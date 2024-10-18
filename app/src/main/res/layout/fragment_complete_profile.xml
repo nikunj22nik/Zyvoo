@@ -356,12 +356,13 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewLocation"
             android:layout_width="match_parent"
-            android:layout_height="60sp"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_height="wrap_content"
+
             android:orientation="horizontal"
+
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toStartOf="@+id/textAddNewLocation"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textWhereILive" />
 
@@ -413,11 +414,11 @@
             android:id="@+id/recyclerViewWork"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
+
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textMyWork" />
 
@@ -467,8 +468,8 @@
             android:id="@+id/recyclerViewlanguages"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
@@ -505,8 +506,8 @@
             android:id="@+id/recyclerViewHobbies"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 
@@ -543,8 +544,8 @@
             android:id="@+id/recyclerViewPets"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_5sdp"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
 

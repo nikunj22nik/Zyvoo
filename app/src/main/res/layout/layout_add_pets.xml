@@ -6,7 +6,7 @@
     android:layout_margin="@dimen/_5sdp"
     android:background="@drawable/button_grey_line_bg"
 
-    android:padding="@dimen/_5sdp">
+    android:padding="@dimen/_7sdp">
 
     <TextView
         android:id="@+id/textMyWorkName"
@@ -15,6 +15,11 @@
         android:layout_centerVertical="true"
         android:drawablePadding="@dimen/_5sdp"
         android:text="New York, US"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11sdp"
+
+        android:maxLines="1"
         app:drawableStartCompat="@drawable/ic_add_pets_icon" />
 
     <ImageView

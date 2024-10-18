@@ -11,7 +11,7 @@
         android:id="@+id/imageIcon"
         android:layout_width="@dimen/_130sdp"
         android:layout_height="wrap_content"
-        android:src="@drawable/splash_icon"
+        android:src="@drawable/splash_icon1"
         android:layout_centerInParent="true"/>
 
 

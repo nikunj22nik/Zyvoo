@@ -43,12 +43,12 @@ class SplashFragment : Fragment() {
 
         )
 
-        val animationDrawable = AnimationDrawable().apply {
-            images.forEach { addFrame(it, 1000 / images.size) } // Divide the duration equally between frames
-            isOneShot = false // Loop the animation
-        }
-        binding.imageIcon.setImageDrawable(animationDrawable) // Set the animation drawable to the ImageView
-        animationDrawable.start()
+//        val animationDrawable = AnimationDrawable().apply {
+//            images.forEach { addFrame(it, 1000 / images.size) } // Divide the duration equally between frames
+//            isOneShot = false // Loop the animation
+//        }
+//        binding.imageIcon.setImageDrawable(animationDrawable) // Set the animation drawable to the ImageView
+//        animationDrawable.start()
 
         handler.postDelayed({
             // Task to be executed after 3 seconds
