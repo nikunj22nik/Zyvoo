@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+ 
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView 
+        android:id="@+id/textAddNew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New"
+        android:textSize="@dimen/_11sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/black"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:drawablePadding="@dimen/_5sdp"
+
+        android:background="@drawable/button_grey_line_bg"
+        android:padding="@dimen/_7sdp"
+        app:drawableEndCompat="@drawable/ic_plus_add_button" />
+    
+    
+    <RelativeLayout
+        android:id="@+id/rlEnterData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_grey_line_bg"
+        android:layout_toEndOf="@+id/textAddNew"
+        android:visibility="gone"
+        android:padding="@dimen/_7sdp">
+
+        <ImageView
+            android:id="@+id/imageIcon"
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:src="@drawable/ic_add_work_icon"/>
+
+        <EditText
+            android:id="@+id/etType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/imageIcon"
+            android:hint="Type..."
+            android:background="@null"
+            android:textSize="@dimen/_11ssp"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:layout_marginHorizontal="@dimen/_3sdp"/>
+
+        <ImageView
+            android:id="@+id/imageCheckedButton"
+            android:layout_width="@dimen/_16sdp"
+            android:layout_height="@dimen/_16sdp"
+            android:src="@drawable/ic_checked_icon"
+            android:layout_toEndOf="@id/etType"/>
+
+
+
+
+    </RelativeLayout>
+    
+</RelativeLayout>

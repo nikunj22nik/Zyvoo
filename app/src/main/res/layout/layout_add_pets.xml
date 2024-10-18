@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp"
+    android:background="@drawable/button_grey_line_bg"
+
+    android:padding="@dimen/_5sdp">
+
+    <TextView
+        android:id="@+id/textMyWorkName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:drawablePadding="@dimen/_5sdp"
+        android:text="New York, US"
+        app:drawableStartCompat="@drawable/ic_add_pets_icon" />
+
+    <ImageView
+        android:id="@+id/imageCross"
+        android:layout_width="@dimen/_18sdp"
+        android:layout_height="@dimen/_18sdp"
+        android:layout_marginStart="@dimen/_3sdp"
+        android:layout_toEndOf="@id/textMyWorkName"
+        android:src="@drawable/ic_cross_item" />
+
+</RelativeLayout>

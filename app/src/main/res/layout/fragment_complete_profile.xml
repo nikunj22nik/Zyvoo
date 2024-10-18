@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".fragment.both.completeProfile.CompleteProfileFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clHead"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_20sdp"
+            android:fontFamily="@font/poppins"
+            android:text="Complete your profile"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_16sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clProfile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:background="@drawable/button_grey_line_bg"
+            app:layout_constraintTop_toBottomOf="@+id/textTitle">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imageProfilePicture"
+                android:layout_width="@dimen/_75sdp"
+                android:layout_height="@dimen/_75sdp"
+                android:background="@drawable/profle_picture_ring"
+                android:padding="@dimen/_15sdp"
+                android:src="@drawable/image_hotel"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/imageEditPicture"
+                android:layout_width="@dimen/_23sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_margin="@dimen/_45sdp"
+                android:src="@drawable/ic_edit_icon"
+                app:layout_constraintStart_toStartOf="@id/imageProfilePicture"
+                app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
+
+
+            <TextView
+                android:id="@+id/textName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:fontFamily="@font/poppins"
+                android:text="Hey James"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11sdp"
+                app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
+                app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
+
+            <TextView
+                android:id="@+id/textHost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_light"
+                android:text="Guest"
+
+                android:textColor="@color/black"
+                app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
+                app:layout_constraintTop_toBottomOf="@+id/textName" />
+
+            <ImageView
+                android:id="@+id/imageInfoIcon"
+                android:layout_width="@dimen/_10sdp"
+                android:layout_height="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:src="@drawable/ic_info_icon"
+                app:layout_constraintStart_toEndOf="@id/textHost"
+                app:layout_constraintTop_toBottomOf="@id/textName" />
+
+            <ImageView
+                android:id="@+id/imageEditName"
+                android:layout_width="@dimen/_23sdp"
+                android:layout_height="@dimen/_23sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:src="@drawable/ic_edit_icon"
+                app:layout_constraintStart_toEndOf="@id/textName"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvInfo"
+            android:layout_width="@dimen/_185sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_55sdp"
+            android:backgroundTint="@color/white"
+            android:visibility="gone"
+            app:cardCornerRadius="@dimen/_10sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/clProfile">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:padding="@dimen/_4sdp"
+                android:textColor="@color/black"
+                android:text="Before you can book or host  on the platform the\n name on Id must match verification documents."
+                android:textSize="@dimen/_7ssp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clVerification"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_13sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@drawable/button_grey_line_bg"
+            android:backgroundTint="#3A4B4C"
+            android:paddingBottom="@dimen/_10sdp"
+            app:layout_constraintTop_toBottomOf="@+id/clProfile">
+
+            <!-- email address-->
+
+            <ImageView
+                android:id="@+id/imageEmail"
+                android:layout_width="@dimen/_75sdp"
+                android:layout_height="@dimen/_65sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/button_grey_line_bg"
+                android:backgroundTint="#1AFFFFFF"
+                android:padding="@dimen/_24sdp"
+                android:src="@drawable/big_email_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textEmailAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:fontFamily="@font/open_sans_bold"
+                android:text="Email Address"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_9ssp"
+                app:layout_constraintEnd_toEndOf="@id/imageEmail"
+                app:layout_constraintStart_toStartOf="@id/imageEmail"
+                app:layout_constraintTop_toBottomOf="@+id/imageEmail" />
+
+            <TextView
+                android:id="@+id/textConfirmNow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="@string/confirm_now"
+                android:textColor="#80FFFFFF"
+                android:textSize="@dimen/_9sdp"
+                app:layout_constraintStart_toStartOf="@id/textEmailAddress"
+                app:layout_constraintTop_toBottomOf="@+id/textEmailAddress" />
+
+            <TextView
+                android:id="@+id/textVerified"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_3sdp"
+                android:fontFamily="@font/poppins"
+                android:text="Verified"
+                android:visibility="gone"
+                android:textColor="#CCFFFFFF"
+                android:textSize="@dimen/_9sdp"
+                app:drawableEndCompat="@drawable/ic_verified_tick"
+                app:layout_constraintStart_toStartOf="@id/textConfirmNow"
+                app:layout_constraintTop_toBottomOf="@+id/textConfirmNow" />
+
+            <!-- phone number-->
+
+            <ImageView
+                android:id="@+id/imagePhone"
+                android:layout_width="@dimen/_75sdp"
+                android:layout_height="@dimen/_65sdp"
+                android:layout_margin="@dimen/_10sdp"
+                android:background="@drawable/button_grey_line_bg"
+                android:backgroundTint="#1AFFFFFF"
+                android:padding="@dimen/_22sdp"
+                android:src="@drawable/big_phone_icon"
+                app:layout_constraintStart_toEndOf="@+id/imageEmail"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textPhoneNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:fontFamily="@font/open_sans_bold"
+                android:text="Phone Number"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_9ssp"
+                app:layout_constraintEnd_toEndOf="@id/imagePhone"
+                app:layout_constraintStart_toStartOf="@id/imagePhone"
+                app:layout_constraintTop_toBottomOf="@+id/imagePhone" />
+
+            <TextView
+                android:id="@+id/textConfirmNow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="@string/confirm_now"
+                android:textColor="#80FFFFFF"
+                android:textSize="@dimen/_9sdp"
+                app:layout_constraintStart_toStartOf="@id/textPhoneNumber"
+                app:layout_constraintTop_toBottomOf="@+id/textPhoneNumber" />
+
+            <TextView
+                android:id="@+id/textVerified1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_3sdp"
+                android:fontFamily="@font/poppins"
+                android:text="Verified"
+                android:visibility="gone"
+                android:textColor="#D9FFFFFF"
+                android:textSize="@dimen/_9sdp"
+                app:drawableEndCompat="@drawable/ic_verified_tick"
+                app:layout_constraintStart_toStartOf="@id/textConfirmNow1"
+                app:layout_constraintTop_toBottomOf="@+id/textConfirmNow1" />
+
+            <!-- verify identify-->
+
+
+            <ImageView
+                android:id="@+id/imageIdentity"
+                android:layout_width="@dimen/_75sdp"
+                android:layout_height="@dimen/_65sdp"
+                android:layout_marginVertical="@dimen/_10sdp"
+                android:background="@drawable/button_grey_line_bg"
+                android:backgroundTint="#1AFFFFFF"
+                android:padding="@dimen/_22sdp"
+                android:src="@drawable/big_phone_icon"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imagePhone"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textIdentity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_3sdp"
+                android:fontFamily="@font/open_sans_bold"
+                android:text="Verify identity"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_9ssp"
+                app:layout_constraintEnd_toEndOf="@id/imageIdentity"
+                app:layout_constraintStart_toStartOf="@id/imageIdentity"
+                app:layout_constraintTop_toBottomOf="@+id/imageIdentity" />
+
+            <TextView
+                android:id="@+id/textConfirmNow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="@string/confirm_now"
+                android:textColor="#80FFFFFF"
+                android:textSize="@dimen/_9sdp"
+                app:layout_constraintStart_toStartOf="@id/textIdentity"
+                app:layout_constraintTop_toBottomOf="@+id/textIdentity" />
+
+            <TextView
+                android:id="@+id/textVerified2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="@dimen/_3sdp"
+                android:fontFamily="@font/poppins"
+                android:text="Verified"
+                android:textColor="#CCFFFFFF"
+                android:visibility="gone"
+                android:textSize="@dimen/_9sdp"
+                app:drawableEndCompat="@drawable/ic_verified_tick"
+                app:layout_constraintStart_toStartOf="@id/textConfirmNow2"
+                app:layout_constraintTop_toBottomOf="@+id/textConfirmNow2" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textAbout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fontFamily="@font/poppins"
+            android:text="About Me"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clVerification" />
+
+        <ImageView
+            android:id="@+id/imageEditAbout"
+            android:layout_width="@dimen/_23sdp"
+            android:layout_height="@dimen/_23sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:src="@drawable/ic_edit_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clVerification" />
+
+        <EditText
+            android:id="@+id/etAboutMe"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_marginHorizontal="@dimen/_17sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="@drawable/button_grey_line_bg"
+            android:fontFamily="@font/poppins"
+            android:inputType="textMultiLine"
+            android:padding="@dimen/_10sdp"
+            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintTop_toBottomOf="@+id/textAbout" />
+
+
+        <TextView
+            android:id="@+id/textWhereILive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fontFamily="@font/poppins"
+            android:text="Where I live*"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/etAboutMe" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewLocation"
+            android:layout_width="match_parent"
+            android:layout_height="60sp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toStartOf="@+id/textAddNewLocation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textWhereILive" />
+
+
+        <TextView
+            android:id="@+id/textAddNewLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:background="@drawable/button_grey_line_bg"
+            android:drawableEnd="@drawable/ic_plus_add_button"
+            android:drawablePadding="@dimen/_5sdp"
+            android:fontFamily="@font/poppins"
+            android:padding="@dimen/_7sdp"
+            android:text="Add New"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11sdp"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@+id/recyclerViewLocation"
+            app:layout_constraintTop_toBottomOf="@+id/textWhereILive" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginHorizontal="@dimen/_23sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#C4C4C4"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewLocation" />
+
+
+        <TextView
+            android:id="@+id/textMyWork"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fontFamily="@font/poppins"
+            android:text="My work"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view1" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewWork"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textMyWork" />
+
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/textAddNewWork"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:drawableEnd="@drawable/ic_plus_add_button"-->
+        <!--            android:text="Add New"-->
+        <!--            android:textSize="@dimen/_11sdp"-->
+        <!--            android:fontFamily="@font/poppins"-->
+        <!--            android:textColor="@color/black"-->
+        <!--            android:layout_marginEnd="@dimen/_15sdp"-->
+        <!--            android:drawablePadding="@dimen/_5sdp"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/textMyWork"-->
+        <!--            android:background="@drawable/button_grey_line_bg"-->
+        <!--            android:padding="@dimen/_7sdp"/>-->
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginHorizontal="@dimen/_23sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#C4C4C4"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewWork" />
+
+
+        <TextView
+            android:id="@+id/textLanguages"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fontFamily="@font/poppins"
+            android:text="Languages I speak*"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewlanguages"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textLanguages" />
+
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginHorizontal="@dimen/_23sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#C4C4C4"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewlanguages" />
+
+
+        <TextView
+            android:id="@+id/textHobbies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fontFamily="@font/poppins"
+            android:text="Hobbies"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewHobbies"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textHobbies" />
+
+
+        <View
+            android:id="@+id/viewHobbies"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginHorizontal="@dimen/_23sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#C4C4C4"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewHobbies" />
+
+
+        <TextView
+            android:id="@+id/textPets"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:fontFamily="@font/poppins"
+            android:text="Pets"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13sdp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewHobbies" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewPets"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textPets" />
+
+
+        <View
+            android:id="@+id/viewPets"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginHorizontal="@dimen/_23sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#C4C4C4"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewPets" />
+
+
+        <TextView
+            android:id="@+id/textSaveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_20sdp"
+            android:background="@drawable/button_bg"
+            android:fontFamily="@font/poppins"
+            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_5sdp"
+            android:text="Save Profile"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/viewPets" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_20sdp"
+            android:fontFamily="@font/poppins"
+            android:text="Skip for now"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textSaveButton"
+            app:layout_constraintTop_toBottomOf="@+id/viewPets" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>

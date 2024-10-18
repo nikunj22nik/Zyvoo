@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_graph"
+    app:startDestination="@id/splashFragment">
+
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.yesitlab.zyvo.fragment.both.splash.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" />
+    <fragment
+        android:id="@+id/loggedScreenFragment"
+        android:name="com.yesitlab.zyvo.fragment.both.loggedScreen.LoggedScreenFragment"
+        android:label="fragment_logged_screen"
+        tools:layout="@layout/fragment_logged_screen" />
+    <fragment
+        android:id="@+id/viewImageFragment"
+        android:name="com.yesitlab.zyvo.fragment.both.viewImage.ViewImageFragment"
+        android:label="fragment_view_image"
+        tools:layout="@layout/fragment_view_image" />
+    <fragment
+        android:id="@+id/turnNotificationsFragment"
+        android:name="com.yesitlab.zyvo.fragment.both.turnNotifications.TurnNotificationsFragment"
+        android:label="fragment_turn_notifications"
+        tools:layout="@layout/fragment_turn_notifications" />
+    <fragment
+        android:id="@+id/turnLocationFragment"
+        android:name="com.yesitlab.zyvo.fragment.both.turnLocation.TurnLocationFragment"
+        android:label="fragment_turn_location"
+        tools:layout="@layout/fragment_turn_location" />
+    <fragment
+        android:id="@+id/completeProfileFragment"
+        android:name="com.yesitlab.zyvo.fragment.both.completeProfile.CompleteProfileFragment"
+        android:label="fragment_complete_profile"
+        tools:layout="@layout/fragment_complete_profile" />
+</navigation>

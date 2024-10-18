@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".fragment.both.loggedScreen.LoggedScreenFragment">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/stroke1"
+        >
+        <RelativeLayout
+            android:id="@+id/rlFind"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_13sdp"
+            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:background="@drawable/search_bar_bg"
+            android:paddingVertical="@dimen/_3sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                android:id="@+id/textWhere"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:fontFamily="@font/poppins"
+                android:text="@string/where"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+
+            <View
+                android:id="@+id/viewTextWhere"
+                android:layout_width="@dimen/_1sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/textWhere"
+                android:background="#E5E5E5" />
+
+            <TextView
+                android:id="@+id/textTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_toEndOf="@id/viewTextWhere"
+                android:fontFamily="@font/poppins"
+                android:text="@string/time"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+
+            <View
+                android:id="@+id/viewTextTime"
+                android:layout_width="@dimen/_1sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/textTime"
+                android:background="#E5E5E5" />
+
+            <TextView
+                android:id="@+id/textActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_toEndOf="@id/viewTextTime"
+                android:fontFamily="@font/poppins"
+                android:text="@string/activity"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+
+            <ImageView
+                android:id="@+id/imageSearchBar"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_30sdp"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:layout_toEndOf="@id/textActivity"
+                android:src="@drawable/ic_search_bar_icon" />
+
+
+        </RelativeLayout>
+
+
+        <ImageView
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:src="@drawable/ic_filter"
+            app:layout_constraintBottom_toBottomOf="@id/rlFind"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rlFind"
+            app:layout_constraintTop_toTopOf="@+id/rlFind" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewBooking"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+
+        app:spanCount="2"
+        tools:itemCount="20"
+        tools:listitem="@layout/layout_logged_recyclerview"
+        app:layout_constraintTop_toBottomOf="@+id/clSearch"
+        app:layout_constraintBottom_toTopOf="@+id/llBottomNavigation"
+
+        android:orientation="vertical"/>
+
+
+
+<LinearLayout
+    android:id="@+id/llBottomNavigation"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   android:orientation="horizontal"
+    android:weightSum="5"
+   android:gravity="center"
+    android:background="@drawable/stroke1"
+    app:layout_constraintBottom_toBottomOf="parent">
+
+
+    <TextView
+        android:id="@+id/textDiscover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Discover"
+        android:textSize="@dimen/_10ssp"
+        android:textColor="#3A4B4C"
+        android:fontFamily="@font/poppins"
+        android:layout_weight="1"
+        android:textAlignment="center"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        app:drawableTopCompat="@drawable/ic_discover"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/textDiscover" />
+    <TextView
+        android:id="@+id/textWishlists"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wishlists"
+        android:textColor="#3A4B4C"
+        android:fontFamily="@font/poppins"
+        android:textAlignment="center"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:textSize="@dimen/_10ssp"
+        app:drawableTopCompat="@drawable/ic_whishlist"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/textLogin"
+        app:layout_constraintStart_toEndOf="@+id/textDiscover" />
+    <TextView
+        android:id="@+id/textLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:textAlignment="center"
+        android:textColor="#3A4B4C"
+        android:fontFamily="@font/poppins"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:textSize="@dimen/_10ssp"
+        android:layout_weight="1"
+        app:drawableTopCompat="@drawable/ic_profile_login"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/textWishlists"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

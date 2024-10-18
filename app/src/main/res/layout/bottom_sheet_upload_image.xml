@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+
+<TextView
+    android:id="@+id/textAddProfile"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Add Profile picture"
+    android:textAlignment="center"
+    android:textColor="@color/black"
+    android:fontFamily="@font/poppins"
+    app:layout_constraintTop_toTopOf="parent"
+    android:textSize="@dimen/_15ssp"
+    android:layout_marginTop="@dimen/_25sdp"
+    />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        app:layout_constraintTop_toBottomOf="@+id/textAddProfile"
+        android:background="#C4C4C4"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginHorizontal="@dimen/_25sdp"/>
+
+
+    <TextView
+        android:id="@+id/textCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:drawableTop="@drawable/ic_take_camera_picture"
+        android:text="Take Photo"
+        android:textSize="@dimen/_10sdp"
+        android:drawablePadding="@dimen/_7sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:fontFamily="@font/poppins"
+        android:layout_marginStart="@dimen/_45sdp"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_30sdp"/>
+
+
+
+
+    <TextView
+        android:id="@+id/textGallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:drawableTop="@drawable/ic_upload_from_device"
+        android:text="Upload from Device "
+        android:textSize="@dimen/_10sdp"
+        android:drawablePadding="@dimen/_7sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="@font/poppins"
+        android:layout_marginEnd="@dimen/_45sdp"
+        app:layout_constraintTop_toBottomOf="@+id/view"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_30sdp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
