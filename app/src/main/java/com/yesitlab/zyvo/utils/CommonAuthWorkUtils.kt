@@ -264,6 +264,31 @@ var navController = navController
             show()
         }}
 
+
+    fun dialogChangeName(context: Context?){
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_change_names)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+
+            var textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
+            textSaveChangesButton.setOnClickListener{
+
+                dismiss()
+            }
+
+
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            show()
+        }}
+
     fun dialogEmailVerification(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {

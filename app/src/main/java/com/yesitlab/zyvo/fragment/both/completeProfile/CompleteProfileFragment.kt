@@ -143,7 +143,9 @@ private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
         binding.imageInfoIcon.setOnClickListener(this)
         binding.clHead.setOnClickListener(this)
         binding.imageEditPicture.setOnClickListener(this)
+        binding.imageEditName.setOnClickListener(this)
         binding.textConfirmNow.setOnClickListener(this)
+        binding.textConfirmNow1.setOnClickListener(this)
         adapterInitialize()
 
         // Initialize Places API if not already initialized
@@ -383,13 +385,18 @@ private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
            R.id.imageEditPicture->{
                bottomSheetUploadImage()
            }
+           R.id.imageEditName->{
+             commonAuthWorkUtils.dialogChangeName(requireContext())
+           }
            R.id.textConfirmNow->{
                commonAuthWorkUtils.dialogNumberVerification(requireContext())
                binding.textConfirmNow.visibility = View.GONE
-               binding.
+               binding.textVerified.visibility = View.VISIBLE
            }
            R.id.textConfirmNow1->{
                commonAuthWorkUtils.dialogEmailVerification(requireContext())
+               binding.textConfirmNow1.visibility = View.GONE
+               binding.textVerified1.visibility = View.VISIBLE
            }
        }
     }
@@ -397,9 +404,6 @@ private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.data?.let { uri ->
-
-
-
 
                     // Load image into BottomSheetDialog's ImageView if available
                     binding.imageProfilePicture?.let {
