@@ -4,4 +4,6 @@ class TestingModel {
     var testing :String =""
     var god :String ="my_name"
     var newChange :String ="my_new_changes"
+
+    var nikunjchange :String ="nikunj_changes"
 }
