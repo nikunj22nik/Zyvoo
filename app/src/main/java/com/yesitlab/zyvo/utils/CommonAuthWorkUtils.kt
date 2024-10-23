@@ -2,6 +2,7 @@ package com.yesitlab.zyvo.utils
 
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
@@ -12,6 +13,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.navigation.NavController
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.GuesMain
+import com.yesitlab.zyvo.session.SessionManager
 import `in`.aabhasjindal.otptextview.OtpTextView
 
 class CommonAuthWorkUtils(var context: Context, navController: NavController) {
@@ -55,7 +58,7 @@ var navController = navController
             textContinueButton.setOnClickListener{
                 var text = "Login Successful"
 
-              dialogOtp(context,text)
+                dialogOtp(context,text)
                 dismiss()
             }
             imageCross.setOnClickListener{
@@ -96,13 +99,13 @@ var navController = navController
                 dialogLogin(context)
                 dismiss()
             }
+
             textContinueButton.setOnClickListener{
                 var text = "register Successful"
-
                 dialogOtp(context,text)
-
                 dismiss()
             }
+
             imageEmailSocial.setOnClickListener{
                 dialogRegisterEmail(context)
                 dismiss()
@@ -111,7 +114,9 @@ var navController = navController
             imageCross.setOnClickListener{
                 dismiss()
             }
+
             window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+
             show()
         }}
 
@@ -335,13 +340,20 @@ var navController = navController
 
             var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener{
-                if (text == "Your password has been changed\n" +
-                    " successfully."){
+                if (text == "Your password has been changed\n" + " successfully."){
                     dialogNewPassword(context,text)
-                }else{
+                }
+                else if(text.equals("Login Successful")){
+                    var session =SessionManager(context)
+                        session.setUserId(1)
+                        var intent = Intent(context,GuesMain::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
+                       context.startActivity(intent)
+                }
+                else{
                     dialogSuccess(context,text)
                 }
-
                 dismiss()
             }
             textResend.setOnClickListener{

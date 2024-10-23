@@ -36,6 +36,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.OnLocalListener
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.GuesMain
 import com.yesitlab.zyvo.adapter.AddHobbiesAdapter
 import com.yesitlab.zyvo.adapter.AddLanguageSpeakAdapter
 import com.yesitlab.zyvo.adapter.AddLocationAdapter
@@ -146,6 +147,9 @@ private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
         binding.imageEditName.setOnClickListener(this)
         binding.textConfirmNow.setOnClickListener(this)
         binding.textConfirmNow1.setOnClickListener(this)
+        binding.textSaveButton.setOnClickListener(this)
+        binding.skipNow.setOnClickListener(this)
+
         adapterInitialize()
 
         // Initialize Places API if not already initialized
@@ -397,6 +401,20 @@ private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
                commonAuthWorkUtils.dialogEmailVerification(requireContext())
                binding.textConfirmNow1.visibility = View.GONE
                binding.textVerified1.visibility = View.VISIBLE
+           }
+
+           R.id.textSaveButton ->{
+               var intent = Intent(requireContext(),GuesMain::class.java)
+               intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+               startActivity(intent)
+               requireActivity().finish()
+           }
+
+           R.id.skip_now ->{
+               var intent = Intent(requireContext(),GuesMain::class.java)
+               intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+               startActivity(intent)
+               requireActivity().finish()
            }
        }
     }

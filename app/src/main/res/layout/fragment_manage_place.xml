@@ -318,7 +318,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="null"
+                android:background="@null"
                 android:hint="Type"
                 android:layout_marginTop="@dimen/_3sdp"
                 android:textColor="#3F3D56"
@@ -459,7 +459,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="null"
+                android:background="@null"
                 android:hint="Type"
                 android:layout_marginTop="@dimen/_3sdp"
                 android:textColor="#3F3D56"

@@ -20,12 +20,17 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener {
+
     private lateinit var binding: FragmentLoggedScreenBinding
+
     private lateinit var adapter: LoggedScreenAdapter
+
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
+
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
     }
+
     private val imagePopViewModel: ImagePopViewModel by lazy {
         ViewModelProvider(this)[ImagePopViewModel::class.java]
     }
@@ -65,13 +70,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener {
                 findNavController().navigateUp()
             }
         }
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     override fun itemClick(obj: Int) {
-
         findNavController().navigate(R.id.viewImageFragment)
-
     }
 
     override fun onClick(p0: View?) {
@@ -81,7 +85,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener {
             }
         }
     }
-
 
 }
 
