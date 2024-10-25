@@ -1,14 +1,19 @@
 package com.yesitlab.zyvo.fragment.guest
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
+import com.yesitlab.zyvo.activity.guest.FiltersActivity
 import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
 import com.yesitlab.zyvo.databinding.FragmentGuestDiscoverBinding
 import com.yesitlab.zyvo.databinding.FragmentLoggedScreenBinding
@@ -22,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener {
 
     lateinit var binding :FragmentGuestDiscoverBinding ;
+    private lateinit var startForResult: ActivityResultLauncher<Intent>
     private lateinit var adapter: LoggedScreenAdapter
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
     private val loggedScreenViewModel: GuestDiscoverViewModel by lazy {
@@ -38,19 +44,34 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener {
 
         val navController = findNavController()
 
+        startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                // Handle the result
+            }
+        }
+
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(),navController)
 
-        adapter = LoggedScreenAdapter(
-            requireContext(), mutableListOf(), this, viewLifecycleOwner, imagePopViewModel)
+        adapter = LoggedScreenAdapter(requireContext(),
+            mutableListOf(),
+            this,
+            viewLifecycleOwner,
+            imagePopViewModel)
 
         binding.recyclerViewBooking.adapter = adapter
+
+
+        binding.filterIcon.setOnClickListener {
+            var intent = Intent(requireContext(),FiltersActivity::class.java)
+            startForResult.launch(intent)
+        }
 
         loggedScreenViewModel.imageList.observe(viewLifecycleOwner, Observer {
             images -> adapter.updateData(images)
         })
 
         return binding.root
-
     }
 
     override fun onClick(p0: View?) {

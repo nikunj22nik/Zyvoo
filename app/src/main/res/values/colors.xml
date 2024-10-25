@@ -11,4 +11,16 @@
     <color name="black_overlay">#66000000</color>
     <color name="scroll_bar_color">#4AEAB1</color>
     <color name="scroll_bar_line_color">#D9D9D9</color>
+
+
+
+    <color name="colorChartUnselected">#c9c9c9</color>
+    <color name="colorChartUnselectedLine">#27c9c9c9</color>
+    <color name="colorChartSelected">#000000</color>
+    <color name="colorChartSelectedLine">#000000</color>
+    <color name="colorRangeSelected">#ba4894cc</color>
+    <color name="colorButtonSelected">#172b59</color>
+    <color name="colorButton">#428abf</color>
+    <color name="colorButtonPressed">#37729e</color>
+
 </resources>

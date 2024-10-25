@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_four_side_grey_corner_white"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+    <TextView
+        android:id="@+id/item_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="16dp"
+        android:text="1 Hour"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/item_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="16dp"
+        android:text="2 Hour"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/item_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="16dp"
+        android:text="3 Hour"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/item_4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:padding="16dp"
+        android:text="4 Hour"
+        android:textSize="18sp" />
+
+
+        <TextView
+            android:id="@+id/item_5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="16dp"
+            android:text="5 Hour"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/item_6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:padding="16dp"
+            android:text="6 Hour"
+            android:textSize="18sp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Add more items as needed -->
+</LinearLayout>
+
+
+    <!--<TextView xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--    android:id="@+id/dropdown_item"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="wrap_content"-->
+    <!--    android:padding="16dp"-->
+    <!--    android:textSize="18sp"-->
+    <!--    android:textColor="@color/black"-->
+    <!--    android:text="ababs"-->
+    <!--    android:background=""-->
+    <!--     />-->
