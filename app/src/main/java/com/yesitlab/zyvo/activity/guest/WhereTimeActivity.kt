@@ -23,12 +23,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.adapter.AdapterActivityText
 import com.yesitlab.zyvo.adapter.AdapterLocationSearch
 import com.yesitlab.zyvo.databinding.ActivityWhereTimeBinding
+import com.yesitlab.zyvo.fragment.guest.FullScreenDialogFragment
 import java.time.LocalDate
 import java.time.YearMonth
 
@@ -36,25 +39,20 @@ class WhereTimeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWhereTimeBinding
     private lateinit var adapterLocationSearch: AdapterLocationSearch
-
+    private var count =0
     private lateinit var displayTextView: RelativeLayout
     private lateinit var displayEditTextView: RelativeLayout
     private lateinit var editText: EditText
-
-
+    private lateinit var adapterActivitivity : AdapterActivityText
     private lateinit var placesClient: PlacesClient
-
-
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         YearMonth.now()
     } else {
         TODO("VERSION.SDK_INT < O")
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate: LocalDate? = LocalDate.now()
-
-
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,10 +62,8 @@ class WhereTimeActivity : AppCompatActivity() {
         setContentView(binding.root)
         Places.initialize(applicationContext, "AIzaSyC9NuN_f-wESHh3kihTvpbvdrmKlTQurxw")
         placesClient = Places.createClient(applicationContext)
-        adapterLocationSearch = AdapterLocationSearch(this, mutableListOf())
-        displayTextView = binding.rlWhere
-        displayEditTextView = binding.rlTypingView
-        editText = binding.etSearchLocation
+
+        adapterIntialization()
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -75,6 +71,7 @@ class WhereTimeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         callingWhereSeach()
 
         displayTextView.setOnClickListener {
@@ -93,10 +90,101 @@ class WhereTimeActivity : AppCompatActivity() {
         binding.imageBack.setOnClickListener {
             onBackPressed()
         }
+
+        binding.rlTiming.setOnClickListener {
+            if(binding.llTime.visibility == View.GONE){
+                binding.llTime.visibility = View.VISIBLE
+            }
+            else{
+                binding.llTime.visibility = View.GONE
+            }
+        }
+
+        binding.imgSearch.setOnClickListener {
+            count++;
+            if(count %2==1) {
+                val dialog = FullScreenDialogFragment()
+                dialog.show(supportFragmentManager, "FullScreenDialog")
+            }else{
+                onBackPressed()
+            }
+        }
+
         updateCalendar()
+        updateCalendar1()
+        selectingClickListener()
+        bydefaultSelect()
+   }
+
+    private fun adapterIntialization() {
+
+        adapterActivitivity= AdapterActivityText(this, mutableListOf())
+        adapterLocationSearch = AdapterLocationSearch(this, mutableListOf())
+        binding.recyclerLocation.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        binding.recyclerActivity.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        binding.recyclerActivity.adapter = adapterActivitivity
+        binding.recyclerLocation.adapter = adapterLocationSearch
+        displayTextView = binding.rlWhere
+        displayEditTextView = binding.rlTypingView
+        editText = binding.etSearchLocation
 
     }
 
+    private fun bydefaultSelect(){
+        binding.tvDate.setBackgroundResource(R.drawable.bg_inner_manage_place)
+        binding.tvHourly.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFlexible.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+
+    private fun selectingClickListener(){
+
+        binding.tvDate.setOnClickListener {
+
+            binding.tvDate.setBackgroundResource(R.drawable.bg_inner_manage_place)
+            binding.tvHourly.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFlexible.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.calendarLayout.visibility = View.VISIBLE
+            binding.layoutFlexible.visibility = View.GONE
+            binding.rlCircularProgress.visibility = View.GONE
+
+        }
+
+        binding.tvHourly.setOnClickListener {
+
+            binding.tvDate.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvHourly.setBackgroundResource(R.drawable.bg_inner_manage_place)
+            binding.tvFlexible.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.calendarLayout.visibility = View.GONE
+            binding.layoutFlexible.visibility = View.GONE
+            binding.rlCircularProgress.visibility = View.VISIBLE
+        }
+
+        binding.tvFlexible.setOnClickListener {
+
+            binding.tvDate.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvHourly.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFlexible.setBackgroundResource(R.drawable.bg_inner_manage_place)
+
+            binding.calendarLayout.visibility = View.GONE
+            binding.layoutFlexible.visibility = View.VISIBLE
+            binding.rlCircularProgress.visibility = View.GONE
+        }
+
+        binding.rlActivity.setOnClickListener {
+            adapterActivitivity.updateAdapter(getActivityData())
+
+            if(binding.rlActivityRecy.visibility == View.VISIBLE){
+                binding.rlActivityRecy.visibility = View.GONE
+            }
+            else{
+                binding.rlActivityRecy.visibility = View.VISIBLE
+            }
+        }
+
+    }
 
     private fun showEditText() {
         displayTextView.visibility = View.GONE
@@ -122,7 +210,6 @@ class WhereTimeActivity : AppCompatActivity() {
 
 
     private fun callingWhereSeach() {
-
         binding.etSearchLocation.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
 
@@ -131,9 +218,14 @@ class WhereTimeActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 s?.let {
                     if (it.isNotEmpty()) {
+                        binding.rlLocation.visibility = View.VISIBLE
+                        binding.rlTypingView.visibility =View.VISIBLE
+                        binding.rlWhere.visibility =View.GONE
                         fetchAutocompleteSuggestions(it.toString(), applicationContext)
-                        binding.recyclerLocation.visibility = View.VISIBLE
                     } else {
+                        binding.rlLocation.visibility = View.GONE
+                        binding.rlTypingView.visibility =View.GONE
+                        binding.rlWhere.visibility =View.VISIBLE
                     }
                 }
             }
@@ -143,7 +235,6 @@ class WhereTimeActivity : AppCompatActivity() {
             }
 
         })
-
     }
 
     private fun fetchAutocompleteSuggestions(query: String, context: Context) {
@@ -164,6 +255,34 @@ class WhereTimeActivity : AppCompatActivity() {
         }.addOnFailureListener { exception ->
             Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
         }
+    }
+
+
+    private fun updateCalendar1() {
+        // Updates the calendar layout with the current and next month views.
+        val calendarLayout = binding.calendarLayout1
+        calendarLayout.removeAllViews()
+        val topMonths = mutableListOf<YearMonth>()
+        val bottomMonths = mutableListOf<YearMonth>()
+
+        // Separate months into top and bottom lists
+        val allMonths = (1..12).map { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            currentMonth.plusMonths(it.toLong())
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+
+        }
+        allMonths.forEachIndexed { index, month ->
+            if (index % 2 == 0) {
+                topMonths.add(month)
+//            } else {
+//                bottomMonths.add(month)
+            }
+        }
+
+        addMonthView(calendarLayout, currentMonth)
+        // addMonthView(calendarLayout, currentMonth.plusMonths(1))
     }
 
     private fun updateCalendar() {
@@ -317,6 +436,19 @@ class WhereTimeActivity : AppCompatActivity() {
             weeks.add(week)
         }
         return weeks
+    }
+
+
+    private fun getActivityData() :MutableList<String>{
+        var actList = mutableListOf<String>()
+
+        actList.add("Stays")
+        actList.add("Event Space")
+        actList.add("Photo Shoot")
+        actList.add("Music Video")
+        actList.add("Wedding")
+
+        return actList
     }
 
 
