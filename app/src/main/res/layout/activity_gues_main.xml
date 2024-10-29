@@ -90,18 +90,6 @@
                     android:src="@drawable/ic_chat"
                    />
 
-                <TextView
-                    android:id="@+id/tv_event"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/image_event"
-                    android:layout_marginTop="1dp"
-                    android:textSize="12sp"
-                    android:gravity="center"
-                     android:text="Inbox"
-                    android:fontFamily="@font/poppins"
-                    android:textColor="#3A4B4C" />
-
             </RelativeLayout>
 
             <RelativeLayout
@@ -201,6 +189,17 @@
             </RelativeLayout>
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_event"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:fontFamily="@font/poppins"
+            android:gravity="center"
+            android:text="Inbox"
+            android:textColor="#3A4B4C"
+            android:textSize="12sp" />
 
         <View
             android:layout_width="match_parent"

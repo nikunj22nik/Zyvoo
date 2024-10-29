@@ -19,9 +19,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 
 class LocationManager(var applicationContext : Context) {
 
-
-    private lateinit var placesClient: PlacesClient
     private lateinit var autocompleteTextView: AutoCompleteTextView
+    private lateinit var placesClient: PlacesClient
+
 
     init {
         Places.initialize(applicationContext, "AIzaSyC9NuN_f-wESHh3kihTvpbvdrmKlTQurxw")
@@ -37,7 +37,9 @@ class LocationManager(var applicationContext : Context) {
             autocompleteTextView.threshold = 1 // Start suggesting after 1 character
 
             autocompleteTextView.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+                }
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     s?.let {
                         if (it.isNotEmpty()) {

@@ -13,7 +13,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
+import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.guest.FiltersActivity
+import com.yesitlab.zyvo.activity.guest.WhereTimeActivity
 import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
 import com.yesitlab.zyvo.databinding.FragmentGuestDiscoverBinding
 import com.yesitlab.zyvo.databinding.FragmentLoggedScreenBinding
@@ -67,6 +69,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener {
             startForResult.launch(intent)
         }
 
+        binding.textWhere.setOnClickListener(this)
+
+
         loggedScreenViewModel.imageList.observe(viewLifecycleOwner, Observer {
             images -> adapter.updateData(images)
         })
@@ -75,7 +80,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener {
     }
 
     override fun onClick(p0: View?) {
-
+        when(p0?.id){
+            R.id.textWhere ->{
+                var intent = Intent(requireContext(),WhereTimeActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 
     override fun itemClick(obj: Int) {

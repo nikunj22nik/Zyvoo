@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_7sdp"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/_8sdp">
+
+
+    <RelativeLayout
+        android:id="@+id/ll1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/button_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#4AEAB1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingStart="@dimen/_7sdp"
+            android:paddingEnd="@dimen/_4sdp"
+            android:src="@drawable/previous_arrow"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+
+        <TextView
+            android:id="@+id/month_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_centerHorizontal="true"
+            android:paddingBottom="@dimen/_4sdp"
+            android:textColor="#4AEAB1"
+            android:textSize="@dimen/_15ssp"
+            android:textStyle="normal" />
+
+        <ImageButton
+            android:id="@+id/button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:paddingStart="@dimen/_3sdp"
+            android:backgroundTint="#4AEAB1"
+            android:paddingEnd="@dimen/_7sdp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/next_arrow"
+            tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/days_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/ll1" />
+
+    <LinearLayout
+        android:id="@+id/weeks_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/days_layout" />
+</androidx.constraintlayout.widget.ConstraintLayout>

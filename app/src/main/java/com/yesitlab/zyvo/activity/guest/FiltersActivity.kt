@@ -100,15 +100,12 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun showingMoreText() {
         val text = "Show More"
-
         val spannableString = SpannableString(text).apply {
             setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
-
         binding.underlinedTextView.text = spannableString
         binding.underlinedTextView.paint.flags = Paint.UNDERLINE_TEXT_FLAG
         binding.underlinedTextView.paint.isAntiAlias = true
-
         binding.underlinedTextView.setOnClickListener {
             languageAdapter.updateAdapter(getNationalLanguages())
             binding.underlinedTextView.visibility =View.GONE
@@ -117,11 +114,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
-
     private fun settingBackgroundTaskToBedroom(){
-
-
-
         binding.tvAnyBedrooms.setOnClickListener {
             binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -209,6 +202,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         }
 
     }
+
     private fun settingBackgroundTaskToBathroom(){
 
         binding.tvAnyBedrooms.setOnClickListener {
@@ -301,8 +295,6 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-
-
     private fun settingBackgroundTaskToProperty() {
 
             binding.tvAny.setOnClickListener {
@@ -375,8 +367,6 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-
-
     private fun byDefaultSelectAvailability()
     {
         binding.tvAny.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -444,7 +434,6 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             binding.tv7.setBackgroundResource(R.drawable.bg_inner_select_white)
         }
     }
-
 
     private fun settingBackgroundTaskToParking(){
         binding.tvAnyParkingSpace.setOnClickListener {
@@ -604,8 +593,6 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         }
 
     }
-
-
 
     fun keyboardUp(){
 
@@ -778,27 +765,23 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-
             R.id.tv_home_setup -> {
                Log.d("TESTING_VOOPON","Here in the home setup")
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
             }
-
             R.id.tv_room -> {
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
             }
+
             R.id.tv_entire_home -> {
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_inner_manage_place)
             }
-
-
-
 
         }
 

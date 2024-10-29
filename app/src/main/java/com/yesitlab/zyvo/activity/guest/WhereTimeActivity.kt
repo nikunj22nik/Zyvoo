@@ -1,0 +1,323 @@
+package com.yesitlab.zyvo.activity.guest
+
+import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Color
+import android.os.Build
+import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.widget.addTextChangedListener
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
+import com.google.android.libraries.places.api.net.PlacesClient
+import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.adapter.AdapterLocationSearch
+import com.yesitlab.zyvo.databinding.ActivityWhereTimeBinding
+import java.time.LocalDate
+import java.time.YearMonth
+
+class WhereTimeActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityWhereTimeBinding
+    private lateinit var adapterLocationSearch: AdapterLocationSearch
+
+    private lateinit var displayTextView: RelativeLayout
+    private lateinit var displayEditTextView: RelativeLayout
+    private lateinit var editText: EditText
+
+
+    private lateinit var placesClient: PlacesClient
+
+
+    private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        YearMonth.now()
+    } else {
+        TODO("VERSION.SDK_INT < O")
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private var selectedDate: LocalDate? = LocalDate.now()
+
+
+
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        binding = ActivityWhereTimeBinding.inflate(LayoutInflater.from(this))
+        setContentView(binding.root)
+        Places.initialize(applicationContext, "AIzaSyC9NuN_f-wESHh3kihTvpbvdrmKlTQurxw")
+        placesClient = Places.createClient(applicationContext)
+        adapterLocationSearch = AdapterLocationSearch(this, mutableListOf())
+        displayTextView = binding.rlWhere
+        displayEditTextView = binding.rlTypingView
+        editText = binding.etSearchLocation
+
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        callingWhereSeach()
+
+        displayTextView.setOnClickListener {
+            showEditText()
+        }
+
+   // Optional: Handle when the EditText loses focus
+   //        editText.setOnFocusChangeListener { _, hasFocus ->
+   //            if (!hasFocus) {
+   //                handleEditTextInput()
+   //            }
+   //
+   //
+  //        }
+
+        binding.imageBack.setOnClickListener {
+            onBackPressed()
+        }
+        updateCalendar()
+
+    }
+
+
+    private fun showEditText() {
+        displayTextView.visibility = View.GONE
+        Log.d("TESTING_ZYVOO", "Show Edit text View")
+        editText.visibility = View.VISIBLE
+        binding.rlTypingView.visibility = View.VISIBLE
+        editText.requestFocus() // Focus on the EditText
+        // Set the existing text if needed
+    }
+
+    private fun handleEditTextInput() {
+        val input = editText.text.toString().trim()
+        if (input.isEmpty()) {
+            // If the input is empty, revert to the original view
+            editText.visibility = View.GONE
+            displayTextView.visibility = View.VISIBLE
+        } else {
+            // If there's input, update the TextView
+            editText.visibility = View.VISIBLE
+            displayTextView.visibility = View.GONE
+        }
+    }
+
+
+    private fun callingWhereSeach() {
+
+        binding.etSearchLocation.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                s?.let {
+                    if (it.isNotEmpty()) {
+                        fetchAutocompleteSuggestions(it.toString(), applicationContext)
+                        binding.recyclerLocation.visibility = View.VISIBLE
+                    } else {
+                    }
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+        })
+
+    }
+
+    private fun fetchAutocompleteSuggestions(query: String, context: Context) {
+        val request = FindAutocompletePredictionsRequest.builder()
+            .setQuery(query)
+            .build()
+
+        placesClient.findAutocompletePredictions(request).addOnSuccessListener { response ->
+            val suggestions =
+                response.autocompletePredictions.map { it.getPrimaryText(null).toString() }
+            Log.d(
+                "TESTING_ZYVOO_LOCATION",
+                "Suggestions For Location :- " + suggestions.size.toString()
+            )
+            // val adapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, suggestions)
+            adapterLocationSearch.updateAdapter(suggestions.toMutableList())
+            //adapter.notifyDataSetChanged()
+        }.addOnFailureListener { exception ->
+            Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun updateCalendar() {
+        // Updates the calendar layout with the current and next month views.
+        val calendarLayout = binding.calendarLayout
+        calendarLayout.removeAllViews()
+        val topMonths = mutableListOf<YearMonth>()
+        val bottomMonths = mutableListOf<YearMonth>()
+
+        // Separate months into top and bottom lists
+        val allMonths = (1..12).map { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            currentMonth.plusMonths(it.toLong())
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+
+        }
+        allMonths.forEachIndexed { index, month ->
+            if (index % 2 == 0) {
+                topMonths.add(month)
+//            } else {
+//                bottomMonths.add(month)
+            }
+        }
+
+        addMonthView(calendarLayout, currentMonth)
+        // addMonthView(calendarLayout, currentMonth.plusMonths(1))
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("SetTextI18n")
+    private fun addMonthView(parentLayout: LinearLayout, yearMonth: YearMonth) {
+        // Adds a view for the specified month to the parent layout.
+        val monthView = layoutInflater.inflate(R.layout.calendar_month, parentLayout, false)
+
+        val monthTitle = monthView.findViewById<TextView>(R.id.month_title)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            monthTitle.text = "${yearMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }}"
+            //${yearMonth.year}"
+        }
+
+        val daysLayout = monthView.findViewById<LinearLayout>(R.id.days_layout)
+        daysLayout.removeAllViews()
+        listOf("S", "M", "T", "W", "T", "F", "S").forEach { day ->
+            val dayView = layoutInflater.inflate(R.layout.calendar_day_name, daysLayout, false) as TextView
+            dayView.text = day
+            daysLayout.addView(dayView)
+        }
+
+        val weeksLayout = monthView.findViewById<LinearLayout>(R.id.weeks_layout)
+        weeksLayout.removeAllViews()
+        val weeks = generateCalendarWeeks(yearMonth)
+        weeks.forEach { week ->
+            val weekLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+            week.forEach { date ->
+                val dateView = layoutInflater.inflate(R.layout.calendar_day, weekLayout, false) as TextView
+                if (date != null) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        // dateView.text = date.dayOfMonth.toString()
+                        dateView.text = date.dayOfMonth.toString().padStart(2, '0')
+
+                    }
+                    dateView.setOnClickListener {
+                        selectedDate = date
+                        updateCalendar()
+                        // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
+                    }
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        when (date) {
+//                            LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
+//                          //  selectedDate -> dateView.setBackgroundResource(R.drawable.selected_bg)
+//
+//                            else -> dateView.setBackgroundResource(android.R.color.transparent)
+//                        }
+
+                        when (date) {
+                            //LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
+                            selectedDate -> dateView.setBackgroundResource(R.drawable.current_bg_date)
+                            else -> dateView.setBackgroundResource(R.drawable.date_bg)
+                        }
+                    }
+                    dateView.setTextColor(
+                        if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                date.month == yearMonth.month
+                            } else {
+                                TODO("VERSION.SDK_INT < O")
+                            }
+                        ) Color.BLACK
+                        else Color.GRAY
+                    )
+                }
+                weekLayout.addView(dateView)
+            }
+            weeksLayout.addView(weekLayout)
+        }
+        // Display llPreviousAndNextMonth only for the current month
+        if (yearMonth == currentMonth) {
+            val previous = monthView.findViewById<ImageButton>(R.id.button_previous)
+            previous.setOnClickListener {
+                currentMonth = currentMonth.minusMonths(1)
+                updateCalendar()
+            }
+            val next = monthView.findViewById<ImageButton>(R.id.button_next)
+            next.setOnClickListener {
+                currentMonth = currentMonth.plusMonths(1)
+                updateCalendar()
+            }
+            parentLayout.addView(monthView)
+        } else {
+            // If not the current month, hide the previous and next buttons
+//            val llPreviousAndNextMonth = monthView.findViewById<LinearLayout>(R.id.llPreviousAndNextMonth)
+//            llPreviousAndNextMonth.visibility = View.GONE
+//            parentLayout.addView(monthView)
+        }
+    }
+
+    private fun generateCalendarWeeks(yearMonth: YearMonth): List<List<LocalDate?>> {
+        // Generates a list of weeks, each containing dates for the specified month.
+        val weeks = ArrayList<List<LocalDate?>>()
+        var week = ArrayList<LocalDate?>()
+
+        val firstDayOfMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            yearMonth.atDay(1).dayOfWeek.value % 7
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+
+        // Add null values for the days before the start of the month
+        for (i in 0 until firstDayOfMonth) {
+            week.add(null)
+        }
+
+        val daysInMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            yearMonth.lengthOfMonth()
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        for (day in 1..daysInMonth) {
+            week.add(yearMonth.atDay(day))
+            if (week.size == 7) {
+                weeks.add(week)
+                week = ArrayList()
+            }
+        }
+
+        // Add null values for the days after the end of the month
+        while (week.size < 7) {
+            week.add(null)
+        }
+        if (week.isNotEmpty()) {
+            weeks.add(week)
+        }
+        return weeks
+    }
+
+
+}
