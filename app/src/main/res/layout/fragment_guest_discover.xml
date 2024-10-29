@@ -126,4 +126,37 @@
     </RelativeLayout>
 
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_30sdp"
+        android:background="@drawable/bg_two_side_circular_black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="@dimen/_85sdp"
+        >
+
+        <ImageView
+            android:id="@+id/img_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_location_map_home"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_5sdp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Map"
+            android:textColor="@color/white"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:layout_toRightOf="@id/img_map"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/_12sdp"
+            />
+
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

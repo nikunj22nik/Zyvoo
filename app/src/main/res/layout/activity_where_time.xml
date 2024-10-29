@@ -14,6 +14,16 @@
         android:layout_marginTop="@dimen/_5sdp"
         android:background="#E5E5E5" />
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -34,6 +44,7 @@
             android:src="@drawable/ic_clear_all" />
 
         <ImageView
+            android:id="@+id/img_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
@@ -124,6 +135,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/rl_timing"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_50sdp"
         android:layout_marginHorizontal="@dimen/_12sdp"
@@ -162,6 +174,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/ll_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -178,6 +191,7 @@
             android:weightSum="3">
 
             <TextView
+                android:id="@+id/tv_date"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -188,6 +202,7 @@
                 android:textSize="@dimen/_13sdp" />
 
             <TextView
+                android:id="@+id/tv_hourly"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -199,6 +214,7 @@
                 android:textSize="@dimen/_13sdp" />
 
             <TextView
+                android:id="@+id/tv_flexible"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -220,10 +236,12 @@
             android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_13sdp"
             android:orientation="vertical"
-            android:visibility="gone"
+            android:visibility="visible"
+
             />
 
         <RelativeLayout
+            android:id="@+id/rl_circular_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -235,16 +253,16 @@
             <!-- Circle Progress View -->
             <com.yesitlab.zyvo.CircularSeekBar
                 android:id="@+id/circularSeekBar"
-                android:layout_width="@dimen/_140sdp"
-                android:layout_height="@dimen/_140sdp"
+                android:layout_width="@dimen/_160sdp"
+                android:layout_height="@dimen/_160sdp"
                 android:layout_centerInParent="true">
 
             </com.yesitlab.zyvo.CircularSeekBar>
 
 
             <androidx.cardview.widget.CardView
-                android:layout_width="110dp"
-                android:layout_height="110dp"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
                 android:layout_centerInParent="true"
                 android:backgroundTint="@color/white"
                 android:elevation="70dp"
@@ -279,9 +297,11 @@
         </RelativeLayout>
 
         <LinearLayout
+            android:id="@+id/layout_flexible"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
+            android:visibility="gone"
             >
         <LinearLayout
             android:id="@+id/calendar_layout_1"
@@ -309,7 +329,7 @@
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 >
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_35sdp"
                     android:layout_marginTop="@dimen/_13sdp"
@@ -317,24 +337,84 @@
                     android:background="@drawable/ic_four_side_circular"
                     >
                     <ImageView
+                        android:id="@+id/ic_clock_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_clock"
+                        android:src="@drawable/ic_clock_black_space"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_7sdp"
+                        android:layout_centerVertical="true"
                         />
-                </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="01:00 PM"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold"
+                        android:layout_toRightOf="@id/ic_clock_1"
+                        android:layout_centerVertical="true"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_drop_down"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        />
+
+                </RelativeLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.1"
                     />
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="@dimen/_35sdp"
                     android:layout_marginTop="@dimen/_13sdp"
                     android:layout_weight="0.95"
                     android:background="@drawable/ic_four_side_circular"
                     >
-                </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/ic_clock_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_clock_black_space"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_7sdp"
+                        android:layout_centerVertical="true"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="03:00 PM"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold"
+                        android:layout_toRightOf="@id/ic_clock_2"
+                        android:layout_centerVertical="true"
+                        />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_drop_down"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        />
+
+
+                </RelativeLayout>
 
 
             </LinearLayout>
@@ -343,4 +423,64 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginHorizontal="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_13sdp"
+        android:background="@drawable/bg_four_side_grey_corner">
+
+        <RelativeLayout
+            android:id="@+id/rl_activity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginVertical="@dimen/_7sdp"
+            android:visibility="visible">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:fontFamily="@font/poppins"
+                android:text="Activity"
+                android:textSize="@dimen/_15sdp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="@dimen/_12sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_drop_down"
+                android:textColor="@color/grey"
+                android:textSize="@dimen/_14sdp" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_activity_recy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:background="@drawable/bg_four_side_grey_corner"
+                android:visibility="gone"
+                >
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@id/recycler_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_13sdp"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

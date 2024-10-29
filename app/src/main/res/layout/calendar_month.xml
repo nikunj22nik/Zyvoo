@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="#4AEAB1"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:paddingStart="@dimen/_7sdp"
+            android:paddingStart="@dimen/_20sdp"
             android:paddingEnd="@dimen/_4sdp"
             android:src="@drawable/previous_arrow"
             tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -48,7 +48,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:paddingStart="@dimen/_3sdp"
             android:backgroundTint="#4AEAB1"
-            android:paddingEnd="@dimen/_7sdp"
+            android:paddingEnd="@dimen/_20sdp"
             android:layout_alignParentEnd="true"
             android:src="@drawable/next_arrow"
             tools:ignore="ContentDescription,SpeakableTextPresentCheck,TouchTargetSizeCheck" />

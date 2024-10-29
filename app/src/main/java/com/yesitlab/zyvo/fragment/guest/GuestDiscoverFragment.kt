@@ -70,7 +70,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener {
         }
 
         binding.textWhere.setOnClickListener(this)
-
+        binding.textTime.setOnClickListener(this)
+        binding.textActivity.setOnClickListener(this)
 
         loggedScreenViewModel.imageList.observe(viewLifecycleOwner, Observer {
             images -> adapter.updateData(images)
