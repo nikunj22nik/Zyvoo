@@ -72,10 +72,7 @@ class LoggedScreenAdapter(
             viewPagerAdapter.updateItem(images)
         })
 
-
-
-
-
+        
         // Tab layout mediator (no need to re-bind it every time)
         TabLayoutMediator(holder.binding.tabLayoutForIndicator, holder.binding.viewpager2) { _, _ -> }.attach()
 
@@ -85,8 +82,6 @@ class LoggedScreenAdapter(
         holder.binding.textTotal.text = currentItem.textTotal
         holder.binding.textMiles.text = currentItem.textMiles
         holder.binding.textPricePerHours.text = currentItem.textPricePerHours
-
-
 
 
     }

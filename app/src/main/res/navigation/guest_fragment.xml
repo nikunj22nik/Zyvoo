@@ -8,5 +8,9 @@
         android:name="com.yesitlab.zyvo.fragment.guest.GuestDiscoverFragment"
         android:label="guestdiscoverfragement"
         />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.ProfileFragment"
+        android:label="ProfileFragment" />
 
 </navigation>
