@@ -94,5 +94,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
     implementation("com.google.android.libraries.places:places:2.4.0")
 
+    implementation("com.google.android.gms:play-services-maps:18.1.0")
+
 
 }
