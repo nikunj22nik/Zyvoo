@@ -89,6 +89,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
+
                     android:src="@drawable/ic_chat"
                    />
                 <TextView
@@ -101,7 +102,9 @@
                     android:layout_below="@+id/image_event"
                     android:text="Inbox"
                     android:textColor="#3A4B4C"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+
+                    />
 
             </RelativeLayout>
 
