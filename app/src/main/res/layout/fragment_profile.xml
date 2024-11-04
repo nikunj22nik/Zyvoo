@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -854,26 +854,27 @@
         android:textColor="@color/black"
         android:textSize="@dimen/_13sdp"
         android:textStyle="bold"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewPassword" />
 
     <RelativeLayout
-        android:id="@+id/rlMailingAddressTitle"
-        android:layout_width="match_parent"
+        android:id="@+id/rlMailingStreetTitle"
+        android:layout_width="@dimen/_130sdp"
         android:layout_height="@dimen/_30sdp"
-        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginHorizontal="@dimen/_15sdp"
         android:background="@drawable/button_grey_line_bg"
         app:layout_constraintTop_toBottomOf="@+id/textMailingAddressTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+
         >
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:maxLines="1"
-            android:inputType="textPassword"
-            android:hint="**********"
+            android:inputType="text"
+            android:hint="Street"
             android:fontFamily="@font/poppins"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
@@ -881,13 +882,140 @@
             android:textSize="@dimen/_12ssp"
             android:layout_marginStart="@dimen/_10ssp"
             android:background="@null"
-            android:layout_marginEnd="@dimen/_25sdp"/>
+            android:layout_marginEnd="@dimen/_30sdp"/>
 
 
 
 
         <ImageView
-            android:id="@+id/imageEditMailingAddress"
+            android:id="@+id/imageEditStreetAddress"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:src="@drawable/ic_edit_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlMailingCityTitle"
+        android:layout_width="@dimen/_130sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:background="@drawable/button_grey_line_bg"
+        app:layout_constraintTop_toBottomOf="@+id/textMailingAddressTitle"
+
+app:layout_constraintStart_toEndOf="@+id/rlMailingStreetTitle"
+        >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:inputType="textPassword"
+            android:hint="City"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textStyle="normal"
+            android:textSize="@dimen/_12ssp"
+            android:layout_marginStart="@dimen/_10ssp"
+            android:background="@null"
+            android:layout_marginEnd="@dimen/_30sdp"/>
+
+
+
+
+        <ImageView
+            android:id="@+id/imageEditCityAddress"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:src="@drawable/ic_edit_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rlMailingStateTitle"
+        android:layout_width="@dimen/_130sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginVertical="@dimen/_10ssp"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:background="@drawable/button_grey_line_bg"
+        app:layout_constraintTop_toBottomOf="@+id/rlMailingStreetTitle"
+        app:layout_constraintStart_toStartOf="parent"
+
+        >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:inputType="textPassword"
+            android:hint="State"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textStyle="normal"
+            android:textSize="@dimen/_12ssp"
+            android:layout_marginStart="@dimen/_10ssp"
+            android:background="@null"
+            android:layout_marginEnd="@dimen/_30sdp"/>
+
+
+
+
+        <ImageView
+            android:id="@+id/imageEditStateAddress"
+            android:layout_width="@dimen/_28sdp"
+            android:layout_height="@dimen/_28sdp"
+
+            android:layout_margin="@dimen/_5sdp"
+            android:src="@drawable/ic_edit_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_alignParentEnd="true" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlMailingZipCodeTitle"
+        android:layout_width="@dimen/_130sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_marginVertical="@dimen/_10ssp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:background="@drawable/button_grey_line_bg"
+        app:layout_constraintTop_toBottomOf="@+id/rlMailingCityTitle"
+
+        app:layout_constraintStart_toEndOf="@+id/rlMailingStreetTitle"
+        >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:inputType="textPassword"
+            android:hint="Zip Code"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:textStyle="normal"
+            android:textSize="@dimen/_12ssp"
+            android:layout_marginStart="@dimen/_10ssp"
+            android:background="@null"
+            android:layout_marginEnd="@dimen/_30sdp"/>
+
+
+
+
+        <ImageView
+            android:id="@+id/imageEditZipAddress"
             android:layout_width="@dimen/_28sdp"
             android:layout_height="@dimen/_28sdp"
 
@@ -906,14 +1034,304 @@
         android:layout_marginHorizontal="@dimen/_23sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:background="#C4C4C4"
-        app:layout_constraintTop_toBottomOf="@+id/rlMailingAddressTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/rlMailingZipCodeTitle" />
+    
+    
+<!--   <TextView-->
+<!--       android:id="@+id/textPaymentMethod"-->
+<!--       android:layout_width="wrap_content"-->
+<!--       android:layout_height="wrap_content"-->
+<!--       android:layout_marginStart="@dimen/_15sdp"-->
+<!--       android:layout_marginTop="@dimen/_20sdp"-->
+<!--       android:fontFamily="@font/poppins"-->
+<!--       android:text="Payment Method"-->
+<!--       android:layout_marginBottom="@dimen/_40sdp"-->
+<!--       android:textColor="@color/black"-->
+<!--       android:textSize="@dimen/_13sdp"-->
+<!--       android:textStyle="bold"-->
+<!--       android:drawablePadding="@dimen/_10ssp"-->
+<!--       app:drawableEndCompat="@drawable/ic_dropdown_close"-->
+<!--       app:layout_constraintStart_toStartOf="parent"-->
+<!--       app:layout_constraintTop_toBottomOf="@+id/viewMailingAddress"/>-->
 
 
 
+    <TextView
+        android:id="@+id/textPaymentMethod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Payment Method"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13sdp"
+        android:textStyle="bold"
+        android:drawablePadding="@dimen/_7ssp"
+        app:drawableEndCompat="@drawable/ic_dropdown_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewMailingAddress"/>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewPaymentCardList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_four_side_grey_corner_white"
+        app:layout_constraintTop_toBottomOf="@+id/textPaymentMethod"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical"
+        app:spanCount="1"
+        app:layout_constraintHeight_max="@dimen/_140sdp"
+android:visibility="gone"
+        tools:itemCount="3"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/layout_payment_cardlist"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginVertical="@dimen/_2sdp"/>
+
+
+    <TextView
+        android:id="@+id/textAddNew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add New"
+        android:visibility="gone"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:textSize="@dimen/_11sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/black"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:drawablePadding="@dimen/_5sdp"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewPaymentCardList"
+        android:background="@drawable/button_grey_line_bg"
+        android:padding="@dimen/_7sdp"
+        app:drawableEndCompat="@drawable/ic_plus_add_button" />
+
+    <View
+        android:id="@+id/viewPayment"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginHorizontal="@dimen/_23sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="#C4C4C4"
+        app:layout_constraintTop_toBottomOf="@+id/textAddNew" />
+
+
+    <TextView
+        android:id="@+id/textUsefulPages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Useful Pages"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13sdp"
+        android:textStyle="bold"
+
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewPayment"/>
+
+
+    <TextView
+        android:id="@+id/textNotifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Notifications"
+        android:gravity="center_vertical"
+        android:drawableStart="@drawable/ic_notification_icon_profile"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="normal"
+        android:drawablePadding="@dimen/_7ssp"
+        app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textUsefulPages"/>
+
+
+    <View
+        android:id="@+id/viewNotifications"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginHorizontal="@dimen/_23sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="#C4C4C4"
+        app:layout_constraintTop_toBottomOf="@+id/textNotifications" />
+
+
+
+
+    <TextView
+        android:id="@+id/textSupport"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Support"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13sdp"
+        android:textStyle="bold"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewNotifications"/>
+
+    <TextView
+        android:id="@+id/textVisitHelpCenter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Visit the Help Center"
+        android:gravity="center_vertical"
+        android:drawableStart="@drawable/ic_help_center"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="normal"
+        android:drawablePadding="@dimen/_7ssp"
+        app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSupport"/>
+
+
+    <TextView
+        android:id="@+id/textGiveFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Give us feedback"
+        android:gravity="center_vertical"
+        android:drawableStart="@drawable/ic_feedback_icon_profile"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="normal"
+        android:drawablePadding="@dimen/_7ssp"
+        app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textVisitHelpCenter"/>
+
+    <View
+        android:id="@+id/viewFeedback"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginHorizontal="@dimen/_23sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="#C4C4C4"
+        app:layout_constraintTop_toBottomOf="@+id/textGiveFeedback" />
+
+
+    <TextView
+        android:id="@+id/textLegal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Legal"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13sdp"
+        android:textStyle="bold"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewFeedback"/>
+
+    <TextView
+        android:id="@+id/textTermServices"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Terms of services"
+        android:gravity="center_vertical"
+        android:drawableStart="@drawable/ic_notebook_icon"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="normal"
+        android:drawablePadding="@dimen/_7ssp"
+        app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textLegal"/>
+
+
+    <TextView
+        android:id="@+id/textPrivacyPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Privacy policy"
+        android:gravity="center_vertical"
+        android:drawableStart="@drawable/ic_notebook_icon"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="normal"
+        android:drawablePadding="@dimen/_7ssp"
+        app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textTermServices"/>
+
+    <View
+        android:id="@+id/viewPrivacy"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginHorizontal="@dimen/_23sdp"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:background="#C4C4C4"
+        app:layout_constraintTop_toBottomOf="@+id/textPrivacyPolicy" />
+
+
+
+    <TextView
+        android:id="@+id/textLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="@dimen/_20sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Logout"
+        android:drawablePadding="@dimen/_10ssp"
+        android:drawableStart="@drawable/ic_logout_icon"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="normal"
+app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/viewPrivacy"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Switch to Host"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textLogout"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:background="@drawable/button_bg"
+        android:paddingHorizontal="@dimen/_95sdp"
+        android:paddingVertical="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_40sdp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.core.widget.NestedScrollView>
+</ScrollView>

@@ -111,14 +111,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-
+        android:orientation="vertical"
         app:spanCount="2"
         tools:itemCount="20"
         tools:listitem="@layout/layout_logged_recyclerview"
         app:layout_constraintTop_toBottomOf="@+id/clSearch"
         app:layout_constraintBottom_toTopOf="@+id/llBottomNavigation"
 
-        android:orientation="vertical"/>
+       />
 
 
 

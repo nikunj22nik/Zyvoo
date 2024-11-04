@@ -11,6 +11,7 @@
         android:id="@+id/fragmentContainerView_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="70dp"
         app:layout_constraintBottom_toTopOf="@id/lay1"
         app:navGraph="@navigation/guest_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -47,7 +48,7 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/image_home"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"
@@ -55,7 +56,7 @@
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_discover_1"
-                />
+                     />
 
                 <TextView
                     android:id="@+id/tv_home"
@@ -67,6 +68,7 @@
                     android:textSize="12sp"
                     android:gravity="center"
                     android:text="Discover"
+
                     android:fontFamily="@font/poppins"
                     android:textColor="#3A4B4C" />
 
@@ -80,7 +82,7 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/image_event"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"
@@ -111,7 +113,7 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageSearch"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"
@@ -143,7 +145,7 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/image_settings"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"
@@ -175,7 +177,7 @@
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/image_profile"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"

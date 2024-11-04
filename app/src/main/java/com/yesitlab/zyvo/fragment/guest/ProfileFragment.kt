@@ -20,6 +20,8 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -33,6 +35,7 @@ import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.OnLocalListener
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.GuesMain
+import com.yesitlab.zyvo.adapter.AdapterAddPaymentCard
 import com.yesitlab.zyvo.adapter.AddHobbiesAdapter
 import com.yesitlab.zyvo.adapter.AddLanguageSpeakAdapter
 import com.yesitlab.zyvo.adapter.AddLocationAdapter
@@ -43,11 +46,15 @@ import com.yesitlab.zyvo.databinding.FragmentProfileBinding
 import com.yesitlab.zyvo.model.AddHobbiesModel
 import com.yesitlab.zyvo.model.AddLanguageModel
 import com.yesitlab.zyvo.model.AddLocationModel
+import com.yesitlab.zyvo.model.AddPaymentCardModel
 import com.yesitlab.zyvo.model.AddPetsModel
 import com.yesitlab.zyvo.model.AddWorkModel
 import com.yesitlab.zyvo.utils.CommonAuthWorkUtils
+import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
+import com.yesitlab.zyvo.viewmodel.PaymentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
-
+@AndroidEntryPoint
 class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 lateinit var binding : FragmentProfileBinding
     private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
@@ -56,6 +63,11 @@ lateinit var binding : FragmentProfileBinding
     private lateinit var addLanguageSpeakAdapter: AddLanguageSpeakAdapter
     private lateinit var addHobbiesAdapter: AddHobbiesAdapter
     private lateinit var addPetsAdapter: AddPetsAdapter
+    private lateinit var addPaymentCardAdapter : AdapterAddPaymentCard
+    private val paymentCardViewHolder: PaymentViewModel by lazy {
+        ViewModelProvider(this)[PaymentViewModel::class.java]
+    }
+    private  var paymentList : MutableList<AddPaymentCardModel> = mutableListOf()
     private var petsList: MutableList<AddPetsModel> = mutableListOf()
     private var hobbiesList: MutableList<AddHobbiesModel> = mutableListOf()
     private var locationList: MutableList<AddLocationModel> = mutableListOf()
@@ -67,6 +79,7 @@ lateinit var binding : FragmentProfileBinding
     private var etSearch: TextView? = null
     private  var bottomSheetDialog : BottomSheetDialog? = null
     private var imageStatus = ""
+    private var isDropdownOpen = false
 
 
     // For handling the result of the Autocomplete Activity
@@ -131,11 +144,20 @@ lateinit var binding : FragmentProfileBinding
         val newPets = AddPetsModel("Unknown Location")
 
         petsList.add(newPets)
+
+
+        addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf())
+        binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
+        paymentCardViewHolder.paymentCardList.observe(viewLifecycleOwner, Observer {
+                payment -> addPaymentCardAdapter.updateItem(payment)
+        })
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        paymentOpenCloseDropDown()
+
         binding.imageInfoIcon.setOnClickListener(this)
         binding.clHead.setOnClickListener(this)
         binding.imageEditPicture.setOnClickListener(this)
@@ -270,6 +292,36 @@ lateinit var binding : FragmentProfileBinding
         }
 
 
+
+    }
+    private fun paymentOpenCloseDropDown(){
+
+        // Set initial drawable
+        binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_dropdown_close, 0)
+
+        binding.textPaymentMethod.setOnClickListener {
+            // Toggle the state
+            isDropdownOpen = !isDropdownOpen
+
+            // Change the drawable based on the state
+            val drawableRes = if (isDropdownOpen) {
+                R.drawable.ic_dropdown_open // Replace with your open icon resource
+
+            } else {
+                R.drawable.ic_dropdown_close // Replace with your close icon resource
+            }
+
+            if (isDropdownOpen){
+
+                binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
+                binding.textAddNew.visibility = View.VISIBLE
+            }else if(!isDropdownOpen){
+                binding.recyclerViewPaymentCardList.visibility = View.GONE
+                binding.textAddNew.visibility = View.GONE
+
+            }
+            binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
+        }
     }
 
     override fun itemClick(obj: Int, text: String) {
@@ -412,5 +464,7 @@ lateinit var binding : FragmentProfileBinding
                 pickImageLauncher.launch(intent)
             }
     }
+
+
 
 }

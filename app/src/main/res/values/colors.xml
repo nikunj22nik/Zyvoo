@@ -23,4 +23,11 @@
     <color name="colorButton">#428abf</color>
     <color name="colorButtonPressed">#37729e</color>
 
+
+
+<!--    navigation bar colors-->
+
+    <color name="clickedColor">#3A4B4C</color>
+    <color name="unClickedColor">#803A4B4C</color>
+
 </resources>
