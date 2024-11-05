@@ -59,7 +59,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-//sdp and ssp
+
+    //sdp and ssp
     implementation(libs.ssp.android)
     implementation(libs.sdp.android)
 
@@ -73,28 +74,30 @@ dependencies {
 
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("com.hbb20:ccp:2.6.0")
-
-    //Retrofit Lib.
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation ("com.squareup.okhttp3:okhttp:5.0.0-alpha.10")
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.10")
     implementation ("com.squareup.okhttp3:okhttp:4.9.1")
 
+
     //OTP Dependency
     implementation ("com.github.aabhasr1:OtpView:v1.1.2")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
     //Image Picker
+
     implementation(libs.imagepicker)
     implementation(libs.glide)
     api("com.github.PhilJay:MPAndroidChart:v3.1.0")
-
     implementation("com.github.stfalcon-studio:StfalconPriceRangeBar-android:v1.5")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
     implementation("com.google.android.libraries.places:places:2.4.0")
-
     implementation("com.google.android.gms:play-services-maps:18.1.0")
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
 
+    implementation("com.google.android.material:material:1.11.0") // Check for the latest version
+    implementation("de.hdodenhof:circleimageview:3.1.0")
+    implementation("com.github.colourmoon:readmore-textview:v1.0.2")
 
 }

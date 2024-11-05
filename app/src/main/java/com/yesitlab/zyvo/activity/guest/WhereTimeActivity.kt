@@ -45,6 +45,7 @@ class WhereTimeActivity : AppCompatActivity() {
     private lateinit var editText: EditText
     private lateinit var adapterActivitivity : AdapterActivityText
     private lateinit var placesClient: PlacesClient
+    private lateinit  var actList : MutableList<String>
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         YearMonth.now()
     } else {
@@ -62,7 +63,7 @@ class WhereTimeActivity : AppCompatActivity() {
         setContentView(binding.root)
         Places.initialize(applicationContext, "AIzaSyC9NuN_f-wESHh3kihTvpbvdrmKlTQurxw")
         placesClient = Places.createClient(applicationContext)
-
+        actList = mutableListOf()
         adapterIntialization()
 
 
@@ -81,11 +82,11 @@ class WhereTimeActivity : AppCompatActivity() {
    // Optional: Handle when the EditText loses focus
    //        editText.setOnFocusChangeListener { _, hasFocus ->
    //            if (!hasFocus) {
-   //                handleEditTextInput()
-   //            }
+    //                handleEditTextInput()
+    //            }
+    //
    //
-   //
-  //        }
+   //        }
 
         binding.imageBack.setOnClickListener {
             onBackPressed()
@@ -114,10 +115,10 @@ class WhereTimeActivity : AppCompatActivity() {
         updateCalendar1()
         selectingClickListener()
         bydefaultSelect()
-   }
+
+    }
 
     private fun adapterIntialization() {
-
         adapterActivitivity= AdapterActivityText(this, mutableListOf())
         adapterLocationSearch = AdapterLocationSearch(this, mutableListOf())
         binding.recyclerLocation.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
@@ -127,6 +128,13 @@ class WhereTimeActivity : AppCompatActivity() {
         displayTextView = binding.rlWhere
         displayEditTextView = binding.rlTypingView
         editText = binding.etSearchLocation
+
+        adapterActivitivity.setOnItemClickListener(object : AdapterActivityText.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                binding.tvActivityName.setText(actList.get(position))
+                binding.recyclerActivity.visibility = View.GONE
+            }
+        })
 
     }
 
@@ -138,7 +146,6 @@ class WhereTimeActivity : AppCompatActivity() {
 
 
     private fun selectingClickListener(){
-
         binding.tvDate.setOnClickListener {
 
             binding.tvDate.setBackgroundResource(R.drawable.bg_inner_manage_place)
@@ -150,7 +157,6 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.rlCircularProgress.visibility = View.GONE
 
         }
-
         binding.tvHourly.setOnClickListener {
 
             binding.tvDate.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -161,7 +167,6 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.layoutFlexible.visibility = View.GONE
             binding.rlCircularProgress.visibility = View.VISIBLE
         }
-
         binding.tvFlexible.setOnClickListener {
 
             binding.tvDate.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -172,10 +177,8 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.layoutFlexible.visibility = View.VISIBLE
             binding.rlCircularProgress.visibility = View.GONE
         }
-
         binding.rlActivity.setOnClickListener {
             adapterActivitivity.updateAdapter(getActivityData())
-
             if(binding.rlActivityRecy.visibility == View.VISIBLE){
                 binding.rlActivityRecy.visibility = View.GONE
             }
@@ -183,7 +186,6 @@ class WhereTimeActivity : AppCompatActivity() {
                 binding.rlActivityRecy.visibility = View.VISIBLE
             }
         }
-
     }
 
     private fun showEditText() {
@@ -212,7 +214,6 @@ class WhereTimeActivity : AppCompatActivity() {
     private fun callingWhereSeach() {
         binding.etSearchLocation.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
             }
 
             override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -231,9 +232,7 @@ class WhereTimeActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-
             }
-
         })
     }
 
@@ -440,8 +439,7 @@ class WhereTimeActivity : AppCompatActivity() {
 
 
     private fun getActivityData() :MutableList<String>{
-        var actList = mutableListOf<String>()
-
+        actList = mutableListOf<String>()
         actList.add("Stays")
         actList.add("Event Space")
         actList.add("Photo Shoot")
