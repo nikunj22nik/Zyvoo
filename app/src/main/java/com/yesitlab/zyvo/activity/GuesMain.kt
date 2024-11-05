@@ -25,10 +25,10 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
         binding = ActivityGuesMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-        binding.navigationHome.setOnClickListener(this)
-        binding.navigationEvent.setOnClickListener(this)
-        binding.navigationSearch.setOnClickListener(this)
-        binding.navigationSettings.setOnClickListener(this)
+        binding.navigationDiscover.setOnClickListener(this)
+        binding.navigationInbox.setOnClickListener(this)
+        binding.navigationBookings.setOnClickListener(this)
+        binding.navigationWishlist.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -36,93 +36,91 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
             insets
         }
 
-
-
-
-
-
     }
 
-    private fun eventColor(){
-        binding.imageHome.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageEvent.setColorFilter(R.color.clickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSearch.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSettings.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageProfile.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
+    private fun inboxColor(){
+
+        binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
+        binding.imageInbox.setImageResource(R.drawable.ic_chat_selected)
+        binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
+        binding.imageWishlist.setImageResource(R.drawable.ic_wishlist)
+        binding.imageProfile.setImageResource(R.drawable.ic_profile)
+
+
 
         //text Color
-        binding.tvHome.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvEvent.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
-        binding.tvSearch.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvSettings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvDiscover.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
+        binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
 
     }
 
 
-    private fun settingsColor(){
-        binding.imageHome.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageEvent.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSearch.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSettings.setColorFilter(R.color.clickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageProfile.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
+    private fun wishlistColor(){
 
+        binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
+        binding.imageInbox.setImageResource(R.drawable.ic_chat)
+        binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
+        binding.imageWishlist.setImageResource(R.drawable.ic_wishlist_selected)
+        binding.imageProfile.setImageResource(R.drawable.ic_profile)
         //text Color
-        binding.tvHome.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvEvent.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvSearch.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvSettings.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
+        binding.tvDiscover.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
 
     }
 
     private fun profileColor(){
-        binding.imageHome.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageEvent.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSearch.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSettings.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageProfile.setColorFilter(R.color.clickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
 
+        binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
+        binding.imageInbox.setImageResource(R.drawable.ic_chat)
+        binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
+        binding.imageWishlist.setImageResource(R.drawable.ic_wishlist)
+        binding.imageProfile.setImageResource(R.drawable.ic_profile_selected)
         //text Color
-        binding.tvHome.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvEvent.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvSearch.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvSettings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvDiscover.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
 
 
     }
-    private fun searchResume(){
-        binding.imageHome.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageEvent.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSearch.setColorFilter(R.color.clickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSettings.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageProfile.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
+    private fun bookingResume(){
 
+        binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
+        binding.imageInbox.setImageResource(R.drawable.ic_chat)
+        binding.imageBooking.setImageResource(R.drawable.ic_booking_1_selected)
+        binding.imageWishlist.setImageResource(R.drawable.ic_wishlist)
+        binding.imageProfile.setImageResource(R.drawable.ic_profile)
 
         //text Color
-        binding.tvHome.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvEvent.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvSearch.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
-        binding.tvSettings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvDiscover.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
+        binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
 
     }
     private fun discoverResume(){
         //image color
 
-        binding.imageHome.setColorFilter(R.color.clickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageEvent.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSearch.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageSettings.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
-        binding.imageProfile.setColorFilter(R.color.unClickedColor, PorterDuff.Mode.SRC_IN) // Apply the tint
 
+        binding.imageDiscover.setImageResource(R.drawable.ic_discover_1)
+        binding.imageInbox.setImageResource(R.drawable.ic_chat)
+        binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
+        binding.imageWishlist.setImageResource(R.drawable.ic_wishlist)
+        binding.imageProfile.setImageResource(R.drawable.ic_profile)
 
         //text Color
-        binding.tvHome.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
-        binding.tvEvent.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvSearch.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-        binding.tvSettings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvDiscover.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
+        binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
+        binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
 
     }
@@ -131,23 +129,23 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
 
     override fun onClick(p0: View?) {
         when(p0?.id){
-            R.id.navigation_home->{
+            R.id.navigationDiscover->{
                 discoverResume()
-               // findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.guest_fragment)
             }
-            R.id.navigation_event->{
-                eventColor()
+            R.id.navigationInbox->{
+                inboxColor()
               //  findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
             }
-            R.id.navigation_search->{
-                searchResume()
+            R.id.navigationBookings->{
+                bookingResume()
               //  findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
             }
-            R.id.navigation_settings->{
-                settingsColor()
+            R.id.navigationWishlist->{
+                wishlistColor()
                // findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
             }
-            R.id.ic_profile->{
+            R.id.icProfile->{
                 profileColor()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
             }

@@ -41,7 +41,7 @@
 
             <RelativeLayout
 
-                android:id="@+id/navigation_home"
+                android:id="@+id/navigationDiscover"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -49,7 +49,7 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/image_home"
+                    android:id="@+id/imageDiscover"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentTop="true"
@@ -59,10 +59,10 @@
                      />
 
                 <TextView
-                    android:id="@+id/tv_home"
+                    android:id="@+id/tvDiscover"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/image_home"
+                    android:layout_below="@+id/imageDiscover"
                     android:layout_marginTop="1dp"
                     android:layout_centerHorizontal="true"
                     android:textSize="12sp"
@@ -75,7 +75,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/navigation_event"
+                android:id="@+id/navigationInbox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -83,7 +83,7 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/image_event"
+                    android:id="@+id/imageInbox"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentTop="true"
@@ -93,13 +93,13 @@
                     android:src="@drawable/ic_chat"
                    />
                 <TextView
-                    android:id="@+id/tv_event"
+                    android:id="@+id/tvInbox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="1dp"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
-                    android:layout_below="@+id/image_event"
+                    android:layout_below="@+id/imageInbox"
                     android:text="Inbox"
                     android:textColor="#3A4B4C"
                     android:textSize="12sp"
@@ -109,7 +109,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/navigation_search"
+                android:id="@+id/navigationBookings"
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -117,7 +117,7 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageSearch"
+                    android:id="@+id/imageBooking"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentTop="true"
@@ -127,10 +127,10 @@
                     />
 
                 <TextView
-                    android:id="@+id/tv_search"
+                    android:id="@+id/tvBookings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageSearch"
+                    android:layout_below="@+id/imageBooking"
                     android:layout_marginTop="1dp"
                     android:gravity="center"
                     android:textSize="12sp"
@@ -141,7 +141,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/navigation_settings"
+                android:id="@+id/navigationWishlist"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -149,7 +149,7 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/image_settings"
+                    android:id="@+id/imageWishlist"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentTop="true"
@@ -159,10 +159,10 @@
                      />
 
                 <TextView
-                    android:id="@+id/tv_settings"
+                    android:id="@+id/tvWishlist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/image_settings"
+                    android:layout_below="@+id/imageWishlist"
                     android:layout_marginTop="1dp"
                     android:textSize="12sp"
                     android:gravity="center"
@@ -173,7 +173,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/ic_profile"
+                android:id="@+id/icProfile"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -181,7 +181,7 @@
                 android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/image_profile"
+                    android:id="@+id/imageProfile"
                     android:layout_width="@dimen/_26sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentTop="true"
@@ -191,10 +191,10 @@
                     />
 
                 <TextView
-                    android:id="@+id/tv_profile"
+                    android:id="@+id/tvProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/image_profile"
+                    android:layout_below="@+id/imageProfile"
                     android:layout_marginTop="1dp"
                     android:textSize="12sp"
                     android:gravity="center"
