@@ -12,5 +12,9 @@
         android:id="@+id/profileFragment"
         android:name="com.yesitlab.zyvo.fragment.guest.ProfileFragment"
         android:label="ProfileFragment" />
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.yesitlab.zyvo.fragment.both.NotificationFragment"
+        android:label="NotificationFragment" />
 
 </navigation>

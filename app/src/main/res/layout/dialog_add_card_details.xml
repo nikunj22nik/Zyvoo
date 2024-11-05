@@ -13,14 +13,242 @@
         android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10ssp"
         android:fontFamily="@font/poppins"
-        android:text="Add Card Details"
-        android:textStyle="bold"
+        android:text="Add Card"
+        android:layout_marginTop="@dimen/_20ssp"
         android:textColor="@color/black"
         android:textSize="@dimen/_13ssp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/viewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginHorizontal="@dimen/_10ssp"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:background="#24000000"
+        app:layout_constraintTop_toBottomOf="@+id/textTitle" />
+
+
+    <EditText
+        android:id="@+id/etCardHolderName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10ssp"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:background="@drawable/button_grey_line_bg"
+        android:fontFamily="@font/poppins"
+        android:hint="Name"
+        android:maxLines="1"
+        android:paddingHorizontal="@dimen/_10ssp"
+        android:paddingVertical="@dimen/_4sdp"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintTop_toBottomOf="@id/viewTitle" />
+
+
+    <EditText
+        android:id="@+id/etCardNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10ssp"
+        android:layout_marginTop="@dimen/_10ssp"
+android:autofillHints="creditCardNumber"
+        android:background="@drawable/button_grey_line_bg"
+        android:fontFamily="@font/poppins"
+        android:hint="Card Number"
+        android:inputType="number"
+        android:maxLines="1"
+        android:paddingHorizontal="@dimen/_10ssp"
+        android:paddingVertical="@dimen/_4sdp"
+        android:textColor="#000"
+        android:textColorHint="#000"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintTop_toBottomOf="@id/etCardHolderName" />
+
+    <TextView
+        android:id="@+id/textMonth"
+        android:layout_width="@dimen/_105sdp"
+        android:layout_height="wrap_content"
+        android:text="Month"
+        android:maxLines="1"
+        android:layout_marginTop="@dimen/_10ssp"
+       android:paddingHorizontal="@dimen/_7sdp"
+        app:drawableEndCompat="@drawable/ic_dropdown_close"
+        android:fontFamily="@font/poppins"
+        android:textColor="#000"
+        android:textSize="@dimen/_11ssp"
+        android:background="@drawable/button_grey_line_bg"
+        app:layout_constraintTop_toBottomOf="@id/etCardNumber"
+        android:layout_marginStart="@dimen/_11ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingVertical="@dimen/_4sdp"/>
+
+
+    <TextView
+        android:id="@+id/textYear"
+        android:layout_width="@dimen/_105sdp"
+        android:layout_height="wrap_content"
+        android:text="Year"
+        android:maxLines="1"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:paddingHorizontal="@dimen/_7sdp"
+        app:drawableEndCompat="@drawable/ic_dropdown_close"
+        android:fontFamily="@font/poppins"
+        android:textColor="#000"
+        android:textSize="@dimen/_11ssp"
+        android:background="@drawable/button_grey_line_bg"
+        app:layout_constraintTop_toBottomOf="@id/etCardNumber"
+        android:layout_marginStart="@dimen/_11ssp"
+
+        app:layout_constraintEnd_toEndOf="@+id/etCardNumber"
+        android:paddingVertical="@dimen/_4sdp"/>
+
+    <TextView
+        android:id="@+id/textAddBillingAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Billing Address"
+        app:layout_constraintTop_toBottomOf="@+id/textMonth"
+        android:layout_marginStart="@dimen/_11ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:fontFamily="@font/poppins"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        android:layout_marginTop="@dimen/_5sdp"
+        />
+
+
+    <EditText
+        android:id="@+id/etStreet"
+        android:layout_width="@dimen/_105sdp"
+        android:layout_height="wrap_content"
+        android:hint="Street"
+        android:maxLines="1"
+        android:autofillHints="name"
+        android:textColorHint="@color/black"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:paddingHorizontal="@dimen/_7sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="#000"
+        android:textSize="@dimen/_11ssp"
+        android:background="@drawable/button_grey_line_bg"
+        app:layout_constraintTop_toBottomOf="@id/textAddBillingAddress"
+        android:layout_marginStart="@dimen/_11ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingVertical="@dimen/_4sdp"/>
+
+
+    <EditText
+        android:id="@+id/etCity"
+        android:layout_width="@dimen/_105sdp"
+        android:layout_height="wrap_content"
+        android:hint="City"
+        android:maxLines="1"
+        android:autofillHints="name"
+        android:textColorHint="@color/black"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:paddingHorizontal="@dimen/_7sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="#000"
+        android:textSize="@dimen/_11ssp"
+        android:background="@drawable/button_grey_line_bg"
+        app:layout_constraintTop_toBottomOf="@id/textAddBillingAddress"
+        android:layout_marginStart="@dimen/_11ssp"
+        app:layout_constraintEnd_toEndOf="@+id/etCardNumber"
+        android:paddingVertical="@dimen/_4sdp"/>
+
+
+
+    <EditText
+        android:id="@+id/etState"
+        android:layout_width="@dimen/_105sdp"
+        android:layout_height="wrap_content"
+        android:hint="State"
+        android:maxLines="1"
+        android:autofillHints="name"
+        android:textColorHint="@color/black"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:paddingHorizontal="@dimen/_7sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="#000"
+        android:textSize="@dimen/_11ssp"
+        android:background="@drawable/button_grey_line_bg"
+        app:layout_constraintTop_toBottomOf="@id/etCity"
+        android:layout_marginStart="@dimen/_11ssp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:paddingVertical="@dimen/_4sdp"/>
+
+
+    <EditText
+        android:id="@+id/etZipCode"
+        android:layout_width="@dimen/_105sdp"
+        android:layout_height="wrap_content"
+        android:hint="Zip Code"
+        android:maxLines="1"
+        android:inputType="number"
+        android:autofillHints="name"
+        android:textColorHint="@color/black"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:paddingHorizontal="@dimen/_7sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="#000"
+        android:textSize="@dimen/_11ssp"
+        android:background="@drawable/button_grey_line_bg"
+        app:layout_constraintTop_toBottomOf="@id/etCity"
+        android:layout_marginStart="@dimen/_11ssp"
+        app:layout_constraintEnd_toEndOf="@+id/etCardNumber"
+        android:paddingVertical="@dimen/_4sdp"/>
+
+
+
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_7ssp"
+        app:buttonTint="#4AEA81"
+        app:layout_constraintTop_toBottomOf="@id/etZipCode"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Same as Mailing Address"
+        android:fontFamily="@font/poppins"
+        android:textSize="@dimen/_10ssp"/>
+
+    <TextView
+        android:id="@+id/textSubmitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/checkBox"
+        android:background="@drawable/button_bg"
+        android:fontFamily="@font/poppins_light"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/_25sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="@color/black"
+        android:paddingHorizontal="@dimen/_40sdp"
+        android:paddingVertical="@dimen/_8ssp"/>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
