@@ -72,9 +72,12 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        selectedItemTextView = binding.tvHour
 
+        selectedItemTextView = binding.tvHour
         settingDataToActivityModel()
+        binding.imgBack.setOnClickListener {
+            onBackPressed()
+        }
 
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(binding.llLocation, InputMethodManager.SHOW_IMPLICIT)
