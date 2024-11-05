@@ -31,6 +31,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.OnLocalListener
 import com.yesitlab.zyvo.R
@@ -53,21 +54,25 @@ import com.yesitlab.zyvo.utils.CommonAuthWorkUtils
 import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
 import com.yesitlab.zyvo.viewmodel.PaymentViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import org.w3c.dom.Text
 import java.util.Locale
+
 @AndroidEntryPoint
 class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
-lateinit var binding : FragmentProfileBinding
-    private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
+    lateinit var binding: FragmentProfileBinding
+    private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
     private lateinit var addWorkAdapter: AddWorkAdapter
     private lateinit var addLanguageSpeakAdapter: AddLanguageSpeakAdapter
     private lateinit var addHobbiesAdapter: AddHobbiesAdapter
     private lateinit var addPetsAdapter: AddPetsAdapter
-    private lateinit var addPaymentCardAdapter : AdapterAddPaymentCard
+    private lateinit var dateManager : DateManager
+
+    private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
     private val paymentCardViewHolder: PaymentViewModel by lazy {
         ViewModelProvider(this)[PaymentViewModel::class.java]
     }
-    private  var paymentList : MutableList<AddPaymentCardModel> = mutableListOf()
+    private var paymentList: MutableList<AddPaymentCardModel> = mutableListOf()
     private var petsList: MutableList<AddPetsModel> = mutableListOf()
     private var hobbiesList: MutableList<AddHobbiesModel> = mutableListOf()
     private var locationList: MutableList<AddLocationModel> = mutableListOf()
@@ -77,7 +82,7 @@ lateinit var binding : FragmentProfileBinding
     private lateinit var localeAdapter: LocaleAdapter
     private var locales: List<Locale> = listOf()
     private var etSearch: TextView? = null
-    private  var bottomSheetDialog : BottomSheetDialog? = null
+    private var bottomSheetDialog: BottomSheetDialog? = null
     private var imageStatus = ""
     private var isDropdownOpen = false
 
@@ -117,7 +122,7 @@ lateinit var binding : FragmentProfileBinding
         arguments?.let {
         }
         val navController = findNavController()
-        commonAuthWorkUtils = CommonAuthWorkUtils(requireContext(),navController)
+        commonAuthWorkUtils = CommonAuthWorkUtils(requireContext(), navController)
         apiKey = getString(R.string.api_key)
     }
 
@@ -125,8 +130,13 @@ lateinit var binding : FragmentProfileBinding
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        dateManager = DateManager(requireContext())
+
+
         // Inflate the layout for this fragment
-        binding = FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()),container,false)
+        binding =
+            FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
         val newLocation = AddLocationModel("Unknown Location")
 
         locationList.add(newLocation)
@@ -148,8 +158,8 @@ lateinit var binding : FragmentProfileBinding
 
         addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf())
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
-        paymentCardViewHolder.paymentCardList.observe(viewLifecycleOwner, Observer {
-                payment -> addPaymentCardAdapter.updateItem(payment)
+        paymentCardViewHolder.paymentCardList.observe(viewLifecycleOwner, Observer { payment ->
+            addPaymentCardAdapter.updateItem(payment)
         })
         return binding.root
     }
@@ -158,6 +168,8 @@ lateinit var binding : FragmentProfileBinding
         super.onViewCreated(view, savedInstanceState)
         paymentOpenCloseDropDown()
 
+        binding.textNotifications.setOnClickListener(this)
+        binding.textAddNewPaymentCard.setOnClickListener(this)
         binding.imageInfoIcon.setOnClickListener(this)
         binding.clHead.setOnClickListener(this)
         binding.imageEditPicture.setOnClickListener(this)
@@ -199,17 +211,16 @@ lateinit var binding : FragmentProfileBinding
         addLanguageSpeakAdapter.updateLanguage(languageList)
 
 
-        addHobbiesAdapter = AddHobbiesAdapter(requireContext(),hobbiesList,this)
+        addHobbiesAdapter = AddHobbiesAdapter(requireContext(), hobbiesList, this)
         binding.recyclerViewHobbies.adapter = addHobbiesAdapter
 
         addHobbiesAdapter.updateHobbies(hobbiesList)
 
 
-        addPetsAdapter = AddPetsAdapter(requireContext(),petsList,this)
+        addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this)
         binding.recyclerViewPets.adapter = addPetsAdapter
 
         addPetsAdapter.updatePets(petsList)
-
 
 
     }
@@ -272,12 +283,12 @@ lateinit var binding : FragmentProfileBinding
             show()
         }
     }
-    private fun bottomSheetUploadImage(){
+
+    private fun bottomSheetUploadImage() {
 
         bottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog1)
         bottomSheetDialog!!.setContentView(R.layout.bottom_sheet_upload_image)
         bottomSheetDialog!!.show()
-
 
 
         val textCamera = bottomSheetDialog?.findViewById<TextView>(R.id.textCamera)
@@ -292,12 +303,17 @@ lateinit var binding : FragmentProfileBinding
         }
 
 
-
     }
-    private fun paymentOpenCloseDropDown(){
+
+    private fun paymentOpenCloseDropDown() {
 
         // Set initial drawable
-        binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_dropdown_close, 0)
+        binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(
+            0,
+            0,
+            R.drawable.ic_dropdown_close,
+            0
+        )
 
         binding.textPaymentMethod.setOnClickListener {
             // Toggle the state
@@ -311,13 +327,13 @@ lateinit var binding : FragmentProfileBinding
                 R.drawable.ic_dropdown_close // Replace with your close icon resource
             }
 
-            if (isDropdownOpen){
+            if (isDropdownOpen) {
 
                 binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
-                binding.textAddNew.visibility = View.VISIBLE
-            }else if(!isDropdownOpen){
+                binding.textAddNewPaymentCard.visibility = View.VISIBLE
+            } else if (!isDropdownOpen) {
                 binding.recyclerViewPaymentCardList.visibility = View.GONE
-                binding.textAddNew.visibility = View.GONE
+                binding.textAddNewPaymentCard.visibility = View.GONE
 
             }
             binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
@@ -347,7 +363,7 @@ lateinit var binding : FragmentProfileBinding
                 }
             }
 
-            "language" ->{
+            "language" -> {
                 if (obj == languageList.size - 1) {
                     dialogSelectLanguage()
                 } else {
@@ -358,7 +374,7 @@ lateinit var binding : FragmentProfileBinding
 
             }
 
-            "Hobbies"->{
+            "Hobbies" -> {
                 if (obj == hobbiesList.size - 1) {
 
 
@@ -369,7 +385,7 @@ lateinit var binding : FragmentProfileBinding
                 }
             }
 
-            "Pets"->{
+            "Pets" -> {
                 if (obj == petsList.size - 1) {
 
 
@@ -385,45 +401,58 @@ lateinit var binding : FragmentProfileBinding
     }
 
     override fun onClick(p0: View?) {
-        when(p0?.id){
-            R.id.imageInfoIcon->{
+        when (p0?.id) {
+            R.id.textNotifications -> {
+               findNavController().navigate(R.id.notificationFragment)
+            }
+            R.id.imageInfoIcon -> {
                 binding.cvInfo.visibility = View.VISIBLE
             }
-            R.id.clHead->{
+
+            R.id.clHead -> {
                 binding.cvInfo.visibility = View.GONE
             }
-            R.id.imageEditPicture->{
+
+            R.id.imageEditPicture -> {
                 bottomSheetUploadImage()
             }
-            R.id.imageEditName->{
+
+            R.id.imageEditName -> {
                 commonAuthWorkUtils.dialogChangeName(requireContext())
             }
-            R.id.textConfirmNow->{
+
+            R.id.textConfirmNow -> {
                 commonAuthWorkUtils.dialogNumberVerification(requireContext())
                 binding.textConfirmNow.visibility = View.GONE
                 binding.textVerified.visibility = View.VISIBLE
             }
-            R.id.textConfirmNow1->{
+
+            R.id.textConfirmNow1 -> {
                 commonAuthWorkUtils.dialogEmailVerification(requireContext())
                 binding.textConfirmNow1.visibility = View.GONE
                 binding.textVerified1.visibility = View.VISIBLE
             }
 
-            R.id.textSaveButton ->{
+            R.id.textSaveButton -> {
                 var intent = Intent(requireContext(), GuesMain::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
                 requireActivity().finish()
             }
 
-            R.id.skip_now ->{
+            R.id.skip_now -> {
                 var intent = Intent(requireContext(), GuesMain::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
                 requireActivity().finish()
             }
+
+            R.id.textAddNewPaymentCard -> {
+                dialogAddCard()
+            }
         }
     }
+
     private val pickImageLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -465,6 +494,50 @@ lateinit var binding : FragmentProfileBinding
             }
     }
 
+
+    private fun dialogAddCard() {
+        val dialog = requireActivity()?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+
+            setCancelable(true)
+            setContentView(R.layout.dialog_add_card_details)
+
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            val month : TextView = findViewById(R.id.textMonth)
+            val year : TextView = findViewById(R.id.textYear)
+
+
+
+            val submitButton : TextView = findViewById(R.id.textSubmitButton)
+
+            month.setOnClickListener{
+
+                    dateManager.showMonthSelectorDialog  { selectedMonth ->
+                        month.text = selectedMonth
+                    }
+
+                year.setOnClickListener{
+
+                dateManager.showYearPickerDialog{ selectedYear->
+                    year.text = selectedYear.toString()
+
+
+                }}
+            }
+
+            submitButton.setOnClickListener{
+                dismiss()
+            }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
 
 
 }

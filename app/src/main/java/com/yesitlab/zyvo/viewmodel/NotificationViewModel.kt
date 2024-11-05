@@ -1,0 +1,40 @@
+package com.yesitlab.zyvo.viewmodel
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.yesitlab.zyvo.model.NotificationScreenModel
+import com.yesitlab.zyvo.repository.ZyvoRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+
+@HiltViewModel
+class NotificationViewModel  @Inject constructor(private val repository: ZyvoRepository):
+    ViewModel(){
+
+        private val _list  = MutableLiveData<ArrayList<NotificationScreenModel>>()
+    val  list : LiveData<ArrayList<NotificationScreenModel>> get() = _list
+
+    init {
+        load()
+    }
+
+
+    private  fun load(){
+       val listItem = arrayListOf<NotificationScreenModel>(
+           NotificationScreenModel("You got a booking","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"),
+           NotificationScreenModel("You got a booking","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"),
+           NotificationScreenModel("You got a booking","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"),
+           NotificationScreenModel("You got a booking","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"),
+           NotificationScreenModel("You got a booking","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,"),
+           NotificationScreenModel("You got a booking","Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,")
+       )
+        _list.value = listItem
+    }
+    // Method to remove item at a specific position
+    fun removeItemAt(position: Int) {
+        _list.value?.removeAt(position)
+        _list.value = _list.value // Trigger observer by setting the value again
+    }
+
+}
