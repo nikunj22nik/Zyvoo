@@ -582,6 +582,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
                 binding.tvMonthName.text = selectedMonth
             }
         }
+
         binding.rlYearView.setOnClickListener {
             dateManager.showYearPickerDialog{
                 year-> binding.tvYear.text = year.toString()

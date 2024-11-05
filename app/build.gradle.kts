@@ -15,12 +15,8 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
-
-
 
     buildTypes {
         release {
@@ -46,7 +42,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -71,7 +66,6 @@ dependencies {
 //    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
     implementation("com.google.dagger:hilt-android:2.52")
     kapt("com.google.dagger:hilt-android-compiler:2.52")
-
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     implementation("com.hbb20:ccp:2.6.0")
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
@@ -80,13 +74,11 @@ dependencies {
     implementation ("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.10")
     implementation ("com.squareup.okhttp3:okhttp:4.9.1")
 
-
     //OTP Dependency
     implementation ("com.github.aabhasr1:OtpView:v1.1.2")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
 
     //Image Picker
-
     implementation(libs.imagepicker)
     implementation(libs.glide)
     api("com.github.PhilJay:MPAndroidChart:v3.1.0")
@@ -95,9 +87,9 @@ dependencies {
     implementation("com.google.android.libraries.places:places:2.4.0")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
-
     implementation("com.google.android.material:material:1.11.0") // Check for the latest version
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.colourmoon:readmore-textview:v1.0.2")
+
 
 }

@@ -47,9 +47,7 @@ class LoggedScreenAdapter(
         val currentItem = list[position]
         holder.binding.cl1.setOnClickListener {
           //  listener.itemClick(position)
-
             mListener.onItemClick(position)
-
             Log.d("Adapter", "cl1 clicked at position $position")
         }
         // Disable user interaction on ViewPager2
@@ -71,7 +69,8 @@ class LoggedScreenAdapter(
         // Setup ViewPager and its adapter
         val viewPagerAdapter = ViewPagerAdapter(mutableListOf(),context, object : OnLogClickListener {
             override fun itemClick(items: MutableList<ViewpagerModel>) {
-                listener.itemClick(position)
+              //  listener.itemClick(position)
+              mListener.onItemClick(position)
             }
         })
 

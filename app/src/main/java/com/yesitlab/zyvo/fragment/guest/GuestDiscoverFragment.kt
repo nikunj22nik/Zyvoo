@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -66,12 +67,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
                 // Handle the result
             }
         }
-
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(),navController)
+
         adapter = LoggedScreenAdapter(requireContext(), mutableListOf(),
             this, viewLifecycleOwner, imagePopViewModel)
 
-
+        setRetainInstance(true);
 
         binding.recyclerViewBooking.adapter = adapter
 
@@ -101,7 +102,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
             val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
 
             if (mapFragment == null) {
-                childFragmentManager.beginTransaction().replace(R.id.map, SupportMapFragment.newInstance()).commit()
+                Log.d("ZYVOO_TESTING","")
+               childFragmentManager.beginTransaction().replace(R.id.map, SupportMapFragment.newInstance()).commit()
+              //  childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
+            }else{
+                childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
+
             }
         }
     }
@@ -156,14 +162,15 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
     fun adapterClickListnerTask(){
         Log.d("TESTING_ZYVOO","I AM HERE IN AdapterClickListener Task")
+
         adapter.setOnItemClickListener(object : LoggedScreenAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
                 Log.d("TESTING_ZYVOO","I AM HERE IN DEVELOPMENT")
                 var intent = Intent(requireContext(),RestaurantDetailActivity::class.java)
                 startActivity(intent)
             }
-        })
 
+        })
     }
 
     override fun itemClick(obj: Int) {}
@@ -208,6 +215,17 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
             }
         })
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+//        val nestedFragment = childFragmentManager.findFragmentById(R.id.map)
+//
+//        val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
+//        if (nestedFragment != null) {
+//            transaction.remove(nestedFragment) // Remove the nested fragment
+//            transaction.commit() // Commit the transaction to make changes
+//        }
     }
 
 }

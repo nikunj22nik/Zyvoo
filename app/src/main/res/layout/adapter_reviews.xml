@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/rl_bg_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImageView"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:src="@drawable/ic_circular_img_user"
+        android:layout_marginTop="16dp"
+        android:layout_centerVertical="true"
+        app:civ_border_color="@color/grey"
+        app:civ_border_width="@dimen/_1sdp"/>
+
+        <LinearLayout
+            android:id="@+id/llMains"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/circleImageView">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="Emily James"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@+id/ratingbar"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_alignParentStart="true"
+                    android:textStyle="bold" />
+
+<!--                <RatingBar-->
+<!--                    android:id="@+id/ratingbar"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_toStartOf="@+id/tvDate"-->
+<!--                    android:rating="4"-->
+<!--                    />-->
+
+                <RatingBar
+                    android:id="@+id/ratingbar"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:isIndicator="false"
+                    android:stepSize="1"
+                    android:progressTint="#E8963C"
+                    android:rating="4"
+                    android:layout_toStartOf="@+id/tvDate"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:secondaryProgressTint="#E8963C" />
+
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mar 09, 22"
+                    android:fontFamily="@font/poppins"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/_12sdp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/black"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Host was very helpful. thank you so much"
+                    android:textSize="@dimen/_14sdp"
+                    android:textColor="@color/black"/>
+
+
+            </LinearLayout>
+
+
+
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/v1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:background="@color/grey"
+        android:layout_below="@id/rl_bg_1"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        />
+
+
+</LinearLayout>

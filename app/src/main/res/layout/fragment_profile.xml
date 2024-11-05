@@ -1326,7 +1326,7 @@ app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/button_bg"
         android:paddingHorizontal="@dimen/_95sdp"
         android:paddingVertical="@dimen/_8sdp"
-        android:layout_marginBottom="@dimen/_40sdp"
+        android:layout_marginBottom="@dimen/_65sdp"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 
