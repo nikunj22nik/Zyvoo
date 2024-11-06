@@ -159,13 +159,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_4sdp"
-            android:layout_marginStart="@dimen/_11sdp"
+
             >
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_wishlist_small"
-
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/_8sdp"
             />
         <TextView
             android:layout_width="wrap_content"
@@ -348,7 +350,9 @@
                 android:gravity="center"
                 android:text="Choose Hours"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_13sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                />
 
             <TextView
                 android:id="@+id/tv_hourly"
@@ -409,10 +413,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     >
-
-
-
-                    <!-- Text in the center -->
+                  <!-- Text in the center -->
                     <TextView
                         android:id="@+id/hoursTextView"
                         android:layout_width="wrap_content"
@@ -780,7 +781,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                          android:text="Parking"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
                         />
 
@@ -808,7 +809,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                         android:text="Wifi"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
                         />
 
@@ -836,7 +837,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                         android:text="2 Rooms"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
                         />
 
@@ -865,7 +866,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                         android:text="Tables"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
                         />
 
@@ -893,7 +894,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                         android:text="Chairs"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
                         />
 
@@ -920,7 +921,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                         android:text="Kitchen"
                         android:textColor="@color/black"
                         android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
                         />
 
@@ -1179,6 +1180,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_height="@dimen/_1sdp"
                 android:background="@color/grey"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_7sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 />
             <ImageView

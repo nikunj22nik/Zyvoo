@@ -14,8 +14,8 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circleImageView"
-        android:layout_width="@dimen/_40sdp"
-        android:layout_height="@dimen/_40sdp"
+        android:layout_width="@dimen/_45sdp"
+        android:layout_height="@dimen/_45sdp"
         android:src="@drawable/ic_circular_img_user"
         android:layout_marginTop="16dp"
         android:layout_centerVertical="true"
@@ -96,7 +96,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Host was very helpful. thank you so much"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_12sdp"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"/>
 
 
@@ -106,9 +107,6 @@
 
 
         </LinearLayout>
-
-
-
     </RelativeLayout>
 
     <View
@@ -117,10 +115,9 @@
         android:layout_height="@dimen/_1sdp"
         android:background="@color/grey"
         android:layout_below="@id/rl_bg_1"
-        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginBottom="@dimen/_15sdp"
-        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginHorizontal="@dimen/_7sdp"
         />
-
 
 </LinearLayout>
