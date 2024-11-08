@@ -66,7 +66,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private lateinit var addLanguageSpeakAdapter: AddLanguageSpeakAdapter
     private lateinit var addHobbiesAdapter: AddHobbiesAdapter
     private lateinit var addPetsAdapter: AddPetsAdapter
-    private lateinit var dateManager : DateManager
+    private lateinit var dateManager: DateManager
 
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
     private val paymentCardViewHolder: PaymentViewModel by lazy {
@@ -167,8 +167,9 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         paymentOpenCloseDropDown()
-
+        binding.textPrivacyPolicy.setOnClickListener(this)
         binding.textNotifications.setOnClickListener(this)
+        binding.textVisitHelpCenter.setOnClickListener(this)
         binding.textAddNewPaymentCard.setOnClickListener(this)
         binding.imageInfoIcon.setOnClickListener(this)
         binding.clHead.setOnClickListener(this)
@@ -402,9 +403,19 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-            R.id.textNotifications -> {
-               findNavController().navigate(R.id.notificationFragment)
+            R.id.textPrivacyPolicy->{
+                findNavController().navigate(R.id.privacyPolicyFragment)
             }
+
+
+            R.id.textNotifications -> {
+                findNavController().navigate(R.id.notificationFragment)
+            }
+
+            R.id.textVisitHelpCenter -> {
+                findNavController().navigate(R.id.helpCenterFragment)
+            }
+
             R.id.imageInfoIcon -> {
                 binding.cvInfo.visibility = View.VISIBLE
             }
@@ -508,29 +519,29 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
 
-            val month : TextView = findViewById(R.id.textMonth)
-            val year : TextView = findViewById(R.id.textYear)
+            val month: TextView = findViewById(R.id.textMonth)
+            val year: TextView = findViewById(R.id.textYear)
 
 
+            val submitButton: TextView = findViewById(R.id.textSubmitButton)
 
-            val submitButton : TextView = findViewById(R.id.textSubmitButton)
+            month.setOnClickListener {
 
-            month.setOnClickListener{
+                dateManager.showMonthSelectorDialog { selectedMonth ->
+                    month.text = selectedMonth
+                }
 
-                    dateManager.showMonthSelectorDialog  { selectedMonth ->
-                        month.text = selectedMonth
+                year.setOnClickListener {
+
+                    dateManager.showYearPickerDialog { selectedYear ->
+                        year.text = selectedYear.toString()
+
+
                     }
-
-                year.setOnClickListener{
-
-                dateManager.showYearPickerDialog{ selectedYear->
-                    year.text = selectedYear.toString()
-
-
-                }}
+                }
             }
 
-            submitButton.setOnClickListener{
+            submitButton.setOnClickListener {
                 dismiss()
             }
 

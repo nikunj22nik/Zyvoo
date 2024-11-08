@@ -25,10 +25,10 @@ class ImagePopViewModel @Inject constructor(private val repository: ZyvoReposito
     // Function to add images to the list
     private fun loadImages() {
         val images = mutableListOf<ViewpagerModel>(
-            ViewpagerModel(R.drawable.image_hotel),
-            ViewpagerModel(R.drawable.image_hotel),
-            ViewpagerModel(R.drawable.image_hotel),
-            ViewpagerModel(R.drawable.image_hotel),
+            ViewpagerModel(R.drawable.ic_image_for_viewpager),
+            ViewpagerModel(R.drawable.ic_image_for_viewpager),
+            ViewpagerModel(R.drawable.ic_image_for_viewpager),
+            ViewpagerModel(R.drawable.ic_image_for_viewpager),
             ViewpagerModel(R.drawable.image_hotel),
             ViewpagerModel(R.drawable.image_hotel),
             ViewpagerModel(R.drawable.image_hotel)

@@ -117,7 +117,6 @@
         tools:listitem="@layout/layout_logged_recyclerview"
         app:layout_constraintTop_toBottomOf="@+id/clSearch"
         app:layout_constraintBottom_toTopOf="@+id/llBottomNavigation"
-
        />
 
 

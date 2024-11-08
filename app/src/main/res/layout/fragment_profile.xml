@@ -1147,12 +1147,12 @@ android:visibility="gone"
         android:fontFamily="@font/poppins"
         android:text="Notifications"
         android:gravity="center_vertical"
-        android:drawableStart="@drawable/ic_notification_icon_profile"
         android:textColor="@color/black"
         android:textSize="@dimen/_12sdp"
         android:textStyle="normal"
         android:drawablePadding="@dimen/_7ssp"
         app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
+        app:drawableStartCompat="@drawable/ic_notification_icon_profile"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textUsefulPages"/>
 

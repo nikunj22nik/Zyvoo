@@ -116,6 +116,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_below="@+id/clSearch"
         tools:itemCount="20"
+        android:layout_marginHorizontal="@dimen/_10sdp"
         tools:listitem="@layout/layout_logged_recyclerview"
         app:layout_constraintTop_toBottomOf="@+id/clSearch"
         android:layout_marginBottom="@dimen/_60sdp"

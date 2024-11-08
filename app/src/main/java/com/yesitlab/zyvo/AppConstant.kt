@@ -3,8 +3,10 @@ package com.yesitlab.zyvo
 class AppConstant {
 
     companion object {
-
+        const val textType : String = "textType"
         var LOGIN_SESSION = "Loggin_setion"
+        var Host = "Host"
+        var Guest = "Guest"
         val DATE: String? = "event_date"
         val MY_INTERESET: String? ="my_interest"
         val START_TIME: String? = "START_TIME"

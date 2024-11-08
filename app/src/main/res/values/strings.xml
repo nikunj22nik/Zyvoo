@@ -60,5 +60,8 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="we_ll_start_with_some_questions_and_get_you_to_the_right_place">We’ll start with some questions \n and get you to the right place.</string>
+    <string name="post_title_article_title_nname_article_blog">Post title article title \nname article blog</string>
+    <string name="table_of_content"><u>Table Of Content</u></string>
 
 </resources>

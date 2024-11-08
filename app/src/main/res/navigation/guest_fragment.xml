@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/guest_fragment"
     >
 
@@ -16,5 +17,24 @@
         android:id="@+id/notificationFragment"
         android:name="com.yesitlab.zyvo.fragment.both.NotificationFragment"
         android:label="NotificationFragment" />
+    <fragment
+        android:id="@+id/helpCenterFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.HelpCenterFragment"
+        android:label="HelpCenterFragment" />
+    <fragment
+        android:id="@+id/browseAllGuidesAndArticlesFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.BrowseAllGuidesAndArticlesFragment"
+        android:label="fragment_browse_all_guides_and_articles"
+        tools:layout="@layout/fragment_browse_all_guides_and_articles" />
+    <fragment
+        android:id="@+id/browseAllGuidesArticleOpenFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.BrowseAllGuidesArticleOpenFragment"
+        android:label="fragment_browse_all_guides_article_open"
+        tools:layout="@layout/fragment_browse_all_guides_article_open" />
+    <fragment
+        android:id="@+id/privacyPolicyFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.PrivacyPolicyFragment"
+        android:label="fragment_privacy_policy"
+        tools:layout="@layout/fragment_privacy_policy" />
 
 </navigation>

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.guest.BrowseAllGuidesAndArticlesFragment">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.yesitlab.zyvo.viewmodel.HelpCenterViewModel" />
+    </data>
+
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="@color/white">
+
+       <ImageView
+           android:id="@+id/imageBackIcon"
+           android:layout_width="@dimen/_25sdp"
+           android:layout_height="@dimen/_25sdp"
+           android:layout_margin="@dimen/_20sdp"
+           android:src="@drawable/ic_back_icon"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent" />
+
+       <View
+           android:id="@+id/viewTitle"
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/_1sdp"
+           android:layout_marginTop="@dimen/_10ssp"
+           android:background="#E5E5E5"
+           app:layout_constraintTop_toBottomOf="@id/imageBackIcon" />
+
+       <TextView
+           android:id="@+id/textTitle"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginHorizontal="@dimen/_10ssp"
+           android:layout_marginTop="@dimen/_20sdp"
+           android:fontFamily="@font/poppins"
+
+           android:text="Hi Katelyn, how can we help?"
+           android:textAlignment="center"
+           android:textColor="@color/black"
+           android:textSize="@dimen/_14ssp"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@id/viewTitle" />
+
+
+<!--       <LinearLayout-->
+<!--           android:id="@+id/llToggle"-->
+<!--           android:layout_width="match_parent"-->
+<!--           android:layout_height="wrap_content"-->
+<!--           android:layout_marginTop="@dimen/_8ssp"-->
+<!--           android:gravity="center"-->
+<!--           android:orientation="horizontal"-->
+<!--           app:layout_constraintTop_toBottomOf="@+id/textTitle">-->
+
+<!--           <RadioGroup-->
+<!--               android:id="@+id/toggleGroup"-->
+<!--               android:layout_width="wrap_content"-->
+<!--               android:layout_height="wrap_content"-->
+<!--               android:orientation="horizontal">-->
+
+<!--               <RadioButton-->
+<!--                   android:id="@+id/radioGuest"-->
+<!--                   android:layout_width="wrap_content"-->
+<!--                   android:layout_height="wrap_content"-->
+<!--                   android:layout_marginEnd="@dimen/_5sdp"-->
+<!--                   android:background="@drawable/toggle_selector"-->
+<!--                   android:button="@null"-->
+<!--                   android:checked="true"-->
+<!--                   android:fontFamily="@font/poppins"-->
+<!--                   android:paddingHorizontal="@dimen/_10sdp"-->
+<!--                   android:text="Guest"-->
+<!--                   android:textAlignment="center"-->
+<!--                   android:textColor="@drawable/toggle_text_selector" />-->
+
+<!--               <RadioButton-->
+<!--                   android:id="@+id/radioHost"-->
+<!--                   android:layout_width="wrap_content"-->
+<!--                   android:layout_height="wrap_content"-->
+<!--                   android:layout_marginStart="@dimen/_5sdp"-->
+<!--                   android:background="@drawable/toggle_selector"-->
+<!--                   android:button="@null"-->
+<!--                   android:fontFamily="@font/poppins"-->
+
+<!--                   android:paddingHorizontal="@dimen/_12sdp"-->
+<!--                   android:text="Host"-->
+<!--                   android:textAlignment="center"-->
+<!--                   android:textColor="@drawable/toggle_text_selector" />-->
+
+<!--           </RadioGroup>-->
+<!--       </LinearLayout>-->
+
+
+       <TextView
+           android:id="@+id/textType"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginStart="@dimen/_14ssp"
+           android:layout_marginTop="@dimen/_10ssp"
+           android:fontFamily="@font/poppins_light"
+           android:text="Guides for Guests"
+           android:textColor="@color/black"
+           android:textSize="@dimen/_14ssp"
+           android:textStyle="bold"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/textTitle" />
+
+
+
+
+       <androidx.recyclerview.widget.RecyclerView
+           android:id="@+id/recyclerViewGuests"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:nestedScrollingEnabled="false"
+           android:orientation="vertical"
+           app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+           app:layout_constraintTop_toBottomOf="@+id/textType"
+           app:spanCount="2"
+           tools:itemCount="4"
+           tools:listitem="@layout/layout_image_most_use" />
+
+
+       <TextView
+           android:id="@+id/textContactUsButton"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginTop="@dimen/_10ssp"
+           android:layout_marginBottom="@dimen/_75sdp"
+           android:background="@drawable/button_bg"
+           android:fontFamily="@font/poppins"
+           android:paddingHorizontal="@dimen/_10ssp"
+           android:paddingVertical="@dimen/_5sdp"
+           android:text="Contact Us"
+           android:textColor="@color/black"
+           app:layout_constraintBottom_toBottomOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@id/recyclerViewGuests" />
+
+   </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
+</layout>

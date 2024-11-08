@@ -91,5 +91,8 @@ dependencies {
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.colourmoon:readmore-textview:v1.0.2")
 
+    //Spinner
+    implementation("com.github.skydoves:powerspinner:1.2.7")
+
 
 }

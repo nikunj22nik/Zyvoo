@@ -31,4 +31,8 @@
     <color name="clickedColor">#3A4B4C</color>
     <color name="unClickedColor">#803A4B4C</color>
 
+    <!-- colors.xml -->
+    <color name="selected_item_background">#ECECED</color>
+
+
 </resources>
