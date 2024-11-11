@@ -341,7 +341,7 @@
             android:layout_marginBottom="@dimen/_10sdp">
 
             <TextView
-                android:id="@+id/tv_date"
+                android:id="@+id/tv_hour"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginVertical="@dimen/_4ssp"
@@ -355,7 +355,7 @@
                 />
 
             <TextView
-                android:id="@+id/tv_hourly"
+                android:id="@+id/tv_day"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
@@ -377,8 +377,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:layout_marginBottom="@dimen/_13sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             android:orientation="vertical"
             android:visibility="visible"
             />
@@ -395,8 +394,8 @@
 
             <com.yesitlab.zyvo.CircularSeekBar
                 android:id="@+id/circularSeekBar"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
                 android:layout_centerInParent="true">
 
             </com.yesitlab.zyvo.CircularSeekBar>
@@ -414,7 +413,7 @@
                     android:layout_gravity="center"
                     >
                   <!-- Text in the center -->
-                    <TextView
+                    <com.yesitlab.zyvo.ObservableTextView
                         android:id="@+id/hoursTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -447,7 +446,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_1sdp"
             android:background="@color/grey"
-            android:layout_marginVertical="@dimen/_10sdp"
+
             android:layout_marginHorizontal="@dimen/_15sdp"
             />
 
@@ -457,7 +456,7 @@
             android:layout_marginBottom="@dimen/_10sdp"
             android:layout_marginHorizontal="@dimen/_24sdp"
             android:weightSum="1"
-            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             >
 
             <RelativeLayout
@@ -475,6 +474,7 @@
                     android:layout_marginStart="@dimen/_7sdp"
                     />
                 <TextView
+                    android:id="@+id/text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3 hour"
@@ -483,6 +483,15 @@
                     android:layout_marginStart="@dimen/_6sdp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins"
+                    />
+                <ImageView
+                    android:id="@+id/ic_drop_down_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_drop_down"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_centerVertical="true"
                     />
 
             </RelativeLayout>
@@ -507,6 +516,7 @@
                     android:layout_marginStart="@dimen/_7sdp"
                     />
                 <TextView
+                    android:id="@+id/text2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$30"
@@ -516,7 +526,15 @@
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins"
                     />
-
+                <ImageView
+                    android:id="@+id/ic_drop_down_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_drop_down"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_centerVertical="true"
+                    />
             </RelativeLayout>
         </LinearLayout>
 
