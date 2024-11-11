@@ -24,6 +24,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.yesitlab.zyvo.ObservableTextView
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.AdapterAddOn
 import com.yesitlab.zyvo.adapter.guest.AdapterReview
@@ -31,20 +32,24 @@ import com.yesitlab.zyvo.databinding.ActivityRestaurantDetailBinding
 import java.time.LocalDate
 import java.time.YearMonth
 
-
 class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     lateinit var binding :ActivityRestaurantDetailBinding
+
     lateinit var adapterAddon :AdapterAddOn
+
     lateinit var adapterReview: AdapterReview
+
     private lateinit var mapView: MapView
+
     private var mMap: GoogleMap? = null
 
-    private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        YearMonth.now()
-    } else {
-        TODO("VERSION.SDK_INT < O")
-    }
+    private var currentMonth: YearMonth =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+           YearMonth.now()
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate: LocalDate? = LocalDate.now()
@@ -53,21 +58,21 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
-
         setContentView(binding.root)
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
+
         initialization()
+
         updateCalendar()
     }
-
 
     fun initialization(){
         adapterAddon = AdapterAddOn(this,getAddOnList().subList(0,4))
@@ -87,13 +92,43 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
           binding.tvShowMore.visibility = View.GONE
           adapterAddon.updateAdapter(getAddOnList())
         }
+
+        binding.hoursTextView.setOnTextChangedListener(object : ObservableTextView.OnTextChangedListener {
+            override fun onTextChanged(newText: String) {
+                // This is called whenever the text changes
+                binding.text1.setText(newText+" hour")
+            }
+        })
+
         clickListeners()
     }
 
     private fun clickListeners(){
+        binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
+        binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.showMoreReview.setOnClickListener {
             adapterReview.updateAdapter(7)
         }
+        binding.text1.setText("01:00 PM")
+        binding.text2.setText("03:00 PM")
+        binding.tvDay.setOnClickListener {
+            binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
+            binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.calendarLayout.visibility = View.VISIBLE
+            binding.rlCircularProgress.visibility = View.GONE
+            binding.text1.setText("01:00 PM")
+            binding.text2.setText("03:00 PM")
+        }
+
+        binding.tvHour.setOnClickListener {
+            binding.tvDay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvHour.setBackgroundResource(R.drawable.bg_inner_manage_place)
+            binding.calendarLayout.visibility = View.GONE
+            binding.rlCircularProgress.visibility = View.VISIBLE
+            binding.text1.setText("3 hour")
+            binding.text2.setText("$30")
+        }
+
     }
 
     private fun  getAddOnList() :  MutableList<String>{
@@ -143,7 +178,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-
     private fun updateCalendar() {
         // Updates the calendar layout with the current and next month views.
         val calendarLayout = binding.calendarLayout
@@ -152,13 +186,15 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         val bottomMonths = mutableListOf<YearMonth>()
 
         // Separate months into top and bottom lists
-        val allMonths = (1..12).map { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val allMonths = (1..12).map {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             currentMonth.plusMonths(it.toLong())
-        } else {
+        }
+            else {
             TODO("VERSION.SDK_INT < O")
+            }
         }
 
-        }
         allMonths.forEachIndexed { index, month ->
             if (index % 2 == 0) {
                 topMonths.add(month)
@@ -296,6 +332,5 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         return weeks
     }
-
 
  }

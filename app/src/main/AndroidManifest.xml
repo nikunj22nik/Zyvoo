@@ -21,6 +21,9 @@
         android:theme="@style/Theme.ZYVO"
         tools:targetApi="31">
         <activity
+            android:name=".activity.CheckOutPayActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.guest.RestaurantDetailActivity"
             android:exported="false" />
         <activity
