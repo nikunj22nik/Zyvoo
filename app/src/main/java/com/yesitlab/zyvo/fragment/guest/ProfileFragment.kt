@@ -22,6 +22,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -167,6 +168,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         paymentOpenCloseDropDown()
+        binding.textGiveFeedback.setOnClickListener(this)
         binding.textPrivacyPolicy.setOnClickListener(this)
         binding.textNotifications.setOnClickListener(this)
         binding.textVisitHelpCenter.setOnClickListener(this)
@@ -405,6 +407,10 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         when (p0?.id) {
             R.id.textPrivacyPolicy->{
                 findNavController().navigate(R.id.privacyPolicyFragment)
+            }
+
+            R.id.textGiveFeedback->{
+                findNavController().navigate(R.id.feedbackFragment)
             }
 
 

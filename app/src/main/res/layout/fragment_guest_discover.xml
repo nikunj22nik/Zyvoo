@@ -36,8 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_light"
                 android:text="@string/where"
+                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
 
@@ -57,7 +58,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_toEndOf="@id/viewTextWhere"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_light"
+                android:textStyle="bold"
                 android:text="@string/time"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />
@@ -78,7 +80,8 @@
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:layout_toEndOf="@id/viewTextTime"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_light"
+                android:textStyle="bold"
                 android:text="@string/activity"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp" />

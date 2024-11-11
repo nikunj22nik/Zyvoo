@@ -62,9 +62,15 @@ class FeedbackFragment : Fragment() {
 
         binding.spinnerFeedback.setIsFocusable(true)
 
-//        binding.spinnerFeedback.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-//            frequency = newItem
-//        }
+        binding.spinnerFeedback.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
+           if (newItem== "Please select"){
+               binding.etAddDetails.visibility = View.GONE
+               binding.textAddDetails.visibility = View.GONE
+           }else{
+               binding.etAddDetails.visibility = View.VISIBLE
+               binding.textAddDetails.visibility = View.VISIBLE
+           }
+        }
     }
 
     override fun onDestroyView() {

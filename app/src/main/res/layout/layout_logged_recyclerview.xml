@@ -10,7 +10,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cl1"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_160sdp"
+        android:layout_height="@dimen/_175sdp"
         app:cardCornerRadius="@dimen/_20sdp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,18 +63,18 @@
 
             <TextView
                 android:id="@+id/textInstantBook"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/_80sdp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/_10sdp"
                 android:background="@drawable/flash_bg"
                 android:drawablePadding="@dimen/_4sdp"
                 android:fontFamily="@font/poppins"
-                android:padding="@dimen/_3sdp"
+                android:padding="@dimen/_4sdp"
                 android:text="Instant book"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_9ssp"
-                android:visibility="gone"
+                android:visibility="visible"
                 app:drawableStartCompat="@drawable/ic_caminho_flash"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -106,12 +106,12 @@
         app:layout_constraintStart_toStartOf="parent"
 
         android:layout_marginEnd="@dimen/_10sdp"
-        android:textSize="@dimen/_10sdp"/>
+        android:textSize="@dimen/_12sdp"/>
 
     <ImageView
         android:id="@+id/imageStar"
-        android:layout_width="@dimen/_10sdp"
-        android:layout_height="@dimen/_10sdp"
+        android:layout_width="@dimen/_11sdp"
+        android:layout_height="@dimen/_11sdp"
         android:src="@drawable/ic_star"
         android:layout_marginStart="@dimen/_3sdp"
         android:layout_marginTop="@dimen/_4sdp"
@@ -126,7 +126,7 @@
         android:text="5.0"
         android:textStyle="bold"
         android:layout_marginTop="@dimen/_1sdp"
-        android:textSize="@dimen/_10ssp"
+        android:textSize="@dimen/_11ssp"
         android:textColor="#FCA800"
        android:layout_marginStart="@dimen/_2sdp"
        app:layout_constraintTop_toBottomOf="@id/textHotelName"/>
@@ -138,7 +138,7 @@
         android:text="(1k+)"
         android:textStyle="bold"
         android:textColor="#A4A4A4"
-        android:textSize="@dimen/_10ssp"
+        android:textSize="@dimen/_11ssp"
         android:layout_marginTop="@dimen/_1sdp"
         android:layout_marginStart="@dimen/_2sdp"
         app:layout_constraintStart_toEndOf="@id/textRating"
@@ -151,7 +151,7 @@
         android:text="37 miles away"
         android:textColor="#A4A4A4"
         android:layout_marginTop="@dimen/_1sdp"
-        android:textSize="@dimen/_10ssp"
+        android:textSize="@dimen/_11ssp"
         android:drawablePadding="@dimen/_5sdp"
         android:layout_marginStart="@dimen/_2sdp"
         app:drawableStartCompat="@drawable/ic_location_hotel"
@@ -168,7 +168,7 @@
         android:drawablePadding="@dimen/_4sdp"
         android:fontFamily="@font/poppins_light"
         android:layout_marginTop="@dimen/_5sdp"
-        android:textSize="@dimen/_10ssp"
+        android:textSize="@dimen/_11ssp"
         app:drawableStartCompat="@drawable/ic_clock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl1"

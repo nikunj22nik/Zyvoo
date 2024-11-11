@@ -36,5 +36,10 @@
         android:name="com.yesitlab.zyvo.fragment.guest.PrivacyPolicyFragment"
         android:label="fragment_privacy_policy"
         tools:layout="@layout/fragment_privacy_policy" />
+    <fragment
+        android:id="@+id/feedbackFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.FeedbackFragment"
+        android:label="fragment_feedback"
+        tools:layout="@layout/fragment_feedback" />
 
 </navigation>
