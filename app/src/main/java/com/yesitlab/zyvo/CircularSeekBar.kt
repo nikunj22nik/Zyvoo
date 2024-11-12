@@ -190,12 +190,8 @@ class CircularSeekBar @JvmOverloads constructor(context: Context, attrs: Attribu
             val dotProgressAngle = (hour * 360f / maxHours)
             // Check if the dot's angle is less than the current progress angle
             if (dotProgressAngle > progressAngle) {
-                canvas.drawCircle(
-                    dotX,
-                    dotY,
-                    10f,
-                    paintDot
-                ) // Draw small dot only if not covered by progress arc
+                // Draw small dot only if not covered by progress arc
+                canvas.drawCircle(dotX, dotY, 10f, paintDot)
             }
         }
 
