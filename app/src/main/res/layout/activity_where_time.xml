@@ -249,20 +249,20 @@
                     android:layout_marginTop="@dimen/_15sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:gravity="center"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <!-- Circle Progress View -->
                     <com.yesitlab.zyvo.CircularSeekBar
                         android:id="@+id/circularSeekBar"
-                        android:layout_width="200dp"
-                        android:layout_height="200dp"
+                        android:layout_width="197dp"
+                        android:layout_height="197dp"
                         android:layout_centerInParent="true">
 
                     </com.yesitlab.zyvo.CircularSeekBar>
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="110dp"
-                        android:layout_height="110dp"
+                        android:layout_width="125dp"
+                        android:layout_height="125dp"
                         android:backgroundTint="@color/white"
                         app:cardCornerRadius="60dp"
                         android:elevation="70dp"
