@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+   android:id="@+id/clMain"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_13sdp"
+    android:layout_marginVertical="@dimen/_10ssp"
+    android:background="@drawable/chat_list_unselected_bg">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageProfilePicture"
+        android:layout_width="@dimen/_75sdp"
+        android:layout_height="@dimen/_75sdp"
+        android:background="@drawable/profle_picture_ring"
+        android:padding="@dimen/_15sdp"
+        android:src="@drawable/ic_mia_pic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageLivePersonDots"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_margin="@dimen/_46sdp"
+        android:src="@drawable/ic_live_icon_green_dot"
+        app:layout_constraintStart_toStartOf="@id/imageProfilePicture"
+        app:layout_constraintTop_toTopOf="@+id/imageProfilePicture" />
+
+
+    <ImageView
+        android:id="@+id/imageThreeDots"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:src="@drawable/ic_three_dots"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginEnd="@dimen/_10ssp"/>
+    <TextView
+        android:id="@+id/textUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Host by Mia"
+        android:maxLines="1"
+        android:maxWidth="@dimen/_150sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15ssp"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/imageProfilePicture"/>
+
+    <TextView
+        android:id="@+id/textTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3 minutes ago"
+        android:maxLines="1"
+        android:textColor="#999999"
+        android:fontFamily="@font/poppins"
+        android:textSize="@dimen/_13ssp"
+        android:layout_marginTop="@dimen/_20sdp"
+        app:layout_constraintTop_toTopOf="@id/textUserName"
+        app:layout_constraintStart_toEndOf="@id/imageProfilePicture"/>
+
+    <TextView
+        android:id="@+id/textDescription"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="@dimen/_173sdp"
+        app:layout_constraintTop_toBottomOf="@+id/textTime"
+        app:layout_constraintStart_toEndOf="@id/imageProfilePicture"
+        android:text="Hello can we talk aboutfff"
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:singleLine="true"
+        android:textSize="@dimen/_14ssp"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/black"/>
+
+    <ImageView
+        android:id="@+id/imageBadge"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:src="@drawable/ic_badge_img"
+        app:layout_constraintStart_toEndOf="@+id/textUserName"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="@dimen/_8sdp"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

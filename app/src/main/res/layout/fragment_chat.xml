@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<data>
+    <variable
+        name="viewModel"
+        type="com.yesitlab.zyvo.viewmodel.ChatListViewModel" />
+</data>
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context=".fragment.guest.ChatFragment">
+
+    <LinearLayout
+        android:id="@+id/llHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/stroke1"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+        <!-- Search Bar -->
+        <EditText
+            android:id="@+id/etSearchButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_36sdp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/_15ssp"
+            android:layout_weight="1"
+            android:background="@drawable/search_bar_bg"
+            android:drawableEnd="@drawable/ic_search_bar_icon22"
+            android:drawablePadding="@dimen/_6sdp"
+            android:hint="Search..."
+            android:textSize="@dimen/_11ssp"
+            android:inputType="text"
+            android:textColor="#000"
+            android:fontFamily="@font/poppins"
+            android:layout_marginVertical="@dimen/_10sdp"
+            android:padding="@dimen/_8sdp"
+            android:textColorHint="#000" />
+
+        <!-- Menu Icon -->
+        <ImageView
+            android:layout_width="@dimen/_42sdp"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="Menu"
+            android:padding="@dimen/_6sdp"
+            android:src="@drawable/ic_filter" />
+
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        tools:listitem="@layout/layout_chat_list"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_below="@+id/llHeader"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_65sdp"/>
+
+
+
+</RelativeLayout>
+
+</layout>

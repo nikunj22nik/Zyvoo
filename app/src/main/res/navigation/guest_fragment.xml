@@ -41,5 +41,9 @@
         android:name="com.yesitlab.zyvo.fragment.guest.FeedbackFragment"
         android:label="fragment_feedback"
         tools:layout="@layout/fragment_feedback" />
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.ChatFragment"
+        android:label="ChatFragment" />
 
 </navigation>
