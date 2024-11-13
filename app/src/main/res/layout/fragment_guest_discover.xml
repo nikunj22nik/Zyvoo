@@ -40,7 +40,7 @@
                 android:text="@string/where"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp" />
+                android:textSize="@dimen/_10ssp" />
 
             <View
                 android:id="@+id/viewTextWhere"
@@ -61,8 +61,9 @@
                 android:fontFamily="@font/poppins_light"
                 android:textStyle="bold"
                 android:text="@string/time"
+                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp" />
+                android:textSize="@dimen/_10ssp" />
 
             <View
                 android:id="@+id/viewTextTime"
@@ -83,13 +84,14 @@
                 android:fontFamily="@font/poppins_light"
                 android:textStyle="bold"
                 android:text="@string/activity"
+                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp" />
+                android:textSize="@dimen/_10ssp" />
 
             <ImageView
                 android:id="@+id/imageSearchBar"
-                android:layout_width="@dimen/_30sdp"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_width="@dimen/_25sdp"
+                android:layout_height="@dimen/_25sdp"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/_5sdp"
                 android:layout_toEndOf="@id/textActivity"

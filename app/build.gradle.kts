@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+
     namespace = "com.yesitlab.zyvo"
     compileSdk = 34
 
@@ -92,7 +93,7 @@ dependencies {
     implementation("com.github.colourmoon:readmore-textview:v1.0.2")
 
     //Spinner
-    implementation("com.github.skydoves:powerspinner:1.2.7")
 
+    implementation("com.github.skydoves:powerspinner:1.2.7")
 
 }
