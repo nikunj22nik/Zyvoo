@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/ic_dots_bg"
     tools:context=".activity.guest.RestaurantDetailActivity">
 
     <View
@@ -44,6 +45,7 @@
         />
 
     <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -270,7 +272,7 @@
                 android:layout_height="wrap_content"
                 android:text="$13/hr"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"
+                android:textSize="@dimen/_13sdp"
                 android:fontFamily="@font/poppins"
                 />
             <TextView
@@ -279,6 +281,7 @@
                 android:text="1 hr minimum"
                 android:textColor="@color/black"
                 android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_13sdp"
                 />
 
         </LinearLayout>
@@ -367,8 +370,6 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp" />
 
-
-
         </LinearLayout>
 
 
@@ -384,7 +385,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_circular_progress"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_15sdp"
@@ -394,15 +395,15 @@
 
             <com.yesitlab.zyvo.CircularSeekBar
                 android:id="@+id/circularSeekBar"
-                android:layout_width="170dp"
-                android:layout_height="170dp"
+                android:layout_width="197dp"
+                android:layout_height="197dp"
                 android:layout_centerInParent="true">
 
             </com.yesitlab.zyvo.CircularSeekBar>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="110dp"
-                android:layout_height="110dp"
+                android:layout_width="125dp"
+                android:layout_height="125dp"
                 android:backgroundTint="@color/white"
                 app:cardCornerRadius="60dp"
                 android:elevation="70dp"
