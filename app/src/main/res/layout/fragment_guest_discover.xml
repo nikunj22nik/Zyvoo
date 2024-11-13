@@ -147,10 +147,11 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_30sdp"
         android:background="@drawable/bg_two_side_circular_black"
-        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintBottom_toTopOf="@+id/clTimeLeftProgressBar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="@dimen/_85sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
         >
 
         <ImageView
@@ -176,5 +177,169 @@
             />
 
     </RelativeLayout>
+
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+android:id="@+id/clTimeLeftProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_145sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center">
+
+
+        <ImageView
+            android:layout_width="@dimen/_42sdp"
+            android:layout_height="@dimen/_42sdp"
+            android:src="@drawable/ic_pin_icon_progress_bar2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="@color/black"
+            android:layout_marginBottom="132dp"
+            android:elevation="@dimen/_18sdp"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <com.yesitlab.zyvo.SemiCircleProgressBar
+            android:id="@+id/customProgressBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_115sdp"
+            android:layout_gravity="center"
+            android:elevation="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </com.yesitlab.zyvo.SemiCircleProgressBar>
+
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_108sdp"
+            android:layout_gravity="center"
+
+            android:background="@drawable/ic_subtract_green"
+            android:orientation="horizontal"
+            android:padding="@dimen/_8sdp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Time Left"
+                android:fontFamily="@font/poppins_bold"
+                android:textStyle="bold"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="@color/black"
+                android:layout_marginStart="@dimen/_45sdp"
+                app:layout_alignSelf="center"/>
+
+            <LinearLayout
+                android:id="@+id/llHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                app:layout_alignSelf="center"
+                android:background="@drawable/time_bg_card">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_bold"
+                    android:text="00"
+                    android:textAlignment="center"
+                    android:textColor="#373B63"
+                    android:textSize="@dimen/_9ssp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hours"
+                    android:textColor="#373B63"
+                    android:fontFamily="@font/poppins"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_8ssp"/>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/llMins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="10dp"
+                android:layout_marginStart="10dp"
+                app:layout_alignSelf="center"
+                android:background="@drawable/time_bg_card">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textStyle="bold"
+                    android:textColor="#373B63"
+                    android:textSize="@dimen/_9ssp"
+                    android:text="00"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mins"
+                    android:textColor="#373B63"
+                    android:fontFamily="@font/poppins"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_8ssp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llSecs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="10dp"
+                android:layout_marginStart="10dp"
+                app:layout_alignSelf="center"
+                android:background="@drawable/time_bg_card">
+                <TextView
+                    android:id="@+id/textSecs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/poppins_bold"
+                    android:textStyle="bold"
+                    android:textColor="#373B63"
+                    android:textSize="@dimen/_9ssp"
+                    android:text="20"/>
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Secs"
+                    android:textColor="#373B63"
+                    android:fontFamily="@font/poppins"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_8ssp"/>
+
+            </LinearLayout>
+
+
+
+
+        </com.google.android.flexbox.FlexboxLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

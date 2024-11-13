@@ -3,10 +3,12 @@ package com.yesitlab.zyvo.fragment.guest
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
@@ -39,7 +41,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
     lateinit var binding :FragmentGuestDiscoverBinding ;
 
     private lateinit var startForResult: ActivityResultLauncher<Intent>
-
+    private val totalDuration = 20000L
     private lateinit var adapter: LoggedScreenAdapter
 
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
@@ -109,9 +111,38 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
                 childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
 
             }
-        }
-    }
 
+
+        }
+
+
+        binding.customProgressBar.setProgressWidth(13f)
+        binding.customProgressBar.setMax(100.0) // Set max progress as 100%
+
+        // Start the countdown timer
+        startCountdown()
+    }
+    private fun startCountdown() {
+        // Countdown timer for 20 seconds with 1-second intervals
+        object : CountDownTimer(totalDuration, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val secondsRemaining = (millisUntilFinished / 1000).toInt()
+
+                // Update the TextView for seconds
+                binding.llSecs.findViewById<TextView>(R.id.textSecs).text = secondsRemaining.toString()
+
+                // Calculate progress percentage and update progress bar
+                val progress = ((totalDuration - millisUntilFinished).toDouble() / totalDuration) * 100
+                binding.customProgressBar.setProgress(progress)
+            }
+
+            override fun onFinish() {
+                // Set the final state when countdown finishes
+                binding.llSecs.findViewById<TextView>(R.id.textSecs).text = "0"
+                binding.customProgressBar.setProgress(100.0)
+            }
+        }.start()
+    }
     override fun onClick(p0: View?) {
         when(p0?.id){
 

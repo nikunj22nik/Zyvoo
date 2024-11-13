@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Background of progress bar -->
+    <item android:id="@android:id/background">
+        <shape>
+            <solid android:color="#e0e0e0" />
+        </shape>
+    </item>
+
+    <!-- Progress layer that goes from green to red -->
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <gradient
+                    android:startColor="#00FF00"
+                    android:endColor="#FF0000"
+                    android:angle="0" />
+            </shape>
+        </clip>
+    </item>
+</layer-list>

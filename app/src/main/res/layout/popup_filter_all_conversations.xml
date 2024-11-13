@@ -8,12 +8,36 @@
     android:padding="@dimen/_8sdp">
 
     <TextView
-        android:id="@+id/itemMute"
+        android:id="@+id/itemAllConversations"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_light"
         android:padding="@dimen/_7sdp"
-        android:text="Mute"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:text="All Conversations"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:id="@+id/itemArchived"
+        android:layout_width="@dimen/_140sdp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:padding="@dimen/_7sdp"
+        android:text="Archived"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/itemUnread"
+        android:layout_width="@dimen/_140sdp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:padding="@dimen/_7sdp"
+        android:text="Unread"
         android:textColor="@color/black"
         android:textSize="@dimen/_11ssp"
         android:textStyle="bold"/>
