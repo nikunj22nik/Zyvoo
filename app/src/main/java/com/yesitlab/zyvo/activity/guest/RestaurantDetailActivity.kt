@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.yesitlab.zyvo.ObservableTextView
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.CheckOutPayActivity
 import com.yesitlab.zyvo.adapter.AdapterAddOn
 import com.yesitlab.zyvo.adapter.guest.AdapterReview
 import com.yesitlab.zyvo.databinding.ActivityRestaurantDetailBinding
@@ -98,6 +99,10 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.tvShowMore.setOnClickListener {
             binding.tvShowMore.visibility = View.GONE
             adapterAddon.updateAdapter(getAddOnList())
+        }
+        binding.startBooking.setOnClickListener {
+            var intent = Intent(this@RestaurantDetailActivity,CheckOutPayActivity::class.java)
+            startActivity(intent)
         }
 
         binding.hoursTextView.setOnTextChangedListener(object :
