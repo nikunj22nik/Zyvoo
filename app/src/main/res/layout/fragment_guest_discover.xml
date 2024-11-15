@@ -20,15 +20,17 @@
         >
         <RelativeLayout
             android:id="@+id/rlFind"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginVertical="@dimen/_13sdp"
-            android:layout_marginHorizontal="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_20sdp"
             android:background="@drawable/search_bar_bg"
             android:paddingVertical="@dimen/_3sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/filter_icon">
 
             <TextView
                 android:id="@+id/textWhere"
@@ -40,7 +42,7 @@
                 android:text="@string/where"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_10ssp" />
+                android:textSize="@dimen/_11ssp" />
 
             <View
                 android:id="@+id/viewTextWhere"
@@ -61,9 +63,8 @@
                 android:fontFamily="@font/poppins_light"
 
                 android:text="@string/time"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_10ssp" />
+                android:textSize="@dimen/_11ssp" />
 
             <View
                 android:id="@+id/viewTextTime"
@@ -84,19 +85,23 @@
                 android:fontFamily="@font/poppins_light"
 
                 android:text="@string/activity"
-                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_10ssp" />
+                android:textSize="@dimen/_11ssp" />
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/_5sdp"
+                >
             <ImageView
                 android:id="@+id/imageSearchBar"
                 android:layout_width="@dimen/_25sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/_5sdp"
-                android:layout_toEndOf="@id/textActivity"
                 android:src="@drawable/ic_search_bar_icon" />
-
+            </RelativeLayout>
 
         </RelativeLayout>
 
@@ -105,12 +110,13 @@
             android:id="@+id/filter_icon"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
-            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
             android:src="@drawable/ic_filter"
             app:layout_constraintBottom_toBottomOf="@id/rlFind"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rlFind"
-            app:layout_constraintTop_toTopOf="@+id/rlFind" />
+            app:layout_constraintTop_toTopOf="@+id/rlFind"
+
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -61,7 +61,7 @@ class CircularSeekBar @JvmOverloads constructor(context: Context, attrs: Attribu
     private var maxHours = 13
     private var isTouchingThumb = false
     private val hourDots = mutableListOf<Pair<Float,Float>>() // Store hour dots' positions
-    private var initialAngle = 0f
+    private var initialAngle = 10f
 
 //    init {
 //        setOnTouchListener { _, event ->
@@ -182,6 +182,7 @@ class CircularSeekBar @JvmOverloads constructor(context: Context, attrs: Attribu
 
         // Draw hour dots at each hour position
         hourDots.clear() // Clear the previous dot positions
+
         for (hour in 0 until maxHours) {
             val angle = Math.toRadians((hour * 360f / maxHours - 90).toDouble())
             val dotX = (cx + radius * cos(angle)).toFloat()
@@ -203,6 +204,7 @@ class CircularSeekBar @JvmOverloads constructor(context: Context, attrs: Attribu
 
         // Draw the thumb (draggable white circle)
         canvas.drawCircle(thumbX, thumbY, 33f, paintThumb)
+
     }
 
     private fun updateProgress(x: Float, y: Float) {

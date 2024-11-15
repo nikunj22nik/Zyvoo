@@ -103,10 +103,13 @@ class WhereTimeActivity : AppCompatActivity() {
 
         binding.imgSearch.setOnClickListener {
             count++;
+
             if(count %2==1) {
                 val dialog = FullScreenDialogFragment()
                 dialog.show(supportFragmentManager, "FullScreenDialog")
-            }else{
+            }
+
+            else{
                 onBackPressed()
             }
         }

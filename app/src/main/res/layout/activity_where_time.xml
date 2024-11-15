@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/ic_dots_bg"
     tools:context=".activity.guest.WhereTimeActivity">
 
     <View
@@ -14,7 +15,7 @@
         android:layout_marginTop="@dimen/_5sdp"
         android:background="#E5E5E5" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -59,7 +60,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:background="@drawable/bg_four_side_grey_corner">
@@ -78,7 +79,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Where"
-                        android:textSize="@dimen/_15sdp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -88,7 +89,7 @@
                         android:layout_centerVertical="true"
                         android:text="Type location...."
                         android:textColor="@color/grey"
-                        android:textSize="@dimen/_14sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
 
                 </RelativeLayout>
@@ -134,7 +135,7 @@
             <RelativeLayout
                 android:id="@+id/rl_timing"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:background="@drawable/bg_four_side_grey_corner">
@@ -153,7 +154,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Time"
-                        android:textSize="@dimen/_15sdp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -163,7 +164,7 @@
                         android:layout_centerVertical="true"
                         android:text="Add Time"
                         android:textColor="@color/grey"
-                        android:textSize="@dimen/_14sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
 
                 </RelativeLayout>
@@ -249,7 +250,7 @@
                     android:layout_marginTop="@dimen/_15sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:gravity="center"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <!-- Circle Progress View -->
                     <com.yesitlab.zyvo.CircularSeekBar
@@ -272,9 +273,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             >
-
-
-
                             <!-- Text in the center -->
                             <TextView
                                 android:id="@+id/hoursTextView"
@@ -426,7 +424,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_50sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:background="@drawable/bg_four_side_grey_corner">
@@ -446,7 +444,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Activity"
-                        android:textSize="@dimen/_15sdp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 
                     <ImageView
@@ -481,5 +479,5 @@
             </RelativeLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

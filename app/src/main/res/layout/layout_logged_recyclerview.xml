@@ -19,7 +19,6 @@
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -106,7 +105,7 @@
         app:layout_constraintStart_toStartOf="parent"
 
         android:layout_marginEnd="@dimen/_10sdp"
-        android:textSize="@dimen/_12sdp"/>
+        android:textSize="@dimen/_13sdp"/>
 
     <ImageView
         android:id="@+id/imageStar"
@@ -154,6 +153,7 @@
         android:textSize="@dimen/_11ssp"
         android:drawablePadding="@dimen/_5sdp"
         android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginEnd="@dimen/_4sdp"
         app:drawableStartCompat="@drawable/ic_location_hotel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textHotelName"/>
@@ -168,7 +168,8 @@
         android:drawablePadding="@dimen/_4sdp"
         android:fontFamily="@font/poppins_light"
         android:layout_marginTop="@dimen/_5sdp"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="@dimen/_13ssp"
+        android:layout_marginEnd="@dimen/_4sdp"
         app:drawableStartCompat="@drawable/ic_clock"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl1"

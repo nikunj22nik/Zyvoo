@@ -7,9 +7,11 @@ import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
@@ -26,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.yesitlab.zyvo.ObservableTextView
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.CheckOutPayActivity
 import com.yesitlab.zyvo.adapter.AdapterAddOn
 import com.yesitlab.zyvo.adapter.guest.AdapterReview
 import com.yesitlab.zyvo.databinding.ActivityRestaurantDetailBinding
@@ -57,70 +60,84 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
+
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
+        disableScrollViewScrollForChildView(binding.rlCircularProgress,binding.scrollView)
+
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
+
         initialization()
+
         updateCalendar()
     }
 
     fun initialization() {
-
         adapterAddon = AdapterAddOn(this, getAddOnList().subList(0, 4))
-
         adapterReview = AdapterReview(this, mutableListOf())
-
         binding.tvReadMoreLess.setCollapsedText("Read More")
-
         binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
-
         binding.recyclerAddOn.adapter = adapterAddon
-
         binding.recyclerAddOn.layoutManager = GridLayoutManager(this, 2)
-
         binding.recyclerAddOn.isNestedScrollingEnabled = false
-
-        binding.recyclerReviews.layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-
+        binding.recyclerReviews.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerReviews.isNestedScrollingEnabled = false
-
         binding.recyclerReviews.adapter = adapterReview
-
         val textView = binding.tvShowMore
-
         textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-
-        binding.tvLocationName.paintFlags =
-            binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-
+        binding.tvLocationName.paintFlags = binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.tvShowMore.setOnClickListener {
-
             binding.tvShowMore.visibility = View.GONE
-
             adapterAddon.updateAdapter(getAddOnList())
-
+        }
+        binding.startBooking.setOnClickListener {
+            var intent = Intent(this@RestaurantDetailActivity,CheckOutPayActivity::class.java)
+            startActivity(intent)
         }
 
         binding.hoursTextView.setOnTextChangedListener(object :
             ObservableTextView.OnTextChangedListener {
-
-            override fun onTextChanged(newText: String) {
+                override fun onTextChanged(newText: String) {
                 // This is called whenever the text changes
                 binding.text1.setText(newText + " hour")
             }
         })
 
         clickListeners()
+    }
 
+    fun disableScrollViewScrollForChildView(childView: View, scrollView: ScrollView) {
+
+        childView.setOnTouchListener { _, event ->
+            // Prevent ScrollView from intercepting touch events when interacting with this child view
+            scrollView.requestDisallowInterceptTouchEvent(true)
+
+            // Let the child view handle its own touch event
+            childView.onTouchEvent(event)
+
+            true  // Consume the event to stop ScrollView from scrolling
+        }
+
+        // Reset ScrollView intercept when touch is released or canceled
+        childView.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
+                scrollView.requestDisallowInterceptTouchEvent(false)  // Allow ScrollView to intercept again
+            }
+
+            childView.onTouchEvent(event)
+
+            true
+        }
     }
 
     private fun clickListeners() {
