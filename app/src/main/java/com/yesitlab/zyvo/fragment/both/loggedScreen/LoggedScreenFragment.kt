@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
+import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
 import com.yesitlab.zyvo.databinding.FragmentLoggedScreenBinding
@@ -19,7 +20,7 @@ import com.yesitlab.zyvo.viewmodel.LoggedScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener {
+class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener , OnClickListener1 {
 
     private lateinit var binding: FragmentLoggedScreenBinding
 
@@ -55,7 +56,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener {
             mutableListOf(),
             this,
             viewLifecycleOwner,
-            imagePopViewModel
+            imagePopViewModel,this
         )
         binding.recyclerViewBooking.adapter = adapter
 
@@ -84,6 +85,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener {
                 commonAuthWorkUtils?.dialogLogin(requireContext())
             }
         }
+    }
+
+    override fun itemClick(obj: Int, text: String) {
+        TODO("Not yet implemented")
     }
 
 }

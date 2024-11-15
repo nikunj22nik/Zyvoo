@@ -55,6 +55,12 @@ class NotificationFragment : Fragment(),OnClickListener,View.OnClickListener {
         adapterNotificationScreen = AdapterNotificationScreen(requireContext(), arrayListOf(),this)
         binding.recyclerView.adapter = adapterNotificationScreen  // Ensure the RecyclerView ID is correct
 
+
+        // Bind the ViewModel to the layout
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner  // Important for LiveData to work in the layout
+
+
         // Observe the LiveData from ViewModel
         viewModel.list.observe(viewLifecycleOwner, Observer { list ->
             adapterNotificationScreen.updateItem(list)

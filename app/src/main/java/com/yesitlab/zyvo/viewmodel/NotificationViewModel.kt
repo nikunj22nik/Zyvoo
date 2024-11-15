@@ -14,8 +14,11 @@ class NotificationViewModel  @Inject constructor(private val repository: ZyvoRep
 
         private val _list  = MutableLiveData<ArrayList<NotificationScreenModel>>()
     val  list : LiveData<ArrayList<NotificationScreenModel>> get() = _list
+    private val _title = MutableLiveData<String>()
+    val title: LiveData<String> get() = _title
 
     init {
+        _title.value = "Notifications"
         load()
     }
 

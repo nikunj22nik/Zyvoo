@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/clMain"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_13sdp"
+    android:layout_marginVertical="@dimen/_10ssp"
+    android:background="@drawable/chat_list_unselected_bg">
+
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvPicture"
+        android:layout_width="@dimen/_55sdp"
+        android:layout_height="@dimen/_60sdp"
+         android:layout_margin="@dimen/_10ssp"
+        app:cardCornerRadius="@dimen/_10ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+<ImageView
+    android:id="@+id/imagePicture"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:src="@drawable/image_hotel"
+    android:scaleType="fitXY"/>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
+    <ImageView
+        android:id="@+id/imageThreeDots"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:visibility="gone"
+        android:src="@drawable/ic_three_dots"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginEnd="@dimen/_10ssp"/>
+    <TextView
+        android:id="@+id/textName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cabin in Peshastin"
+        android:maxLines="1"
+
+        android:layout_marginStart="@dimen/_10ssp"
+        android:maxWidth="@dimen/_150sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cvPicture"/>
+
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/fl"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:flexDirection="row"
+        app:alignItems="center"
+        app:flexWrap="wrap"
+        app:justifyContent="flex_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textName"
+        app:layout_constraintStart_toEndOf="@id/cvPicture"
+        >
+        <TextView
+            android:id="@+id/textStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Finished"
+            android:maxLines="1"
+
+            android:paddingVertical="@dimen/_3sdp"
+            android:paddingHorizontal="@dimen/_10ssp"
+            android:layout_marginStart="@dimen/_10ssp"
+            android:textColor="#3A4B4C"
+            android:fontFamily="@font/poppins"
+            android:background="@drawable/button_bg"
+            android:textSize="@dimen/_11ssp"
+           />
+
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="wrap_content"
+            android:maxWidth="@dimen/_173sdp"
+            android:text="October 22, 2023"
+            android:maxLines="1"
+            android:layout_marginStart="@dimen/_12ssp"
+            android:textSize="@dimen/_12ssp"
+            android:fontFamily="@font/poppins"
+            android:textColor="@color/black"/>
+    </com.google.android.flexbox.FlexboxLayout>
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

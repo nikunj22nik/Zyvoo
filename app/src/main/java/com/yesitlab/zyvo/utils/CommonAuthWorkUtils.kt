@@ -1,11 +1,14 @@
 package com.yesitlab.zyvo.utils
 
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.CheckBox
 import android.widget.EditText
@@ -14,11 +17,15 @@ import android.widget.TextView
 import androidx.navigation.NavController
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.GuesMain
+import com.yesitlab.zyvo.adapter.WishlistAdapter
+import com.yesitlab.zyvo.databinding.DialogAddWishlistBinding
 import com.yesitlab.zyvo.session.SessionManager
+import com.yesitlab.zyvo.viewmodel.WishlistViewModel
 import `in`.aabhasjindal.otptextview.OtpTextView
 
 class CommonAuthWorkUtils(var context: Context, navController: NavController) {
 var navController = navController
+
 
     fun dialogLogin(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -432,6 +439,37 @@ var navController = navController
         }
     }
 
-
+//    private fun showWishlistDialog(context: Context, viewModel: WishlistViewModel,viewLifecycleOwner :viewLifecycleOwner) {
+//      //  private  val viewModel : WishlistViewModel by viewModels()
+//
+//        val dialogBinding = DialogAddWishlistBinding.inflate(LayoutInflater.from(context))
+//        //DialogWishlistBinding
+//
+//        // Set up the RecyclerView for the dialog
+//        val dialogAdapter = WishlistAdapter(context,true, mutableListOf())
+//        dialogBinding.rvWishList.adapter = dialogAdapter
+//
+//        viewModel.list.observe(viewLifecycleOwner) {
+//            dialogAdapter.updateItem(it)
+//        }
+//
+//        // Create and show the dialog
+//        val dialog = AlertDialog.Builder(context)
+//            .setView(dialogBinding.root)
+//            .create()
+//
+//        dialog.show()
+//
+//        // Optional: Set dialog size for consistency
+//        dialog.window?.setLayout(
+//            (resources.displayMetrics.widthPixels * 0.9).toInt(),
+//            ViewGroup.LayoutParams.WRAP_CONTENT
+//        )
+//
+//        // Close button logic
+//        dialogBinding.imageCross.setOnClickListener {
+//            dialog.dismiss()
+//        }
+//    }
 
 }

@@ -139,11 +139,11 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
             }
             R.id.navigationBookings->{
                 bookingResume()
-              //  findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
             }
             R.id.navigationWishlist->{
                 wishlistColor()
-               // findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
+               findNavController(R.id.fragmentContainerView_main).navigate(R.id.wishlistFragment)
             }
             R.id.icProfile->{
                 profileColor()

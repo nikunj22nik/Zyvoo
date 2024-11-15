@@ -12,6 +12,7 @@ import android.graphics.SweepGradient
 import android.util.AttributeSet
 import android.util.Log
 import android.view.View
+import androidx.compose.ui.Modifier
 
 class SemiCircleProgressBar @JvmOverloads constructor(
     context: Context,
@@ -144,12 +145,13 @@ class SemiCircleProgressBar @JvmOverloads constructor(
         val rect = RectF(
 
 
-            -35f,  // Adjust the left coordinate
+            -30f,  // Adjust the left coordinate
          //   halfStrokeWidth + radius,  // Adjust the top coordinate
-            25f,
-            1115f,
+            20f,
+            width.toFloat() + 25f,
+            //1115f,
            // width - halfStrokeWidth - radius, // Adjust the right coordinate
-            height * 2 - halfStrokeWidth - radius // Adjust the bottom coordinate
+            height * 2 - halfStrokeWidth - radius -10f // Adjust the bottom coordinate
         )
 
         var left = halfStrokeWidth + radius

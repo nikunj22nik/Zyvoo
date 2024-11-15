@@ -3,4 +3,23 @@
 
     <dimen name="default_active_tick_radius">9dp</dimen>
     <dimen name="custom_active_tick_radius">9dp</dimen>
+
+
+
+
+
+    <dimen name="image_small_size">@dimen/_50sdp</dimen>
+    <dimen name="image_large_size">@dimen/_100sdp</dimen>
+
+
+    <dimen name="imageWishListWidthSmall">@dimen/_125sdp</dimen>
+    <dimen name="imageWishListHeightSmall">@dimen/_130sdp</dimen>
+    <dimen name="text_small_size">12sp</dimen>
+
+    <!-- Define large dimensions for Fragment -->
+
+    <dimen name="imageWishListWidthLarge">@dimen/_135sdp</dimen>
+    <dimen name="imageWishListHeightLarge">@dimen/_140sdp</dimen>
+    <dimen name="text_large_size">16sp</dimen>
+
 </resources>
