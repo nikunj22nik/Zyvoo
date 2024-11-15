@@ -1,5 +1,6 @@
 package com.yesitlab.zyvo.utils
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -78,7 +79,7 @@ var navController = navController
 //            //    visibility = if (number.isNullOrEmpty()) View.GONE else View.VISIBLE
 //            }
 
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
 
@@ -122,7 +123,7 @@ var navController = navController
                 dismiss()
             }
 
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             show()
         }}
@@ -172,7 +173,7 @@ var navController = navController
 //            //    visibility = if (number.isNullOrEmpty()) View.GONE else View.VISIBLE
 //            }
 
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
 
@@ -210,7 +211,7 @@ var navController = navController
             imageCross.setOnClickListener{
                 dismiss()
             }
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
 
@@ -240,7 +241,7 @@ var navController = navController
             imageCross.setOnClickListener{
                 dismiss()
             }
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
 
@@ -272,7 +273,7 @@ var navController = navController
             imageCross.setOnClickListener{
                 dismiss()
             }
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
 
@@ -297,7 +298,7 @@ var navController = navController
 
 
 
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
 
@@ -324,14 +325,15 @@ var navController = navController
             imageCross.setOnClickListener{
                 dismiss()
             }
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
 
 
 
 
-    fun dialogOtp(context: Context?,text: String){
+    @SuppressLint("SuspiciousIndentation")
+    fun dialogOtp(context: Context?, text: String){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -369,7 +371,7 @@ var navController = navController
             imageCross.setOnClickListener{
                 dismiss()
             }
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
 
@@ -396,7 +398,7 @@ var navController = navController
             imageCross.setOnClickListener{
                 dismiss()
             }
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
 
@@ -434,7 +436,7 @@ var navController = navController
                 dismiss()
             }
 
-            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
     }

@@ -8,8 +8,10 @@ import android.graphics.RectF
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.TextView
+import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.min
@@ -320,3 +322,4 @@ class CircularSeekBar @JvmOverloads constructor(context: Context, attrs: Attribu
     }
 
 }
+

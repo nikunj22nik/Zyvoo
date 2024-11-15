@@ -52,6 +52,30 @@ android:layout_marginHorizontal="@dimen/_5sdp"
         tools:listitem="@layout/layout_wishlist"
         android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@+id/viewTop"
+
+
+       />
+
+
+
+    <TextView
+        android:id="@+id/textCreateWishList"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Create Wishlist"
+        android:textAlignment="center"
+        android:background="@drawable/button_bg"
+        app:layout_constraintTop_toBottomOf="@+id/rvWishList"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingVertical="@dimen/_5sdp"
+        android:fontFamily="@font/poppins"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:textColor="#000000"
+        android:layout_marginBottom="@dimen/_30sdp"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/_65sdp"/>
+        android:layout_marginHorizontal="@dimen/_20sdp"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

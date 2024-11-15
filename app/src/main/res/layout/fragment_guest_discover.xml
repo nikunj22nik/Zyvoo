@@ -25,7 +25,7 @@
             android:layout_marginVertical="@dimen/_13sdp"
             android:layout_marginStart="@dimen/_20sdp"
             android:background="@drawable/search_bar_bg"
-            android:paddingVertical="@dimen/_3sdp"
+            android:paddingVertical="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_15sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -38,11 +38,12 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:fontFamily="@font/poppins_light"
+
                 android:text="@string/where"
+                android:fontFamily="@font/poppins"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_11ssp" />
+                android:textSize="@dimen/_10ssp" />
 
             <View
                 android:id="@+id/viewTextWhere"
@@ -60,11 +61,11 @@
                 android:layout_centerVertical="true"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_toEndOf="@id/viewTextWhere"
-                android:fontFamily="@font/poppins_light"
-
                 android:text="@string/time"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_11ssp" />
+                android:textSize="@dimen/_10ssp" />
 
             <View
                 android:id="@+id/viewTextTime"
@@ -82,11 +83,11 @@
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:layout_toEndOf="@id/viewTextTime"
-                android:fontFamily="@font/poppins_light"
-
                 android:text="@string/activity"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_11ssp" />
+                android:textSize="@dimen/_10ssp" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -108,8 +109,8 @@
 
         <ImageView
             android:id="@+id/filter_icon"
-            android:layout_width="@dimen/_30sdp"
-            android:layout_height="@dimen/_30sdp"
+            android:layout_width="@dimen/_33sdp"
+            android:layout_height="@dimen/_33sdp"
             android:layout_marginEnd="@dimen/_10sdp"
             android:src="@drawable/ic_filter"
             app:layout_constraintBottom_toBottomOf="@id/rlFind"
@@ -127,7 +128,6 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_below="@+id/clSearch"
         tools:itemCount="20"
-        android:layout_marginHorizontal="@dimen/_10sdp"
         tools:listitem="@layout/layout_logged_recyclerview"
         app:layout_constraintTop_toBottomOf="@+id/clSearch"
         android:layout_marginBottom="@dimen/_60sdp"
