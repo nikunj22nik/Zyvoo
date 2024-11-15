@@ -874,6 +874,7 @@
                     android:layout_marginTop="@dimen/_10sdp" />
 
                 <RelativeLayout
+                    android:id="@+id/rl_add_card"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_35sdp"
                     android:layout_below="@id/recyclerViewPaymentCardList"
@@ -889,8 +890,6 @@
                         android:text="Add New Card"
                         android:textSize="@dimen/_13sdp"
                         android:textStyle="bold" />
-
-
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -944,6 +943,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
 
 
             <RelativeLayout
+                android:id="@+id/rl_parking"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
@@ -978,6 +978,24 @@ has been the industry's standard dummy text ever the industry's standard dummy .
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/tv_parking_rule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_four_side_grey_corner"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
+                    android:padding="@dimen/_10sdp"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_host_rules"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
@@ -1010,6 +1028,22 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:src="@drawable/ic_drop_down" />
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/tv_host_rule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_four_side_grey_corner"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
+                    android:padding="@dimen/_10sdp"
+                    />
+
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -1017,6 +1051,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:background="@color/grey" />
+
 
             <RelativeLayout
                 android:layout_width="wrap_content"
