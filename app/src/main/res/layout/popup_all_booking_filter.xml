@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/_10sdp"
+    android:background="@drawable/bg_inner_select_white"
+    android:orientation="vertical"
+    android:padding="@dimen/_8sdp">
+
+    <TextView
+        android:id="@+id/itemAllBookings"
+        android:layout_width="@dimen/_140sdp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:padding="@dimen/_7sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:text="All Bookings"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:id="@+id/itemConfirmed"
+        android:layout_width="@dimen/_140sdp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:padding="@dimen/_7sdp"
+        android:text="Confirmed"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/itemPending"
+        android:layout_width="@dimen/_140sdp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:padding="@dimen/_7sdp"
+        android:text="Pending"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/itemFinished"
+        android:layout_width="@dimen/_140sdp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:padding="@dimen/_7sdp"
+        android:text="Finished"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"/>
+    <TextView
+        android:id="@+id/itemCancelled"
+        android:layout_width="@dimen/_140sdp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins_light"
+        android:padding="@dimen/_7sdp"
+        android:text="Cancelled"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"/>
+
+</LinearLayout>

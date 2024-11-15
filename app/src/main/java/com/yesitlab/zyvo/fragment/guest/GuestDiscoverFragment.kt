@@ -1,6 +1,8 @@
 package com.yesitlab.zyvo.fragment.guest
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -13,6 +15,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -24,19 +27,24 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.yesitlab.zyvo.OnClickListener
+import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.guest.FiltersActivity
 import com.yesitlab.zyvo.activity.guest.RestaurantDetailActivity
 import com.yesitlab.zyvo.activity.guest.WhereTimeActivity
 import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
+import com.yesitlab.zyvo.adapter.WishlistAdapter
+import com.yesitlab.zyvo.databinding.DialogAddWishlistBinding
 import com.yesitlab.zyvo.databinding.FragmentGuestDiscoverBinding
 import com.yesitlab.zyvo.utils.CommonAuthWorkUtils
 import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
+import com.yesitlab.zyvo.viewmodel.WishlistViewModel
 import com.yesitlab.zyvo.viewmodel.guest.GuestDiscoverViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, OnMapReadyCallback {
+class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, OnMapReadyCallback,
+    OnClickListener1 {
 
     lateinit var binding :FragmentGuestDiscoverBinding ;
 
@@ -45,6 +53,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
     private lateinit var adapter: LoggedScreenAdapter
 
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
+    private  val viewModel : WishlistViewModel by viewModels()
 
     private lateinit var map: GoogleMap
 
@@ -72,7 +81,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(),navController)
 
         adapter = LoggedScreenAdapter(requireContext(), mutableListOf(),
-            this, viewLifecycleOwner, imagePopViewModel)
+            this, viewLifecycleOwner, imagePopViewModel,this)
 
         setRetainInstance(true);
 
@@ -248,6 +257,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
     }
 
+
+
+
     override fun onDestroyView() {
         super.onDestroyView()
 //        val nestedFragment = childFragmentManager.findFragmentById(R.id.map)
@@ -257,6 +269,47 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 //            transaction.remove(nestedFragment) // Remove the nested fragment
 //            transaction.commit() // Commit the transaction to make changes
 //        }
+    }
+
+    private fun showWishlistDialog() {
+        //  private  val viewModel : WishlistViewModel by viewModels()
+
+        val dialogBinding = DialogAddWishlistBinding.inflate(LayoutInflater.from(requireContext()))
+        //DialogWishlistBinding
+
+        // Set up the RecyclerView for the dialog
+        val dialogAdapter = WishlistAdapter(requireContext(),true, mutableListOf())
+        dialogBinding.rvWishList.adapter = dialogAdapter
+
+        viewModel.list.observe(viewLifecycleOwner) {
+            dialogAdapter.updateItem(it)
+        }
+
+        // Create and show the dialog
+        val dialog = AlertDialog.Builder(context)
+            .setView(dialogBinding.root)
+            .create()
+
+        dialog.show()
+
+        // Optional: Set dialog size for consistency
+        dialog.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.9).toInt(),
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        // Close button logic
+        dialogBinding.imageCross.setOnClickListener {
+            dialog.dismiss()
+        }
+    }
+
+    override fun itemClick(obj: Int, text: String) {
+        when(text){
+            "Add Wish"->{
+                showWishlistDialog()
+            }
+        }
     }
 
 }

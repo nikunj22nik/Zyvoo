@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.yesitlab.zyvo.OnClickListener
+import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.OnLogClickListener
 import com.yesitlab.zyvo.databinding.LayoutLoggedRecyclerviewBinding
 import com.yesitlab.zyvo.model.LogModel
@@ -20,7 +21,7 @@ import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
 
 class LoggedScreenAdapter(
     private val context: Context, private var list: MutableList<LogModel>, private val listener: OnClickListener,
-    private val lifecycleOwner: LifecycleOwner, private val imagePopViewModel: ImagePopViewModel
+    private val lifecycleOwner: LifecycleOwner, private val imagePopViewModel: ImagePopViewModel, private val listener2: OnClickListener1
 ) : RecyclerView.Adapter<LoggedScreenAdapter.LoggedViewHolder>() {
 
     private lateinit var mListener: onItemClickListener
@@ -45,6 +46,12 @@ class LoggedScreenAdapter(
 
     override fun onBindViewHolder(holder: LoggedViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currentItem = list[position]
+
+        holder.binding.imageAddWish.setOnClickListener{
+            listener2.itemClick(position,"Add Wish")
+        }
+
+
         holder.binding.cl1.setOnClickListener {
           //  listener.itemClick(position)
             mListener.onItemClick(position)

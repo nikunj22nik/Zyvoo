@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragment.guest.MyBookingsFragment">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.yesitlab.zyvo.viewmodel.MyBookingsViewModel" />
+    </data>
+
+
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    >
+
+    <RelativeLayout
+        android:id="@+id/rlHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@drawable/stroke1"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+        <!-- Menu Icon -->
+        <ImageView
+            android:id="@+id/imageFilter"
+            android:layout_width="@dimen/_42sdp"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="Menu"
+            android:padding="@dimen/_6sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_filter" />
+
+    </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewChat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_below="@+id/rlHeader"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_65sdp"/>
+
+
+
+</RelativeLayout>
+</layout>

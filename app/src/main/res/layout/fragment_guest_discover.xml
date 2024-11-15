@@ -61,7 +61,7 @@
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_toEndOf="@id/viewTextWhere"
                 android:fontFamily="@font/poppins_light"
-                android:textStyle="bold"
+
                 android:text="@string/time"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp" />
@@ -83,7 +83,7 @@
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:layout_toEndOf="@id/viewTextTime"
                 android:fontFamily="@font/poppins_light"
-                android:textStyle="bold"
+
                 android:text="@string/activity"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp" />
@@ -204,9 +204,8 @@ android:id="@+id/clTimeLeftProgressBar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:backgroundTint="@color/black"
-            android:layout_marginBottom="132dp"
+            android:layout_marginBottom="@dimen/_115sdp"
             android:elevation="@dimen/_18sdp"
-
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />
@@ -228,7 +227,6 @@ android:id="@+id/clTimeLeftProgressBar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_108sdp"
             android:layout_gravity="center"
-
             android:background="@drawable/ic_subtract_green"
             android:orientation="horizontal"
             android:padding="@dimen/_8sdp"

@@ -45,5 +45,19 @@
         android:id="@+id/chatFragment"
         android:name="com.yesitlab.zyvo.fragment.guest.ChatFragment"
         android:label="ChatFragment" />
+    <fragment
+        android:id="@+id/myBookingsFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.MyBookingsFragment"
+        android:label="fragment_my_bookings"
+        tools:layout="@layout/fragment_my_bookings" />
+    <fragment
+        android:id="@+id/reviewBookingFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.ReviewBookingFragment"
+        android:label="fragment_review_booking"
+        tools:layout="@layout/fragment_review_booking" />
+    <fragment
+        android:id="@+id/wishlistFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.WishlistFragment"
+        android:label="WishlistFragment" />
 
 </navigation>
