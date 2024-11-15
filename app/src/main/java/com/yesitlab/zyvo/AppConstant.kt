@@ -1,5 +1,7 @@
 package com.yesitlab.zyvo
 
+import android.icu.util.Calendar
+
 class AppConstant {
 
     companion object {
@@ -86,6 +88,12 @@ class AppConstant {
         val EVENT = "event"
         val VOOPON ="Voopon"
         val BASE_URL ="https://vooleyvoo.tgastaging.com"
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val years = (1900..currentYear).toList()
+
+        val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September",
+            "October", "November", "December")
+
 
     }
 

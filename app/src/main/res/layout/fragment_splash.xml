@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white"
     tools:context=".fragment.both.splash.SplashFragment">
 
@@ -14,6 +16,109 @@
         android:src="@drawable/splash_icon1"
         android:layout_centerInParent="true"/>
 
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imageIcon"
+        >
+
+        <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_2sdp"
+        android:layout_margin="10sp"
+        android:background="@drawable/bg_four_side_grey_corner"
+        >
+        <com.skydoves.powerspinner.PowerSpinnerView
+            android:id="@+id/spinnerLanguage"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_22sdp"
+            android:gravity="center_horizontal|center_vertical"
+            android:textSize = "14.5sp"
+            android:padding = "0dp"
+            android:text="22"
+            app:spinner_arrow_drawable="@drawable/ic_drop_down"
+            android:paddingStart = "8dp"
+            android:paddingEnd = "8dp"
+            android:paddingTop = "6dp"
+            android:paddingBottom = "6dp"
+            app:spinner_arrow_padding="@dimen/_10sdp"
+
+            android:textAlignment = "center"
+            app:spinner_arrow_gravity = "end"
+            app:spinner_divider_size = "0.4dp"
+            app:spinner_popup_animation = "dropdown"
+            app:spinner_popup_elevation = "14dp" />
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_2sdp"
+            android:layout_marginVertical="10sp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/bg_four_side_grey_corner"
+            >
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/spinnermonth"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_22sdp"
+                android:gravity="center_horizontal|center_vertical"
+                android:textSize = "14.5sp"
+                android:padding = "0dp"
+                android:text="October"
+                app:spinner_arrow_padding="@dimen/_10sdp"
+                android:paddingStart = "8dp"
+                android:paddingEnd = "8dp"
+                android:paddingTop = "6dp"
+                app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                android:paddingBottom = "6dp"
+
+                android:textAlignment = "center"
+                app:spinner_arrow_gravity = "end"
+                app:spinner_divider_size = "0.4dp"
+                app:spinner_popup_animation = "dropdown"
+                app:spinner_popup_elevation = "14dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_2sdp"
+            android:layout_marginVertical="10sp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/bg_four_side_grey_corner"
+            >
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/spinneryear"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_22sdp"
+                android:gravity="center_horizontal|center_vertical"
+                android:textSize = "14.5sp"
+                android:padding = "0dp"
+                android:text="2024"
+                app:spinner_popup_top_padding="@dimen/_10sdp"
+                app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                android:paddingStart = "8dp"
+                android:paddingEnd = "8dp"
+                android:paddingTop = "6dp"
+                android:paddingBottom = "6dp"
+                app:spinner_arrow_padding="@dimen/_10sdp"
+                android:textAlignment = "center"
+                app:spinner_arrow_gravity = "end"
+
+                app:spinner_divider_size = "0.4dp"
+                app:spinner_popup_background="@drawable/bg_four_side_grey_corner"
+                app:spinner_popup_animation = "dropdown"
+                app:spinner_popup_elevation = "14dp"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 
 </RelativeLayout>

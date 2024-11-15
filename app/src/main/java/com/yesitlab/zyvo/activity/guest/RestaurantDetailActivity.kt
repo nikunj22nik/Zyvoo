@@ -88,7 +88,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.tvReadMoreLess.setCollapsedText("Read More")
         binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
         binding.recyclerAddOn.adapter = adapterAddon
-        binding.recyclerAddOn.layoutManager = GridLayoutManager(this, 2)
+        binding.recyclerAddOn.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
         binding.recyclerAddOn.isNestedScrollingEnabled = false
         binding.recyclerReviews.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerReviews.isNestedScrollingEnabled = false

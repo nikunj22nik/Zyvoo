@@ -257,15 +257,15 @@
                     <!-- Circle Progress View -->
                     <com.yesitlab.zyvo.CircularSeekBar
                         android:id="@+id/circularSeekBar"
-                        android:layout_width="197dp"
-                        android:layout_height="197dp"
+                        android:layout_width="@dimen/_170sdp"
+                        android:layout_height="@dimen/_170sdp"
                         android:layout_centerInParent="true">
 
                     </com.yesitlab.zyvo.CircularSeekBar>
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="125dp"
-                        android:layout_height="125dp"
+                        android:layout_width="@dimen/_110sdp"
+                        android:layout_height="@dimen/_110sdp"
                         android:backgroundTint="@color/white"
                         app:cardCornerRadius="60dp"
                         android:elevation="70dp"

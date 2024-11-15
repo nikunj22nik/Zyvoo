@@ -154,6 +154,7 @@
             android:text="Share"
             android:textColor="@color/black"
             android:fontFamily="@font/poppins"
+            android:layout_marginEnd="@dimen/_6sdp"
             />
 
         <LinearLayout
@@ -168,7 +169,7 @@
             android:src="@drawable/ic_wishlist_small"
             android:layout_marginEnd="@dimen/_4sdp"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/_8sdp"
+
             />
         <TextView
             android:layout_width="wrap_content"
@@ -271,7 +272,7 @@
                 android:layout_height="wrap_content"
                 android:text="$13/hr"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_12sdp"
                 android:fontFamily="@font/poppins"
                 />
             <TextView
@@ -280,7 +281,7 @@
                 android:text="1 hr minimum"
                 android:textColor="@color/black"
                 android:fontFamily="@font/poppins"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_12sdp"
                 />
 
         </LinearLayout>
@@ -316,6 +317,7 @@
                 android:layout_height="wrap_content"
                 android:text="15% Off"
                 android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
                 android:fontFamily="@font/poppins"
                 />
         </LinearLayout>

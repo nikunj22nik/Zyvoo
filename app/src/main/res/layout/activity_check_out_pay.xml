@@ -87,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:text="Hosted by"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -145,7 +145,7 @@
                         android:drawablePadding="@dimen/_2sdp"
                         android:text="Respond within 1 hr"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -205,7 +205,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins"
                             android:text="Cabin in Peshastin"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="@dimen/_13sdp"
                             android:textStyle="bold" />
 
                         <LinearLayout
@@ -572,7 +572,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:cardBackgroundColor="@color/white"
+                        app:cardBackgroundColor="#FFFFFF"
                         app:cardCornerRadius="@dimen/_10sdp">
 
                         <LinearLayout
@@ -581,137 +581,148 @@
                             android:layout_marginBottom="@dimen/_10sdp"
                             android:orientation="vertical">
 
-                        <LinearLayout
-                            android:id="@+id/llCalendarLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_15sdp"
 
-                            android:layout_marginHorizontal="@dimen/_5sdp"
-                            android:orientation="horizontal"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:weightSum="3">
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/dd_select_gender"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                                android:layout_width="@dimen/_30sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:layout_weight="0.9"
-                                android:background="@drawable/circular_gray_shape_bg"
-                                app:boxCornerRadiusBottomEnd="4dp"
-                                app:boxCornerRadiusBottomStart="4dp"
-                                app:boxCornerRadiusTopEnd="4dp"
-                                app:boxCornerRadiusTopStart="4dp"
-                                app:boxStrokeColor="@android:color/transparent"
-                                app:boxStrokeWidth="0dp"
-                                app:endIconDrawable="@drawable/ic_drop_down"
-                                app:endIconTint="@color/black">
-
-                                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                    android:id="@+id/spinner_day"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:inputType="none"
-                                    android:background="@null"
-                                    android:padding="@dimen/_1sdp"
-                                    android:text="22"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/_11sdp" />
-
-                            </com.google.android.material.textfield.TextInputLayout>
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/dd_select_month"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                                android:layout_width="@dimen/_55sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:layout_weight="1.2"
-                                android:background="@drawable/circular_gray_shape_bg"
-                                app:boxCornerRadiusBottomEnd="4dp"
-                                app:boxCornerRadiusBottomStart="4dp"
-                                android:layout_marginStart="@dimen/_3sdp"
-                                app:boxCornerRadiusTopEnd="4dp"
-                                app:boxCornerRadiusTopStart="4dp"
-                                app:boxStrokeColor="@android:color/transparent"
-                                app:boxStrokeWidth="0dp"
-                                app:endIconDrawable="@drawable/ic_drop_down"
-                                app:endIconTint="@color/black">
-
-                                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                    android:id="@+id/spinner_month"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:inputType="none"
-                                    android:background="@null"
-                                    android:padding="@dimen/_1sdp"
-                                    android:text="october"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/_11sdp" />
-
-                            </com.google.android.material.textfield.TextInputLayout>
+                           <LinearLayout
+                               android:layout_width="wrap_content"
+                               android:layout_height="wrap_content"
+                               >
 
 
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/dd_select_year"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                                android:layout_width="@dimen/_50sdp"
-                                android:layout_height="@dimen/_35sdp"
-                                android:layout_weight="0.9"
-                                android:background="@drawable/circular_gray_shape_bg"
-                                app:boxCornerRadiusBottomEnd="4dp"
-                                app:boxCornerRadiusBottomStart="4dp"
-                                android:layout_marginStart="@dimen/_3sdp"
-                                app:boxCornerRadiusTopEnd="4dp"
-                                app:boxCornerRadiusTopStart="4dp"
-                                app:boxStrokeColor="@android:color/transparent"
-                                app:boxStrokeWidth="0dp"
-                                app:endIconDrawable="@drawable/ic_drop_down"
-                                app:endIconTint="@color/black">
+                           </LinearLayout>
 
-                                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                                    android:id="@+id/spinner_year"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:singleLine="true"
-                                    android:inputType="none"
-                                    android:background="@null"
-                                    android:padding="@dimen/_1sdp"
-                                    android:text="2024"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/_11sdp" />
 
-                            </com.google.android.material.textfield.TextInputLayout>
 
-<!--                            <RelativeLayout-->
-<!--                                android:layout_width="0dp"-->
-<!--                                android:layout_height="wrap_content"-->
+<!--                        <LinearLayout-->
+<!--                            android:id="@+id/llCalendarLayout"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginTop="@dimen/_15sdp"-->
+
+<!--                            android:layout_marginHorizontal="@dimen/_5sdp"-->
+<!--                            android:orientation="horizontal"-->
+<!--                            android:layout_gravity="center"-->
+<!--                            android:gravity="center"-->
+<!--                            android:weightSum="3">-->
+
+<!--                            <com.google.android.material.textfield.TextInputLayout-->
+<!--                                android:id="@+id/dd_select_gender"-->
+<!--                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="@dimen/_35sdp"-->
 <!--                                android:layout_weight="0.9"-->
+<!--                                android:background="@drawable/circular_gray_shape_bg"-->
+<!--                                app:boxCornerRadiusBottomEnd="4dp"-->
+<!--                                app:boxCornerRadiusBottomStart="4dp"-->
+<!--                                app:boxCornerRadiusTopEnd="4dp"-->
+<!--                                app:boxCornerRadiusTopStart="4dp"-->
+<!--                                app:boxStrokeColor="@android:color/transparent"-->
+<!--                                app:boxStrokeWidth="0dp"-->
+<!--                                app:endIconDrawable="@drawable/ic_drop_down"-->
+<!--                                app:endIconTint="@color/black">-->
+
+<!--                                <com.google.android.material.textfield.MaterialAutoCompleteTextView-->
+<!--                                    android:id="@+id/spinner_day"-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    android:inputType="none"-->
+<!--                                    android:background="@null"-->
+<!--                                    android:padding="@dimen/_1sdp"-->
+<!--                                    android:text="22"-->
+<!--                                    android:textColor="@color/black"-->
+<!--                                    android:textSize="@dimen/_11sdp" />-->
+
+<!--                            </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                            <com.google.android.material.textfield.TextInputLayout-->
+<!--                                android:id="@+id/dd_select_month"-->
+<!--                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--                                android:layout_width="@dimen/_55sdp"-->
+<!--                                android:layout_height="@dimen/_35sdp"-->
+<!--                                android:layout_weight="1.2"-->
+<!--                                android:background="@drawable/circular_gray_shape_bg"-->
+<!--                                app:boxCornerRadiusBottomEnd="4dp"-->
+<!--                                app:boxCornerRadiusBottomStart="4dp"-->
 <!--                                android:layout_marginStart="@dimen/_3sdp"-->
-<!--                                android:background="@drawable/circular_gray_shape_bg">-->
+<!--                                app:boxCornerRadiusTopEnd="4dp"-->
+<!--                                app:boxCornerRadiusTopStart="4dp"-->
+<!--                                app:boxStrokeColor="@android:color/transparent"-->
+<!--                                app:boxStrokeWidth="0dp"-->
+<!--                                app:endIconDrawable="@drawable/ic_drop_down"-->
+<!--                                app:endIconTint="@color/black">-->
 
-<!--                                <TextView-->
-<!--                                    android:id="@+id/textViewYear"-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="wrap_content"-->
+<!--                                <com.google.android.material.textfield.MaterialAutoCompleteTextView-->
+<!--                                    android:id="@+id/spinner_month"-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    android:inputType="none"-->
+<!--                                    android:background="@null"-->
+<!--                                    android:padding="@dimen/_1sdp"-->
+<!--                                    android:text="october"-->
+<!--                                    android:textColor="@color/black"-->
+<!--                                    android:textSize="@dimen/_11sdp" />-->
+
+<!--                            </com.google.android.material.textfield.TextInputLayout>-->
+
+
+<!--                            <com.google.android.material.textfield.TextInputLayout-->
+<!--                                android:id="@+id/dd_select_year"-->
+<!--                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+<!--                                android:layout_width="@dimen/_50sdp"-->
+<!--                                android:layout_height="@dimen/_35sdp"-->
+<!--                                android:layout_weight="0.9"-->
+<!--                                android:background="@drawable/circular_gray_shape_bg"-->
+<!--                                app:boxCornerRadiusBottomEnd="4dp"-->
+<!--                                app:boxCornerRadiusBottomStart="4dp"-->
+<!--                                android:layout_marginStart="@dimen/_3sdp"-->
+<!--                                app:boxCornerRadiusTopEnd="4dp"-->
+<!--                                app:boxCornerRadiusTopStart="4dp"-->
+<!--                                app:boxStrokeColor="@android:color/transparent"-->
+<!--                                app:boxStrokeWidth="0dp"-->
+<!--                                app:endIconDrawable="@drawable/ic_drop_down"-->
+<!--                                app:endIconTint="@color/black">-->
+
+<!--                                <com.google.android.material.textfield.MaterialAutoCompleteTextView-->
+<!--                                    android:id="@+id/spinner_year"-->
+<!--                                    android:layout_width="match_parent"-->
+<!--                                    android:layout_height="match_parent"-->
+<!--                                    android:singleLine="true"-->
+<!--                                    android:inputType="none"-->
+<!--                                    android:background="@null"-->
+<!--                                    android:padding="@dimen/_1sdp"-->
 <!--                                    android:text="2024"-->
-<!--                                    android:padding="@dimen/_5sdp"-->
-<!--                                    android:layout_marginStart="@dimen/_5sdp"-->
-<!--                                    android:textSize="@dimen/_10sdp"-->
-<!--                                    android:textColor="@color/black"/>-->
+<!--                                    android:textColor="@color/black"-->
+<!--                                    android:textSize="@dimen/_11sdp" />-->
 
-<!--                                <ImageView-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="wrap_content"-->
-<!--                                    android:layout_alignParentEnd="true"-->
-<!--                                    android:layout_marginEnd="@dimen/_10sdp"-->
-<!--                                    android:layout_centerVertical="true"-->
-<!--                                    android:src="@drawable/ic_drop_down"/>-->
+<!--                            </com.google.android.material.textfield.TextInputLayout>-->
 
-<!--                            </RelativeLayout>-->
+<!--&lt;!&ndash;                            <RelativeLayout&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_width="0dp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_weight="0.9"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:layout_marginStart="@dimen/_3sdp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                android:background="@drawable/circular_gray_shape_bg">&ndash;&gt;-->
 
-                        </LinearLayout>
+<!--&lt;!&ndash;                                <TextView&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:id="@+id/textViewYear"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:text="2024"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:padding="@dimen/_5sdp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_marginStart="@dimen/_5sdp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textSize="@dimen/_10sdp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:textColor="@color/black"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                <ImageView&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_width="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_alignParentEnd="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_marginEnd="@dimen/_10sdp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:layout_centerVertical="true"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    android:src="@drawable/ic_drop_down"/>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            </RelativeLayout>&ndash;&gt;-->
+
+<!--                        </LinearLayout>-->
 
                         <TextView
                             android:id="@+id/textSaveChangesButton"
@@ -874,6 +885,7 @@
                     android:layout_marginTop="@dimen/_10sdp" />
 
                 <RelativeLayout
+                    android:id="@+id/rl_add_card"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_35sdp"
                     android:layout_below="@id/recyclerViewPaymentCardList"
@@ -889,8 +901,6 @@
                         android:text="Add New Card"
                         android:textSize="@dimen/_13sdp"
                         android:textStyle="bold" />
-
-
                 </RelativeLayout>
 
             </RelativeLayout>
@@ -925,7 +935,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:textColor="#000000"
                 android:textSize="@dimen/_13sdp" />
 
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
@@ -942,8 +951,8 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
 
-
             <RelativeLayout
+                android:id="@+id/rl_parking"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
@@ -978,6 +987,24 @@ has been the industry's standard dummy text ever the industry's standard dummy .
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/tv_parking_rule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_four_side_grey_corner"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
+                    android:padding="@dimen/_10sdp"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_host_rules"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
@@ -1011,6 +1038,23 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:src="@drawable/ic_drop_down" />
             </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/tv_host_rule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_four_side_grey_corner"
+                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
+                    android:padding="@dimen/_10sdp"
+                    />
+
+            </RelativeLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
@@ -1036,7 +1080,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:textStyle="bold" />
 
             </RelativeLayout>
-
 
         </LinearLayout>
     </ScrollView>
