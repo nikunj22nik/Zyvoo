@@ -53,6 +53,7 @@ class CheckOutPayActivity : AppCompatActivity() {
 
 
     fun clickListeneres(){
+
         binding.rlParking.setOnClickListener {
              if(binding.tvParkingRule.visibility == View.VISIBLE){
                  binding.tvParkingRule.visibility=View.GONE
@@ -63,10 +64,10 @@ class CheckOutPayActivity : AppCompatActivity() {
 
         binding.rlHostRules.setOnClickListener {
              if(binding.tvHostRule.visibility == View.VISIBLE){
-                 binding.tvHostRule.visibility = View.VISIBLE
+                 binding.tvHostRule.visibility = View.GONE
              }
              else{
-                 binding.tvHostRule.visibility = View.GONE
+                 binding.tvHostRule.visibility = View.VISIBLE
              }
         }
 
@@ -90,14 +91,14 @@ class CheckOutPayActivity : AppCompatActivity() {
         val adapterday: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, dayarray)
 
         // Assign the adapter to this ListActivity
-        binding.spinnerDay.setAdapter<ArrayAdapter<*>>(adapterday)
-
-        val montharray = resources.getStringArray(R.array.month)
-
-        val adaptermonth: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, montharray)
-
-        // Assign the adapter to this ListActivity
-        binding.spinnerMonth.setAdapter<ArrayAdapter<*>>(adaptermonth)
+//        binding.spinnerDay.setAdapter<ArrayAdapter<*>>(adapterday)
+//
+//        val montharray = resources.getStringArray(R.array.month)
+//
+//        val adaptermonth: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, montharray)
+//
+//        // Assign the adapter to this ListActivity
+//        binding.spinnerMonth.setAdapter<ArrayAdapter<*>>(adaptermonth)
 
         // Set years
         val years = ArrayList<String?>()
@@ -106,8 +107,8 @@ class CheckOutPayActivity : AppCompatActivity() {
             years.add(i.toString())
         }
 
-        val adapteryear: ArrayAdapter<String?> = ArrayAdapter<String?>(this, android.R.layout.simple_spinner_item, years)
-        binding.spinnerYear.setAdapter<ArrayAdapter<*>>(adapteryear)
+//        val adapteryear: ArrayAdapter<String?> = ArrayAdapter<String?>(this, android.R.layout.simple_spinner_item, years)
+//        binding.spinnerYear.setAdapter<ArrayAdapter<*>>(adapteryear)
 
         paymentCardViewHolder.paymentCardList.observe(this, Observer { payment ->
             addPaymentCardAdapter.updateItem(payment)

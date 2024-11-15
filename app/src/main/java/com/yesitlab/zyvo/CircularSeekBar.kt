@@ -29,20 +29,20 @@ class CircularSeekBar @JvmOverloads constructor(context: Context, attrs: Attribu
         color = Color.WHITE
         style = Paint.Style.STROKE
         elevation = 70f
-        strokeWidth = 94f
+        strokeWidth = 90f
     }
 
     private val paintProgress = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.parseColor("#4AEAB1") // Greenish color
         style = Paint.Style.STROKE
-        strokeWidth = 94f
+        strokeWidth = 90f
         strokeCap = Paint.Cap.ROUND
     }
 
     private val paintThumb = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         color = Color.WHITE
         style = Paint.Style.FILL
-        strokeWidth = 94f
+        strokeWidth = 90f
         //nikunj change
     }
 

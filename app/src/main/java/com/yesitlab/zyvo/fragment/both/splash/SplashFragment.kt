@@ -18,7 +18,8 @@ import com.yesitlab.zyvo.session.SessionManager
 
 
 class SplashFragment : Fragment() {
-    private lateinit var binding: FragmentSplashBinding
+
+      private lateinit var binding: FragmentSplashBinding
     private lateinit var handler : Handler
 
 
@@ -28,10 +29,7 @@ class SplashFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         binding = FragmentSplashBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
         return binding.root
@@ -40,9 +38,7 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handler = Handler(Looper.getMainLooper())
-        val images = listOfNotNull(ContextCompat.getDrawable(requireActivity(), R.drawable.splash_icon),
-            ContextCompat.getDrawable(requireActivity(), R.drawable.splash_icon1),
-            )
+        val images = listOfNotNull(ContextCompat.getDrawable(requireActivity(), R.drawable.splash_icon), ContextCompat.getDrawable(requireActivity(), R.drawable.splash_icon1),)
 
 //        val animationDrawable = AnimationDrawable().apply {
 //            images.forEach { addFrame(it, 1000 / images.size) } // Divide the duration equally between frames
@@ -52,31 +48,55 @@ class SplashFragment : Fragment() {
 //        animationDrawable.start()
 
 
-        handler.postDelayed({
-
-            var session =SessionManager(requireContext())
-            if(session.getUserId() ==1){
-                var intent = Intent(requireContext(),GuesMain::class.java)
-                startActivity(intent)
-                requireActivity().finish()
-            }
-            else {
-                // Task to be executed after 3 seconds
-                findNavController().navigate(R.id.loggedScreenFragment)
-                //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
-            }
-
-
-
+//        handler.postDelayed({
+//            var session =SessionManager(requireContext())
+//
+//            if(session.getUserId() ==1){
+//                var intent = Intent(requireContext(),GuesMain::class.java)
+//                startActivity(intent)
+//                requireActivity().finish()
+//            }
+//            else {
+//                // Task to be executed after 3 seconds
+//                findNavController().navigate(R.id.loggedScreenFragment)
+//                //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
+//               }
+//             }, 3000)
 
 
-                            }, 3000)
+        val months = listOf(
+            "January", "February",
+            "March", "April",
+            "May", "June", "July", "August",
+            "September", "October",
+            "November", "December"
+        )
 
+
+        val years = (2000..2050).toList()
+        val yearsStringList = years.map { it.toString() }
+
+        val days = resources.getStringArray(R.array.day).map { it.toInt() }
+
+        binding.spinnerLanguage.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.spinnerLanguage.arrowAnimate = false
+        binding.spinnerLanguage.setItems(months)
+        binding.spinnerLanguage.setIsFocusable(true)
+
+        binding.spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.spinneryear.arrowAnimate = false
+
+  
+
+        binding.spinneryear.setItems(yearsStringList)
+        binding.spinneryear.setIsFocusable(true)
+        binding.spinneryear.post {
+            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
         handler.removeCallbacksAndMessages(null)
     }
 
