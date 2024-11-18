@@ -53,6 +53,7 @@ class SplashFragment : Fragment() {
 
 
         handler.postDelayed({
+
             var session =SessionManager(requireContext())
 
             if(session.getUserId() ==1){
@@ -66,7 +67,7 @@ class SplashFragment : Fragment() {
                 //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
                }
              }, 3000)
-        
+
 //        val months = listOf(
 //            "January", "February", "March", "April", "May", "June", "July",
 //            "August", "September", "October", "November", "December"

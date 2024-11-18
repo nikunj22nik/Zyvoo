@@ -149,6 +149,7 @@
                         android:textSize="@dimen/_12sdp" />
 
                     <RelativeLayout
+                        android:id="@+id/rl_msg_host"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35sdp"
                         android:layout_marginTop="@dimen/_4ssp"
@@ -160,10 +161,63 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/_5sdp"
                             android:text="Message the host"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"/>
 
                     </RelativeLayout>
 
+                    
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_3sdp"
+                        android:background="@drawable/bg_four_side_corner_white"
+                        >
+
+                        <RelativeLayout
+                            android:id="@+id/doubt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:background="@drawable/bg_four_side_corner_msg_box"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="I have a doubt"
+                                android:textSize="@dimen/_12ssp"
+                                android:layout_centerHorizontal="true"
+                                />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/available_day"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp"
+                            android:layout_below="@id/doubt"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:background="@drawable/bg_four_side_grey_corner"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Available days"
+                                android:textSize="@dimen/_12ssp"
+                                android:layout_centerHorizontal="true"
+                                />
+
+                        </RelativeLayout>
+
+                    </RelativeLayout>
 
                 </LinearLayout>
 
@@ -473,8 +527,8 @@
 
                         <ImageView
                             android:id="@+id/img_calendar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/_12sdp"
+                            android:layout_height="@dimen/_12sdp"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:src="@drawable/ic_calendar_icon" />
 
@@ -485,6 +539,7 @@
                             android:layout_marginStart="@dimen/_7sdp"
                             android:layout_toRightOf="@id/img_calendar"
                             android:text="October 22, 2023"
+                            android:textSize="@dimen/_12ssp"
                             android:textColor="@color/black" />
 
                         <ImageView
@@ -493,6 +548,7 @@
                             android:layout_marginStart="@dimen/_5sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_toRightOf="@id/tv_date"
+                            android:layout_centerVertical="true"
                             android:src="@drawable/ic_edit_icon_green" />
 
                     </RelativeLayout>
@@ -509,8 +565,9 @@
 
                         <ImageView
                             android:id="@+id/clock_1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/_12sdp"
+                            android:layout_height="@dimen/_12sdp"
+                            android:layout_centerVertical="true"
                             android:src="@drawable/ic_clock_new" />
 
                         <TextView
@@ -519,6 +576,7 @@
                             android:layout_marginStart="@dimen/_9sdp"
                             android:layout_toRightOf="@id/clock_1"
                             android:text="2 Hours"
+                            android:textSize="@dimen/_12ssp"
                             android:textColor="@color/black" />
 
                     </RelativeLayout>
@@ -535,9 +593,10 @@
 
                         <ImageView
                             android:id="@+id/clock_old"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/_12ssp"
+                            android:layout_height="@dimen/_12ssp"
                             android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_centerVertical="true"
                             android:src="@drawable/ic_clock_new" />
 
                         <TextView
@@ -547,6 +606,7 @@
                             android:layout_marginStart="@dimen/_7sdp"
                             android:layout_toRightOf="@id/clock_old"
                             android:text="From 01pm to 03pm"
+                            android:textSize="@dimen/_12ssp"
                             android:textColor="@color/black" />
 
                         <ImageView
@@ -554,23 +614,295 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_centerVertical="true"
                             android:layout_toRightOf="@id/tv_timing"
                             android:src="@drawable/ic_edit_icon_green" />
 
                     </RelativeLayout>
 
-                </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/relTime"
+                        android:layout_width="wrap_content"
+                        android:layout_below="@id/date_view_1"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:visibility="gone"
+                        >
 
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:cardBackgroundColor="#FFFFFF"
+                            app:cardCornerRadius="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_8sdp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/_10sdp"
+                                android:orientation="vertical"
+                                >
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/imageIcon"
+                                    >
+                                    <TextView
+                                        android:layout_width="@dimen/_40sdp"
+                                        android:layout_height="wrap_content"
+                                        android:text="From"
+                                        android:layout_marginStart="@dimen/_10sdp"
+
+                                        android:textSize="@dimen/_12sdp"
+                                        android:fontFamily="@font/poppins"
+                                        android:layout_marginTop="@dimen/_10sdp"
+                                        />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:padding="@dimen/_2sdp"
+                                        android:layout_margin="10sp"
+                                        android:background="@drawable/bg_four_side_grey_corner"
+                                        >
+                                        <com.skydoves.powerspinner.PowerSpinnerView
+                                            android:id="@+id/endHour"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="@dimen/_22sdp"
+                                            android:gravity="center_horizontal|center_vertical"
+                                            android:textSize = "@dimen/_9ssp"
+                                            android:padding = "0dp"
+                                            android:text="22"
+                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                            android:paddingStart = "8dp"
+                                            android:paddingEnd = "8dp"
+                                            android:paddingTop = "6dp"
+                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_padding="@dimen/_10sdp"
+                                            android:textAlignment = "center"
+                                            app:spinner_arrow_gravity = "end"
+                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_popup_animation = "dropdown"
+                                            app:spinner_popup_elevation = "14dp" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:padding="@dimen/_2sdp"
+                                        android:layout_marginVertical="10sp"
+                                        android:layout_marginEnd="@dimen/_10sdp"
+                                        android:background="@drawable/bg_four_side_grey_corner"
+                                        >
+                                        <com.skydoves.powerspinner.PowerSpinnerView
+                                            android:id="@+id/endMinute"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="@dimen/_22sdp"
+                                            android:gravity="center_horizontal|center_vertical"
+                                            android:textSize = "@dimen/_10ssp"
+                                            android:padding = "0dp"
+                                            android:text="30"
+                                            app:spinner_arrow_padding="@dimen/_10sdp"
+                                            android:paddingStart = "8dp"
+                                            android:paddingEnd = "8dp"
+                                            android:paddingTop = "6dp"
+                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                            android:paddingBottom = "6dp"
+                                            android:textAlignment = "center"
+                                            app:spinner_arrow_gravity = "end"
+                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_popup_animation = "dropdown"
+                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            app:spinner_popup_elevation = "14dp" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:padding="@dimen/_2sdp"
+                                        android:layout_marginVertical="10sp"
+                                        android:layout_marginEnd="@dimen/_10sdp"
+                                        android:background="@drawable/bg_four_side_grey_corner"
+                                        >
+                                        <com.skydoves.powerspinner.PowerSpinnerView
+                                            android:id="@+id/endAmPm"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="@dimen/_22sdp"
+                                            android:gravity="center_horizontal|center_vertical"
+                                            android:textSize = "@dimen/_10ssp"
+                                            android:padding = "0dp"
+                                            android:text="AM"
+                                            app:spinner_popup_top_padding="@dimen/_10sdp"
+                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                            android:paddingStart = "8dp"
+                                            android:paddingEnd = "8dp"
+                                            android:paddingTop = "6dp"
+                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_padding="@dimen/_10sdp"
+                                            android:textAlignment = "center"
+                                            app:spinner_arrow_gravity = "end"
+
+                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            app:spinner_popup_animation = "dropdown"
+                                            app:spinner_popup_elevation = "14dp"
+                                            />
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/imageIcon"
+                                    >
+                                    <TextView
+                                        android:layout_width="@dimen/_40sdp"
+                                        android:layout_height="wrap_content"
+                                        android:text="To"
+                                        android:layout_marginStart="@dimen/_10sdp"
+                                        android:textSize="@dimen/_12sdp"
+                                        android:fontFamily="@font/poppins"
+                                       android:layout_marginTop="@dimen/_6sdp"
+                                        />
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:padding="@dimen/_2sdp"
+                                        android:layout_margin="10sp"
+                                        android:background="@drawable/bg_four_side_grey_corner"
+                                        >
+                                        <com.skydoves.powerspinner.PowerSpinnerView
+                                            android:id="@+id/startHour"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="@dimen/_22sdp"
+                                            android:gravity="center_horizontal|center_vertical"
+                                            android:textSize = "@dimen/_9ssp"
+                                            android:padding = "0dp"
+                                            android:text="22"
+                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                            android:paddingStart = "8dp"
+                                            android:paddingEnd = "8dp"
+                                            android:paddingTop = "6dp"
+                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_padding="@dimen/_10sdp"
+                                            android:textAlignment = "center"
+                                            app:spinner_arrow_gravity = "end"
+                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_popup_animation = "dropdown"
+                                            app:spinner_popup_elevation = "14dp" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:padding="@dimen/_2sdp"
+                                        android:layout_marginVertical="10sp"
+                                        android:layout_marginEnd="@dimen/_10sdp"
+                                        android:background="@drawable/bg_four_side_grey_corner"
+                                        >
+                                        <com.skydoves.powerspinner.PowerSpinnerView
+                                            android:id="@+id/startMinute"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="@dimen/_22sdp"
+                                            android:gravity="center_horizontal|center_vertical"
+                                            android:textSize = "@dimen/_10ssp"
+                                            android:padding = "0dp"
+                                            android:text="30"
+                                            app:spinner_arrow_padding="@dimen/_10sdp"
+                                            android:paddingStart = "8dp"
+                                            android:paddingEnd = "8dp"
+                                            android:paddingTop = "6dp"
+                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                            android:paddingBottom = "6dp"
+                                            android:textAlignment = "center"
+                                            app:spinner_arrow_gravity = "end"
+                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_popup_animation = "dropdown"
+                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            app:spinner_popup_elevation = "14dp" />
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:padding="@dimen/_2sdp"
+                                        android:layout_marginVertical="10sp"
+                                        android:layout_marginEnd="@dimen/_10sdp"
+                                        android:background="@drawable/bg_four_side_grey_corner"
+                                        >
+                                        <com.skydoves.powerspinner.PowerSpinnerView
+                                            android:id="@+id/startAmPm"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="@dimen/_22sdp"
+                                            android:gravity="center_horizontal|center_vertical"
+                                            android:textSize = "@dimen/_10ssp"
+                                            android:padding = "0dp"
+                                            android:text="AM"
+                                            app:spinner_popup_top_padding="@dimen/_10sdp"
+                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                            android:paddingStart = "8dp"
+                                            android:paddingEnd = "8dp"
+                                            android:paddingTop = "6dp"
+                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_padding="@dimen/_10sdp"
+                                            android:textAlignment = "center"
+                                            app:spinner_arrow_gravity = "end"
+
+                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            app:spinner_popup_animation = "dropdown"
+                                            app:spinner_popup_elevation = "14dp"
+                                            />
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <TextView
+                                    android:id="@+id/textSaveChangesButtonTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:paddingHorizontal="@dimen/_20sdp"
+                                    android:layout_marginTop="@dimen/_10sdp"
+                                    android:layout_marginHorizontal="@dimen/_10sdp"
+                                    android:background="@drawable/edit_name_bg"
+                                    android:backgroundTint="#3A4B4C"
+                                    android:fontFamily="@font/poppins"
+                                    android:paddingVertical="@dimen/_8sdp"
+                                    android:text="Save Changes"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_9sdp"
+                                    android:textStyle="normal" />
+
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </RelativeLayout>
+                </RelativeLayout>
                 <RelativeLayout
                     android:id="@+id/relCalendarLayouts"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_100sdp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_83sdp"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:visibility="gone">
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         app:cardBackgroundColor="#FFFFFF"
                         app:cardCornerRadius="@dimen/_10sdp">
@@ -579,156 +911,117 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            >
 
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/imageIcon"
+                                >
 
-                           <LinearLayout
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content"
-                               >
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/_2sdp"
+                                    android:layout_margin="10sp"
+                                    android:background="@drawable/bg_four_side_grey_corner"
+                                    >
+                                    <com.skydoves.powerspinner.PowerSpinnerView
+                                        android:id="@+id/spinnerLanguage"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="@dimen/_22sdp"
+                                        android:gravity="center_horizontal|center_vertical"
+                                        android:textSize = "@dimen/_10ssp"
+                                        android:padding = "0dp"
+                                        android:text="22"
+                                        app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                        app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                        android:paddingStart = "8dp"
+                                        android:paddingEnd = "8dp"
+                                        android:paddingTop = "6dp"
+                                        android:paddingBottom = "6dp"
+                                        app:spinner_arrow_padding="@dimen/_10sdp"
+                                        android:textAlignment = "center"
+                                        app:spinner_arrow_gravity = "end"
+                                        app:spinner_divider_size = "0.4dp"
+                                        app:spinner_popup_animation = "dropdown"
+                                        app:spinner_popup_elevation = "14dp" />
 
+                                </LinearLayout>
 
-                           </LinearLayout>
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/_2sdp"
+                                    android:layout_marginVertical="10sp"
+                                    android:layout_marginEnd="@dimen/_10sdp"
+                                    android:background="@drawable/bg_four_side_grey_corner"
+                                    >
+                                    <com.skydoves.powerspinner.PowerSpinnerView
+                                        android:id="@+id/spinnermonth"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="@dimen/_22sdp"
+                                        android:gravity="center_horizontal|center_vertical"
+                                        android:textSize = "@dimen/_10ssp"
+                                        android:padding = "0dp"
+                                        android:text="October"
+                                        app:spinner_arrow_padding="@dimen/_10sdp"
+                                        android:paddingStart = "8dp"
+                                        android:paddingEnd = "8dp"
+                                        android:paddingTop = "6dp"
+                                        app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                        android:paddingBottom = "6dp"
+                                        android:textAlignment = "center"
+                                        app:spinner_arrow_gravity = "end"
+                                        app:spinner_divider_size = "0.4dp"
+                                        app:spinner_popup_animation = "dropdown"
+                                        app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                        app:spinner_popup_elevation = "14dp" />
 
+                                </LinearLayout>
 
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/_2sdp"
+                                    android:layout_marginVertical="10sp"
+                                    android:layout_marginEnd="@dimen/_10sdp"
+                                    android:background="@drawable/bg_four_side_grey_corner"
+                                    >
+                                    <com.skydoves.powerspinner.PowerSpinnerView
+                                        android:id="@+id/spinneryear"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_horizontal|center_vertical"
+                                        android:textSize = "@dimen/_10ssp"
+                                        android:padding = "0dp"
+                                        android:text="2024"
+                                        app:spinner_popup_top_padding="@dimen/_10sdp"
+                                        app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                        android:paddingStart = "8dp"
+                                        android:paddingEnd = "8dp"
+                                        android:paddingTop = "6dp"
+                                        android:paddingBottom = "6dp"
+                                        app:spinner_arrow_padding="@dimen/_10sdp"
+                                        android:textAlignment = "center"
+                                        app:spinner_arrow_gravity = "end"
+                                        app:spinner_divider_size = "0.4dp"
+                                        app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                        app:spinner_popup_animation = "dropdown"
+                                        app:spinner_popup_elevation = "14dp"
+                                        />
 
-<!--                        <LinearLayout-->
-<!--                            android:id="@+id/llCalendarLayout"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_marginTop="@dimen/_15sdp"-->
+                                </LinearLayout>
 
-<!--                            android:layout_marginHorizontal="@dimen/_5sdp"-->
-<!--                            android:orientation="horizontal"-->
-<!--                            android:layout_gravity="center"-->
-<!--                            android:gravity="center"-->
-<!--                            android:weightSum="3">-->
+                            </LinearLayout>
 
-<!--                            <com.google.android.material.textfield.TextInputLayout-->
-<!--                                android:id="@+id/dd_select_gender"-->
-<!--                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="@dimen/_35sdp"-->
-<!--                                android:layout_weight="0.9"-->
-<!--                                android:background="@drawable/circular_gray_shape_bg"-->
-<!--                                app:boxCornerRadiusBottomEnd="4dp"-->
-<!--                                app:boxCornerRadiusBottomStart="4dp"-->
-<!--                                app:boxCornerRadiusTopEnd="4dp"-->
-<!--                                app:boxCornerRadiusTopStart="4dp"-->
-<!--                                app:boxStrokeColor="@android:color/transparent"-->
-<!--                                app:boxStrokeWidth="0dp"-->
-<!--                                app:endIconDrawable="@drawable/ic_drop_down"-->
-<!--                                app:endIconTint="@color/black">-->
-
-<!--                                <com.google.android.material.textfield.MaterialAutoCompleteTextView-->
-<!--                                    android:id="@+id/spinner_day"-->
-<!--                                    android:layout_width="match_parent"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:inputType="none"-->
-<!--                                    android:background="@null"-->
-<!--                                    android:padding="@dimen/_1sdp"-->
-<!--                                    android:text="22"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:textSize="@dimen/_11sdp" />-->
-
-<!--                            </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--                            <com.google.android.material.textfield.TextInputLayout-->
-<!--                                android:id="@+id/dd_select_month"-->
-<!--                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-<!--                                android:layout_width="@dimen/_55sdp"-->
-<!--                                android:layout_height="@dimen/_35sdp"-->
-<!--                                android:layout_weight="1.2"-->
-<!--                                android:background="@drawable/circular_gray_shape_bg"-->
-<!--                                app:boxCornerRadiusBottomEnd="4dp"-->
-<!--                                app:boxCornerRadiusBottomStart="4dp"-->
-<!--                                android:layout_marginStart="@dimen/_3sdp"-->
-<!--                                app:boxCornerRadiusTopEnd="4dp"-->
-<!--                                app:boxCornerRadiusTopStart="4dp"-->
-<!--                                app:boxStrokeColor="@android:color/transparent"-->
-<!--                                app:boxStrokeWidth="0dp"-->
-<!--                                app:endIconDrawable="@drawable/ic_drop_down"-->
-<!--                                app:endIconTint="@color/black">-->
-
-<!--                                <com.google.android.material.textfield.MaterialAutoCompleteTextView-->
-<!--                                    android:id="@+id/spinner_month"-->
-<!--                                    android:layout_width="match_parent"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:inputType="none"-->
-<!--                                    android:background="@null"-->
-<!--                                    android:padding="@dimen/_1sdp"-->
-<!--                                    android:text="october"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:textSize="@dimen/_11sdp" />-->
-
-<!--                            </com.google.android.material.textfield.TextInputLayout>-->
-
-
-<!--                            <com.google.android.material.textfield.TextInputLayout-->
-<!--                                android:id="@+id/dd_select_year"-->
-<!--                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-<!--                                android:layout_width="@dimen/_50sdp"-->
-<!--                                android:layout_height="@dimen/_35sdp"-->
-<!--                                android:layout_weight="0.9"-->
-<!--                                android:background="@drawable/circular_gray_shape_bg"-->
-<!--                                app:boxCornerRadiusBottomEnd="4dp"-->
-<!--                                app:boxCornerRadiusBottomStart="4dp"-->
-<!--                                android:layout_marginStart="@dimen/_3sdp"-->
-<!--                                app:boxCornerRadiusTopEnd="4dp"-->
-<!--                                app:boxCornerRadiusTopStart="4dp"-->
-<!--                                app:boxStrokeColor="@android:color/transparent"-->
-<!--                                app:boxStrokeWidth="0dp"-->
-<!--                                app:endIconDrawable="@drawable/ic_drop_down"-->
-<!--                                app:endIconTint="@color/black">-->
-
-<!--                                <com.google.android.material.textfield.MaterialAutoCompleteTextView-->
-<!--                                    android:id="@+id/spinner_year"-->
-<!--                                    android:layout_width="match_parent"-->
-<!--                                    android:layout_height="match_parent"-->
-<!--                                    android:singleLine="true"-->
-<!--                                    android:inputType="none"-->
-<!--                                    android:background="@null"-->
-<!--                                    android:padding="@dimen/_1sdp"-->
-<!--                                    android:text="2024"-->
-<!--                                    android:textColor="@color/black"-->
-<!--                                    android:textSize="@dimen/_11sdp" />-->
-
-<!--                            </com.google.android.material.textfield.TextInputLayout>-->
-
-<!--&lt;!&ndash;                            <RelativeLayout&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:layout_width="0dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:layout_weight="0.9"&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:layout_marginStart="@dimen/_3sdp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                android:background="@drawable/circular_gray_shape_bg">&ndash;&gt;-->
-
-<!--&lt;!&ndash;                                <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:id="@+id/textViewYear"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_width="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:text="2024"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:padding="@dimen/_5sdp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_marginStart="@dimen/_5sdp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:textSize="@dimen/_10sdp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:textColor="@color/black"/>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                                <ImageView&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_width="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_height="wrap_content"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_alignParentEnd="true"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_marginEnd="@dimen/_10sdp"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:layout_centerVertical="true"&ndash;&gt;-->
-<!--&lt;!&ndash;                                    android:src="@drawable/ic_drop_down"/>&ndash;&gt;-->
-
-<!--&lt;!&ndash;                            </RelativeLayout>&ndash;&gt;-->
-
-<!--                        </LinearLayout>-->
-
-                        <TextView
+                            <TextView
                             android:id="@+id/textSaveChangesButton"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
+                            android:paddingHorizontal="@dimen/_20sdp"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:layout_marginHorizontal="@dimen/_10sdp"
                             android:background="@drawable/edit_name_bg"
@@ -746,6 +1039,7 @@
                     </androidx.cardview.widget.CardView>
 
                 </RelativeLayout>
+
             </RelativeLayout>
 
             <View

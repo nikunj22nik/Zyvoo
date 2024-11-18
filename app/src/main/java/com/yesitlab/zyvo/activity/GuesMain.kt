@@ -23,7 +23,9 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+     //  enableEdgeToEdge()
+
+
         binding = ActivityGuesMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
@@ -34,7 +36,18 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
         binding.icProfile.setOnClickListener(this)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+        //    v.setPadding(0, systemBars.top, 0, 0)
+
+            val isKeyboardVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
+            v.setPadding(
+                systemBars.left,
+                systemBars.top,
+                systemBars.right,
+                if (isKeyboardVisible) imeInsets.bottom else systemBars.bottom
+            )
             insets
         }
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView_main) as NavHostFragment

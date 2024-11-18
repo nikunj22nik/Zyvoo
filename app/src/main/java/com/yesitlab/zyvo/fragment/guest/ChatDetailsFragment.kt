@@ -16,11 +16,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ChatDetailsFragment : Fragment() {
+
     private var _binding : FragmentChatDetailsBinding? = null
     private val binding get() = _binding!!
-
     var chatDetailsAdapter : ChatDetailsAdapter? = null
-
     private  val viewModel : ChatDetailsViewModel by viewModels()
     private var param1: String? = null
     private var param2: String? = null
@@ -34,25 +33,20 @@ class ChatDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         // Inflate the layout for this fragment
         _binding = FragmentChatDetailsBinding.inflate(LayoutInflater.from(requireContext()),container,false)
+       // requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
 
 
         binding.viewModel = viewModel
-
         binding.lifecycleOwner = viewLifecycleOwner
-
         chatDetailsAdapter = ChatDetailsAdapter(requireContext(), mutableListOf())
         binding.rvChatting.adapter = chatDetailsAdapter
-
         viewModel.list.observe(viewLifecycleOwner, Observer {
             chatDetailsAdapter!!.updateItem(it)
         })
-
-
         return binding.getRoot()
     }
 
@@ -65,7 +59,6 @@ class ChatDetailsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-
     }
 
 
