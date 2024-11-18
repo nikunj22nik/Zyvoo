@@ -12,8 +12,8 @@
     <dimen name="image_large_size">@dimen/_100sdp</dimen>
 
 
-    <dimen name="imageWishListWidthSmall">@dimen/_125sdp</dimen>
-    <dimen name="imageWishListHeightSmall">@dimen/_130sdp</dimen>
+    <dimen name="imageWishListWidthSmall">@dimen/_120sdp</dimen>
+    <dimen name="imageWishListHeightSmall">@dimen/_127sdp</dimen>
     <dimen name="text_small_size">12sp</dimen>
 
     <!-- Define large dimensions for Fragment -->

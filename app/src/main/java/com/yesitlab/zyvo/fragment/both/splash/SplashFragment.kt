@@ -43,17 +43,13 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handler = Handler(Looper.getMainLooper())
-        val images = listOfNotNull(
-            ContextCompat.getDrawable(requireActivity(), R.drawable.splash_icon),
-            ContextCompat.getDrawable(requireActivity(), R.drawable.splash_icon1),
-        )
 
-        val animationDrawable = AnimationDrawable().apply {
-            images.forEach { addFrame(it, 1000 / images.size) } // Divide the duration equally between frames
-            isOneShot = false // Loop the animation
-        }
-        binding.imageIcon.setImageDrawable(animationDrawable) // Set the animation drawable to the ImageView
-        animationDrawable.start()
+//        val animationDrawable = AnimationDrawable().apply {
+//            images.forEach { addFrame(it, 1000 / images.size) } // Divide the duration equally between frames
+//            isOneShot = false // Loop the animation
+//        }
+//        binding.imageIcon.setImageDrawable(animationDrawable) // Set the animation drawable to the ImageView
+//        animationDrawable.start()
 
 
         handler.postDelayed({
@@ -70,7 +66,7 @@ class SplashFragment : Fragment() {
                 //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
                }
              }, 3000)
-
+        
 //        val months = listOf(
 //            "January", "February", "March", "April", "May", "June", "July",
 //            "August", "September", "October", "November", "December"

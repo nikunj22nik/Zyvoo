@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_8sdp"
+    android:orientation="vertical">
+    
+    
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imageProfilePicture"
+            android:layout_width="@dimen/_47sdp"
+            android:layout_height="@dimen/_47sdp"
+            android:background="@drawable/profle_picture_ring"
+            android:padding="@dimen/_9sdp"
+            android:layout_marginStart="@dimen/_10sdp"
+            android:src="@drawable/ic_mia_pic"
+
+            />
+
+        <TextView
+            android:id="@+id/textUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mia"
+            android:textColor="#000"
+            android:textSize="@dimen/_11ssp"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:fontFamily="@font/poppins_light"
+           android:layout_toEndOf="@id/imageProfilePicture"/>
+
+
+        <TextView
+            android:id="@+id/textDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:text="Jul 20, 2023, 11:32 AM"
+            android:textColor="#000"
+            android:textSize="@dimen/_10ssp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:fontFamily="@font/poppins"
+            android:maxWidth="@dimen/_135sdp"
+            android:layout_centerVertical="true"/>
+    </RelativeLayout>
+
+
+
+    <TextView
+        android:id="@+id/textMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hi welcome to our house!"
+        android:textColor="#000"
+        android:layout_marginHorizontal="@dimen/_17sdp"
+        android:textStyle="bold"
+        android:textSize="@dimen/_11ssp"
+        android:fontFamily="@font/poppins_light"
+        />
+
+
+
+</LinearLayout>

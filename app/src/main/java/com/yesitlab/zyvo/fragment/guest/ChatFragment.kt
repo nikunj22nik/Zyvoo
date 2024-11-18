@@ -18,6 +18,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.AdapterChatList
@@ -61,7 +62,12 @@ class ChatFragment : Fragment() ,View.OnClickListener{
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageFilter.setOnClickListener(this)
-        adapterChatList = AdapterChatList(requireContext(), chatList)
+        adapterChatList = AdapterChatList(requireContext(), chatList,object : OnClickListener{
+            override fun itemClick(obj: Int) {
+             findNavController().navigate(R.id.chatDetailsFragment)
+            }
+
+        })
         binding.recyclerViewChat.adapter = adapterChatList
         viewModel.list.observe(viewLifecycleOwner, Observer { list ->
             chatList = list

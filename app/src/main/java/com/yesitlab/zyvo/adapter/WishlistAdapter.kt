@@ -34,7 +34,11 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean, var li
 //            }
 //        }
 
-            // Adjust size based on isSmall flag using dimensions from dimens.xml
+           // var imageWidth : Int =
+
+            //binding
+
+          //   Adjust size based on isSmall flag using dimensions from dimens.xml
             val resources = itemView.context.resources
             val (imageWidth, imageHeight, textSize) = if (isSmall) {
                 Triple(
@@ -48,7 +52,20 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean, var li
                     resources.getDimensionPixelSize(R.dimen.imageWishListHeightLarge),
                     resources.getDimension(R.dimen.text_large_size)
                 )
-            }}
+            }
+
+            // Apply dimensions to ImageView
+            binding.imageWishList.layoutParams.apply {
+                width = imageWidth
+                height = imageHeight
+            }
+            binding.imageWishList.requestLayout()
+
+            // Apply text size to TextViews
+           // binding.textSaved.textSize = textSize
+         //   binding.textTitle.textSize = textSize
+
+                    }
 
 
         }

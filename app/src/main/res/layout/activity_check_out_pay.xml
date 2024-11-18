@@ -96,11 +96,12 @@
 
                         <de.hdodenhof.circleimageview.CircleImageView
                             android:id="@+id/profile_image_1"
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
+                            android:layout_width="@dimen/_21sdp"
+                            android:layout_height="@dimen/_21sdp"
                             android:src="@drawable/ic_img_girl_dumm"
                             app:civ_border_color="#FF000000"
-                            app:civ_border_width="1dp" />
+                            app:civ_border_width="@dimen/_1sdp" />
+
 
                         <TextView
                             android:layout_width="wrap_content"

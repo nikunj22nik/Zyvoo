@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/ic_dots_bg"
+
     tools:context=".activity.guest.WhereTimeActivity">
 
     <View
@@ -79,7 +79,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Where"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -88,8 +88,9 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:text="Type location...."
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/_12sdp" />
+                        android:fontFamily="@font/poppins"
+                        android:textColor="#66000000"
+                        android:textSize="@dimen/_10sdp" />
 
 
                 </RelativeLayout>
@@ -154,7 +155,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Time"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -163,8 +164,9 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:text="Add Time"
-                        android:textColor="@color/grey"
-                        android:textSize="@dimen/_12sdp" />
+                        android:fontFamily="@font/poppins"
+                        android:textColor="#66000000"
+                        android:textSize="@dimen/_10sdp" />
 
 
                 </RelativeLayout>
@@ -444,7 +446,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Activity"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />
 
                     <ImageView

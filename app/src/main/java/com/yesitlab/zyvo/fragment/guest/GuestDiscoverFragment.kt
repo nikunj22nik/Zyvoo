@@ -1,15 +1,24 @@
 package com.yesitlab.zyvo.fragment.guest
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -19,6 +28,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -270,7 +280,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 //            transaction.commit() // Commit the transaction to make changes
 //        }
     }
-
+/*
     private fun showWishlistDialog() {
         //  private  val viewModel : WishlistViewModel by viewModels()
 
@@ -278,12 +288,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         //DialogWishlistBinding
 
         // Set up the RecyclerView for the dialog
-        val dialogAdapter = WishlistAdapter(requireContext(),true, mutableListOf())
-        dialogBinding.rvWishList.adapter = dialogAdapter
 
-        viewModel.list.observe(viewLifecycleOwner) {
-            dialogAdapter.updateItem(it)
-        }
 
         // Create and show the dialog
         val dialog = AlertDialog.Builder(context)
@@ -293,10 +298,10 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         dialog.show()
 
         // Optional: Set dialog size for consistency
-        dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.9).toInt(),
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
+//        dialog.window?.setLayout(
+//            (resources.displayMetrics.widthPixels * 0.9).toInt(),
+//            ViewGroup.LayoutParams.WRAP_CONTENT
+//        )
 
         // Close button logic
         dialogBinding.imageCross.setOnClickListener {
@@ -304,10 +309,100 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         }
     }
 
+ */
+
+
+
+   private fun showAddWishlistDialog() {
+        val dialogAdapter = WishlistAdapter(requireContext(),true, mutableListOf())
+
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_add_wishlist)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+//            // Retrieve NavController using NavHostFragment
+//            val navHostFragment = (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.fragmentAuthContainerView) as NavHostFragment
+//            val navController = navHostFragment.navController
+
+val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
+
+            rvWishList.adapter = dialogAdapter
+
+            viewModel.list.observe(viewLifecycleOwner) {
+                dialogAdapter.updateItem(it)
+            }
+
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+      findViewById<TextView>(R.id.textCreateWishList).setOnClickListener {
+          createWishListDialog()
+                dismiss()
+            }
+
+           // findViewById<TextView>(R.id.text).text = text
+
+
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
+
+    private fun createWishListDialog(){
+
+
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_create_wishlist)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+         val etDescription =    findViewById<EditText>(R.id.etDescription)
+
+         val tvMaxCount =    findViewById<TextView>(R.id.textMaxCount)
+            setupCharacterCountListener(etDescription, tvMaxCount, 50)
+            // findViewById<TextView>(R.id.text).text = text
+
+
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+
+    }
+    private fun setupCharacterCountListener(editText: EditText, textView: TextView, maxLength: Int) {
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            @SuppressLint("SetTextI18n")
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val remainingChars = maxLength - (s?.length ?: 0)
+                textView.text = "max $remainingChars characters"
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
     override fun itemClick(obj: Int, text: String) {
         when(text){
             "Add Wish"->{
-                showWishlistDialog()
+                showAddWishlistDialog()
             }
         }
     }
