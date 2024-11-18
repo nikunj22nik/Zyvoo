@@ -82,12 +82,9 @@ class CheckOutPayActivity : AppCompatActivity() {
         adapterAddon = AdapterAddOn(this@CheckOutPayActivity,getAddOnList().subList(0,4))
         binding.recyclerAddOn.layoutManager = LinearLayoutManager(this@CheckOutPayActivity, LinearLayoutManager.VERTICAL ,false)
         binding.recyclerAddOn.adapter = adapterAddon
-
         addPaymentCardAdapter = AdapterAddPaymentCard(this, mutableListOf())
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
-
         val dayarray = resources.getStringArray(R.array.day)
-
         val adapterday: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, dayarray)
 
         // Assign the adapter to this ListActivity
@@ -155,11 +152,9 @@ class CheckOutPayActivity : AppCompatActivity() {
                     }
                 }
             }
-
             submitButton.setOnClickListener {
                 dismiss()
             }
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }

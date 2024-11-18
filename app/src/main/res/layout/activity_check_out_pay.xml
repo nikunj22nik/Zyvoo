@@ -285,8 +285,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="$300"
-                        android:textStyle="bold
-" />
+                        android:textStyle="bold" />
 
                 </RelativeLayout>
 
@@ -528,7 +527,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/date_view"
-                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:background="@drawable/bg_two_side_corner"
                         android:paddingVertical="@dimen/_10sdp">
@@ -566,8 +565,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_100sdp"
                     android:layout_marginTop="@dimen/_83sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:visibility="visible">
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:visibility="gone">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
