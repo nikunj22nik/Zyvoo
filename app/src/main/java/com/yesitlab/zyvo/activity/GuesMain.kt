@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.databinding.ActivityGuesMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class GuesMain : AppCompatActivity() ,OnClickListener {
     lateinit var binding : ActivityGuesMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -35,8 +37,26 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView_main) as NavHostFragment
+        val navController = navHostFragment.navController
 
-    }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.chatDetailsFragment -> hideBottomNavigation()
+                else -> showBottomNavigation()
+            }
+        }
+
+
+}
+private fun showBottomNavigation() {
+    binding.lay1.visibility = View.VISIBLE
+}
+
+private fun hideBottomNavigation() {
+    binding.lay1.visibility = View.GONE
+}
+
 
     private fun inboxColor(){
 

@@ -59,5 +59,10 @@
         android:id="@+id/wishlistFragment"
         android:name="com.yesitlab.zyvo.fragment.guest.WishlistFragment"
         android:label="WishlistFragment" />
+    <fragment
+        android:id="@+id/chatDetailsFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.ChatDetailsFragment"
+        android:label="fragment_chat_details"
+        tools:layout="@layout/fragment_chat_details" />
 
 </navigation>

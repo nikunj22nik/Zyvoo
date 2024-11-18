@@ -48,20 +48,20 @@ class SplashFragment : Fragment() {
 //        animationDrawable.start()
 
 
-//        handler.postDelayed({
-//            var session =SessionManager(requireContext())
-//
-//            if(session.getUserId() ==1){
-//                var intent = Intent(requireContext(),GuesMain::class.java)
-//                startActivity(intent)
-//                requireActivity().finish()
-//            }
-//            else {
-//                // Task to be executed after 3 seconds
-//                findNavController().navigate(R.id.loggedScreenFragment)
-//                //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
-//               }
-//             }, 3000)
+        handler.postDelayed({
+            var session =SessionManager(requireContext())
+
+            if(session.getUserId() ==1){
+                var intent = Intent(requireContext(),GuesMain::class.java)
+                startActivity(intent)
+                requireActivity().finish()
+            }
+            else {
+                // Task to be executed after 3 seconds
+                findNavController().navigate(R.id.loggedScreenFragment)
+                //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
+               }
+             }, 3000)
 
 
         val months = listOf(

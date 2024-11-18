@@ -21,8 +21,8 @@ import com.yesitlab.zyvo.model.ChatListModel
 
 class AdapterChatList(
     var context: Context,
-    var list: MutableList<ChatListModel>
-
+    var list: MutableList<ChatListModel>,
+var listener: OnClickListener
 ) : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>() {
     // Track the selected position
 
@@ -57,7 +57,7 @@ class AdapterChatList(
                 notifyItemChanged(selectedPosition) // Highlight new selection
 
                 // Optional: Trigger any listener action
-             //   listener.onItemClick(currentItem, position)
+                listener.itemClick(position)
             }
         }
 
