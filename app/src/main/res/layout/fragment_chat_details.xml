@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragment.guest.ChatDetailsFragment">
+
     <data>
-<variable
+    <variable
     name="viewModel"
     type="com.yesitlab.zyvo.viewmodel.ChatDetailsViewModel" />
     </data>
@@ -31,13 +32,14 @@
         android:layout_marginVertical="@dimen/_10sdp">
 
         <ImageView
-            android:id="@+id/img_back"
+            android:id="@+id/imgBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_15sdp"
             android:src="@drawable/ic_back_icon" />
 
         <ImageView
+            android:id="@+id/imageFilter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
@@ -116,6 +118,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fitsSystemWindows="true"
+
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
         />

@@ -2,6 +2,7 @@ package com.yesitlab.zyvo.activity
 
 import android.app.Dialog
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -16,6 +18,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.AdapterAddOn
@@ -49,6 +52,181 @@ class CheckOutPayActivity : AppCompatActivity() {
 
         initialization()
         clickListeneres()
+        callingSelectionOfDate()
+        callingSelectionOfTime()
+        messageHostListener()
+    }
+
+
+    fun messageHostListener(){
+        binding.rlMsgHost.setOnClickListener {
+
+        }
+    }
+
+    fun callingSelectionOfTime(){
+        val hoursArray = Array(24) { i -> (i + 1).toString() }
+        val hoursList: List<String> = hoursArray.toList()
+
+        val minutesArray = Array(60) { i -> (i + 1).toString() }
+        val minutesList :List<String> = minutesArray.toList()
+
+        binding.endHour.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.endHour.arrowAnimate = false
+        binding.endHour.setItems(hoursList)
+        binding.endHour.setIsFocusable(true)
+        val recyclerView = binding.endHour.getSpinnerRecyclerView()
+        val spacing = 16 // Spacing in pixels
+        recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                outRect.top = spacing
+            }
+        })
+
+
+        binding.endMinute.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.endMinute.arrowAnimate = false
+        binding.endMinute.setItems(minutesList)
+        binding.endMinute.setIsFocusable(true)
+        val recyclerView1 = binding.endMinute.getSpinnerRecyclerView()
+        // Spacing in pixels
+        recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                outRect.top = spacing
+            }
+        })
+
+
+        binding.startHour.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.startHour.arrowAnimate = false
+        binding.startHour.setItems(hoursList)
+        binding.startHour.setIsFocusable(true)
+        val recyclerView2 = binding.startHour.getSpinnerRecyclerView()
+        recyclerView2.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                outRect.top = spacing
+            }
+        })
+
+        binding.startMinute.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.startMinute.arrowAnimate = false
+        binding.startMinute.setItems(hoursList)
+        binding.startMinute.setIsFocusable(true)
+        val recyclerView3 = binding.startMinute.getSpinnerRecyclerView()
+        recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                outRect.top = spacing
+            }
+        })
+
+        binding.dateView1.setOnClickListener {
+            if(binding.relTime.visibility == View.VISIBLE){
+                binding.relTime.visibility = View.GONE
+            }else{
+                binding.relTime.visibility = View.VISIBLE
+            }
+        }
+
+
+    }
+
+    fun callingSelectionOfDate(){
+
+                val months = listOf("January", "February", "March", "April", "May", "June", "July",
+                    "August", "September", "October", "November", "December")
+
+        val years = (2000..2050).toList()
+        val yearsStringList = years.map { it.toString() }
+        Toast.makeText(this,"Year String List: "+yearsStringList.size,Toast.LENGTH_LONG).show()
+        val days = resources.getStringArray(R.array.day).toList()
+
+
+        binding.spinnerLanguage.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.spinnerLanguage.arrowAnimate = false
+        binding.spinnerLanguage.setItems(days)
+        binding.spinnerLanguage.setIsFocusable(true)
+        val recyclerView = binding.spinnerLanguage.getSpinnerRecyclerView()
+
+       // Add item decoration for spacing
+        val spacing = 16 // Spacing in pixels
+        recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                outRect.top = spacing
+            }
+        })
+
+        binding.spinnermonth.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.spinnermonth.arrowAnimate = false
+        binding.spinnermonth.setItems(months)
+        binding.spinnermonth.setIsFocusable(true)
+        val recyclerView3 = binding.spinnermonth.getSpinnerRecyclerView()
+
+        recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                outRect.top = spacing
+            }
+        })
+
+
+        binding.spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.spinneryear.arrowAnimate = false
+        binding.spinneryear.setItems(yearsStringList)
+        binding.spinneryear.setIsFocusable(true)
+        binding.spinneryear.post {
+            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
+        }
+
+        val recyclerView1 = binding.spinneryear.getSpinnerRecyclerView()
+        recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                outRect.top = spacing
+            }
+
+        })
+
+        binding.dateView.setOnClickListener {
+            if(binding.relCalendarLayouts.visibility == View.VISIBLE){
+                binding.relCalendarLayouts.visibility = View.GONE
+            }else{
+                binding.relCalendarLayouts.visibility = View.VISIBLE
+            }
+        }
+
     }
 
 
@@ -82,12 +260,9 @@ class CheckOutPayActivity : AppCompatActivity() {
         adapterAddon = AdapterAddOn(this@CheckOutPayActivity,getAddOnList().subList(0,4))
         binding.recyclerAddOn.layoutManager = LinearLayoutManager(this@CheckOutPayActivity, LinearLayoutManager.VERTICAL ,false)
         binding.recyclerAddOn.adapter = adapterAddon
-
         addPaymentCardAdapter = AdapterAddPaymentCard(this, mutableListOf())
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
-
         val dayarray = resources.getStringArray(R.array.day)
-
         val adapterday: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, dayarray)
 
         // Assign the adapter to this ListActivity
@@ -155,11 +330,9 @@ class CheckOutPayActivity : AppCompatActivity() {
                     }
                 }
             }
-
             submitButton.setOnClickListener {
                 dismiss()
             }
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
