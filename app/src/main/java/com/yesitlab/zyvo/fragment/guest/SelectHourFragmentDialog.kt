@@ -5,12 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
+import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.databinding.FragmentSelectHourDialogBinding
 
 
 class SelectHourFragmentDialog : DialogFragment() {
 
+    private  var _binding : FragmentSelectHourDialogBinding? = null
+    private  val binding  get() =  _binding!!
+    private lateinit var dateManager: DateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +31,29 @@ class SelectHourFragmentDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_select_hour_dialog, container, false)
+        _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_select_hour_dialog, container, false)
+
+        dateManager = DateManager(requireContext())
+
+
+        return binding.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.rlSelectHour.setOnClickListener{
+            dateManager.showHourSelectionDialog(requireContext()) { selectedHour ->
+                binding.textSelectedHour.setText(selectedHour.toString())
+            }
+
+        }
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        _binding = null
     }
 
 

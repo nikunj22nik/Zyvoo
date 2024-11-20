@@ -55,142 +55,168 @@
 
 
 
-    <in.aabhasjindal.otptextview.OtpTextView
+<!--    <com.ozcanalasalvar.otp_view.view.OtpView-->
+<!--        android:id="@+id/OtpView"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="center_horizontal"-->
+<!--        android:layout_marginTop="@dimen/_10sdp"-->
+<!--        android:textColor="@color/black"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:length="4"-->
+<!--        app:otp=""-->
+<!--        app:otp_box_background="@drawable/otp_box"-->
+<!--        app:otp_box_background_error="@color/red"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textEnterYourEmail"/>-->
+
+    <com.ozcanalasalvar.otp_view.view.OtpView
         android:id="@+id/OtpView"
+
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:textColor="@color/black"
+        android:layout_height="@dimen/_50sdp"
+        app:activeColor="#4AEAB1"
+
+        android:layout_marginTop="10dp"
+        app:digits="4"
+
+        app:boxStrokeColor="#C4C4C4"
+    app:boxStrokeWidth="@dimen/_1sdp"
+
+    app:autoFocusEnabled="false"
+    app:keyboardType="number"
+
+
+    app:otpSymbol=""
+
+        app:passiveColor="#fff"
+        app:textColor="#000"
+        app:textSize="22"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:length="4"
-        app:otp=""
-        app:otp_box_background="@drawable/otp_box"
-        app:otp_box_background_error="@color/red"
-        app:layout_constraintTop_toBottomOf="@+id/textEnterYourEmail"/>
+            app:layout_constraintTop_toBottomOf="@+id/textEnterYourEmail"/>
 
-
-    <TextView
-        android:id="@+id/textSubmitButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_15sdp"
-        android:background="@drawable/button_bg"
-        android:fontFamily="@font/poppins"
-        android:paddingHorizontal="@dimen/_90sdp"
-        android:paddingVertical="@dimen/_5sdp"
-        android:text="Submit"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_11sdp"
-        app:layout_constraintTop_toBottomOf="@+id/OtpView"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
-
-    <RelativeLayout
-        android:id="@+id/rlDidntReceive"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_28sdp"
-        android:layout_marginEnd="@dimen/_15sdp"
-        android:layout_marginBottom="@dimen/_30sdp"
-        app:layout_constraintTop_toBottomOf="@+id/textSubmitButton">
-        <TextView
-            android:id="@+id/textDidntReceive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:fontFamily="@font/poppins"
-            android:layout_centerVertical="true"
-            android:text="Didn't receive the verification code?"
-            android:textColor="#636363"
-            android:textSize="@dimen/_9ssp"
-            android:textStyle="normal"
-            />
 
         <TextView
-            android:id="@+id/textResend"
+            android:id="@+id/textSubmitButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="@dimen/_3sdp"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:background="@drawable/button_bg"
             android:fontFamily="@font/poppins"
-            android:text="Resend"
-            android:layout_centerVertical="true"
-            android:textColor="#636363"
-            android:textSize="@dimen/_10ssp"
+            android:paddingHorizontal="@dimen/_90sdp"
+            android:paddingVertical="@dimen/_5sdp"
+            android:text="Submit"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_11sdp"
+            app:layout_constraintTop_toBottomOf="@+id/OtpView"
             android:textStyle="bold"
-            android:layout_toEndOf="@+id/textDidntReceive"
-
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             />
-    </RelativeLayout>
 
-
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_30sdp"
-        app:layout_constraintTop_toBottomOf="@+id/rlDidntReceive">
 
         <RelativeLayout
-            android:id="@+id/rlResendLine"
+            android:id="@+id/rlDidntReceive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:gravity="center_horizontal"
-            android:paddingBottom="@dimen/_50sdp"
-            android:visibility="gone">
-
+            android:layout_marginStart="@dimen/_28sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_30sdp"
+            app:layout_constraintTop_toBottomOf="@+id/textSubmitButton">
             <TextView
-                android:id="@+id/textResendotp"
+                android:id="@+id/textDidntReceive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/_15sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Resend verification code in"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_13ssp"
-                android:textStyle="normal" />
+                android:layout_centerVertical="true"
+                android:text="Didn't receive the verification code?"
+                android:textColor="#636363"
+                android:textSize="@dimen/_9ssp"
+                android:textStyle="normal"
+                />
 
             <TextView
-                android:id="@+id/textTimeResend"
+                android:id="@+id/textResend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_5sdp"
-                android:layout_toEndOf="@+id/textResendotp"
+                android:layout_gravity="center"
+                android:layout_marginStart="@dimen/_3sdp"
                 android:fontFamily="@font/poppins"
-                android:text="00:00"
-                android:textColor="#4AEAB1"
-                android:textFontWeight="600"
-                android:textSize="@dimen/_13ssp" />
+                android:text="Resend"
+                android:layout_centerVertical="true"
+                android:textColor="#636363"
+                android:textSize="@dimen/_10ssp"
+                android:textStyle="bold"
+                android:layout_toEndOf="@+id/textDidntReceive"
+
+                />
         </RelativeLayout>
 
 
-        <TextView
-            android:id="@+id/incorrectOtp"
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:gravity="center_horizontal"
-            android:paddingBottom="@dimen/_50sdp"
-            android:text="Incorrect verification code, please try again!"
-            android:textAlignment="center"
-            android:textColor="@color/red"
-            android:textSize="@dimen/_11ssp"
-            android:visibility="gone" />
+            android:layout_marginBottom="@dimen/_30sdp"
+            app:layout_constraintTop_toBottomOf="@+id/rlDidntReceive">
 
-    </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rlResendLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:gravity="center_horizontal"
+                android:paddingBottom="@dimen/_50sdp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textResendotp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="Resend verification code in"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_13ssp"
+                    android:textStyle="normal" />
+
+                <TextView
+                    android:id="@+id/textTimeResend"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:layout_toEndOf="@+id/textResendotp"
+                    android:fontFamily="@font/poppins"
+                    android:text="00:00"
+                    android:textColor="#4AEAB1"
+                    android:textFontWeight="600"
+                    android:textSize="@dimen/_13ssp" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/incorrectOtp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:gravity="center_horizontal"
+                android:paddingBottom="@dimen/_50sdp"
+                android:text="Incorrect verification code, please try again!"
+                android:textAlignment="center"
+                android:textColor="@color/red"
+                android:textSize="@dimen/_11ssp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
 
 
 
 
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>

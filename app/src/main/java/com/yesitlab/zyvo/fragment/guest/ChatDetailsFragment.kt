@@ -20,29 +20,29 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 
 class ChatDetailsFragment : Fragment(), View.OnClickListener {
-
-    private var _binding : FragmentChatDetailsBinding? = null
+    private var _binding: FragmentChatDetailsBinding? = null
     private val binding get() = _binding!!
-    private var chatDetailsAdapter : ChatDetailsAdapter? = null
-
-    private  val viewModel : ChatDetailsViewModel by viewModels()
-    private var param1: String? = null
-    private var param2: String? = null
+    private var chatDetailsAdapter: ChatDetailsAdapter? = null
+    private val viewModel: ChatDetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-          //  param1 = it.getString(ARG_PARAM1)
-           // param2 = it.getString(ARG_PARAM2)
+            //  param1 = it.getString(ARG_PARAM1)
+            // param2 = it.getString(ARG_PARAM2)
         }
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentChatDetailsBinding.inflate(LayoutInflater.from(requireContext()),container,false)
-       // requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+        _binding = FragmentChatDetailsBinding.inflate(
+            LayoutInflater.from(requireContext()),
+            container,
+            false
+        )
+        // requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
 
 
         binding.viewModel = viewModel
@@ -61,7 +61,6 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener {
         binding.imageFilter.setOnClickListener(this)
 
     }
-
 
 
     private fun showAllBookingPopupWindow(anchorView: View, position: Int) {
@@ -237,17 +236,17 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener {
     }
 
     override fun onClick(p0: View?) {
-       when(p0?.id){
-           R.id.imageThreeDots->{
-               showPopupWindow(binding.imageThreeDots,0)
-           }
+        when (p0?.id) {
+            R.id.imageThreeDots -> {
+                showPopupWindow(binding.imageThreeDots, 0)
+            }
 
 
-           R.id.imageFilter->{
+            R.id.imageFilter -> {
 
-               showAllBookingPopupWindow(binding.imageFilter,0)
-           }
-       }
+                showAllBookingPopupWindow(binding.imageFilter, 0)
+            }
+        }
 
     }
 

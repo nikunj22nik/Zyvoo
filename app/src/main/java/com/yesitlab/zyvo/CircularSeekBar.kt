@@ -426,17 +426,20 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
 
     private fun getClickedDotIndex(x: Float, y: Float): Int {
         val dotCount = 12
+        val clickRadius = 30f
         for (i in 0 until dotCount) {
             val angle = Math.toRadians(START_ANGLE + i * (SWEEP_ANGLE / dotCount).toDouble())
             val dotX = centerX + radius * cos(angle)
             val dotY = centerY + radius * sin(angle)
-            if (sqrt((x - dotX).pow(2) + (y - dotY).pow(2)) <= 20) {
+            if (sqrt((x - dotX).pow(2) + (y - dotY).pow(2)) <= clickRadius) {
                 // If the clicked index is 0, return 12 instead.
                 return  i
             }
             Log.d("timeVipin", i.toString())
         }
         return -1
+
+
     }
 
 
