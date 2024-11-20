@@ -33,7 +33,9 @@ class CheckOutPayActivity : AppCompatActivity() {
 
     lateinit var binding : ActivityCheckOutPayBinding
     lateinit var adapterAddon : AdapterAddOn
+
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
+
     private val paymentCardViewHolder: PaymentViewModel by lazy {
         ViewModelProvider(this)[PaymentViewModel::class.java]
     }
@@ -55,13 +57,42 @@ class CheckOutPayActivity : AppCompatActivity() {
         callingSelectionOfDate()
         callingSelectionOfTime()
         messageHostListener()
+
+
     }
 
 
     fun messageHostListener(){
         binding.rlMsgHost.setOnClickListener {
-
+            if(binding.llMsgHost.visibility == View.VISIBLE){
+                binding.llMsgHost.visibility = View.GONE
+            }
+            else{
+                binding.llMsgHost.visibility = View.VISIBLE
+            }
         }
+
+        binding.imgBack.setOnClickListener {
+            onBackPressed()
+        }
+        binding.doubt.setOnClickListener {
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+        }
+
+        binding.tvAvailableDay.setOnClickListener {
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+        }
+
+        binding.tvOtherReason.setOnClickListener {
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+        }
+
     }
 
     fun callingSelectionOfTime(){
@@ -106,11 +137,11 @@ class CheckOutPayActivity : AppCompatActivity() {
             }
         })
 
-
         binding.startHour.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.startHour.arrowAnimate = false
         binding.startHour.setItems(hoursList)
         binding.startHour.setIsFocusable(true)
+
         val recyclerView2 = binding.startHour.getSpinnerRecyclerView()
         recyclerView2.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
@@ -146,7 +177,6 @@ class CheckOutPayActivity : AppCompatActivity() {
                 binding.relTime.visibility = View.VISIBLE
             }
         }
-
 
     }
 
@@ -187,12 +217,7 @@ class CheckOutPayActivity : AppCompatActivity() {
         val recyclerView3 = binding.spinnermonth.getSpinnerRecyclerView()
 
         recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = spacing
             }
         })
@@ -222,7 +247,8 @@ class CheckOutPayActivity : AppCompatActivity() {
         binding.dateView.setOnClickListener {
             if(binding.relCalendarLayouts.visibility == View.VISIBLE){
                 binding.relCalendarLayouts.visibility = View.GONE
-            }else{
+            }
+            else{
                 binding.relCalendarLayouts.visibility = View.VISIBLE
             }
         }
@@ -249,6 +275,14 @@ class CheckOutPayActivity : AppCompatActivity() {
              }
         }
 
+        binding.rlCreditDebitCard.setOnClickListener {
+            if(binding.rlCreditDebitRecycler.visibility == View.GONE) {
+                binding.rlCreditDebitRecycler.visibility = View.VISIBLE
+            }else{
+                binding.rlCreditDebitRecycler.visibility = View.GONE
+            }
+        }
+
         binding.rlAddCard.setOnClickListener {
             dialogAddCard()
         }
@@ -261,7 +295,10 @@ class CheckOutPayActivity : AppCompatActivity() {
         binding.recyclerAddOn.layoutManager = LinearLayoutManager(this@CheckOutPayActivity, LinearLayoutManager.VERTICAL ,false)
         binding.recyclerAddOn.adapter = adapterAddon
         addPaymentCardAdapter = AdapterAddPaymentCard(this, mutableListOf())
+
+        binding.recyclerViewPaymentCardList.layoutManager = LinearLayoutManager(this@CheckOutPayActivity,LinearLayoutManager.VERTICAL,false)
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
+
         val dayarray = resources.getStringArray(R.array.day)
         val adapterday: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, dayarray)
 

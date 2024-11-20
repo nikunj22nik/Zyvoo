@@ -356,8 +356,6 @@ val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
     }
 
     private fun createWishListDialog(){
-
-
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)

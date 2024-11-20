@@ -27,7 +27,7 @@ class AdapterAddPaymentCard(var context : Context, var list: MutableList<AddPaym
         return  PaymentCardViewHolder(binding)
     }
 
-    override fun getItemCount() = list.size
+    override fun getItemCount() = 4
 
     override fun onBindViewHolder(holder: PaymentCardViewHolder, position: Int) {
         var currentItem = list[position]

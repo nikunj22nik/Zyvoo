@@ -41,6 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/_15sdp"
+                    android:visibility="gone"
                     android:src="@drawable/ic_filter" />
             </RelativeLayout>
 
@@ -72,26 +73,34 @@
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/bg_four_side_grey_corner"
-                android:weightSum="1">
+                android:orientation="vertical"
+                >
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
                     android:layout_marginVertical="@dimen/_10sdp"
                     android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_weight="0.4"
-                    android:orientation="vertical">
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        >
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hosted by"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_12sdp"
+                        android:layout_gravity="center_vertical"/>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_10sdp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
@@ -118,25 +127,24 @@
                             android:src="@drawable/ic_badge_img" />
 
                     </LinearLayout>
-
+                    </LinearLayout>
 
                 </LinearLayout>
 
                 <View
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="@dimen/_3sdp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:layout_weight="0.01"
+                    android:layout_width="match_parent"
+                    android:layout_height="1sp"
+                    android:layout_marginHorizontal="@dimen/_6sdp"
+
                     android:background="@color/grey" />
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:layout_marginVertical="@dimen/_12sdp"
                     android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_weight="0.5"
+
                     android:orientation="vertical">
 
                     <TextView
@@ -146,13 +154,16 @@
                         android:drawablePadding="@dimen/_2sdp"
                         android:text="Respond within 1 hr"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_12sdp"
+                        android:layout_gravity="center_horizontal"/>
 
                     <RelativeLayout
                         android:id="@+id/rl_msg_host"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35sdp"
-                        android:layout_marginTop="@dimen/_4ssp"
+                        android:layout_marginTop="@dimen/_8ssp"
+                        android:layout_marginEnd="@dimen/_15sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
                         android:background="@drawable/bg_four_corner_light_black">
 
                         <TextView
@@ -167,11 +178,14 @@
                     </RelativeLayout>
 
                     
-                    <RelativeLayout
+                    <LinearLayout
+                        android:id="@+id/ll_msg_host"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/_3sdp"
-                        android:background="@drawable/bg_four_side_corner_white"
+                        android:background="@drawable/bg_four_side_grey_corner"
+                        android:orientation="vertical"
+                        android:visibility="gone"
                         >
 
                         <RelativeLayout
@@ -189,14 +203,15 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="I have a doubt"
-                                android:textSize="@dimen/_12ssp"
+                                android:textSize="@dimen/_11ssp"
+                                android:textStyle="bold"
+                                android:fontFamily="@font/poppins"
                                 android:layout_centerHorizontal="true"
                                 />
 
                         </RelativeLayout>
-
                         <RelativeLayout
-                            android:id="@+id/available_day"
+                            android:id="@+id/tv_available_day"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="@dimen/_6sdp"
@@ -204,20 +219,85 @@
                             android:layout_below="@id/doubt"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
-                            android:background="@drawable/bg_four_side_grey_corner"
+                            android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             >
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Available days"
-                                android:textSize="@dimen/_12ssp"
+                                android:textSize="@dimen/_11ssp"
+                                android:fontFamily="@font/poppins"
+                                android:textStyle="bold"
                                 android:layout_centerHorizontal="true"
                                 />
 
                         </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/tv_other_reason"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp"
+                            android:layout_below="@id/doubt"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+                            >
 
-                    </RelativeLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Other reason"
+                                android:textSize="@dimen/_10ssp"
+                                android:layout_centerHorizontal="true"
+                                android:fontFamily="@font/poppins"
+                                android:textStyle="bold"
+                                />
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:id="@+id/tv_share_message"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_100sdp"
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp"
+                            android:layout_below="@id/doubt"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+                            >
+
+                            <EditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Share a message"
+                                android:textSize="@dimen/_9ssp"
+                                android:background="@null"
+                                android:layout_centerHorizontal="true"
+                                />
+
+                        </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_33sdp"
+                            android:background="@drawable/bg_save_button"
+                            android:layout_marginHorizontal="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            >
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Message Host"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_12sdp"
+                                android:layout_centerInParent="true"
+                                />
+                        </RelativeLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -626,7 +706,7 @@
                         android:layout_below="@id/date_view_1"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_15sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
                         android:visibility="gone"
                         >
 
@@ -1138,6 +1218,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_credit_debit_card"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
@@ -1165,6 +1246,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_credit_debit_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"

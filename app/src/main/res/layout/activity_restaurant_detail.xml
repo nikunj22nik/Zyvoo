@@ -18,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_10sdp"
+        android:visibility="visible"
         >
 
         <ImageView
@@ -34,6 +35,7 @@
             android:src="@drawable/ic_filter"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/_15sdp"
+            android:visibility="gone"
             />
     </RelativeLayout>
 
@@ -141,6 +143,11 @@
             android:textColor="@color/black"
             android:fontFamily="@font/poppins"
             />
+        <LinearLayout
+            android:id="@+id/ll_share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -156,8 +163,9 @@
             android:fontFamily="@font/poppins"
             android:layout_marginEnd="@dimen/_6sdp"
             />
-
+        </LinearLayout>
         <LinearLayout
+            android:id="@+id/tv_wishlist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_4sdp"
@@ -182,6 +190,7 @@
 
     </com.google.android.flexbox.FlexboxLayout>
     <LinearLayout
+        android:id="@+id/ll_hotel_views"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="1"
@@ -462,6 +471,7 @@
             >
 
             <RelativeLayout
+                android:id="@+id/rl_view1"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_weight="0.4"
@@ -504,6 +514,7 @@
                 />
 
             <RelativeLayout
+                android:id="@+id/rl_view2"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_weight="0.4"
@@ -538,6 +549,11 @@
                     android:layout_centerVertical="true"
                     />
             </RelativeLayout>
+
+
+
+
+
         </LinearLayout>
 
         <RelativeLayout
@@ -550,6 +566,7 @@
             >
 
             <TextView
+                android:id="@+id/tv_booking_txt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Start Booking"
@@ -621,113 +638,113 @@
 
    </RelativeLayout>
   
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_marginTop="@dimen/_10sdp"
-       android:layout_marginHorizontal="@dimen/_15sdp"
-       android:background="@drawable/bg_four_side_grey_corner"
-       android:weightSum="1"
-       >
-       <LinearLayout
-           android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:layout_weight="0.4"
-           android:orientation="vertical"
-           android:layout_marginVertical="@dimen/_10sdp"
-           android:layout_marginStart="@dimen/_5sdp"
-           >
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="Hosted by"
-               android:textColor="@color/black"
-               android:textSize="@dimen/_13sdp"
-               />
-           <LinearLayout
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="@dimen/_10sdp"
-               >
-               <de.hdodenhof.circleimageview.CircleImageView
-                   android:id="@+id/profile_image_1"
-                   android:layout_width="26dp"
-                   android:layout_height="26dp"
-                   android:src="@drawable/ic_img_girl_dumm"
-                   app:civ_border_width="1dp"
-                   app:civ_border_color="#FF000000"/>
+<!--   <LinearLayout-->
+<!--       android:layout_width="match_parent"-->
+<!--       android:layout_height="wrap_content"-->
+<!--       android:layout_marginTop="@dimen/_10sdp"-->
+<!--       android:layout_marginHorizontal="@dimen/_15sdp"-->
+<!--       android:background="@drawable/bg_four_side_grey_corner"-->
+<!--       android:weightSum="1"-->
+<!--       >-->
+<!--       <LinearLayout-->
+<!--           android:layout_width="0dp"-->
+<!--           android:layout_height="wrap_content"-->
+<!--           android:layout_weight="0.4"-->
+<!--           android:orientation="vertical"-->
+<!--           android:layout_marginVertical="@dimen/_10sdp"-->
+<!--           android:layout_marginStart="@dimen/_5sdp"-->
+<!--           >-->
+<!--           <TextView-->
+<!--               android:layout_width="wrap_content"-->
+<!--               android:layout_height="wrap_content"-->
+<!--               android:text="Hosted by"-->
+<!--               android:textColor="@color/black"-->
+<!--               android:textSize="@dimen/_13sdp"-->
+<!--               />-->
+<!--           <LinearLayout-->
+<!--               android:layout_width="match_parent"-->
+<!--               android:layout_height="wrap_content"-->
+<!--               android:layout_marginTop="@dimen/_10sdp"-->
+<!--               >-->
+<!--               <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                   android:id="@+id/profile_image_1"-->
+<!--                   android:layout_width="26dp"-->
+<!--                   android:layout_height="26dp"-->
+<!--                   android:src="@drawable/ic_img_girl_dumm"-->
+<!--                   app:civ_border_width="1dp"-->
+<!--                   app:civ_border_color="#FF000000"/>-->
 
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="Mia J."
-                   android:textColor="@color/black"
-                   android:layout_marginStart="@dimen/_7sdp"
-                   android:textSize="@dimen/_12sdp"
-                   />
-               <ImageView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/ic_badge_img"
-                   android:layout_marginStart="@dimen/_4ssp"
-                   />
+<!--               <TextView-->
+<!--                   android:layout_width="wrap_content"-->
+<!--                   android:layout_height="wrap_content"-->
+<!--                   android:text="Mia J."-->
+<!--                   android:textColor="@color/black"-->
+<!--                   android:layout_marginStart="@dimen/_7sdp"-->
+<!--                   android:textSize="@dimen/_12sdp"-->
+<!--                   />-->
+<!--               <ImageView-->
+<!--                   android:layout_width="wrap_content"-->
+<!--                   android:layout_height="wrap_content"-->
+<!--                   android:src="@drawable/ic_badge_img"-->
+<!--                   android:layout_marginStart="@dimen/_4ssp"-->
+<!--                   />-->
 
-           </LinearLayout>
-
-
-       </LinearLayout>
-
-       <View
-           android:layout_width="0dp"
-           android:layout_height="match_parent"
-           android:layout_marginVertical="@dimen/_10sdp"
-           android:background="@color/grey"
-           android:layout_marginHorizontal="@dimen/_3sdp"
-           android:layout_weight="0.01"
-           />
-
-       <LinearLayout
-           android:layout_width="0dp"
-           android:layout_height="wrap_content"
-           android:layout_weight="0.5"
-           android:orientation="vertical"
-           android:layout_marginVertical="@dimen/_10sdp"
-           android:layout_marginStart="@dimen/_5sdp"
-           android:layout_gravity="center_horizontal|center_vertical"
-           >
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:text="Respond within 1 hr"
-               android:textColor="@color/black"
-               android:textSize="@dimen/_13sdp"
-               android:drawableStart="@drawable/ic_clock_dot_new"
-               android:drawablePadding="@dimen/_2sdp"
-               />
-
-           <RelativeLayout
-               android:layout_width="match_parent"
-               android:layout_height="@dimen/_35sdp"
-               android:layout_marginTop="@dimen/_4ssp"
-               android:background="@drawable/bg_four_corner_light_black"
-               >
-
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="Message the host"
-                   android:textColor="@color/black"
-                   android:layout_centerInParent="true"
-                   android:layout_marginTop="@dimen/_5sdp"
-                   />
-
-           </RelativeLayout>
+<!--           </LinearLayout>-->
 
 
-       </LinearLayout>
+<!--       </LinearLayout>-->
+
+<!--       <View-->
+<!--           android:layout_width="0dp"-->
+<!--           android:layout_height="match_parent"-->
+<!--           android:layout_marginVertical="@dimen/_10sdp"-->
+<!--           android:background="@color/grey"-->
+<!--           android:layout_marginHorizontal="@dimen/_3sdp"-->
+<!--           android:layout_weight="0.01"-->
+<!--           />-->
+
+<!--       <LinearLayout-->
+<!--           android:layout_width="0dp"-->
+<!--           android:layout_height="wrap_content"-->
+<!--           android:layout_weight="0.5"-->
+<!--           android:orientation="vertical"-->
+<!--           android:layout_marginVertical="@dimen/_10sdp"-->
+<!--           android:layout_marginStart="@dimen/_5sdp"-->
+<!--           android:layout_gravity="center_horizontal|center_vertical"-->
+<!--           >-->
+<!--           <TextView-->
+<!--               android:layout_width="wrap_content"-->
+<!--               android:layout_height="wrap_content"-->
+<!--               android:text="Respond within 1 hr"-->
+<!--               android:textColor="@color/black"-->
+<!--               android:textSize="@dimen/_13sdp"-->
+<!--               android:drawableStart="@drawable/ic_clock_dot_new"-->
+<!--               android:drawablePadding="@dimen/_2sdp"-->
+<!--               />-->
+
+<!--           <RelativeLayout-->
+<!--               android:layout_width="match_parent"-->
+<!--               android:layout_height="@dimen/_35sdp"-->
+<!--               android:layout_marginTop="@dimen/_4ssp"-->
+<!--               android:background="@drawable/bg_four_corner_light_black"-->
+<!--               >-->
+
+<!--               <TextView-->
+<!--                   android:layout_width="wrap_content"-->
+<!--                   android:layout_height="wrap_content"-->
+<!--                   android:text="Message the host"-->
+<!--                   android:textColor="@color/black"-->
+<!--                   android:layout_centerInParent="true"-->
+<!--                   android:layout_marginTop="@dimen/_5sdp"-->
+<!--                   />-->
+
+<!--           </RelativeLayout>-->
 
 
-   </LinearLayout>
+<!--       </LinearLayout>-->
+
+
+<!--   </LinearLayout>-->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -743,6 +760,7 @@
 
 
             <com.colormoon.readmoretextview.ReadMoreTextView
+
                 android:layout_width="match_parent"
                 android:id="@+id/tvReadMoreLess"
                 android:textColor="#000000"
@@ -968,6 +986,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 />
 
             <RelativeLayout
+                android:id="@+id/rl_parking"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/bg_four_side_grey_corner"
@@ -1001,8 +1020,24 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_centerVertical="true"
                     />
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_parking_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:background="@drawable/rounded_bottom_corners"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_7sdp"
+                    android:text="The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy"
+                    />
+            </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_host_rule"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:background="@drawable/bg_four_side_grey_corner"
@@ -1034,6 +1069,21 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_centerVertical="true"
+                    />
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_host_rule_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:background="@drawable/rounded_bottom_corners"
+                android:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_7sdp"
+                    android:text="The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy"
                     />
             </RelativeLayout>
 
@@ -1204,15 +1254,32 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_marginHorizontal="@dimen/_7sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 />
-            <ImageView
-                android:id="@+id/show_more_review"
+<!--            <ImageView-->
+<!--                android:id="@+id/show_more_review"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:src="@drawable/ic_show_more_review"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:layout_marginVertical="@dimen/_15sdp"-->
+<!--                />-->
+
+            <RelativeLayout
+                android:id="@+id/showMoreReview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_show_more_review"
+                android:background="@drawable/bg_two_side_corner"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_10sdp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginVertical="@dimen/_15sdp"
-                />
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text = "Show more reviews"
+                    />
 
+
+            </RelativeLayout>
 
         </LinearLayout>
 

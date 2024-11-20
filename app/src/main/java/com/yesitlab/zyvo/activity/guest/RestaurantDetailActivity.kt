@@ -1,40 +1,59 @@
 package com.yesitlab.zyvo.activity.guest
 
 import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import androidx.fragment.app.viewModels
 import android.graphics.Paint
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnClickListener
+import android.view.WindowManager
+import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.ObservableTextView
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.CheckOutPayActivity
 import com.yesitlab.zyvo.adapter.AdapterAddOn
+import com.yesitlab.zyvo.adapter.WishlistAdapter
 import com.yesitlab.zyvo.adapter.guest.AdapterReview
 import com.yesitlab.zyvo.databinding.ActivityRestaurantDetailBinding
+import com.yesitlab.zyvo.fragment.both.viewImage.ViewImageDialogFragment
+import com.yesitlab.zyvo.viewmodel.WishlistViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.YearMonth
 
+@AndroidEntryPoint
 class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     lateinit var binding: ActivityRestaurantDetailBinding
@@ -44,6 +63,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var adapterReview: AdapterReview
 
     private lateinit var mapView: MapView
+    private  val viewModel : WishlistViewModel by viewModels()
 
     private var mMap: GoogleMap? = null
 
@@ -62,9 +82,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         enableEdgeToEdge()
 
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
-
         setContentView(binding.root)
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -72,14 +90,147 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         disableScrollViewScrollForChildView(binding.rlCircularProgress,binding.scrollView)
-
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
         initialization()
-
+        share()
         updateCalendar()
+        clickListeners1()
+
+
+
+
+    }
+
+
+    fun clickListeners1(){
+        binding.rlParking.setOnClickListener {
+          if(binding.rlParkingView.visibility == View.VISIBLE){
+              binding.rlParkingView.visibility = View.GONE
+          }else{
+              binding.rlParkingView.visibility = View.VISIBLE
+          }
+       }
+        binding.rlHostRule.setOnClickListener {
+           if(binding.rlHostRuleView.visibility == View.VISIBLE){
+               binding.rlHostRuleView.visibility = View.GONE
+           }else{
+               binding.rlHostRuleView.visibility = View.VISIBLE
+           }
+       }
+
+
+        binding.tvWishlist.setOnClickListener {
+            showAddWishlistDialog()
+        }
+        binding.llHotelViews.setOnClickListener {
+            val dialogFragment = ViewImageDialogFragment()
+            dialogFragment.show(supportFragmentManager, "exampleDialog")
+        }
+
+    }
+
+    private fun showAddWishlistDialog() {
+        val dialogAdapter = WishlistAdapter(this,true, mutableListOf())
+
+        val dialog =  Dialog(this, R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_add_wishlist)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+//            // Retrieve NavController using NavHostFragment
+//            val navHostFragment = (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.fragmentAuthContainerView) as NavHostFragment
+//            val navController = navHostFragment.navController
+
+            val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
+
+            rvWishList.adapter = dialogAdapter
+
+            viewModel.list.observe(this@RestaurantDetailActivity) {
+                dialogAdapter.updateItem(it)
+            }
+
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+            findViewById<TextView>(R.id.textCreateWishList).setOnClickListener {
+                createWishListDialog()
+                dismiss()
+            }
+
+            // findViewById<TextView>(R.id.text).text = text
+
+
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
+
+    private fun createWishListDialog(){
+        val dialog =   Dialog(this, R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_create_wishlist)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+            val etDescription =    findViewById<EditText>(R.id.etDescription)
+
+            val tvMaxCount =    findViewById<TextView>(R.id.textMaxCount)
+            setupCharacterCountListener(etDescription, tvMaxCount, 50)
+            // findViewById<TextView>(R.id.text).text = text
+
+
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+
+    }
+
+    private fun setupCharacterCountListener(editText: EditText, textView: TextView, maxLength: Int) {
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            @SuppressLint("SetTextI18n")
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val remainingChars = maxLength - (s?.length ?: 0)
+                textView.text = "max $remainingChars characters"
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+
+    fun share(){
+        binding.llShare.setOnClickListener {
+          shareText(this,"Here is Zyvoo Promo Code")
+        }
+    }
+
+    fun shareText(context: Context, text: String) {
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain" // Set the type to plain text
+            putExtra(Intent.EXTRA_TEXT, text) // Add the text to be shared
+        }
+
+        context.startActivity(Intent.createChooser(shareIntent, "Share via"))
     }
 
     fun initialization() {
@@ -101,10 +252,13 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             adapterAddon.updateAdapter(getAddOnList())
         }
         binding.startBooking.setOnClickListener {
-            var intent = Intent(this@RestaurantDetailActivity,CheckOutPayActivity::class.java)
-            startActivity(intent)
+            if(binding.tvBookingTxt.text.toString().equals("Start Booking")){
+                   binding.tvBookingTxt.setText("Proceed to Checkout")
+            }else {
+                var intent = Intent(this@RestaurantDetailActivity, CheckOutPayActivity::class.java)
+                startActivity(intent)
+            }
         }
-
         binding.hoursTextView.setOnTextChangedListener(object :
             ObservableTextView.OnTextChangedListener {
                 override fun onTextChanged(newText: String) {
@@ -114,7 +268,37 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         })
 
         clickListeners()
+        selectTime()
     }
+
+    fun selectTime(){
+
+        binding.rlView1.setOnClickListener {
+           if(binding.text1.text.toString().equals("3 hour")){
+               DateManager(this).showHourSelectionDialog(this) { selectedHour ->
+                 binding.text1.setText(selectedHour.toString())
+               }
+           }
+           else{
+               DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                   binding.text1.setText(selectedTime.toString())
+               }
+           }
+        }
+
+       binding.rlView2.setOnClickListener {
+           if(binding.text2.text.toString().equals("$30")){
+
+           }else{
+               DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                   binding.text2.setText(selectedTime.toString())
+               }
+           }
+       }
+
+    }
+
+
 
     fun disableScrollViewScrollForChildView(childView: View, scrollView: ScrollView) {
 
@@ -151,7 +335,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.text1.setText("01:00 PM")
-
         binding.text2.setText("03:00 PM")
 
         binding.tvDay.setOnClickListener {
@@ -161,6 +344,10 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.rlCircularProgress.visibility = View.GONE
             binding.text1.setText("01:00 PM")
             binding.text2.setText("03:00 PM")
+        }
+
+        binding.imgBack.setOnClickListener {
+            onBackPressed()
         }
 
         binding.tvHour.setOnClickListener {
