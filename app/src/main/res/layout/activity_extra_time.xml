@@ -300,6 +300,7 @@
                 android:paddingVertical="16dp">
 
                 <RelativeLayout
+                    android:id="@+id/rl_cancel_booking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_four_corner_light_black_small_corner"
@@ -710,7 +711,6 @@
                         android:layout_below="@id/date_view_1"
                         android:layout_marginStart="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_10sdp"
-
                         android:background="@drawable/bg_two_side_corner"
                         android:paddingVertical="@dimen/_10sdp">
 
@@ -724,7 +724,7 @@
 
                         <TextView
                             android:id="@+id/tv_add_more"
-                            android:layout_width="wrap_content"
+                          android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_7sdp"
                             android:layout_toRightOf="@id/add_more"
@@ -773,6 +773,7 @@
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:textColor="#000000"
+
                 android:textSize="@dimen/_13sdp" />
             <View
                 android:layout_width="match_parent"

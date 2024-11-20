@@ -49,4 +49,10 @@
         <item name="cornerSize">15dp</item>
         <item name="cornerFamily">cut</item>
     </style>
+
+    <style name="CustomDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item> <!-- Set width to 90% -->
+
+    </style>
+
 </resources>

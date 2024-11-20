@@ -26,9 +26,10 @@
             android:layout_height="wrap_content"
             android:text="Report Violation"
             android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_13sdp"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/poppins"
+            android:textStyle="bold"
             />
 
 
@@ -52,9 +53,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Please select a reason for reporting this user."
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins"
                 />
 
             <RelativeLayout
@@ -89,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add Additional Details"
-                android:textSize="@dimen/_11sdp"
+                android:textSize="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:textStyle="bold"
@@ -111,6 +114,7 @@
                     android:layout_height="@dimen/_130sdp"
                     android:background="@null"
                     android:layout_margin="@dimen/_7sdp"
+                    android:layout_marginTop="0dp"
                     />
             </RelativeLayout>
 
@@ -146,6 +150,7 @@
             android:text="You can also add additional details to \n help us investigate further."
             android:textSize="@dimen/_12ssp"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/poppins"
             android:layout_marginBottom="@dimen/_10sdp"

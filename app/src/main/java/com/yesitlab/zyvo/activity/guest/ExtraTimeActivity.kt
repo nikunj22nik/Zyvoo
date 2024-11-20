@@ -5,6 +5,8 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
@@ -36,6 +38,57 @@ class ExtraTimeActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        clickListeners()
+
+
+    }
+
+    private fun clickListeners(){
+        binding.imgBack.setOnClickListener {
+            onBackPressed()
+        }
+        binding.rlCancelBooking.setOnClickListener {
+            cancelScreen()
+        }
+        binding.rlParking.setOnClickListener {
+            if(binding.tvParkingRule.visibility == View.VISIBLE){
+                binding.tvParkingRule.visibility= View.GONE
+            }else{
+                binding.tvParkingRule.visibility = View.VISIBLE
+            }
+        }
+        binding.rlHostRules.setOnClickListener {
+            if(binding.tvHostRule.visibility == View.VISIBLE){
+                binding.tvHostRule.visibility = View.GONE
+            }
+            else{
+                binding.tvHostRule.visibility = View.VISIBLE
+            }
+        }
+        binding.rlMsgHost.setOnClickListener {
+            if(binding.llMsgHost.visibility == View.VISIBLE){
+                binding.llMsgHost.visibility = View.GONE
+            }
+            else{
+                binding.llMsgHost.visibility = View.VISIBLE
+            }
+        }
+        binding.doubt.setOnClickListener {
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+        }
+        binding.tvAvailableDay.setOnClickListener {
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+        }
+        binding.tvOtherReason.setOnClickListener {
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+        }
     }
 
     private fun dialogReportIssue() {
@@ -44,11 +97,11 @@ class ExtraTimeActivity : AppCompatActivity() {
         dialog?.apply {
             setCancelable(true)
             setContentView(R.layout.report_violation)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
+//            window?.attributes = WindowManager.LayoutParams().apply {
+//                copyFrom(window?.attributes)
+//                width = WindowManager.LayoutParams.MATCH_PARENT
+//                height = WindowManager.LayoutParams.MATCH_PARENT
+//            }
 
             val crossButton: ImageView = findViewById(R.id.img_cross)
             val submit :RelativeLayout = findViewById(R.id.rl_submit_report)
@@ -58,6 +111,7 @@ class ExtraTimeActivity : AppCompatActivity() {
                 if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
                     txtSubmit.setText("Submitted")
                 }else{
+                    dialog.dismiss()
                      openDialogSuccess()
                 }
             }
@@ -65,7 +119,14 @@ class ExtraTimeActivity : AppCompatActivity() {
             crossButton.setOnClickListener {
                 dialog.dismiss()
             }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent) // Optional
+
+
             show()
         }
 
@@ -74,18 +135,17 @@ class ExtraTimeActivity : AppCompatActivity() {
     private fun openDialogSuccess(){
 
         val dialog=Dialog(this, R.style.BottomSheetDialog)
-
-              dialog?.apply {
+        dialog?.apply {
                 setCancelable(true)
-                setContentView(R.layout.dialog_success)
+                setContentView(R.layout.dialog_success_report_submit)
                 window?.attributes = WindowManager.LayoutParams().apply {
                     copyFrom(window?.attributes)
                     width = WindowManager.LayoutParams.MATCH_PARENT
                     height = WindowManager.LayoutParams.MATCH_PARENT
                 }
 
-                var okBtn :ImageView = findViewById<ImageView>(R.id.imageCross)
-                var cross :TextView = findViewById<TextView>(R.id.textOkayButton)
+                var okBtn :ImageView = findViewById<ImageView>(R.id.img_cross)
+                var cross :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
                 okBtn.setOnClickListener {
                     dialog.dismiss()
                 }
@@ -96,7 +156,11 @@ class ExtraTimeActivity : AppCompatActivity() {
                 okBtn.setOnClickListener {
                     dialog.dismiss()
                 }
-                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
                 show()
             }
     }
@@ -115,6 +179,12 @@ class ExtraTimeActivity : AppCompatActivity() {
 
             var okBtn :ImageView = findViewById<ImageView>(R.id.img_crss_1)
             var cross :RelativeLayout = findViewById<RelativeLayout>(R.id.yes_btn)
+            var cancelBtn :RelativeLayout = findViewById(R.id.cancel_btn)
+
+            cancelBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+
             okBtn.setOnClickListener {
                 dialog.dismiss()
             }
@@ -125,7 +195,14 @@ class ExtraTimeActivity : AppCompatActivity() {
             okBtn.setOnClickListener {
                 dialog.dismiss()
             }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+
             show()
         }
     }

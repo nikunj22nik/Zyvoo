@@ -13,6 +13,7 @@
         >
 
         <ImageView
+            android:id="@+id/img_cross"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_img_cross_big"
@@ -34,7 +35,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_right_img"
+            android:src="@drawable/ic_success_icon"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
@@ -47,9 +48,12 @@
             android:textAlignment="center"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/poppins"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_12ssp"
             />
 
         <RelativeLayout
+            android:id="@+id/rl_okay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
@@ -61,7 +65,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Okay"
+                android:fontFamily="@font/poppins"
                 android:layout_margin="@dimen/_10sdp"
+                android:textStyle="bold"
                 android:paddingHorizontal="@dimen/_10sdp"
                 />
         </RelativeLayout>

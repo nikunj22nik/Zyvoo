@@ -50,6 +50,7 @@
             android:fontFamily="@font/poppins"
             android:text="Are you sure you want to \ncancel this booking?"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="@dimen/_12ssp" />
 
         <LinearLayout

@@ -6,4 +6,10 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">?attr/isLightTheme</item>
     </style>
+    <style name="CustomDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item> <!-- Set width to 90% -->
+        <item name="android:paddingLeft">16dp</item>        <!-- Add padding -->
+        <item name="android:paddingRight">16dp</item>       <!-- Add padding -->
+        <item name="android:background">@drawable/bg_four_side_grey_corner</item> <!-- Optional -->
+    </style>
 </resources>

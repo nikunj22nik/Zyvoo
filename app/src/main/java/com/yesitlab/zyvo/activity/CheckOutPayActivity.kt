@@ -183,10 +183,7 @@ class CheckOutPayActivity : AppCompatActivity() {
     }
 
     fun callingSelectionOfDate(){
-
-                val months = listOf("January", "February", "March", "April", "May", "June", "July",
-                    "August", "September", "October", "November", "December")
-
+        val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
         val years = (2000..2050).toList()
         val yearsStringList = years.map { it.toString() }
         Toast.makeText(this,"Year String List: "+yearsStringList.size,Toast.LENGTH_LONG).show()
@@ -268,10 +265,6 @@ class CheckOutPayActivity : AppCompatActivity() {
              }
         }
 
-        binding.rlConfirmPay.setOnClickListener {
-            var intent = Intent(this@CheckOutPayActivity,ExtraTimeActivity::class.java)
-            startActivity(intent)
-        }
 
 
         binding.rlHostRules.setOnClickListener {
@@ -282,6 +275,12 @@ class CheckOutPayActivity : AppCompatActivity() {
                  binding.tvHostRule.visibility = View.VISIBLE
              }
         }
+
+        binding.rlConfirmPay.setOnClickListener {
+            var intent = Intent(this@CheckOutPayActivity,ExtraTimeActivity::class.java)
+            startActivity(intent)
+        }
+
 
         binding.rlCreditDebitCard.setOnClickListener {
             if(binding.rlCreditDebitRecycler.visibility == View.GONE) {
