@@ -2,6 +2,8 @@ package com.yesitlab.zyvo
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.graphics.Bitmap
+
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -13,6 +15,10 @@ import android.util.AttributeSet
 import android.util.Log
 import android.view.View
 import androidx.compose.ui.Modifier
+import java.lang.Math.cos
+import java.lang.Math.sin
+
+
 
 class SemiCircleProgressBar @JvmOverloads constructor(
     context: Context,
@@ -70,6 +76,7 @@ class SemiCircleProgressBar @JvmOverloads constructor(
 //            colors, positions
 //        )
 //        progressPaint.shader = sweepGradient
+
         val shader = LinearGradient(
             0f, 0f, width.toFloat(), (height * 2).toFloat(),
             colors,
@@ -180,4 +187,11 @@ class SemiCircleProgressBar @JvmOverloads constructor(
         setProgressMultiColorGradient()
     }
 }
+
+
+
+
+
+
+
 

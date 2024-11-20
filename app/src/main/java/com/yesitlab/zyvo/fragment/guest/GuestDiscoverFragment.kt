@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -135,8 +136,16 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         }
 
 
-        binding.customProgressBar.setProgressWidth(13f)
-        binding.customProgressBar.setMax(100.0) // Set max progress as 100%
+      //  binding.customProgressBar.setProgressWidth(13f)
+       // binding.customProgressBar.setMax(100.0) // Set max progress as 100%
+        binding.customProgressBar.setMax(100.0)
+        binding.customProgressBar.setProgressWithAnimation(75.0)
+        // Load the image and set it
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_progress_runnable_image)
+        if (bitmap == null) {
+            Log.e("SemiCircleProgressBar", "Bitmap not loaded. Check resource ID.")
+        }
+        binding.customProgressBar.setImageBitmap(bitmap)
 
         // Start the countdown timer
         startCountdown()

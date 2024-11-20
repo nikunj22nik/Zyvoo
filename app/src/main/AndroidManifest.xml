@@ -43,6 +43,8 @@
             android:name=".activity.GuesMain"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+        
+
         <activity
             android:name=".activity.AuthActivity"
             android:exported="true"

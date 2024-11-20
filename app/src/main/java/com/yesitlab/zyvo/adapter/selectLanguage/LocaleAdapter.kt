@@ -32,7 +32,6 @@ holder.ll1.setOnClickListener {
     listner.onItemClick(languageName)
 
 }
-
         holder.languageTitle.text = languageName
         holder.countryName.text = regionName
     }
