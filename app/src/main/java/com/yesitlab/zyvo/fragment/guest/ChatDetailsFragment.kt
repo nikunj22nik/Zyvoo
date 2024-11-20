@@ -20,12 +20,10 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 
 class ChatDetailsFragment : Fragment(), View.OnClickListener {
+
     private var _binding : FragmentChatDetailsBinding? = null
     private val binding get() = _binding!!
-
     private var chatDetailsAdapter : ChatDetailsAdapter? = null
-
-
 
     private  val viewModel : ChatDetailsViewModel by viewModels()
     private var param1: String? = null

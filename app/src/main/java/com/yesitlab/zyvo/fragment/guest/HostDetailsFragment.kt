@@ -1,34 +1,63 @@
 package com.yesitlab.zyvo.fragment.guest
 
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.yesitlab.zyvo.OnClickListener
+import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.adapter.HostListingAdapter
+import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
+import com.yesitlab.zyvo.adapter.WishlistAdapter
+import com.yesitlab.zyvo.adapter.guest.AdapterReview
+import com.yesitlab.zyvo.databinding.FragmentGuestDiscoverBinding
+import com.yesitlab.zyvo.databinding.FragmentHostDetailsBinding
+import com.yesitlab.zyvo.viewmodel.HostListingViewModel
+import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
+import com.yesitlab.zyvo.viewmodel.WishlistViewModel
+import com.yesitlab.zyvo.viewmodel.guest.GuestDiscoverViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [HostDetailsFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
+@AndroidEntryPoint
+class HostDetailsFragment : Fragment() , OnClickListener{
+    lateinit var binding : FragmentHostDetailsBinding;
+    lateinit var adapterReview: AdapterReview
+    private lateinit var adapter: HostListingAdapter
+    private val hostListingViewModel: HostListingViewModel by lazy {
+        ViewModelProvider(this)[HostListingViewModel::class.java]
+    }
 
+    private val imagePopViewModel: ImagePopViewModel by lazy {
+        ViewModelProvider(this)[ImagePopViewModel::class.java]
+    }
 
-class HostDetailsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+    private  val viewModel : WishlistViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+        //    param1 = it.getString(ARG_PARAM1)
+        //    param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -37,26 +66,65 @@ class HostDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_host_details, container, false)
+        binding = FragmentHostDetailsBinding.inflate(LayoutInflater.from(requireContext()),container, false)
+
+
+
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment HostDetailsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            HostDetailsFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initialization()
+
+
+        binding.textViewMore.setOnClickListener {
+            findNavController().navigate(R.id.listingFragment)
+        }
     }
+
+    fun initialization(){
+        adapter = HostListingAdapter(requireContext(),3, mutableListOf(),
+            viewLifecycleOwner, imagePopViewModel)
+
+        setRetainInstance(true)
+
+        binding.recyclerViewBooking.adapter = adapter
+
+
+        hostListingViewModel.imageList.observe(viewLifecycleOwner, Observer {
+                images -> adapter.updateItem(images)
+        })
+
+
+        binding.recyclerReviews.isNestedScrollingEnabled = false
+
+        adapterReview = AdapterReview(requireContext(), mutableListOf())
+
+        binding.recyclerReviews.adapter = adapterReview
+
+        clickListeners()
+    }
+
+    override fun itemClick(obj: Int) {
+        TODO("Not yet implemented")
+    }
+
+
+
+
+    private fun clickListeners() {
+
+
+
+        binding.showMoreReview.setOnClickListener {
+            adapterReview.updateAdapter(7)
+        }
+
+
+
+
+    }
+
 }

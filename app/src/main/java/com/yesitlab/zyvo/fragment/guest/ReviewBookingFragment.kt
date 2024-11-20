@@ -67,7 +67,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
         adapterAddon = AdapterAddOn(requireContext(), getAddOnList().subList(0, 4))
 
-        adapterReview = AdapterReview(requireContext(), mutableListOf())
+      adapterReview = AdapterReview(requireContext(), mutableListOf())
 
 
 
@@ -92,6 +92,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
         binding.tvLocationName.paintFlags =
             binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
 
         binding.tvShowMore.setOnClickListener {
 

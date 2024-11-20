@@ -64,5 +64,15 @@
         android:name="com.yesitlab.zyvo.fragment.guest.ChatDetailsFragment"
         android:label="fragment_chat_details"
         tools:layout="@layout/fragment_chat_details" />
+    <fragment
+        android:id="@+id/hostDetailsFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.HostDetailsFragment"
+        android:label="fragment_host_details"
+        tools:layout="@layout/fragment_host_details" />
+    <fragment
+        android:id="@+id/listingFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.ListingFragment"
+        android:label="fragment_listing"
+        tools:layout="@layout/fragment_listing" />
 
 </navigation>
