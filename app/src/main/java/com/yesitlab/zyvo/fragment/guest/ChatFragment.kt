@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
+import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.AdapterChatList
 import com.yesitlab.zyvo.databinding.FragmentChatBinding
@@ -65,6 +66,15 @@ class ChatFragment : Fragment() ,View.OnClickListener{
         adapterChatList = AdapterChatList(requireContext(), chatList,object : OnClickListener{
             override fun itemClick(obj: Int) {
              findNavController().navigate(R.id.chatDetailsFragment)
+            }
+
+        },object : OnClickListener1 {
+            override fun itemClick(obj: Int, text: String) {
+               when(text){
+                   "image"->{
+                       findNavController().navigate(R.id.hostDetailsFragment)
+                   }
+               }
             }
 
         })

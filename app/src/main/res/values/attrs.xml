@@ -70,5 +70,31 @@
         <attr name="barActiveThumbColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="SemiCircleProgressBar">
+
+
+
+        <attr name="endIcon" format="reference" />
+        <attr name="endIconSize" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="CircularSeekBar">
+        <attr name="cc_borderWidth" format="dimension" />
+        <attr name="cc_metricTextSize" format="dimension" />
+        <attr name="cc_borderColor" format="color" />
+        <attr name="cc_fillColor" format="color" />
+        <attr name="cc_tickTextColor" format="color" />
+        <attr name="cc_startIconResource" format="reference" />
+        <attr name="cc_endIconResource" format="reference" />
+        <attr name="cc_isStartEnabled" format="boolean" />
+        <attr name="cc_isEndEnabled" format="boolean" />
+        <attr name="cc_is24HR" format="boolean" />
+        <attr name="cc_startHour" format="float" />
+        <attr name="cc_endHour" format="float" />
+        <attr name="cc_metricMode" format="enum">
+            <enum name="counter" value="0" />
+            <enum name="clock" value="1" />
+        </attr>
+    </declare-styleable>
 
 </resources>

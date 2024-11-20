@@ -40,7 +40,6 @@
         <activity
             android:name=".activity.GuesMain"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activity.AuthActivity"
             android:exported="true"

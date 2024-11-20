@@ -20,9 +20,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
@@ -136,16 +138,22 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         }
 
 
-      //  binding.customProgressBar.setProgressWidth(13f)
+        binding.customProgressBar.setProgressWidth(13f)
        // binding.customProgressBar.setMax(100.0) // Set max progress as 100%
         binding.customProgressBar.setMax(100.0)
-        binding.customProgressBar.setProgressWithAnimation(75.0)
+       // binding.customProgressBar.setProgressWithAnimation(75.0)
+
+
+//        binding.customProgressBar.setThumb(ContextCompat.getDrawable(requireContext(), R.drawable.ic_progress_runnable_image)!!)
+//        binding.customProgressBar.setOnProgressChangeListener { progress ->
+//            Log.d("Progress", "Current progress: $progress")
+//        }
         // Load the image and set it
-        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_progress_runnable_image)
-        if (bitmap == null) {
-            Log.e("SemiCircleProgressBar", "Bitmap not loaded. Check resource ID.")
-        }
-        binding.customProgressBar.setImageBitmap(bitmap)
+//        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_progress_runnable_image)
+//        if (bitmap == null) {
+//            Log.e("SemiCircleProgressBar", "Bitmap not loaded. Check resource ID.")
+//        }
+//        binding.customProgressBar.setImageBitmap(bitmap)
 
         // Start the countdown timer
         startCountdown()
@@ -364,6 +372,7 @@ val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun createWishListDialog(){
 
 
