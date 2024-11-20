@@ -50,9 +50,25 @@
         <item name="cornerFamily">cut</item>
     </style>
 
+
     <style name="CustomDialogStyle" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowMinWidthMajor">90%</item> <!-- Set width to 90% -->
 
+    </style>
+
+
+
+    <style name="CustomRatingBarStyle" parent="Widget.AppCompat.RatingBar">
+        <item name="android:progressDrawable">@drawable/custom_rating</item>
+        <item name="android:minHeight">@dimen/_20sdp</item>
+        <item name="android:maxHeight">@dimen/_40sdp</item>
+    </style>
+    <style name="ratingBar" parent="android:Widget.RatingBar">
+        <item name="android:minHeight">17dp</item>
+        <item name="android:minWidth">20dp</item>
+
+        <item name="android:numStars">5</item>
+        <item name="android:progressDrawable">@drawable/custom_rating_bar</item>
     </style>
 
 </resources>
