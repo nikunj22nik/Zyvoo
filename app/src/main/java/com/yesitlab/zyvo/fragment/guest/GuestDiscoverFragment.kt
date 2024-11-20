@@ -145,7 +145,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         if (bitmap == null) {
             Log.e("SemiCircleProgressBar", "Bitmap not loaded. Check resource ID.")
         }
-        binding.customProgressBar.setImageBitmap(bitmap)
+       // binding.customProgressBar.setImageBitmap(bitmap)
 
         // Start the countdown timer
         startCountdown()

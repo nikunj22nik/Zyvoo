@@ -1,6 +1,7 @@
 package com.yesitlab.zyvo.activity
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.guest.ExtraTimeActivity
 import com.yesitlab.zyvo.adapter.AdapterAddOn
 import com.yesitlab.zyvo.adapter.AdapterAddPaymentCard
 import com.yesitlab.zyvo.databinding.ActivityCheckOutPayBinding
@@ -265,6 +267,12 @@ class CheckOutPayActivity : AppCompatActivity() {
                  binding.tvParkingRule.visibility = View.VISIBLE
              }
         }
+
+        binding.rlConfirmPay.setOnClickListener {
+            var intent = Intent(this@CheckOutPayActivity,ExtraTimeActivity::class.java)
+            startActivity(intent)
+        }
+
 
         binding.rlHostRules.setOnClickListener {
              if(binding.tvHostRule.visibility == View.VISIBLE){

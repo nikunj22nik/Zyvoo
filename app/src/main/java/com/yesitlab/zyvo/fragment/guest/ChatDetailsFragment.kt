@@ -18,28 +18,15 @@ import com.yesitlab.zyvo.viewmodel.ChatDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 class ChatDetailsFragment : Fragment(), View.OnClickListener {
     private var _binding : FragmentChatDetailsBinding? = null
     private val binding get() = _binding!!
 
     private var chatDetailsAdapter : ChatDetailsAdapter? = null
 
-=======
-class ChatDetailsFragment : Fragment() {
 
-    private var _binding : FragmentChatDetailsBinding? = null
-    private val binding get() = _binding!!
-    var chatDetailsAdapter : ChatDetailsAdapter? = null
->>>>>>> 3f19f9108b2f10ad6f68e92b81d3a184023e99ef
-=======
-class ChatDetailsFragment : Fragment() {
 
-    private var _binding : FragmentChatDetailsBinding? = null
-    private val binding get() = _binding!!
-    var chatDetailsAdapter : ChatDetailsAdapter? = null
->>>>>>> 3f19f9108b2f10ad6f68e92b81d3a184023e99ef
     private  val viewModel : ChatDetailsViewModel by viewModels()
     private var param1: String? = null
     private var param2: String? = null
@@ -248,7 +235,7 @@ class ChatDetailsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-<<<<<<< HEAD
+
     }
 
     override fun onClick(p0: View?) {
@@ -263,8 +250,7 @@ class ChatDetailsFragment : Fragment() {
                showAllBookingPopupWindow(binding.imageFilter,0)
            }
        }
-=======
->>>>>>> 3f19f9108b2f10ad6f68e92b81d3a184023e99ef
+
     }
 
 

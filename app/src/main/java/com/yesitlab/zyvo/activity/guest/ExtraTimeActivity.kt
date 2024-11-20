@@ -73,7 +73,7 @@ class ExtraTimeActivity : AppCompatActivity() {
 
     private fun openDialogSuccess(){
 
-        val dialog = Dialog(this, R.style.BottomSheetDialog)
+        val dialog=Dialog(this, R.style.BottomSheetDialog)
 
               dialog?.apply {
                 setCancelable(true)
@@ -100,5 +100,35 @@ class ExtraTimeActivity : AppCompatActivity() {
                 show()
             }
     }
+
+    private fun cancelScreen(){
+        val dialog=Dialog(this, R.style.BottomSheetDialog)
+
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_cancel)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            var okBtn :ImageView = findViewById<ImageView>(R.id.img_crss_1)
+            var cross :RelativeLayout = findViewById<RelativeLayout>(R.id.yes_btn)
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            cross.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
+
 
 }

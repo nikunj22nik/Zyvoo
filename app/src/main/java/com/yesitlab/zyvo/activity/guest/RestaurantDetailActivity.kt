@@ -57,22 +57,17 @@ import java.time.YearMonth
 class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     lateinit var binding: ActivityRestaurantDetailBinding
-
     lateinit var adapterAddon: AdapterAddOn
-
     lateinit var adapterReview: AdapterReview
-
     private lateinit var mapView: MapView
     private  val viewModel : WishlistViewModel by viewModels()
-
     private var mMap: GoogleMap? = null
-
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             YearMonth.now()
-        }
+    }
     else {
             TODO("VERSION.SDK_INT < O")
-        }
+   }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate: LocalDate? = LocalDate.now()
@@ -80,7 +75,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -98,10 +92,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         share()
         updateCalendar()
         clickListeners1()
-
-
-
-
     }
 
 
@@ -272,7 +262,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun selectTime(){
-
         binding.rlView1.setOnClickListener {
            if(binding.text1.text.toString().equals("3 hour")){
                DateManager(this).showHourSelectionDialog(this) { selectedHour ->
@@ -285,8 +274,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                }
            }
         }
-
-       binding.rlView2.setOnClickListener {
+        binding.rlView2.setOnClickListener {
            if(binding.text2.text.toString().equals("$30")){
 
            }else{
@@ -295,13 +283,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                }
            }
        }
-
     }
 
-
-
     fun disableScrollViewScrollForChildView(childView: View, scrollView: ScrollView) {
-
         childView.setOnTouchListener { _, event ->
             // Prevent ScrollView from intercepting touch events when interacting with this child view
             scrollView.requestDisallowInterceptTouchEvent(true)
@@ -311,7 +295,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
             true  // Consume the event to stop ScrollView from scrolling
         }
-
         // Reset ScrollView intercept when touch is released or canceled
         childView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
@@ -422,13 +405,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val calendarLayout = binding.calendarLayout
         calendarLayout.removeAllViews()
-
         val topMonths = mutableListOf<YearMonth>()
-
         val bottomMonths = mutableListOf<YearMonth>()
-
         // Separate months into top and bottom lists
-
         val allMonths = (1..12).map {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 currentMonth.plusMonths(it.toLong())
@@ -436,7 +415,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 TODO("VERSION.SDK_INT < O")
             }
         }
-
         allMonths.forEachIndexed { index, month ->
             if (index % 2 == 0) {
                 topMonths.add(month)
