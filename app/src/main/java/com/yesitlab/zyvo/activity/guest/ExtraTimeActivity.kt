@@ -130,5 +130,48 @@ class ExtraTimeActivity : AppCompatActivity() {
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    override fun onSubmitClicked() {
+        openNewDialog()
+    }
+
+    fun openNewDialog(){
+        val dialog =  Dialog(this, R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_price_amount)
+//            window?.attributes = WindowManager.LayoutParams().apply {
+//                copyFrom(window?.attributes)
+//                width = WindowManager.LayoutParams.MATCH_PARENT
+//                height = WindowManager.LayoutParams.MATCH_PARENT
+//            }
+
+            val crossButton: ImageView = findViewById(R.id.imgCross)
+            val submit :RelativeLayout = findViewById(R.id.yes_btn)
+            val txtSubmit : RelativeLayout = findViewById(R.id.rl_cancel_btn)
+
+            submit.setOnClickListener {
+               dialog.dismiss()
+            }
+
+            crossButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            txtSubmit.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent) // Optional
+
+            show()
+        }
+    }
+>>>>>>> Stashed changes
 
 }

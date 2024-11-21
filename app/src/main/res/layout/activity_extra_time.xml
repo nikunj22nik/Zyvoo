@@ -716,8 +716,8 @@
 
                         <ImageView
                             android:id="@+id/add_more"
-                            android:layout_width="@dimen/_12ssp"
-                            android:layout_height="@dimen/_12ssp"
+                            android:layout_width="@dimen/_15ssp"
+                            android:layout_height="@dimen/_15ssp"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_add_more" />
