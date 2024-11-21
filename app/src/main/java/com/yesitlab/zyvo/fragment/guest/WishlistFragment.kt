@@ -9,6 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.fragment.findNavController
+import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.WishlistAdapter
 import com.yesitlab.zyvo.databinding.FragmentWishlistBinding
@@ -44,7 +46,12 @@ private var adapter : WishlistAdapter? = null
         binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
-        adapter = WishlistAdapter(requireContext(),false, mutableListOf())
+        adapter = WishlistAdapter(requireContext(),false, mutableListOf(),object : OnClickListener{
+            override fun itemClick(obj: Int) {
+             findNavController().navigate(R.id.recentlyViewedFragment)
+            }
+
+        })
         binding.rvWishList.adapter = adapter
 
         viewModel.list.observe(viewLifecycleOwner, Observer {

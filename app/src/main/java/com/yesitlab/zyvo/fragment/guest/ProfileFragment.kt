@@ -37,6 +37,8 @@ import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.OnLocalListener
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.GuesMain
+import com.yesitlab.zyvo.activity.guest.FiltersActivity
+import com.yesitlab.zyvo.activity.guest.WhereTimeActivity
 import com.yesitlab.zyvo.adapter.AdapterAddPaymentCard
 import com.yesitlab.zyvo.adapter.AddHobbiesAdapter
 import com.yesitlab.zyvo.adapter.AddLanguageSpeakAdapter
@@ -191,6 +193,16 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         }
 
         // Set listeners
+
+
+        binding.filterIcon.setOnClickListener {
+            startActivity(Intent(requireActivity(),FiltersActivity::class.java))
+        }
+
+        binding.rlFind.setOnClickListener {
+
+            startActivity(Intent(requireActivity(),WhereTimeActivity::class.java))
+        }
 
 
     }

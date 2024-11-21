@@ -123,7 +123,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun showAddWishlistDialog() {
-        val dialogAdapter = WishlistAdapter(this,true, mutableListOf())
+        val dialogAdapter = WishlistAdapter(this,true, mutableListOf(),null)
 
         val dialog =  Dialog(this, R.style.BottomSheetDialog)
         dialog?.apply {

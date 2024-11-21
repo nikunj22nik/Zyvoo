@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.databinding.LayoutWishlistBinding
 import com.yesitlab.zyvo.model.WishListModel
 
-class WishlistAdapter(var context: Context, private val isSmall: Boolean, var list: MutableList<WishListModel>) :
+class WishlistAdapter(var context: Context, private val isSmall: Boolean, var list: MutableList<WishListModel>, var listener: OnClickListener?) :
     RecyclerView.Adapter<WishlistAdapter.WishlistViewHolder>() {
 
     inner class WishlistViewHolder(var binding: LayoutWishlistBinding) :
@@ -19,24 +20,10 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean, var li
             binding.textSaved.setText(currentItem.text2)
             binding.textTitle.setText(currentItem.text1)
 
-//            // Adjust size based on isSmall flag using dimensions from dimens.xml
-//            val resources = itemView.context.resources
-//            val imageSize = if (isSmall) {
-//                resources.getDimensionPixelSize(R.dimen.image_small_size)
-//
-//            } else {
-//                resources.getDimensionPixelSize(R.dimen.image_large_size)
-//            }
-//            val textSize = if (isSmall) {
-//                resources.getDimension(R.dimen.text_small_size)
-//            } else {
-//                resources.getDimension(R.dimen.text_large_size)
-//            }
-//        }
+            binding.root.setOnClickListener {
+                listener?.itemClick(position)
+            }
 
-           // var imageWidth : Int =
-
-            //binding
 
           //   Adjust size based on isSmall flag using dimensions from dimens.xml
             val resources = itemView.context.resources

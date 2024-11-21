@@ -19,7 +19,6 @@ import android.widget.TextView
 import androidx.navigation.NavController
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.GuesMain
-import com.yesitlab.zyvo.adapter.WishlistAdapter
 import com.yesitlab.zyvo.databinding.DialogAddWishlistBinding
 import com.yesitlab.zyvo.session.SessionManager
 import com.yesitlab.zyvo.viewmodel.WishlistViewModel

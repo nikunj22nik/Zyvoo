@@ -10,6 +10,8 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.ChatDetailsAdapter
@@ -24,6 +26,8 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener {
     private val binding get() = _binding!!
     private var chatDetailsAdapter: ChatDetailsAdapter? = null
     private val viewModel: ChatDetailsViewModel by viewModels()
+
+    lateinit var navController : NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +63,12 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         binding.imageThreeDots.setOnClickListener(this)
         binding.imageFilter.setOnClickListener(this)
+
+
+        navController = Navigation.findNavController(view)
+        binding.imgBack.setOnClickListener{
+            navController.navigateUp()
+        }
 
     }
 

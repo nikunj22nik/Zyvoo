@@ -79,5 +79,10 @@
         android:name="com.yesitlab.zyvo.fragment.guest.TermsServicesFragment"
         android:label="fragment_terms_services"
         tools:layout="@layout/fragment_terms_services" />
+    <fragment
+        android:id="@+id/recentlyViewedFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.RecentlyViewedFragment"
+        android:label="fragment_recently_viewed"
+        tools:layout="@layout/fragment_recently_viewed" />
 
 </navigation>

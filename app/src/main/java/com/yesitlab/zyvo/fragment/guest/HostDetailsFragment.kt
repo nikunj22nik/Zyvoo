@@ -19,6 +19,8 @@ import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +30,7 @@ import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.HostListingAdapter
 import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
-import com.yesitlab.zyvo.adapter.WishlistAdapter
+
 import com.yesitlab.zyvo.adapter.guest.AdapterReview
 import com.yesitlab.zyvo.databinding.FragmentGuestDiscoverBinding
 import com.yesitlab.zyvo.databinding.FragmentHostDetailsBinding
@@ -43,6 +45,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class HostDetailsFragment : Fragment() , OnClickListener{
     lateinit var binding : FragmentHostDetailsBinding;
     lateinit var adapterReview: AdapterReview
+
+    lateinit var navController :NavController
     private lateinit var adapter: HostListingAdapter
     private val hostListingViewModel: HostListingViewModel by lazy {
         ViewModelProvider(this)[HostListingViewModel::class.java]
@@ -81,6 +85,11 @@ class HostDetailsFragment : Fragment() , OnClickListener{
 
         binding.textViewMore.setOnClickListener {
             findNavController().navigate(R.id.listingFragment)
+        }
+
+        navController = Navigation.findNavController(view)
+        binding.imgBack.setOnClickListener{
+            navController.navigateUp()
         }
     }
 

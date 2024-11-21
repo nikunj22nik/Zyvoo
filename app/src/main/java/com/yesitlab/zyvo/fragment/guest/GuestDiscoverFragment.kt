@@ -333,7 +333,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
 
    private fun showAddWishlistDialog() {
-        val dialogAdapter = WishlistAdapter(requireContext(),true, mutableListOf())
+        val dialogAdapter = WishlistAdapter(requireContext(),true, mutableListOf(), null)
 
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
