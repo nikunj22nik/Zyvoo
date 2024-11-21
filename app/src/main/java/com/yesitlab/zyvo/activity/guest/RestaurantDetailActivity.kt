@@ -185,8 +185,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             setupCharacterCountListener(etDescription, tvMaxCount, 50)
             // findViewById<TextView>(R.id.text).text = text
 
-
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
