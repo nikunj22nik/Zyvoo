@@ -14,6 +14,7 @@ import android.view.WindowManager
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.navigation.NavController
 import com.yesitlab.zyvo.R
@@ -334,8 +335,8 @@ var navController = navController
 
 
     @SuppressLint("SuspiciousIndentation")
-    fun dialogOtp(context: Context?, text: String){
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+    fun dialogOtp(context: Context, text: String){
+        val dialog =  Dialog(context, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_otp_verification)
@@ -344,11 +345,11 @@ var navController = navController
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var OtpView =  findViewById<OtpTextView>(R.id.OtpView)
-            var textResend =  findViewById<TextView>(R.id.textResend)
+            val imageCross =  findViewById<ImageView>(R.id.imageCross)
 
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
+            val textResend =  findViewById<TextView>(R.id.textResend)
+
+            val textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener{
                 if (text == "Your password has been changed\n" + " successfully."){
                     dialogNewPassword(context,text)
@@ -437,6 +438,40 @@ var navController = navController
                 dismiss()
             }
 
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
+
+
+
+
+    @SuppressLint("MissingInflatedId")
+    fun dialogLogOut(context: Context?, text: String) {
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_logout)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+
+
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+
+
+            findViewById<RelativeLayout>(R.id.rlYes).setOnClickListener {
+                dismiss()
+            }
+
+            findViewById<RelativeLayout>(R.id.rlCancel).setOnClickListener {
+                dismiss()
+            }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }

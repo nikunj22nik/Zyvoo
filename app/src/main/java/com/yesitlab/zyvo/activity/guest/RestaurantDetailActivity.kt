@@ -247,13 +247,14 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 startActivity(intent)
             }
         }
-        binding.hoursTextView.setOnTextChangedListener(object :
-            ObservableTextView.OnTextChangedListener {
-                override fun onTextChanged(newText: String) {
-                // This is called whenever the text changes
-                binding.text1.setText(newText + " hour")
-            }
-        })
+        //nikunj sir
+//        binding.hoursTextView.setOnTextChangedListener(object :
+//            ObservableTextView.OnTextChangedListener {
+//                override fun onTextChanged(newText: String) {
+//                // This is called whenever the text changes
+//                binding.text1.setText(newText + " hour")
+//            }
+//        })
 
         clickListeners()
         selectTime()

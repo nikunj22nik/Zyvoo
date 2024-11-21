@@ -169,7 +169,9 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         paymentOpenCloseDropDown()
         binding.textGiveFeedback.setOnClickListener(this)
+        binding.textTermServices.setOnClickListener(this)
         binding.textPrivacyPolicy.setOnClickListener(this)
+        binding.textLogout.setOnClickListener(this)
         binding.textNotifications.setOnClickListener(this)
         binding.textVisitHelpCenter.setOnClickListener(this)
         binding.textAddNewPaymentCard.setOnClickListener(this)
@@ -407,6 +409,13 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         when (p0?.id) {
             R.id.textPrivacyPolicy->{
                 findNavController().navigate(R.id.privacyPolicyFragment)
+            }
+         R.id.textTermServices->{
+                findNavController().navigate(R.id.termsServicesFragment)
+            }
+
+            R.id.textLogout->{
+                commonAuthWorkUtils.dialogLogOut(requireContext(),"LogOut")
             }
 
             R.id.textGiveFeedback->{

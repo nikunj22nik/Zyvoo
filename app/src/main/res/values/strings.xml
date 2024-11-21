@@ -114,5 +114,7 @@
     <string name="we_ll_start_with_some_questions_and_get_you_to_the_right_place">We’ll start with some questions \n and get you to the right place.</string>
     <string name="post_title_article_title_nname_article_blog">Post title article title \nname article blog</string>
     <string name="table_of_content"><u>Table Of Content</u></string>
+    <string name="are_you_sure_you_want_to_logout">Are you sure you want to\n logout?</string>
+    <string name="edit"><u>Edit</u></string>
 
 </resources>

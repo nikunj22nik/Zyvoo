@@ -5,7 +5,7 @@ plugins {
     id("dagger.hilt.android.plugin")
 }
 
-android {
+android{
 
     namespace = "com.yesitlab.zyvo"
     compileSdk = 34

@@ -1,12 +1,24 @@
 package com.yesitlab.zyvo.fragment.guest
 
+import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.Context
+import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -62,7 +74,47 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
         initialization()
+
+
+
+        binding.textReviewBookingButton.setOnClickListener {
+            dialogReview()
+        }
+
+        binding.textMessageTheHostButton.setOnClickListener {
+            findNavController().navigate(R.id.chatFragment)
+        }
     }
+
+    @SuppressLint("MissingInflatedId")
+    fun dialogReview(){
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_review)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            var ratingbar =  findViewById<RatingBar>(R.id.ratingbar)
+            var ratingbar2 =  findViewById<RatingBar>(R.id.ratingbar2)
+            var ratingbar3 =  findViewById<RatingBar>(R.id.ratingbar3)
+            var textPublishReview =  findViewById<TextView>(R.id.textPublishReview)
+            var etMessage =  findViewById<TextView>(R.id.etMessage)
+
+
+
+            textPublishReview.setOnClickListener{
+
+                dismiss()
+            }
+
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }}
+
     fun initialization() {
 
         adapterAddon = AdapterAddOn(requireContext(), getAddOnList().subList(0, 4))

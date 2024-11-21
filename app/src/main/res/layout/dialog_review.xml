@@ -1,30 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginHorizontal="@dimen/_30sdp"
+    android:background="@drawable/dialog_bg"
+    android:orientation="vertical">
 
 
-<!--    -->
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+
+        android:layout_marginTop="@dimen/_30sdp"
+        android:fontFamily="@font/poppins"
+        android:text="Review Guest"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_15ssp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_5sdp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:fontFamily="@font/poppins"
+            android:text="Response Rate"
+            android:textColor="@color/black"
+            android:textStyle="normal" />
+
+
+        <RatingBar
+            android:id="@+id/ratingbar"
+            style="@style/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/_8sdp"
+
+            android:isIndicator="false"
+            android:rating="4"
+            android:stepSize="1" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginVertical="@dimen/_5sdp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins"
+            android:text="Communication"
+            android:textColor="@color/black"
+            android:textStyle="normal" />
+
+
+        <RatingBar
+            android:id="@+id/ratingbar2"
+            style="@style/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/_8sdp"
+
+            android:isIndicator="false"
+            android:rating="4"
+            android:stepSize="1" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_5sdp"
+            android:fontFamily="@font/poppins"
+            android:text="On Time"
+            android:textColor="@color/black"
+            android:textStyle="normal" />
+
+
+        <RatingBar
+            android:id="@+id/ratingbar3"
+            style="@style/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/_8sdp"
+
+            android:isIndicator="false"
+            android:rating="4"
+            android:stepSize="1" />
+
+    </RelativeLayout>
+
+
+    <EditText
+        android:id="@+id/etMessage"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_100sdp"
+
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:background="@drawable/bg_four_side_grey_corner"
+        android:fontFamily="@font/poppins"
+        android:gravity="start"
+        android:hint="Message..."
+        android:padding="@dimen/_7sdp"
+        android:textColor="@color/black"
+        android:textStyle="normal" />
+
+
+    <TextView
+        android:id="@+id/textPublishReview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@drawable/button_bg"
+        android:fontFamily="@font/inter"
+        android:paddingVertical="@dimen/_7sdp"
+        android:text="Publish Review"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textStyle="bold" />
 
 
 
-<!--    <RatingBar-->
-<!--        android:id="@+id/ratingbar"-->
-<!--        style="?android:attr/ratingBarStyleSmall"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center_vertical"-->
-<!--        android:isIndicator="false"-->
-<!--        android:stepSize="1"-->
-<!--        android:progressTint="#E8963C"-->
-<!--        android:rating="4"-->
-<!--        android:layout_toStartOf="@+id/tvDate"-->
-<!--        android:layout_centerVertical="true"-->
-<!--        android:layout_marginEnd="@dimen/_8sdp"-->
-<!--        android:secondaryProgressTint="#E8963C" />-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

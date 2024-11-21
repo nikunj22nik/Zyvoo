@@ -85,11 +85,11 @@
         <item name="android:maxHeight">@dimen/_40sdp</item>
     </style>
     <style name="ratingBar" parent="android:Widget.RatingBar">
-        <item name="android:minHeight">17dp</item>
-        <item name="android:minWidth">20dp</item>
-
+        <item name="android:minHeight">11dp</item>
+        <item name="android:minWidth">11dp</item>
         <item name="android:numStars">5</item>
         <item name="android:progressDrawable">@drawable/custom_rating_bar</item>
+        <item name="android:progressBarPadding">5dp</item>
     </style>
 
 

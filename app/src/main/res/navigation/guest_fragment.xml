@@ -74,5 +74,10 @@
         android:name="com.yesitlab.zyvo.fragment.guest.ListingFragment"
         android:label="fragment_listing"
         tools:layout="@layout/fragment_listing" />
+    <fragment
+        android:id="@+id/termsServicesFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.TermsServicesFragment"
+        android:label="fragment_terms_services"
+        tools:layout="@layout/fragment_terms_services" />
 
 </navigation>

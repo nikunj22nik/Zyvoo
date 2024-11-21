@@ -48,7 +48,9 @@ class SelectHourFragmentDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_select_hour_dialog, container, false)
+
+        _binding = FragmentSelectHourDialogBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
+       // _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_select_hour_dialog, container, false)
 
         dateManager = DateManager(requireContext())
 
