@@ -5,6 +5,9 @@ import android.icu.util.Calendar
 class AppConstant {
 
     companion object {
+        val WHERE: String = "where"
+        val TIME :String = "time"
+        val ACTIVITY :String = "activity"
         const val textType : String = "textType"
         var LOGIN_SESSION = "Loggin_setion"
         var Host = "Host"

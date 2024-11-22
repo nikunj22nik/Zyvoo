@@ -54,18 +54,16 @@
 
 
 
-
     <LinearLayout
         android:id="@+id/OtpView"
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_below="@+id/textEnterYourEmail"
         android:gravity="center"
         android:layout_gravity="center_horizontal"
-
         android:padding="16dp">
+
 
         <EditText
             android:id="@+id/otp_digit1"

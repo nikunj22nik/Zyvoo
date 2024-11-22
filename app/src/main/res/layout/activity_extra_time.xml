@@ -53,7 +53,7 @@
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
-                android:text="New Booking Confirmed"
+                android:text="Booking time extension screen"
                 android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
             <View
@@ -290,6 +290,7 @@
 
 
             </LinearLayout>
+
             <RelativeLayout
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
@@ -297,6 +298,7 @@
                 android:layout_marginHorizontal="@dimen/_15sdp"
                   android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
+                android:visibility="gone"
                 android:paddingVertical="16dp">
 
                 <RelativeLayout
@@ -332,6 +334,7 @@
                 </RelativeLayout>
 
             </RelativeLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -716,8 +719,8 @@
 
                         <ImageView
                             android:id="@+id/add_more"
-                            android:layout_width="@dimen/_12ssp"
-                            android:layout_height="@dimen/_12ssp"
+                            android:layout_width="@dimen/_13ssp"
+                            android:layout_height="@dimen/_13ssp"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_add_more" />
@@ -755,7 +758,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Cancelation Policies"
+                android:text="Refund Policies"
                 android:textSize="@dimen/_13ssp"
                 android:fontFamily="@font/poppins"
                 android:layout_marginStart="@dimen/_13sdp"
@@ -911,7 +914,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:text="My Bookings"
+                    android:text="Confirm &amp; Pay"
                     android:textColor="@color/black"
                      />
 

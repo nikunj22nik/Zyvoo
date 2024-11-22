@@ -39,10 +39,12 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.yesitlab.zyvo.AppConstant
 import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.GuesMain
+import com.yesitlab.zyvo.activity.guest.ExtraTimeChargesActivity
 import com.yesitlab.zyvo.activity.guest.FiltersActivity
 import com.yesitlab.zyvo.activity.guest.RestaurantDetailActivity
 import com.yesitlab.zyvo.activity.guest.WhereTimeActivity
@@ -110,6 +112,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         binding.textTime.setOnClickListener(this)
         binding.textActivity.setOnClickListener(this)
         binding.rlShowMap.setOnClickListener(this)
+        binding.customProgressBar.setOnClickListener(this)
 
         loggedScreenViewModel.imageList.observe(viewLifecycleOwner, Observer {
             images -> adapter.updateData(images)
@@ -125,17 +128,13 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
         if (savedInstanceState == null) {
             val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-
             if (mapFragment == null) {
                 Log.d("ZYVOO_TESTING","")
-               childFragmentManager.beginTransaction().replace(R.id.map, SupportMapFragment.newInstance()).commit()
-              //  childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
+                childFragmentManager.beginTransaction().replace(R.id.map, SupportMapFragment.newInstance()).commit()
+               //  childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
             }else{
                 childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
-
             }
-
-
         }
 
 
@@ -184,17 +183,19 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
     }
     override fun onClick(p0: View?) {
         when(p0?.id){
-
             R.id.textWhere ->{
                 var intent = Intent(requireContext(),WhereTimeActivity::class.java)
+                intent.putExtra(AppConstant.WHERE, AppConstant.WHERE)
                 startActivity(intent)
             }
             R.id.textTime ->{
                 var intent = Intent(requireContext(),WhereTimeActivity::class.java)
+                intent.putExtra(AppConstant.TIME, AppConstant.TIME)
                 startActivity(intent)
             }
             R.id.textActivity ->{
                 var intent = Intent(requireContext(),WhereTimeActivity::class.java)
+                intent.putExtra(AppConstant.ACTIVITY, AppConstant.ACTIVITY)
                 startActivity(intent)
             }
             R.id.rl_show_map ->{
@@ -210,6 +211,13 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
                     binding.recyclerViewBooking.visibility = View.VISIBLE
                 }
             }
+
+            R.id.customProgressBar ->{
+                var intent = Intent(requireContext(),ExtraTimeChargesActivity::class.java)
+                intent.putExtra(AppConstant.TIME, AppConstant.TIME)
+                startActivity(intent)
+            }
+
         }
     }
 
@@ -222,8 +230,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
                 Log.d("TESTING_ZYVOO","Inside Map Gone")
             } else {
                 mapFragment.view?.visibility = View.VISIBLE
-
-
             }
             isMapVisible = !isMapVisible
         }
@@ -377,7 +383,11 @@ val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
 
     @SuppressLint("SuspiciousIndentation")
     private fun createWishListDialog(){
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+
+        val dialog = context?.let {
+            Dialog(it, R.style.BottomSheetDialog)
+        }
+
         dialog?.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_create_wishlist)

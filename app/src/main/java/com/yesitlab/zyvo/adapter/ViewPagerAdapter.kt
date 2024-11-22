@@ -26,7 +26,7 @@ class ViewPagerAdapter(private var list: MutableList<ViewpagerModel>, var contex
 
 
         holder.itemView.setOnClickListener {
-            Toast.makeText(context,"hbsadf"+list.size,Toast.LENGTH_SHORT).show()
+
             listner?.itemClick(list)
         }
 

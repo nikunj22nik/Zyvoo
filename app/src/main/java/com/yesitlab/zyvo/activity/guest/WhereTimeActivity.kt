@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.yesitlab.zyvo.AppConstant
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.AdapterActivityText
 import com.yesitlab.zyvo.adapter.AdapterLocationSearch
@@ -118,7 +119,24 @@ class WhereTimeActivity : AppCompatActivity() {
         updateCalendar1()
         selectingClickListener()
         bydefaultSelect()
+        bydefaultOpenScreen()
+    }
 
+    private fun bydefaultOpenScreen(){
+        intent?.let {
+            if(it.hasExtra(AppConstant.TIME)){
+                binding.llTime.visibility = View.VISIBLE
+                binding.rlActivityRecy.visibility = View.GONE
+            }
+            else if(it.hasExtra(AppConstant.WHERE)){
+                binding.llTime.visibility = View.GONE
+                binding.rlActivityRecy.visibility = View.GONE
+            }
+            else{
+                binding.llTime.visibility = View.GONE
+                binding.rlActivityRecy.visibility = View.VISIBLE
+            }
+        }
     }
 
     private fun adapterIntialization() {

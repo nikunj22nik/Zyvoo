@@ -68,7 +68,7 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
             Log.d("TESTING_ZYVO12","I"+status)
             if(status.equals("12345")) {
                 bookingResume()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
+      findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
             }
         }
     }
@@ -77,13 +77,14 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
         super.onPostResume()
 
     }
-private fun showBottomNavigation() {
-    binding.lay1.visibility = View.VISIBLE
-}
+    private fun showBottomNavigation() {
+       binding.lay1.visibility = View.VISIBLE
+    }
 
-private fun hideBottomNavigation() {
-    binding.lay1.visibility = View.GONE
-}
+    private fun hideBottomNavigation() {
+       binding.lay1.visibility = View.GONE
+    }
+
 
 
      fun inboxColor(){
@@ -140,6 +141,7 @@ private fun hideBottomNavigation() {
     }
      fun bookingResume(){
 
+        Log.d("TESTING_ZYVOO","i AM HERE IN A BOOKING")
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1_selected)
