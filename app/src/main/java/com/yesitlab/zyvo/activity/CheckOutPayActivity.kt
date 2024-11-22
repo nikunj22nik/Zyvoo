@@ -101,6 +101,8 @@ class CheckOutPayActivity : AppCompatActivity() {
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
         }
 
+
+
     }
 
     fun callingSelectionOfTime(){
@@ -108,6 +110,7 @@ class CheckOutPayActivity : AppCompatActivity() {
         val hoursList: List<String> = hoursArray.toList()
         val minutesArray = Array(60) { i -> (i + 1).toString() }
         val minutesList :List<String> = minutesArray.toList()
+        val amPmList = listOf<String>("AM","PM")
 
         binding.endHour.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.endHour.arrowAnimate = false
@@ -133,6 +136,31 @@ class CheckOutPayActivity : AppCompatActivity() {
                 outRect.top = spacing
             }
         })
+
+
+        binding.endAmPm.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.endAmPm.arrowAnimate = false
+        binding.endAmPm.setItems(amPmList)
+        binding.endAmPm.setIsFocusable(true)
+        val recyclerView45 = binding.endAmPm.getSpinnerRecyclerView()
+        recyclerView45.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = spacing
+            }
+        })
+
+
+        binding.startAmPm.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.startAmPm.arrowAnimate = false
+        binding.startAmPm.setItems(amPmList)
+        binding.startAmPm.setIsFocusable(true)
+        val recyclerView46 = binding.endAmPm.getSpinnerRecyclerView()
+        recyclerView46.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = spacing
+            }
+        })
+
 
         binding.startHour.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.startHour.arrowAnimate = false
@@ -187,6 +215,7 @@ class CheckOutPayActivity : AppCompatActivity() {
 
 
         binding.spinnerLanguage.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.spinnerLanguage.spinnerPopupHeight = 400
         binding.spinnerLanguage.arrowAnimate = false
         binding.spinnerLanguage.setItems(days)
         binding.spinnerLanguage.setIsFocusable(true)
@@ -196,17 +225,14 @@ class CheckOutPayActivity : AppCompatActivity() {
         val spacing = 16 // Spacing in pixels
         recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
+                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = spacing
             }
         })
 
         binding.spinnermonth.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.spinnermonth.arrowAnimate = false
+        binding.spinnermonth.spinnerPopupHeight = 400
         binding.spinnermonth.setItems(months)
         binding.spinnermonth.setIsFocusable(true)
 
@@ -218,34 +244,34 @@ class CheckOutPayActivity : AppCompatActivity() {
             }
         })
 
-
         binding.spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.spinneryear.arrowAnimate = false
+        binding.spinneryear.spinnerPopupHeight = 400
         binding.spinneryear.setItems(yearsStringList.subList(0,16))
         binding.spinneryear.setIsFocusable(true)
-
-        binding.spinneryear.post {
-            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
-        }
+//        binding.spinneryear.post {
+//            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
+//        }
 
         binding.endAmPm.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.endAmPm.arrowAnimate = false
+        binding.endAmPm.spinnerPopupHeight = 200
         binding.endAmPm.setItems(am_pm_list)
         binding.endAmPm.setIsFocusable(true)
-
-        binding.endAmPm.post {
-            binding.endAmPm.spinnerPopupWidth = binding.endAmPm.width
-        }
+//        binding.endAmPm.post {
+//            binding.endAmPm.spinnerPopupWidth = binding.endAmPm.width
+//        }
 
 
         binding.startAmPm.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.startAmPm.arrowAnimate = false
+        binding.startAmPm.spinnerPopupHeight = 200
         binding.startAmPm.setItems(am_pm_list)
         binding.startAmPm.setIsFocusable(true)
 
-        binding.startAmPm.post {
-            binding.startAmPm.spinnerPopupWidth = binding.startAmPm.width
-        }
+//        binding.startAmPm.post {
+//            binding.startAmPm.spinnerPopupWidth = binding.startAmPm.width
+//        }
 
         val recyclerView6 = binding.startAmPm.getSpinnerRecyclerView()
 
