@@ -54,6 +54,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 binding.llMsgHost.visibility = View.VISIBLE
             }
         }
+        binding.imgBack.setOnClickListener {
+            onBackPressed()
+        }
 
         binding.dateView2.setOnClickListener {
             var dialog1 = SelectHourFragmentDialog()

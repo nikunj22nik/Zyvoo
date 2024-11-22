@@ -134,6 +134,13 @@ class WhereTimeActivity : AppCompatActivity() {
             }
             else{
                 binding.llTime.visibility = View.GONE
+                adapterActivitivity.updateAdapter(getActivityData())
+                if(binding.rlActivityRecy.visibility == View.VISIBLE){
+                    binding.rlActivityRecy.visibility = View.GONE
+                }
+                else{
+                    binding.rlActivityRecy.visibility = View.VISIBLE
+                }
                 binding.rlActivityRecy.visibility = View.VISIBLE
             }
         }
