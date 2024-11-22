@@ -1,6 +1,7 @@
 package com.yesitlab.zyvo.activity.guest
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -17,6 +18,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.GuesMain
 import com.yesitlab.zyvo.databinding.ActivityExtraTimeBinding
 import com.yesitlab.zyvo.fragment.guest.SelectHourFragmentDialog
 
@@ -102,6 +104,13 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             var dialog1 = SelectHourFragmentDialog()
             dialog1.setDialogListener(this)
             dialog1.show(supportFragmentManager, "MYDIALOF")
+        }
+
+        binding.myBooking.setOnClickListener {
+            val intent = Intent(this, GuesMain::class.java)
+            intent.putExtra("key_name","12345")
+            startActivity(intent)
+            finish()
         }
 
     }

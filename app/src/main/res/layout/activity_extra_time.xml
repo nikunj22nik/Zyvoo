@@ -898,6 +898,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_marginTop="@dimen/_13sdp"
                 android:background="@color/grey" />
             <RelativeLayout
+                android:id="@+id/my_booking"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_marginTop="@dimen/_10sdp"

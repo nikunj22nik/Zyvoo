@@ -77,9 +77,9 @@ dependencies {
 
     //OTP Dependency
     implementation ("com.github.aabhasr1:OtpView:v1.1.2")
-    implementation ("com.github.ozcanalasalvar:otpview:2.0.1")
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
 
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation ("com.github.ozcanalasalvar:otpview:2.0.1")
     //Image Picker
     implementation(libs.imagepicker)
     implementation(libs.glide)

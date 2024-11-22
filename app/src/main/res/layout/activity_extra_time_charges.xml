@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".activity.CheckOutPayActivity">
+    tools:context=".activity.guest.ExtraTimeChargesActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -23,7 +22,6 @@
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:background="@color/grey" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,92 +39,87 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/_15sdp"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_filter" />
+                    android:src="@drawable/ic_filter"
+                    android:visibility="gone" />
             </RelativeLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:background="#E5E5E5" />
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Checkout and Pay"
+                android:text="Booking time extension screen"
                 android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="#E5E5E5" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/bg_four_side_grey_corner"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginVertical="@dimen/_10sdp"
                     android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hosted by"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp"
-                        android:layout_gravity="center_vertical"/>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_10sdp"
-                        android:layout_marginTop="@dimen/_10sdp">
-
-                        <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/profile_image_1"
-                            android:layout_width="@dimen/_21sdp"
-                            android:layout_height="@dimen/_21sdp"
-                            android:src="@drawable/ic_img_girl_dumm"
-                            app:civ_border_color="#FF000000"
-                            app:civ_border_width="@dimen/_1sdp" />
-
+                        android:layout_height="match_parent">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_7sdp"
-                            android:text="Mia J."
+                            android:layout_gravity="center_vertical"
+                            android:text="Hosted by"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_4ssp"
-                            android:src="@drawable/ic_badge_img" />
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_10sdp">
 
-                    </LinearLayout>
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/profile_image_1"
+                                android:layout_width="@dimen/_21sdp"
+                                android:layout_height="@dimen/_21sdp"
+                                android:src="@drawable/ic_img_girl_dumm"
+                                app:civ_border_color="#FF000000"
+                                app:civ_border_width="@dimen/_1sdp" />
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_7sdp"
+                                android:text="Mia J."
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_4ssp"
+                                android:src="@drawable/ic_badge_img" />
+
+                        </LinearLayout>
                     </LinearLayout>
 
                 </LinearLayout>
@@ -150,20 +143,20 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:drawableStart="@drawable/ic_clock_dot_new"
                         android:drawablePadding="@dimen/_2sdp"
                         android:text="Respond within 1 hr"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:textSize="@dimen/_12sdp" />
 
                     <RelativeLayout
                         android:id="@+id/rl_msg_host"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_8ssp"
                         android:layout_marginEnd="@dimen/_15sdp"
-                        android:layout_marginStart="@dimen/_15sdp"
                         android:background="@drawable/bg_four_corner_light_black">
 
                         <TextView
@@ -173,11 +166,11 @@
                             android:layout_marginTop="@dimen/_5sdp"
                             android:text="Message the host"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"/>
+                            android:textSize="@dimen/_12sdp" />
 
                     </RelativeLayout>
 
-                    
+
                     <LinearLayout
                         android:id="@+id/ll_msg_host"
                         android:layout_width="match_parent"
@@ -185,116 +178,109 @@
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@drawable/bg_four_side_grey_corner"
                         android:orientation="vertical"
-                        android:visibility="gone"
-                        >
+                        android:visibility="gone">
 
                         <RelativeLayout
                             android:id="@+id/doubt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingHorizontal="@dimen/_6sdp"
-                            android:paddingVertical="@dimen/_6sdp"
-                            android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
                             android:background="@drawable/bg_four_side_corner_msg_box"
-                            >
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:fontFamily="@font/poppins"
                                 android:text="I have a doubt"
                                 android:textSize="@dimen/_11ssp"
-                                android:textStyle="bold"
-                                android:fontFamily="@font/poppins"
-                                android:layout_centerHorizontal="true"
-                                />
+                                android:textStyle="bold" />
 
                         </RelativeLayout>
+
                         <RelativeLayout
                             android:id="@+id/tv_available_day"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingHorizontal="@dimen/_6sdp"
-                            android:paddingVertical="@dimen/_6sdp"
                             android:layout_below="@id/doubt"
-                            android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
-                            >
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:fontFamily="@font/poppins"
                                 android:text="Available days"
                                 android:textSize="@dimen/_11ssp"
-                                android:fontFamily="@font/poppins"
-                                android:textStyle="bold"
-                                android:layout_centerHorizontal="true"
-                                />
+                                android:textStyle="bold" />
 
                         </RelativeLayout>
+
                         <RelativeLayout
                             android:id="@+id/tv_other_reason"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingHorizontal="@dimen/_6sdp"
-                            android:paddingVertical="@dimen/_6sdp"
                             android:layout_below="@id/doubt"
-                            android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
-                            >
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Other reason"
-                                android:textSize="@dimen/_10ssp"
                                 android:layout_centerHorizontal="true"
                                 android:fontFamily="@font/poppins"
-                                android:textStyle="bold"
-                                />
+                                android:text="Other reason"
+                                android:textSize="@dimen/_10ssp"
+                                android:textStyle="bold" />
 
                         </RelativeLayout>
+
                         <RelativeLayout
                             android:id="@+id/tv_share_message"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_100sdp"
-                            android:paddingHorizontal="@dimen/_6sdp"
-                            android:paddingVertical="@dimen/_6sdp"
                             android:layout_below="@id/doubt"
-                            android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
-                            >
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp">
 
                             <EditText
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Share a message"
-                                android:textSize="@dimen/_9ssp"
-                                android:background="@null"
                                 android:layout_centerHorizontal="true"
-                                />
+                                android:background="@null"
+                                android:hint="Share a message"
+                                android:textSize="@dimen/_9ssp" />
 
                         </RelativeLayout>
+
                         <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_33sdp"
-                            android:background="@drawable/bg_save_button"
                             android:layout_marginHorizontal="@dimen/_10sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            >
+                            android:background="@drawable/bg_save_button">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
                                 android:text="Message Host"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/_12sdp"
-                                android:layout_centerInParent="true"
-                                />
+                                android:textSize="@dimen/_12sdp" />
                         </RelativeLayout>
 
                     </LinearLayout>
@@ -303,12 +289,54 @@
 
 
             </LinearLayout>
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:visibility="gone"
+                android:paddingVertical="16dp">
 
+                <RelativeLayout
+                    android:id="@+id/rl_cancel_booking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_four_corner_light_black_small_corner"
+                    android:paddingHorizontal="@dimen/_15sdp"
+                    android:paddingVertical="@dimen/_7sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Cancel Booking" />
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/report_issue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/bg_four_corner_light_black_small_corner"
+                    android:paddingHorizontal="@dimen/_15sdp"
+                    android:paddingVertical="@dimen/_7sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Report an Issue" />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/bg_four_side_grey_corner"
                 android:orientation="vertical">
 
@@ -568,14 +596,6 @@
 
 
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_17sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="#E5E5E5" />
-
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -620,21 +640,14 @@
                             android:layout_toRightOf="@id/img_calendar"
                             android:text="October 22, 2023"
                             android:textSize="@dimen/_12ssp"
+                            android:layout_marginEnd="@dimen/_7sdp"
                             android:textColor="@color/black" />
 
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_5sdp"
-                            android:layout_marginEnd="@dimen/_5sdp"
-                            android:layout_toRightOf="@id/tv_date"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_edit_icon_green" />
+
 
                     </RelativeLayout>
 
                     <RelativeLayout
-                        android:id="@+id/rlHours"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_9sdp"
@@ -652,7 +665,6 @@
                             android:src="@drawable/ic_clock_new" />
 
                         <TextView
-                            android:id="@+id/tvHours"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_9sdp"
@@ -688,486 +700,54 @@
                             android:layout_marginStart="@dimen/_7sdp"
                             android:layout_toRightOf="@id/clock_old"
                             android:text="From 01pm to 03pm"
+                            android:layout_marginEnd="@dimen/_7sdp"
                             android:textSize="@dimen/_12ssp"
                             android:textColor="@color/black" />
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:id="@+id/date_view_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/date_view_1"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:background="@drawable/bg_two_side_corner"
+                        android:paddingVertical="@dimen/_10sdp">
+
+                        <ImageView
+                            android:id="@+id/add_more"
+                            android:layout_width="@dimen/_12ssp"
+                            android:layout_height="@dimen/_12ssp"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_add_more" />
+
+                        <TextView
+                            android:id="@+id/tv_add_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_7sdp"
+                            android:layout_toRightOf="@id/add_more"
+                            android:text="Add more time"
+                            android:textSize="@dimen/_12ssp"
+                            android:textColor="@color/black" />
+
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_10sdp"
-                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:src="@drawable/ic_clock_new"
+                            android:layout_toRightOf="@id/tv_add_more"
+                            android:layout_marginStart="@dimen/_8sdp"
+                            android:layout_marginEnd="@dimen/_8sdp"
                             android:layout_centerVertical="true"
-                            android:layout_toRightOf="@id/tv_timing"
-                            android:src="@drawable/ic_edit_icon_green" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/relTime"
-                        android:layout_width="wrap_content"
-                        android:layout_below="@id/date_view_1"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_15sdp"
-                        android:layout_marginTop="@dimen/_3sdp"
-                        android:visibility="gone"
-                        >
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            app:cardBackgroundColor="#FFFFFF"
-                            app:cardCornerRadius="@dimen/_10sdp"
-                            android:layout_marginTop="@dimen/_8sdp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/_10sdp"
-                                android:orientation="vertical"
-                                >
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@id/imageIcon"
-                                    >
-                                    <TextView
-                                        android:layout_width="@dimen/_40sdp"
-                                        android:layout_height="wrap_content"
-                                        android:text="From"
-                                        android:layout_marginStart="@dimen/_10sdp"
-
-                                        android:textSize="@dimen/_12sdp"
-                                        android:fontFamily="@font/poppins"
-                                        android:layout_marginTop="@dimen/_10sdp"
-                                        />
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
-                                        android:layout_margin="10sp"
-                                        android:background="@drawable/bg_four_side_grey_corner"
-                                        >
-                                        <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/endHour"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="@dimen/_22sdp"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_9ssp"
-                                            android:padding = "0dp"
-                                            android:text="22"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
-                                        android:layout_marginVertical="10sp"
-                                        android:layout_marginEnd="@dimen/_10sdp"
-                                        android:background="@drawable/bg_four_side_grey_corner"
-                                        >
-                                        <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/endMinute"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="@dimen/_22sdp"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
-                                            android:text="30"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingBottom = "6dp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_elevation = "14dp" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
-                                        android:layout_marginVertical="10sp"
-                                        android:layout_marginEnd="@dimen/_10sdp"
-                                        android:background="@drawable/bg_four_side_grey_corner"
-                                        >
-                                        <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/endAmPm"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="@dimen/_22sdp"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
-                                            android:text="AM"
-                                            app:spinner_popup_top_padding="@dimen/_10sdp"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp"
-                                            />
-
-                                    </LinearLayout>
-
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@id/imageIcon"
-                                    >
-                                    <TextView
-                                        android:layout_width="@dimen/_40sdp"
-                                        android:layout_height="wrap_content"
-                                        android:text="To"
-                                        android:layout_marginStart="@dimen/_10sdp"
-                                        android:textSize="@dimen/_12sdp"
-                                        android:fontFamily="@font/poppins"
-                                       android:layout_marginTop="@dimen/_6sdp"
-                                        />
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
-                                        android:layout_margin="10sp"
-                                        android:background="@drawable/bg_four_side_grey_corner"
-                                        >
-                                        <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/startHour"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="@dimen/_22sdp"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_9ssp"
-                                            android:padding = "0dp"
-                                            android:text="22"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
-                                        android:layout_marginVertical="10sp"
-                                        android:layout_marginEnd="@dimen/_10sdp"
-                                        android:background="@drawable/bg_four_side_grey_corner"
-                                        >
-                                        <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/startMinute"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="@dimen/_22sdp"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
-                                            android:text="30"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingBottom = "6dp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_elevation = "14dp" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
-                                        android:layout_marginVertical="10sp"
-                                        android:layout_marginEnd="@dimen/_10sdp"
-                                        android:background="@drawable/bg_four_side_grey_corner"
-                                        >
-                                        <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/startAmPm"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="@dimen/_22sdp"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
-                                            android:text="AM"
-                                            app:spinner_popup_top_padding="@dimen/_10sdp"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp"
-                                            />
-
-                                    </LinearLayout>
-
-                                </LinearLayout>
-
-                                <TextView
-                                    android:id="@+id/textSaveChangesButtonTime"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:paddingHorizontal="@dimen/_20sdp"
-                                    android:layout_marginTop="@dimen/_10sdp"
-                                    android:layout_marginHorizontal="@dimen/_10sdp"
-                                    android:background="@drawable/edit_name_bg"
-                                    android:backgroundTint="#3A4B4C"
-                                    android:fontFamily="@font/poppins"
-                                    android:paddingVertical="@dimen/_8sdp"
-                                    android:text="Save Changes"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/white"
-                                    android:textSize="@dimen/_9sdp"
-                                    android:textStyle="normal" />
-
-                            </LinearLayout>
-
-                        </androidx.cardview.widget.CardView>
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/relCalendarLayouts"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/date_view"
-                        android:layout_marginTop="@dimen/_3sdp"
-                        android:layout_marginStart="@dimen/_15sdp"
-                        android:visibility="gone">
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            app:cardBackgroundColor="#FFFFFF"
-                            app:cardCornerRadius="@dimen/_10sdp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="@dimen/_10sdp"
-                                android:orientation="vertical"
-                                >
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_below="@id/imageIcon"
-                                    >
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
-                                        android:layout_margin="10sp"
-                                        android:background="@drawable/bg_four_side_grey_corner"
-                                        >
-                                        <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/spinnerLanguage"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="@dimen/_22sdp"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
-                                            android:text="22"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
-                                        android:layout_marginVertical="10sp"
-                                        android:layout_marginEnd="@dimen/_10sdp"
-                                        android:background="@drawable/bg_four_side_grey_corner"
-                                        >
-                                        <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/spinnermonth"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="@dimen/_22sdp"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
-                                            android:text="October"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingBottom = "6dp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_elevation = "14dp" />
-
-                                    </LinearLayout>
-
-                                    <LinearLayout
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
-                                        android:layout_marginVertical="10sp"
-                                        android:layout_marginEnd="@dimen/_10sdp"
-                                        android:background="@drawable/bg_four_side_grey_corner"
-                                        >
-                                        <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/spinneryear"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
-                                            android:text="2024"
-                                            app:spinner_popup_top_padding="@dimen/_10sdp"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp"
-                                            />
-
-                                    </LinearLayout>
-
-                                </LinearLayout>
-
-                                <TextView
-                                    android:id="@+id/textSaveChangesButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:paddingHorizontal="@dimen/_20sdp"
-                                    android:layout_marginTop="@dimen/_10sdp"
-                                    android:layout_marginHorizontal="@dimen/_10sdp"
-                                    android:background="@drawable/edit_name_bg"
-                                    android:backgroundTint="#3A4B4C"
-                                    android:fontFamily="@font/poppins"
-                                    android:paddingVertical="@dimen/_8sdp"
-                                    android:text="Save Changes"
-                                    android:textAlignment="center"
-                                    android:textColor="@color/white"
-                                    android:textSize="@dimen/_9sdp"
-                                    android:textStyle="normal" />
-
-                            </LinearLayout>
-
-                        </androidx.cardview.widget.CardView>
+                            />
 
                     </RelativeLayout>
                 </RelativeLayout>
-
-
             </RelativeLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:background="#E5E5E5" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:fontFamily="@font/poppins"
-                android:text="Add-ons from the host"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:fontFamily="@font/poppins"
-                android:text="Host provided services, items or options. Available at checkout."
-                android:textSize="@dimen/_12sdp" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_add_on"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp" />
-
-
-            <TextView
-                android:id="@+id/tv_show_more"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_14sdp"
-                android:text="Show More" />
 
             <View
                 android:layout_width="match_parent"
@@ -1250,59 +830,23 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_credit_debit_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_15sdp"
-                android:background="@drawable/bg_four_side_grey_corner"
-                android:visibility="gone">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerViewPaymentCardList"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_10sdp" />
-
-                <RelativeLayout
-                    android:id="@+id/rl_add_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/_35sdp"
-                    android:layout_below="@id/recyclerViewPaymentCardList"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:background="@drawable/bg_green_add_card">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginHorizontal="@dimen/_12sdp"
-                        android:text="Add New Card"
-                        android:textSize="@dimen/_13sdp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-
-            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:background="@color/grey" />
-
+                android:background="#E5E5E5" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Refund policies"
+                android:textSize="@dimen/_13ssp"
+                android:fontFamily="@font/poppins"
                 android:layout_marginStart="@dimen/_13sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:text="Refund Policies"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
-
+                android:layout_marginTop="@dimen/_10sdp"
+                android:textStyle="bold"
+                />
             <com.colormoon.readmoretextview.ReadMoreTextView
                 android:id="@+id/tvReadMoreLess"
                 android:layout_width="match_parent"
@@ -1314,24 +858,24 @@
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:textColor="#000000"
-                android:textSize="@dimen/_13sdp" />
 
+                android:textSize="@dimen/_13sdp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
+                android:background="@color/grey"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp" />
-
+                />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_12sdp"
                 android:text="Included in your booking"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
-
+                android:textStyle="bold"
+                android:textSize="@dimen/_13ssp"
+                />
             <RelativeLayout
                 android:id="@+id/rl_parking"
                 android:layout_width="match_parent"
@@ -1366,7 +910,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:src="@drawable/ic_drop_down" />
             </RelativeLayout>
-
             <RelativeLayout
                 android:id="@+id/tv_parking_rule"
                 android:layout_width="match_parent"
@@ -1383,7 +926,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     />
 
             </RelativeLayout>
-
             <RelativeLayout
                 android:id="@+id/rl_host_rules"
                 android:layout_width="match_parent"
@@ -1418,7 +960,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:src="@drawable/ic_drop_down" />
             </RelativeLayout>
-
             <RelativeLayout
                 android:id="@+id/tv_host_rule"
                 android:layout_width="match_parent"
@@ -1435,21 +976,19 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     />
 
             </RelativeLayout>
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:background="@color/grey" />
-
             <RelativeLayout
-                android:id="@+id/rl_confirm_pay"
+                android:id="@+id/my_booking"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_12sdp"
                 android:background="@drawable/bg_green_add_card">
 
                 <TextView
@@ -1457,13 +996,15 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:text="Confirm &amp; Pay"
+                    android:text="My Bookings"
                     android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    />
 
             </RelativeLayout>
 
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

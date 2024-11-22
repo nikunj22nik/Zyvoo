@@ -65,6 +65,15 @@ class CheckOutPayActivity : AppCompatActivity() {
 
 
     fun messageHostListener(){
+        var dateManager = DateManager(this)
+        binding.rlHours.setOnClickListener {
+            dateManager.showHourSelectionDialog(this) { selectedHour ->
+                binding.tvHours.setText(selectedHour.toString())
+            }
+        }
+        binding.textSaveChangesButtonTime.setOnClickListener {
+            binding.relTime.visibility = View.GONE
+        }
         binding.rlMsgHost.setOnClickListener {
             if(binding.llMsgHost.visibility == View.VISIBLE){
                 binding.llMsgHost.visibility = View.GONE
@@ -73,7 +82,6 @@ class CheckOutPayActivity : AppCompatActivity() {
                 binding.llMsgHost.visibility = View.VISIBLE
             }
         }
-
         binding.imgBack.setOnClickListener {
             onBackPressed()
         }
@@ -82,13 +90,11 @@ class CheckOutPayActivity : AppCompatActivity() {
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
         }
-
         binding.tvAvailableDay.setOnClickListener {
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
         }
-
         binding.tvOtherReason.setOnClickListener {
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
@@ -100,7 +106,6 @@ class CheckOutPayActivity : AppCompatActivity() {
     fun callingSelectionOfTime(){
         val hoursArray = Array(24) { i -> (i + 1).toString() }
         val hoursList: List<String> = hoursArray.toList()
-
         val minutesArray = Array(60) { i -> (i + 1).toString() }
         val minutesList :List<String> = minutesArray.toList()
 
@@ -111,12 +116,7 @@ class CheckOutPayActivity : AppCompatActivity() {
         val recyclerView = binding.endHour.getSpinnerRecyclerView()
         val spacing = 16 // Spacing in pixels
         recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = spacing
             }
         })
@@ -129,12 +129,7 @@ class CheckOutPayActivity : AppCompatActivity() {
         val recyclerView1 = binding.endMinute.getSpinnerRecyclerView()
         // Spacing in pixels
         recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = spacing
             }
         })
@@ -184,7 +179,8 @@ class CheckOutPayActivity : AppCompatActivity() {
 
     fun callingSelectionOfDate(){
         val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-        val years = (2000..2050).toList()
+        val am_pm_list = listOf("AM","PM")
+        val years = (2024..2050).toList()
         val yearsStringList = years.map { it.toString() }
         Toast.makeText(this,"Year String List: "+yearsStringList.size,Toast.LENGTH_LONG).show()
         val days = resources.getStringArray(R.array.day).toList()
@@ -196,7 +192,7 @@ class CheckOutPayActivity : AppCompatActivity() {
         binding.spinnerLanguage.setIsFocusable(true)
         val recyclerView = binding.spinnerLanguage.getSpinnerRecyclerView()
 
-       // Add item decoration for spacing
+        // Add item decoration for spacing
         val spacing = 16 // Spacing in pixels
         recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
@@ -213,6 +209,7 @@ class CheckOutPayActivity : AppCompatActivity() {
         binding.spinnermonth.arrowAnimate = false
         binding.spinnermonth.setItems(months)
         binding.spinnermonth.setIsFocusable(true)
+
         val recyclerView3 = binding.spinnermonth.getSpinnerRecyclerView()
 
         recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
@@ -224,20 +221,53 @@ class CheckOutPayActivity : AppCompatActivity() {
 
         binding.spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.spinneryear.arrowAnimate = false
-        binding.spinneryear.setItems(yearsStringList)
+        binding.spinneryear.setItems(yearsStringList.subList(0,16))
         binding.spinneryear.setIsFocusable(true)
+
         binding.spinneryear.post {
             binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
         }
 
+        binding.endAmPm.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.endAmPm.arrowAnimate = false
+        binding.endAmPm.setItems(am_pm_list)
+        binding.endAmPm.setIsFocusable(true)
+
+        binding.endAmPm.post {
+            binding.endAmPm.spinnerPopupWidth = binding.endAmPm.width
+        }
+
+
+        binding.startAmPm.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.startAmPm.arrowAnimate = false
+        binding.startAmPm.setItems(am_pm_list)
+        binding.startAmPm.setIsFocusable(true)
+
+        binding.startAmPm.post {
+            binding.startAmPm.spinnerPopupWidth = binding.startAmPm.width
+        }
+
+        val recyclerView6 = binding.startAmPm.getSpinnerRecyclerView()
+
+        recyclerView6.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = spacing
+            }
+        })
+
+
+        val recyclerView5 = binding.endAmPm.getSpinnerRecyclerView()
+        recyclerView5.addItemDecoration(object : RecyclerView.ItemDecoration() {
+
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = spacing
+            }
+
+        })
+
         val recyclerView1 = binding.spinneryear.getSpinnerRecyclerView()
         recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = spacing
             }
 
@@ -252,36 +282,35 @@ class CheckOutPayActivity : AppCompatActivity() {
             }
         }
 
+        binding.textSaveChangesButton.setOnClickListener {
+            binding.tvDate.setText(binding.spinnermonth.text.toString()+" "+binding.spinnerLanguage.text.toString()+","+binding.spinneryear.text.toString())
+            binding.relCalendarLayouts.visibility = View.GONE
+        }
+
     }
 
 
     fun clickListeneres(){
 
         binding.rlParking.setOnClickListener {
-             if(binding.tvParkingRule.visibility == View.VISIBLE){
-                 binding.tvParkingRule.visibility=View.GONE
-             }else{
-                 binding.tvParkingRule.visibility = View.VISIBLE
-             }
+            if(binding.tvParkingRule.visibility == View.VISIBLE){
+                binding.tvParkingRule.visibility=View.GONE
+            }else{
+                binding.tvParkingRule.visibility = View.VISIBLE
+            }
         }
-
-
-
         binding.rlHostRules.setOnClickListener {
-             if(binding.tvHostRule.visibility == View.VISIBLE){
-                 binding.tvHostRule.visibility = View.GONE
-             }
-             else{
-                 binding.tvHostRule.visibility = View.VISIBLE
-             }
+            if(binding.tvHostRule.visibility == View.VISIBLE){
+                binding.tvHostRule.visibility = View.GONE
+            }
+            else{
+                binding.tvHostRule.visibility = View.VISIBLE
+            }
         }
-
         binding.rlConfirmPay.setOnClickListener {
             var intent = Intent(this@CheckOutPayActivity,ExtraTimeActivity::class.java)
             startActivity(intent)
         }
-
-
         binding.rlCreditDebitCard.setOnClickListener {
             if(binding.rlCreditDebitRecycler.visibility == View.GONE) {
                 binding.rlCreditDebitRecycler.visibility = View.VISIBLE
@@ -289,7 +318,6 @@ class CheckOutPayActivity : AppCompatActivity() {
                 binding.rlCreditDebitRecycler.visibility = View.GONE
             }
         }
-
         binding.rlAddCard.setOnClickListener {
             dialogAddCard()
         }

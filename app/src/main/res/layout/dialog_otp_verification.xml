@@ -23,11 +23,20 @@ android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
         android:text="OTP Verification"
+<<<<<<< Updated upstream
         android:layout_centerHorizontal="true"
         android:textColor="@color/black"
         android:textSize="@dimen/_13ssp"
         android:textStyle="bold"
         android:layout_below="@+id/imageCross" />
+=======
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13ssp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageCross" />
+>>>>>>> Stashed changes
 
     <View
         android:id="@+id/view"
@@ -48,9 +57,15 @@ android:layout_marginHorizontal="@dimen/_20sdp"
         android:text="Please type the verification code send \nto +1 999 999 9999"
         android:textAlignment="center"
         android:textColor="@color/black"
+<<<<<<< Updated upstream
 
         android:layout_below="@+id/view"/>
+=======
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
+>>>>>>> Stashed changes
 
     <!--    <com.ozcanalasalvar.otp_view.view.OtpView-->
     <!--        android:id="@+id/OtpView"-->
@@ -67,18 +82,50 @@ android:layout_marginHorizontal="@dimen/_20sdp"
     <!--        app:otp_box_background_error="@color/red"-->
     <!--        app:layout_constraintTop_toBottomOf="@+id/textEnterYourEmail"/>-->
 
+<<<<<<< Updated upstream
+    <!--    <com.ozcanalasalvar.otp_view.view.OtpView-->
+    <!--        android:id="@+id/OtpView"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center_horizontal"-->
+    <!--        android:layout_marginTop="@dimen/_10sdp"-->
+    <!--        android:textColor="@color/black"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:length="4"-->
+    <!--        app:otp=""-->
+    <!--        app:otp_box_background="@drawable/otp_box"-->
+    <!--        app:otp_box_background_error="@color/red"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/textEnterYourEmail"/>-->
+
+=======
+    <RelativeLayout
+        android:id="@+id/OtpView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/textEnterYourEmail"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        >
+>>>>>>> Stashed changes
 <!--    <com.ozcanalasalvar.otp_view.view.OtpView-->
 <!--        android:id="@+id/OtpView"-->
 <!--        android:layout_width="wrap_content"-->
 <!--        android:layout_height="@dimen/_50sdp"-->
+<<<<<<< Updated upstream
 <!--        android:layout_marginTop="10dp"-->
 <!--        app:activeColor="#4AEAB1"-->
 <!--        app:autoFocusEnabled="false"-->
 <!--        android:layout_centerHorizontal="true"-->
+=======
+<!--        app:activeColor="#4AEAB1"-->
+<!--        app:autoFocusEnabled="false"-->
+>>>>>>> Stashed changes
 <!--        app:boxStrokeColor="#C4C4C4"-->
 <!--        app:boxStrokeWidth="@dimen/_1sdp"-->
 <!--        app:digits="4"-->
 <!--        app:keyboardType="number"-->
+<<<<<<< Updated upstream
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent"-->
 <!--        app:layout_constraintTop_toBottomOf="@+id/textEnterYourEmail"-->
@@ -96,6 +143,72 @@ android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_below="@+id/textEnterYourEmail"
         android:layout_height="50dp"/>
 
+=======
+<!--        app:otpSymbol=""-->
+<!--        app:passiveColor="#fff"-->
+<!--        app:textColor="#000"-->
+<!--         />-->
+
+
+
+        <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="@dimen/_22sdp"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/otp_digit1"
+                android:layout_width="@dimen/_43sdp"
+                android:layout_height="@dimen/_43sdp"
+                android:maxLength="1"
+                android:inputType="number"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:background="@drawable/otp_box"/>
+
+            <EditText
+                android:id="@+id/otp_digit2"
+                android:layout_width="@dimen/_43sdp"
+                android:layout_height="@dimen/_43sdp"
+                android:maxLength="1"
+                android:inputType="number"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:layout_marginHorizontal="@dimen/_4sdp"
+                android:background="@drawable/otp_box"/>
+
+            <EditText
+                android:id="@+id/otp_digit3"
+                android:layout_width="@dimen/_43sdp"
+                android:layout_height="@dimen/_43sdp"
+                android:maxLength="1"
+                android:inputType="number"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                android:background="@drawable/otp_box"/>
+
+            <EditText
+                android:id="@+id/otp_digit4"
+                android:layout_width="@dimen/_43sdp"
+                android:layout_height="@dimen/_43sdp"
+                android:maxLength="1"
+                android:inputType="number"
+                android:gravity="center"
+                android:textSize="24sp"
+                android:background="@drawable/otp_box"/>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+>>>>>>> Stashed changes
     <TextView
         android:id="@+id/textSubmitButton"
         android:layout_width="wrap_content"
@@ -107,22 +220,41 @@ android:layout_marginHorizontal="@dimen/_20sdp"
         android:paddingHorizontal="@dimen/_90sdp"
         android:paddingVertical="@dimen/_5sdp"
         android:text="Submit"
+<<<<<<< Updated upstream
         android:layout_centerHorizontal="true"
         android:textColor="@color/black"
         android:textSize="@dimen/_11sdp"
         android:textStyle="bold"
         android:layout_below="@+id/OtpView"
      />
+=======
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11sdp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/OtpView1" />
+>>>>>>> Stashed changes
 
 
     <RelativeLayout
         android:id="@+id/rlDidntReceive"
+<<<<<<< Updated upstream
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/_30sdp"
         android:layout_below="@+id/textSubmitButton"
         >
+=======
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_28sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
+        app:layout_constraintTop_toBottomOf="@+id/textSubmitButton">
+>>>>>>> Stashed changes
 
         <TextView
             android:id="@+id/textDidntReceive"
@@ -132,7 +264,10 @@ android:layout_marginHorizontal="@dimen/_20sdp"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_15sdp"
             android:fontFamily="@font/poppins"
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             android:text="Didn't receive the verification code?"
             android:textColor="#636363"
             android:textSize="@dimen/_9ssp"
@@ -160,9 +295,13 @@ android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_30sdp"
+<<<<<<< Updated upstream
         android:layout_centerHorizontal="true"
 
         android:layout_below="@+id/rlDidntReceive">
+=======
+        app:layout_constraintTop_toBottomOf="@+id/rlDidntReceive">
+>>>>>>> Stashed changes
 
         <RelativeLayout
             android:id="@+id/rlResendLine"
@@ -213,4 +352,8 @@ android:layout_marginHorizontal="@dimen/_20sdp"
     </RelativeLayout>
 
 
+<<<<<<< Updated upstream
 </RelativeLayout>
+=======
+</androidx.constraintlayout.widget.ConstraintLayout>
+>>>>>>> Stashed changes

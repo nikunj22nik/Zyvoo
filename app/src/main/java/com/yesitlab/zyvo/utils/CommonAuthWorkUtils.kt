@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -27,7 +29,7 @@ import `in`.aabhasjindal.otptextview.OtpTextView
 class CommonAuthWorkUtils(var context: Context, navController: NavController) {
 var navController = navController
 
-
+    private lateinit var otpDigits: Array<EditText>
     fun dialogLogin(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -344,11 +346,53 @@ var navController = navController
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
+<<<<<<< Updated upstream
             val imageCross =  findViewById<ImageView>(R.id.imageCross)
 
             val textResend =  findViewById<TextView>(R.id.textResend)
 
             val textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
+=======
+
+            otpDigits = arrayOf<EditText>(
+                findViewById(R.id.otp_digit1),
+                findViewById(R.id.otp_digit2),
+                findViewById(R.id.otp_digit3),
+                findViewById(R.id.otp_digit4)
+            )
+
+            for (i in 0 until otpDigits.size) {
+                val index = i
+                otpDigits.get(i).setOnClickListener { v ->
+                    otpDigits.get(index).requestFocus()
+                }
+
+                otpDigits.get(i).addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        count: Int,
+                        after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                        if (s.length == 1 && index < otpDigits.size - 1) {
+                            otpDigits.get(index + 1).requestFocus()
+                        } else if (s.length == 0 && index > 0) {
+                            otpDigits.get(index - 1).requestFocus()
+                        }
+                    }
+
+                    override fun afterTextChanged(s: Editable) {}
+                })
+
+            }
+            var imageCross =  findViewById<ImageView>(R.id.imageCross)
+            var textResend =  findViewById<TextView>(R.id.textResend)
+//
+           var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
+>>>>>>> Stashed changes
             textSubmitButton.setOnClickListener{
                 if (text == "Your password has been changed\n" + " successfully."){
                     dialogNewPassword(context,text)

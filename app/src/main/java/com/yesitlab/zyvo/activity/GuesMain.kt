@@ -3,6 +3,7 @@ package com.yesitlab.zyvo.activity
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -19,13 +20,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class GuesMain : AppCompatActivity() ,OnClickListener {
+
     lateinit var binding : ActivityGuesMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
      //  enableEdgeToEdge()
-
-
         binding = ActivityGuesMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
@@ -52,16 +52,31 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
         }
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView_main) as NavHostFragment
         val navController = navHostFragment.navController
-
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.chatDetailsFragment -> hideBottomNavigation()
                 else -> showBottomNavigation()
             }
         }
-
-
 }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("TESTING_ZYVO","I am in the on resume")
+        if (intent!=null) {
+            var status:String= intent.getStringExtra("key_name").toString()
+            Log.d("TESTING_ZYVO12","I"+status)
+            if(status.equals("12345")) {
+                bookingResume()
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
+            }
+        }
+    }
+
+    override fun onPostResume() {
+        super.onPostResume()
+
+    }
 private fun showBottomNavigation() {
     binding.lay1.visibility = View.VISIBLE
 }

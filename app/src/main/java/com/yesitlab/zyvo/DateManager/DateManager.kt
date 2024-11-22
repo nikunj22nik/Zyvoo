@@ -81,19 +81,41 @@ class DateManager(var context : Context) {
     }
 
     fun showHourSelectionDialog(context: Context, onHourSelected: (String) -> Unit) {
+//        val numberPicker = NumberPicker(context).apply {
+//            minValue = 1
+//            maxValue = 24
+//            wrapSelectorWheel = true
+//        }
+//
+//        AlertDialog.Builder(context)
+//            .setTitle("Select Hours")
+//            .setView(numberPicker)
+//            .setPositiveButton("OK") { _, _ ->
+//                val selectedHour = numberPicker.value
+//                val result = "$selectedHour hour${if (selectedHour > 1) "s" else ""}"
+//                onHourSelected(result) // Return the selected hour as a string
+//            }
+//            .setNegativeButton("Cancel", null)
+//            .show()
+
+
+        val timeOptions = mutableListOf("30 minutes").apply {
+            addAll((1..24).map { "$it hour${if (it > 1) "s" else ""}" })
+        }.toTypedArray()
+
         val numberPicker = NumberPicker(context).apply {
-            minValue = 1
-            maxValue = 24
+            minValue = 0
+            maxValue = timeOptions.size - 1
+            displayedValues = timeOptions
             wrapSelectorWheel = true
         }
 
         AlertDialog.Builder(context)
-            .setTitle("Select Hours")
+            .setTitle("Select Time")
             .setView(numberPicker)
             .setPositiveButton("OK") { _, _ ->
-                val selectedHour = numberPicker.value
-                val result = "$selectedHour hour${if (selectedHour > 1) "s" else ""}"
-                onHourSelected(result) // Return the selected hour as a string
+                val selectedTime = timeOptions[numberPicker.value]
+               selectedTime // Return the selected time as a string
             }
             .setNegativeButton("Cancel", null)
             .show()
