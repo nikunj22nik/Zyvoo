@@ -702,14 +702,16 @@
 
                     </RelativeLayout>
 
-                    <RelativeLayout
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/relTime"
                         android:layout_width="wrap_content"
                         android:layout_below="@id/date_view_1"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_3sdp"
+                        app:cardCornerRadius="@dimen/_10sdp"
                         android:visibility="gone"
+                        android:layout_marginBottom="@dimen/_5sdp"
                         >
 
                         <androidx.cardview.widget.CardView
@@ -762,6 +764,7 @@
                                             android:paddingStart = "8dp"
                                             android:paddingEnd = "8dp"
                                             android:paddingTop = "6dp"
+
                                             android:paddingBottom = "6dp"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
                                             android:textAlignment = "center"
@@ -792,6 +795,7 @@
                                             android:paddingStart = "8dp"
                                             android:paddingEnd = "8dp"
                                             android:paddingTop = "6dp"
+
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
                                             android:paddingBottom = "6dp"
                                             android:textAlignment = "center"
@@ -822,6 +826,7 @@
                                             app:spinner_popup_top_padding="@dimen/_10sdp"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
                                             android:paddingStart = "8dp"
+
                                             android:paddingEnd = "8dp"
                                             android:paddingTop = "6dp"
                                             android:paddingBottom = "6dp"
@@ -869,6 +874,7 @@
                                             android:textSize = "@dimen/_9ssp"
                                             android:padding = "0dp"
                                             android:text="22"
+
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
                                             android:paddingStart = "8dp"
@@ -902,6 +908,7 @@
                                             android:text="30"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
                                             android:paddingStart = "8dp"
+
                                             android:paddingEnd = "8dp"
                                             android:paddingTop = "6dp"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
@@ -973,15 +980,17 @@
 
                         </androidx.cardview.widget.CardView>
 
-                    </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
 
-                    <RelativeLayout
+                    <androidx.cardview.widget.CardView
                         android:id="@+id/relCalendarLayouts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/date_view"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        app:cardCornerRadius="@dimen/_10sdp"
                         android:visibility="gone">
 
                         <androidx.cardview.widget.CardView
@@ -1023,6 +1032,7 @@
                                             android:paddingStart = "8dp"
                                             android:paddingEnd = "8dp"
                                             android:paddingTop = "6dp"
+
                                             android:paddingBottom = "6dp"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
                                             android:textAlignment = "center"
@@ -1049,6 +1059,7 @@
                                             android:textSize = "@dimen/_10ssp"
                                             android:padding = "0dp"
                                             android:text="October"
+
                                             app:spinner_arrow_padding="@dimen/_10sdp"
                                             android:paddingStart = "8dp"
                                             android:paddingEnd = "8dp"
@@ -1058,6 +1069,7 @@
                                             android:textAlignment = "center"
                                             app:spinner_arrow_gravity = "end"
                                             app:spinner_divider_size = "0.4dp"
+
                                             app:spinner_popup_animation = "dropdown"
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
                                             app:spinner_popup_elevation = "14dp" />
@@ -1075,7 +1087,7 @@
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/spinneryear"
                                             android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
+                                            android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textSize = "@dimen/_10ssp"
                                             android:padding = "0dp"
@@ -1093,6 +1105,8 @@
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
                                             app:spinner_popup_animation = "dropdown"
                                             app:spinner_popup_elevation = "14dp"
+
+
                                             />
 
                                     </LinearLayout>
@@ -1121,7 +1135,7 @@
 
                         </androidx.cardview.widget.CardView>
 
-                    </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
                 </RelativeLayout>
 
 

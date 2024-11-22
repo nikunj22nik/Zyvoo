@@ -203,12 +203,15 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
                     binding.tvMapContent.setText("Show List")
                     binding.rlMapView.visibility = View.VISIBLE
                     binding.recyclerViewBooking.visibility = View.GONE
+                    binding.clTimeLeftProgressBar.visibility = View.GONE
                 }
                 else{
                     binding.tvMapContent.setText("Show Map")
                     toggleMapVisibility()
                     binding.rlMapView.visibility = View.GONE
                     binding.recyclerViewBooking.visibility = View.VISIBLE
+                    binding.clTimeLeftProgressBar.visibility = View.VISIBLE
+
                 }
             }
 
