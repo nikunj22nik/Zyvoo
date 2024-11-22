@@ -138,7 +138,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         }
 
 
-        binding.customProgressBar.setProgressWidth(13f)
+        binding.customProgressBar.setProgressWidth(15f)
        // binding.customProgressBar.setMax(100.0) // Set max progress as 100%
         binding.customProgressBar.setMax(100.0)
        // binding.customProgressBar.setProgressWithAnimation(75.0)

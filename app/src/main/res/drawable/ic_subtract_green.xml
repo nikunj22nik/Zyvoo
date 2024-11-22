@@ -12,7 +12,7 @@
       <aapt:attr name="android:fillColor">
         <gradient 
             android:startX="216.15"
-            android:startY="169.14"
+            android:startY="173.14"
             android:endX="205.25"
             android:endY="-4.71"
             android:type="linear">

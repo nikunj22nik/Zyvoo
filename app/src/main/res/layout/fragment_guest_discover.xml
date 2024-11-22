@@ -197,66 +197,56 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clTimeLeftProgressBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_155sdp"
-        android:layout_marginBottom="@dimen/_25sdp"
+        android:layout_height="190dp"
+        android:layout_marginBottom="@dimen/_20sdp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent">
 
 
-        <ImageView
-            android:layout_width="@dimen/_42sdp"
-            android:layout_height="@dimen/_42sdp"
-            android:layout_marginBottom="@dimen/_115sdp"
-            android:backgroundTint="@color/black"
-            android:elevation="@dimen/_18sdp"
-            android:src="@drawable/ic_pin_icon_progress_bar2"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+<!--        <ImageView-->
+<!--            android:layout_width="@dimen/_42sdp"-->
+<!--            android:layout_height="@dimen/_42sdp"-->
+<!--            android:layout_marginBottom="@dimen/_115sdp"-->
+<!--            android:backgroundTint="@color/black"-->
+<!--            android:elevation="@dimen/_18sdp"-->
+<!--            android:src="@drawable/ic_pin_icon_progress_bar2"-->
+<!--            android:visibility="gone"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
 
         <com.yesitlab.zyvo.SemiCircleProgressBar
             android:id="@+id/customProgressBar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="178dp"
             android:layout_gravity="center"
-            android:maxHeight="@dimen/_115sdp"
-           
-            app:layout_constraintHeight_max="@dimen/_115sdp"
+
+            app:layout_constraintHeight_max="178dp"
             android:layout_marginBottom="@dimen/_2sdp"
             android:elevation="@dimen/_8sdp"
             app:endIcon="@drawable/ic_pin_icon_progress_bar"
             app:endIconSize="48dp"
 
-            app:layout_constraintBottom_toBottomOf="parent"
+
             app:layout_constraintTop_toTopOf="parent">
 
         </com.yesitlab.zyvo.SemiCircleProgressBar>
 
-        <!--        <com.google.android.flexbox.FlexboxLayout-->
-        <!--            android:layout_width="match_parent"-->
-        <!--            android:layout_height="@dimen/_108sdp"-->
-        <!--            android:layout_gravity="center"-->
-
-        <!--            android:background="@drawable/ic_subtract_green"-->
-        <!--            android:orientation="horizontal"-->
-        <!--            android:padding="@dimen/_8sdp"-->
-        <!--            android:scaleType="centerCrop"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent">-->
 
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="150dp"
             android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginTop="25dp"
             android:background="@drawable/ic_subtract_green"
+            android:visibility="visible"
             android:orientation="horizontal"
             android:padding="@dimen/_8sdp"
             android:scaleType="centerCrop"
 
-            app:layout_constraintBottom_toBottomOf="@+id/customProgressBar"
+
+
             app:layout_constraintTop_toTopOf="@+id/customProgressBar">
 
             <TextView

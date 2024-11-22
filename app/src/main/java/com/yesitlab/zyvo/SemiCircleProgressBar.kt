@@ -3,9 +3,6 @@ package com.yesitlab.zyvo
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.LinearGradient
@@ -13,19 +10,13 @@ import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.Shader
-import android.graphics.SweepGradient
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
-import android.widget.AbsSeekBar
-import android.widget.FrameLayout
-import androidx.compose.ui.Modifier
-import java.lang.Math.cos
-import java.lang.Math.sin
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.toRect
 
-/*
 class SemiCircleProgressBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -33,43 +24,54 @@ class SemiCircleProgressBar @JvmOverloads constructor(
 ) : View(context, attrs, defStyleAttr)
 {
 
-    private val containerPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val outerBorderPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val backgroundPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val transparentBackgroundPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val progressPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var maxProgress: Double = 100.0
     private var currentProgress: Double = 0.0
-    private var strokeWidthDefault = 15f
+    private var strokeWidthDefault = 2f
+    private var transparentStrokeWidthDefault = 80f
     private var endIcon: Drawable? = null
     private var endIconSize: Int = 40 // Default icon size in dp
     private var radius: Float = 10f  // Default radius (adjust as needed)
 
     init {
-        // Initialize container paint (semi-circle background)
-        containerPaint.style = Paint.Style.FILL
-        containerPaint.color = Color.LTGRAY // Default color
-        containerPaint.isAntiAlias = true
+        // Initialize the outer border paint
+        outerBorderPaint.style = Paint.Style.STROKE
+        outerBorderPaint.strokeCap = Paint.Cap.ROUND
+        outerBorderPaint.color = Color.TRANSPARENT // Change this to your desired outer border color
+        outerBorderPaint.strokeWidth = 60f // Set the desired outer border thickness
 
-        // Initialize background paint (progress background)
+        // Set default paint properties for the transparent background
+        transparentBackgroundPaint.style = Paint.Style.STROKE
+        transparentBackgroundPaint.strokeCap = Paint.Cap.ROUND
+        transparentBackgroundPaint.color = Color.TRANSPARENT
+        transparentBackgroundPaint.strokeWidth = transparentStrokeWidthDefault
+
+        // Set default paint properties for background
         backgroundPaint.style = Paint.Style.STROKE
         backgroundPaint.strokeCap = Paint.Cap.ROUND
-        backgroundPaint.color = Color.DKGRAY
+        backgroundPaint.color = Color.LTGRAY
         backgroundPaint.strokeWidth = strokeWidthDefault
 
-        // Initialize progress paint (progress arc)
+        // Set default paint properties for progress
         progressPaint.style = Paint.Style.STROKE
         progressPaint.strokeCap = Paint.Cap.ROUND
         progressPaint.strokeWidth = strokeWidthDefault
+
+        // Set the multi-color gradient
         setProgressMultiColorGradient()
 
         // Retrieve custom attributes
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.SemiCircleProgressBar, 0, 0)
-        containerPaint.color = typedArray.getColor(R.styleable.SemiCircleProgressBar_containerColor, Color.LTGRAY)
         endIcon = typedArray.getDrawable(R.styleable.SemiCircleProgressBar_endIcon)
         endIconSize = typedArray.getDimensionPixelSize(R.styleable.SemiCircleProgressBar_endIconSize, dpToPx(40))
         typedArray.recycle()
     }
 
     private fun setProgressMultiColorGradient() {
+        // Set a SweepGradient with multiple colors
         val colors = intArrayOf(
             Color.parseColor("#99C817"),
             Color.parseColor("#FDEB48"),
@@ -77,59 +79,145 @@ class SemiCircleProgressBar @JvmOverloads constructor(
             Color.parseColor("#F7B11E"),
             Color.parseColor("#D72626")
         )
-        val positions = floatArrayOf(0.0f, 0.25f, 0.40f, 0.58f, 1.0f)
+
+        val positions = floatArrayOf(
+            0.0f,   // Start with green
+            0.25f,  // Light yellow around 24% progress
+            0.40f,  // Yellow around 39% progress
+            0.58f,  // Orange around 68% progress
+            1.0f    // Red at the end of the progress (100%)
+        )
 
         val shader = LinearGradient(
             0f, 0f, width.toFloat(), (height * 2).toFloat(),
-            colors, positions, Shader.TileMode.CLAMP
+            colors,
+            positions,
+            Shader.TileMode.CLAMP
         )
         progressPaint.shader = shader
     }
 
+    fun setMax(max: Double) {
+        if (max > 0) {
+            maxProgress = max
+            invalidate()
+        }
+    }
+
+    fun setProgress(progress: Double) {
+        if (progress in 0.0..maxProgress) {
+            currentProgress = progress
+            invalidate()
+        }
+    }
+
+    fun setProgressWidth(width: Float) {
+        backgroundPaint.strokeWidth = width
+        progressPaint.strokeWidth = width
+        invalidate()
+    }
+
+    fun setProgressWithAnimation(progress: Double, duration: Long = 500) {
+        if (progress in 0.0..maxProgress) {
+            val animator = ValueAnimator.ofFloat(currentProgress.toFloat(), progress.toFloat())
+            animator.duration = duration
+            animator.addUpdateListener { animation ->
+                currentProgress = animation.animatedValue.toString().toDouble()
+                invalidate()
+            }
+            animator.start()
+        } else {
+            currentProgress = maxProgress
+        }
+    }
+
+    fun setStrokeWidth(width: Float) {
+        backgroundPaint.strokeWidth = width
+        progressPaint.strokeWidth = width
+        strokeWidthDefault = width
+        invalidate()
+    }
+
+    fun setEndIcon(drawable: Drawable?) {
+        endIcon = drawable
+        invalidate()
+    }
+
+    fun setEndIconSize(size: Int) {
+        endIconSize = size
+        invalidate()
+    }
+
+    fun setProgressColor(color: Int) {
+        progressPaint.color = color
+        invalidate()
+    }
+
+    fun setProgressGradient(startColor: Int, endColor: Int) {
+        val shader = LinearGradient(
+            0f, 0f, width.toFloat(), (height * 2).toFloat(),
+            startColor, endColor, Shader.TileMode.CLAMP
+        )
+        progressPaint.shader = shader
+        invalidate()
+    }
+
+    @SuppressLint("DrawAllocation")
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         val strokeWidth = progressPaint.strokeWidth
         val halfStrokeWidth = strokeWidth / 2f
 
-        // Container dimensions
-        val containerRect = RectF(
-            halfStrokeWidth,
-            -dpToPx(50).toFloat(), // Extend height upwards by 50 dp
-            width.toFloat() - halfStrokeWidth,
-            height * 2f - halfStrokeWidth
+        // Adjust the bounds for the outer border arc
+        val outerRect = RectF(
+            halfStrokeWidth + 20f, // Add padding to prevent clipping
+            halfStrokeWidth + 40f,
+            width - halfStrokeWidth - 20f,
+            height * 2 - halfStrokeWidth - 20f
         )
 
-        // Background dimensions
-        val rect = RectF(
-            halfStrokeWidth,
-            halfStrokeWidth,
-            width.toFloat() - halfStrokeWidth,
-            height * 2f - halfStrokeWidth
+
+
+        // Draw the outer border arc
+        canvas.drawArc(outerRect, 200f, 140f, false, outerBorderPaint)
+
+        // Original rect for background and progress
+//        val rect = RectF(
+//            -30f,
+//            20f,
+//            width.toFloat() + 25f,
+//            height * 2 - halfStrokeWidth - radius - 10f
+//        )
+        val middleRect = RectF(
+            halfStrokeWidth -35, // Add padding to prevent clipping
+            halfStrokeWidth + 60f,
+            width - halfStrokeWidth + 30,
+            height * 2 - halfStrokeWidth - 60f
         )
 
-        // Draw the container semi-circle
-        canvas.drawArc(containerRect, 180f, 180f, true, containerPaint)
 
-        // Draw the complete background semicircle
-        canvas.drawArc(rect, 200f, 140f, false, backgroundPaint)
+
+
+        // Draw the background semicircle
+        canvas.drawArc(middleRect, 200f, 140f, false, backgroundPaint)
 
         // Calculate the angle based on the progress
         val angle = 140f * (currentProgress / maxProgress.toFloat())
 
         // Draw the progress arc
-        canvas.drawArc(rect, 200f, angle.toFloat(), false, progressPaint)
+        canvas.drawArc(middleRect, 200f, angle.toFloat(), false, progressPaint)
 
         // Draw the end icon at the current progress
         endIcon?.let { icon ->
             val angleRadians = Math.toRadians(200.0 + angle) // 200 degrees start + progress
-            val centerX = (rect.centerX() + rect.width() / 2 * Math.cos(angleRadians)).toFloat()
-            val centerY = (rect.centerY() + rect.height() / 2 * Math.sin(angleRadians)).toFloat()
+            val centerX = (middleRect.centerX() + middleRect.width() / 2 * Math.cos(angleRadians)).toFloat()
+            val centerY = (middleRect.centerY() + middleRect.height() / 2 * Math.sin(angleRadians)).toFloat()
 
             val halfSize = endIconSize / 2
             val iconRect = Rect(
                 (centerX - halfSize).toInt(),
-                (centerY - halfSize).toInt(),
+                (centerY - halfSize).toInt() ,
                 (centerX + halfSize).toInt(),
                 (centerY + halfSize).toInt()
             )
@@ -140,20 +228,24 @@ class SemiCircleProgressBar @JvmOverloads constructor(
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
+        // Update gradient on size change to recalculate shader positions
         setProgressMultiColorGradient()
     }
 
     private fun dpToPx(dp: Int): Int {
         return (dp * resources.displayMetrics.density).toInt()
     }
+
+    override fun onFinishInflate() {
+        super.onFinishInflate()
+        // Perform additional setup if needed after child views are added
+    }
 }
-
- */
-
 
 
 //21- nov
 
+/*
 class SemiCircleProgressBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
@@ -346,6 +438,8 @@ class SemiCircleProgressBar @JvmOverloads constructor(
         canvas.drawArc(rect, 200f, angle.toFloat(), false, progressPaint)
 
 
+
+
          // Draw the end icon at the current progress
         endIcon?.let { icon ->
             val angleRadians = Math.toRadians(200.0 + angle) // 200 degrees start + progress
@@ -367,6 +461,7 @@ class SemiCircleProgressBar @JvmOverloads constructor(
     }
 
 
+
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
         // Update gradient on size change to recalculate shader positions
@@ -380,6 +475,8 @@ class SemiCircleProgressBar @JvmOverloads constructor(
         // Perform additional setup if needed after child views are added
     }
 }
+
+ */
 
 
 
