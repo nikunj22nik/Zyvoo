@@ -16,11 +16,13 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -92,6 +94,29 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         share()
         updateCalendar()
         clickListeners1()
+
+        binding.imageInfo.setOnClickListener({
+            showPopupWindowForPets(it)
+        })
+    }
+
+
+    private fun showPopupWindowForPets(anchorView: View) {
+        // Inflate the popup layout
+        val inflater = LayoutInflater.from(this)
+        val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
+
+        // Create the PopupWindow
+        val popupWindow = PopupWindow(popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+            ,
+            ViewGroup.LayoutParams.WRAP_CONTENT)
+
+        // Show the popup window at the bottom right of the TextView
+
+        popupWindow.isOutsideTouchable = true
+        popupWindow.isFocusable = true
+        popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
     }
 
 

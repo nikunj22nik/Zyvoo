@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.GuesMain
 import com.yesitlab.zyvo.adapter.WishlistAdapter
 import com.yesitlab.zyvo.databinding.FragmentWishlistBinding
 import com.yesitlab.zyvo.viewmodel.MyBookingsViewModel
@@ -72,6 +73,9 @@ private var adapter : WishlistAdapter? = null
         super.onDestroyView()
         _binding = null
     }
-
+    override fun onResume() {
+        super.onResume()
+        (activity as? GuesMain)?.wishlistColor()
+    }
 
 }

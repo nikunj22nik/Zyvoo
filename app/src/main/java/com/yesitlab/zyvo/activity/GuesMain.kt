@@ -86,7 +86,7 @@ private fun hideBottomNavigation() {
 }
 
 
-    private fun inboxColor(){
+     fun inboxColor(){
 
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
         binding.imageInbox.setImageResource(R.drawable.ic_chat_selected)
@@ -106,7 +106,7 @@ private fun hideBottomNavigation() {
     }
 
 
-    private fun wishlistColor(){
+     fun wishlistColor(){
 
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
@@ -122,7 +122,7 @@ private fun hideBottomNavigation() {
 
     }
 
-    private fun profileColor(){
+     fun profileColor(){
 
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
@@ -138,7 +138,7 @@ private fun hideBottomNavigation() {
 
 
     }
-    private fun bookingResume(){
+     fun bookingResume(){
 
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
@@ -154,7 +154,7 @@ private fun hideBottomNavigation() {
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
 
     }
-    private fun discoverResume(){
+     fun discoverResume(){
         //image color
 
 

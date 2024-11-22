@@ -252,7 +252,7 @@
                     android:layout_marginTop="@dimen/_15sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:gravity="center"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <!-- Circle Progress View -->
                     <!--                    <com.yesitlab.zyvo.CircularSeekBar-->

@@ -576,6 +576,9 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             show()
         }
     }
-
+    override fun onResume() {
+        super.onResume()
+        (activity as? GuesMain)?.profileColor()
+    }
 
 }

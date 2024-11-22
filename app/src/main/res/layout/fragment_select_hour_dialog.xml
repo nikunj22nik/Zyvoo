@@ -8,6 +8,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
 app:cardCornerRadius="@dimen/_20sdp"
+    app:cardBackgroundColor="#E6FFFFFF"
     android:layout_gravity="center"
     android:layout_marginHorizontal="@dimen/_22sdp"
     tools:context=".fragment.guest.SelectHourFragmentDialog">
@@ -16,13 +17,14 @@ app:cardCornerRadius="@dimen/_20sdp"
 <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+    android:background="#E6FFFFFF"
     android:layout_gravity="center">
 
 
         <RelativeLayout
             android:id="@+id/rl_circular_progress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/_165sdp"
+            android:layout_height="@dimen/_165sdp"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_30sdp"
          android:layout_centerHorizontal="true"
@@ -33,13 +35,13 @@ app:cardCornerRadius="@dimen/_20sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.yesitlab.zyvo.CircularSeekBar1
+            <com.yesitlab.zyvo.CircularSeekBar
                 android:id="@+id/circularSeekBar"
                 android:layout_width="@dimen/_165sdp"
                 android:layout_height="@dimen/_165sdp"
                 android:layout_centerInParent="true"
-                android:layout_marginHorizontal="@dimen/_15sdp"
                 app:cc_endHour="1"
+                app:cc_borderWidth="@dimen/_30sdp"
                 app:cc_endIconResource="@drawable/oval_white"
                 app:cc_fillColor="#4AEAB1"
                 app:cc_metricMode="clock"
@@ -50,7 +52,7 @@ app:cardCornerRadius="@dimen/_20sdp"
                 >
 
 
-            </com.yesitlab.zyvo.CircularSeekBar1>
+            </com.yesitlab.zyvo.CircularSeekBar>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="@dimen/_105sdp"

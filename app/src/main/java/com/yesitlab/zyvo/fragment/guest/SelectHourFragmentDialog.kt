@@ -20,7 +20,7 @@ class SelectHourFragmentDialog : DialogFragment() {
 
     private  var _binding : FragmentSelectHourDialogBinding? = null
     private  val binding  get() =  _binding!!
-    private lateinit var dateManager: DateManager
+
 
 
     interface DialogListener {
@@ -52,7 +52,7 @@ class SelectHourFragmentDialog : DialogFragment() {
         _binding = FragmentSelectHourDialogBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
        // _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_select_hour_dialog, container, false)
 
-        dateManager = DateManager(requireContext())
+
 
 
         return binding.root
@@ -63,7 +63,7 @@ class SelectHourFragmentDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rlSelectHour.setOnClickListener{
-            dateManager.showHourSelectionDialog(requireContext()) { selectedHour ->
+            DateManager(requireContext()).showHourSelectionDialog(requireContext()) { selectedHour ->
                 binding.textSelectedHour.setText(selectedHour.toString())
             }
         }

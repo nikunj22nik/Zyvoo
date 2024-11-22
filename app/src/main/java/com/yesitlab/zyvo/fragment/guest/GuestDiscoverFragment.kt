@@ -42,6 +42,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.GuesMain
 import com.yesitlab.zyvo.activity.guest.FiltersActivity
 import com.yesitlab.zyvo.activity.guest.RestaurantDetailActivity
 import com.yesitlab.zyvo.activity.guest.WhereTimeActivity
@@ -423,6 +424,11 @@ val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
                 showAddWishlistDialog()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? GuesMain)?.discoverResume()
     }
 
 }

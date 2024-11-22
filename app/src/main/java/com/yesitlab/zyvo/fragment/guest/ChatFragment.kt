@@ -22,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.GuesMain
 import com.yesitlab.zyvo.adapter.AdapterChatList
 import com.yesitlab.zyvo.databinding.FragmentChatBinding
 import com.yesitlab.zyvo.model.ChatListModel
@@ -208,6 +209,10 @@ class ChatFragment : Fragment() ,View.OnClickListener{
                showPopupWindow(binding.imageFilter,0)
            }
        }
+    }
+    override fun onResume() {
+        super.onResume()
+        (activity as? GuesMain)?.inboxColor()
     }
 
 }

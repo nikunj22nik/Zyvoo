@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.GuesMain
 import com.yesitlab.zyvo.adapter.MyBookingsAdapter
 import com.yesitlab.zyvo.databinding.FragmentMyBookingsBinding
 import com.yesitlab.zyvo.model.MyBookingsModel
@@ -160,6 +161,10 @@ findNavController().navigate(R.id.reviewBookingFragment)
                 showPopupWindow(binding.imageFilter, 0)
             }
         }
+    }
+    override fun onResume() {
+        super.onResume()
+        (activity as? GuesMain)?.bookingResume()
     }
 
 

@@ -20,6 +20,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.navigation.NavController
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.AuthActivity
 import com.yesitlab.zyvo.activity.GuesMain
 import com.yesitlab.zyvo.databinding.DialogAddWishlistBinding
 import com.yesitlab.zyvo.session.SessionManager
@@ -346,13 +347,13 @@ var navController = navController
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-<<<<<<< Updated upstream
+
             val imageCross =  findViewById<ImageView>(R.id.imageCross)
 
             val textResend =  findViewById<TextView>(R.id.textResend)
 
             val textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-=======
+
 
             otpDigits = arrayOf<EditText>(
                 findViewById(R.id.otp_digit1),
@@ -388,22 +389,20 @@ var navController = navController
                 })
 
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var textResend =  findViewById<TextView>(R.id.textResend)
+
 //
-           var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
->>>>>>> Stashed changes
+
             textSubmitButton.setOnClickListener{
                 if (text == "Your password has been changed\n" + " successfully."){
                     dialogNewPassword(context,text)
                 }
                 else if(text.equals("Login Successful")){
                     var session =SessionManager(context)
-                        session.setUserId(1)
-                        var intent = Intent(context,GuesMain::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    session.setUserId(1)
+                    var intent = Intent(context,GuesMain::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
-                       context.startActivity(intent)
+                    context.startActivity(intent)
                 }
                 else{
                     dialogSuccess(context,text)
@@ -509,6 +508,11 @@ var navController = navController
 
 
             findViewById<RelativeLayout>(R.id.rlYes).setOnClickListener {
+                var sessionManager = SessionManager(context)
+                sessionManager.setUserId(-1)
+                var intent  = Intent(context,AuthActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                context.startActivity(intent)
                 dismiss()
             }
 

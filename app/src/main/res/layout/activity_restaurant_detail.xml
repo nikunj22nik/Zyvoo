@@ -461,7 +461,7 @@
             android:layout_marginTop="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:gravity="center"
-            android:visibility="visible">
+            android:visibility="gone">
 
 
             <com.yesitlab.zyvo.CircularSeekBar
@@ -684,6 +684,7 @@
        android:background="@drawable/bg_four_side_corner_black"
        >
        <ImageView
+           android:id="@+id/imageInfo"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:src="@drawable/ic_eye_icon_white"
