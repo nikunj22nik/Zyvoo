@@ -221,8 +221,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-
             android:maxHeight="@dimen/_115sdp"
+           
             app:layout_constraintHeight_max="@dimen/_115sdp"
             android:layout_marginBottom="@dimen/_2sdp"
             android:elevation="@dimen/_8sdp"

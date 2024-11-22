@@ -72,14 +72,14 @@
 
     <declare-styleable name="SemiCircleProgressBar">
 
-
+        <attr name="containerColor" format="color" />
 
         <attr name="endIcon" format="reference" />
         <attr name="endIconSize" format="dimension" />
     </declare-styleable>
 
     <declare-styleable name="CircularSeekBar">
-        <attr name="cc_borderWidth" format="dimension" />
+        <attr name="cc_borderWidth" format="float" />
         <attr name="cc_metricTextSize" format="dimension" />
         <attr name="cc_borderColor" format="color" />
         <attr name="cc_fillColor" format="color" />

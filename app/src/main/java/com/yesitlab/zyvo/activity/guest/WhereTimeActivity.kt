@@ -318,6 +318,12 @@ class WhereTimeActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun addMonthView(parentLayout: LinearLayout, yearMonth: YearMonth) {
         // Adds a view for the specified month to the parent layout.
+
+        val params = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        params.setMargins(10, 10, 10, 10)
         val monthView = layoutInflater.inflate(R.layout.calendar_month, parentLayout, false)
 
         val monthTitle = monthView.findViewById<TextView>(R.id.month_title)
