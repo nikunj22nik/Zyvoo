@@ -28,8 +28,7 @@ import com.yesitlab.zyvo.viewmodel.WishlistViewModel
 import `in`.aabhasjindal.otptextview.OtpTextView
 
 class CommonAuthWorkUtils(var context: Context, navController: NavController) {
-var navController = navController
-
+     var navController = navController
     private lateinit var otpDigits: Array<EditText>
     fun dialogLogin(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -75,12 +74,6 @@ var navController = navController
             imageCross.setOnClickListener{
                 dismiss()
             }
-
-
-//            findViewById<TextView>(R.id.textNumber).apply {
-//
-//            //    visibility = if (number.isNullOrEmpty()) View.GONE else View.VISIBLE
-//            }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
@@ -132,7 +125,6 @@ var navController = navController
         }}
 
 
-
     fun dialogLoginEmail(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -161,20 +153,12 @@ var navController = navController
                 dialogForgotPassword(context)
                 dismiss()
             }
-
-
             textLoginButton.setOnClickListener{
                 dismiss()
             }
             imageCross.setOnClickListener{
                 dismiss()
             }
-
-
-//            findViewById<TextView>(R.id.textNumber).apply {
-//
-//            //    visibility = if (number.isNullOrEmpty()) View.GONE else View.VISIBLE
-//            }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
@@ -248,10 +232,6 @@ var navController = navController
             show()
         }}
 
-
-
-
-
     fun dialogNumberVerification(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -263,7 +243,6 @@ var navController = navController
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
             var imageCross =  findViewById<ImageView>(R.id.imageCross)
-
             var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener{
 
@@ -299,11 +278,10 @@ var navController = navController
                 dismiss()
             }
 
-
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
+
 
     fun dialogEmailVerification(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -331,9 +309,6 @@ var navController = navController
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
-
-
-
 
 
     @SuppressLint("SuspiciousIndentation")
@@ -390,8 +365,6 @@ var navController = navController
 
             }
 
-//
-
             textSubmitButton.setOnClickListener{
                 if (text == "Your password has been changed\n" + " successfully."){
                     dialogNewPassword(context,text)
@@ -446,6 +419,7 @@ var navController = navController
             show()
         }}
 
+
     fun dialogSuccess(context: Context?, text: String) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -456,14 +430,6 @@ var navController = navController
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-
-//            // Retrieve NavController using NavHostFragment
-//            val navHostFragment = (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.fragmentAuthContainerView) as NavHostFragment
-//            val navController = navHostFragment.navController
-
-
-
-
 
             findViewById<ImageView>(R.id.imageCross).setOnClickListener {
                 dismiss()
@@ -485,9 +451,6 @@ var navController = navController
         }
     }
 
-
-
-
     @SuppressLint("MissingInflatedId")
     fun dialogLogOut(context: Context?, text: String) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -499,9 +462,6 @@ var navController = navController
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-
-
-
             findViewById<ImageView>(R.id.imageCross).setOnClickListener {
                 dismiss()
             }
@@ -523,38 +483,5 @@ var navController = navController
             show()
         }
     }
-
-//    private fun showWishlistDialog(context: Context, viewModel: WishlistViewModel,viewLifecycleOwner :viewLifecycleOwner) {
-//      //  private  val viewModel : WishlistViewModel by viewModels()
-//
-//        val dialogBinding = DialogAddWishlistBinding.inflate(LayoutInflater.from(context))
-//        //DialogWishlistBinding
-//
-//        // Set up the RecyclerView for the dialog
-//        val dialogAdapter = WishlistAdapter(context,true, mutableListOf())
-//        dialogBinding.rvWishList.adapter = dialogAdapter
-//
-//        viewModel.list.observe(viewLifecycleOwner) {
-//            dialogAdapter.updateItem(it)
-//        }
-//
-//        // Create and show the dialog
-//        val dialog = AlertDialog.Builder(context)
-//            .setView(dialogBinding.root)
-//            .create()
-//
-//        dialog.show()
-//
-//        // Optional: Set dialog size for consistency
-//        dialog.window?.setLayout(
-//            (resources.displayMetrics.widthPixels * 0.9).toInt(),
-//            ViewGroup.LayoutParams.WRAP_CONTENT
-//        )
-//
-//        // Close button logic
-//        dialogBinding.imageCross.setOnClickListener {
-//            dialog.dismiss()
-//        }
-//    }
 
 }

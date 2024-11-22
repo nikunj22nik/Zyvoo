@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.ChatDetailsAdapter
@@ -68,6 +69,10 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener {
         navController = Navigation.findNavController(view)
         binding.imgBack.setOnClickListener{
             navController.navigateUp()
+        }
+
+        binding.imageProfilePicture.setOnClickListener {
+            findNavController().navigate(R.id.hostDetailsFragment)
         }
 
     }

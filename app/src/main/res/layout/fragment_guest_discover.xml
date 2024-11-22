@@ -219,7 +219,7 @@
         <com.yesitlab.zyvo.SemiCircleProgressBar
             android:id="@+id/customProgressBar"
             android:layout_width="match_parent"
-            android:layout_height="178dp"
+            android:layout_height="@dimen/_176sdp"
             android:layout_gravity="center"
 
             app:layout_constraintHeight_max="178dp"
@@ -236,17 +236,14 @@
 
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="@dimen/_115sdp"
             android:layout_gravity="center"
             android:layout_marginTop="25dp"
-            android:background="@drawable/ic_subtract_green"
+          android:elevation="@dimen/_150sdp"
             android:visibility="visible"
             android:orientation="horizontal"
             android:padding="@dimen/_8sdp"
             android:scaleType="centerCrop"
-
-
-
             app:layout_constraintTop_toTopOf="@+id/customProgressBar">
 
             <TextView
