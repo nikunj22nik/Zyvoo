@@ -38,6 +38,8 @@ class CircularSeekBar @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr)
 {
+
+
     companion object {
         private const val MAX_SCALE = 11
         private const val MIX_SCALE = 0
@@ -54,6 +56,9 @@ class CircularSeekBar @JvmOverloads constructor(
         private const val START_ANGLE = -90f
         private const val SWEEP_ANGLE = 360f
 
+
+
+
     }
 
     private val paintDot = Paint(Paint.ANTI_ALIAS_FLAG).apply {
@@ -63,16 +68,18 @@ class CircularSeekBar @JvmOverloads constructor(
     }
 
     @Dimension
-    private var _borderWidth = 110f
+    private var _borderWidth: Float = 110f
         set(value) {
             field = value
             _iconWidth = value / 2
             indicatorBorderPaint.strokeWidth = value
             indicatorFillPaint.strokeWidth = value
+            invalidate() // Refresh the view after changing border width
         }
 
+
     @Dimension
-    private var _iconWidth: Float = _borderWidth / 2
+    private var _iconWidth: Float = _borderWidth.toFloat() / 2
 
     @Dimension
     private var _metricTextSizeWidth: Float = 130f
@@ -125,7 +132,7 @@ class CircularSeekBar @JvmOverloads constructor(
         isAntiAlias = true
         style = Paint.Style.STROKE
         color = _borderColor
-        strokeWidth = _borderWidth
+        strokeWidth = _borderWidth.toFloat()
         strokeCap = Paint.Cap.ROUND
     }
 
@@ -133,7 +140,7 @@ class CircularSeekBar @JvmOverloads constructor(
         isAntiAlias = true
         style = Paint.Style.STROKE
         color = _fillColor
-        strokeWidth = _borderWidth
+        strokeWidth = _borderWidth.toFloat()
         strokeCap = Paint.Cap.ROUND
     }
 
@@ -223,18 +230,33 @@ class CircularSeekBar @JvmOverloads constructor(
         decimalFormat.roundingMode = RoundingMode.HALF_UP
 
         obtainStyledAttributes(attrs, defStyleAttr)
-    }
 
+
+    }
+/*
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
         indicatorBorderRect.set(
-            _borderWidth / 2,
-            _borderWidth / 2,
-            height.coerceAtMost(width) - _borderWidth / 2,
-            height.coerceAtMost(width) - _borderWidth / 2
+            _borderWidth.toFloat() / 2,
+            _borderWidth.toFloat() / 2,
+            height.coerceAtMost(width) - _borderWidth.toFloat() / 2,
+            height.coerceAtMost(width) - _borderWidth.toFloat() / 2
         )
     }
+
+ */
+override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+    super.onSizeChanged(w, h, oldw, oldh)
+    validateBorderWidth(w, h) // Ensure border width is valid
+    indicatorBorderRect.set(
+        _borderWidth / 2,
+        _borderWidth / 2,
+        w - _borderWidth / 2,
+        h - _borderWidth / 2
+    )
+}
+
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
@@ -242,7 +264,7 @@ class CircularSeekBar @JvmOverloads constructor(
         val height = MeasureSpec.getSize(heightMeasureSpec)
         val width = MeasureSpec.getSize(widthMeasureSpec)
 
-        radius = (height.coerceAtMost(width) - _borderWidth) / 2
+        radius = (height.coerceAtMost(width) - _borderWidth.toFloat()) / 2
 
         setMeasuredDimension(height.coerceAtMost(width), height.coerceAtMost(width))
     }
@@ -497,7 +519,7 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
     fun setOnTimeChangedListener(listener: OnTimeChangedListener) {
         timeChangedListener = listener
     }
-
+/*
     private fun obtainStyledAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
         context.theme.obtainStyledAttributes(
             attrs,
@@ -533,6 +555,8 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
                 R.styleable.CircularSeekBar_cc_endIconResource,
                 _endIconResource
             )
+            _borderWidth =
+                it.getResourceId(R.styleable.CircularSeekBar_cc_borderWidth, _borderWidth.toInt()).toFloat()
             isStartEnabled = it.getBoolean(R.styleable.CircularSeekBar_cc_isStartEnabled, isStartEnabled)
             isEndEnabled = it.getBoolean(R.styleable.CircularSeekBar_cc_isEndEnabled, isEndEnabled)
             is24HR = it.getBoolean(R.styleable.CircularSeekBar_cc_is24HR, is24HR)
@@ -546,6 +570,60 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
             )
         }
     }
+
+ */
+
+    private fun obtainStyledAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
+        context.theme.obtainStyledAttributes(
+            attrs,
+            R.styleable.CircularSeekBar,
+            defStyleAttr,
+            0
+        ).use {
+            _borderWidth = it.getDimension(
+                R.styleable.CircularSeekBar_cc_borderWidth,
+                _borderWidth
+            )
+            _metricTextSizeWidth = it.getDimension(
+                R.styleable.CircularSeekBar_cc_metricTextSize,
+                _metricTextSizeWidth
+            )
+            _borderColor = it.getColor(
+                R.styleable.CircularSeekBar_cc_borderColor,
+                _borderColor
+            )
+            _fillColor = it.getColor(
+                R.styleable.CircularSeekBar_cc_fillColor,
+                _fillColor
+            )
+            _tickTextColor = it.getColor(
+                R.styleable.CircularSeekBar_cc_tickTextColor,
+                _tickTextColor
+            )
+            _endIconResource = it.getResourceId(
+                R.styleable.CircularSeekBar_cc_endIconResource,
+                _endIconResource
+            )
+            isStartEnabled = it.getBoolean(R.styleable.CircularSeekBar_cc_isStartEnabled, isStartEnabled)
+            isEndEnabled = it.getBoolean(R.styleable.CircularSeekBar_cc_isEndEnabled, isEndEnabled)
+            is24HR = it.getBoolean(R.styleable.CircularSeekBar_cc_is24HR, is24HR)
+            startHours = it.getFloat(R.styleable.CircularSeekBar_cc_startHour, startHours)
+            endHours = it.getFloat(R.styleable.CircularSeekBar_cc_endHour, endHours)
+            metricMode = MetricMode.find(
+                it.getInt(
+                    R.styleable.CircularSeekBar_cc_metricMode,
+                    metricMode.ordinal
+                )
+            )
+        }
+    }
+    private fun validateBorderWidth(maxWidth: Int, maxHeight: Int) {
+        val maxDimension = maxWidth.coerceAtMost(maxHeight)
+        if (_borderWidth > maxDimension / 2) {
+            _borderWidth = maxDimension / 2f
+        }
+    }
+
 
     private fun renderBorder(canvas: Canvas) {
 
@@ -756,6 +834,9 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
             cy - textBoundsRect.exactCenterY(),
             paint
         )
+    }
+    private fun dpToPx(dp: Int): Int {
+        return (dp * resources.displayMetrics.density).toInt()
     }
 }
 

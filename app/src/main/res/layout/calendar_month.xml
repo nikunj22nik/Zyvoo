@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/_7sdp"
+    android:layout_marginHorizontal="@dimen/_5sdp"
     android:layout_marginTop="@dimen/_10sdp"
     android:orientation="vertical"
     android:paddingBottom="@dimen/_8sdp">
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_3sdp"
-            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginTop="@dimen/_1sdp"
             android:layout_centerHorizontal="true"
             android:paddingBottom="@dimen/_4sdp"
             android:textColor="#4AEAB1"
@@ -61,7 +61,7 @@
         android:id="@+id/days_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_10sdp"
+
         android:layout_marginTop="@dimen/_15sdp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/ll1" />
@@ -70,6 +70,7 @@
         android:id="@+id/weeks_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/days_layout" />
 </androidx.constraintlayout.widget.ConstraintLayout>

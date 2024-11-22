@@ -246,13 +246,13 @@
 
                 <RelativeLayout
                     android:id="@+id/rl_circular_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_265sdp"
+                    android:layout_height="@dimen/_265sdp"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:gravity="center"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <!-- Circle Progress View -->
                     <!--                    <com.yesitlab.zyvo.CircularSeekBar-->
@@ -323,18 +323,15 @@
                     <com.yesitlab.zyvo.CircularSeekBar
                         android:id="@+id/circularSeekBar"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_300sdp"
+                        android:layout_height="match_parent"
                         android:layout_centerInParent="true"
-                        android:layout_marginHorizontal="@dimen/_15sdp"
                         app:cc_endHour="1"
+                        app:cc_borderWidth="@dimen/_46sdp"
                         app:cc_endIconResource="@drawable/oval_white"
                         app:cc_fillColor="#4AEAB1"
                         app:cc_metricMode="clock"
                         app:cc_startHour="0"
-
-                        app:cc_tickTextColor="?android:attr/textColorPrimary"
-
-                        >
+                        app:cc_tickTextColor="?android:attr/textColorPrimary">
 
 
                     </com.yesitlab.zyvo.CircularSeekBar>
