@@ -56,14 +56,17 @@ class SplashFragment : Fragment() {
 
             var session =SessionManager(requireContext())
 
-            if(session.getUserId() ==1){
-                var intent = Intent(requireContext(),GuesMain::class.java)
-                startActivity(intent)
-                requireActivity().finish()
+           if(session.getUserId() ==1){
+//                var intent = Intent(requireContext(),GuesMain::class.java)
+//                startActivity(intent)
+//                requireActivity().finish()
+
+          findNavController().navigate(R.id.paymentsFragment2)
             }
             else {
                 // Task to be executed after 3 seconds
-                findNavController().navigate(R.id.loggedScreenFragment)
+               findNavController().navigate(R.id.paymentsFragment2)
+             // findNavController().navigate(R.id.loggedScreenFragment)
                 //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
                }
              }, 3000)

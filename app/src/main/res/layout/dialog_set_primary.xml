@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/set_primary_bg">
+
+
+    <TextView
+        android:id="@+id/textSetPrimaryCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set as primary"
+        android:textColor="#333333"
+        android:fontFamily="@font/poppins"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"/>
+
+
+    <TextView
+        android:id="@+id/textDeleteCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:textColor="#333333"
+        android:fontFamily="@font/poppins"
+        android:layout_marginVertical="@dimen/_10sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"/>
+</LinearLayout>

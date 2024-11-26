@@ -3,9 +3,13 @@ package com.yesitlab.zyvo.DateManager
 import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.widget.NumberPicker
+import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Calendar
@@ -54,6 +58,110 @@ class DateManager(var context : Context) {
 
         return Pair(monthName, year)
     }
+
+
+
+/*
+    fun  getRangeSelectedDateWithYear(
+        fragmentManager: FragmentManager,
+        onDateRangeSelected: (Pair<Pair<String, String>, Int>?) -> Unit
+    ): Pair<Pair<String, String>, Int>? {
+        // Initialize the MaterialDatePicker
+        val datePicker = MaterialDatePicker.Builder.dateRangePicker().build()
+
+        // Variable to hold the selected start and end dates and the year
+        var selectedData: Pair<Pair<String, String>, Int>? = null
+
+        // Show the DatePicker
+        datePicker.show(fragmentManager, "DatePicker")
+
+        // Set up the event for when the OK button is clicked
+        datePicker.addOnPositiveButtonClickListener { selection ->
+            // Extract start and end dates from the selection
+            val startDate = selection?.first?.let { java.util.Date(it) }
+            val endDate = selection?.second?.let { java.util.Date(it) }
+
+            // Format the dates into readable strings
+            val dateFormat = java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault())
+            val startDateString = startDate?.let { dateFormat.format(it) }
+            val endDateString = endDate?.let { dateFormat.format(it) }
+
+            // Extract the year from the startDate (or endDate, as they should be in the same year)
+            val calendar = java.util.Calendar.getInstance()
+            startDate?.let { calendar.time = it }
+            val year = calendar.get(java.util.Calendar.YEAR)
+
+            // Display the selected date range
+            Toast.makeText(context, "${datePicker.headerText }  $year is selected", Toast.LENGTH_LONG).show()
+
+            // Assign the startDate, endDate, and year to the result
+            if (startDateString != null && endDateString != null) {
+                selectedData = Pair(Pair(startDateString, endDateString), year)
+            }
+        }
+
+        // Set up the event for when the cancel button is clicked
+        datePicker.addOnNegativeButtonClickListener {
+            Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
+        }
+
+        // Set up the event for when the back button is pressed
+        datePicker.addOnCancelListener {
+            Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
+        }
+
+        return selectedData
+    }
+
+ */
+fun getRangeSelectedDateWithYear(
+    fragmentManager: FragmentManager,
+    onDateRangeSelected: (Pair<Pair<String, String>, Int>?) -> Unit
+) {
+    val datePicker = MaterialDatePicker.Builder.dateRangePicker().build()
+
+
+
+
+    datePicker.show(fragmentManager, "DatePicker")
+
+    datePicker.addOnPositiveButtonClickListener { selection ->
+        val startDate = selection?.first?.let { java.util.Date(it) }
+        val endDate = selection?.second?.let { java.util.Date(it) }
+
+        val dateFormat = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
+        val dateFormat1 = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
+        val startDateString = startDate?.let { dateFormat.format(it) }
+        val endDateString = endDate?.let { dateFormat1.format(it) }
+
+        val calendar = java.util.Calendar.getInstance()
+        startDate?.let { calendar.time = it }
+        val year = calendar.get(java.util.Calendar.YEAR)
+
+        if (startDateString != null && endDateString != null) {
+            val selectedData = Pair(Pair(startDateString, endDateString), year)
+            onDateRangeSelected(selectedData) // Send selected data to the callback
+        } else {
+            onDateRangeSelected(null) // Indicate that no valid date range was selected
+        }
+    }
+
+    datePicker.addOnNegativeButtonClickListener {
+        Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
+        onDateRangeSelected(null)
+    }
+
+
+
+    datePicker.addOnCancelListener {
+        Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
+        onDateRangeSelected(null)
+    }
+}
+
+
+
+
 
 
 

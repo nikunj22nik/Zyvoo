@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="default_active_tick_radius">9dp</dimen>
@@ -6,7 +6,7 @@
 
 
 
-
+    <dimen name="_350sdp" tools:ignore="ResourceCycle">@dimen/_350sdp</dimen>
 
     <dimen name="image_small_size">@dimen/_50sdp</dimen>
     <dimen name="image_large_size">@dimen/_100sdp</dimen>

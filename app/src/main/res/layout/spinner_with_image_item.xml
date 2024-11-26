@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/_5sdp">
+
+    <ImageView
+        android:id="@+id/spinner_icon"
+        android:layout_width="@dimen/_11sdp"
+        android:layout_height="@dimen/_11sdp"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:src="@drawable/lightning_icon" />
+
+    <TextView
+        android:id="@+id/spinner_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Instant (Fee 2%)"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_9ssp" />
+
+</LinearLayout>

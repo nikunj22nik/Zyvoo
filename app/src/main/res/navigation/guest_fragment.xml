@@ -84,5 +84,10 @@
         android:name="com.yesitlab.zyvo.fragment.guest.RecentlyViewedFragment"
         android:label="fragment_recently_viewed"
         tools:layout="@layout/fragment_recently_viewed" />
+    <fragment
+        android:id="@+id/paymentsFragment"
+        android:name="com.yesitlab.zyvo.fragment.host.PaymentsFragment"
+        android:label="fragment_payments"
+        tools:layout="@layout/fragment_payments" />
 
 </navigation>

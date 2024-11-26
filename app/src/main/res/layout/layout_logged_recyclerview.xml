@@ -73,7 +73,7 @@
                 android:text="Instant book"
                 android:textStyle="normal"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_11ssp"
+                android:textSize="@dimen/_10ssp"
                 android:visibility="visible"
                 app:drawableStartCompat="@drawable/ic_caminho_flash"
                 app:layout_constraintStart_toStartOf="parent"
