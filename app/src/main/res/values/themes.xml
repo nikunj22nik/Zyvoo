@@ -92,6 +92,7 @@
         <item name="android:progressBarPadding">5dp</item>
     </style>
 
+
     <style name="RoundedImageViewShape">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopLeft">16dp</item>

@@ -36,4 +36,9 @@
         android:name="com.yesitlab.zyvo.fragment.both.completeProfile.CompleteProfileFragment"
         android:label="fragment_complete_profile"
         tools:layout="@layout/fragment_complete_profile" />
+    <fragment
+        android:id="@+id/paymentsFragment2"
+        android:name="com.yesitlab.zyvo.fragment.host.PaymentsFragment"
+        android:label="fragment_payments"
+        tools:layout="@layout/fragment_payments" />
 </navigation>

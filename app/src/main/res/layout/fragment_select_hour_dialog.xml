@@ -21,17 +21,28 @@ app:cardCornerRadius="@dimen/_20sdp"
     android:layout_gravity="center">
 
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv1"
+        android:layout_width="@dimen/_165sdp"
+        android:layout_height="@dimen/_165sdp"
+        app:cardCornerRadius="@dimen/_165sdp"
+        android:layout_gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:elevation="@dimen/_200sdp">
+
+
         <RelativeLayout
             android:id="@+id/rl_circular_progress"
-            android:layout_width="@dimen/_165sdp"
-            android:layout_height="@dimen/_165sdp"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/_30sdp"
-         android:layout_centerHorizontal="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+
+
             android:gravity="center"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-
+            android:elevation="@dimen/_200sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -41,6 +52,7 @@ app:cardCornerRadius="@dimen/_20sdp"
                 android:layout_height="@dimen/_165sdp"
                 android:layout_centerInParent="true"
                 app:cc_endHour="1"
+
                 app:cc_borderWidth="@dimen/_30sdp"
                 app:cc_endIconResource="@drawable/oval_white"
                 app:cc_fillColor="#4AEAB1"
@@ -107,6 +119,8 @@ app:cardCornerRadius="@dimen/_20sdp"
 
         </RelativeLayout>
 
+    </androidx.cardview.widget.CardView>
+
 
         <TextView
             android:id="@+id/textOr"
@@ -116,13 +130,13 @@ app:cardCornerRadius="@dimen/_20sdp"
             android:fontFamily="@font/poppins"
             android:text="Or"
             android:layout_centerHorizontal="true"
-            android:layout_below="@+id/rl_circular_progress"
+            android:layout_below="@+id/cv1"
             android:layout_gravity="center_horizontal"
             android:textColor="@color/black"
             android:textSize="@dimen/_17sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rl_circular_progress" />
+            />
 
 
         <RelativeLayout

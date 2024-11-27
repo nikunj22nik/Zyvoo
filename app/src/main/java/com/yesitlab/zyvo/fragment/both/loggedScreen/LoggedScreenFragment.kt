@@ -100,7 +100,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener ,
     }
 
     override fun itemClick(obj: Int, text: String) {
-        TODO("Not yet implemented")
+        when(text){
+            "Add Wish"->{
+                commonAuthWorkUtils?.dialogLogin(requireContext())
+            }
+        }
+
     }
 
 }

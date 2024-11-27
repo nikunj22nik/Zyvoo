@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/_140sdp"
+    android:layout_height="@dimen/_95sdp"
+    android:layout_margin="@dimen/_10sdp"
+    android:background="@drawable/ic_debit_card_view">
+
+    <ImageView
+        android:id="@+id/imagePrimaryIcon"
+        android:layout_width="@dimen/_35sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5ssp"
+        android:src="@drawable/ic_primary" />
+
+
+    <ImageView
+        android:id="@+id/imageThreeDots"
+        android:layout_width="@dimen/_8sdp"
+        android:layout_height="@dimen/_15sdp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/_5sdp"
+        android:src="@drawable/ic_three_dots_white" />
+
+
+    <TextView
+        android:id="@+id/textBankAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/imagePrimaryIcon"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:maxWidth="@dimen/_110sdp"
+        android:text="Bank Account"
+        android:textColor="#FFFFFF"
+        android:textSize="@dimen/_9ssp" />
+
+
+    <TextView
+        android:id="@+id/textStartNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:maxWidth="@dimen/_35sdp"
+        android:text="1234"
+        android:textColor="#FFF" />
+
+    <TextView
+        android:id="@+id/textEndNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:maxWidth="@dimen/_35sdp"
+        android:text="1234"
+        android:textColor="#FFF" />
+
+    <TextView
+        android:id="@+id/textCardHolderName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textStartNumber"
+
+        android:layout_centerVertical="true"
+        android:layout_marginStart="@dimen/_10ssp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        android:fontFamily="@font/poppins"
+       android:layout_marginTop="@dimen/_8sdp"
+        android:text="Vipin"
+        android:textColor="#FFF"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>
+

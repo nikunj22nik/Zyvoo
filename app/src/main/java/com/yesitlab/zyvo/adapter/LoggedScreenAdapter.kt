@@ -44,12 +44,17 @@ class LoggedScreenAdapter(
 
     override fun getItemCount() = list.size
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onBindViewHolder(holder: LoggedViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currentItem = list[position]
 
-        holder.binding.imageAddWish.setOnClickListener{
-            listener2.itemClick(position,"Add Wish")
-        }
+
+
+            holder.binding.imageAddWish.setOnClickListener{
+                listener2.itemClick(position,"Add Wish")
+            }
+
+
 
 
         holder.binding.cl1.setOnClickListener {
