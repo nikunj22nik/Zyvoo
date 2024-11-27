@@ -171,6 +171,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         super.onViewCreated(view, savedInstanceState)
         paymentOpenCloseDropDown()
         binding.textGiveFeedback.setOnClickListener(this)
+        binding.rlPasswordTitle.setOnClickListener(this)
         binding.textTermServices.setOnClickListener(this)
         binding.textPrivacyPolicy.setOnClickListener(this)
         binding.textLogout.setOnClickListener(this)
@@ -196,12 +197,12 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
 
         binding.filterIcon.setOnClickListener {
-            startActivity(Intent(requireActivity(),FiltersActivity::class.java))
+            startActivity(Intent(requireActivity(), FiltersActivity::class.java))
         }
 
         binding.rlFind.setOnClickListener {
 
-            startActivity(Intent(requireActivity(),WhereTimeActivity::class.java))
+            startActivity(Intent(requireActivity(), WhereTimeActivity::class.java))
         }
 
 
@@ -345,7 +346,6 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             }
 
             if (isDropdownOpen) {
-
                 binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
                 binding.textAddNewPaymentCard.visibility = View.VISIBLE
             } else if (!isDropdownOpen) {
@@ -419,18 +419,24 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-            R.id.textPrivacyPolicy->{
+
+            R.id.textPrivacyPolicy -> {
                 findNavController().navigate(R.id.privacyPolicyFragment)
             }
-         R.id.textTermServices->{
+
+            R.id.rlPasswordTitle -> {
+                commonAuthWorkUtils.dialogEmailVerification(requireContext())
+            }
+
+            R.id.textTermServices -> {
                 findNavController().navigate(R.id.termsServicesFragment)
             }
 
-            R.id.textLogout->{
-                commonAuthWorkUtils.dialogLogOut(requireContext(),"LogOut")
+            R.id.textLogout -> {
+                commonAuthWorkUtils.dialogLogOut(requireContext(), "LogOut")
             }
 
-            R.id.textGiveFeedback->{
+            R.id.textGiveFeedback -> {
                 findNavController().navigate(R.id.feedbackFragment)
             }
 
@@ -472,14 +478,14 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             }
 
             R.id.textSaveButton -> {
-                var intent = Intent(requireContext(), GuesMain::class.java)
+                val intent = Intent(requireContext(), GuesMain::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
                 requireActivity().finish()
             }
 
             R.id.skip_now -> {
-                var intent = Intent(requireContext(), GuesMain::class.java)
+                val intent = Intent(requireContext(), GuesMain::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
                 requireActivity().finish()
@@ -576,6 +582,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             show()
         }
     }
+
     override fun onResume() {
         super.onResume()
         (activity as? GuesMain)?.profileColor()

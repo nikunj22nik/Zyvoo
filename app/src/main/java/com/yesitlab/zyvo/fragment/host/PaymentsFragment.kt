@@ -10,29 +10,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.RelativeLayout
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.powerspinner.PowerSpinnerView
-import com.yesitlab.zyvo.AppConstant
 import com.yesitlab.zyvo.DateManager.DateManager
-import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.CustomSpinnerWithImageAdapter
 import com.yesitlab.zyvo.adapter.host.PaymentAdapter
 import com.yesitlab.zyvo.adapter.host.TransactionAdapter
 import com.yesitlab.zyvo.databinding.FragmentPaymentsBinding
-import com.yesitlab.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.yesitlab.zyvo.model.SpinnerModel
-import com.yesitlab.zyvo.model.TransactionModel
 import com.yesitlab.zyvo.viewmodel.host.PaymentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -134,6 +132,13 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
         }
 
 
+        binding.textAddPyoutMethodButton.setOnClickListener {
+            dialogSelectPaymentMethod()
+        }
+
+
+
+
         return binding.root
     }
 
@@ -158,7 +163,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
     }
 
 
-    fun dialogWithdraw() {
+    private fun dialogWithdraw() {
         val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog.setContentView(R.layout.dialog_withdraw)
 
@@ -208,39 +213,72 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
         dialog.show()
     }
 
-/*
-    fun callingSelectionOfDate(){
+
+
+
+    private fun dialogSelectPaymentMethod() {
+        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog.setContentView(R.layout.dialog_select_payment_host)
+
+        dialog.setCancelable(false)
+        dialog.apply {
+
+
+
+            val togglePaymentTypeSelectButton = findViewById<ToggleButton>(R.id.togglePaymentTypeSelectButton)
+            val rlBankAccount = findViewById<RelativeLayout>(R.id.rlBankAccount)
+            val llDebitCard = findViewById<LinearLayout>(R.id.llDebitCard)
+            val spinnermonth = findViewById<PowerSpinnerView>(R.id.spinnermonth)
+            val spinneryear = findViewById<PowerSpinnerView>(R.id.spinneryear)
+
+            val btnAddPayment = findViewById<TextView>(R.id.btnAddPayment)
+
+
+            callingSelectionOfDate(spinnermonth,spinneryear)
+
+
+           togglePaymentTypeSelectButton.setOnCheckedChangeListener{v1, isChecked->
+                if (!isChecked){
+
+                    rlBankAccount.visibility = View.GONE
+                    llDebitCard.visibility = View.VISIBLE
+                }
+                else {
+                    llDebitCard.visibility = View.GONE
+                    rlBankAccount.visibility = View.VISIBLE
+                }
+
+            }
+
+
+            btnAddPayment.setOnClickListener { dismiss() }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+        dialog.show()
+    }
+
+
+    fun callingSelectionOfDate(spinnermonth: PowerSpinnerView, spinneryear: PowerSpinnerView) {
         val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-        val am_pm_list = listOf("AM","PM")
+       // val am_pm_list = listOf("AM","PM")
         val years = (2024..2050).toList()
         val yearsStringList = years.map { it.toString() }
-        Toast.makeText(this,"Year String List: "+yearsStringList.size,Toast.LENGTH_LONG).show()
+        Toast.makeText(requireContext(),"Year String List: "+yearsStringList.size,Toast.LENGTH_LONG).show()
         val days = resources.getStringArray(R.array.day).toList()
 
 
-        binding.spinnerLanguage.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        binding.spinnerLanguage.spinnerPopupHeight = 400
-        binding.spinnerLanguage.arrowAnimate = false
-        binding.spinnerLanguage.setItems(days)
-        binding.spinnerLanguage.setIsFocusable(true)
-        val recyclerView = binding.spinnerLanguage.getSpinnerRecyclerView()
-
         // Add item decoration for spacing
         val spacing = 16 // Spacing in pixels
-        recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-                outRect.top = spacing
-            }
-        })
 
-        binding.spinnermonth.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        binding.spinnermonth.arrowAnimate = false
-        binding.spinnermonth.spinnerPopupHeight = 400
-        binding.spinnermonth.setItems(months)
-        binding.spinnermonth.setIsFocusable(true)
 
-        val recyclerView3 = binding.spinnermonth.getSpinnerRecyclerView()
+        spinnermonth.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        spinnermonth.arrowAnimate = false
+        spinnermonth.spinnerPopupHeight = 400
+        spinnermonth.setItems(months)
+        spinnermonth.setIsFocusable(true)
+
+        val recyclerView3 = spinnermonth.getSpinnerRecyclerView()
 
         recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
@@ -248,54 +286,32 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
             }
         })
 
-        binding.spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        binding.spinneryear.arrowAnimate = false
-        binding.spinneryear.spinnerPopupHeight = 400
-        binding.spinneryear.setItems(yearsStringList.subList(0,16))
-        binding.spinneryear.setIsFocusable(true)
+        spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        spinneryear.arrowAnimate = false
+        spinneryear.spinnerPopupHeight = 400
+        spinneryear.setItems(yearsStringList.subList(0,16))
+        spinneryear.setIsFocusable(true)
 //        binding.spinneryear.post {
 //            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
 //        }
 
-        binding.endAmPm.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        binding.endAmPm.arrowAnimate = false
-        binding.endAmPm.spinnerPopupHeight = 200
-        binding.endAmPm.setItems(am_pm_list)
-        binding.endAmPm.setIsFocusable(true)
+
 //        binding.endAmPm.post {
 //            binding.endAmPm.spinnerPopupWidth = binding.endAmPm.width
 //        }
 
 
-        binding.startAmPm.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        binding.startAmPm.arrowAnimate = false
-        binding.startAmPm.spinnerPopupHeight = 200
-        binding.startAmPm.setItems(am_pm_list)
-        binding.startAmPm.setIsFocusable(true)
 
 //        binding.startAmPm.post {
 //            binding.startAmPm.spinnerPopupWidth = binding.startAmPm.width
 //        }
 
-        val recyclerView6 = binding.startAmPm.getSpinnerRecyclerView()
-
-        recyclerView6.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-                outRect.top = spacing
-            }
-        })
 
 
-        val recyclerView5 = binding.endAmPm.getSpinnerRecyclerView()
-        recyclerView5.addItemDecoration(object : RecyclerView.ItemDecoration() {
 
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
-                outRect.top = spacing
-            }
 
-        })
 
-        val recyclerView1 = binding.spinneryear.getSpinnerRecyclerView()
+        val recyclerView1 = spinneryear.getSpinnerRecyclerView()
         recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                 outRect.top = spacing
@@ -303,23 +319,11 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
 
         })
 
-        binding.dateView.setOnClickListener {
-            if(binding.relCalendarLayouts.visibility == View.VISIBLE){
-                binding.relCalendarLayouts.visibility = View.GONE
-            }
-            else{
-                binding.relCalendarLayouts.visibility = View.VISIBLE
-            }
-        }
 
-        binding.textSaveChangesButton.setOnClickListener {
-            binding.tvDate.setText(binding.spinnermonth.text.toString()+" "+binding.spinnerLanguage.text.toString()+","+binding.spinneryear.text.toString())
-            binding.relCalendarLayouts.visibility = View.GONE
-        }
 
     }
 
- */
+
 
     override fun onDestroyView() {
         super.onDestroyView()

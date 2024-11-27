@@ -8,7 +8,6 @@
     android:elevation="@dimen/_200sdp"
     app:cardBackgroundColor="#E6FFFFFF"
     app:cardCornerRadius="@dimen/_20sdp"
-
     tools:context=".fragment.host.FilterPaymentStatusFragment">
 
 

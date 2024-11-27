@@ -1,86 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_gravity="center"
+    android:layout_marginHorizontal="@dimen/_13sdp"
     android:background="@drawable/dialog_bg"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="@dimen/_10sdp">
 
     <!-- Title -->
     <TextView
         android:id="@+id/tvSelectPaymentMethod"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/_8sdp"
+        android:fontFamily="@font/poppins"
         android:gravity="center"
-        android:paddingBottom="16dp"
         android:text="Select payment method"
         android:textColor="@android:color/black"
-        android:textSize="18sp"
+        android:textSize="@dimen/_15ssp"
         android:textStyle="bold" />
 
     <!-- Payment Method Tabs -->
-    <LinearLayout
-        android:id="@+id/llPaymentTabs"
+
+
+    <ToggleButton
+        android:id="@+id/togglePaymentTypeSelectButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingBottom="16dp">
+        android:layout_gravity="center"
+        android:layout_marginHorizontal="@dimen/_28sdp"
+        android:layout_marginTop="@dimen/_5sdp"
 
-<!--        &lt;!&ndash; Bank Account Tab &ndash;&gt;-->
-<!--        <Button-->
-<!--            android:id="@+id/btnBankAccount"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:background="@drawable/tab_selected"-->
-<!--            android:padding="8dp"-->
-<!--            android:text="Bank Account"-->
-<!--            android:textColor="@android:color/white" />-->
+        android:background="@drawable/payment_type_select_toggle_background"
+        android:checked="false"
+        android:textOff="@null"
+        android:textOn="@null"
+        app:layout_constraintLeft_toLeftOf="parent"
 
-<!--        &lt;!&ndash; Debit Card Tab &ndash;&gt;-->
-<!--        <Button-->
-<!--            android:id="@+id/btnDebitCard"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_weight="1"-->
-<!--            android:background="@drawable/tab_unselected"-->
-<!--            android:padding="8dp"-->
-<!--            android:text="Debit Card"-->
-<!--            android:textColor="@android:color/black" />-->
-    </LinearLayout>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Content Layout (Switchable) -->
     <FrameLayout
         android:id="@+id/flContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_18sdp">
 
         <!-- Bank Account Form -->
+
         <RelativeLayout
-            android:id="@+id/llBankAccount"
+            android:id="@+id/rlBankAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone">
 
+            <TextView
+                android:id="@+id/textBankAccountTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/poppins"
+                android:text="Bank Account"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp"
+                android:textStyle="bold" />
+
 
             <ImageView
                 android:id="@+id/imageBankIcon"
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_width="@dimen/_31sdp"
+                android:layout_height="@dimen/_31sdp"
+                android:layout_below="@+id/textBankAccountTitle"
+                android:layout_marginTop="@dimen/_15sdp"
                 android:src="@drawable/ic_bank" />
 
             <TextView
                 android:id="@+id/textBankName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/textBankAccountTitle"
                 android:layout_marginHorizontal="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:layout_toEndOf="@+id/imageBankIcon"
+                android:fontFamily="@font/poppins"
                 android:text="Bank Name"
-                android:textSize="@dimen/_15sdp"/>
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
 
 
             <!-- Bank Name -->
@@ -88,32 +97,34 @@
                 android:id="@+id/etBankName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:layout_below="@+id/textBankName"
                 android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginBottom="8dp"
                 android:layout_toEndOf="@+id/imageBankIcon"
                 android:background="@drawable/bg_two_side_corner"
-                android:padding="12dp" />
+                android:padding="@dimen/_5sdp" />
 
             <ImageView
                 android:id="@+id/imageAccountNumberIcon"
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
                 android:layout_below="@+id/etBankName"
+
+                android:layout_marginTop="@dimen/_15sdp"
                 android:src="@drawable/ic_account" />
 
             <TextView
                 android:id="@+id/textAccountNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_below="@+id/etBankName"
+                android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_toEndOf="@+id/imageAccountNumberIcon"
+                android:fontFamily="@font/poppins"
                 android:text="Account Number"
-                android:textSize="@dimen/_15sdp"/>
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
 
 
             <!-- Bank Name -->
@@ -127,26 +138,28 @@
                 android:layout_marginBottom="8dp"
                 android:layout_toEndOf="@+id/imageAccountNumberIcon"
                 android:background="@drawable/bg_two_side_corner"
-                android:padding="12dp" />
+                android:padding="@dimen/_5sdp" />
 
 
             <ImageView
                 android:id="@+id/imageRoutingNumberIcon"
-                android:layout_width="@dimen/_40sdp"
-                android:layout_height="@dimen/_40sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_30sdp"
                 android:layout_below="@+id/etAccountNumber"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:src="@drawable/ic_rounting" />
 
             <TextView
                 android:id="@+id/textRoutingNumber"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_below="@+id/etAccountNumber"
+                android:layout_marginHorizontal="@dimen/_5sdp"
                 android:layout_toEndOf="@+id/imageRoutingNumberIcon"
+                android:fontFamily="@font/poppins"
                 android:text="Routing Number"
-                android:textSize="@dimen/_15sdp"/>
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
 
 
             <!-- Bank Name -->
@@ -160,7 +173,7 @@
                 android:layout_marginBottom="8dp"
                 android:layout_toEndOf="@+id/imageRoutingNumberIcon"
                 android:background="@drawable/bg_two_side_corner"
-                android:padding="12dp" />
+                android:padding="@dimen/_5sdp" />
 
 
         </RelativeLayout>
@@ -173,6 +186,19 @@
             android:orientation="vertical"
             android:visibility="visible">
 
+
+            <TextView
+                android:id="@+id/textDebitCardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="@font/poppins"
+                android:text="Debit Card"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp"
+                android:textStyle="bold" />
+
+
             <!-- Name -->
             <EditText
                 android:id="@+id/etName"
@@ -180,9 +206,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_two_side_corner"
-
+                android:fontFamily="@font/poppins"
                 android:hint="Name"
-                android:padding="12dp" />
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
 
             <!-- Card Number -->
             <EditText
@@ -191,8 +220,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_two_side_corner"
+                android:fontFamily="@font/poppins"
                 android:hint="Card Number"
-                android:padding="12dp" />
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
 
             <!-- CVV -->
             <EditText
@@ -201,9 +234,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/bg_two_side_corner"
-
+                android:fontFamily="@font/poppins"
                 android:hint="CVV Number"
-                android:padding="12dp" />
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_4sdp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
 
             <!-- Expiry -->
             <RelativeLayout
@@ -217,36 +253,36 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/_4sdp"
                     android:layout_marginVertical="10sp"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:background="@drawable/bg_two_side_corner"
-                    >
+                    android:padding="@dimen/_4sdp">
+
                     <com.skydoves.powerspinner.PowerSpinnerView
                         android:id="@+id/spinnermonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:textSize = "@dimen/_13ssp"
-                        android:padding = "0dp"
-                        android:text="Month"
                         android:fontFamily="@font/poppins"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:padding="0dp"
+                        android:paddingStart="15dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="8dp"
+                        android:paddingBottom="6dp"
+                        android:text="Month"
+                        android:textAlignment="center"
                         android:textColor="@color/black"
+                        android:textSize="@dimen/_13ssp"
                         app:spinner_arrow_drawable="@drawable/drop_down_black2"
+                        app:spinner_arrow_gravity="end"
                         app:spinner_arrow_padding="@dimen/_30sdp"
-                        android:paddingStart = "15dp"
-                        android:paddingEnd = "8dp"
-                        android:paddingTop = "6dp"
+                        app:spinner_arrow_show="true"
                         app:spinner_arrow_tint="#000"
-                       app:spinner_arrow_show="true"
-                        android:paddingBottom = "6dp"
-                        android:textAlignment = "center"
-                        app:spinner_arrow_gravity = "end"
-                        app:spinner_divider_size = "0.4dp"
+                        app:spinner_divider_size="0.4dp"
 
-                        app:spinner_popup_animation = "dropdown"
+                        app:spinner_popup_animation="dropdown"
                         app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                        app:spinner_popup_elevation = "14dp" />
+                        app:spinner_popup_elevation="14dp" />
 
                 </LinearLayout>
 
@@ -255,42 +291,40 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginVertical="10sp"
-                    android:padding="@dimen/_4sdp"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:background="@drawable/bg_two_side_corner"
-                    >
+                    android:padding="@dimen/_4sdp">
+
                     <com.skydoves.powerspinner.PowerSpinnerView
                         android:id="@+id/spinneryear"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:gravity="center_horizontal|center_vertical"
-                        android:textSize = "@dimen/_13ssp"
-                        android:padding = "0dp"
-                        android:text="Year"
-
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
-                        app:spinner_arrow_drawable="@drawable/drop_down_black2"
-                        app:spinner_popup_top_padding="@dimen/_10sdp"
-                        app:spinner_arrow_tint="#000"
-                        app:spinner_arrow_show="true"
-                        android:paddingStart = "15dp"
-                        android:paddingEnd = "8dp"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:padding="0dp"
                         android:paddingVertical="@dimen/_6sdp"
+
+                        android:paddingStart="15dp"
+                        android:paddingEnd="8dp"
+                        android:text="Year"
+                        android:textAlignment="center"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_13ssp"
+                        app:spinner_arrow_drawable="@drawable/drop_down_black2"
+                        app:spinner_arrow_gravity="end"
                         app:spinner_arrow_padding="@dimen/_35sdp"
-                        android:textAlignment = "center"
-                        app:spinner_arrow_gravity = "end"
-                        app:spinner_divider_size = "0.4dp"
+                        app:spinner_arrow_show="true"
+                        app:spinner_arrow_tint="#000"
+                        app:spinner_divider_size="0.4dp"
+                        app:spinner_popup_animation="dropdown"
                         app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                        app:spinner_popup_animation = "dropdown"
-                        app:spinner_popup_elevation = "14dp"
+                        app:spinner_popup_elevation="14dp"
+                        app:spinner_popup_top_padding="@dimen/_10sdp"
 
 
                         />
 
                 </LinearLayout>
-
-
 
 
             </RelativeLayout>
@@ -302,13 +336,13 @@
         android:id="@+id/btnAddPayment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:textSize="@dimen/_13ssp"
-        android:background="@drawable/bg_green_add_card"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_green_add_card"
+        android:fontFamily="@font/poppins"
         android:paddingHorizontal="@dimen/_20sdp"
         android:paddingVertical="@dimen/_10sdp"
         android:text="Add payment"
-        android:fontFamily="@font/poppins"
-        android:textColor="@android:color/black" />
+        android:textColor="@android:color/black"
+        android:textSize="@dimen/_13ssp" />
 </LinearLayout>
