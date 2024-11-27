@@ -9,7 +9,6 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -20,9 +19,9 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -37,6 +36,7 @@ import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.OnLocalListener
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.GuesMain
+import com.yesitlab.zyvo.activity.HostMainActivity
 import com.yesitlab.zyvo.activity.guest.FiltersActivity
 import com.yesitlab.zyvo.activity.guest.WhereTimeActivity
 import com.yesitlab.zyvo.adapter.AdapterAddPaymentCard
@@ -54,10 +54,8 @@ import com.yesitlab.zyvo.model.AddPaymentCardModel
 import com.yesitlab.zyvo.model.AddPetsModel
 import com.yesitlab.zyvo.model.AddWorkModel
 import com.yesitlab.zyvo.utils.CommonAuthWorkUtils
-import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
 import com.yesitlab.zyvo.viewmodel.PaymentViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import org.w3c.dom.Text
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -142,15 +140,20 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
         val newLocation = AddLocationModel("Unknown Location")
 
+
+        binding.switchHost.setOnClickListener{
+
+            var intent = Intent(requireContext(),HostMainActivity::class.java)
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            startActivity(intent)
+        }
         locationList.add(newLocation)
-
         val newWork = AddWorkModel("Unknown Location")
-
         workList.add(newWork)
         val newLanguage = AddLanguageModel("Unknown Location")
-
         languageList.add(newLanguage)
-
         val newHobbies = AddHobbiesModel("Unknown Location")
 
         hobbiesList.add(newHobbies)

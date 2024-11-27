@@ -80,6 +80,7 @@ class AppConstant {
         val SHARE_VOOPON: String="SHARE_VOOPON"
         val MOVE: String="MOVE"
         val DELETE: String="delete"
+        val ADD_IMAGE :String = "ADD_IMAGE"
         val EDIT:String="edit"
         val CREATE_VOOPON: String="CREATE_VOOPON"
         val CREATE_EVENT: String="CREATE_EVENT"

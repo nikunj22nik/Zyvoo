@@ -167,7 +167,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
                 val secondsRemaining = (millisUntilFinished / 1000).toInt()
 
                 // Update the TextView for seconds
-                binding.llSecs.findViewById<TextView>(R.id.textSecs).text = secondsRemaining.toString()
+             //   binding.llSecs.findViewById<TextView>(R.id.textSecs).text = secondsRemaining.toString()
 
                 // Calculate progress percentage and update progress bar
                 val progress = ((totalDuration - millisUntilFinished).toDouble() / totalDuration) * 100
@@ -176,7 +176,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
             override fun onFinish() {
                 // Set the final state when countdown finishes
-                binding.llSecs.findViewById<TextView>(R.id.textSecs).text = "0"
+             //   binding.llSecs.findViewById<TextView>(R.id.textSecs).text = "0"
                 binding.customProgressBar.setProgress(100.0)
             }
         }.start()

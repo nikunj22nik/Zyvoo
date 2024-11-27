@@ -36,6 +36,20 @@ class SemiCircleProgressBar @JvmOverloads constructor(
     private var endIconSize: Int = 40 // Default icon size in dp
     private var radius: Float = 10f  // Default radius (adjust as needed)
 
+    //nikunj code
+
+    private val innerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = Color.RED // Inner semicircle color (red)
+        style = Paint.Style.FILL   // Solid fill for the inner semicircle
+    }
+
+    private val outerPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+        color = 0xFF6200EE.toInt() // Outer semicircle color (purple)
+        style = Paint.Style.FILL   // Solid fill for the outer semicircle
+    }
+
+
+
     init {
         // Initialize the outer border paint
         outerBorderPaint.style = Paint.Style.STROKE
@@ -46,7 +60,7 @@ class SemiCircleProgressBar @JvmOverloads constructor(
         // Set default paint properties for the transparent background
         transparentBackgroundPaint.style = Paint.Style.STROKE
         transparentBackgroundPaint.strokeCap = Paint.Cap.ROUND
-        transparentBackgroundPaint.color = Color.TRANSPARENT
+        transparentBackgroundPaint.color = Color.RED
         transparentBackgroundPaint.strokeWidth = transparentStrokeWidthDefault
 
         // Set default paint properties for background
@@ -155,8 +169,7 @@ class SemiCircleProgressBar @JvmOverloads constructor(
 
     fun setProgressGradient(startColor: Int, endColor: Int) {
         val shader = LinearGradient(
-            0f, 0f, width.toFloat(), (height * 2).toFloat(),
-            startColor, endColor, Shader.TileMode.CLAMP
+            0f, 0f, width.toFloat(), (height * 2).toFloat(), startColor, endColor, Shader.TileMode.CLAMP
         )
         progressPaint.shader = shader
         invalidate()
@@ -177,18 +190,47 @@ class SemiCircleProgressBar @JvmOverloads constructor(
             height * 2 - halfStrokeWidth - 20f
         )
 
-
-
         // Draw the outer border arc
         canvas.drawArc(outerRect, 200f, 140f, false, outerBorderPaint)
 
         // Original rect for background and progress
-//        val rect = RectF(
-//            -30f,
-//            20f,
-//            width.toFloat() + 25f,
-//            height * 2 - halfStrokeWidth - radius - 10f
-//        )
+
+        //nikunj code
+//        val rect = RectF(0f, 60f, width.toFloat(), height.toFloat())
+//        canvas.drawArc(rect, 200f, 140f, true, transparentBackgroundPaint)
+
+         val rectanglePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = 0xFF6200EE.toInt() // Rectangle color (e.g., purple)
+            style = Paint.Style.FILL
+        }
+
+        val rectLeft = 0f
+        val rectTop = 60f
+        val rectRight = width.toFloat()
+        val rectBottom = height.toFloat()
+
+
+
+        // Dimensions for the semicircle (aligned to the bottom of the rectangle)
+        val semicircleRadius = (rectRight - rectLeft) / 2
+        val semicircleCenterX = rectLeft + semicircleRadius
+        val semicircleCenterY = rectBottom
+
+        val semicircleRectF = RectF(
+            semicircleCenterX - semicircleRadius, // left
+            semicircleCenterY - semicircleRadius, // top
+            semicircleCenterX + semicircleRadius, // right
+            semicircleCenterY  // bottom
+        )
+
+        // Draw the semicircle (starting at 180° and sweeping 180°)
+        canvas.drawArc(semicircleRectF, 180f, 0f, true, innerPaint)
+
+
+
+
+      //  canvas.drawArc(innerRectF, -180f, 270f, false, innerPaint)
+
         val middleRect = RectF(
             halfStrokeWidth -35, // Add padding to prevent clipping
             halfStrokeWidth + 60f,

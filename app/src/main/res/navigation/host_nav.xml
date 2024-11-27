@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/host_nav"
+    app:startDestination="@id/host_fragment_properties">
+
+
+    <fragment android:id="@+id/host_fragment_properties"
+        android:name="com.yesitlab.zyvo.fragment.host.MyPlacesFragment"
+        android:label="guestdiscoverfragement"
+        >
+        <action android:id="@+id/host_fragment_property_to_host_manage_property_frag"
+            app:destination="@id/host_manage_property_frag"
+            />
+    </fragment>
+
+    <fragment android:id="@+id/host_manage_property_frag"
+        android:name="com.yesitlab.zyvo.fragment.host.ManagePlaceFragment"
+        android:label="manageFragment"
+        />
+
+
+</navigation>

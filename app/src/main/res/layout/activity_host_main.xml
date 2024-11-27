@@ -5,15 +5,15 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.GuesMain">
+    tools:context=".activity.HostMainActivity">
+
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         app:layout_constraintBottom_toTopOf="@id/lay1"
-        app:navGraph="@navigation/guest_fragment"
+        app:navGraph="@navigation/host_nav"
         android:name="androidx.navigation.fragment.NavHostFragment"
         app:defaultNavHost="true"
         />
@@ -38,7 +38,7 @@
             android:orientation="horizontal"
             android:layout_marginHorizontal="@dimen/_10sdp"
 
-            android:weightSum="5">
+            android:weightSum="4">
 
             <RelativeLayout
 
@@ -56,8 +56,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_discover_1"
-                     />
+                    android:src="@drawable/ic_home_zyvoo"
+                    />
 
                 <TextView
                     android:id="@+id/tvDiscover"
@@ -68,8 +68,8 @@
                     android:layout_centerHorizontal="true"
                     android:textSize="@dimen/_10ssp"
                     android:gravity="center"
-                    android:text="Discover"
-android:textStyle="bold"
+                    android:text="Properties"
+                    android:textStyle="bold"
                     android:fontFamily="@font/inter"
                     android:textColor="#3A4B4C" />
 
@@ -92,20 +92,20 @@ android:textStyle="bold"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_4sdp"
                     android:src="@drawable/ic_chat"
-                   />
+                    />
 
                 <RelativeLayout
                     android:layout_width="@dimen/_14sdp"
                     android:layout_height="@dimen/_14sdp"
                     android:background="@drawable/circular_green"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/_15sdp"
+                    android:layout_toRightOf="@id/imageInbox"
+                    android:layout_marginStart="-14dp"
                     >
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="3"
-                       android:layout_centerInParent="true"
+                        android:layout_centerInParent="true"
                         android:textSize="@dimen/_8sdp"
                         />
                 </RelativeLayout>
@@ -149,7 +149,7 @@ android:textStyle="bold"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageBooking"
                     android:gravity="center"
-                     android:text="Bookings"
+                    android:text="Bookings"
                     android:textStyle="bold"
                     android:textColor="#803A4B4C"
                     android:textSize="@dimen/_10ssp"
@@ -173,39 +173,7 @@ android:textStyle="bold"
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/navigationWishlist"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center">
 
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageWishlist"
-                    android:layout_width="@dimen/_23sdp"
-                    android:layout_height="@dimen/_23sdp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerInParent="true"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_wishlist"
-                     />
-
-                <TextView
-                    android:id="@+id/tvWishlist"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageWishlist"
-                    android:gravity="center"
-
-                    android:textStyle="bold"
-                    android:textColor="#803A4B4C"
-                    android:textSize="@dimen/_10ssp"
-                    android:fontFamily="@font/inter"
-                      android:text="Wishlists"
-                    />
-
-            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/icProfile"
@@ -230,7 +198,7 @@ android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageProfile"
-                     android:gravity="center"
+                    android:gravity="center"
                     android:text="Profile"
                     android:textStyle="bold"
                     android:textColor="#803A4B4C"
@@ -248,5 +216,8 @@ android:textStyle="bold"
             android:background="#D0D5DC"
             />
     </LinearLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,16 +13,17 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.databinding.ActivityExtraTimeBinding
+import com.yesitlab.zyvo.databinding.ActivityExtraTimeChargesBinding
 import com.yesitlab.zyvo.fragment.guest.SelectHourFragmentDialog
 
 class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.DialogListener {
-    lateinit var binding :ActivityExtraTimeBinding
+    lateinit var binding :ActivityExtraTimeChargesBinding
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityExtraTimeBinding.inflate(LayoutInflater.from(this))
+        binding = ActivityExtraTimeChargesBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())

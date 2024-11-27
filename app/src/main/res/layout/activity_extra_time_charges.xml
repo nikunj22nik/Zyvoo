@@ -996,7 +996,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:text="My Bookings"
+                    android:text="Confirm &amp; Pay"
                     android:textColor="@color/black"
                     />
 
