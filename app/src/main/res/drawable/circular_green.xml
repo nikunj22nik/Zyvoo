@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Set the background color to green -->
+    <solid android:color="#4AEAB1" /> <!-- Use any green shade, #008000 is pure green -->
+
+    <!-- Make it circular -->
+    <corners android:radius="50dp" /> <!-- Ensure radius is large enough for a circle -->
+
+    <!-- Optional: Define a fixed size -->
+    <size
+        android:width="100dp"
+        android:height="100dp" />
+</shape>
+

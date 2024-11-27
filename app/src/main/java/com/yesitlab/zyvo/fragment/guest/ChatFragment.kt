@@ -190,12 +190,7 @@ class ChatFragment : Fragment() ,View.OnClickListener{
 
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(
-            anchorView,
-            xOffset,
-            yOffset,
-            Gravity.END
-        )  // Adjust the Y offset dynamically
+        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
 
     override fun onDestroyView() {
