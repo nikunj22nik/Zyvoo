@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
-
+    android:background="@color/white"
+    tools:context=".fragment.host.HostProfileFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clHead"
@@ -19,103 +19,73 @@
             android:id="@+id/clSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/stroke1"
             app:layout_constraintTop_toTopOf="parent">
 
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="About Me"
+              android:textColor="@color/black"
+              android:fontFamily="@font/poppins"
+              android:textSize="@dimen/_15ssp"
+              android:layout_marginStart="@dimen/_15sdp"
+              app:layout_constraintStart_toStartOf="parent"
+              android:layout_marginTop="@dimen/_12sdp"
+              app:layout_constraintTop_toTopOf="parent"
+              />
+
+
             <RelativeLayout
-                android:id="@+id/rlFind"
+                android:id="@+id/rl_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_25sdp"
-                android:layout_marginVertical="@dimen/_13sdp"
-                android:background="@drawable/search_bar_bg"
+                android:background="@drawable/bg_two_side_corner"
+                android:paddingStart="@dimen/_10sdp"
                 android:paddingVertical="@dimen/_4sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:paddingEnd="@dimen/_4sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginEnd="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_7sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                >
 
                 <TextView
-                    android:id="@+id/textWhere"
+                    android:id="@+id/tv_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Edit"
+                    android:textSize="@dimen/_13ssp"
+                    android:layout_marginStart="@dimen/_7sdp"
                     android:layout_centerVertical="true"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    />
 
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/where"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:id="@+id/viewTextWhere"
-                    android:layout_width="@dimen/_1sdp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/textWhere"
-                    android:background="#E5E5E5" />
-
-                <TextView
-                    android:id="@+id/textTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_toEndOf="@id/viewTextWhere"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/time"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:id="@+id/viewTextTime"
-                    android:layout_width="@dimen/_1sdp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/textTime"
-                    android:background="#E5E5E5" />
-
-                <TextView
-                    android:id="@+id/textActivity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_15sdp"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_toEndOf="@id/viewTextTime"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/activity"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold" />
 
                 <ImageView
-                    android:id="@+id/imageSearchBar"
-                    android:layout_width="@dimen/_25sdp"
-                    android:layout_height="@dimen/_25sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:layout_toEndOf="@id/textActivity"
-                    android:src="@drawable/ic_search_bar_icon" />
-
-
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_edit_icon"
+                    android:layout_toRightOf="@id/tv_edit"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    />
             </RelativeLayout>
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lorem Ipsum is simply dummy text of the printin  and typesetting industry. Lorem Ipsum has been g "
+                android:textColor="@color/black"
+                android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_11ssp"
+                android:layout_marginStart="@dimen/_15sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginTop="@dimen/_2sdp"
+                app:layout_constraintTop_toBottomOf="@id/rl_edit"
 
-            <ImageView
-                android:id="@+id/filter_icon"
-                android:layout_width="@dimen/_33sdp"
-                android:layout_height="@dimen/_33sdp"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:src="@drawable/ic_filter"
-                app:layout_constraintBottom_toBottomOf="@id/rlFind"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/rlFind"
-                app:layout_constraintTop_toTopOf="@+id/rlFind" />
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clProfile"
@@ -153,7 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_25sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Hey Katelyn!"
+                android:text="Hey James"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
                 android:textStyle="bold"
@@ -165,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins"
-                android:text="Guest"
+                android:text="Host"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
                 app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
@@ -185,7 +155,7 @@
                 android:id="@+id/imageEditName"
                 android:layout_width="@dimen/_28sdp"
                 android:layout_height="@dimen/_28sdp"
-                android:layout_marginTop="@dimen/_18sdp"
+                android:layout_marginTop="@dimen/_21sdp"
                 android:src="@drawable/ic_edit_icon"
                 app:layout_constraintStart_toEndOf="@id/textName"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -421,6 +391,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_13sdp"
             android:textStyle="bold"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/clVerification" />
 
@@ -431,6 +402,7 @@
             android:layout_marginTop="@dimen/_20sdp"
             android:layout_marginEnd="@dimen/_15sdp"
             android:src="@drawable/ic_edit_icon"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/clVerification" />
 
@@ -442,6 +414,7 @@
             android:layout_marginTop="@dimen/_5sdp"
             android:background="@drawable/button_grey_line_bg"
             android:fontFamily="@font/poppins"
+            android:visibility="gone"
             android:inputType="textMultiLine"
             android:padding="@dimen/_10sdp"
             android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
@@ -583,80 +556,6 @@
             app:layout_constraintTop_toBottomOf="@+id/recyclerViewlanguages" />
 
 
-        <TextView
-            android:id="@+id/textHobbies"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:fontFamily="@font/poppins"
-            android:text="Hobbies"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_13sdp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view3" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewHobbies"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textHobbies" />
-
-
-        <View
-            android:id="@+id/viewHobbies"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_1sdp"
-            android:layout_marginHorizontal="@dimen/_23sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="#C4C4C4"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerViewHobbies" />
-
-
-        <TextView
-            android:id="@+id/textPets"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:fontFamily="@font/poppins"
-            android:text="Pets"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_13sdp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewHobbies" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewPets"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textPets" />
-
-
-        <View
-            android:id="@+id/viewPets"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_1sdp"
-            android:layout_marginHorizontal="@dimen/_23sdp"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:background="#C4C4C4"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerViewPets" />
 
 
         <TextView
@@ -671,7 +570,7 @@
             android:textSize="@dimen/_13sdp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/viewPets" />
+            app:layout_constraintTop_toBottomOf="@id/view3" />
 
         <RelativeLayout
             android:id="@+id/rlEmailAddress"
@@ -854,7 +753,7 @@
             android:layout_marginStart="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_20sdp"
             android:fontFamily="@font/poppins"
-            android:text="Mailing Address"
+            android:text="Address"
             android:textColor="@color/black"
             android:textSize="@dimen/_13sdp"
             android:textStyle="bold"
@@ -880,7 +779,7 @@
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:background="@null"
                 android:fontFamily="@font/poppins"
-                android:hint="Street"
+                android:hint="Country"
                 android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/black"
@@ -949,7 +848,6 @@
             android:background="@drawable/button_grey_line_bg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rlMailingStreetTitle"
-
             >
 
             <EditText
@@ -972,7 +870,6 @@
                 android:id="@+id/imageEditStateAddress"
                 android:layout_width="@dimen/_28sdp"
                 android:layout_height="@dimen/_28sdp"
-
                 android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/_5sdp"
                 android:src="@drawable/ic_edit_icon"
@@ -989,7 +886,6 @@
             android:layout_marginVertical="@dimen/_10ssp"
             android:background="@drawable/button_grey_line_bg"
             app:layout_constraintStart_toEndOf="@+id/rlMailingStreetTitle"
-
             app:layout_constraintTop_toBottomOf="@+id/rlMailingCityTitle">
 
             <EditText
@@ -999,8 +895,7 @@
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:background="@null"
                 android:fontFamily="@font/poppins"
-                android:hint="Zip Code"
-                android:inputType="textPassword"
+                  android:inputType="textPassword"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -1084,7 +979,6 @@
             tools:itemCount="3"
             tools:listitem="@layout/layout_payment_cardlist" />
 
-
         <TextView
             android:id="@+id/textAddNewPaymentCard"
             android:layout_width="wrap_content"
@@ -1099,7 +993,7 @@
             android:text="Add New"
             android:textColor="@color/black"
             android:textSize="@dimen/_11sdp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:drawableEndCompat="@drawable/ic_plus_add_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recyclerViewPaymentCardList" />
@@ -1125,13 +1019,8 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_13sdp"
             android:textStyle="bold"
-
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewPayment" />
-
-
-
 
         <TextView
             android:id="@+id/textPaymentWithdraw"
@@ -1149,12 +1038,10 @@
             app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
             app:drawableStartCompat="@drawable/ic_payment_withdraw"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textUsefulPages" />
-
-
-
+            app:layout_constraintTop_toBottomOf="@+id/textUsefulPages"
+            />
         <TextView
-            android:id="@+id/textBookings"
+            android:id="@+id/textBooking"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_15sdp"
@@ -1169,10 +1056,10 @@
             app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
             app:drawableStartCompat="@drawable/ic_booking"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textPaymentWithdraw" />
-
+            app:layout_constraintTop_toBottomOf="@+id/textPaymentWithdraw"
+            />
         <TextView
-            android:id="@+id/textCreateNewListing"
+            android:id="@+id/textCreateList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_15sdp"
@@ -1187,7 +1074,10 @@
             app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
             app:drawableStartCompat="@drawable/ic_create_list"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textBookings" />
+            app:layout_constraintTop_toBottomOf="@+id/textBooking"
+            />
+
+
         <TextView
             android:id="@+id/textLanguage"
             android:layout_width="match_parent"
@@ -1204,7 +1094,8 @@
             app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
             app:drawableStartCompat="@drawable/ic_language_icon"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textCreateNewListing" />
+            app:layout_constraintTop_toBottomOf="@+id/textCreateList" />
+
         <TextView
             android:id="@+id/textNotifications"
             android:layout_width="match_parent"
@@ -1222,6 +1113,10 @@
             app:drawableStartCompat="@drawable/ic_notification_icon_profile"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textLanguage" />
+
+
+
+
         <View
             android:id="@+id/viewNotifications"
             android:layout_width="match_parent"
@@ -1369,7 +1264,7 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_12sdp"
             android:textStyle="normal"
-            app:layout_constraintEnd_toEndOf="parent"
+             android:layout_marginStart="@dimen/_15sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewPrivacy" />
 
@@ -1384,14 +1279,13 @@
             android:fontFamily="@font/poppins"
             android:paddingHorizontal="@dimen/_95sdp"
             android:paddingVertical="@dimen/_8sdp"
-            android:text="Switch to Host"
+            android:text="Switch to Guest"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textLogout" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

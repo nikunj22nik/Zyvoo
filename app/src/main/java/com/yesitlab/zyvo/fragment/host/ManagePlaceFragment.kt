@@ -1,12 +1,17 @@
 package com.yesitlab.zyvo.fragment.host
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
+import android.provider.Settings
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +20,8 @@ import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -49,6 +56,19 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
     private var PICK_IMAGES_REQUEST =210
     private lateinit var galleryAdapter :GallaryAdapter
     private var mMap: GoogleMap? = null
+    private val REQUEST_CODE_STORAGE_PERMISSION = 1
+    val STORAGE_PERMISSION_CODE = 100
+
+    var storage_permissions = arrayOf<String>(
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
+    )
+
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    var storage_permissions_33 = arrayOf<String>(
+        Manifest.permission.READ_MEDIA_IMAGES,
+        Manifest.permission.CAMERA, Manifest.permission.READ_MEDIA_VIDEO
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +79,8 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentManagePlaceBinding.inflate(inflater,container,false)
         settingDataToActivityModel()
+        ActivityCompat.requestPermissions(requireActivity(), permissions(), REQUEST_CODE_STORAGE_PERMISSION)
+
         initialization()
         setUpRecyclerView()
         mapInitialization(savedInstanceState)
@@ -66,17 +88,17 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
         return binding.root
     }
 
+    fun permissions(): Array<String> {
+        val p: Array<String>
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            p = storage_permissions_33
+        } else {
+            p = storage_permissions
+        }
+        return p
+    }
+
     private fun imagePermissionInitialization(){
-
-        permissionLauncher =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-                if (isGranted) {
-                    openGallery()
-                } else {
-                    Toast.makeText(requireContext(), "Permission Denied", Toast.LENGTH_SHORT).show()
-                }
-            }
-
 
         galleryAdapter.setOnItemClickListener(object :GallaryAdapter.onItemClickListener{
             override fun onItemClick(position: Int, type: String) {
@@ -85,10 +107,21 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
                     imageList.removeAt(position)
                     galleryAdapter.updateAdapter(imageList)
                 }else{
-                    if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                        openGallery()
+//                    if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+//                        openGallery()
+//                    } else {
+//                        permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+//                    }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
+                        context?.let { openGallery() }
                     } else {
-                        permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                        if (hasPermissions(requireContext(), *permissions())) {
+                            //Do our task
+                            context?.let { openGallery() }
+                        } else {
+                            requestPermission();
+                        }
                     }
                 }
 
@@ -96,6 +129,56 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
         })
 
     }
+
+    private fun requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            try {
+                val intent = Intent()
+                intent.action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+                val uri = Uri.fromParts("package", activity?.packageName, null)
+                intent.data = uri
+                storageActivityResultLauncher.launch(intent)
+            } catch (e: Exception) {
+                val intent = Intent()
+                intent.action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+                storageActivityResultLauncher.launch(intent)
+            }
+        } else {
+            activity?.let {
+                ActivityCompat.requestPermissions(
+                    it, arrayOf(
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
+                    ), STORAGE_PERMISSION_CODE
+                )
+            }
+        }
+    }
+
+    private val storageActivityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                if (Environment.isExternalStorageManager()) {
+                    context?.let { it1 -> openGallery() }
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Manage External Storage permission is denied",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else {
+
+            }
+        }
+
+
+
+    private fun hasPermissions(context: Context, vararg permissions: String): Boolean =
+        permissions.all {
+            ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
 
     private fun openGallery() {
         // Intent to pick multiple images
@@ -664,12 +747,9 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
         binding.recyclerActivity.layoutManager = gridLayoutManager
         binding.recyclerActivity2.isNestedScrollingEnabled = false
         binding.recyclerActivity.adapter = adapterActivity
-
         binding.recyclerActivity.isNestedScrollingEnabled = false
-
         binding.recyclerActivity2.adapter = adapterActivity2
         binding.recyclerActivity2.visibility = View.GONE
-
         binding.tvOtherActivity.setOnClickListener {
             if (binding.recyclerActivity2.visibility == View.VISIBLE) {
                 binding.recyclerActivity2.visibility = View.GONE
@@ -699,7 +779,7 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
 
     override fun onPause() {
         super.onPause()
-        mapView.onPause()  // Important to call in onPause
+        mapView.onPause()
     }
 
     override fun onDestroy() {

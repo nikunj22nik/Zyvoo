@@ -65,8 +65,10 @@ class SplashFragment : Fragment() {
             }
             else {
                 // Task to be executed after 3 seconds
+
           //    findNavController().navigate(R.id.paymentsFragment2)
              findNavController().navigate(R.id.loggedScreenFragment)
+
                 //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
                }
              }, 3000)
