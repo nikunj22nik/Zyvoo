@@ -539,6 +539,7 @@
 
 
                         <ImageView
+                            android:id="@+id/imageShare"
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
                             android:layout_marginEnd="16dp"
@@ -581,69 +582,143 @@
                 </LinearLayout>
 
                 <!-- Image Grid -->
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:background="@drawable/bg_type_manage_place"
-                    android:backgroundTint="@color/white">
+
+<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginHorizontal="@dimen/_10sdp"-->
+<!--                    android:layout_marginTop="16dp"-->
+<!--                    android:layout_marginBottom="16dp"-->
+<!--                    android:background="@drawable/bg_type_manage_place"-->
+<!--                    android:backgroundTint="@color/white">-->
 
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/imageView1"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:background="@drawable/right_radius_bg"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_image_for_viewpager"
-                        app:layout_constraintBottom_toBottomOf="parent"
+<!--                    <com.google.android.material.imageview.ShapeableImageView-->
+<!--                        android:id="@+id/imageView1"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="0dp"-->
+<!--                        android:background="@drawable/right_radius_bg"-->
+<!--                        android:scaleType="centerCrop"-->
+<!--                        android:src="@drawable/ic_image_for_viewpager"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
 
-                        app:layout_constraintEnd_toStartOf="@+id/imageView2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded1" />
-
-
-                    <!-- Large Image (Left) -->
+<!--                        app:layout_constraintEnd_toStartOf="@+id/imageView2"-->
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded1" />-->
 
 
-                    <!-- Top Right Image -->
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/imageView2"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/_10sdp"
-                        android:layout_marginBottom="@dimen/_5sdp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_image_for_viewpager"
-                        app:layout_constraintBottom_toTopOf="@+id/imageView3"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/imageView1"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />
+<!--                    &lt;!&ndash; Large Image (Left) &ndash;&gt;-->
 
-                    <!-- Bottom Right Image -->
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/imageView3"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_marginStart="@dimen/_10sdp"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_image_for_viewpager"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintDimensionRatio="1:1"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toEndOf="@id/imageView1"
-                        app:layout_constraintTop_toBottomOf="@id/imageView2"
-                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--                    &lt;!&ndash; Top Right Image &ndash;&gt;-->
+<!--                    <com.google.android.material.imageview.ShapeableImageView-->
+<!--                        android:id="@+id/imageView2"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="0dp"-->
+<!--                        android:layout_marginStart="@dimen/_10sdp"-->
+<!--                        android:layout_marginBottom="@dimen/_5sdp"-->
+<!--                        android:scaleType="centerCrop"-->
+<!--                        android:src="@drawable/ic_image_for_viewpager"-->
+<!--                        app:layout_constraintBottom_toTopOf="@+id/imageView3"-->
+<!--                        app:layout_constraintDimensionRatio="1:1"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toEndOf="@id/imageView1"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />-->
+
+<!--                    &lt;!&ndash; Bottom Right Image &ndash;&gt;-->
+<!--                    <com.google.android.material.imageview.ShapeableImageView-->
+<!--                        android:id="@+id/imageView3"-->
+<!--                        android:layout_width="0dp"-->
+<!--                        android:layout_height="0dp"-->
+<!--                        android:layout_marginStart="@dimen/_10sdp"-->
+<!--                        android:layout_marginTop="@dimen/_5sdp"-->
+<!--                        android:scaleType="centerCrop"-->
+<!--                        android:src="@drawable/ic_image_for_viewpager"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintDimensionRatio="1:1"-->
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintStart_toEndOf="@id/imageView1"-->
+<!--                        app:layout_constraintTop_toBottomOf="@id/imageView2"-->
+<!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />-->
+<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
                 <!-- Divider -->
+
+
+                <LinearLayout
+                    android:id="@+id/ll_hotel_views"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_left_corners"
+                        android:layout_weight="0.49"
+                        >
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/shapeableImageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_155sdp"
+                            android:src="@drawable/ic_dummy_img_1"
+                            android:scaleType="fitXY"
+                            />
+                    </androidx.cardview.widget.CardView>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.03"
+                        />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.45"
+                        android:orientation="vertical"
+                        >
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_75sdp"
+                            android:background="@drawable/rounded_right_corners"
+                            >
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_72sdp"
+                                android:src="@drawable/ic_dummy_img_2"
+                                android:scaleType="fitXY"
+                                />
+
+
+                        </androidx.cardview.widget.CardView>
+
+
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_70sdp"
+                            android:background="@drawable/rounded_right_corners"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            >
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_75sdp"
+                                android:src="@drawable/ic_dummy_img_3"
+                                android:scaleType="fitXY"
+                                />
+                        </androidx.cardview.widget.CardView>
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

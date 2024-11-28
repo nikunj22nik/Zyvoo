@@ -74,6 +74,16 @@ class SelectHourFragmentDialog : DialogFragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        dialog?.window?.setLayout(
+            (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+            ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+        )
+        dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent) // Optional
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

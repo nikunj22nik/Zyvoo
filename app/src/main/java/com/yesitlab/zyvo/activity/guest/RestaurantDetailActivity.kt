@@ -98,8 +98,34 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.imageInfo.setOnClickListener({
             showPopupWindowForPets(it)
         })
-    }
 
+        binding.imageInfo1.setOnClickListener({
+            showPopupWindowForPets(it)
+        })
+
+
+
+
+binding.imageShare.setOnClickListener{
+    shareApp()
+}
+
+
+
+
+    }
+    private fun shareApp() {
+        val appPackageName = packageName
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "Buy this best app at: https://play.google.com/store/apps/details?id=$appPackageName"
+            )
+            type = "text/plain"
+        }
+        startActivity(sendIntent)
+    }
 
     private fun showPopupWindowForPets(anchorView: View) {
         // Inflate the popup layout
@@ -348,7 +374,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
             binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.calendarLayout.visibility = View.VISIBLE
-            binding.rlCircularProgress.visibility = View.GONE
+            binding.cv1.visibility = View.GONE
             binding.text1.setText("01:00 PM")
             binding.text2.setText("03:00 PM")
         }
@@ -361,7 +387,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.tvDay.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvHour.setBackgroundResource(R.drawable.bg_inner_manage_place)
             binding.calendarLayout.visibility = View.GONE
-            binding.rlCircularProgress.visibility = View.VISIBLE
+            binding.cv1.visibility = View.VISIBLE
             binding.text1.setText("3 hour")
             binding.text2.setText("$30")
         }

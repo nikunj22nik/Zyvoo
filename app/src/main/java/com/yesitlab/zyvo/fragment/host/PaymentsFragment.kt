@@ -217,11 +217,11 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
 
 
     private fun dialogSelectPaymentMethod() {
-        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
-        dialog.setContentView(R.layout.dialog_select_payment_host)
+        val dialog1 = Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog1.setContentView(R.layout.dialog_select_payment_host)
 
-        dialog.setCancelable(false)
-        dialog.apply {
+        dialog1.setCancelable(false)
+        dialog1.apply {
 
 
 
@@ -239,13 +239,13 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
 
            togglePaymentTypeSelectButton.setOnCheckedChangeListener{v1, isChecked->
                 if (!isChecked){
-
-                    rlBankAccount.visibility = View.GONE
-                    llDebitCard.visibility = View.VISIBLE
-                }
-                else {
                     llDebitCard.visibility = View.GONE
                     rlBankAccount.visibility = View.VISIBLE
+
+                }
+                else {
+                    rlBankAccount.visibility = View.GONE
+                    llDebitCard.visibility = View.VISIBLE
                 }
 
             }
@@ -254,8 +254,9 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
             btnAddPayment.setOnClickListener { dismiss() }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
         }
-        dialog.show()
+
     }
 
 

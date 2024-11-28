@@ -109,11 +109,11 @@ android:clickable="false"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_14ssp"
                 android:layout_marginTop="@dimen/_10ssp"
-                android:fontFamily="@font/poppins_light"
+                android:fontFamily="@font/poppins"
                 android:text="Guides for Guests"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
-                android:textStyle="bold"
+
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/llToggle" />
 
@@ -125,11 +125,11 @@ android:clickable="false"
                 android:layout_marginTop="@dimen/_10ssp"
                 android:layout_marginEnd="@dimen/_18ssp"
                 android:drawablePadding="@dimen/_5sdp"
-                android:fontFamily="@font/poppins_light"
+                android:fontFamily="@font/poppins"
                 android:text="Browse all Guides"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13ssp"
-                android:textStyle="bold"
+
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/llToggle" />

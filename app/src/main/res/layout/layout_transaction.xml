@@ -35,7 +35,7 @@
             android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pending"
+            android:text="Status"
             android:paddingVertical="@dimen/_3ssp"
             android:paddingHorizontal="@dimen/_5sdp"
             android:textColor="#000"

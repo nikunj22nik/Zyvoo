@@ -42,7 +42,7 @@
 
             <RelativeLayout
 
-                android:id="@+id/navigationDiscover"
+                android:id="@+id/navigationProperties"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -50,7 +50,7 @@
                 android:gravity="center">
 
                 <ImageView
-                    android:id="@+id/imageDiscover"
+                    android:id="@+id/imageProperties"
                     android:layout_width="@dimen/_23sdp"
                     android:layout_height="@dimen/_23sdp"
                     android:layout_alignParentTop="true"
@@ -60,10 +60,10 @@
                     />
 
                 <TextView
-                    android:id="@+id/tvDiscover"
+                    android:id="@+id/tvProperties"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/imageDiscover"
+                    android:layout_below="@+id/imageProperties"
                     android:layout_marginTop="1dp"
                     android:layout_centerHorizontal="true"
                     android:textSize="@dimen/_10ssp"

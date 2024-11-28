@@ -128,6 +128,8 @@
         android:background="@drawable/bg_four_side_grey_corner"
         android:fontFamily="@font/poppins"
         android:gravity="start"
+        android:textSize="@dimen/_11ssp"
+        android:textColorHint="@color/black"
         android:hint="Message..."
         android:padding="@dimen/_7sdp"
         android:textColor="@color/black"

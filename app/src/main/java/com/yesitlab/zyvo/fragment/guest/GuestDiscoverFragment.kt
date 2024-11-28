@@ -6,7 +6,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -34,8 +36,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
@@ -52,6 +56,7 @@ import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
 import com.yesitlab.zyvo.adapter.WishlistAdapter
 import com.yesitlab.zyvo.databinding.DialogAddWishlistBinding
 import com.yesitlab.zyvo.databinding.FragmentGuestDiscoverBinding
+import com.yesitlab.zyvo.model.Location
 import com.yesitlab.zyvo.utils.CommonAuthWorkUtils
 import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
 import com.yesitlab.zyvo.viewmodel.WishlistViewModel
@@ -67,11 +72,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
     private lateinit var startForResult: ActivityResultLauncher<Intent>
     private val totalDuration = 20000L
     private lateinit var adapter: LoggedScreenAdapter
+    private lateinit var mapView: MapView
 
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
     private  val viewModel : WishlistViewModel by viewModels()
 
-    private lateinit var map: GoogleMap
+    private lateinit var googleMap: GoogleMap
 
     private var isMapVisible = false
 
@@ -94,6 +100,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
                 // Handle the result
             }
         }
+        mapView = binding.map
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(),navController)
 
         adapter = LoggedScreenAdapter(requireContext(), mutableListOf(),
@@ -118,6 +125,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
             images -> adapter.updateData(images)
         })
 
+        mapView.onCreate(savedInstanceState)
+        mapView.getMapAsync(this)
         adapterClickListnerTask()
 
         return binding.root
@@ -126,16 +135,13 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (savedInstanceState == null) {
-            val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
-            if (mapFragment == null) {
-                Log.d("ZYVOO_TESTING","")
-                childFragmentManager.beginTransaction().replace(R.id.map, SupportMapFragment.newInstance()).commit()
-               //  childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
-            }else{
-                childFragmentManager.beginTransaction().replace(R.id.map, mapFragment).commit()
-            }
-        }
+        val locations = listOf(
+            Location(37.7749, -122.4194, "San Francisco"),
+            Location(34.0522, -118.2437, "Los Angeles"),
+            Location(40.7128, -74.0060, "New York")
+        )
+
+
 
 
         binding.customProgressBar.setProgressWidth(15f)
@@ -207,7 +213,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
                 }
                 else{
                     binding.tvMapContent.setText("Show Map")
-                    toggleMapVisibility()
+
                     binding.rlMapView.visibility = View.GONE
                     binding.recyclerViewBooking.visibility = View.VISIBLE
                     binding.clTimeLeftProgressBar.visibility = View.VISIBLE
@@ -225,18 +231,18 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
     }
 
 
-    private fun toggleMapVisibility() {
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map)
-        if (mapFragment != null) {
-            if (isMapVisible) {
-                mapFragment.view?.visibility = View.GONE
-                Log.d("TESTING_ZYVOO","Inside Map Gone")
-            } else {
-                mapFragment.view?.visibility = View.VISIBLE
-            }
-            isMapVisible = !isMapVisible
-        }
-    }
+//    private fun toggleMapVisibility() {
+//        val mapFragment = childFragmentManager.findFragmentById(R.id.map)
+//        if (mapFragment != null) {
+//            if (isMapVisible) {
+//                mapFragment.view?.visibility = View.GONE
+//                Log.d("TESTING_ZYVOO","Inside Map Gone")
+//            } else {
+//                mapFragment.view?.visibility = View.VISIBLE
+//            }
+//            isMapVisible = !isMapVisible
+//        }
+//    }
 
 
     fun adapterClickListnerTask(){
@@ -254,53 +260,74 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
     override fun itemClick(obj: Int) {}
 
-    override fun onMapReady(googleMap: GoogleMap) {
+    override fun onMapReady(mp: GoogleMap) {
 
-        map = googleMap
+
+googleMap = mp
 
         // Example coordinates
 
-        val location = LatLng(37.7749, -122.4194)
-        val location1 = LatLng(37.7740, -122.4200)
-        val location2 = LatLng(37.7730, -122.4190)
-        val location3 = LatLng(37.7750, -122.4200)
+        val locations = listOf(
+            Location(37.7749, -122.4194, " $13/h"),
+            Location(34.0522, -118.2437, " $15/h"),
+            Location(40.7128, -74.0060, " $19/h"),
+            Location(51.5074, -0.1278, " $23/h"),
+            Location(48.8566, 2.3522, " $67/h")
+        )
 
-        for(i in 1..4){
-            when(i){
-                1->{
-                    map.addMarker(MarkerOptions().position(location))
-                }
-                2->{
-                    map.addMarker(MarkerOptions().position(location1))
-                }
-                3->{
-                    map.addMarker(MarkerOptions().position(location2))
-                }
-                4->{
-                    map.addMarker(MarkerOptions().position(location3))
-                }
-            }
+        for (location in locations) {
+            val customMarkerBitmap = createCustomMarker(requireContext(), location.title)
+
+            val markerOptions = MarkerOptions()
+                .position(LatLng(location.latitude, location.longitude))
+                .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
+                .title(location.title)
+
+            googleMap.addMarker(markerOptions)
         }
 
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 15F));
-
-        map.setInfoWindowAdapter(object : GoogleMap.InfoWindowAdapter {
-            override fun getInfoWindow(marker: Marker): View? {
-                return null
-            }
-            override fun getInfoContents(marker: Marker): View {
-                val infoView = layoutInflater.inflate(R.layout.custom_info_window, null)
-                return infoView
-            }
-        })
+        // Move and zoom the camera to the first location
+        if (locations.isNotEmpty()) {
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                LatLng(locations[0].latitude, locations[0].longitude), 10f))
+        }
 
     }
 
+    fun createCustomMarker(context: Context, text: String): Bitmap {
+        val markerView = LayoutInflater.from(context).inflate(R.layout.custom_marker, null)
+
+        val label = markerView.findViewById<TextView>(R.id.label)
+        label.text = text
+
+        markerView.measure(
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        )
+        markerView.layout(0, 0, markerView.measuredWidth, markerView.measuredHeight)
+
+        val bitmap = Bitmap.createBitmap(
+            markerView.measuredWidth,
+            markerView.measuredHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        markerView.draw(canvas)
+        return bitmap
+    }
+
+
+
+    override fun onPause() {
+        super.onPause()
+        mapView.onPause()
+    }
 
 
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mapView.onDestroy()
 //        val nestedFragment = childFragmentManager.findFragmentById(R.id.map)
 //
 //        val transaction: FragmentTransaction = childFragmentManager.beginTransaction()
@@ -441,6 +468,7 @@ val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
 
     override fun onResume() {
         super.onResume()
+        mapView.onResume()
         (activity as? GuesMain)?.discoverResume()
     }
 

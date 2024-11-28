@@ -28,6 +28,7 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.yesitlab.zyvo.AppConstant
+import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.AdapterActivityText
 import com.yesitlab.zyvo.adapter.AdapterLocationSearch
@@ -120,6 +121,31 @@ class WhereTimeActivity : AppCompatActivity() {
         selectingClickListener()
         bydefaultSelect()
         bydefaultOpenScreen()
+        selectTime()
+    }
+
+    fun selectTime(){
+        binding.rlView1.setOnClickListener {
+            if(binding.text1.text.toString().equals("3 hour")){
+                DateManager(this).showHourSelectionDialog(this) { selectedHour ->
+                    binding.text1.setText(selectedHour.toString())
+                }
+            }
+            else{
+                DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                    binding.text1.setText(selectedTime.toString())
+                }
+            }
+        }
+        binding.rlView2.setOnClickListener {
+            if(binding.text2.text.toString().equals("$30")){
+
+            }else{
+                DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                    binding.text2.setText(selectedTime.toString())
+                }
+            }
+        }
     }
 
     private fun bydefaultOpenScreen(){
@@ -182,7 +208,7 @@ class WhereTimeActivity : AppCompatActivity() {
 
             binding.calendarLayout.visibility = View.VISIBLE
             binding.layoutFlexible.visibility = View.GONE
-            binding.rlCircularProgress.visibility = View.GONE
+            binding.cv1.visibility = View.GONE
 
         }
         binding.tvHourly.setOnClickListener {
@@ -193,7 +219,7 @@ class WhereTimeActivity : AppCompatActivity() {
 
             binding.calendarLayout.visibility = View.GONE
             binding.layoutFlexible.visibility = View.GONE
-            binding.rlCircularProgress.visibility = View.VISIBLE
+            binding.cv1.visibility = View.VISIBLE
         }
         binding.tvFlexible.setOnClickListener {
 
@@ -203,7 +229,7 @@ class WhereTimeActivity : AppCompatActivity() {
 
             binding.calendarLayout.visibility = View.GONE
             binding.layoutFlexible.visibility = View.VISIBLE
-            binding.rlCircularProgress.visibility = View.GONE
+            binding.cv1.visibility = View.GONE
         }
         binding.rlActivity.setOnClickListener {
             adapterActivitivity.updateAdapter(getActivityData())

@@ -189,6 +189,31 @@ fun getRangeSelectedDateWithYear(
     }
 
     fun showHourSelectionDialog(context: Context, onHourSelected: (String) -> Unit) {
+        val timeOptions = mutableListOf("30 minutes").apply {
+            addAll((1..24).map { "$it hour${if (it > 1) "s" else ""}" })
+        }.toTypedArray()
+
+        val numberPicker = NumberPicker(context).apply {
+            minValue = 0
+            maxValue = timeOptions.size - 1
+            displayedValues = timeOptions
+            wrapSelectorWheel = true
+        }
+
+        AlertDialog.Builder(context)
+            .setTitle("Select Time")
+            .setView(numberPicker)
+            .setPositiveButton("OK") { _, _ ->
+                val selectedTime = timeOptions[numberPicker.value]
+                onHourSelected(selectedTime) // Pass the selected time back to the caller
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+
+    /*
+    fun showHourSelectionDialog(context: Context, onHourSelected: (String) -> Unit) {
 //        val numberPicker = NumberPicker(context).apply {
 //            minValue = 1
 //            maxValue = 24
@@ -228,5 +253,7 @@ fun getRangeSelectedDateWithYear(
             .setNegativeButton("Cancel", null)
             .show()
     }
+
+     */
 
 }

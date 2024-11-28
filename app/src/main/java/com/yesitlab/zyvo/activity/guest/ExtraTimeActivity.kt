@@ -46,7 +46,8 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
         }
 
         clickListeners()
-
+        binding.tvReadMoreLess.setCollapsedText("Read More")
+        binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
     }
 
     private fun clickListeners(){

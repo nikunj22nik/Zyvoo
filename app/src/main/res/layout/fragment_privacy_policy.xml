@@ -13,6 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
            android:background="@color/white"
+            android:paddingHorizontal="@dimen/_10sdp"
             android:orientation="vertical">
 
             <LinearLayout
@@ -29,7 +30,7 @@
                     android:layout_width="@dimen/_27sdp"
                     android:layout_height="@dimen/_27sdp"
                     android:layout_marginVertical="@dimen/_15sdp"
-                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginStart="@dimen/_10sdp"
                     android:src="@drawable/ic_back_icon" />
 
 

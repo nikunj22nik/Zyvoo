@@ -6,16 +6,14 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.MotionEvent
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
-import dagger.hilt.android.internal.modules.ApplicationContextModule
-import dagger.hilt.android.qualifiers.ApplicationContext
+
 
 class LocationManager(var applicationContext : Context) {
 
@@ -33,7 +31,11 @@ class LocationManager(var applicationContext : Context) {
 
         fun autoCompleteLocationWork(autocompleteTextView :AutoCompleteTextView){
             this.autocompleteTextView =autocompleteTextView
-            autocompleteTextView.dropDownWidth = 350
+
+            autocompleteTextView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            val width: Int = autocompleteTextView.getMeasuredWidth()
+            Log.d("TESTING_WIDTH", width.toString())
+           // autocompleteTextView.dropDownWidth = width
             autocompleteTextView.threshold = 1 // Start suggesting after 1 character
 
             autocompleteTextView.addTextChangedListener(object : TextWatcher {

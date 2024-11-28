@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.yesitlab.zyvo.OnClickListener1
+import com.yesitlab.zyvo.OnItemClickListener
 import com.yesitlab.zyvo.OnLogClickListener
 import com.yesitlab.zyvo.databinding.LayoutLoggedRecyclerviewBinding
 import com.yesitlab.zyvo.model.HostListingModel
@@ -19,13 +20,11 @@ import com.yesitlab.zyvo.model.ViewpagerModel
 import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
 
 
-class HostListingAdapter(private val context: Context,  private val maxItemsToShow: Int? = null , private var list: MutableList<HostListingModel>, private val lifecycleOwner: LifecycleOwner, private val imagePopViewModel: ImagePopViewModel): RecyclerView.Adapter<HostListingAdapter.HostViewHolder>() {
 
-    private lateinit var mListener: onItemClickListener
+class HostListingAdapter(private val context: Context,  private val maxItemsToShow: Int? = null , private var list: MutableList<HostListingModel>, private val lifecycleOwner: LifecycleOwner, private val imagePopViewModel: ImagePopViewModel, var mListener: OnItemClickListener): RecyclerView.Adapter<HostListingAdapter.HostViewHolder>() {
 
-    interface onItemClickListener {
-        fun onItemClick(position: Int)
-    }
+
+
 
 
     inner class HostViewHolder(var binding: LayoutLoggedRecyclerviewBinding): RecyclerView.ViewHolder(binding.root){

@@ -33,6 +33,7 @@
 
     <!-- colors.xml -->
     <color name="selected_item_background">#ECECED</color>
+    <color name="grey">#636363</color>
 
 
 </resources>

@@ -368,7 +368,6 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 } else {
                     locationList.removeAt(obj)
                     addLocationAdapter.updateLocations(locationList)
-
                 }
             }
 
@@ -397,7 +396,6 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             "Hobbies" -> {
                 if (obj == hobbiesList.size - 1) {
 
-
                 } else {
                     hobbiesList.removeAt(obj)
                     addHobbiesAdapter.updateHobbies(hobbiesList)
@@ -422,7 +420,6 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
-
             R.id.textPrivacyPolicy -> {
                 findNavController().navigate(R.id.privacyPolicyFragment)
             }
@@ -513,7 +510,6 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                             .placeholder(R.drawable.ic_profile_login)
                             .into(it)
                     }
-
                     imageStatus = "1"
                 }
             }
@@ -545,10 +541,8 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private fun dialogAddCard() {
         val dialog = requireActivity()?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
-
             setCancelable(true)
             setContentView(R.layout.dialog_add_card_details)
-
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
@@ -557,22 +551,15 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             val month: TextView = findViewById(R.id.textMonth)
             val year: TextView = findViewById(R.id.textYear)
-
-
             val submitButton: TextView = findViewById(R.id.textSubmitButton)
-
             month.setOnClickListener {
-
                 dateManager.showMonthSelectorDialog { selectedMonth ->
                     month.text = selectedMonth
                 }
 
                 year.setOnClickListener {
-
                     dateManager.showYearPickerDialog { selectedYear ->
                         year.text = selectedYear.toString()
-
-
                     }
                 }
             }

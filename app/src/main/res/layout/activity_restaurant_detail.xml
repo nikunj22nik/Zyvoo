@@ -149,6 +149,7 @@
             android:layout_height="wrap_content"
             >
         <ImageView
+            android:id="@+id/imageShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_share_icon"
@@ -301,7 +302,7 @@
             android:layout_marginVertical="@dimen/_7ssp"
             />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_7sdp"
@@ -310,10 +311,10 @@
             android:layout_weight="0.45"
             >
             <TextView
+                android:id="@+id/textHourDiscount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4+ hour discount"
-                android:drawableEnd="@drawable/ic_eye_icon"
                 android:drawablePadding="@dimen/_3ssp"
                 android:textSize="@dimen/_11sdp"
                 android:textColor="@color/black"
@@ -321,15 +322,29 @@
                 android:textStyle="bold"
                 />
 
+
+            <ImageView
+                android:id="@+id/imageInfo1"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:src="@drawable/ic_info_icon"
+                android:padding="2dp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:layout_toEndOf="@+id/textHourDiscount"
+                />
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="15% Off"
+                android:layout_below="@+id/textHourDiscount"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 android:fontFamily="@font/poppins"
                 />
-        </LinearLayout>
+        </RelativeLayout>
 
 
     </LinearLayout>
@@ -453,91 +468,102 @@
 
 <!--        </RelativeLayout>-->
 
-        <RelativeLayout
-            android:id="@+id/rl_circular_progress"
-            android:layout_width="@dimen/_265sdp"
-            android:layout_height="@dimen/_265sdp"
+
+
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv1"
+            android:layout_width="@dimen/_245sdp"
+            android:layout_height="@dimen/_245sdp"
+            app:cardCornerRadius="@dimen/_265sdp"
             android:layout_gravity="center"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/_15sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:gravity="center"
-            android:visibility="gone">
+            app:cardElevation="@dimen/_20sdp"
+            android:elevation="@dimen/_200sdp">
 
 
-            <com.yesitlab.zyvo.CircularSeekBar
-                android:id="@+id/circularSeekBar"
+            <RelativeLayout
+                android:id="@+id/rl_circular_progress"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_marginHorizontal="@dimen/_15sdp"
-                app:cc_endHour="1"
-                app:cc_borderWidth="@dimen/_38sdp"
-                app:cc_endIconResource="@drawable/oval_white"
-                app:cc_fillColor="#4AEAB1"
-                app:cc_metricMode="clock"
-                app:cc_startHour="0"
-
-                app:cc_tickTextColor="?android:attr/textColorPrimary"
-
+                android:layout_gravity="center"
                 >
 
-
-
-
-
-            </com.yesitlab.zyvo.CircularSeekBar>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="@dimen/_160sdp"
-                android:layout_height="@dimen/_160sdp"
-                android:layout_centerInParent="true"
-                android:backgroundTint="@color/white"
-                android:elevation="@dimen/_160sdp"
-                app:cardCornerRadius="@dimen/_170sdp">
-
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <com.yesitlab.zyvo.CircularSeekBar
+                    android:id="@+id/circularSeekBar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_10sdp"
-                        android:fontFamily="@font/poppins"
-                        android:gravity="center"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_30ssp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textHours"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:gravity="center"
-                        android:text="Hours"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_22sdp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textTime" />
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    app:cc_endHour="1"
+                    app:cc_borderWidth="@dimen/_42sdp"
+                    app:cc_endIconResource="@drawable/oval_white"
+                    app:cc_fillColor="#4AEAB1"
+                    app:cc_metricMode="clock"
+                    app:cc_startHour="0"
+                    app:cc_tickTextColor="?android:attr/textColorPrimary">
 
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                </com.yesitlab.zyvo.CircularSeekBar>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="@dimen/_157sdp"
+                    android:layout_height="@dimen/_157sdp"
+                    android:layout_centerInParent="true"
+                    android:backgroundTint="@color/white"
+                    app:cardElevation="@dimen/_15sdp"
+                    android:elevation="@dimen/_200sdp"
+                    app:cardCornerRadius="@dimen/_170sdp">
 
 
-            </androidx.cardview.widget.CardView>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-        </RelativeLayout>
+                        <TextView
+                            android:id="@+id/textTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:fontFamily="@font/poppins"
+                            android:gravity="center"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_30ssp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
+
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:text="Hours"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_22sdp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textTime" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
 
         <View
             android:layout_width="match_parent"

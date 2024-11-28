@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="wrap_content"
+android:layout_height="wrap_content"
+    android:background="@drawable/bg_two_side_corner_white"
+android:paddingHorizontal="@dimen/_10sdp"
+android:paddingVertical="@dimen/_7sdp">
+
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/ic_clock_new"
+    android:layout_gravity="center_vertical"
+    />
+
+<TextView
+    android:id="@+id/label"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="$13/h"
+    android:textStyle="bold"
+    android:textSize="@dimen/_13sdp"
+    android:layout_marginStart="@dimen/_7sdp"
+    />
+
+</LinearLayout>

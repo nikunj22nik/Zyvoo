@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -21,6 +22,7 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.AuthActivity
@@ -29,10 +31,18 @@ import com.yesitlab.zyvo.databinding.DialogAddWishlistBinding
 import com.yesitlab.zyvo.session.SessionManager
 import com.yesitlab.zyvo.viewmodel.WishlistViewModel
 import `in`.aabhasjindal.otptextview.OtpTextView
+import org.w3c.dom.Text
 
 class CommonAuthWorkUtils(var context: Context, navController: NavController) {
      var navController = navController
     private lateinit var otpDigits: Array<EditText>
+    private var countDownTimer: CountDownTimer? = null
+
+    var resendEnabled = false
+    var otpValue: String = ""
+
+
+
     fun dialogLogin(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -71,7 +81,9 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
             textContinueButton.setOnClickListener{
                 var text = "Login Successful"
 
-                dialogOtp(context,text)
+                var textHeaderOfOtpVerfication = "Please type the verification code send \n to +1 999 999 9999"
+
+                dialogOtp(context,text, textHeaderOfOtpVerfication)
                 dismiss()
             }
             imageCross.setOnClickListener{
@@ -108,8 +120,9 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
             }
 
             textContinueButton.setOnClickListener{
-                var text = "register Successful"
-                dialogOtp(context,text)
+                var text = "Your account is registered \nsuccessfully"
+                var textHeaderOfOtpVerfication = "Please type the verification code send \n to +1 999 999 9999"
+                dialogOtp(context,text,textHeaderOfOtpVerfication)
                 dismiss()
             }
 
@@ -191,9 +204,10 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
                 dismiss()
             }
             textCreateAccountButton.setOnClickListener{
-                var text = "register Successful"
+                var text = "Your account is registered \nsuccessfully"
 
-                dialogOtp(context,text)
+                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
+                dialogOtp(context,text,textHeaderOfOtpVerfication)
 
                 dismiss()
             }
@@ -224,7 +238,9 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
             textSubmitButton.setOnClickListener{
                 var text = "Your password has been changed\n successfully."
 
-                dialogOtp(context,text)
+                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
+                dialogOtp(context,text,textHeaderOfOtpVerfication)
+
 
                 dismiss()
             }
@@ -249,9 +265,11 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
             var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener{
 
-                var text = "Your Phone/ Email has been Verified\n  successfully."
+                var text = "Your Phone has been Verified\n  successfully."
 
-                dialogOtp(context,text)
+                var textHeaderOfOtpVerfication = "Please type the verification code send \nto +1 999 999 9999"
+                dialogOtp(context,text,textHeaderOfOtpVerfication)
+
 
                 dismiss()
             }
@@ -300,9 +318,10 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
 
             var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener{
-                var text = "Your Phone/ Email has been Verified\n  successfully."
+                var text = "Your Email has been Verified\n  successfully."
 
-                dialogOtp(context,text)
+                var textHeaderOfOtpVerfication = "Please type the verification code send \nto +1 999 999 9999"
+                dialogOtp(context,text,textHeaderOfOtpVerfication)
 
                 dismiss()
             }
@@ -315,7 +334,7 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
 
 
     @SuppressLint("SuspiciousIndentation")
-    fun dialogOtp(context: Context, text: String){
+    fun dialogOtp(context: Context, text: String, textHeaderOfOtpVerfication: String){
         val dialog =  Dialog(context, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(false)
@@ -329,8 +348,17 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
             val imageCross =  findViewById<ImageView>(R.id.imageCross)
 
             val textResend =  findViewById<TextView>(R.id.textResend)
+            val textEnterYourEmail =  findViewById<TextView>(R.id.textEnterYourEmail)
 
             val textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
+            val rlResendLine =  findViewById<RelativeLayout>(R.id.rlResendLine)
+
+            val textTimeResend =  findViewById<TextView>(R.id.textTimeResend)
+            val incorrectOtp =  findViewById<TextView>(R.id.incorrectOtp)
+
+
+
+            textEnterYourEmail.text = textHeaderOfOtpVerfication
 
 
             otpDigits = arrayOf<EditText>(
@@ -368,7 +396,58 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
 
             }
 
+
+            startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
+            countDownTimer!!.cancel()
+
+
+
+
+            textTimeResend.text = "${"00"}:${"00"} sec"
+            if (textTimeResend.text == "${"00"}:${"00"} sec") {
+                resendEnabled = true
+                textResend.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.scroll_bar_color
+                    )
+                )
+            } else {
+                textResend.setTextColor(
+                    ContextCompat.getColor(
+                        context,
+                        R.color.grey
+                    )
+                )
+            }
+
+
+
+
+
+
+
             textSubmitButton.setOnClickListener{
+
+                /*
+                  if (otpValue.equals("1234")) {
+
+                alertBox()
+
+            } else {
+                binding.rlResendLine.visibility = View.GONE
+                binding.incorrectOtp.visibility = View.VISIBLE
+                binding.textResend.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.orange
+                    )
+                )
+            }
+                 */
+
+
+
                 if (text == "Your password has been changed\n" + " successfully."){
                     dialogNewPassword(context,text)
                 }
@@ -385,8 +464,21 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
                 }
                 dismiss()
             }
+
+
             textResend.setOnClickListener{
-                dismiss()
+                if (resendEnabled) {
+                    rlResendLine.visibility = View.VISIBLE
+                    incorrectOtp.visibility = View.GONE
+                    countDownTimer?.cancel()
+                    startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
+                    textResend.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.grey
+                        )
+                    )
+                }
             }
             imageCross.setOnClickListener{
                 dismiss()
@@ -394,6 +486,46 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
+
+
+
+
+
+
+    private fun startCountDownTimer(context: Context,textTimeResend : TextView,rlResendLine: RelativeLayout, textResend : TextView) {
+        countDownTimer = object : CountDownTimer(120000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                val f = android.icu.text.DecimalFormat("00")
+                val min = (millisUntilFinished / 60000) % 60
+                val sec = (millisUntilFinished / 1000) % 60
+               textTimeResend.text = "${f.format(min)}:${f.format(sec)} sec"
+            }
+
+            override fun onFinish() {
+                textTimeResend.text = "00:00"
+                rlResendLine.visibility = View.GONE
+                if (textTimeResend.text == "00:00") {
+                    resendEnabled = true
+                    textResend.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.scroll_bar_color
+                        )
+                    )
+                } else {
+                    textResend.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.grey
+                        )
+                    )
+                }
+            }
+        }
+        countDownTimer?.start()
+    }
+
+
 
     fun dialogNewPassword(context: Context?,text: String){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -440,11 +572,14 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
 
             findViewById<TextView>(R.id.text).text = text
             findViewById<TextView>(R.id.textOkayButton).setOnClickListener {
-                if (text == "register Successful") {
+                if (text == "Your account is registered \nsuccessfully") {
 
                         Log.d("Navigation", "Navigating to turnNotificationsFragment")
                     navController.navigate(R.id.turnNotificationsFragment)
 
+                }
+                else if (text == "Your password has been changed\n" + " successfully."){
+                    dialogLoginEmail(context)
                 }
                 dismiss()
             }
@@ -557,42 +692,6 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
-
-
-
-
-//    private fun showWishlistDialog(context: Context, viewModel: WishlistViewModel,viewLifecycleOwner :viewLifecycleOwner) {
-//      //  private  val viewModel : WishlistViewModel by viewModels()
-//
-//        val dialogBinding = DialogAddWishlistBinding.inflate(LayoutInflater.from(context))
-//        //DialogWishlistBinding
-//
-//        // Set up the RecyclerView for the dialog
-//        val dialogAdapter = WishlistAdapter(context,true, mutableListOf())
-//        dialogBinding.rvWishList.adapter = dialogAdapter
-//
-//        viewModel.list.observe(viewLifecycleOwner) {
-//            dialogAdapter.updateItem(it)
-//        }
-//
-//        // Create and show the dialog
-//        val dialog = AlertDialog.Builder(context)
-//            .setView(dialogBinding.root)
-//            .create()
-//
-//        dialog.show()
-//
-//        // Optional: Set dialog size for consistency
-//        dialog.window?.setLayout(
-//            (resources.displayMetrics.widthPixels * 0.9).toInt(),
-//            ViewGroup.LayoutParams.WRAP_CONTENT
-//        )
-//
-//        // Close button logic
-//        dialogBinding.imageCross.setOnClickListener {
-//            dialog.dismiss()
-//        }
-//    }
 
 
 }

@@ -65,6 +65,7 @@ class TransactionAdapter(private var transactionsList: ArrayList<TransactionMode
                 "Pending" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
                 "Completed" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
                 "Canceled" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                else ->  holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
             }
 
         }

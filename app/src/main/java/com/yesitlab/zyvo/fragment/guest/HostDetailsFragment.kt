@@ -27,13 +27,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.OnClickListener1
+import com.yesitlab.zyvo.OnItemClickListener
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.HostListingAdapter
+
 import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
 
 import com.yesitlab.zyvo.adapter.guest.AdapterReview
 import com.yesitlab.zyvo.databinding.FragmentGuestDiscoverBinding
 import com.yesitlab.zyvo.databinding.FragmentHostDetailsBinding
+import com.yesitlab.zyvo.fragment.both.viewImage.ViewImageDialogFragment
 import com.yesitlab.zyvo.viewmodel.HostListingViewModel
 import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
 import com.yesitlab.zyvo.viewmodel.WishlistViewModel
@@ -42,7 +45,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class HostDetailsFragment : Fragment() , OnClickListener{
+class HostDetailsFragment : Fragment() , OnClickListener, OnItemClickListener {
     lateinit var binding : FragmentHostDetailsBinding;
     lateinit var adapterReview: AdapterReview
 
@@ -95,7 +98,9 @@ class HostDetailsFragment : Fragment() , OnClickListener{
 
     fun initialization(){
         adapter = HostListingAdapter(requireContext(),3, mutableListOf(),
-            viewLifecycleOwner, imagePopViewModel)
+            viewLifecycleOwner, imagePopViewModel,this)
+
+
 
         setRetainInstance(true)
 
@@ -133,6 +138,12 @@ class HostDetailsFragment : Fragment() , OnClickListener{
 
 
 
+
+    }
+
+    override fun onItemClick(position: Int) {
+        val dialogFragment = ViewImageDialogFragment()
+        dialogFragment.show(parentFragmentManager, "exampleDialog")
 
     }
 

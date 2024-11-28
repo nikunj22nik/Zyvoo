@@ -77,6 +77,7 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
         super.onPostResume()
 
     }
+
     private fun showBottomNavigation() {
        binding.lay1.visibility = View.VISIBLE
     }

@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.yesitlab.zyvo.OnClickListener
 
 import com.yesitlab.zyvo.R
@@ -25,7 +27,7 @@ class NotificationFragment : Fragment(),OnClickListener,View.OnClickListener {
     private val viewModel: NotificationViewModel by viewModels()
     private lateinit var adapterNotificationScreen : AdapterNotificationScreen
     // var  list : ArrayList<NotificationScreenModel> = arrayListOf()
-
+private lateinit var navController: NavController
 
     // 1. Called when fragment is attached to its parent activity
     override fun onAttach(context: android.content.Context) {
@@ -73,6 +75,10 @@ class NotificationFragment : Fragment(),OnClickListener,View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // Initialize view-related components and observers
+
+        navController = Navigation.findNavController(view)
+        binding.imageBackButton.setOnClickListener(this)
+
     }
 
     // 5. Called when the fragment becomes visible
@@ -123,7 +129,11 @@ class NotificationFragment : Fragment(),OnClickListener,View.OnClickListener {
     }
 
     override fun onClick(p0: View?) {
-        TODO("Not yet implemented")
+       when(p0?.id){
+           R.id.imageBackButton->{
+               navController.navigateUp()
+           }
+       }
 
     }
 }

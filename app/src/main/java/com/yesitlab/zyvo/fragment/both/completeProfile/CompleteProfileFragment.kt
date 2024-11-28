@@ -393,12 +393,13 @@ private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
              commonAuthWorkUtils.dialogChangeName(requireContext())
            }
            R.id.textConfirmNow->{
-               commonAuthWorkUtils.dialogNumberVerification(requireContext())
+               commonAuthWorkUtils.dialogEmailVerification(requireContext())
+
                binding.textConfirmNow.visibility = View.GONE
                binding.textVerified.visibility = View.VISIBLE
            }
            R.id.textConfirmNow1->{
-               commonAuthWorkUtils.dialogEmailVerification(requireContext())
+               commonAuthWorkUtils.dialogNumberVerification(requireContext())
                binding.textConfirmNow1.visibility = View.GONE
                binding.textVerified1.visibility = View.VISIBLE
            }

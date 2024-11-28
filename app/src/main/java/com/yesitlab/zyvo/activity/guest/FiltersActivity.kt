@@ -635,7 +635,9 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         binding.tvEntireHome.setOnClickListener(this)
         binding.llDate.setOnClickListener(this)
         binding.llTime.setOnClickListener {
-            showDropdown(it)
+            DateManager(this).showHourSelectionDialog(this) { selectedHour ->
+                binding.tvHour.setText(selectedHour)
+            }
         }
         byDefaultSelect()
 

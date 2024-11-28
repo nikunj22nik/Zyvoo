@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".activity.guest.FiltersActivity">
 
     <ScrollView
@@ -252,7 +253,7 @@
 
                 <LinearLayout
                     android:id="@+id/ll_location"
-                    android:layout_width="@dimen/_130sdp"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/_33sdp"
                     android:background="@drawable/bg_rounded_full_corner_grey"
                     android:orientation="horizontal"
@@ -268,12 +269,13 @@
 
                     <AutoCompleteTextView
                         android:id="@+id/autocomplete_location"
-                        android:layout_width="@dimen/_80sdp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_7sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:background="@null"
                         android:hint="Location"
+                        android:singleLine="true"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 
@@ -290,11 +292,11 @@
                     android:id="@+id/ll_date"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/_33sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:background="@drawable/bg_rounded_full_corner_grey"
                     android:minWidth="@dimen/_80sdp"
-                    app:layout_constraintStart_toEndOf="@id/ll_location"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ll_location">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -327,10 +329,12 @@
                     android:id="@+id/rl_date_selection"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_15sdp"
-                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/bg_four_side_corner_white"
                     android:padding="@dimen/_8sdp"
+
                     android:visibility="gone"
+                    android:elevation="@dimen/_20sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@id/ll_date"
                     app:layout_constraintTop_toBottomOf="@id/ll_date">
@@ -412,7 +416,7 @@
                     android:minWidth="@dimen/_80sdp"
                     android:padding="@dimen/_7sdp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ll_location">
+                    app:layout_constraintTop_toBottomOf="@id/ll_date">
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -1177,6 +1181,7 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Activities"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
 
@@ -1253,6 +1258,7 @@
                 android:layout_marginTop="@dimen/_13sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Booking"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
 
@@ -1378,6 +1384,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Language"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
 

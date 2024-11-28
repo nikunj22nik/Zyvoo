@@ -3,6 +3,7 @@ package com.yesitlab.zyvo.fragment.guest
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
@@ -84,7 +85,26 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         binding.textMessageTheHostButton.setOnClickListener {
             findNavController().navigate(R.id.chatFragment)
         }
+
+        binding.imageShare.setOnClickListener {
+            shareApp()
+        }
+
     }
+
+    private fun shareApp() {
+        val appPackageName = requireActivity().packageName
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "Buy this best app at: https://play.google.com/store/apps/details?id=$appPackageName"
+            )
+            type = "text/plain"
+        }
+        startActivity(sendIntent)
+    }
+
 
     @SuppressLint("MissingInflatedId")
     fun dialogReview(){

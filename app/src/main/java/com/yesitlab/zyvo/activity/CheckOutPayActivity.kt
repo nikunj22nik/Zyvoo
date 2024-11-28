@@ -54,11 +54,15 @@ class CheckOutPayActivity : AppCompatActivity() {
             insets
         }
 
+        binding.tvReadMoreLess.setCollapsedText("Read More")
+        binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
+
         initialization()
         clickListeneres()
         callingSelectionOfDate()
         callingSelectionOfTime()
         messageHostListener()
+
 
 
     }
@@ -340,8 +344,10 @@ class CheckOutPayActivity : AppCompatActivity() {
         binding.rlCreditDebitCard.setOnClickListener {
             if(binding.rlCreditDebitRecycler.visibility == View.GONE) {
                 binding.rlCreditDebitRecycler.visibility = View.VISIBLE
+                binding.imageDropDown.setImageResource(R.drawable.ic_dropdown_close)
             }else{
                 binding.rlCreditDebitRecycler.visibility = View.GONE
+                binding.imageDropDown.setImageResource(R.drawable.ic_dropdown_open)
             }
         }
         binding.rlAddCard.setOnClickListener {

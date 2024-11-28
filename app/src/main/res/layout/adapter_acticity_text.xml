@@ -10,8 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="stays"
-        android:textStyle="bold"
-        android:textSize="@dimen/_12sdp"
+        android:textSize="@dimen/_11sdp"
         android:fontFamily="@font/poppins"
         android:layout_marginStart="@dimen/_10sdp"
 

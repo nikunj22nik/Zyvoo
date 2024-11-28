@@ -218,9 +218,9 @@ class SemiCircleProgressBar @JvmOverloads constructor(
 
 
         val outerRect = RectF(
-            halfStrokeWidth -35, // Add padding to prevent clipping
+            halfStrokeWidth -45, // Add padding to prevent clipping
             halfStrokeWidth + 60f,
-            width - halfStrokeWidth + 30,
+            width - halfStrokeWidth + 40,
             height * 2 - halfStrokeWidth - 60f
         )
 
@@ -277,9 +277,9 @@ class SemiCircleProgressBar @JvmOverloads constructor(
       //  canvas.drawArc(innerRectF, -180f, 270f, false, innerPaint)
 
         val middleRect = RectF(
-            halfStrokeWidth -35, // Add padding to prevent clipping
+            halfStrokeWidth -45, // Add padding to prevent clipping
             halfStrokeWidth + 60f,
-            width - halfStrokeWidth + 30,
+            width - halfStrokeWidth + 40,
             height * 2 - halfStrokeWidth - 60f
         )
 
