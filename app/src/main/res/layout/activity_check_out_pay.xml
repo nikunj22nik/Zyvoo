@@ -57,6 +57,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Checkout and Pay"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
 
@@ -93,6 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hosted by"
+                        android:fontFamily="@font/poppins"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12sdp"
                         android:layout_gravity="center_vertical"/>
@@ -117,7 +119,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_7sdp"
                             android:text="Mia J."
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black"
+
                             android:textSize="@dimen/_12sdp" />
 
                         <ImageView
@@ -154,6 +158,7 @@
                         android:drawablePadding="@dimen/_2sdp"
                         android:text="Respond within 1 hr"
                         android:textColor="@color/black"
+                        android:fontFamily="@font/poppins"
                         android:textSize="@dimen/_12sdp"
                         android:layout_gravity="center_horizontal"/>
 
@@ -172,6 +177,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/_5sdp"
                             android:text="Message the host"
+                           android:fontFamily="@font/poppins"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"/>
 
@@ -204,9 +210,10 @@
                                 android:layout_height="wrap_content"
                                 android:text="I have a doubt"
                                 android:textSize="@dimen/_11ssp"
-                                android:textStyle="bold"
                                 android:fontFamily="@font/poppins"
-                                android:layout_centerHorizontal="true"
+                                android:textColor="@color/black"
+
+
                                 />
 
                         </RelativeLayout>
@@ -228,8 +235,8 @@
                                 android:text="Available days"
                                 android:textSize="@dimen/_11ssp"
                                 android:fontFamily="@font/poppins"
-                                android:textStyle="bold"
-                                android:layout_centerHorizontal="true"
+                                android:textColor="@color/black"
+
                                 />
 
                         </RelativeLayout>
@@ -250,9 +257,9 @@
                                 android:layout_height="wrap_content"
                                 android:text="Other reason"
                                 android:textSize="@dimen/_10ssp"
-                                android:layout_centerHorizontal="true"
+
                                 android:fontFamily="@font/poppins"
-                                android:textStyle="bold"
+                                android:textColor="@color/black"
                                 />
 
                         </RelativeLayout>
@@ -275,6 +282,9 @@
                                 android:hint="Share a message"
                                 android:textSize="@dimen/_9ssp"
                                 android:background="@null"
+                                android:textColorHint="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textColor="@color/black"
                                 android:layout_centerHorizontal="true"
                                 />
 
@@ -338,8 +348,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                             android:text="Cabin in Peshastin"
                             android:fontFamily="@font/poppins"
-                            android:text="Cabin in Peshastin"
+                            android:textColor="@color/black"
                             android:textSize="@dimen/_13sdp"
                             android:textStyle="bold" />
 
@@ -411,8 +422,9 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:text="2 Hours"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        />
 
 
                     <TextView
@@ -420,7 +432,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="$300"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/black" />
 
                 </RelativeLayout>
 
@@ -439,7 +452,8 @@
                         android:fontFamily="@font/poppins"
                         android:text="Cleaning Fee"
                         android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                       />
 
 
                     <TextView
@@ -447,8 +461,9 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="$20"
-                        android:textStyle="bold
-" />
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"/>
+
 
                 </RelativeLayout>
 
@@ -463,10 +478,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
+
                         android:text="Zyvoo Service Fee"
                         android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"
+                        />
 
 
                     <TextView
@@ -474,7 +491,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="$2"
-                        android:textStyle="bold
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"/>
 " />
 
                 </RelativeLayout>
@@ -491,9 +509,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"
                         android:text="Taxes"
                         android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                         />
 
 
                     <TextView
@@ -501,7 +520,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="$10"
-                        android:textStyle="bold
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"/>
 " />
 
                 </RelativeLayout>
@@ -517,9 +537,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"
                         android:text="Add-on"
                         android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                         />
 
 
                     <TextView
@@ -527,7 +548,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="$300"
-                        android:textStyle="bold
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"/>
 " />
 
                 </RelativeLayout>
@@ -551,9 +573,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"
                         android:text="Total"
                         android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                         />
 
 
                     <TextView
@@ -561,7 +584,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="$320"
-                        android:textStyle="bold
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"/>
 " />
 
                 </RelativeLayout>
@@ -587,6 +611,7 @@
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
                     android:text="Booking Details"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
@@ -960,7 +985,7 @@
 
                                 <TextView
                                     android:id="@+id/textSaveChangesButtonTime"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:paddingHorizontal="@dimen/_20sdp"
@@ -991,7 +1016,7 @@
                         android:layout_marginStart="@dimen/_15sdp"
                         android:layout_marginBottom="@dimen/_5sdp"
                         app:cardCornerRadius="@dimen/_10sdp"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"
@@ -1115,7 +1140,7 @@
 
                                 <TextView
                                     android:id="@+id/textSaveChangesButton"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:paddingHorizontal="@dimen/_20sdp"
@@ -1199,10 +1224,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/poppins"
+
                     android:text="Payment Method"
                     android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -1371,8 +1397,10 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_toRightOf="@id/img_parking"
-                    android:fontFamily="@font/poppins"
+
                     android:text="Parking"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp" />
 
                 <ImageView
@@ -1424,6 +1452,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_toRightOf="@id/img_host_rule"
                     android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
                     android:text="Host rules"
                     android:textSize="@dimen/_13sdp" />
 

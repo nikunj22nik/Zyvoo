@@ -221,6 +221,7 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
 
 
 
+    @SuppressLint("MissingInflatedId")
     fun dialogForgotPassword(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -232,7 +233,6 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
             var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var etMobileNumber =  findViewById<EditText>(R.id.etMobileNumber)
             var etEmail =  findViewById<EditText>(R.id.etEmail)
             var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener{
@@ -304,7 +304,7 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
         }}
 
 
-    fun dialogEmailVerification(context: Context?){
+    fun dialogEmailVerification(context: Context?,text: String){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -318,10 +318,12 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
 
             var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener{
-                var text = "Your Email has been Verified\n  successfully."
+                var text2 = "Your Email has been Verified\n  successfully."
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto +1 999 999 9999"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
+                val texter = if (text != null.toString()) text else text2
+
+                var textHeaderOfOtpVerfication = "Please type the verification code send \nto @gmail.com"
+                dialogOtp(context,texter,textHeaderOfOtpVerfication)
 
                 dismiss()
             }

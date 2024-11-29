@@ -18,7 +18,8 @@ class MyBookingsAdapter(
     var context: Context,
     var list: MutableList<MyBookingsModel>,
     var listner: OnClickListener
-) : RecyclerView.Adapter<MyBookingsAdapter.MyBookingsViewHolder>() {
+) : RecyclerView.Adapter<MyBookingsAdapter.MyBookingsViewHolder>()
+{
 
     lateinit var textStatus : TextView
     lateinit var text : String
@@ -66,9 +67,6 @@ class MyBookingsAdapter(
         this.list = newList
         notifyDataSetChanged()
     }
-fun getText(text :String): String{
 
-    return text
-}
 
 }

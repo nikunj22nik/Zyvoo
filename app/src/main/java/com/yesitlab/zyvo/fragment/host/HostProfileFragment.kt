@@ -445,7 +445,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             }
 
             R.id.textConfirmNow1 -> {
-                commonAuthWorkUtils.dialogEmailVerification(requireContext())
+                commonAuthWorkUtils.dialogEmailVerification(requireContext(), null.toString())
                 binding.textConfirmNow1.visibility = View.GONE
                 binding.textVerified1.visibility = View.VISIBLE
             }

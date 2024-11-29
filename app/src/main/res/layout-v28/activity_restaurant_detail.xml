@@ -284,7 +284,7 @@
                 android:layout_height="wrap_content"
                 android:text="$13/hr"
                 android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textFontWeight="400"
                 android:textSize="@dimen/_12sdp"
                 android:fontFamily="@font/poppins"
                 />
@@ -294,7 +294,6 @@
                 android:text="1 hr minimum"
                 android:textColor="@color/black"
                 android:fontFamily="@font/poppins"
-                android:textFontWeight="300"
                 android:textSize="@dimen/_12sdp"
                 />
 
@@ -381,7 +380,6 @@
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
                 android:text="Choose Hours"
-                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp"
                 android:layout_marginStart="@dimen/_5sdp"
@@ -397,7 +395,6 @@
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
                 android:text="Choose Day"
-                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp" />
 
@@ -872,7 +869,6 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="About the Space"
                 android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 android:textStyle="bold"
                 android:textSize="@dimen/_14sdp"
                 />
@@ -905,9 +901,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_height="wrap_content"
                 android:text="Included in your booking"
                 android:textStyle="bold"
-
                 android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 android:layout_marginStart="@dimen/_13sdp"
                 android:textSize="@dimen/_14sdp"
                 />
@@ -1105,7 +1099,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 />
 
             <RelativeLayout
@@ -1223,7 +1216,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_height="wrap_content"
                 android:text="Add-ons from the host"
                 android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 android:textStyle="bold"
                 android:textSize="@dimen/_14sdp"
                 android:layout_marginTop="@dimen/_10sdp"
@@ -1271,8 +1263,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:text="Address &amp; Location"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:textSize="@dimen/_14sdp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 android:layout_marginStart="@dimen/_11sdp"
                 android:textStyle="bold"
                 />
@@ -1357,13 +1347,10 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sort by: Positive Reviews"
+                    android:drawableEnd="@drawable/ic_drop_down"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/poppins"
                     android:layout_alignParentEnd="true"
                     android:textSize="@dimen/_12sdp"
-
-                    app:drawableEndCompat="@drawable/drop_down_black"
 
                     />
 

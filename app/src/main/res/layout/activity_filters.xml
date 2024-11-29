@@ -65,7 +65,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Type of Place"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
 
             <TextView
@@ -74,6 +74,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_10sdp"
                 android:text="Search rooms, entire homes, or any type of place."
                 android:textColor="@color/black" />
 
@@ -92,12 +93,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:layout_marginVertical="@dimen/_5sdp"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
-                    android:paddingVertical="8dp"
+                    android:paddingVertical="5dp"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/_10ssp"
                     android:text="Any Type"
-                    android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                     />
 
                 <TextView
                     android:id="@+id/tv_room"
@@ -106,23 +109,27 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
-                    android:paddingVertical="8dp"
+
                     android:text="Room"
-                    android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                   android:layout_gravity="center_vertical"
+                    android:paddingVertical="5dp"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/_10ssp" />
 
                 <TextView
                     android:id="@+id/tv_entire_home"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+
                     android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
-                    android:paddingVertical="8dp"
+
                     android:text="Entire Home"
-                    android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_gravity="center_vertical"
+                    android:paddingVertical="5dp"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/_10ssp" />
             </LinearLayout>
 
             <View
@@ -139,7 +146,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Price range"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
 
             <TextView
@@ -150,7 +157,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Hour prices before fees and taxes"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="@dimen/_10sdp" />
 
             <com.yesitlab.zyvo.RangeBarWithChart
                 android:id="@+id/seekBar"
@@ -457,9 +464,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/poppins"
                 android:text="Availability"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_17sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
 
             <TextView
@@ -468,7 +476,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="No of People"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -489,9 +497,11 @@
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
+
                     android:text="Any"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/tv_1"
@@ -504,7 +514,8 @@
                     android:paddingVertical="8dp"
                     android:text="1"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_2"
@@ -517,7 +528,8 @@
                     android:paddingVertical="8dp"
                     android:text="2"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_3"
@@ -530,7 +542,8 @@
                     android:paddingVertical="8dp"
                     android:text="3"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_5"
@@ -543,7 +556,8 @@
                     android:paddingVertical="8dp"
                     android:text="5"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_7"
@@ -556,7 +570,8 @@
                     android:paddingVertical="8dp"
                     android:text="7"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -591,7 +606,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Property Size (Sq ft)"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -614,7 +629,8 @@
                     android:paddingVertical="8dp"
                     android:text="Any"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_250"
@@ -627,7 +643,8 @@
                     android:paddingVertical="8dp"
                     android:text="250"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_350"
@@ -640,7 +657,8 @@
                     android:paddingVertical="8dp"
                     android:text="350"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_450"
@@ -653,7 +671,8 @@
                     android:paddingVertical="8dp"
                     android:text="450"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/tv_550"
@@ -666,7 +685,8 @@
                     android:paddingVertical="8dp"
                     android:text="550"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_650"
@@ -679,7 +699,8 @@
                     android:paddingVertical="8dp"
                     android:text="650"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_750"
@@ -692,7 +713,8 @@
                     android:paddingVertical="8dp"
                     android:text="750"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -727,7 +749,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Parking space capacity"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -750,7 +772,8 @@
                     android:paddingVertical="8dp"
                     android:text="Any"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_1_parking"
@@ -763,7 +786,8 @@
                     android:paddingVertical="8dp"
                     android:text="1"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_2_parking"
@@ -776,7 +800,8 @@
                     android:paddingVertical="8dp"
                     android:text="2"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_3_parking"
@@ -789,7 +814,8 @@
                     android:paddingVertical="8dp"
                     android:text="3"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_4_parking"
@@ -802,7 +828,8 @@
                     android:paddingVertical="8dp"
                     android:text="4"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_5_parking"
@@ -815,7 +842,8 @@
                     android:paddingVertical="8dp"
                     android:text="5"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_7_parking"
@@ -828,7 +856,8 @@
                     android:paddingVertical="8dp"
                     android:text="7"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_8_parking"
@@ -841,7 +870,8 @@
                     android:paddingVertical="8dp"
                     android:text="8+"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -876,7 +906,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bedrooms"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -899,7 +929,8 @@
                     android:paddingVertical="8dp"
                     android:text="Any"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_1_bedroom"
@@ -912,7 +943,8 @@
                     android:paddingVertical="8dp"
                     android:text="1"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_2_bedroom"
@@ -925,7 +957,8 @@
                     android:paddingVertical="8dp"
                     android:text="2"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_3_bedroom"
@@ -938,7 +971,8 @@
                     android:paddingVertical="8dp"
                     android:text="3"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_4_bedroom"
@@ -951,7 +985,8 @@
                     android:paddingVertical="8dp"
                     android:text="4"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_5_bedroom"
@@ -964,7 +999,8 @@
                     android:paddingVertical="8dp"
                     android:text="5"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_7_bedroom"
@@ -977,7 +1013,8 @@
                     android:paddingVertical="8dp"
                     android:text="7"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_8_bedroom"
@@ -990,7 +1027,8 @@
                     android:paddingVertical="8dp"
                     android:text="8+"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -1025,7 +1063,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bathrooms"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -1048,7 +1086,8 @@
                     android:paddingVertical="8dp"
                     android:text="Any"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_1_bathrooms"
@@ -1061,7 +1100,8 @@
                     android:paddingVertical="8dp"
                     android:text="1"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_2_bathroom"
@@ -1074,7 +1114,8 @@
                     android:paddingVertical="8dp"
                     android:text="2"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_3_bathroom"
@@ -1087,7 +1128,8 @@
                     android:paddingVertical="8dp"
                     android:text="3"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_4_bathroom"
@@ -1100,7 +1142,8 @@
                     android:paddingVertical="8dp"
                     android:text="4"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_5_bathroom"
@@ -1113,7 +1156,8 @@
                     android:paddingVertical="8dp"
                     android:text="5"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_7_bathroom"
@@ -1126,7 +1170,8 @@
                     android:paddingVertical="8dp"
                     android:text="7"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_8_bathroom"
@@ -1139,7 +1184,8 @@
                     android:paddingVertical="8dp"
                     android:text="8+"
                     android:textColor="#3F3D56"
-                    android:textSize="16sp" />
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -1182,7 +1228,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Activities"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView

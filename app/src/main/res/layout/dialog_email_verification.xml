@@ -46,7 +46,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
         android:text="Enter your email for the verification process,
-we will send 4 digits code to your number."
+we will send 4 digits code to your email address."
         android:textAlignment="center"
         android:layout_marginHorizontal="@dimen/_40sdp"
         android:layout_marginVertical="@dimen/_12sdp"

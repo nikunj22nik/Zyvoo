@@ -91,37 +91,27 @@
                         android:padding="@dimen/_11sdp"
                         android:src="@drawable/ic_mia_pic" />
 
-                    <TextView
-                        android:id="@+id/textUserName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/imageProfilePicture"
-                        android:fontFamily="@font/poppins"
-                        android:maxWidth="@dimen/_85sdp"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:text="Mia Jdddssddddd."
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12ssp"
-                        android:textStyle="normal"
-                        app:drawableEndCompat="@drawable/ic_profile_verify_check_icon" />
+
+
+
 
                     <View
                         android:id="@+id/viewProfile"
                         android:layout_width="@dimen/_2sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:layout_centerInParent="true"
-
+android:visibility="gone"
                         android:background="#24000000" />
 
                     <RelativeLayout
+                        android:id="@+id/rlNeedHelp"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/viewProfile"
                         android:gravity="center_vertical"
+                        android:visibility="gone"
                         android:orientation="horizontal">
 
                         <ImageView
@@ -153,6 +143,67 @@
                     </RelativeLayout>
 
 
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/imageProfilePicture"
+                        android:layout_centerVertical="true"
+                        android:orientation="horizontal">
+
+
+                        <TextView
+                            android:id="@+id/textUserName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@+id/imageProfilePicture"
+                            android:fontFamily="@font/poppins"
+                            android:maxWidth="@dimen/_85sdp"
+                            android:maxLines="1"
+                            android:visibility="visible"
+                            android:singleLine="true"
+                            android:text="Mia Jdddssddddd."
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12ssp"
+                            android:textStyle="normal"
+                           />
+
+
+                        <!-- Star Rating Icon -->
+                        <ImageView
+                            android:id="@+id/imageVerifyCheck"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
+                            android:layout_gravity="center_vertical"
+android:layout_marginBottom="@dimen/_3sdp"
+                            android:visibility="gone"
+                            android:src="@drawable/ic_profile_verify_check_icon" />
+
+
+                        <!-- Star Rating Icon -->
+                        <ImageView
+                            android:id="@+id/imageStar1"
+                            android:layout_width="@dimen/_13sdp"
+                            android:layout_height="@dimen/_13sdp"
+                            android:layout_gravity="center_vertical"
+
+                            android:src="@drawable/ic_star"
+                            app:tint="#FFBB00" />
+
+                        <TextView
+                            android:id="@+id/textRatingStar1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_2sdp"
+                            android:layout_toEndOf="@+id/imageStar"
+                            android:fontFamily="@font/inter"
+                            android:text="5.0"
+                            android:textColor="#FFBB00"
+                            android:textSize="@dimen/_13ssp" />
+
+                    </LinearLayout>
+
+
                 </RelativeLayout>
 
                 <View
@@ -161,6 +212,7 @@
                     android:background="#E5E5E5" />
 
                 <LinearLayout
+                    android:id="@+id/llTopButtons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -194,6 +246,22 @@
 
 
                 </LinearLayout>
+
+
+
+                <TextView
+                    android:id="@+id/textReportIssueButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_15sdp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/bg_four_corner_light_black"
+                    android:paddingHorizontal="@dimen/_16sdp"
+                    android:paddingVertical="@dimen/_7sdp"
+                    android:text="Report an Issue"
+                    android:textColor="#000000"
+                    android:textSize="@dimen/_12ssp" />
 
 
                 <LinearLayout

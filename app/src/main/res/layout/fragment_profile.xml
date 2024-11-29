@@ -1133,79 +1133,7 @@
 
 
 
-        <TextView
-            android:id="@+id/textPaymentWithdraw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:drawablePadding="@dimen/_7ssp"
-            android:fontFamily="@font/poppins"
-            android:gravity="center_vertical"
-            android:text="Payments and Withdrawals"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp"
-            android:textStyle="normal"
-            app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
-            app:drawableStartCompat="@drawable/ic_payment_withdraw"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textUsefulPages" />
-
-
-
-        <TextView
-            android:id="@+id/textBookings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:drawablePadding="@dimen/_7ssp"
-            android:fontFamily="@font/poppins"
-            android:gravity="center_vertical"
-            android:text="Bookings"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp"
-            android:textStyle="normal"
-            app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
-            app:drawableStartCompat="@drawable/ic_booking"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textPaymentWithdraw" />
-
-        <TextView
-            android:id="@+id/textCreateNewListing"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:drawablePadding="@dimen/_7ssp"
-            android:fontFamily="@font/poppins"
-            android:gravity="center_vertical"
-            android:text="Create New Listing"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp"
-            android:textStyle="normal"
-            app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
-            app:drawableStartCompat="@drawable/ic_create_list"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textBookings" />
-        <TextView
-            android:id="@+id/textLanguage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:drawablePadding="@dimen/_7ssp"
-            android:fontFamily="@font/poppins"
-            android:gravity="center_vertical"
-            android:text="Language"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_12sdp"
-            android:textStyle="normal"
-            app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
-            app:drawableStartCompat="@drawable/ic_language_icon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textCreateNewListing" />
-        <TextView
+          <TextView
             android:id="@+id/textNotifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -1221,7 +1149,7 @@
             app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
             app:drawableStartCompat="@drawable/ic_notification_icon_profile"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textLanguage" />
+            app:layout_constraintTop_toBottomOf="@+id/textUsefulPages" />
         <View
             android:id="@+id/viewNotifications"
             android:layout_width="match_parent"

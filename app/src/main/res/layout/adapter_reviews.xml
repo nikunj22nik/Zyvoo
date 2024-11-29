@@ -41,8 +41,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/poppins_bold"
+                    android:fontFamily="@font/poppins"
                     android:text="Emily James"
+                    android:textColor="@color/black"
+
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/ratingbar"
                     android:textSize="@dimen/_12sdp"

@@ -1,6 +1,329 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_13sdp"
+        android:layout_marginVertical="@dimen/_10ssp"
+        android:background="@drawable/chat_list_unselected_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imagePicture"
+                android:layout_width="@dimen/_75sdp"
+                android:layout_height="@dimen/_75sdp"
+                android:background="@drawable/profle_picture_ring"
+                android:padding="@dimen/_15sdp"
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_img_girl_dumm"
+                />
+
+
+
+
+
+        <ImageView
+            android:id="@+id/imageThreeDots"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_10ssp"
+            android:src="@drawable/ic_three_dots"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_10ssp"
+            android:layout_marginTop="@dimen/_15sdp"
+
+            android:fontFamily="@font/poppins"
+            android:maxWidth="@dimen/_150sdp"
+            android:maxLines="1"
+            android:text="Katelyn Francy"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintStart_toEndOf="@id/imagePicture"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/fl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:alignItems="center"
+            app:flexDirection="row"
+            app:flexWrap="wrap"
+            app:justifyContent="flex_start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imagePicture"
+            app:layout_constraintTop_toBottomOf="@+id/textName">
+
+            <TextView
+                android:id="@+id/textStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10ssp"
+                android:background="@drawable/button_bg"
+
+                android:fontFamily="@font/poppins"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/_10ssp"
+                android:paddingVertical="@dimen/_3sdp"
+                android:text="Finished"
+                android:textColor="#3A4B4C"
+                android:textSize="@dimen/_11ssp" />
+
+            <TextView
+                android:id="@+id/textDate"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12ssp"
+                android:fontFamily="@font/poppins"
+                android:maxWidth="@dimen/_173sdp"
+                android:maxLines="1"
+                android:text="October 22, 2023"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp" />
+        </com.google.android.flexbox.FlexboxLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llApproveAndDecline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imagePicture"
+            app:layout_constraintTop_toBottomOf="@+id/fl">
+
+
+            <TextView
+                android:id="@+id/textApporve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_two_side_corner_green_layout"
+                android:paddingHorizontal="@dimen/_7sdp"
+                android:paddingVertical="@dimen/_2sdp"
+                android:text="Apporve"
+                android:textColor="#00BF7B" />
+
+            <TextView
+                android:id="@+id/textDecline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:background="@drawable/bg_two_side_corner_red_layout"
+                android:paddingHorizontal="@dimen/_7sdp"
+                android:paddingVertical="@dimen/_2sdp"
+                android:text="Decline"
+                android:textColor="#FF1A00" />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="@dimen/_85sdp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/clMain"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/llDeclineRequest"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@drawable/bg_four_side_grey_corner_white"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toEndOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/clMain">
+
+        <RelativeLayout
+            android:id="@+id/doubt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:background="@drawable/bg_four_side_corner_msg_box"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_6sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="I'm overbooked"
+                android:textSize="@dimen/_10ssp"
+                android:textStyle="bold"
+
+                />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tv_available_day"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/doubt"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_6sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="Maintenance day"
+                android:textSize="@dimen/_10ssp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tv_other_reason"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/doubt"
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_6sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
+                android:text="Other reason..."
+                android:textColor="#663F3D56"
+                android:textSize="@dimen/_10ssp"
+                android:textStyle="bold" />
+
+        </RelativeLayout>
+
+
+        <EditText
+            android:id="@+id/tvShareMessage1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_100sdp"
+
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+            android:gravity="start"
+            android:hint="Share a message..."
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_6sdp"
+            android:textSize="@dimen/_9ssp"
+
+            />
+
+
+        <RelativeLayout
+            android:id="@+id/rlDeclineRequestBtn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_33sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/bg_save_button">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Decline Request"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llAcceptRequest"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:background="@drawable/bg_four_side_grey_corner_white"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toEndOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/clMain">
+
+
+
+        <EditText
+            android:id="@+id/tvShareMessage"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_100sdp"
+
+            android:layout_marginHorizontal="@dimen/_6sdp"
+            android:layout_marginTop="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+            android:gravity="start"
+            android:hint="Share a message..."
+            android:paddingHorizontal="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_6sdp"
+            android:textSize="@dimen/_9ssp"
+
+            />
+
+
+        <RelativeLayout
+            android:id="@+id/rlAcceptRequestBtn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:background="@drawable/bg_save_button">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Approve Request"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_10sdp" />
+        </RelativeLayout>
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

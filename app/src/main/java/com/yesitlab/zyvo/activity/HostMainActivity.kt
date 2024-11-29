@@ -122,19 +122,20 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         when(p0?.id){
             R.id.navigationDiscover->{
                 homeResume()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.guest_fragment)
+
             }
             R.id.navigationInbox->{
                 inboxColor()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
+
             }
             R.id.navigationBookings->{
                 bookingResume()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.bookingScreenHostFragment)
+
             }
             R.id.icProfile->{
                 profileColor()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostProfileFragment)
             }
         }
     }
