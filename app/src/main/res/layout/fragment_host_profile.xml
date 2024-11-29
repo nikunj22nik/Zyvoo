@@ -993,10 +993,23 @@
             android:text="Add New"
             android:textColor="@color/black"
             android:textSize="@dimen/_11sdp"
-            android:visibility="visible"
+            android:visibility="gone"
             app:drawableEndCompat="@drawable/ic_plus_add_button"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recyclerViewPaymentCardList" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_four_side_grey_corner_white"
+            android:paddingVertical="@dimen/_10sdp"
+            android:paddingHorizontal="@dimen/_10sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recyclerViewPaymentCardList"
+            >
+
+
+        </RelativeLayout>
 
         <View
             android:id="@+id/viewPayment"

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/main_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_four_side_grey_corner"
+
+    android:paddingBottom="@dimen/_10sdp"
+    android:layout_marginEnd="@dimen/_15sdp"
+    android:layout_marginBottom="@dimen/_15sdp">
+
+    <TextView
+        android:id="@+id/tv_language"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="English"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins"
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:textSize="@dimen/_12sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginVertical="@dimen/_10sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+
+        />
+
+
+     <TextView
+         android:id="@+id/tv_country_name"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:text="China"
+         app:layout_constraintTop_toBottomOf="@id/tv_language"
+         app:layout_constraintStart_toStartOf="@id/tv_language"
+         android:textSize="@dimen/_9sdp"
+         android:fontFamily="@font/poppins"
+         />
+</androidx.constraintlayout.widget.ConstraintLayout>

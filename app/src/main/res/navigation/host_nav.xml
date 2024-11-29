@@ -23,11 +23,46 @@
         android:id="@+id/hostProfileFragment"
         android:name="com.yesitlab.zyvo.fragment.host.HostProfileFragment"
         android:label="fragment_host_profile"
+
         tools:layout="@layout/fragment_host_profile" />
     <fragment
         android:id="@+id/bookingScreenHostFragment"
         android:name="com.yesitlab.zyvo.fragment.host.BookingScreenHostFragment"
-        android:label="BookingScreenHostFragment" />
+        android:label="BookingScreenHostFragment" >
+
+        <action android:id="@+id/host_profile_frag_to_host_payment_frag"
+            app:destination="@id/hostPaymentFragment"
+            />
+    </fragment>
+
+    <fragment android:id="@+id/hostPaymentFragment"
+        android:name="com.yesitlab.zyvo.fragment.host.PaymentsFragment"
+        android:label="host_payment"
+        />
+
+
+    <fragment android:id="@+id/language_fragment_host"
+        android:name="com.yesitlab.zyvo.fragment.host.LanguageFragment"
+        android:label="language_fragment_host"
+        />
+
+    <fragment android:id="@+id/feedbackFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.FeedbackFragment"
+        android:label="Feedback_Fragment"
+        />
+
+    <fragment
+        android:id="@+id/privacyPolicyFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.PrivacyPolicyFragment"
+        android:label="fragment_privacy_policy"
+        tools:layout="@layout/fragment_privacy_policy" />
+
+
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.yesitlab.zyvo.fragment.both.NotificationFragment"
+        android:label="NotificationFragment" />
+
 
 
 </navigation>

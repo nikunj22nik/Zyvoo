@@ -53,7 +53,6 @@ class SplashFragment : Fragment() {
 
 
         handler.postDelayed({
-
             var session =SessionManager(requireContext())
 
            if(session.getUserId() ==1){

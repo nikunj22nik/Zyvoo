@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
@@ -16,7 +17,11 @@ import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
+import android.widget.ToggleButton
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,6 +35,7 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.skydoves.powerspinner.PowerSpinnerView
 import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.OnLocalListener
@@ -68,7 +74,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private lateinit var addWorkAdapter: AddWorkAdapter
     private lateinit var addLanguageSpeakAdapter: AddLanguageSpeakAdapter
     private lateinit var addHobbiesAdapter: AddHobbiesAdapter
-    private lateinit var addPetsAdapter: AddPetsAdapter
+
     private lateinit var dateManager: DateManager
 
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
@@ -92,7 +98,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
     // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 if (intent != null) {
@@ -113,7 +120,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
                     Log.i(TAG, "Place: ${place.name}, ${place.id}")
                 }
-            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+            }
+            else if (result.resultCode == Activity.RESULT_CANCELED) {
                 // The user canceled the operation.
                 Log.i(TAG, "User canceled autocomplete")
             }
@@ -147,11 +155,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        paymentOpenCloseDropDown()
 
 
-//        binding.textGiveFeedback.setOnClickListener(this)
-        binding.textTermServices.setOnClickListener(this)
+
+        binding.textGiveFeedback.setOnClickListener(this)
+     //   binding.textTermServices.setOnClickListener(this)
         binding.textPrivacyPolicy.setOnClickListener(this)
         binding.textLogout.setOnClickListener(this)
         binding.textNotifications.setOnClickListener(this)
@@ -163,7 +171,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         binding.imageEditName.setOnClickListener(this)
         binding.textConfirmNow.setOnClickListener(this)
         binding.textConfirmNow1.setOnClickListener(this)
-
+        binding.textPaymentWithdraw.setOnClickListener(this)
+        binding.textLanguage.setOnClickListener(this)
 
         adapterInitialize()
 
@@ -176,7 +185,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
 
 //        binding.filterIcon.setOnClickListener {
-//            startActivity(Intent(requireActivity(), FiltersActivity::class.java))
+//        startActivity(Intent(requireActivity(), FiltersActivity::class.java))
 //        }
 //
 //        binding.rlFind.setOnClickListener {
@@ -189,14 +198,15 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     // Function to initialize the adapter for adding locations
     private fun adapterInitialize() {
         addLocationAdapter = AddLocationAdapter(requireContext(), locationList, this)
+
         binding.recyclerViewLocation.adapter = addLocationAdapter
 
         // Update the adapter with the initial location list (if any)
+
         addLocationAdapter.updateLocations(locationList)
 
-
-
         addWorkAdapter = AddWorkAdapter(requireContext(), workList, this)
+
         binding.recyclerViewWork.adapter = addWorkAdapter
 
         addWorkAdapter.updateWork(workList)
@@ -216,7 +226,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 //        addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this)
 //        binding.recyclerViewPets.adapter = addPetsAdapter
 
-        addPetsAdapter.updatePets(petsList)
+//        addPetsAdapter.updatePets(petsList)
 
 
     }
@@ -281,7 +291,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     }
 
     private fun bottomSheetUploadImage() {
-
         bottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog1)
         bottomSheetDialog!!.setContentView(R.layout.bottom_sheet_upload_image)
         bottomSheetDialog!!.show()
@@ -302,7 +311,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     }
 
     private fun paymentOpenCloseDropDown() {
-
         // Set initial drawable
         binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(
             0,
@@ -381,21 +389,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 }
             }
 
-            "Pets" -> {
-                if (obj == petsList.size - 1) {
-
-
-                } else {
-                    petsList.removeAt(obj)
-                    addPetsAdapter.updatePets(petsList)
-
-                }
-            }
-
         }
-
     }
 
+
+//cfupg7644r
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.textPrivacyPolicy->{
@@ -404,32 +402,27 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             R.id.textTermServices->{
                 findNavController().navigate(R.id.termsServicesFragment)
             }
-
             R.id.textLogout->{
                 commonAuthWorkUtils.dialogLogOut(requireContext(),"LogOut")
             }
-
             R.id.textGiveFeedback->{
                 findNavController().navigate(R.id.feedbackFragment)
             }
-
-
+            R.id.textLanguage ->{
+                findNavController().navigate(R.id.language_fragment_host)
+            }
             R.id.textNotifications -> {
                 findNavController().navigate(R.id.notificationFragment)
             }
-
             R.id.textVisitHelpCenter -> {
                 findNavController().navigate(R.id.helpCenterFragment)
             }
-
             R.id.imageInfoIcon -> {
                 binding.cvInfo.visibility = View.VISIBLE
             }
-
             R.id.clHead -> {
                 binding.cvInfo.visibility = View.GONE
             }
-
             R.id.imageEditPicture -> {
                 bottomSheetUploadImage()
             }
@@ -465,14 +458,123 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             }
 
             R.id.textAddNewPaymentCard -> {
-                dialogAddCard()
+                dialogSelectPaymentMethod()
+            }
+            R.id.textPaymentWithdraw ->{
+                findNavController().navigate(R.id.hostPaymentFragment)
             }
         }
     }
 
-    private val pickImageLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+
+    private fun dialogSelectPaymentMethod() {
+        val dialog1 = Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog1.setContentView(R.layout.dialog_select_payment_host)
+
+        dialog1.setCancelable(false)
+        dialog1.apply {
+            val togglePaymentTypeSelectButton = findViewById<ToggleButton>(R.id.togglePaymentTypeSelectButton)
+            val rlBankAccount = findViewById<RelativeLayout>(R.id.rlBankAccount)
+            val llDebitCard = findViewById<LinearLayout>(R.id.llDebitCard)
+            val spinnermonth = findViewById<PowerSpinnerView>(R.id.spinnermonth)
+            val spinneryear = findViewById<PowerSpinnerView>(R.id.spinneryear)
+
+            val btnAddPayment = findViewById<TextView>(R.id.btnAddPayment)
+
+            callingSelectionOfDate(spinnermonth,spinneryear)
+
+            togglePaymentTypeSelectButton.setOnCheckedChangeListener{v1, isChecked->
+                if (!isChecked){
+                    llDebitCard.visibility = View.GONE
+                    rlBankAccount.visibility = View.VISIBLE
+
+                }
+                else {
+                    rlBankAccount.visibility = View.GONE
+                    llDebitCard.visibility = View.VISIBLE
+                }
+
+            }
+
+
+            btnAddPayment.setOnClickListener {
+                dismiss()
+                binding.textAddNewPaymentCard.visibility =View.GONE
+            }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+
+    }
+
+    fun callingSelectionOfDate(spinnermonth: PowerSpinnerView, spinneryear: PowerSpinnerView) {
+        val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+        // val am_pm_list = listOf("AM","PM")
+        val years = (2024..2050).toList()
+        val yearsStringList = years.map { it.toString() }
+        Toast.makeText(requireContext(),"Year String List: "+yearsStringList.size, Toast.LENGTH_LONG).show()
+        val days = resources.getStringArray(R.array.day).toList()
+
+
+        // Add item decoration for spacing
+        val spacing = 16 // Spacing in pixels
+
+
+        spinnermonth.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        spinnermonth.arrowAnimate = false
+        spinnermonth.spinnerPopupHeight = 400
+        spinnermonth.setItems(months)
+        spinnermonth.setIsFocusable(true)
+
+        val recyclerView3 = spinnermonth.getSpinnerRecyclerView()
+
+        recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = spacing
+            }
+        })
+
+        spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        spinneryear.arrowAnimate = false
+        spinneryear.spinnerPopupHeight = 400
+        spinneryear.setItems(yearsStringList.subList(0,16))
+        spinneryear.setIsFocusable(true)
+//        binding.spinneryear.post {
+//            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
+//        }
+
+
+//        binding.endAmPm.post {
+//            binding.endAmPm.spinnerPopupWidth = binding.endAmPm.width
+//        }
+
+
+
+//        binding.startAmPm.post {
+//            binding.startAmPm.spinnerPopupWidth = binding.startAmPm.width
+//        }
+
+
+
+
+
+
+        val recyclerView1 = spinneryear.getSpinnerRecyclerView()
+        recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect.top = spacing
+            }
+
+        })
+
+
+
+    }
+
+
+    private val pickImageLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        result -> if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.data?.let { uri ->
 
                     // Load image into BottomSheetDialog's ImageView if available
@@ -491,12 +593,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
     private fun profileImageGalleryChooser() {
         ImagePicker.with(this)
-            .galleryOnly()
-            .crop() // Crop image (Optional)
+            .galleryOnly().crop() // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
-            .createIntent { intent ->
-                pickImageLauncher.launch(intent)
+            .createIntent {
+                intent -> pickImageLauncher.launch(intent)
             }
     }
 
@@ -511,14 +612,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             }
     }
 
-
     private fun dialogAddCard() {
         val dialog = requireActivity()?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
-
             setCancelable(true)
             setContentView(R.layout.dialog_add_card_details)
-
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
@@ -527,22 +625,15 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             val month: TextView = findViewById(R.id.textMonth)
             val year: TextView = findViewById(R.id.textYear)
-
-
             val submitButton: TextView = findViewById(R.id.textSubmitButton)
-
             month.setOnClickListener {
-
                 dateManager.showMonthSelectorDialog { selectedMonth ->
                     month.text = selectedMonth
                 }
 
                 year.setOnClickListener {
-
                     dateManager.showYearPickerDialog { selectedYear ->
                         year.text = selectedYear.toString()
-
-
                     }
                 }
             }
@@ -555,10 +646,15 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             show()
         }
     }
+
     override fun onResume() {
         super.onResume()
         (activity as? GuesMain)?.profileColor()
     }
-
-
 }
+
+// 14-01-1967
+// 10-12-1971
+//50100614300827
+
+
