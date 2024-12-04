@@ -426,7 +426,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             R.id.rlPasswordTitle -> {
                 var text = "Your password has been changed successfully"
-                commonAuthWorkUtils.dialogEmailVerification(requireContext(),text)
+                commonAuthWorkUtils.dialogNewPassword(requireContext(),text)
             }
 
             R.id.textTermServices -> {

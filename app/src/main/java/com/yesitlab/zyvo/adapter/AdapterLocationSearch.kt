@@ -4,12 +4,14 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.databinding.AdapterLocationSearchBinding
 import com.yesitlab.zyvo.databinding.LayoutLoggedRecyclerviewBinding
 import com.yesitlab.zyvo.model.AddHobbiesModel
 
 class AdapterLocationSearch(var context : Context,var list : MutableList<String> ) : RecyclerView.Adapter<AdapterLocationSearch.AdapterLocationViewHolder>()
 {
+    private var onItemClickListener: ((String) -> Unit)? = null
     inner class AdapterLocationViewHolder(val binding: AdapterLocationSearchBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterLocationViewHolder {
@@ -22,7 +24,18 @@ class AdapterLocationSearch(var context : Context,var list : MutableList<String>
     }
 
     override fun onBindViewHolder(holder: AdapterLocationViewHolder, position: Int) {
+
+        val suggestion = list[position]
         holder.binding.tvLocation.setText(list.get(position))
+
+
+        holder.itemView.setOnClickListener {
+            onItemClickListener?.invoke(suggestion)
+        }
+
+//        holder.binding.tvLocation.setOnClickListener {
+//            listner.itemClick(position,"selected location")
+//        }
     }
 
     fun updateAdapter(list : MutableList<String>){
@@ -30,5 +43,8 @@ class AdapterLocationSearch(var context : Context,var list : MutableList<String>
         notifyDataSetChanged()
     }
 
+    fun setOnItemClickListener(listener: (String) -> Unit) {
+        onItemClickListener = listener
+    }
 
 }

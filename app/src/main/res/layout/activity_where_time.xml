@@ -74,6 +74,7 @@
                     android:visibility="visible">
 
                     <TextView
+                        android:id="@+id/textLocationName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
@@ -565,7 +566,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_activity_recy"
+                android:id="@+id/rlActivityRecy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"

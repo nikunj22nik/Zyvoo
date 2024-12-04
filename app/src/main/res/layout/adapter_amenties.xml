@@ -10,7 +10,9 @@
         android:id="@+id/radio_btn"
         android:layout_width="@dimen/_135sdp"
         android:layout_height="wrap_content"
-        android:text="Wifi"
+
+        app:buttonTint="#4AEAB1"
+
         android:textSize="@dimen/_13sdp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"

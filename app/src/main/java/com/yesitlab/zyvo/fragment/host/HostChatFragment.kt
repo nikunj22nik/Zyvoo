@@ -1,42 +1,36 @@
 package com.yesitlab.zyvo.fragment.host
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.yesitlab.zyvo.R
-import com.yesitlab.zyvo.databinding.FragmentBookingScreenHostBinding
-
-
 import android.widget.PopupWindow
 import android.widget.TextView
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
-
+import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.GuesMain
-import com.yesitlab.zyvo.activity.HostMainActivity
-import com.yesitlab.zyvo.adapter.MyBookingsAdapter
-import com.yesitlab.zyvo.adapter.host.HostBookingsAdapter
-import com.yesitlab.zyvo.databinding.FragmentMyBookingsBinding
-import com.yesitlab.zyvo.model.MyBookingsModel
-import com.yesitlab.zyvo.viewmodel.MyBookingsViewModel
-import com.yesitlab.zyvo.viewmodel.NotificationViewModel
-import com.yesitlab.zyvo.viewmodel.host.HostBookingsViewModel
+import com.yesitlab.zyvo.adapter.AdapterChatList
+import com.yesitlab.zyvo.databinding.FragmentChatBinding
+import com.yesitlab.zyvo.model.ChatListModel
+import com.yesitlab.zyvo.viewmodel.host.ChatListHostViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListener {
-    private var _binding: FragmentBookingScreenHostBinding? = null
+class HostChatFragment : Fragment() , View.OnClickListener{
+    private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
-    private var adapterMyBookingsAdapter: HostBookingsAdapter? = null
-    private val viewModel: HostBookingsViewModel by viewModels()
-    private var list: MutableList<MyBookingsModel> = mutableListOf()
-
+    private lateinit var adapterChatList: AdapterChatList
+    private val viewModel: ChatListHostViewModel by viewModels()
+    var objects: Int = 0
+    private var chatList: MutableList<ChatListModel> = mutableListOf()
+    private var filteredList: MutableList<ChatListModel> = chatList.toMutableList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -48,18 +42,9 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentBookingScreenHostBinding.inflate(
-            LayoutInflater.from(requireContext()),
-            container,
-            false
-        )
         // Inflate the layout for this fragment
-        adapterMyBookingsAdapter = HostBookingsAdapter(requireContext(), mutableListOf(), this)
-        binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
-
-        viewModel.list.observe(viewLifecycleOwner, Observer { list ->
-            adapterMyBookingsAdapter!!.updateItem(list)
-        })
+        _binding =
+            FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
 
         return binding.root
@@ -68,13 +53,60 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageFilter.setOnClickListener(this)
+        adapterChatList = AdapterChatList(requireContext(), chatList,object : OnClickListener {
+            override fun itemClick(obj: Int) {
+                findNavController().navigate(R.id.hostChatDetailsFragment)
+            }
+
+        },null)
+        binding.recyclerViewChat.adapter = adapterChatList
+        viewModel.list.observe(viewLifecycleOwner, Observer { list ->
+            chatList = list
+            adapterChatList.updateItem(list)
+        })
+
+        binding.etSearchButton.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+
+                // val searchText = p0.toString().trim()
+
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+                val query = p0.toString()
+                filter(query)
+
+            }
+        })
+        // Add text change listener for search bar
+//        binding.etSearchButton.addTextChangedListener { text ->
+//           // Call filter function in adapter
+//        }
 
     }
+
+
+    fun filter(query: String) {
+        filteredList = if (query.isEmpty()) {
+            chatList.toMutableList()
+        } else {
+            chatList.filter {
+                it.textUserName.contains(query, ignoreCase = true) ||
+                        it.textDescription.contains(query, ignoreCase = true)
+            }.toMutableList()
+        }
+
+        adapterChatList.updateItem(filteredList)
+
+    }
+
 
     private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
         val popupView =
-            LayoutInflater.from(context).inflate(R.layout.popup_all_booking_host_filter, null)
+            LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
 
         // Create PopupWindow with the custom layout
         val popupWindow = PopupWindow(
@@ -85,27 +117,15 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         )
 
         // Set click listeners for each menu item in the popup layout
-        popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener {
+        popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
 
             popupWindow.dismiss()
         }
-        popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener {
+        popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
 
             popupWindow.dismiss()
         }
-        popupView.findViewById<TextView>(R.id.itemBookingRequests).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemWaitingPayment).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener {
+        popupView.findViewById<TextView>(R.id.itemUnread).setOnClickListener {
 
             popupWindow.dismiss()
         }
@@ -150,12 +170,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(
-            anchorView,
-            xOffset,
-            yOffset,
-            Gravity.END
-        )  // Adjust the Y offset dynamically
+        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
 
     override fun onDestroyView() {
@@ -163,23 +178,16 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         _binding = null
     }
 
-    override fun itemClick(obj: Int) {
-
-      //  Toast.makeText(requireContext(),obj.toString(),Toast.LENGTH_LONG).show()
-        findNavController().navigate(R.id.reviewBookingHostFragment)
-    }
-
     override fun onClick(p0: View?) {
-        when (p0?.id) {
-            R.id.imageFilter -> {
-                showPopupWindow(binding.imageFilter, 0)
+        when(p0?.id){
+            R.id.imageFilter->{
+                showPopupWindow(binding.imageFilter,0)
             }
         }
     }
     override fun onResume() {
         super.onResume()
-        (activity as? HostMainActivity)?.bookingResume()
+        (activity as? GuesMain)?.inboxColor()
     }
-
 
 }

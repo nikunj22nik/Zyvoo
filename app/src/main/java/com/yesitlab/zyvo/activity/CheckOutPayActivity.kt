@@ -3,9 +3,13 @@ package com.yesitlab.zyvo.activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.UnderlineSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
@@ -361,6 +365,8 @@ class CheckOutPayActivity : AppCompatActivity() {
         adapterAddon = AdapterAddOn(this@CheckOutPayActivity,getAddOnList().subList(0,4))
         binding.recyclerAddOn.layoutManager = LinearLayoutManager(this@CheckOutPayActivity, LinearLayoutManager.VERTICAL ,false)
         binding.recyclerAddOn.adapter = adapterAddon
+
+        showingMoreText()
         addPaymentCardAdapter = AdapterAddPaymentCard(this, mutableListOf())
 
         binding.recyclerViewPaymentCardList.layoutManager = LinearLayoutManager(this@CheckOutPayActivity,LinearLayoutManager.VERTICAL,false)
@@ -398,6 +404,46 @@ class CheckOutPayActivity : AppCompatActivity() {
         }
 
     }
+
+
+    private fun showingLessText() {
+        val text = "Show Less"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.tvShowMore.text = spannableString
+        binding.tvShowMore.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.tvShowMore.paint.isAntiAlias = true
+        binding.tvShowMore.setOnClickListener {
+            adapterAddon.updateAdapter(getAddOnList().subList(0,4))
+            showingMoreText()
+        }
+
+
+
+
+    }
+
+
+    private fun showingMoreText() {
+        val text = "Show More"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.tvShowMore.text = spannableString
+        binding.tvShowMore.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.tvShowMore.paint.isAntiAlias = true
+        binding.tvShowMore.setOnClickListener {
+            adapterAddon.updateAdapter(getAddOnList().subList(0,6))
+            // binding.underlinedTextView.visibility =View.GONE
+            showingLessText()
+        }
+
+
+
+
+    }
+
 
     private fun getAddOnList(): MutableList<String> {
         var list = mutableListOf<String>()

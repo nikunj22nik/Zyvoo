@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.yesitlab.zyvo.AppConstant
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.databinding.FragmentFeedbackBinding
@@ -38,6 +39,13 @@ class FeedbackFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+
+        binding.imageBackIcon.setOnClickListener {
+            navController.navigateUp()
+        }
+
+
         binding.spinnerFeedback.setItems(
             listOf(AppConstant.Host, AppConstant.Guest)
         )

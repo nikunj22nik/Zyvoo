@@ -431,6 +431,12 @@ val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
             findViewById<ImageView>(R.id.imageCross).setOnClickListener {
                 dismiss()
             }
+            findViewById<TextView>(R.id.textCreate).setOnClickListener {
+                dismiss()
+            }
+            findViewById<TextView>(R.id.textClear).setOnClickListener {
+                dismiss()
+            }
          val etDescription =    findViewById<EditText>(R.id.etDescription)
 
          val tvMaxCount =    findViewById<TextView>(R.id.textMaxCount)

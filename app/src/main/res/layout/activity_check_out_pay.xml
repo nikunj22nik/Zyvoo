@@ -1343,8 +1343,10 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:text="Refund Policies"
                 android:textColor="@color/black"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold"
                 android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
+                />
 
             <com.colormoon.readmoretextview.ReadMoreTextView
                 android:id="@+id/tvReadMoreLess"
@@ -1373,7 +1375,9 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:text="Included in your booking"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins"
+                 />
 
             <RelativeLayout
                 android:id="@+id/rl_parking"

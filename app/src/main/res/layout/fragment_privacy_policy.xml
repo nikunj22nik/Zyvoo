@@ -16,8 +16,8 @@
             android:paddingHorizontal="@dimen/_10sdp"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/llHeader"
+            <RelativeLayout
+                android:id="@+id/rlHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -34,31 +34,33 @@
                     android:src="@drawable/ic_back_icon" />
 
 
-                <!-- Search Bar -->
-                <EditText
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/_34sdp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="@dimen/_10ssp"
-                    android:layout_weight="1"
-                    android:background="@drawable/search_bar_bg"
-                    android:drawableEnd="@drawable/ic_search_bar_icon22"
-                    android:drawablePadding="@dimen/_6sdp"
-                    android:hint="Search..."
-                    android:inputType="text"
-                    android:padding="@dimen/_6sdp"
-                    android:textColorHint="#B0B0B0" />
+<!--                &lt;!&ndash; Search Bar &ndash;&gt;-->
+<!--                <EditText-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="@dimen/_34sdp"-->
+<!--                    android:layout_gravity="center_vertical"-->
+<!--                    android:layout_marginStart="@dimen/_10ssp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:background="@drawable/search_bar_bg"-->
+<!--                    android:drawableEnd="@drawable/ic_search_bar_icon22"-->
+<!--                    android:drawablePadding="@dimen/_6sdp"-->
+<!--                    android:hint="Search..."-->
+<!--                    android:inputType="text"-->
+<!--                    android:padding="@dimen/_6sdp"-->
+<!--                    android:textColorHint="#B0B0B0" />-->
 
                 <!-- Menu Icon -->
                 <ImageView
                     android:layout_width="@dimen/_42sdp"
                     android:layout_height="@dimen/_42sdp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="end"
                     android:contentDescription="Menu"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:padding="@dimen/_6sdp"
                     android:src="@drawable/ic_filter" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <View
                 android:id="@+id/viewHead"

@@ -25,9 +25,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Success"
+            android:text="Notification"
             android:textSize="@dimen/_13sdp"
-            android:textColor="@color/black"
             android:fontFamily="@font/poppins"
             android:layout_gravity="center_horizontal"
             android:textStyle="bold"
@@ -45,11 +44,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="We will review your report and take \n appropriate action if necessary."
+            android:text="Your report has been submitted. Thank you for helping us maintain a safe and respectful community."
             android:textAlignment="center"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/poppins"
-            android:textColor="#636363"
+            android:textColor="@color/black"
             android:textSize="@dimen/_12ssp"
             />
 
@@ -68,7 +67,6 @@
                 android:text="Okay"
                 android:fontFamily="@font/poppins"
                 android:layout_margin="@dimen/_10sdp"
-                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:paddingHorizontal="@dimen/_10sdp"
                 />
