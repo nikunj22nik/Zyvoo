@@ -59,6 +59,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:paddingVertical="@dimen/_5sdp"
+                android:visibility="visible"
                 >
 
                 <de.hdodenhof.circleimageview.CircleImageView

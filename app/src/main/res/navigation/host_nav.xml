@@ -7,7 +7,7 @@
 
     <fragment android:id="@+id/host_fragment_properties"
         android:name="com.yesitlab.zyvo.fragment.host.MyPlacesFragment"
-        android:label="guestdiscoverfragement"
+        android:label="myplacesfragment"
         >
         <action android:id="@+id/host_fragment_property_to_host_manage_property_frag"
             app:destination="@id/host_manage_property_frag"
@@ -29,8 +29,8 @@
     <fragment
         android:id="@+id/bookingScreenHostFragment"
         android:name="com.yesitlab.zyvo.fragment.host.BookingScreenHostFragment"
-        android:label="BookingScreenHostFragment" >
-/>
+        android:label="BookingScreenHostFragment" />
+
     <fragment
         android:id="@+id/reviewBookingHostFragment"
         android:name="com.yesitlab.zyvo.fragment.host.ReviewBookingHostFragment"
@@ -39,10 +39,11 @@
         android:id="@+id/hostChatDetailsFragment"
         android:name="com.yesitlab.zyvo.fragment.host.HostChatDetailsFragment"
         android:label="HostChatDetailsFragment" />
+
     <fragment
         android:id="@+id/hostChatFragment"
         android:name="com.yesitlab.zyvo.fragment.host.HostChatFragment"
-        android:label="HostChatFragment" />
+        android:label="HostChatFragment" >
 
 
         <action android:id="@+id/host_profile_frag_to_host_payment_frag"
@@ -91,5 +92,5 @@
         android:name="com.yesitlab.zyvo.fragment.host.BrowseGuideArtcileDetailFragment"
         android:label="Browse Article Details"
         />
-        />
+
 </navigation>

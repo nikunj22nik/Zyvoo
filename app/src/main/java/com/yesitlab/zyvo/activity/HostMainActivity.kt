@@ -32,15 +32,10 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         }
 
         binding.imageProperties.setImageResource(R.drawable.ic_select_home)
-
         binding.tvProperties.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
-
         binding.navigationProperties.setOnClickListener(this)
-
-        binding.navigationInbox.setOnClickListener(this)
-
+        binding.navigationInbox1.setOnClickListener(this)
         binding.navigationBookings.setOnClickListener(this)
-
         binding.icProfile.setOnClickListener(this)
 
     }
@@ -51,7 +46,6 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         binding.imageProperties.setImageResource(R.drawable.ic_home_zyvoo)
         binding.imageInbox.setImageResource(R.drawable.ic_chat_selected)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
-
         binding.imageProfile.setImageResource(R.drawable.ic_profile)
 
 
@@ -60,7 +54,6 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         binding.tvProperties.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
 
     }
@@ -73,13 +66,11 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         binding.imageProperties.setImageResource(R.drawable.ic_home_zyvoo)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
-
         binding.imageProfile.setImageResource(R.drawable.ic_profile_selected)
         //text Color
         binding.tvProperties.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
 
 
@@ -90,14 +81,10 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         binding.imageProperties.setImageResource(R.drawable.ic_home_zyvoo)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1_selected)
-
         binding.imageProfile.setImageResource(R.drawable.ic_profile)
-
-        //text Color
         binding.tvProperties.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
-
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
 
     }
@@ -106,16 +93,11 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         binding.imageProperties.setImageResource(R.drawable.ic_select_home)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
-
         binding.imageProfile.setImageResource(R.drawable.ic_profile)
-
-        //text Color
         binding.tvProperties.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
         binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-
     }
 
 
@@ -126,14 +108,11 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
                 homeResume()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.host_fragment_properties)
             }
-            R.id.navigationInbox->{
+            R.id.navigationInbox_1->{
                 inboxColor()
-
-              //  findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
-
+                //  findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
+                Log.d("TESTING_ANDROID","I AM ON NAVIGATION INBOX")
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostChatFragment)
-
-
             }
             R.id.navigationBookings->{
                 bookingResume()

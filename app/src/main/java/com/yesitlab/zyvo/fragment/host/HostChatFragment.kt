@@ -3,6 +3,7 @@ package com.yesitlab.zyvo.fragment.host
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -33,9 +34,9 @@ class HostChatFragment : Fragment() , View.OnClickListener{
     private var filteredList: MutableList<ChatListModel> = chatList.toMutableList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
 
-        }
+        Log.d("TESTING_ZYVOO_Proj", "onCreate OF CHAT")
+
     }
 
     override fun onCreateView(
@@ -43,6 +44,8 @@ class HostChatFragment : Fragment() , View.OnClickListener{
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+        Log.d("TESTING_ZYVOO_Proj", "onCreateView OF CHAT")
         _binding =
             FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
