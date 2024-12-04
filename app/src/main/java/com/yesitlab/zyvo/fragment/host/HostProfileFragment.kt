@@ -415,7 +415,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 findNavController().navigate(R.id.notificationFragment)
             }
             R.id.textVisitHelpCenter -> {
-                findNavController().navigate(R.id.helpCenterFragment)
+                findNavController().navigate(R.id.helpCenterFragment_host)
             }
             R.id.imageInfoIcon -> {
                 binding.cvInfo.visibility = View.VISIBLE

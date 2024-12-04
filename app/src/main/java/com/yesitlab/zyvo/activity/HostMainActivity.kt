@@ -30,16 +30,18 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        binding.imageProperties.setImageResource(R.drawable.ic_select_home)
+
+        binding.tvProperties.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
+
         binding.navigationProperties.setOnClickListener(this)
+
         binding.navigationInbox.setOnClickListener(this)
+
         binding.navigationBookings.setOnClickListener(this)
+
         binding.icProfile.setOnClickListener(this)
-
-
-
-
-
-
 
     }
 
@@ -120,21 +122,21 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
 
     override fun onClick(p0: View?) {
         when(p0?.id){
-            R.id.navigationDiscover->{
+            R.id.navigationProperties->{
                 homeResume()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.guest_fragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.host_fragment_properties)
             }
             R.id.navigationInbox->{
                 inboxColor()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
+              //  findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
             }
             R.id.navigationBookings->{
                 bookingResume()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.bookingScreenHostFragment)
             }
             R.id.icProfile->{
                 profileColor()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostProfileFragment)
             }
         }
     }

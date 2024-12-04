@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-        <variable
-            name="viewModel"
-            type="com.yesitlab.zyvo.viewmodel.HelpCenterViewModel" />
-    </data>
-
+    tools:context=".fragment.host.HostHelpCenterFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -72,12 +68,12 @@
 
                     <RadioButton
                         android:id="@+id/radioGuest"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/_85sdp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/_5sdp"
-                        android:background="@drawable/toggle_selector"
                         android:button="@null"
-                        android:checked="true"
+                        android:background="@drawable/toggle_selector"
+
                         android:fontFamily="@font/poppins"
                         android:paddingHorizontal="@dimen/_10sdp"
                         android:text="Guest"
@@ -86,13 +82,14 @@
 
                     <RadioButton
                         android:id="@+id/radioHost"
-                        android:layout_width="wrap_content"
+                        android:layout_width="@dimen/_85sdp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:background="@drawable/toggle_selector"
                         android:button="@null"
+                        android:checked="true"
                         android:fontFamily="@font/poppins"
-android:clickable="false"
+                        android:clickable="false"
                         android:paddingHorizontal="@dimen/_12sdp"
                         android:text="Host"
                         android:textAlignment="center"
@@ -235,4 +232,6 @@ android:clickable="false"
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-</layout>
+
+
+</RelativeLayout>

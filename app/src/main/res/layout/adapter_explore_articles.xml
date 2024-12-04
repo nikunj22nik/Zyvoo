@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:orientation="vertical">
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/shapeableImageView"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_200sdp"
+        android:src="@drawable/ic_dummy_img_1"
+        android:layout_marginHorizontal="@dimen/_5sdp"
+        android:scaleType="fitXY"
+        app:shapeAppearanceOverlay="@style/RoundedImageViewShape"
+        android:contentDescription="Rectangular Image with Rounded Corners"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Articles Topic Title"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_13sdp"
+        android:fontFamily="@font/poppins"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply and typesetting industry."
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/black"
+        />
+
+</LinearLayout>
