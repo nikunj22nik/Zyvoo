@@ -126,6 +126,7 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
             }
             R.id.navigationInbox->{
                 inboxColor()
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostChatFragment)
 
             }
             R.id.navigationBookings->{

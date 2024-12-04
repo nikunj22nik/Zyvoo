@@ -216,7 +216,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 //        addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this)
 //        binding.recyclerViewPets.adapter = addPetsAdapter
 
-        addPetsAdapter.updatePets(petsList)
+      //  addPetsAdapter.updatePets(petsList)
 
 
     }

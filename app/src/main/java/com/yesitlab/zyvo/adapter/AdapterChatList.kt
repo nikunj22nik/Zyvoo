@@ -2,18 +2,13 @@ package com.yesitlab.zyvo.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.libraries.places.api.model.kotlin.addressComponents
 import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
@@ -23,7 +18,7 @@ import com.yesitlab.zyvo.model.ChatListModel
 class AdapterChatList(
     var context: Context,
     var list: MutableList<ChatListModel>,
-var listener: OnClickListener, var listener1: OnClickListener1
+    var listener: OnClickListener, var listener1: OnClickListener1?
 ) : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>() {
     // Track the selected position
 
@@ -39,7 +34,7 @@ var listener: OnClickListener, var listener1: OnClickListener1
             binding.textDescription.setText(currentItem.textDescription)
 
             binding.imageProfilePicture.setOnClickListener {
-                listener1.itemClick(position,"image")
+                listener1?.itemClick(position,"image")
             }
 
             // Change the background color based on selectedPosition

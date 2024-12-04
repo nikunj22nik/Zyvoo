@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="500"
+    android:viewportHeight="500">
+    <!-- Shoe sole -->
+    <path
+        android:pathData="M50,400 C100,450,400,450,450,400 C450,350,100,350,50,400 Z"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+
+    <!-- Shoe body -->
+    <path
+        android:pathData="M60,200 C80,150,400,150,440,250 C420,300,100,300,60,250 Z"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+
+    <!-- Shoe toe -->
+    <path
+        android:pathData="M400,250 C450,280,450,320,400,350"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+
+    <!-- Heel curve -->
+    <path
+        android:pathData="M60,200 C30,250,30,350,50,400"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+
+    <!-- Side panel -->
+    <path
+        android:pathData="M80,240 C150,200,300,200,400,250"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+
+    <!-- Shoelace loops -->
+    <path
+        android:pathData="M120,220 L120,240"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+    <path
+        android:pathData="M160,220 L160,240"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+    <path
+        android:pathData="M200,220 L200,240"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+    <path
+        android:pathData="M240,220 L240,240"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+    <path
+        android:pathData="M280,220 L280,240"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+    <path
+        android:pathData="M320,220 L320,240"
+        android:strokeWidth="4"
+        android:strokeColor="#000000"
+        android:fillColor="#ffffff" />
+</vector>

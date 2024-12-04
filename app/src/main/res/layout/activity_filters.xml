@@ -476,6 +476,8 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="No of People"
+                android:fontFamily="@font/poppins"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
@@ -606,6 +608,8 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Property Size (Sq ft)"
+                android:fontFamily="@font/poppins"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
@@ -749,6 +753,8 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Parking space capacity"
+                android:fontFamily="@font/poppins"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
@@ -906,6 +912,8 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bedrooms"
+                android:fontFamily="@font/poppins"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
@@ -1063,6 +1071,8 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bathrooms"
+                android:fontFamily="@font/poppins"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
@@ -1249,6 +1259,8 @@
                     android:layout_marginStart="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_13sdp"
                     android:text="Other Activities"
+                    android:textStyle="bold"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
 
@@ -1280,6 +1292,8 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:text="Amenities"
+                android:fontFamily="@font/poppins"
+                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
 
@@ -1290,6 +1304,18 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_7sdp" />
+
+            <TextView
+                android:id="@+id/underlinedTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_14sdp"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:paddingBottom="4dp"
+                android:text="Show More"
+                android:textColor="@android:color/black"
+                android:textSize="15sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -1314,9 +1340,11 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="Instant Book"
+               android:textStyle="bold"
+                android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
-                android:textStyle="bold" />
+                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1335,7 +1363,8 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp" />
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
+                    android:theme="@style/SCBSwitch"
                     android:id="@+id/idSwitch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -1351,9 +1380,11 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="Self check-in"
+                android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
+                android:textStyle="bold"
                 android:textSize="@dimen/_14sdp"
-                android:textStyle="bold" />
+                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1372,7 +1403,8 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp" />
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
+                    android:theme="@style/SCBSwitch"
                     android:id="@+id/idSwitch_1"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -1408,7 +1440,8 @@
                         android:textStyle="bold" />
                 </RelativeLayout>
 
-                <Switch
+                <androidx.appcompat.widget.SwitchCompat
+                    android:theme="@style/SCBSwitch"
                     android:id="@+id/hjhj"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

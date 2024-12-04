@@ -44,6 +44,7 @@ class AdapterActivityText(var context : Context, var list : MutableList<String>)
 
     }
 
+
     fun updateAdapter(list:MutableList<String>){
         this.list = list
         notifyDataSetChanged()

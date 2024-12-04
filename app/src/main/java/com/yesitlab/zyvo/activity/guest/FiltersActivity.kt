@@ -99,6 +99,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             showPopupWindowForPets(it)
         })
         showingMoreText()
+        showingMoreAmText()
     }
 
     private fun showingMoreText() {
@@ -111,11 +112,75 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         binding.underlinedTextView.paint.isAntiAlias = true
         binding.underlinedTextView.setOnClickListener {
             languageAdapter.updateAdapter(getNationalLanguages())
-            binding.underlinedTextView.visibility =View.GONE
+           // binding.underlinedTextView.visibility =View.GONE
+            showingLessText()
         }
 
 
+
+
     }
+
+
+    private fun showingLessText() {
+        val text = "Show Less"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.underlinedTextView.text = spannableString
+        binding.underlinedTextView.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.underlinedTextView.paint.isAntiAlias = true
+        binding.underlinedTextView.setOnClickListener {
+            languageAdapter.updateAdapter(getNationalLanguages().subList(0,6))
+            showingMoreText()
+        }
+
+
+
+
+    }
+
+
+    private fun showingMoreAmText() {
+        val text = "Show More"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.underlinedTextView1.text = spannableString
+        binding.underlinedTextView1.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.underlinedTextView1.paint.isAntiAlias = true
+        binding.underlinedTextView1.setOnClickListener {
+            amenitiesAdapter.updateAdapter(amenitiesList)
+            // binding.underlinedTextView.visibility =View.GONE
+            showingLessAmText()
+        }
+
+
+
+
+    }
+
+
+    private fun showingLessAmText() {
+        val text = "Show Less"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.underlinedTextView1.text = spannableString
+        binding.underlinedTextView1.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.underlinedTextView1.paint.isAntiAlias = true
+        binding.underlinedTextView1.setOnClickListener {
+            amenitiesAdapter.updateAdapter(amenitiesList.subList(0,6))
+            showingMoreAmText()
+        }
+
+
+
+
+    }
+
+
+
 
     private fun settingBackgroundTaskToBedroom(){
         binding.tvAnyBedrooms.setOnClickListener {
@@ -563,7 +628,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
 
         binding.recyclerAmenties.layoutManager = GridLayoutManager(this,2)
         binding.recyclerAmenties.adapter = amenitiesAdapter
-        amenitiesAdapter.updateAdapter(amenitiesList)
+        amenitiesAdapter.updateAdapter(amenitiesList.subList(0,6))
 
        var p= dateManager.getCurrentMonthAndYear()
         binding.tvMonthName.setText(p.first)

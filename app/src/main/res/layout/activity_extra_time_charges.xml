@@ -181,7 +181,7 @@
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@drawable/bg_four_side_grey_corner"
                         android:orientation="vertical"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
                         <RelativeLayout
                             android:id="@+id/doubt"
@@ -196,7 +196,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
+android:textColor="@color/black"
                                 android:fontFamily="@font/poppins"
                                 android:text="I have a doubt"
                                 android:textSize="@dimen/_11ssp"
@@ -218,8 +218,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
+
                                 android:fontFamily="@font/poppins"
+                                android:textColor="@color/black"
                                 android:text="Available days"
                                 android:textSize="@dimen/_11ssp"
                                 android:textStyle="bold" />
@@ -240,8 +241,9 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerHorizontal="true"
+
                                 android:fontFamily="@font/poppins"
+                                android:textColor="@color/black"
                                 android:text="Other reason"
                                 android:textSize="@dimen/_10ssp"
                                 android:textStyle="bold" />
@@ -265,7 +267,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
                                 android:background="@null"
-                                android:hint="Share a message"
+                                android:hint="Share a message..."
+                                android:textStyle="bold"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/black"
                                 android:textSize="@dimen/_9ssp" />
 
                         </RelativeLayout>

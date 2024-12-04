@@ -24,6 +24,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Cancel"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins"
             android:textSize="@dimen/_15sdp"
             android:textStyle="bold" />
         
@@ -48,9 +50,10 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/poppins"
+
             android:text="Are you sure you want to \ncancel this booking?"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:textColor="#636363"
             android:textSize="@dimen/_12ssp" />
 
         <LinearLayout

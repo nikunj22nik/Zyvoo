@@ -85,7 +85,7 @@ class HostDetailsFragment : Fragment() , OnClickListener, OnItemClickListener {
         super.onViewCreated(view, savedInstanceState)
         initialization()
 
-
+        binding.textAboutDescription.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
         binding.textViewMore.setOnClickListener {
             findNavController().navigate(R.id.listingFragment)
         }

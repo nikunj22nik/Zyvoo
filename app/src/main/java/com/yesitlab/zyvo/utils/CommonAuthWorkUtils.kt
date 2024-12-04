@@ -170,6 +170,10 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
                 dismiss()
             }
             textLoginButton.setOnClickListener{
+                var intent = Intent(context,GuesMain::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
+                context.startActivity(intent)
                 dismiss()
             }
             imageCross.setOnClickListener{
@@ -449,7 +453,6 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
                  */
 
 
-
                 if (text == "Your password has been changed\n" + " successfully."){
                     dialogNewPassword(context,text)
                 }
@@ -462,7 +465,13 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
                     context.startActivity(intent)
                 }
                 else{
-                    dialogSuccess(context,text)
+                    if (text == "Your password has been changed successfully" ){
+                        dialogNewPassword(context,text)
+                    }else{
+                         dialogSuccess(context,text)
+                    }
+
+
                 }
                 dismiss()
             }

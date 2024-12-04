@@ -29,6 +29,7 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.yesitlab.zyvo.AppConstant
 import com.yesitlab.zyvo.DateManager.DateManager
+import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.AdapterActivityText
 import com.yesitlab.zyvo.adapter.AdapterLocationSearch
@@ -158,22 +159,25 @@ class WhereTimeActivity : AppCompatActivity() {
                 binding.llTime.visibility = View.GONE
                 binding.rlActivityRecy.visibility = View.GONE
             }
-            else{
+            else if(it.hasExtra(AppConstant.ACTIVITY)){
                 binding.llTime.visibility = View.GONE
                 adapterActivitivity.updateAdapter(getActivityData())
+
                 if(binding.rlActivityRecy.visibility == View.VISIBLE){
                     binding.rlActivityRecy.visibility = View.GONE
                 }
                 else{
                     binding.rlActivityRecy.visibility = View.VISIBLE
                 }
-                binding.rlActivityRecy.visibility = View.VISIBLE
+              //  binding.rlActivityRecy.visibility = View.VISIBLE
             }
         }
     }
 
     private fun adapterIntialization() {
         adapterActivitivity= AdapterActivityText(this, mutableListOf())
+        adapterActivitivity.updateAdapter(getActivityData())
+        adapterActivitivity.notifyDataSetChanged()
         adapterLocationSearch = AdapterLocationSearch(this, mutableListOf())
         binding.recyclerLocation.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
         binding.recyclerActivity.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
@@ -186,9 +190,23 @@ class WhereTimeActivity : AppCompatActivity() {
         adapterActivitivity.setOnItemClickListener(object : AdapterActivityText.onItemClickListener{
             override fun onItemClick(position: Int) {
                 binding.tvActivityName.setText(actList.get(position))
-                binding.recyclerActivity.visibility = View.GONE
+               binding.rlActivityRecy.visibility = View.GONE
             }
         })
+
+        binding.rlActivity.setOnClickListener {
+            adapterActivitivity.updateAdapter(getActivityData())
+            adapterActivitivity.notifyDataSetChanged()
+
+            binding.recyclerActivity.visibility = View.VISIBLE
+            if(binding.rlActivityRecy.visibility == View.VISIBLE){
+                binding.rlActivityRecy.visibility = View.GONE
+            } else if(binding.rlActivityRecy.visibility == View.GONE) {
+                binding.rlActivityRecy.visibility = View.VISIBLE
+            }
+        }
+
+
 
     }
 
@@ -232,14 +250,16 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.cv1.visibility = View.GONE
         }
         binding.rlActivity.setOnClickListener {
-            adapterActivitivity.updateAdapter(getActivityData())
+//            adapterActivitivity.updateAdapter(getActivityData())
+//            adapterActivitivity.notifyDataSetChanged()
             if(binding.rlActivityRecy.visibility == View.VISIBLE){
                 binding.rlActivityRecy.visibility = View.GONE
-            }
-            else{
+            } else if(binding.rlActivityRecy.visibility == View.GONE) {
                 binding.rlActivityRecy.visibility = View.VISIBLE
             }
         }
+
+
     }
 
     private fun showEditText() {
@@ -304,40 +324,21 @@ class WhereTimeActivity : AppCompatActivity() {
             )
             // val adapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, suggestions)
             adapterLocationSearch.updateAdapter(suggestions.toMutableList())
+
+            adapterLocationSearch.setOnItemClickListener { selectedLocation ->
+                binding.textLocationName.text = "$selectedLocation"
+               // Toast.makeText(context, "Selected Location: $selectedLocation", Toast.LENGTH_SHORT).show()
+                binding.rlLocation.visibility = View.GONE
+                binding.rlTypingView.visibility =View.GONE
+                binding.rlWhere.visibility =View.VISIBLE
+binding.etSearchLocation.clearFocus()
+                binding.etSearchLocation.setText("")
+            }
             //adapter.notifyDataSetChanged()
         }.addOnFailureListener { exception ->
             Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
         }
     }
-
-
-    private fun updateCalendar1() {
-        // Updates the calendar layout with the current and next month views.
-        val calendarLayout = binding.calendarLayout1
-        calendarLayout.removeAllViews()
-        val topMonths = mutableListOf<YearMonth>()
-        val bottomMonths = mutableListOf<YearMonth>()
-
-        // Separate months into top and bottom lists
-        val allMonths = (1..12).map { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            currentMonth.plusMonths(it.toLong())
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
-
-        }
-        allMonths.forEachIndexed { index, month ->
-            if (index % 2 == 0) {
-                topMonths.add(month)
-//            } else {
-//                bottomMonths.add(month)
-            }
-        }
-
-        addMonthView(calendarLayout, currentMonth)
-        // addMonthView(calendarLayout, currentMonth.plusMonths(1))
-    }
-
     private fun updateCalendar() {
         // Updates the calendar layout with the current and next month views.
         val calendarLayout = binding.calendarLayout
@@ -364,6 +365,61 @@ class WhereTimeActivity : AppCompatActivity() {
         addMonthView(calendarLayout, currentMonth)
         // addMonthView(calendarLayout, currentMonth.plusMonths(1))
     }
+
+    private fun updateCalendar1() {
+//        // Updates the calendar layout with the current and next month views.
+//        val calendarLayout = binding.calendarLayout1
+//        calendarLayout.removeAllViews()
+//        val topMonths = mutableListOf<YearMonth>()
+//        val bottomMonths = mutableListOf<YearMonth>()
+//
+//        // Separate months into top and bottom lists
+//        val allMonths = (1..12).map { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            currentMonth.plusMonths(it.toLong())
+//        } else {
+//            TODO("VERSION.SDK_INT < O")
+//        }
+//
+//        }
+//        allMonths.forEachIndexed { index, month ->
+//            if (index % 2 == 0) {
+//                topMonths.add(month)
+////            } else {
+////                bottomMonths.add(month)
+//            }
+//        }
+//
+//        addMonthView(calendarLayout, currentMonth)
+//        // addMonthView(calendarLayout, currentMonth.plusMonths(1))
+
+
+
+        // Updates the calendar layout with the current and next month views.
+        val calendarLayout1 = binding.calendarLayout1
+        calendarLayout1.removeAllViews()
+        val topMonths = mutableListOf<YearMonth>()
+        val bottomMonths = mutableListOf<YearMonth>()
+
+        // Separate months into top and bottom lists
+        val allMonths = (1..12).map { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            currentMonth.plusMonths(it.toLong())
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+
+        }
+        allMonths.forEachIndexed { index, month ->
+            if (index % 2 == 0) {
+                topMonths.add(month)
+//            } else {
+//                bottomMonths.add(month)
+            }
+        }
+
+        addMonthView(calendarLayout1, currentMonth)
+    }
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
@@ -407,6 +463,7 @@ class WhereTimeActivity : AppCompatActivity() {
                     dateView.setOnClickListener {
                         selectedDate = date
                         updateCalendar()
+                        updateCalendar1()
                         // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -443,11 +500,13 @@ class WhereTimeActivity : AppCompatActivity() {
             previous.setOnClickListener {
                 currentMonth = currentMonth.minusMonths(1)
                 updateCalendar()
+                updateCalendar1()
             }
             val next = monthView.findViewById<ImageButton>(R.id.button_next)
             next.setOnClickListener {
                 currentMonth = currentMonth.plusMonths(1)
                 updateCalendar()
+                updateCalendar1()
             }
             parentLayout.addView(monthView)
         } else {

@@ -11,7 +11,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.RatingBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -24,6 +26,7 @@ import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.AdapterAddOn
 import com.yesitlab.zyvo.adapter.guest.AdapterReview
@@ -76,13 +79,15 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         initialization()
 
 
-
+binding.textReportIssueButton.setOnClickListener {
+    dialogReportIssue()
+}
         binding.textReviewBookingButton.setOnClickListener {
             dialogReview()
         }
 
         binding.textMessageTheHostButton.setOnClickListener {
-            findNavController().navigate(R.id.chatFragment)
+            findNavController().navigate(R.id.hostChatFragment)
         }
 
         binding.imageShare.setOnClickListener {
@@ -131,6 +136,113 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
+
+    private fun dialogReportIssue() {
+        var dateManager = DateManager(requireContext())
+        val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(R.layout.report_violation)
+//            window?.attributes = WindowManager.LayoutParams().apply {
+//                copyFrom(window?.attributes)
+//                width = WindowManager.LayoutParams.MATCH_PARENT
+//                height = WindowManager.LayoutParams.MATCH_PARENT
+//            }
+
+            val crossButton: ImageView = findViewById(R.id.img_cross)
+            val submit : RelativeLayout = findViewById(R.id.rl_submit_report)
+            val txtSubmit : TextView = findViewById(R.id.txt_submit)
+
+            submit.setOnClickListener {
+                if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
+                    txtSubmit.setText("Submitted")
+                }else{
+                    dialog.dismiss()
+                    openDialogNotification()
+                }
+            }
+
+            crossButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent) // Optional
+
+
+            show()
+        }
+
+    }
+
+    private fun openDialogNotification(){
+
+        val dialog=Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_notification_report_submit)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            var cross :ImageView = findViewById<ImageView>(R.id.img_cross)
+            var okBtn :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            cross.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+                openDialogSuccess()
+                dialog.dismiss()
+            }
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
+        }
+    }
+    private fun openDialogSuccess(){
+
+        val dialog=Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_success_report_submit)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            var cross :ImageView = findViewById<ImageView>(R.id.img_cross)
+            var okBtn :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            cross.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
             show()
         }
     }
