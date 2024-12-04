@@ -1,6 +1,7 @@
 package com.yesitlab.zyvo.fragment.host
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -34,6 +35,7 @@ class BrowseArticleHostFragment : Fragment() {
 
         arguments?.let {
             if(it.containsKey(AppConstant.type)){
+                Log.d("TESTING_ANDROID", "I am on Type")
                 if(it.getString(AppConstant.type).equals("Article")) binding.tvViewTitle.setText("Browse all Articles") else  binding.tvViewTitle.setText("Browse all Guides")
             }
         }

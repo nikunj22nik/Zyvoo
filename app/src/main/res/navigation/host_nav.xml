@@ -45,7 +45,6 @@
         android:name="com.yesitlab.zyvo.fragment.host.HostChatFragment"
         android:label="HostChatFragment" >
 
-
         <action android:id="@+id/host_profile_frag_to_host_payment_frag"
             app:destination="@id/hostPaymentFragment"
             />
