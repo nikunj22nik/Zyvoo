@@ -21,6 +21,9 @@
         android:theme="@style/Theme.ZYVO"
         tools:targetApi="31">
         <activity
+            android:name=".activity.PlaceOpenActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.HostMainActivity"
             android:exported="false" />
         <activity
