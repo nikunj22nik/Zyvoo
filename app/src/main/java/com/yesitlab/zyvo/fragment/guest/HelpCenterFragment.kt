@@ -19,7 +19,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HelpCenterFragment : Fragment() ,View.OnClickListener, OnClickListener{
-private var _binding : FragmentHelpCenterBinding? = null
+
+    private var _binding : FragmentHelpCenterBinding? = null
     private val binding get() = _binding!!
     private  val viewModel : HelpCenterViewModel by viewModels()
     private lateinit var adapterAllGuides: AdapterAllGuides
@@ -27,33 +28,25 @@ private var _binding : FragmentHelpCenterBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
+        arguments?.let { }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _binding = FragmentHelpCenterBinding.inflate(LayoutInflater.from(requireContext()),container,false)
 
         adapterAllGuides = AdapterAllGuides(requireContext(), arrayListOf(),maxItemsToShow = 4,this)
-binding.recyclerViewGuests.adapter = adapterAllGuides
-
+        binding.recyclerViewGuests.adapter = adapterAllGuides
         viewModel.list.observe(viewLifecycleOwner, Observer {
-            list ->
-            adapterAllGuides.updateItem(list)
+            list -> adapterAllGuides.updateItem(list)
         })
 
         adapterAllArticles = AdapterAllArticles(requireContext(), arrayListOf(),maxItemsToShow = 3,this)
-binding.recyclerViewArticle.adapter = adapterAllArticles
+        binding.recyclerViewArticle.adapter = adapterAllArticles
 
-viewModel.articlesList.observe(viewLifecycleOwner, Observer {
-    articleList ->
-    adapterAllArticles.updateItem(articleList)
-})
+        viewModel.articlesList.observe(viewLifecycleOwner, Observer {
+             articleList -> adapterAllArticles.updateItem(articleList)
+        })
 
         return binding.root
     }
@@ -85,7 +78,7 @@ viewModel.articlesList.observe(viewLifecycleOwner, Observer {
            R.id.textBrowseAllGuides->{
                val bundle = Bundle()
                bundle.putString(AppConstant.textType,"Guides for Guests")
-findNavController().navigate(R.id.browseAllGuidesAndArticlesFragment,bundle)
+               findNavController().navigate(R.id.browseAllGuidesAndArticlesFragment,bundle)
            }
            R.id.textBrowseAllArticle->{
                val bundle = Bundle()

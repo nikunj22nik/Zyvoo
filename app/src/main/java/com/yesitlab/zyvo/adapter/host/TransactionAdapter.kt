@@ -2,6 +2,7 @@ package com.yesitlab.zyvo.adapter.host
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,6 @@ class TransactionAdapter(private var transactionsList: ArrayList<TransactionMode
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
         val itemView = LayoutTransactionBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-
         return TransactionViewHolder(itemView)
     }
 
@@ -25,12 +25,16 @@ class TransactionAdapter(private var transactionsList: ArrayList<TransactionMode
     }
 
     private fun setContentBg(view: View) {
-        view.setBackgroundColor(Color.parseColor("#FFFFFF"))
+        //    view.setBackgroundColor(Color.parseColor("#FFFFFF"))
+        try {
+            view.setBackgroundColor(Color.parseColor("#FFFFFF"))
+        } catch (e: IllegalArgumentException) {
+            Log.e("TransactionAdapter", "Invalid color string", e)
+        }
     }
 
     override fun onBindViewHolder(holder: TransactionViewHolder, position: Int) {
         val rowPos = holder.bindingAdapterPosition
-
         if (rowPos == 0) {
             // Header Cells. Main Headings appear here
             holder.binding.profileImage.visibility = View.GONE
@@ -44,7 +48,8 @@ class TransactionAdapter(private var transactionsList: ArrayList<TransactionMode
                 binding.tvDate.text = "Date"
             }
 
-        } else {
+        }
+        else {
             val modal = transactionsList[rowPos - 1]
             holder.binding.profileImage.visibility = View.VISIBLE
 
@@ -77,8 +82,8 @@ class TransactionAdapter(private var transactionsList: ArrayList<TransactionMode
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateItem(newList : ArrayList<TransactionModel>){
-        this.transactionsList = newList
-notifyDataSetChanged()
+         this.transactionsList = newList
+         notifyDataSetChanged()
     }
 
     inner class TransactionViewHolder(var binding : LayoutTransactionBinding) : RecyclerView.ViewHolder(binding.root) {

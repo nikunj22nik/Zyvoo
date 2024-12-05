@@ -1,5 +1,6 @@
 package com.yesitlab.zyvo.fragment.host
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import android.widget.TextView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.PlaceOpenActivity
 import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
 import com.yesitlab.zyvo.adapter.host.MyPlacesHostAdapter
 import com.yesitlab.zyvo.databinding.FragmentMyPlacesBinding
@@ -41,9 +43,8 @@ class MyPlacesFragment : Fragment(),View.OnClickListener {
         adapter = MyPlacesHostAdapter(requireContext(), loadDummyData())
         binding.recyclerMyPlaces.adapter = adapter
         binding.imgFilter.setOnClickListener(this)
-
         binding.rlAddNewPlace.setOnClickListener(this)
-
+        binding.tvPlaces.setOnClickListener(this)
 
         binding.rlAddNewPlace1.setOnClickListener(this)
 
@@ -151,6 +152,10 @@ class MyPlacesFragment : Fragment(),View.OnClickListener {
 
             R.id.rl_add_new_place_1 ->{
                 findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag)
+            }
+            R.id.tv_places ->{
+                var intent = Intent(requireContext(),PlaceOpenActivity::class.java)
+                startActivity(intent)
             }
         }
     }

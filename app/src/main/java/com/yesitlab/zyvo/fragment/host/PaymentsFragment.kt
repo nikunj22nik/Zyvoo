@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -21,6 +22,7 @@ import android.widget.ToggleButton
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.skydoves.powerspinner.PowerSpinnerView
@@ -37,27 +39,27 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener {
 
-    private var _binding: FragmentPaymentsBinding? = null
-    private val binding get() = _binding!!
-    var close = 0;
-    private val viewModel: PaymentViewModel by lazy {
-        ViewModelProvider(this)[PaymentViewModel::class.java]
-    }
-    lateinit var adapter: TransactionAdapter
-    lateinit var adapter1: PaymentAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            //  param1 = it.getString(ARG_PARAM1)
-            //  param2 = it.getString(ARG_PARAM2)
-        }
-    }
+         var _binding: FragmentPaymentsBinding? = null
+       val binding get() = _binding!!
+         var close = 0;
+
+    val viewModel: PaymentViewModel by lazy {
+            ViewModelProvider(this)[PaymentViewModel::class.java]
+         }
+
+         lateinit var adapter: TransactionAdapter
+
+         lateinit var adapter1: PaymentAdapter
+
+         override fun onCreate(savedInstanceState: Bundle?) {
+           super.onCreate(savedInstanceState)
+           arguments?.let {}
+           Log.d("TESTING_ZYVOO_PROJ","i AM HERE IN Payment fragment")
+         }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _binding = DataBindingUtil.inflate(inflater, R.layout.fragment_payments, container, false)
         binding.viewmodel = viewModel
@@ -66,14 +68,9 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
         binding.rvTransactions.layoutManager = LinearLayoutManager(requireContext())
         adapter = TransactionAdapter(arrayListOf())
         binding.rvTransactions.adapter = adapter
-
         viewModel.list.observe(viewLifecycleOwner, Observer {
             adapter.updateItem(it)
         })
-
-
-
-
         adapter1 = PaymentAdapter(requireContext(), mutableListOf())
 
         binding.rcvPaymentCard.adapter = adapter1
@@ -116,9 +113,6 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
                 }
             }
         }
-
-
-
         binding.imageFilter.setOnClickListener {
             val dialog1 = FilterPaymentStatusFragment()
             dialog1.setDialogListener(this)
@@ -126,18 +120,16 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
 
 
         }
-
         binding.btnWithdrawFunds.setOnClickListener {
             dialogWithdraw()
         }
-
-
         binding.textAddPyoutMethodButton.setOnClickListener {
             dialogSelectPaymentMethod()
         }
 
-
-
+        binding.imageBackButton.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
         return binding.root
     }
@@ -249,10 +241,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
                 }
 
             }
-
-
             btnAddPayment.setOnClickListener { dismiss() }
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
@@ -324,12 +313,10 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
 
     }
 
-
-
-    override fun onDestroyView() {
+      override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
-    }
+          _binding = null
+      }
 
     override fun onSubmitClicked() {
         TODO("Not yet implemented")

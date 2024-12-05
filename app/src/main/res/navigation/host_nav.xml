@@ -5,10 +5,9 @@
     android:id="@+id/host_nav"
     app:startDestination="@id/host_fragment_properties">
 
-
     <fragment android:id="@+id/host_fragment_properties"
         android:name="com.yesitlab.zyvo.fragment.host.MyPlacesFragment"
-        android:label="guestdiscoverfragement"
+        android:label="myplacesfragment"
         >
         <action android:id="@+id/host_fragment_property_to_host_manage_property_frag"
             app:destination="@id/host_manage_property_frag"
@@ -19,15 +18,19 @@
         android:name="com.yesitlab.zyvo.fragment.host.ManagePlaceFragment"
         android:label="manageFragment"
         />
+
     <fragment
         android:id="@+id/hostProfileFragment"
         android:name="com.yesitlab.zyvo.fragment.host.HostProfileFragment"
         android:label="fragment_host_profile"
+
         tools:layout="@layout/fragment_host_profile" />
+
     <fragment
         android:id="@+id/bookingScreenHostFragment"
         android:name="com.yesitlab.zyvo.fragment.host.BookingScreenHostFragment"
         android:label="BookingScreenHostFragment" />
+
     <fragment
         android:id="@+id/reviewBookingHostFragment"
         android:name="com.yesitlab.zyvo.fragment.host.ReviewBookingHostFragment"
@@ -36,10 +39,57 @@
         android:id="@+id/hostChatDetailsFragment"
         android:name="com.yesitlab.zyvo.fragment.host.HostChatDetailsFragment"
         android:label="HostChatDetailsFragment" />
+
     <fragment
         android:id="@+id/hostChatFragment"
         android:name="com.yesitlab.zyvo.fragment.host.HostChatFragment"
-        android:label="HostChatFragment" />
+        android:label="HostChatFragment" >
 
+        <action android:id="@+id/host_profile_frag_to_host_payment_frag"
+            app:destination="@id/hostPaymentFragment"
+            />
+    </fragment>
+
+    <fragment android:id="@+id/hostPaymentFragment"
+        android:name="com.yesitlab.zyvo.fragment.host.PaymentsFragment"
+        android:label="host_payment"
+        />
+
+    <fragment android:id="@+id/language_fragment_host"
+        android:name="com.yesitlab.zyvo.fragment.host.LanguageFragment"
+        android:label="language_fragment_host"
+        />
+
+    <fragment android:id="@+id/feedbackFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.FeedbackFragment"
+        android:label="Feedback_Fragment"
+        />
+
+    <fragment
+        android:id="@+id/privacyPolicyFragment"
+        android:name="com.yesitlab.zyvo.fragment.guest.PrivacyPolicyFragment"
+        android:label="fragment_privacy_policy"
+        tools:layout="@layout/fragment_privacy_policy" />
+
+    <fragment
+        android:id="@+id/notificationFragment"
+        android:name="com.yesitlab.zyvo.fragment.both.NotificationFragment"
+        android:label="NotificationFragment" />
+
+    <fragment
+        android:id="@+id/helpCenterFragment_host"
+        android:name="com.yesitlab.zyvo.fragment.host.HostHelpCenterFragment"
+        android:label="HelpCenterFragment" />
+
+    <fragment
+        android:id="@+id/browse_article_host"
+        android:name="com.yesitlab.zyvo.fragment.host.BrowseArticleHostFragment"
+        android:label="BrowseArticleHost"
+        />
+
+    <fragment android:id="@+id/browse_aricle_details"
+        android:name="com.yesitlab.zyvo.fragment.host.BrowseGuideArtcileDetailFragment"
+        android:label="Browse Article Details"
+        />
 
 </navigation>

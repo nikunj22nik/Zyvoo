@@ -10,7 +10,9 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
+import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Locale
@@ -57,6 +59,52 @@ class DateManager(var context : Context) {
         val year = currentDate.year
 
         return Pair(monthName, year)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun getCurrentWeek(): List<String> {
+        val today = LocalDate.now()
+        val startOfWeek = today.minusDays(today.dayOfWeek.ordinal.toLong()) // Get Monday of the current week
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+        return DayOfWeek.values().mapIndexed { index, dayOfWeek ->
+            val date = startOfWeek.plusDays(index.toLong())
+            val formattedDate = date.format(formatter)
+            val shortDayName =
+                dayOfWeek.name.take(3) // Get the first three characters of the day name
+            "${dayOfWeek.ordinal + 1} - "+"${shortDayName}"
+        }
+
+    }
+
+    fun generateTimeList(): List<String> {
+        val timeList = mutableListOf<String>()
+
+        // Generate times from 12:00 AM to 11:59 PM
+        for (hour in 0..23) {
+            for (minute in 0..59 step 5) { // Using step 5 to have time in 5-minute intervals
+                val ampm = if (hour < 12) "AM" else "PM"
+                val hourIn12Format = if (hour % 12 == 0) 12 else hour % 12
+                val timeString = String.format("%02d:%02d $ampm", hourIn12Format, minute)
+                timeList.add(timeString)
+            }
+        }
+
+        return timeList
+    }
+
+
+    fun generateHourList(): List<String> {
+        val hourList = mutableListOf<String>()
+        hourList.add("")
+        // Generate times from 12:00 AM to 11:00 PM (only full hours)
+        for (hour in 0..23) {
+            val ampm = if (hour < 12) "AM\n" else "PM\n"
+            val hourIn12Format = if (hour % 12 == 0) 12 else hour % 12
+            val timeString = String.format("$ampm %02d:00", hourIn12Format)
+            hourList.add(timeString)
+        }
+
+        return hourList
     }
 
 

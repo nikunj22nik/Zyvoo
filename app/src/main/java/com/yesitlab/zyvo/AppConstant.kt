@@ -1,6 +1,7 @@
 package com.yesitlab.zyvo
 
 import android.icu.util.Calendar
+import com.yesitlab.zyvo.model.CountryLanguage
 
 class AppConstant {
 
@@ -60,6 +61,7 @@ class AppConstant {
         val EVENT_ID: String?="EVENT_ID"
         val PROVIDER_ID: String?="PROVIDER_ID"
         val type:String? = "type"
+        val article :String= "article"
         val VOOPON_ID :String? = "VOOPOM_ID"
         val Id: String?="ID"
         val LATITUDE:String ="latitude"
@@ -98,7 +100,47 @@ class AppConstant {
         val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September",
             "October", "November", "December")
 
-
+        val countriesAndLanguages = listOf(
+            CountryLanguage("United States", "English"),
+            CountryLanguage("Canada", "English"),
+            CountryLanguage("Mexico", "Spanish"),
+            CountryLanguage("Brazil", "Portuguese"),
+            CountryLanguage("Argentina", "Spanish"),
+            CountryLanguage("United Kingdom", "English"),
+            CountryLanguage("Germany", "German"),
+            CountryLanguage("France", "French"),
+            CountryLanguage("Italy", "Italian"),
+            CountryLanguage("Spain", "Spanish"),
+            CountryLanguage("India", "Hindi"),
+            CountryLanguage("China", "Mandarin"),
+            CountryLanguage("Japan", "Japanese"),
+            CountryLanguage("South Korea", "Korean"),
+            CountryLanguage("Russia", "Russian"),
+            CountryLanguage("Australia", "English"),
+            CountryLanguage("Saudi Arabia", "Arabic"),
+            CountryLanguage("Egypt", "Arabic"),
+            CountryLanguage("South Africa", "Afrikaans"),
+            CountryLanguage("Nigeria", "English"),
+            CountryLanguage("Kenya", "Swahili"),
+            CountryLanguage("Turkey", "Turkish"),
+            CountryLanguage("Iran", "Persian"),
+            CountryLanguage("Thailand", "Thai"),
+            CountryLanguage("Vietnam", "Vietnamese"),
+            CountryLanguage("Pakistan", "Urdu"),
+            CountryLanguage("Indonesia", "Indonesian"),
+            CountryLanguage("Poland", "Polish"),
+            CountryLanguage("Ukraine", "Ukrainian"),
+            CountryLanguage("Israel", "Hebrew"),
+            CountryLanguage("Chile", "Spanish"),
+            CountryLanguage("Colombia", "Spanish"),
+            CountryLanguage("Peru", "Spanish"),
+            CountryLanguage("Sweden", "Swedish"),
+            CountryLanguage("Norway", "Norwegian"),
+            CountryLanguage("Denmark", "Danish"),
+            CountryLanguage("Finland", "Finnish"),
+            CountryLanguage("Netherlands", "Dutch"),
+            CountryLanguage("Belgium", "Dutch")
+        )
     }
 
 
