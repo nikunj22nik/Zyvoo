@@ -12,6 +12,17 @@ import com.yesitlab.zyvo.model.TransactionModel
 class ExploreArticlesAdapter(private var transactionsList: MutableList<TransactionModel>) :
     RecyclerView.Adapter<ExploreArticlesAdapter.ViewHolder>() {
 
+    private lateinit var mListener: onItemClickListener
+
+    interface onItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    fun setOnItemClickListener(listener: ExploreArticlesAdapter.onItemClickListener) {
+        mListener = listener
+    }
+
+
     class ViewHolder(var binding: AdapterExploreArticlesBinding) : RecyclerView.ViewHolder(binding.root){}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExploreArticlesAdapter.ViewHolder {
@@ -26,6 +37,9 @@ class ExploreArticlesAdapter(private var transactionsList: MutableList<Transacti
 
     override fun onBindViewHolder(holder: ExploreArticlesAdapter.ViewHolder, position: Int) {
 
+        holder.binding.main.setOnClickListener {
+            mListener.onItemClick(position)
+        }
     }
 
 

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yesitlab.zyvo.AppConstant
 import com.yesitlab.zyvo.R
@@ -33,12 +34,24 @@ class BrowseArticleHostFragment : Fragment() {
 
         binding.recyclerNewArticles.adapter = adapter
 
+        adapter.setOnItemClickListener(object :ExploreArticlesAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+             findNavController().navigate(R.id.browse_aricle_details)
+            }
+
+        })
+
+
         arguments?.let {
             if(it.containsKey(AppConstant.type)){
                 Log.d("TESTING_ANDROID", "I am on Type")
                 if(it.getString(AppConstant.type).equals("Article")) binding.tvViewTitle.setText("Browse all Articles") else  binding.tvViewTitle.setText("Browse all Guides")
             }
         }
+        binding.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
 
         return binding.root
 

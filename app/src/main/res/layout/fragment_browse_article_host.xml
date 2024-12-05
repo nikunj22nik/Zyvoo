@@ -6,6 +6,17 @@
     android:orientation="vertical"
     tools:context=".fragment.host.BrowseArticleHostFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,6 +24,7 @@
         android:weightSum="1"
         >
         <ImageView
+            android:id="@+id/img_back"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_back_icon"
@@ -96,6 +108,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginTop="@dimen/_10sdp"
+        android:nestedScrollingEnabled="false"
         />
 
     <View
@@ -119,6 +132,9 @@
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_70sdp"
         />
 
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

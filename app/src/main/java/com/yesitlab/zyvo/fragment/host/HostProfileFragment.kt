@@ -36,6 +36,7 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.skydoves.powerspinner.PowerSpinnerView
+import com.yesitlab.zyvo.AppConstant
 import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.OnLocalListener
@@ -384,8 +385,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             "Hobbies" -> {
                 if (obj == hobbiesList.size - 1) {
-
-
                 } else {
                     hobbiesList.removeAt(obj)
                     addHobbiesAdapter.updateHobbies(hobbiesList)
@@ -419,7 +418,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 findNavController().navigate(R.id.notificationFragment)
             }
             R.id.textVisitHelpCenter -> {
-                findNavController().navigate(R.id.helpCenterFragment_host)
+                var bundle = Bundle()
+                bundle.putString(AppConstant.type, AppConstant.Host)
+                findNavController().navigate(R.id.helpCenterFragment_host,bundle)
             }
             R.id.imageInfoIcon -> {
                 binding.cvInfo.visibility = View.VISIBLE

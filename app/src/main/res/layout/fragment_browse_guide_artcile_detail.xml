@@ -25,6 +25,7 @@
         android:weightSum="1"
         >
         <ImageView
+            android:id="@+id/img_back"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_back_icon"
@@ -37,6 +38,7 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_35sdp"
             android:layout_weight="0.70"
+            android:visibility="gone"
             android:background="@drawable/bg_two_side_corner"
             >
             <EditText
@@ -68,6 +70,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.15"
             android:src="@drawable/ic_filter"
+            android:visibility="gone"
             android:layout_gravity="center_vertical"
             />
 
@@ -331,6 +334,7 @@
                 android:textStyle="bold"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_70sdp"
                 />
 
 
