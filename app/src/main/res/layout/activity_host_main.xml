@@ -76,7 +76,7 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/navigationInbox"
+                android:id="@+id/navigationInbox_1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

@@ -90,4 +90,20 @@
         android:label="fragment_payments"
         tools:layout="@layout/fragment_payments" />
 
+    <fragment
+        android:id="@+id/helpCenterFragment_host"
+        android:name="com.yesitlab.zyvo.fragment.host.HostHelpCenterFragment"
+        android:label="HelpCenterFragment" />
+
+    <fragment
+        android:id="@+id/browse_article_host"
+        android:name="com.yesitlab.zyvo.fragment.host.BrowseArticleHostFragment"
+        android:label="BrowseArticleHost"
+        />
+
+    <fragment android:id="@+id/browse_aricle_details"
+        android:name="com.yesitlab.zyvo.fragment.host.BrowseGuideArtcileDetailFragment"
+        android:label="Browse Article Details"
+        />
+
 </navigation>

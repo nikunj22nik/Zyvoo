@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.databinding.FragmentBrowseGuideArtcileDetailBinding
 
@@ -24,6 +25,9 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
     ): View? {
         binding = FragmentBrowseGuideArtcileDetailBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
 
+        binding.imgBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
         return binding.root
     }
 

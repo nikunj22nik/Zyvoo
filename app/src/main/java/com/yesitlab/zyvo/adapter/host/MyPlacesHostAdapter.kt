@@ -26,15 +26,13 @@ import com.yesitlab.zyvo.databinding.MyPlacesHostAdapterBinding
 import com.yesitlab.zyvo.model.HostMyPlacesModel
 import com.yesitlab.zyvo.model.LogModel
 import com.yesitlab.zyvo.model.ViewpagerModel
+import com.yesitlab.zyvo.utils.CommonAuthWorkUtils
 import com.yesitlab.zyvo.viewmodel.ImagePopViewModel
 
-class MyPlacesHostAdapter(
-    private val context: Context, private var list: MutableList<HostMyPlacesModel>) :
-    RecyclerView.Adapter<MyPlacesHostAdapter.ViewHolder>()
-{
+class MyPlacesHostAdapter(private val context: Context, private var list: MutableList<HostMyPlacesModel>) :
+    RecyclerView.Adapter<MyPlacesHostAdapter.ViewHolder>() {
 
     private lateinit var mListener: onItemClickListener
-
 
     interface onItemClickListener {
         fun onItemClick(position: Int)
@@ -43,7 +41,6 @@ class MyPlacesHostAdapter(
     fun setOnItemClickListener(listener: MyPlacesHostAdapter.onItemClickListener) {
         mListener = listener
     }
-
 
     class ViewHolder(var binding: MyPlacesHostAdapterBinding) : RecyclerView.ViewHolder(binding.root){}
 
@@ -54,15 +51,20 @@ class MyPlacesHostAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
         val currentItem = list[position]
-
 
         holder.binding.cl1.setOnClickListener {
             //  listener.itemClick(position)
             mListener.onItemClick(position)
             Log.d("Adapter", "cl1 clicked at position $position")
         }
+
+       var commonAuthWorkUtils = CommonAuthWorkUtils(context,null)
+
+        if(!commonAuthWorkUtils.isScreenLarge(context)){
+            holder.binding.cl1.layoutParams.height = 500
+        }
+
         if (position == 1 || position == 3){
             holder.binding.textInstantBook.visibility = View.VISIBLE
             holder.binding.imageReward.visibility = View.VISIBLE
@@ -71,7 +73,6 @@ class MyPlacesHostAdapter(
             holder.binding.textInstantBook.visibility = View.GONE
             holder.binding.imageReward.visibility = View.GONE
         }
-
         // Setup ViewPager and its adapter
         val viewPagerAdapter = ViewPagerAdapter(mutableListOf(),context, object : OnLogClickListener {
             override fun itemClick(items: MutableList<ViewpagerModel>) {
@@ -79,13 +80,12 @@ class MyPlacesHostAdapter(
                 mListener.onItemClick(position)
             }
         })
+
         holder.binding.viewpager2.adapter = viewPagerAdapter
         holder.binding.viewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
+        holder.binding.viewpager2.setOffscreenPageLimit(1);
         // Observe ViewModel inside fragment and update adapter with images
-
-            viewPagerAdapter.updateItem(list.get(position).newList)
-
+        viewPagerAdapter.updateItem(list.get(position).newList)
         // Tab layout mediator (no need to re-bind it every time)
         TabLayoutMediator(holder.binding.tabLayoutForIndicator, holder.binding.viewpager2) { _, _ -> }.attach()
         // Set TextView data
@@ -94,11 +94,9 @@ class MyPlacesHostAdapter(
         holder.binding.textTotal.text = currentItem.textTotal
         holder.binding.textMiles.text = currentItem.textMiles
         holder.binding.textPricePerHours.text = currentItem.textPricePerHours
-
         holder.binding.imageAddWish.setOnClickListener {
             showPopupWindow(holder.binding.imageAddWish,0)
         }
-
     }
 
     override fun getItemCount(): Int {

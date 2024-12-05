@@ -44,6 +44,9 @@ class AdapterAllGuides(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val currentItem = items[position]
 
+        holder.binding.main.setOnClickListener {
+            listener.itemClick(position)
+        }
         holder.bind(currentItem)
     }
 

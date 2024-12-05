@@ -1,6 +1,7 @@
 package com.yesitlab.zyvo.fragment.host
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,11 +31,11 @@ class HostHelpCenterFragment : Fragment(),View.OnClickListener, OnClickListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
+
     }
 
-    override fun onCreateView(inflater: LayoutInflater,
-                              container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) :  View? {
         binding = FragmentHostHelpCenterBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
         adapterAllGuides = AdapterAllGuides(requireContext(), arrayListOf(),maxItemsToShow = 4,this)
         binding.recyclerViewGuests.adapter = adapterAllGuides
@@ -46,9 +47,21 @@ class HostHelpCenterFragment : Fragment(),View.OnClickListener, OnClickListener 
         viewModel.articlesList.observe(viewLifecycleOwner, Observer {
                 articleList -> adapterAllArticles.updateItem(articleList)
         })
-
         binding.textBrowseAllGuides.setOnClickListener(this)
         binding.textBrowseAllArticle.setOnClickListener(this)
+
+        arguments?.let {
+            Log.d("TESTING_ANDROID", "I AM ON CLICK OF HOST Arguments")
+
+            if(it.containsKey(AppConstant.Guest)){
+                binding.radioGuest.isChecked = true
+
+                binding.radioHost.isChecked = false
+            }else{
+                binding.radioHost.isChecked = true
+                binding.radioGuest.isChecked = false
+            }
+        }
 
 
         return binding.root
@@ -59,18 +72,18 @@ class HostHelpCenterFragment : Fragment(),View.OnClickListener, OnClickListener 
             R.id.textBrowseAllGuides ->{
                 var bundle = Bundle()
                 bundle.putString(AppConstant.type ,"Guides")
-                  findNavController().navigate(R.id.browse_article_host)
+                  findNavController().navigate(R.id.browse_article_host,bundle)
             }
             R.id.textBrowseAllArticle ->{
                 var bundle = Bundle()
                 bundle.putString(AppConstant.article,"Article")
-                 findNavController().navigate(R.id.browse_article_host)
+                 findNavController().navigate(R.id.browse_article_host,bundle)
             }
         }
     }
 
     override fun itemClick(obj: Int) {
-
+        findNavController().navigate(R.id.browse_aricle_details)
     }
 
 

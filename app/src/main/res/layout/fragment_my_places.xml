@@ -7,6 +7,18 @@
     android:orientation="vertical"
     tools:context=".fragment.host.MyPlacesFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+
 
 
     <RelativeLayout
@@ -87,7 +99,7 @@
         android:id="@+id/no_data_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <RelativeLayout
             android:id="@+id/rl_add_new_place_1"
@@ -130,17 +142,19 @@
         android:id="@+id/data_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
+        android:layout_marginBottom="@dimen/_75sdp"
         >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_my_places"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:orientation="vertical"
             android:layout_marginTop="@dimen/_15sdp"
             android:layout_marginHorizontal="@dimen/_10sdp"
             />
+
         <RelativeLayout
             android:id="@+id/rl_add_new_place"
             android:layout_width="match_parent"
@@ -178,4 +192,6 @@
 
     </RelativeLayout>
 
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

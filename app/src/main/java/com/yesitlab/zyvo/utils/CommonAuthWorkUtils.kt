@@ -1,7 +1,6 @@
 package com.yesitlab.zyvo.utils
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -27,13 +26,10 @@ import androidx.navigation.NavController
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.AuthActivity
 import com.yesitlab.zyvo.activity.GuesMain
-import com.yesitlab.zyvo.databinding.DialogAddWishlistBinding
 import com.yesitlab.zyvo.session.SessionManager
-import com.yesitlab.zyvo.viewmodel.WishlistViewModel
-import `in`.aabhasjindal.otptextview.OtpTextView
-import org.w3c.dom.Text
 
-class CommonAuthWorkUtils(var context: Context, navController: NavController) {
+
+class CommonAuthWorkUtils(var context: Context, navController: NavController?) {
      var navController = navController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
@@ -586,7 +582,7 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
                 if (text == "Your account is registered \nsuccessfully") {
 
                         Log.d("Navigation", "Navigating to turnNotificationsFragment")
-                    navController.navigate(R.id.turnNotificationsFragment)
+                    navController?.navigate(R.id.turnNotificationsFragment)
 
                 }
                 else if (text == "Your password has been changed\n" + " successfully."){
@@ -704,5 +700,18 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController) {
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
 
+     fun isScreenLarge(context: Context): Boolean {
+        // Get the screen width
+        val display =
+            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+        val width = display.width
+
+        // Convert pixels to dp
+        val density = context.resources.displayMetrics.density
+        val widthInDp = (width / density).toInt()
+
+        // Check if the screen width is greater than 600dp (typical for tablets)
+        return widthInDp > 600
+    }
 
 }

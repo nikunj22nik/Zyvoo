@@ -87,7 +87,6 @@
                         android:layout_marginStart="@dimen/_5sdp"
                         android:background="@drawable/toggle_selector"
                         android:button="@null"
-                        android:checked="true"
                         android:fontFamily="@font/poppins"
                         android:clickable="false"
                         android:paddingHorizontal="@dimen/_12sdp"

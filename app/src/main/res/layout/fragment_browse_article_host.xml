@@ -6,6 +6,17 @@
     android:orientation="vertical"
     tools:context=".fragment.host.BrowseArticleHostFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,6 +24,7 @@
         android:weightSum="1"
         >
         <ImageView
+            android:id="@+id/img_back"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_back_icon"
@@ -56,6 +68,7 @@
             android:layout_gravity="center_vertical"
             />
     </LinearLayout>
+
     <TextView
         android:id="@+id/tv_view_title"
         android:layout_width="wrap_content"
@@ -68,6 +81,7 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:textStyle="bold"
         />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
@@ -75,24 +89,28 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginHorizontal="@dimen/_13sdp"
         />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Our new articles"
         android:textColor="@color/black"
         android:textSize="@dimen/_13ssp"
-        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginStart="@dimen/_16sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:fontFamily="@font/poppins"
         android:textStyle="bold"
         />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_new_articles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginTop="@dimen/_10sdp"
+        android:nestedScrollingEnabled="false"
         />
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_1sdp"
@@ -100,6 +118,7 @@
         android:layout_marginBottom="@dimen/_10sdp"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:background="@color/grey" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -113,6 +132,9 @@
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_70sdp"
         />
 
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

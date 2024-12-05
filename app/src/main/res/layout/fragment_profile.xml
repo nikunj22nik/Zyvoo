@@ -1288,7 +1288,6 @@
             android:id="@+id/textLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_marginTop="@dimen/_20sdp"
             android:drawableStart="@drawable/ic_logout_icon"
             android:drawablePadding="@dimen/_10ssp"
@@ -1307,7 +1306,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10ssp"
-            android:layout_marginBottom="@dimen/_65sdp"
+            android:layout_marginBottom="@dimen/_75sdp"
             android:background="@drawable/button_bg"
             android:fontFamily="@font/poppins"
             android:paddingHorizontal="@dimen/_95sdp"
