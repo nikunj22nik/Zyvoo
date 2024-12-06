@@ -38,6 +38,9 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         binding.navigationBookings.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
 
+//        val currentDestination = findNavController().currentDestination
+//        Log.d("NAVIGATION_DEBUG", "Current Destination: $currentDestination")
+
     }
 
 
@@ -110,9 +113,9 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
             }
             R.id.navigationInbox_1->{
                 inboxColor()
-                //  findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
-                Log.d("TESTING_ANDROID","I AM ON NAVIGATION INBOX")
+
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostChatFragment)
+
             }
             R.id.navigationBookings->{
                 bookingResume()
