@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -62,14 +63,13 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var adapterAddon: AdapterAddOn
     lateinit var adapterReview: AdapterReview
     private lateinit var mapView: MapView
-    private  val viewModel : WishlistViewModel by viewModels()
+    private val viewModel: WishlistViewModel by viewModels()
     private var mMap: GoogleMap? = null
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            YearMonth.now()
+        YearMonth.now()
+    } else {
+        TODO("VERSION.SDK_INT < O")
     }
-    else {
-            TODO("VERSION.SDK_INT < O")
-   }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate: LocalDate? = LocalDate.now()
@@ -77,6 +77,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Log.d("TESTING_ZYVOO", "I am in Restaurent Details")
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -85,7 +86,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             insets
         }
 
-        disableScrollViewScrollForChildView(binding.rlCircularProgress,binding.scrollView)
+        disableScrollViewScrollForChildView(binding.rlCircularProgress, binding.scrollView)
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
@@ -106,14 +107,13 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
 
-binding.imageShare.setOnClickListener{
-    shareApp()
-}
-
-
+        binding.imageShare.setOnClickListener {
+            shareApp()
+        }
 
 
     }
+
     private fun shareApp() {
         val appPackageName = packageName
         val sendIntent = Intent().apply {
@@ -133,10 +133,11 @@ binding.imageShare.setOnClickListener{
         val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
 
         // Create the PopupWindow
-        val popupWindow = PopupWindow(popupView,
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
-            ,
-            ViewGroup.LayoutParams.WRAP_CONTENT)
+        )
 
         // Show the popup window at the bottom right of the TextView
 
@@ -146,21 +147,21 @@ binding.imageShare.setOnClickListener{
     }
 
 
-    fun clickListeners1(){
+    fun clickListeners1() {
         binding.rlParking.setOnClickListener {
-          if(binding.rlParkingView.visibility == View.VISIBLE){
-              binding.rlParkingView.visibility = View.GONE
-          }else{
-              binding.rlParkingView.visibility = View.VISIBLE
-          }
-       }
+            if (binding.rlParkingView.visibility == View.VISIBLE) {
+                binding.rlParkingView.visibility = View.GONE
+            } else {
+                binding.rlParkingView.visibility = View.VISIBLE
+            }
+        }
         binding.rlHostRule.setOnClickListener {
-           if(binding.rlHostRuleView.visibility == View.VISIBLE){
-               binding.rlHostRuleView.visibility = View.GONE
-           }else{
-               binding.rlHostRuleView.visibility = View.VISIBLE
-           }
-       }
+            if (binding.rlHostRuleView.visibility == View.VISIBLE) {
+                binding.rlHostRuleView.visibility = View.GONE
+            } else {
+                binding.rlHostRuleView.visibility = View.VISIBLE
+            }
+        }
 
 
         binding.tvWishlist.setOnClickListener {
@@ -174,9 +175,9 @@ binding.imageShare.setOnClickListener{
     }
 
     private fun showAddWishlistDialog() {
-        val dialogAdapter = WishlistAdapter(this,true, mutableListOf(),null)
+        val dialogAdapter = WishlistAdapter(this, true, mutableListOf(), null)
 
-        val dialog =  Dialog(this, R.style.BottomSheetDialog)
+        val dialog = Dialog(this, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_add_wishlist)
@@ -190,7 +191,7 @@ binding.imageShare.setOnClickListener{
 //            val navHostFragment = (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.fragmentAuthContainerView) as NavHostFragment
 //            val navController = navHostFragment.navController
 
-            val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
+            val rvWishList: RecyclerView = findViewById<RecyclerView>(R.id.rvWishList)
 
             rvWishList.adapter = dialogAdapter
 
@@ -209,14 +210,13 @@ binding.imageShare.setOnClickListener{
             // findViewById<TextView>(R.id.text).text = text
 
 
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
     }
 
-    private fun createWishListDialog(){
-        val dialog =   Dialog(this, R.style.BottomSheetDialog)
+    private fun createWishListDialog() {
+        val dialog = Dialog(this, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_create_wishlist)
@@ -230,9 +230,9 @@ binding.imageShare.setOnClickListener{
             findViewById<ImageView>(R.id.imageCross).setOnClickListener {
                 dismiss()
             }
-            val etDescription =    findViewById<EditText>(R.id.etDescription)
+            val etDescription = findViewById<EditText>(R.id.etDescription)
 
-            val tvMaxCount =    findViewById<TextView>(R.id.textMaxCount)
+            val tvMaxCount = findViewById<TextView>(R.id.textMaxCount)
             setupCharacterCountListener(etDescription, tvMaxCount, 50)
             // findViewById<TextView>(R.id.text).text = text
 
@@ -242,7 +242,11 @@ binding.imageShare.setOnClickListener{
 
     }
 
-    private fun setupCharacterCountListener(editText: EditText, textView: TextView, maxLength: Int) {
+    private fun setupCharacterCountListener(
+        editText: EditText,
+        textView: TextView,
+        maxLength: Int
+    ) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -257,9 +261,9 @@ binding.imageShare.setOnClickListener{
     }
 
 
-    fun share(){
+    fun share() {
         binding.llShare.setOnClickListener {
-          shareText(this,"Here is Zyvoo Promo Code")
+            shareText(this, "Here is Zyvoo Promo Code")
         }
     }
 
@@ -278,22 +282,25 @@ binding.imageShare.setOnClickListener{
         binding.tvReadMoreLess.setCollapsedText("Read More")
         binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
         binding.recyclerAddOn.adapter = adapterAddon
-        binding.recyclerAddOn.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        binding.recyclerAddOn.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerAddOn.isNestedScrollingEnabled = false
-        binding.recyclerReviews.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerReviews.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerReviews.isNestedScrollingEnabled = false
         binding.recyclerReviews.adapter = adapterReview
         val textView = binding.tvShowMore
         textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        binding.tvLocationName.paintFlags = binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        binding.tvLocationName.paintFlags =
+            binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.tvShowMore.setOnClickListener {
             binding.tvShowMore.visibility = View.GONE
             adapterAddon.updateAdapter(getAddOnList())
         }
         binding.startBooking.setOnClickListener {
-            if(binding.tvBookingTxt.text.toString().equals("Start Booking")){
-                   binding.tvBookingTxt.setText("Proceed to Checkout")
-            }else {
+            if (binding.tvBookingTxt.text.toString().equals("Start Booking")) {
+                binding.tvBookingTxt.setText("Proceed to Checkout")
+            } else {
                 var intent = Intent(this@RestaurantDetailActivity, CheckOutPayActivity::class.java)
                 startActivity(intent)
             }
@@ -311,28 +318,27 @@ binding.imageShare.setOnClickListener{
         selectTime()
     }
 
-    fun selectTime(){
+    fun selectTime() {
         binding.rlView1.setOnClickListener {
-           if(binding.text1.text.toString().equals("3 hour")){
-               DateManager(this).showHourSelectionDialog(this) { selectedHour ->
-                 binding.text1.setText(selectedHour.toString())
-               }
-           }
-           else{
-               DateManager(this).showTimePickerDialog(this) { selectedTime ->
-                   binding.text1.setText(selectedTime.toString())
-               }
-           }
+            if (binding.text1.text.toString().equals("3 hour")) {
+                DateManager(this).showHourSelectionDialog(this) { selectedHour ->
+                    binding.text1.setText(selectedHour.toString())
+                }
+            } else {
+                DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                    binding.text1.setText(selectedTime.toString())
+                }
+            }
         }
         binding.rlView2.setOnClickListener {
-           if(binding.text2.text.toString().equals("$30")){
+            if (binding.text2.text.toString().equals("$30")) {
 
-           }else{
-               DateManager(this).showTimePickerDialog(this) { selectedTime ->
-                   binding.text2.setText(selectedTime.toString())
-               }
-           }
-       }
+            } else {
+                DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                    binding.text2.setText(selectedTime.toString())
+                }
+            }
+        }
     }
 
     fun disableScrollViewScrollForChildView(childView: View, scrollView: ScrollView) {

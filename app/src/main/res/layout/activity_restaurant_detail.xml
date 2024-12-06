@@ -28,6 +28,11 @@
             android:src="@drawable/ic_back_icon"
             android:layout_marginStart="@dimen/_15sdp"
             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            
+            />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -58,812 +63,809 @@
 
 
 
-    <com.google.android.flexbox.FlexboxLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:flexWrap="wrap"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        app:justifyContent="flex_start">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Cabin in Peshastins"
-        android:textColor="@color/black"
-        android:fontFamily="@font/poppins"
-        android:textStyle="bold"
-        android:textSize="@dimen/_13sdp"
-
-        />
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_start_new"
-        android:layout_marginTop="@dimen/_10sdp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="5.0"
-        android:layout_marginTop="@dimen/_7sdp"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:textColor="#FCA800"
-        android:textStyle="bold"
-        android:textSize="@dimen/_12sdp"
-        />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_7sdp"
-        android:text="(30 reviews)"
-        />
-
-    </com.google.android.flexbox.FlexboxLayout>
-    <com.google.android.flexbox.FlexboxLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:flexWrap="wrap"
-        android:layout_marginHorizontal="@dimen/_15sdp"
-        app:justifyContent="flex_start"
-        app:alignItems="center"
-        >
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_clock_dot_new"
-            android:scaleType="fitXY"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2 hr 5 min"
-            android:textColor="@color/black"
-            android:fontFamily="@font/poppins"
-            android:layout_marginStart="@dimen/_4sdp"
-            />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_sqrt_feet_small"
-            android:layout_marginEnd="@dimen/_4sdp"
-            android:layout_marginStart="@dimen/_11sdp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="323 sqft"
-            android:textColor="@color/black"
-            android:fontFamily="@font/poppins"
-            />
-        <LinearLayout
-            android:id="@+id/ll_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            >
-        <ImageView
-            android:id="@+id/imageShare"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_share_icon"
-            android:layout_marginEnd="@dimen/_4sdp"
-            android:layout_marginStart="@dimen/_11sdp"
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Share"
-            android:textColor="@color/black"
-            android:fontFamily="@font/poppins"
-            android:layout_marginEnd="@dimen/_6sdp"
-            />
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/tv_wishlist"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_4sdp"
-
-            >
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_wishlist_small"
-            android:layout_marginEnd="@dimen/_4sdp"
-            android:layout_gravity="center_vertical"
-
-            />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Wishlist"
-            android:textColor="@color/black"
-            android:fontFamily="@font/poppins"
-            />
-        </LinearLayout>
-
-    </com.google.android.flexbox.FlexboxLayout>
-    <LinearLayout
-        android:id="@+id/ll_hotel_views"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:weightSum="1"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        >
-        <androidx.cardview.widget.CardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded_left_corners"
-            android:layout_weight="0.49"
-            >
-            <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/shapeableImageView"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_155sdp"
-            android:src="@drawable/ic_dummy_img_1"
-            android:scaleType="fitXY"
-                />
-        </androidx.cardview.widget.CardView>
-
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.03"
-            />
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.45"
-            android:orientation="vertical"
-            >
-            <androidx.cardview.widget.CardView
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_75sdp"
-                android:background="@drawable/rounded_right_corners"
-                >
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_72sdp"
-                android:src="@drawable/ic_dummy_img_2"
-                android:scaleType="fitXY"
-                />
+                android:layout_height="wrap_content"
+                app:flexWrap="wrap"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                app:justifyContent="flex_start">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:text="Cabin in Peshastins"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_13sdp"
 
-            </androidx.cardview.widget.CardView>
+                    />
 
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_70sdp"
-                android:background="@drawable/rounded_right_corners"
-                android:layout_marginTop="@dimen/_4sdp"
-                >
                 <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_75sdp"
-                    android:src="@drawable/ic_dummy_img_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_start_new"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5.0"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:textColor="#FCA800"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/_12sdp"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:text="(30 reviews)"
+                    />
+
+            </com.google.android.flexbox.FlexboxLayout>
+            <com.google.android.flexbox.FlexboxLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:flexWrap="wrap"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                app:justifyContent="flex_start"
+                app:alignItems="center"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_clock_dot_new"
                     android:scaleType="fitXY"
                     />
-            </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 hr 5 min"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_sqrt_feet_small"
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:layout_marginStart="@dimen/_11sdp"
+                    />
 
-    </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="323 sqft"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins"
+                    />
+                <LinearLayout
+                    android:id="@+id/ll_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    >
+                    <ImageView
+                        android:id="@+id/imageShare"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_share_icon"
+                        android:layout_marginEnd="@dimen/_4sdp"
+                        android:layout_marginStart="@dimen/_11sdp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Share"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins"
+                        android:layout_marginEnd="@dimen/_6sdp"
+                        />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/tv_wishlist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_4sdp"
 
+                    >
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_wishlist_small"
+                        android:layout_marginEnd="@dimen/_4sdp"
+                        android:layout_gravity="center_vertical"
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_60sdp"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:background="@drawable/bg_four_side_grey_corner"
-        android:weightSum="1"
-        >
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Wishlist"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins"
+                        />
+                </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/_10sdp"
-            android:orientation="vertical"
-            android:layout_weight="0.45"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$13/hr"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/_12sdp"
-                android:fontFamily="@font/poppins"
-                />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1 hr minimum"
-                android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
-                android:textFontWeight="300"
-                android:textSize="@dimen/_12sdp"
-                />
-
-        </LinearLayout>
-        <View
-            android:layout_width="@dimen/_1sdp"
-            android:layout_height="match_parent"
-            android:background="@color/grey"
-            android:layout_marginVertical="@dimen/_7ssp"
-            />
-
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_7sdp"
-            android:layout_marginTop="@dimen/_9sdp"
-            android:orientation="vertical"
-            android:layout_weight="0.45"
-            >
-            <TextView
-                android:id="@+id/textHourDiscount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="4+ hour discount"
-                android:drawablePadding="@dimen/_3ssp"
-                android:textSize="@dimen/_11sdp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
-                android:textStyle="bold"
-                />
-
-
-            <ImageView
-                android:id="@+id/imageInfo1"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:src="@drawable/ic_info_icon"
-                android:padding="2dp"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:layout_marginStart="@dimen/_4sdp"
-                android:layout_toEndOf="@+id/textHourDiscount"
-                />
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="15% Off"
-                android:layout_below="@+id/textHourDiscount"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                android:fontFamily="@font/poppins"
-                />
-        </RelativeLayout>
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_11sdp"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:background="@drawable/bg_four_side_corner_dark_black"
-        android:orientation="vertical"
-        >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:background="@drawable/bg_outer_manage_place"
-            android:weightSum="2"
-            android:layout_marginBottom="@dimen/_10sdp">
-
-            <TextView
-                android:id="@+id/tv_hour"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="@dimen/_4ssp"
-                android:layout_weight="1"
-                android:fontFamily="@font/poppins"
-                android:gravity="center"
-                android:text="Choose Hours"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:layout_marginStart="@dimen/_5sdp"
-                />
-
-            <TextView
-                android:id="@+id/tv_day"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginVertical="@dimen/_4ssp"
-                android:layout_weight="1"
-                android:fontFamily="@font/poppins"
-                android:gravity="center"
-                android:text="Choose Day"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp" />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/calendar_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:orientation="vertical"
-            android:visibility="visible"
-            />
-
-<!--        <RelativeLayout-->
-<!--            android:id="@+id/rl_circular_progress"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_gravity="center"-->
-<!--            android:layout_marginTop="@dimen/_15sdp"-->
-<!--            android:layout_marginBottom="@dimen/_10sdp"-->
-<!--            android:gravity="center"-->
-<!--            android:visibility="gone">-->
-
-<!--            <com.yesitlab.zyvo.CircularSeekBar-->
-<!--                android:id="@+id/circularSeekBar"-->
-<!--                android:layout_width="197dp"-->
-<!--                android:layout_height="197dp"-->
-<!--                android:layout_centerInParent="true">-->
-
-<!--            </com.yesitlab.zyvo.CircularSeekBar>-->
-
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:layout_width="125dp"-->
-<!--                android:layout_height="125dp"-->
-<!--                android:backgroundTint="@color/white"-->
-<!--                app:cardCornerRadius="60dp"-->
-<!--                android:elevation="70dp"-->
-<!--                android:layout_centerInParent="true">-->
-<!--                <RelativeLayout-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    >-->
-<!--                  &lt;!&ndash; Text in the center &ndash;&gt;-->
-<!--                    <com.yesitlab.zyvo.ObservableTextView-->
-<!--                        android:id="@+id/hoursTextView"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_centerHorizontal="true"-->
-<!--                        android:text="1"-->
-<!--                        android:textColor="@android:color/black"-->
-<!--                        android:textSize="24sp"-->
-<!--                        android:textStyle="bold"/>-->
-
-<!--                    &lt;!&ndash; Label below the number &ndash;&gt;-->
-<!--                    <TextView-->
-<!--                        android:id="@+id/hoursLabel"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:layout_below="@id/hoursTextView"-->
-<!--                        android:layout_centerHorizontal="true"-->
-<!--                        android:text="Hours"-->
-<!--                        android:textColor="@android:color/black"-->
-<!--                        android:textSize="14sp"/>-->
-
-
-<!--                </RelativeLayout>-->
-
-
-<!--            </androidx.cardview.widget.CardView>-->
-
-<!--        </RelativeLayout>-->
-
-
-
-
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv1"
-            android:layout_width="@dimen/_245sdp"
-            android:layout_height="@dimen/_245sdp"
-            app:cardCornerRadius="@dimen/_265sdp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:gravity="center"
-            app:cardElevation="@dimen/_20sdp"
-            android:elevation="@dimen/_200sdp">
-
-
-            <RelativeLayout
-                android:id="@+id/rl_circular_progress"
+            </com.google.android.flexbox.FlexboxLayout>
+            <LinearLayout
+                android:id="@+id/ll_hotel_views"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                >
+                <androidx.cardview.widget.CardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_left_corners"
+                    android:layout_weight="0.49"
+                    >
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/shapeableImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_155sdp"
+                        android:src="@drawable/ic_dummy_img_1"
+                        android:scaleType="fitXY"
+                        />
+                </androidx.cardview.widget.CardView>
+
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.03"
+                    />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.45"
+                    android:orientation="vertical"
+                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_75sdp"
+                        android:background="@drawable/rounded_right_corners"
+                        >
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_72sdp"
+                            android:src="@drawable/ic_dummy_img_2"
+                            android:scaleType="fitXY"
+                            />
+
+
+                    </androidx.cardview.widget.CardView>
+
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_70sdp"
+                        android:background="@drawable/rounded_right_corners"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        >
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_75sdp"
+                            android:src="@drawable/ic_dummy_img_3"
+                            android:scaleType="fitXY"
+                            />
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_60sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="@drawable/bg_four_side_grey_corner"
+                android:weightSum="1"
                 >
 
-                <com.yesitlab.zyvo.CircularSeekBar
-                    android:id="@+id/circularSeekBar"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:orientation="vertical"
+                    android:layout_weight="0.45"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="$13/hr"
+                        android:textColor="@color/black"
+                        android:textFontWeight="400"
+                        android:textSize="@dimen/_12sdp"
+                        android:fontFamily="@font/poppins"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1 hr minimum"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
+                        />
+
+                </LinearLayout>
+                <View
+                    android:layout_width="@dimen/_1sdp"
                     android:layout_height="match_parent"
-                    android:layout_centerInParent="true"
-                    app:cc_endHour="1"
-                    app:cc_borderWidth="@dimen/_42sdp"
-                    app:cc_endIconResource="@drawable/oval_white"
-                    app:cc_fillColor="#4AEAB1"
-                    app:cc_metricMode="clock"
-                    app:cc_startHour="0"
-                    app:cc_tickTextColor="?android:attr/textColorPrimary">
+                    android:background="@color/grey"
+                    android:layout_marginVertical="@dimen/_7ssp"
+                    />
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_7sdp"
+                    android:layout_marginTop="@dimen/_9sdp"
+                    android:orientation="vertical"
+                    android:layout_weight="0.45"
+                    >
+                    <TextView
+                        android:id="@+id/textHourDiscount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="4+ hour discount"
+                        android:drawablePadding="@dimen/_3ssp"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins"
+                        android:textStyle="bold"
+                        />
 
 
-                </com.yesitlab.zyvo.CircularSeekBar>
+                    <ImageView
+                        android:id="@+id/imageInfo1"
+                        android:layout_width="@dimen/_15sdp"
+                        android:layout_height="@dimen/_15sdp"
+                        android:src="@drawable/ic_info_icon"
+                        android:padding="2dp"
+                        android:layout_marginTop="@dimen/_2sdp"
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:layout_toEndOf="@+id/textHourDiscount"
+                        />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="15% Off"
+                        android:layout_below="@+id/textHourDiscount"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        android:fontFamily="@font/poppins"
+                        />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_11sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_four_side_corner_dark_black"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:background="@drawable/bg_outer_manage_place"
+                    android:weightSum="2"
+                    android:layout_marginBottom="@dimen/_10sdp">
+
+                    <TextView
+                        android:id="@+id/tv_hour"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="@dimen/_4ssp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
+                        android:gravity="center"
+                        android:text="Choose Hours"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_13sdp"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_day"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="@dimen/_4ssp"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
+                        android:gravity="center"
+                        android:text="Choose Day"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_13sdp" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/calendar_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    />
+
+                <!--        <RelativeLayout-->
+                <!--            android:id="@+id/rl_circular_progress"-->
+                <!--            android:layout_width="match_parent"-->
+                <!--            android:layout_height="wrap_content"-->
+                <!--            android:layout_gravity="center"-->
+                <!--            android:layout_marginTop="@dimen/_15sdp"-->
+                <!--            android:layout_marginBottom="@dimen/_10sdp"-->
+                <!--            android:gravity="center"-->
+                <!--            android:visibility="gone">-->
+
+                <!--            <com.yesitlab.zyvo.CircularSeekBar-->
+                <!--                android:id="@+id/circularSeekBar"-->
+                <!--                android:layout_width="197dp"-->
+                <!--                android:layout_height="197dp"-->
+                <!--                android:layout_centerInParent="true">-->
+
+                <!--            </com.yesitlab.zyvo.CircularSeekBar>-->
+
+                <!--            <androidx.cardview.widget.CardView-->
+                <!--                android:layout_width="125dp"-->
+                <!--                android:layout_height="125dp"-->
+                <!--                android:backgroundTint="@color/white"-->
+                <!--                app:cardCornerRadius="60dp"-->
+                <!--                android:elevation="70dp"-->
+                <!--                android:layout_centerInParent="true">-->
+                <!--                <RelativeLayout-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_gravity="center"-->
+                <!--                    >-->
+                <!--                  &lt;!&ndash; Text in the center &ndash;&gt;-->
+                <!--                    <com.yesitlab.zyvo.ObservableTextView-->
+                <!--                        android:id="@+id/hoursTextView"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_centerHorizontal="true"-->
+                <!--                        android:text="1"-->
+                <!--                        android:textColor="@android:color/black"-->
+                <!--                        android:textSize="24sp"-->
+                <!--                        android:textStyle="bold"/>-->
+
+                <!--                    &lt;!&ndash; Label below the number &ndash;&gt;-->
+                <!--                    <TextView-->
+                <!--                        android:id="@+id/hoursLabel"-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:layout_below="@id/hoursTextView"-->
+                <!--                        android:layout_centerHorizontal="true"-->
+                <!--                        android:text="Hours"-->
+                <!--                        android:textColor="@android:color/black"-->
+                <!--                        android:textSize="14sp"/>-->
+
+
+                <!--                </RelativeLayout>-->
+
+
+                <!--            </androidx.cardview.widget.CardView>-->
+
+                <!--        </RelativeLayout>-->
+
+
+
+
 
                 <androidx.cardview.widget.CardView
-                    android:layout_width="@dimen/_157sdp"
-                    android:layout_height="@dimen/_157sdp"
-                    android:layout_centerInParent="true"
-                    android:backgroundTint="@color/white"
-                    app:cardElevation="@dimen/_15sdp"
-                    android:elevation="@dimen/_200sdp"
-                    app:cardCornerRadius="@dimen/_170sdp">
+                    android:id="@+id/cv1"
+                    android:layout_width="@dimen/_245sdp"
+                    android:layout_height="@dimen/_245sdp"
+                    app:cardCornerRadius="@dimen/_265sdp"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:gravity="center"
+                    app:cardElevation="@dimen/_20sdp"
+                    android:elevation="@dimen/_200sdp">
 
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
+                    <RelativeLayout
+                        android:id="@+id/rl_circular_progress"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        >
 
-                        <TextView
-                            android:id="@+id/textTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/_10sdp"
-                            android:fontFamily="@font/poppins"
-                            android:gravity="center"
-                            android:textAlignment="center"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_30ssp"
-                            android:textStyle="bold"
-                            app:layout_constraintBottom_toBottomOf="parent"
-
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <TextView
-                            android:id="@+id/textHours"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:gravity="center"
-                            android:text="Hours"
-                            android:textAlignment="center"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_22sdp"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textTime" />
+                        <com.yesitlab.zyvo.CircularSeekBar
+                            android:id="@+id/circularSeekBar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true"
+                            app:cc_endHour="1"
+                            app:cc_borderWidth="@dimen/_42sdp"
+                            app:cc_endIconResource="@drawable/oval_white"
+                            app:cc_fillColor="#4AEAB1"
+                            app:cc_metricMode="clock"
+                            app:cc_startHour="0"
+                            app:cc_tickTextColor="?android:attr/textColorPrimary">
 
 
-                    </androidx.constraintlayout.widget.ConstraintLayout>
+                        </com.yesitlab.zyvo.CircularSeekBar>
 
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="@dimen/_157sdp"
+                            android:layout_height="@dimen/_157sdp"
+                            android:layout_centerInParent="true"
+                            android:backgroundTint="@color/white"
+                            app:cardElevation="@dimen/_15sdp"
+                            android:elevation="@dimen/_200sdp"
+                            app:cardCornerRadius="@dimen/_170sdp">
+
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <TextView
+                                    android:id="@+id/textTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/_10sdp"
+                                    android:fontFamily="@font/poppins"
+                                    android:gravity="center"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_30ssp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/textHours"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="true"
+                                    android:gravity="center"
+                                    android:text="Hours"
+                                    android:textAlignment="center"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/_22sdp"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/textTime" />
+
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                        </androidx.cardview.widget.CardView>
+
+                    </RelativeLayout>
 
                 </androidx.cardview.widget.CardView>
 
-            </RelativeLayout>
 
-        </androidx.cardview.widget.CardView>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:background="@color/grey"
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_1sdp"
-            android:background="@color/grey"
-
-            android:layout_marginHorizontal="@dimen/_15sdp"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:layout_marginHorizontal="@dimen/_24sdp"
-            android:weightSum="1"
-            android:layout_marginTop="@dimen/_10sdp"
-            >
-
-            <RelativeLayout
-                android:id="@+id/rl_view1"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_weight="0.4"
-                android:background="@drawable/bg_two_side_corner">
-
-                <ImageView
-                    android:id="@+id/cl1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_clock_new"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_7sdp"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
                     />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:layout_marginHorizontal="@dimen/_24sdp"
+                    android:weightSum="1"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    >
+
+                    <RelativeLayout
+                        android:id="@+id/rl_view1"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_weight="0.4"
+                        android:background="@drawable/bg_two_side_corner">
+
+                        <ImageView
+                            android:id="@+id/cl1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_clock_new"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_7sdp"
+                            />
+                        <TextView
+                            android:id="@+id/text1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="3 hour"
+                            android:layout_toRightOf="@id/cl1"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/poppins"
+                            />
+                        <ImageView
+                            android:id="@+id/ic_drop_down_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_drop_down"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_centerVertical="true"
+                            />
+
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        />
+
+                    <RelativeLayout
+                        android:id="@+id/rl_view2"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_weight="0.4"
+                        android:background="@drawable/bg_two_side_corner">
+
+                        <ImageView
+                            android:id="@+id/cl2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_clock_new"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_7sdp"
+                            />
+                        <TextView
+                            android:id="@+id/text2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="$30"
+                            android:layout_toRightOf="@id/cl2"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_6sdp"
+                            android:textColor="@color/black"
+                            android:fontFamily="@font/poppins"
+                            />
+                        <ImageView
+                            android:id="@+id/ic_drop_down_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_drop_down"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_centerVertical="true"
+                            />
+                    </RelativeLayout>
+
+
+
+
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/start_booking"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_marginHorizontal="@dimen/_19sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:background="@drawable/bg_two_side_corners_green"
+                    >
+
+                    <TextView
+                        android:id="@+id/tv_booking_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Start Booking"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_14sdp"
+                        />
+                </RelativeLayout>
+
+
                 <TextView
-                    android:id="@+id/text1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3 hour"
-                    android:layout_toRightOf="@id/cl1"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:textColor="@color/black"
+                    android:text="Cancel for free within 24 hours"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
                     />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:paddingVertical="@dimen/_10sdp"
+                android:background="@drawable/bg_four_side_corner_black"
+                >
                 <ImageView
-                    android:id="@+id/ic_drop_down_1"
+                    android:id="@+id/imageInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_drop_down"
+                    android:src="@drawable/ic_eye_icon_white"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_centerVertical="true"
                     />
 
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                />
-
-            <RelativeLayout
-                android:id="@+id/rl_view2"
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_weight="0.4"
-                android:background="@drawable/bg_two_side_corner">
-
                 <ImageView
-                    android:id="@+id/cl2"
+                    android:id="@+id/img_shield"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_clock_new"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_7sdp"
+                    android:src="@drawable/ic_sheild_icon"
+                    android:layout_marginStart="@dimen/_13sdp"
                     />
                 <TextView
-                    android:id="@+id/text2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$30"
-                    android:layout_toRightOf="@id/cl2"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_6sdp"
-                    android:textColor="@color/black"
+                    android:layout_toRightOf="@id/img_shield"
+                    android:text="ZYVO Shield"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp"
                     android:fontFamily="@font/poppins"
                     />
-                <ImageView
-                    android:id="@+id/ic_drop_down_2"
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_drop_down"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_centerVertical="true"
+                    android:text="Our Commitment to Your Safety \n and Protection on Zyvo"
+                    android:layout_below="@id/img_shield"
+                    android:textColor="@color/white"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:textSize="@dimen/_12sdp"
+                    android:fontFamily="@font/poppins"
                     />
+
+
             </RelativeLayout>
 
+            <!--   <LinearLayout-->
+            <!--       android:layout_width="match_parent"-->
+            <!--       android:layout_height="wrap_content"-->
+            <!--       android:layout_marginTop="@dimen/_10sdp"-->
+            <!--       android:layout_marginHorizontal="@dimen/_15sdp"-->
+            <!--       android:background="@drawable/bg_four_side_grey_corner"-->
+            <!--       android:weightSum="1"-->
+            <!--       >-->
+            <!--       <LinearLayout-->
+            <!--           android:layout_width="0dp"-->
+            <!--           android:layout_height="wrap_content"-->
+            <!--           android:layout_weight="0.4"-->
+            <!--           android:orientation="vertical"-->
+            <!--           android:layout_marginVertical="@dimen/_10sdp"-->
+            <!--           android:layout_marginStart="@dimen/_5sdp"-->
+            <!--           >-->
+            <!--           <TextView-->
+            <!--               android:layout_width="wrap_content"-->
+            <!--               android:layout_height="wrap_content"-->
+            <!--               android:text="Hosted by"-->
+            <!--               android:textColor="@color/black"-->
+            <!--               android:textSize="@dimen/_13sdp"-->
+            <!--               />-->
+            <!--           <LinearLayout-->
+            <!--               android:layout_width="match_parent"-->
+            <!--               android:layout_height="wrap_content"-->
+            <!--               android:layout_marginTop="@dimen/_10sdp"-->
+            <!--               >-->
+            <!--               <de.hdodenhof.circleimageview.CircleImageView-->
+            <!--                   android:id="@+id/profile_image_1"-->
+            <!--                   android:layout_width="26dp"-->
+            <!--                   android:layout_height="26dp"-->
+            <!--                   android:src="@drawable/ic_img_girl_dumm"-->
+            <!--                   app:civ_border_width="1dp"-->
+            <!--                   app:civ_border_color="#FF000000"/>-->
+
+            <!--               <TextView-->
+            <!--                   android:layout_width="wrap_content"-->
+            <!--                   android:layout_height="wrap_content"-->
+            <!--                   android:text="Mia J."-->
+            <!--                   android:textColor="@color/black"-->
+            <!--                   android:layout_marginStart="@dimen/_7sdp"-->
+            <!--                   android:textSize="@dimen/_12sdp"-->
+            <!--                   />-->
+            <!--               <ImageView-->
+            <!--                   android:layout_width="wrap_content"-->
+            <!--                   android:layout_height="wrap_content"-->
+            <!--                   android:src="@drawable/ic_badge_img"-->
+            <!--                   android:layout_marginStart="@dimen/_4ssp"-->
+            <!--                   />-->
+
+            <!--           </LinearLayout>-->
 
 
+            <!--       </LinearLayout>-->
+
+            <!--       <View-->
+            <!--           android:layout_width="0dp"-->
+            <!--           android:layout_height="match_parent"-->
+            <!--           android:layout_marginVertical="@dimen/_10sdp"-->
+            <!--           android:background="@color/grey"-->
+            <!--           android:layout_marginHorizontal="@dimen/_3sdp"-->
+            <!--           android:layout_weight="0.01"-->
+            <!--           />-->
+
+            <!--       <LinearLayout-->
+            <!--           android:layout_width="0dp"-->
+            <!--           android:layout_height="wrap_content"-->
+            <!--           android:layout_weight="0.5"-->
+            <!--           android:orientation="vertical"-->
+            <!--           android:layout_marginVertical="@dimen/_10sdp"-->
+            <!--           android:layout_marginStart="@dimen/_5sdp"-->
+            <!--           android:layout_gravity="center_horizontal|center_vertical"-->
+            <!--           >-->
+            <!--           <TextView-->
+            <!--               android:layout_width="wrap_content"-->
+            <!--               android:layout_height="wrap_content"-->
+            <!--               android:text="Respond within 1 hr"-->
+            <!--               android:textColor="@color/black"-->
+            <!--               android:textSize="@dimen/_13sdp"-->
+            <!--               android:drawableStart="@drawable/ic_clock_dot_new"-->
+            <!--               android:drawablePadding="@dimen/_2sdp"-->
+            <!--               />-->
+
+            <!--           <RelativeLayout-->
+            <!--               android:layout_width="match_parent"-->
+            <!--               android:layout_height="@dimen/_35sdp"-->
+            <!--               android:layout_marginTop="@dimen/_4ssp"-->
+            <!--               android:background="@drawable/bg_four_corner_light_black"-->
+            <!--               >-->
+
+            <!--               <TextView-->
+            <!--                   android:layout_width="wrap_content"-->
+            <!--                   android:layout_height="wrap_content"-->
+            <!--                   android:text="Message the host"-->
+            <!--                   android:textColor="@color/black"-->
+            <!--                   android:layout_centerInParent="true"-->
+            <!--                   android:layout_marginTop="@dimen/_5sdp"-->
+            <!--                   />-->
+
+            <!--           </RelativeLayout>-->
 
 
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/start_booking"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_35sdp"
-            android:layout_marginHorizontal="@dimen/_19sdp"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:background="@drawable/bg_two_side_corners_green"
-            >
-
-            <TextView
-                android:id="@+id/tv_booking_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Start Booking"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"
-                android:fontFamily="@font/poppins"
-                android:textSize="@dimen/_14sdp"
-                />
-        </RelativeLayout>
+            <!--       </LinearLayout>-->
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel for free within 24 hours"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:fontFamily="@font/poppins"
-            />
-
-    </LinearLayout>
-
-   <RelativeLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_marginTop="@dimen/_15sdp"
-       android:layout_marginHorizontal="@dimen/_15sdp"
-       android:paddingVertical="@dimen/_10sdp"
-       android:background="@drawable/bg_four_side_corner_black"
-       >
-       <ImageView
-           android:id="@+id/imageInfo"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:src="@drawable/ic_eye_icon_white"
-           android:layout_alignParentEnd="true"
-           android:layout_marginEnd="@dimen/_10sdp"
-           />
-
-       <ImageView
-           android:id="@+id/img_shield"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:src="@drawable/ic_sheild_icon"
-           android:layout_marginStart="@dimen/_13sdp"
-           />
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_toRightOf="@id/img_shield"
-           android:text="ZYVO Shield"
-           android:layout_marginStart="@dimen/_10sdp"
-           android:textColor="@color/white"
-           android:textSize="@dimen/_14sdp"
-           android:fontFamily="@font/poppins"
-           />
-
-       <TextView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Our Commitment to Your Safety \n and Protection on Zyvo"
-           android:layout_below="@id/img_shield"
-           android:textColor="@color/white"
-           android:layout_marginStart="@dimen/_15sdp"
-           android:layout_marginTop="@dimen/_10sdp"
-           android:textSize="@dimen/_12sdp"
-           android:fontFamily="@font/poppins"
-           />
-
-
-   </RelativeLayout>
-  
-<!--   <LinearLayout-->
-<!--       android:layout_width="match_parent"-->
-<!--       android:layout_height="wrap_content"-->
-<!--       android:layout_marginTop="@dimen/_10sdp"-->
-<!--       android:layout_marginHorizontal="@dimen/_15sdp"-->
-<!--       android:background="@drawable/bg_four_side_grey_corner"-->
-<!--       android:weightSum="1"-->
-<!--       >-->
-<!--       <LinearLayout-->
-<!--           android:layout_width="0dp"-->
-<!--           android:layout_height="wrap_content"-->
-<!--           android:layout_weight="0.4"-->
-<!--           android:orientation="vertical"-->
-<!--           android:layout_marginVertical="@dimen/_10sdp"-->
-<!--           android:layout_marginStart="@dimen/_5sdp"-->
-<!--           >-->
-<!--           <TextView-->
-<!--               android:layout_width="wrap_content"-->
-<!--               android:layout_height="wrap_content"-->
-<!--               android:text="Hosted by"-->
-<!--               android:textColor="@color/black"-->
-<!--               android:textSize="@dimen/_13sdp"-->
-<!--               />-->
-<!--           <LinearLayout-->
-<!--               android:layout_width="match_parent"-->
-<!--               android:layout_height="wrap_content"-->
-<!--               android:layout_marginTop="@dimen/_10sdp"-->
-<!--               >-->
-<!--               <de.hdodenhof.circleimageview.CircleImageView-->
-<!--                   android:id="@+id/profile_image_1"-->
-<!--                   android:layout_width="26dp"-->
-<!--                   android:layout_height="26dp"-->
-<!--                   android:src="@drawable/ic_img_girl_dumm"-->
-<!--                   app:civ_border_width="1dp"-->
-<!--                   app:civ_border_color="#FF000000"/>-->
-
-<!--               <TextView-->
-<!--                   android:layout_width="wrap_content"-->
-<!--                   android:layout_height="wrap_content"-->
-<!--                   android:text="Mia J."-->
-<!--                   android:textColor="@color/black"-->
-<!--                   android:layout_marginStart="@dimen/_7sdp"-->
-<!--                   android:textSize="@dimen/_12sdp"-->
-<!--                   />-->
-<!--               <ImageView-->
-<!--                   android:layout_width="wrap_content"-->
-<!--                   android:layout_height="wrap_content"-->
-<!--                   android:src="@drawable/ic_badge_img"-->
-<!--                   android:layout_marginStart="@dimen/_4ssp"-->
-<!--                   />-->
-
-<!--           </LinearLayout>-->
-
-
-<!--       </LinearLayout>-->
-
-<!--       <View-->
-<!--           android:layout_width="0dp"-->
-<!--           android:layout_height="match_parent"-->
-<!--           android:layout_marginVertical="@dimen/_10sdp"-->
-<!--           android:background="@color/grey"-->
-<!--           android:layout_marginHorizontal="@dimen/_3sdp"-->
-<!--           android:layout_weight="0.01"-->
-<!--           />-->
-
-<!--       <LinearLayout-->
-<!--           android:layout_width="0dp"-->
-<!--           android:layout_height="wrap_content"-->
-<!--           android:layout_weight="0.5"-->
-<!--           android:orientation="vertical"-->
-<!--           android:layout_marginVertical="@dimen/_10sdp"-->
-<!--           android:layout_marginStart="@dimen/_5sdp"-->
-<!--           android:layout_gravity="center_horizontal|center_vertical"-->
-<!--           >-->
-<!--           <TextView-->
-<!--               android:layout_width="wrap_content"-->
-<!--               android:layout_height="wrap_content"-->
-<!--               android:text="Respond within 1 hr"-->
-<!--               android:textColor="@color/black"-->
-<!--               android:textSize="@dimen/_13sdp"-->
-<!--               android:drawableStart="@drawable/ic_clock_dot_new"-->
-<!--               android:drawablePadding="@dimen/_2sdp"-->
-<!--               />-->
-
-<!--           <RelativeLayout-->
-<!--               android:layout_width="match_parent"-->
-<!--               android:layout_height="@dimen/_35sdp"-->
-<!--               android:layout_marginTop="@dimen/_4ssp"-->
-<!--               android:background="@drawable/bg_four_corner_light_black"-->
-<!--               >-->
-
-<!--               <TextView-->
-<!--                   android:layout_width="wrap_content"-->
-<!--                   android:layout_height="wrap_content"-->
-<!--                   android:text="Message the host"-->
-<!--                   android:textColor="@color/black"-->
-<!--                   android:layout_centerInParent="true"-->
-<!--                   android:layout_marginTop="@dimen/_5sdp"-->
-<!--                   />-->
-
-<!--           </RelativeLayout>-->
-
-
-<!--       </LinearLayout>-->
-
-
-<!--   </LinearLayout>-->
+            <!--   </LinearLayout>-->
 
             <TextView
                 android:layout_width="wrap_content"
@@ -872,7 +874,6 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="About the Space"
                 android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 android:textStyle="bold"
                 android:textSize="@dimen/_14sdp"
                 />
@@ -905,9 +906,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_height="wrap_content"
                 android:text="Included in your booking"
                 android:textStyle="bold"
-
                 android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 android:layout_marginStart="@dimen/_13sdp"
                 android:textSize="@dimen/_14sdp"
                 />
@@ -939,7 +938,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                         android:text="Parking"
+                        android:text="Parking"
                         android:textColor="@color/black"
                         android:textStyle="bold"
                         android:layout_marginStart="@dimen/_7sdp"
@@ -1105,7 +1104,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 />
 
             <RelativeLayout
@@ -1223,7 +1221,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_height="wrap_content"
                 android:text="Add-ons from the host"
                 android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 android:textStyle="bold"
                 android:textSize="@dimen/_14sdp"
                 android:layout_marginTop="@dimen/_10sdp"
@@ -1271,8 +1268,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:text="Address &amp; Location"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:textSize="@dimen/_14sdp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
                 android:layout_marginStart="@dimen/_11sdp"
                 android:textStyle="bold"
                 />
@@ -1295,7 +1290,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_height="400dp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 />
-            
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
@@ -1357,13 +1352,10 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sort by: Positive Reviews"
+                    android:drawableEnd="@drawable/ic_drop_down"
                     android:drawablePadding="@dimen/_5sdp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/poppins"
                     android:layout_alignParentEnd="true"
                     android:textSize="@dimen/_12sdp"
-
-                    app:drawableEndCompat="@drawable/drop_down_black"
 
                     />
 
@@ -1383,14 +1375,14 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_marginHorizontal="@dimen/_7sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 />
-<!--            <ImageView-->
-<!--                android:id="@+id/show_more_review"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:src="@drawable/ic_show_more_review"-->
-<!--                android:layout_gravity="center_horizontal"-->
-<!--                android:layout_marginVertical="@dimen/_15sdp"-->
-<!--                />-->
+            <!--            <ImageView-->
+            <!--                android:id="@+id/show_more_review"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:src="@drawable/ic_show_more_review"-->
+            <!--                android:layout_gravity="center_horizontal"-->
+            <!--                android:layout_marginVertical="@dimen/_15sdp"-->
+            <!--                />-->
 
             <RelativeLayout
                 android:id="@+id/showMoreReview"
