@@ -1,23 +1,40 @@
 package com.yesitlab.zyvo.activity.guest
 
 import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.adapter.AdapterAddPaymentCard
 import com.yesitlab.zyvo.databinding.ActivityExtraTimeBinding
 import com.yesitlab.zyvo.databinding.ActivityExtraTimeChargesBinding
 import com.yesitlab.zyvo.fragment.guest.SelectHourFragmentDialog
+import com.yesitlab.zyvo.viewmodel.PaymentViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.DialogListener {
     lateinit var binding :ActivityExtraTimeChargesBinding
+    private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
+
+    private val paymentCardViewHolder: PaymentViewModel by lazy {
+        ViewModelProvider(this)[PaymentViewModel::class.java]
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +54,13 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 binding.tvParkingRule.visibility = View.VISIBLE
             }
         }
-
+        addPaymentCardAdapter = AdapterAddPaymentCard(this, mutableListOf())
+        paymentCardViewHolder.paymentCardList.observe(this, Observer { payment ->
+            addPaymentCardAdapter.updateItem(payment)
+        })
+        binding.recyclerViewPaymentCardList.layoutManager = LinearLayoutManager(this@ExtraTimeChargesActivity,
+            LinearLayoutManager.VERTICAL,false)
+        binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
         binding.rlHostRules.setOnClickListener {
             if(binding.tvHostRule.visibility == View.VISIBLE){
                 binding.tvHostRule.visibility = View.GONE
@@ -65,7 +88,54 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             dialog1.show(supportFragmentManager, "MYDIALOF")
         }
 
+        binding.rlCreditDebitCard.setOnClickListener {
+            if(binding.rlCreditDebitRecycler.visibility == View.GONE) {
+                binding.rlCreditDebitRecycler.visibility = View.VISIBLE
+                binding.imageDropDown.setImageResource(R.drawable.ic_dropdown_close)
+            }else{
+                binding.rlCreditDebitRecycler.visibility = View.GONE
+                binding.imageDropDown.setImageResource(R.drawable.ic_dropdown_open)
+            }
+        }
+        binding.rlAddCard.setOnClickListener {
+            dialogAddCard()
+        }
+
     }
+
+
+    private fun dialogAddCard() {
+        var dateManager = DateManager(this)
+        val dialog =  Dialog(this, R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_add_card_details)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            val month: TextView = findViewById(R.id.textMonth)
+            val year: TextView = findViewById(R.id.textYear)
+            val submitButton: TextView = findViewById(R.id.textSubmitButton)
+            month.setOnClickListener {
+                dateManager.showMonthSelectorDialog { selectedMonth ->
+                    month.text = selectedMonth
+                }
+                year.setOnClickListener {
+                    dateManager.showYearPickerDialog { selectedYear ->
+                        year.text = selectedYear.toString()
+                    }
+                }
+            }
+            submitButton.setOnClickListener {
+                dismiss()
+            }
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
+
 
     override fun onSubmitClicked() {
        openNewDialog()
@@ -75,7 +145,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         val dialog =  Dialog(this, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(true)
+
             setContentView(R.layout.dialog_price_amount)
+
 //            window?.attributes = WindowManager.LayoutParams().apply {
 //                copyFrom(window?.attributes)
 //                width = WindowManager.LayoutParams.MATCH_PARENT
@@ -94,13 +166,13 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 dialog.dismiss()
             }
 
-            window?.setLayout(
-                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
-                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
-            )
+            window?.setLayout((resources.displayMetrics.widthPixels * 0.9).toInt(), ViewGroup.LayoutParams.WRAP_CONTENT)
             window?.setBackgroundDrawableResource(android.R.color.transparent) // Optional
 
             show()
+
         }
+
     }
+
 }

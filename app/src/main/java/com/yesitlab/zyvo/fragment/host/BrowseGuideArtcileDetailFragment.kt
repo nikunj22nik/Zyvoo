@@ -28,6 +28,11 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
         binding.imgBack.setOnClickListener {
             findNavController().navigateUp()
         }
+
+        binding.tvContactUs.setOnClickListener {
+            findNavController().navigate(R.id.contact_us)
+        }
+
         return binding.root
     }
 

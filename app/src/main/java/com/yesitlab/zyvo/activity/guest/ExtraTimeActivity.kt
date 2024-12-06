@@ -3,7 +3,6 @@ package com.yesitlab.zyvo.activity.guest
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,12 +15,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.skydoves.powerspinner.PowerSpinnerView
 import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.GuesMain
 import com.yesitlab.zyvo.databinding.ActivityExtraTimeBinding
+import com.yesitlab.zyvo.fragment.both.CustomSpinnerAdapterReportViolation
 import com.yesitlab.zyvo.fragment.guest.SelectHourFragmentDialog
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogListener {
 
     lateinit var binding :ActivityExtraTimeBinding
@@ -131,6 +135,19 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             val crossButton: ImageView = findViewById(R.id.img_cross)
             val submit :RelativeLayout = findViewById(R.id.rl_submit_report)
             val txtSubmit : TextView = findViewById(R.id.txt_submit)
+            val powerSpinner :PowerSpinnerView = findViewById<PowerSpinnerView>(R.id.spinnerView1)
+            val items: MutableList<String> = ArrayList()
+            items.add("Inappropriate Content")
+            items.add("Misleading Information")
+            items.add("Spam or Scam")
+            items.add("Harassment")
+            items.add("Discrimation")
+            items.add("Other Isuue")
+
+            val adapter: CustomSpinnerAdapterReportViolation = CustomSpinnerAdapterReportViolation(this@ExtraTimeActivity, items)
+            powerSpinner.setItems(items)
+
+         //   powerSpinner.dividerColor = Color.parseColor("E5E5E5")
 
             submit.setOnClickListener {
                 if (txtSubmit.text.toString().trim().equals("Submitted") == false) {

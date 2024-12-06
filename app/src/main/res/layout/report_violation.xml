@@ -61,34 +61,57 @@
                 android:fontFamily="@font/poppins"
                 />
 
-            <RelativeLayout
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="@dimen/_30sdp"-->
+<!--                android:layout_marginHorizontal="@dimen/_10sdp"-->
+<!--                android:layout_marginTop="@dimen/_10sdp"-->
+<!--                android:background="@drawable/bg_two_side_corner"-->
+<!--                >-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Name"-->
+<!--                    android:textSize="@dimen/_12sdp"-->
+<!--                    android:layout_marginStart="@dimen/_10sdp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:fontFamily="@font/poppins"-->
+<!--                    />-->
+
+<!--                <ImageView-->
+<!--                    android:layout_width="@dimen/_10sdp"-->
+<!--                    android:layout_height="@dimen/_7sdp"-->
+<!--                    android:src="@drawable/ic_drop_down"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:rotation="180"-->
+<!--                    android:layout_marginEnd="@dimen/_12sdp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    />-->
+
+<!--            </RelativeLayout>-->
+            <com.skydoves.powerspinner.PowerSpinnerView
+                android:id="@+id/spinnerView1"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_30sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/bg_two_side_corner"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Name"
-                    android:textSize="@dimen/_12sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/poppins"
-                    />
-
-                <ImageView
-                    android:layout_width="@dimen/_10sdp"
-                    android:layout_height="@dimen/_7sdp"
-                    android:src="@drawable/ic_drop_down"
-                    android:layout_alignParentEnd="true"
-                    android:rotation="180"
-                    android:layout_marginEnd="@dimen/_12sdp"
-                    android:layout_centerVertical="true"
-                    />
-
-            </RelativeLayout>
+                android:layout_marginTop="12dp"
+                android:background="@drawable/button_grey_line_bg"
+                android:foreground="?attr/selectableItemBackground"
+                android:hint="Name"
+                android:padding="10dp"
+                android:textColor="#000"
+                android:textColorHint="#80000000"
+                android:textSize="14.5sp"
+                app:spinner_arrow_gravity="end"
+                app:spinner_arrow_padding="8dp"
+                app:spinner_arrow_show="true"
+                app:spinner_arrow_tint="#3A4B4C"
+                app:spinner_divider_show="false"
+                app:spinner_item_height="46dp"
+                app:spinner_selected_item_background="#90EE90"
+                app:spinner_popup_animation="fade"
+                app:spinner_popup_background="@color/white"
+                app:spinner_popup_elevation="14dp" />
 
             <TextView
                 android:layout_width="wrap_content"

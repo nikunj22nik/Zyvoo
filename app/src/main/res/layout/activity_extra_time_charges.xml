@@ -181,7 +181,7 @@
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@drawable/bg_four_side_grey_corner"
                         android:orientation="vertical"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <RelativeLayout
                             android:id="@+id/doubt"
@@ -841,6 +841,7 @@ android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
 
                 <ImageView
+                    android:id="@+id/imageDropDown"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -848,6 +849,41 @@ android:textColor="@color/black"
                     android:layout_marginEnd="@dimen/_10sdp"
                     android:rotation="180"
                     android:src="@drawable/ic_dropdown_open" />
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/rl_credit_debit_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:background="@drawable/bg_four_side_grey_corner"
+                android:visibility="gone">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewPaymentCardList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_10sdp" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_add_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_below="@id/recyclerViewPaymentCardList"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:background="@drawable/bg_green_add_card">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:text="Add New Card"
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
 
             </RelativeLayout>
 

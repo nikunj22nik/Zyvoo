@@ -179,7 +179,7 @@
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@drawable/bg_four_side_grey_corner"
                         android:orientation="vertical"
-                        android:visibility="visible">
+                        android:visibility="gone">
 
                         <RelativeLayout
                             android:id="@+id/doubt"

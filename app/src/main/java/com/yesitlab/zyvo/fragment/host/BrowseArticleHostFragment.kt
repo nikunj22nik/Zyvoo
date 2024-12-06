@@ -25,22 +25,20 @@ class BrowseArticleHostFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
         adapter = ExploreArticlesAdapter(mutableListOf())
-
         binding = FragmentBrowseArticleHostBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
-
         binding.recyclerNewArticles.layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
-
         binding.recyclerNewArticles.adapter = adapter
 
         adapter.setOnItemClickListener(object :ExploreArticlesAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
-             findNavController().navigate(R.id.browse_aricle_details)
+                findNavController().navigate(R.id.browse_aricle_details)
             }
-
         })
 
+        binding.tvContactUs.setOnClickListener {
+            findNavController().navigate(R.id.contact_us)
+        }
 
         arguments?.let {
             if(it.containsKey(AppConstant.type)){
@@ -48,13 +46,12 @@ class BrowseArticleHostFragment : Fragment() {
                 if(it.getString(AppConstant.type).equals("Article")) binding.tvViewTitle.setText("Browse all Articles") else  binding.tvViewTitle.setText("Browse all Guides")
             }
         }
+
         binding.imgBack.setOnClickListener {
             findNavController().navigateUp()
         }
 
-
         return binding.root
-
     }
 
 

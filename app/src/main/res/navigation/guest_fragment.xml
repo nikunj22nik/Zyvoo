@@ -106,4 +106,10 @@
         android:label="Browse Article Details"
         />
 
+    <fragment android:id="@+id/contact_us"
+        android:name="com.yesitlab.zyvo.fragment.both.ContactUsFragment"
+        android:label="Contact Us"
+        />
+
+
 </navigation>
