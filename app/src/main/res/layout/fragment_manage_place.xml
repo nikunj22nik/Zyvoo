@@ -12,16 +12,13 @@
         android:layout_height="match_parent"
         android:fillViewport="true"
         >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
-
-
-
-
-    <RelativeLayout
+            <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_15sdp"
@@ -55,15 +52,13 @@
 
 
     </RelativeLayout>
-
-    <View
+            <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
         android:layout_marginTop="@dimen/_15sdp"
         android:background="#E5E5E5"
         />
-    
-    <TextView
+            <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Manage your place"
@@ -73,8 +68,7 @@
         android:fontFamily="@font/poppins"
         android:textStyle="bold"
         />
-
-    <TextView
+            <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Setup places, avaxilability, prices and more."
@@ -85,9 +79,7 @@
         android:textStyle="bold"
         android:textSize="@dimen/_13sdp"
         />
-
-
-    <LinearLayout
+            <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
@@ -134,16 +126,12 @@
             android:textColor="#3F3D56"
             android:textSize="@dimen/_10ssp" />
     </LinearLayout>
-
-
-    <View
+            <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
         android:background="#E2E2E2"
         android:layout_marginTop="@dimen/_15sdp"
         />
-
-
             <LinearLayout
                 android:id="@+id/ll_home_setup"
                 android:layout_width="match_parent"
@@ -1099,8 +1087,6 @@
 
 
             </LinearLayout>
-
-
             <LinearLayout
                 android:id="@+id/ll_gallery_location"
                 android:layout_width="match_parent"
@@ -1385,11 +1371,8 @@
 
 
             </LinearLayout>
-
-
-
-
-
         </LinearLayout>
+
     </ScrollView>
+
 </LinearLayout>

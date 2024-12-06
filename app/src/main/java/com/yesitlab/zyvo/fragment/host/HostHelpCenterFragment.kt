@@ -63,6 +63,10 @@ class HostHelpCenterFragment : Fragment(),View.OnClickListener, OnClickListener 
             }
         }
 
+        binding.textContactUsButton.setOnClickListener {
+            findNavController().navigate(R.id.contact_us)
+        }
+
 
         return binding.root
     }

@@ -120,6 +120,7 @@
         android:background="@color/grey" />
 
     <TextView
+        android:id="@+id/tvContactUs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Contact Us"

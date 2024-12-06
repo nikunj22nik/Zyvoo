@@ -262,11 +262,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
     override fun onMapReady(mp: GoogleMap) {
 
-
-googleMap = mp
-
+        googleMap = mp
         // Example coordinates
-
         val locations = listOf(
             Location(37.7749, -122.4194, " $13/h"),
             Location(34.0522, -118.2437, " $15/h"),
