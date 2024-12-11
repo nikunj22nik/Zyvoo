@@ -9,6 +9,10 @@ import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.UnderlineSpan
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,9 +21,12 @@ import android.view.WindowManager
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.PopupWindow
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,6 +54,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
     lateinit var adapterReview: AdapterReview
     private lateinit var mapView: MapView
     private var mMap: GoogleMap? = null
+lateinit var  navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +73,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_review_booking,container,false)
 
 
-
+binding.textReportIssueButton.visibility = View.GONE
         binding.textUserName.visibility = View.VISIBLE
         binding.rlNeedHelp.visibility = View.VISIBLE
         binding.imageStar1.visibility = View.GONE
@@ -92,7 +100,10 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         mapView.getMapAsync(this)
         initialization()
 
-
+        navController = Navigation.findNavController(view)
+        binding.imageBackIcon.setOnClickListener {
+            navController.navigateUp()
+        }
 
         binding.textReviewBookingButton.setOnClickListener {
             dialogReview()
@@ -105,7 +116,141 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         binding.imageShare.setOnClickListener {
             shareApp()
         }
+        binding.textReviewClick.setOnClickListener {
+            showPopupWindow(it,0)
+        }
+        showingMoreText()
 
+
+        binding.rlParking.setOnClickListener {
+            if(binding.tvParkingRule.visibility == View.VISIBLE){
+                binding.tvParkingRule.visibility= View.GONE
+            }else{
+                binding.tvParkingRule.visibility = View.VISIBLE
+            }
+        }
+
+        binding.rlHostRules.setOnClickListener {
+            if(binding.tvHostRule.visibility == View.VISIBLE){
+                binding.tvHostRule.visibility= View.GONE
+            }else{
+                binding.tvHostRule.visibility = View.VISIBLE
+            }
+        }
+
+
+    }
+
+    private fun showingMoreText() {
+        val text = "Show More"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.tvShowMore.text = spannableString
+        binding.tvShowMore.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.tvShowMore.paint.isAntiAlias = true
+        binding.tvShowMore.setOnClickListener {
+            adapterAddon.updateAdapter(getAddOnList())
+            // binding.underlinedTextView.visibility =View.GONE
+            showingLessText()
+        }
+
+
+
+
+    }
+
+
+    private fun showingLessText() {
+        val text = "Show Less"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.tvShowMore.text = spannableString
+        binding.tvShowMore.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.tvShowMore.paint.isAntiAlias = true
+        binding.tvShowMore.setOnClickListener {
+
+            adapterAddon.updateAdapter(getAddOnList().subList(0, 4))
+            showingMoreText()
+        }
+
+
+
+
+    }
+
+
+
+    private fun showPopupWindow(anchorView: View, position: Int) {
+        // Inflate the custom layout for the popup menu
+        val popupView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.popup_positive_review, null)
+
+        // Create PopupWindow with the custom layout
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        // Set click listeners for each menu item in the popup layout
+        popupView.findViewById<TextView>(R.id.itemHighestReview).setOnClickListener {
+
+            binding.textReviewClick.text ="Sort by: Highest Review"
+            popupWindow.dismiss()
+        }
+        popupView.findViewById<TextView>(R.id.itemLowestReview).setOnClickListener {
+            binding.textReviewClick.text ="Sort by: Lowest Review"
+            popupWindow.dismiss()
+        }
+        popupView.findViewById<TextView>(R.id.itemRecentReview).setOnClickListener {
+            binding.textReviewClick.text ="Sort by: Recent Review"
+            popupWindow.dismiss()
+        }
+
+        // Get the location of the anchor view (three-dot icon)
+        val location = IntArray(2)
+        anchorView.getLocationOnScreen(location)
+
+        // Get the height of the PopupView after inflating it
+        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val popupHeight = popupView.measuredHeight
+        val popupWeight = popupView.measuredWidth
+        val screenWidht = resources?.displayMetrics?.widthPixels
+        val anchorX = location[1]
+        val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
+
+        val xOffset = if (popupWeight > spaceEnd!!) {
+            // If there is not enough space below, show it above
+            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+        } else {
+            // Otherwise, show it below
+            // 20 // This adds a small gap between the popup and the anchor view
+            -(popupWeight + 20)
+        }
+
+        // Calculate the Y offset to make the popup appear above the three-dot icon
+        val screenHeight = resources?.displayMetrics?.heightPixels
+        val anchorY = location[1]
+
+        // Calculate the available space above the anchorView
+        val spaceAbove = anchorY
+        val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
+
+        // Determine the Y offset
+        val yOffset = if (popupHeight > spaceBelow!!) {
+            // If there is not enough space below, show it above
+            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+        } else {
+            // Otherwise, show it below
+            20 // This adds a small gap between the popup and the anchor view
+        }
+
+        // Show the popup window anchored to the view (three-dot icon)
+        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
+        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
 
     private fun shareApp() {

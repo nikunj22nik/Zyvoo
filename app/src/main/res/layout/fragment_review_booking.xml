@@ -95,13 +95,7 @@
 
 
 
-                    <View
-                        android:id="@+id/viewProfile"
-                        android:layout_width="@dimen/_2sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:layout_centerInParent="true"
-android:visibility="gone"
-                        android:background="#24000000" />
+
 
                     <RelativeLayout
                         android:id="@+id/rlNeedHelp"
@@ -109,10 +103,17 @@ android:visibility="gone"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
-                        android:layout_toEndOf="@+id/viewProfile"
+                        android:layout_toEndOf="@+id/llUserName"
                         android:gravity="center_vertical"
                         android:visibility="gone"
                         android:orientation="horizontal">
+
+                        <View
+                            android:id="@+id/viewProfile"
+                            android:layout_width="@dimen/_2sdp"
+                            android:layout_height="@dimen/_20sdp"
+                           android:layout_alignParentStart="true"
+                            android:background="#24000000" />
 
                         <ImageView
                             android:id="@+id/imageInfoIcon"
@@ -144,9 +145,11 @@ android:visibility="gone"
 
 
                     <LinearLayout
+                        android:id="@+id/llUserName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/imageProfilePicture"
+                       android:layout_marginStart="@dimen/_5sdp"
                         android:layout_centerVertical="true"
                         android:orientation="horizontal">
 
@@ -1084,6 +1087,7 @@ android:layout_marginBottom="@dimen/_3sdp"
                     android:textStyle="bold" />
 
                 <RelativeLayout
+                    android:id="@+id/rl_parking"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_marginHorizontal="@dimen/_15sdp"
@@ -1116,8 +1120,24 @@ android:layout_marginBottom="@dimen/_3sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:src="@drawable/ic_drop_down" />
                 </RelativeLayout>
-
                 <RelativeLayout
+                    android:id="@+id/tv_parking_rule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:visibility="gone"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
+                        android:padding="@dimen/_10sdp"
+                        />
+
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/rl_host_rules"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_marginHorizontal="@dimen/_15sdp"
@@ -1149,6 +1169,22 @@ android:layout_marginBottom="@dimen/_3sdp"
                         android:layout_centerVertical="true"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:src="@drawable/ic_drop_down" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/tv_host_rule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:visibility="gone"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
+                        android:padding="@dimen/_10sdp"
+                        />
+
                 </RelativeLayout>
 
                 <View
@@ -1279,16 +1315,35 @@ android:layout_marginBottom="@dimen/_3sdp"
                             android:textSize="@dimen/_12sdp" />
                     </LinearLayout>
 
-                    <TextView
+                    <RelativeLayout
+                        android:id="@+id/rlTextReviewClick"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:drawableEnd="@drawable/ic_drop_down"
-                        android:drawablePadding="@dimen/_5sdp"
-                        android:text="Sort by: Positive Reviews"
-                        android:textSize="@dimen/_12sdp"
+                        android:layout_gravity="end"
+                        >
 
-                        />
+
+
+                        <TextView
+                            android:id="@+id/textReviewClick"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toStartOf="@+id/imageDropDown"
+                            android:fontFamily="@font/poppins"
+                            android:text="Sort by: Positive Reviews"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            />
+
+                        <ImageView
+                            android:id="@+id/imageDropDown"
+                            android:layout_width="@dimen/_9sdp"
+                            android:layout_height="@dimen/_10sdp"
+                            android:src="@drawable/drop_down_black"
+                            android:layout_marginStart="@dimen/_4sdp"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:layout_alignParentEnd="true"/>
+                    </RelativeLayout>
 
                 </RelativeLayout>
 

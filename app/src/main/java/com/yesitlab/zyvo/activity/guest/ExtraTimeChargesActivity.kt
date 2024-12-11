@@ -1,6 +1,7 @@
 package com.yesitlab.zyvo.activity.guest
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -47,6 +48,11 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        binding.myBooking.setOnClickListener {
+            startActivity(Intent(this,ExtraTimeActivity::class.java))
+        }
+
+
         binding.rlParking.setOnClickListener {
             if(binding.tvParkingRule.visibility == View.VISIBLE){
                 binding.tvParkingRule.visibility= View.GONE
@@ -101,6 +107,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             dialogAddCard()
         }
 
+
+        binding.tvReadMoreLess.setCollapsedText("Read More")
+        binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
     }
 
 

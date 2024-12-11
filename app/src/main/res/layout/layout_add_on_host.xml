@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp"
+    android:background="@drawable/button_grey_line_bg"
+
+    android:padding="@dimen/_7sdp">
+
+    <TextView
+        android:id="@+id/textName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:drawablePadding="@dimen/_5sdp"
+        android:text="New York, US"
+        android:maxLines="1"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11sdp"
+        />
+
+    <TextView
+        android:id="@+id/textRupees"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:drawablePadding="@dimen/_5sdp"
+        android:text="$10"
+        android:layout_toEndOf="@id/textName"
+        android:maxLines="1"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:fontFamily="@font/poppins"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11sdp"
+        />
+
+    <ImageView
+        android:id="@+id/imageCross"
+        android:layout_width="@dimen/_18sdp"
+        android:layout_height="@dimen/_18sdp"
+        android:layout_marginStart="@dimen/_3sdp"
+        android:layout_toEndOf="@id/textRupees"
+        android:src="@drawable/ic_cross_item" />
+
+</RelativeLayout>

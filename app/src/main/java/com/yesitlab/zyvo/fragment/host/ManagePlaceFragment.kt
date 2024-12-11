@@ -1,11 +1,16 @@
 package com.yesitlab.zyvo.fragment.host
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -16,14 +21,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.EditText
 import android.widget.PopupWindow
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -32,17 +43,25 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.yesitlab.zyvo.AppConstant
+import com.yesitlab.zyvo.DateManager.DateManager
+import com.yesitlab.zyvo.OnClickListener
+import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.adapter.guest.ActivitiesAdapter
 import com.yesitlab.zyvo.adapter.guest.AmenitiesAdapter
+import com.yesitlab.zyvo.adapter.host.AddOnAdapter
+import com.yesitlab.zyvo.adapter.host.AddOnItemAdapter
 import com.yesitlab.zyvo.adapter.host.GallaryAdapter
+import com.yesitlab.zyvo.adapter.host.RadioTextAdapter
 import com.yesitlab.zyvo.databinding.FragmentManagePlaceBinding
 import com.yesitlab.zyvo.model.ActivityModel
+import com.yesitlab.zyvo.model.host.AddOnModel
+import com.yesitlab.zyvo.model.host.ItemRadio
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
+class ManagePlaceFragment : Fragment() , OnMapReadyCallback , OnClickListener1 {
 
     lateinit var binding :FragmentManagePlaceBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
@@ -59,6 +78,11 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
     private val REQUEST_CODE_STORAGE_PERMISSION = 1
     val STORAGE_PERMISSION_CODE = 100
 
+    private var previouslySelectedIndex: Int = -1
+    private lateinit var addOnAdapter: AddOnAdapter
+
+    private var addOnList: MutableList<AddOnModel> = mutableListOf()
+
     var storage_permissions = arrayOf<String>(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
@@ -69,6 +93,8 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
         Manifest.permission.READ_MEDIA_IMAGES,
         Manifest.permission.CAMERA, Manifest.permission.READ_MEDIA_VIDEO
     )
+
+    lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,8 +111,27 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
         setUpRecyclerView()
         mapInitialization(savedInstanceState)
         imagePermissionInitialization()
+
+        val newWork = AddOnModel("Unknown Location", "0")
+        addOnList.add(newWork)
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+navController = Navigation.findNavController(view)
+        settingBackgroundAllWeek()
+        settingBackgroundAllMonth()
+        onClickDialogOpenner()
+
+        binding.imageBackButton.setOnClickListener {
+            navController.navigateUp()
+        }
+        binding.textSaveAndContinueButton.setOnClickListener {
+            findNavController().navigate(R.id.host_fragment_properties)
+        }
+    }
+
 
     fun permissions(): Array<String> {
         val p: Array<String>
@@ -180,6 +225,8 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
             ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
 
+
+
     private fun openGallery() {
         // Intent to pick multiple images
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -187,7 +234,6 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
         intent.type = "image/*"
         startActivityForResult(intent, PICK_IMAGES_REQUEST)
     }
-
 
 
     private fun mapInitialization(savedInstanceState: Bundle?) {
@@ -223,6 +269,11 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
     }
 
     private fun initialization(){
+
+        addOnAdapter = AddOnAdapter(requireContext(), addOnList, this)
+        binding.recyclerAddOn.adapter = addOnAdapter
+
+
         imageList = mutableListOf<Uri>()
         val dummyUri = Uri.parse("http://www.example.com")
         imageList.add(dummyUri)
@@ -267,6 +318,7 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
 
             binding.llGalleryLocation.visibility = View.GONE
             binding.llHomeSetup.visibility = View.VISIBLE
+            binding.llAvailability.visibility = View.GONE
         }
 
         binding.tvGallery.setOnClickListener {
@@ -275,6 +327,7 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
             binding.tvAvailability.setBackgroundResource(R.drawable.bg_outer_manage_place)
 
             binding.llGalleryLocation.visibility = View.VISIBLE
+            binding.llAvailability.visibility = View.GONE
             binding.llHomeSetup.visibility = View.GONE
         }
 
@@ -282,6 +335,10 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
             binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvGallery.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvAvailability.setBackgroundResource(R.drawable.bg_inner_select_white)
+
+            binding.llGalleryLocation.visibility = View.GONE
+            binding.llAvailability.visibility = View.VISIBLE
+            binding.llHomeSetup.visibility = View.GONE
         }
 
         binding.allowPets.setOnClickListener{
@@ -792,5 +849,596 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback {
         super.onLowMemory()
         mapView.onLowMemory()  // Important to call in onLowMemory
     }
+
+    override fun itemClick(obj: Int, text: String) {
+      when(text){
+          "add On"->{
+              showAddOnDialog()
+
+          }
+
+
+          "add On Cross" -> {
+              if (obj == addOnList.size - 1) {
+                //  dialogSelectLanguage()
+              } else {
+                  addOnList.removeAt(obj)
+                  addOnAdapter.updateAddOn(addOnList)
+
+              }}
+
+    }}
+    fun getItemList(): List<String> {
+        return listOf(
+            "Computer Screen",
+            "Studio Lights",
+            "Projectors",
+            "Speakers",
+            "Microphones",
+            "Sounds Systems",
+            "DJ Equipment",
+            "Tables",
+            "Chairs",
+            "Stage Platforms",
+            "Art Supplies (Paint, brushes)",
+            "Allow Alcohol",
+            "Onsite Food Prep (Event)",
+            "Extra Person above Max Capacity",
+            "Photographer (Per Hour)",
+            "Videographer (Per Hour)"
+        )
+    }
+
+    @SuppressLint("MissingInflatedId")
+     fun showAddOnDialog() {
+
+
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+
+            setContentView(R.layout.dialog_add_new_add_on_host)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+
+            val recyclerView: RecyclerView = findViewById(R.id.rcy)
+            val etItemName: EditText = findViewById(R.id.etAdd)
+            val etItemPrice: EditText = findViewById(R.id.etRupees)
+            val btnSubmit: TextView = findViewById(R.id.textAddButton)
+
+            val itemList = getItemList()
+            var selectedItem: String? = null
+
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            recyclerView.adapter = AddOnItemAdapter(itemList) { item ->
+                selectedItem = item
+                etItemName.setText(item)
+            }
+
+//            viewModel.list.observe(viewLifecycleOwner) {
+//                dialogAdapter.updateItem(it)
+//            }
+            // Handle Submit Button
+            btnSubmit.setOnClickListener {
+                val itemName = etItemName.text.toString()
+                val itemPrice = etItemPrice.text.toString()
+
+                if (itemName.isNotEmpty() && itemPrice.isNotEmpty()) {
+//                    tvItemName.text = itemName
+//                    tvItemPrice.text = itemPrice
+                    val newAddOn = AddOnModel(itemName, itemPrice)
+                    addOnList.add(0, newAddOn)
+
+                    // Notify adapter about changes
+                    addOnAdapter.updateAddOn(addOnList) // Custom method in adapter
+                    addOnAdapter.notifyItemInserted(0)
+                    dialog.dismiss()
+                } else {
+                    Toast.makeText(requireContext(), "Please enter valid details", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+
+            // findViewById<TextView>(R.id.text).text = text
+
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+
+
+
+
+    }
+
+
+     fun settingBackgroundAllMonth() {
+        //No of people
+
+        binding.tvAll.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+
+
+        binding.tvJan.setOnClickListener {
+
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+        binding.tvFeb.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+
+
+        binding.tvMar.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+
+        binding.tvApr.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+
+        binding.tvMay.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+        binding.tvJun.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_inner_select_white)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+        binding.tvJul.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+        binding.tvAug.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+        binding.tvSep.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+        binding.tvOct.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+        binding.tvNov.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+        binding.tvDec.setOnClickListener {
+            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvDec.setBackgroundResource(R.drawable.bg_inner_select_white)
+        }
+
+
+
+    }
+
+    fun settingBackgroundAllWeek(){
+        binding.tvAllDays.setOnClickListener {
+            binding.tvAllDays.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+
+        }
+
+
+        binding.tvOnlyWorkingDays.setOnClickListener {
+
+            binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        }
+        binding.tvOnlyWeekends.setOnClickListener {
+            binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_inner_select_white)
+
+        }
+
+
+    }
+
+
+
+    private fun getItemListForRadioHoursText(): MutableList<ItemRadio> {
+        var items =   mutableListOf(
+            ItemRadio("1 hour minimum", false),
+            ItemRadio("2 hour minimum", false),
+            ItemRadio("3 hour minimum", false),
+            ItemRadio("4 hour minimum", false),
+            ItemRadio("5 hour minimum", false),
+            ItemRadio("6 hour minimum", false),
+            ItemRadio("7 hour minimum", false),
+            ItemRadio("8 hour minimum", false),
+            ItemRadio("9 hour minimum", false),
+            ItemRadio("10 hour minimum", false),
+            ItemRadio("11 hour minimum", false),
+            ItemRadio("12 hour minimum", false),
+            ItemRadio("13 hour minimum", false),
+            ItemRadio("14 hour minimum", false),
+            ItemRadio("15 hour minimum", false),
+            ItemRadio("16 hour minimum", false),
+            ItemRadio("17 hour minimum", false),
+            ItemRadio("18 hour minimum", false),
+            ItemRadio("19 hour minimum", false),
+            ItemRadio("20 hour minimum", false),
+            ItemRadio("21 hour minimum", false),
+            ItemRadio("22 hour minimum", false),
+            ItemRadio("23 hour minimum", false),
+            ItemRadio("24 hour minimum", false)
+        )
+
+        // Restore the previously selected item's state
+        if (previouslySelectedIndex != -1 && previouslySelectedIndex < items.size) {
+            items[previouslySelectedIndex].isSelected = true
+        }
+        return items
+    }
+
+
+    private fun getItemListForRadioPerHoursRuppesText(): MutableList<ItemRadio> {
+        var items =   mutableListOf(
+            ItemRadio("$10 per hour", false),
+            ItemRadio("20 per hour", false),
+            ItemRadio("30 per hour", false),
+            ItemRadio("40 per hour", false),
+            ItemRadio("50 per hour", false),
+            ItemRadio("60 per hour", false),
+            ItemRadio("70 per hour", false),
+            ItemRadio("80 per hour", false),
+            ItemRadio("90 per hour", false),
+            ItemRadio("100 per hour", false),
+            ItemRadio("110 per hour", false),
+            ItemRadio("120 per hour", false),
+            ItemRadio("130 per hour", false),
+            ItemRadio("14 hour minimum", false),
+            ItemRadio("15 hour minimum", false),
+            ItemRadio("16 hour minimum", false),
+            ItemRadio("17 hour minimum", false),
+            ItemRadio("18 hour minimum", false),
+            ItemRadio("19 hour minimum", false),
+            ItemRadio("20 hour minimum", false),
+            ItemRadio("21 hour minimum", false),
+            ItemRadio("22 hour minimum", false),
+            ItemRadio("23 hour minimum", false),
+            ItemRadio("24 hour minimum", false)
+        )
+
+        // Restore the previously selected item's state
+        if (previouslySelectedIndex != -1 && previouslySelectedIndex < items.size) {
+            items[previouslySelectedIndex].isSelected = true
+        }
+        return items
+    }
+    private fun getItemListForRadioPerHoursBulkText(): MutableList<ItemRadio> {
+        var items =   mutableListOf(
+            ItemRadio("1 hours", false),
+            ItemRadio("2 hours", false),
+            ItemRadio("3 hours", false),
+            ItemRadio("4 hours", false),
+            ItemRadio("5 hours", false),
+            ItemRadio("6 hours", false),
+            ItemRadio("7 hours", false),
+            ItemRadio("8 hours", false),
+            ItemRadio("9 hours", false),
+            ItemRadio("10 hours", false),
+            ItemRadio("11 hours", false),
+            ItemRadio("12 hours", false),
+            ItemRadio("13 hours", false),
+            ItemRadio("14 hours", false),
+            ItemRadio("15 hours", false),
+            ItemRadio("16 hours", false),
+            ItemRadio("17 hours", false),
+            ItemRadio("18 hours", false),
+            ItemRadio("19 hours", false),
+            ItemRadio("20 hours", false),
+            ItemRadio("21 hours", false),
+            ItemRadio("22 hours", false),
+            ItemRadio("23 hours", false),
+            ItemRadio("24 hours", false)
+
+        )
+
+        // Restore the previously selected item's state
+        if (previouslySelectedIndex != -1 && previouslySelectedIndex < items.size) {
+            items[previouslySelectedIndex].isSelected = true
+        }
+        return items
+    }
+ private fun getItemListForRadioPerHoursDiscountText(): MutableList<ItemRadio> {
+        var items =   mutableListOf(
+            ItemRadio("5% Discount", false),
+            ItemRadio("10% Discount", false),
+            ItemRadio("15% Discount", false),
+            ItemRadio("20% Discount", false),
+            ItemRadio("25% Discount", false),
+            ItemRadio("30% Discount", false),
+            ItemRadio("35% Discount", false),
+            ItemRadio("40% Discount", false),
+            ItemRadio("45% Discount", false),
+            ItemRadio("50% Discount", false),
+
+            ItemRadio("75% Discount", false)
+
+        )
+
+        // Restore the previously selected item's state
+        if (previouslySelectedIndex != -1 && previouslySelectedIndex < items.size) {
+            items[previouslySelectedIndex].isSelected = true
+        }
+        return items
+    }
+
+
+
+
+
+
+
+    fun onClickDialogOpenner(){
+        binding.llHours.setOnClickListener {
+                    val items = getItemListForRadioHoursText()
+
+            showSelectedDialog(requireContext(), items,binding.tvHoursSelect)
+        }
+
+        binding.llHoursRupees.setOnClickListener {
+            val items = getItemListForRadioPerHoursRuppesText()
+
+            showSelectedDialog(requireContext(), items,binding.tvHoursRupeesSelect)
+
+        }
+        binding.llHoursBulk.setOnClickListener {
+            val items = getItemListForRadioPerHoursBulkText()
+
+            showSelectedDialog(requireContext(), items,binding.tvHoursBulkSelect)
+
+        }
+
+
+        binding.llDiscount.setOnClickListener {
+            val items = getItemListForRadioPerHoursDiscountText()
+
+            showSelectedDialog(requireContext(), items,binding.tvDiscountSelect)
+
+        }
+        binding.llAvailabilityFromHours.setOnClickListener {
+            DateManager(requireContext()).showTimePickerDialog(requireContext()) { selectedHour ->
+                binding.tvHours.setText(selectedHour.toString())
+            }
+
+
+        }
+        binding.llAvailabilityEndHours.setOnClickListener {
+            DateManager(requireContext()).showTimePickerDialog(requireContext()) { selectedHour ->
+                binding.tvHours1.setText(selectedHour.toString())
+            }
+
+
+        }
+
+
+    }
+
+
+
+
+
+
+    fun showSelectedDialog(context: Context, items: MutableList<ItemRadio>, text: TextView) {
+        val dialog = Dialog(context, R.style.BottomSheetDialog)
+        dialog.apply {
+            setCancelable(false)
+
+            setContentView(R.layout.dialog_for_select_radio_text)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+
+
+            recyclerView.layoutManager = LinearLayoutManager(context)
+            val adapter = RadioTextAdapter(items, object : OnClickListener {
+                override fun itemClick(selectedIndex: Int) {
+
+
+                    previouslySelectedIndex = selectedIndex
+                }
+            }) { selectedText ->
+                // Update TextView with the selected text
+                text.text = selectedText
+                dismiss()
+            }
+
+            recyclerView.adapter = adapter
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
+
+
+
 
 }

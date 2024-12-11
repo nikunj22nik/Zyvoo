@@ -43,6 +43,7 @@ import com.yesitlab.zyvo.OnLocalListener
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.activity.GuesMain
 import com.yesitlab.zyvo.activity.HostMainActivity
+import com.yesitlab.zyvo.activity.PlaceOpenActivity
 import com.yesitlab.zyvo.activity.guest.FiltersActivity
 import com.yesitlab.zyvo.activity.guest.WhereTimeActivity
 import com.yesitlab.zyvo.adapter.AdapterAddPaymentCard
@@ -68,16 +69,13 @@ import java.util.Locale
 
 @AndroidEntryPoint
 class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
-
     lateinit var binding :FragmentHostProfileBinding
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
     private lateinit var addWorkAdapter: AddWorkAdapter
     private lateinit var addLanguageSpeakAdapter: AddLanguageSpeakAdapter
     private lateinit var addHobbiesAdapter: AddHobbiesAdapter
-
     private lateinit var dateManager: DateManager
-
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
     private val paymentCardViewHolder: PaymentViewModel by lazy {
         ViewModelProvider(this)[PaymentViewModel::class.java]
@@ -156,10 +154,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
-
         binding.textGiveFeedback.setOnClickListener(this)
+        binding.textBooking.setOnClickListener(this)
+        binding.textCreateList.setOnClickListener(this)
      //   binding.textTermServices.setOnClickListener(this)
         binding.textPrivacyPolicy.setOnClickListener(this)
         binding.textLogout.setOnClickListener(this)
@@ -184,7 +181,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
         // Set listeners
 
-
 //        binding.filterIcon.setOnClickListener {
 //        startActivity(Intent(requireActivity(), FiltersActivity::class.java))
 //        }
@@ -193,6 +189,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 //            startActivity(Intent(requireActivity(), WhereTimeActivity::class.java))
 //        }
 
+
+        binding.switchHost.setOnClickListener {
+            val intent = Intent(requireContext(), GuesMain::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            startActivity(intent)
+            requireActivity().finish()
+        }
     }
 
 
@@ -392,6 +395,15 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 //cfupg7644r
     override fun onClick(p0: View?) {
         when (p0?.id) {
+
+
+
+            R.id.textBooking->{
+                findNavController().navigate(R.id.bookingScreenHostFragment)
+            }
+            R.id.textCreateList->{
+               startActivity(Intent(requireActivity(),PlaceOpenActivity::class.java))
+            }
             R.id.textPrivacyPolicy->{
                 findNavController().navigate(R.id.privacyPolicyFragment)
             }
