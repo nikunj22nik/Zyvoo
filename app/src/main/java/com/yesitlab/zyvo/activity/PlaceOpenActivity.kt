@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.ui.Alignment
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
@@ -26,6 +28,7 @@ class PlaceOpenActivity : AppCompatActivity() {
     lateinit var binding: ActivityPlaceOpenBinding
     lateinit var adapter : AdapterOuterPlaceOrder
     lateinit var list : MutableList<Pair<String,List<String>>>
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +42,15 @@ class PlaceOpenActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+
+
+
+        binding.imageBackButton.setOnClickListener {
+            onBackPressed()
+        }
+
+
 
         fillDataInCalendar()
 

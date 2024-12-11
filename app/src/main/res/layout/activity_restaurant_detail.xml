@@ -11,22 +11,20 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
-        android:background="@color/grey"
-        />
+        android:background="@color/grey" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_10sdp"
-        android:visibility="visible"
-        >
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/img_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_back_icon"
             android:layout_marginStart="@dimen/_15sdp"
+
             />
         <TextView
             android:layout_width="wrap_content"
@@ -34,144 +32,136 @@
 
             />
 
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_filter"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="@dimen/_15sdp"
-            android:visibility="gone"
-            />
+            android:src="@drawable/ic_filter"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
-        android:background="@color/grey"
-        />
+        android:background="@color/grey" />
 
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            >
-
+            android:orientation="vertical">
 
 
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:flexWrap="wrap"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_15sdp"
+                app:flexWrap="wrap"
                 app:justifyContent="flex_start">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="8dp"
-                    android:text="Cabin in Peshastins"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/poppins"
-                    android:textStyle="bold"
+                    android:padding="8dp"
+                    android:text="Cabin in Peshastinsddd"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
+                    android:textStyle="bold"
 
                     />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_start_new"
                     android:layout_marginTop="@dimen/_10sdp"
-                    />
+                    android:src="@drawable/ic_start_new" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5.0"
-                    android:layout_marginTop="@dimen/_7sdp"
                     android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:text="5.0"
                     android:textColor="#FCA800"
-                    android:textStyle="bold"
                     android:textSize="@dimen/_12sdp"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_7sdp"
-                    android:text="(30 reviews)"
-                    />
+                    android:text="(30 reviews)" />
 
             </com.google.android.flexbox.FlexboxLayout>
+
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:flexWrap="wrap"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                app:justifyContent="flex_start"
                 app:alignItems="center"
-                >
+                app:flexWrap="wrap"
+                app:justifyContent="flex_start">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_clock_dot_new"
                     android:scaleType="fitXY"
-                    />
+                    android:src="@drawable/ic_clock_dot_new" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2 hr 5 min"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/poppins"
                     android:layout_marginStart="@dimen/_4sdp"
-                    />
+                    android:fontFamily="@font/poppins"
+                    android:text="2 hr 5 min"
+                    android:textColor="@color/black" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_sqrt_feet_small"
-                    android:layout_marginEnd="@dimen/_4sdp"
                     android:layout_marginStart="@dimen/_11sdp"
-                    />
+                    android:layout_marginEnd="@dimen/_4sdp"
+                    android:src="@drawable/ic_sqrt_feet_small" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="323 sqft"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/poppins"
-                    />
+                    android:text="323 sqft"
+                    android:textColor="@color/black" />
+
                 <LinearLayout
                     android:id="@+id/ll_share"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
+
                     <ImageView
                         android:id="@+id/imageShare"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_share_icon"
-                        android:layout_marginEnd="@dimen/_4sdp"
                         android:layout_marginStart="@dimen/_11sdp"
-                        />
+                        android:layout_marginEnd="@dimen/_4sdp"
+                        android:src="@drawable/ic_share_icon" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Share"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/poppins"
                         android:layout_marginEnd="@dimen/_6sdp"
-                        />
+                        android:fontFamily="@font/poppins"
+                        android:text="Share"
+                        android:textColor="@color/black" />
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/tv_wishlist"
                     android:layout_width="wrap_content"
@@ -179,70 +169,70 @@
                     android:layout_marginEnd="@dimen/_4sdp"
 
                     >
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_wishlist_small"
-                        android:layout_marginEnd="@dimen/_4sdp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/_4sdp"
+                        android:src="@drawable/ic_wishlist_small"
 
                         />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Wishlist"
-                        android:textColor="@color/black"
                         android:fontFamily="@font/poppins"
-                        />
+                        android:text="Wishlist"
+                        android:textColor="@color/black" />
                 </LinearLayout>
 
             </com.google.android.flexbox.FlexboxLayout>
+
             <LinearLayout
                 android:id="@+id/ll_hotel_views"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="1"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                >
+                android:weightSum="1">
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/rounded_left_corners"
                     android:layout_weight="0.49"
-                    >
+                    android:background="@drawable/rounded_left_corners">
+
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/shapeableImageView"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_155sdp"
-                        android:src="@drawable/ic_dummy_img_1"
                         android:scaleType="fitXY"
-                        />
+                        android:src="@drawable/ic_dummy_img_1" />
                 </androidx.cardview.widget.CardView>
 
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.03"
-                    />
+                    android:layout_weight="0.03" />
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.45"
-                    android:orientation="vertical"
-                    >
+                    android:orientation="vertical">
+
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_75sdp"
-                        android:background="@drawable/rounded_right_corners"
-                        >
+                        android:background="@drawable/rounded_right_corners">
+
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_72sdp"
-                            android:src="@drawable/ic_dummy_img_2"
                             android:scaleType="fitXY"
-                            />
+                            android:src="@drawable/ic_dummy_img_2" />
 
 
                     </androidx.cardview.widget.CardView>
@@ -251,15 +241,14 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_70sdp"
-                        android:background="@drawable/rounded_right_corners"
                         android:layout_marginTop="@dimen/_4sdp"
-                        >
+                        android:background="@drawable/rounded_right_corners">
+
                         <ImageView
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_75sdp"
-                            android:src="@drawable/ic_dummy_img_3"
                             android:scaleType="fitXY"
-                            />
+                            android:src="@drawable/ic_dummy_img_3" />
                     </androidx.cardview.widget.CardView>
 
                 </LinearLayout>
@@ -274,84 +263,80 @@
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/bg_four_side_grey_corner"
-                android:weightSum="1"
-                >
+                android:weightSum="1">
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_10sdp"
-                    android:orientation="vertical"
                     android:layout_weight="0.45"
-                    >
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
                         android:text="$13/hr"
                         android:textColor="@color/black"
-                        android:textFontWeight="400"
                         android:textSize="@dimen/_12sdp"
-                        android:fontFamily="@font/poppins"
-                        />
+                        android:textStyle="bold" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
                         android:text="1 hr minimum"
                         android:textColor="@color/black"
-                        android:fontFamily="@font/poppins"
-                        android:textSize="@dimen/_12sdp"
-                        />
+                        android:textFontWeight="300"
+                        android:textSize="@dimen/_12sdp" />
 
                 </LinearLayout>
+
                 <View
                     android:layout_width="@dimen/_1sdp"
                     android:layout_height="match_parent"
-                    android:background="@color/grey"
                     android:layout_marginVertical="@dimen/_7ssp"
-                    />
+                    android:background="@color/grey" />
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_7sdp"
                     android:layout_marginTop="@dimen/_9sdp"
-                    android:orientation="vertical"
                     android:layout_weight="0.45"
-                    >
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/textHourDiscount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="4+ hour discount"
                         android:drawablePadding="@dimen/_3ssp"
-                        android:textSize="@dimen/_11sdp"
-                        android:textColor="@color/black"
                         android:fontFamily="@font/poppins"
-                        android:textStyle="bold"
-                        />
+                        android:text="4+ hour discount"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11sdp"
+                        android:textStyle="bold" />
 
 
                     <ImageView
                         android:id="@+id/imageInfo1"
                         android:layout_width="@dimen/_15sdp"
                         android:layout_height="@dimen/_15sdp"
-                        android:src="@drawable/ic_info_icon"
-                        android:padding="2dp"
-                        android:layout_marginTop="@dimen/_2sdp"
                         android:layout_marginStart="@dimen/_4sdp"
+                        android:layout_marginTop="@dimen/_2sdp"
                         android:layout_toEndOf="@+id/textHourDiscount"
-                        />
+                        android:padding="2dp"
+                        android:src="@drawable/ic_info_icon" />
 
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="15% Off"
                         android:layout_below="@+id/textHourDiscount"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp"
                         android:fontFamily="@font/poppins"
-                        />
+                        android:text="15% Off"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
                 </RelativeLayout>
 
 
@@ -364,31 +349,30 @@
                 android:layout_marginHorizontal="@dimen/_11sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/bg_four_side_corner_dark_black"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     android:background="@drawable/bg_outer_manage_place"
-                    android:weightSum="2"
-                    android:layout_marginBottom="@dimen/_10sdp">
+                    android:weightSum="2">
 
                     <TextView
                         android:id="@+id/tv_hour"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_marginVertical="@dimen/_4ssp"
+                        android:layout_marginStart="@dimen/_5sdp"
                         android:layout_weight="1"
                         android:fontFamily="@font/poppins"
                         android:gravity="center"
                         android:text="Choose Hours"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp"
-                        android:layout_marginStart="@dimen/_5sdp"
-                        />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_day"
@@ -401,7 +385,8 @@
                         android:gravity="center"
                         android:text="Choose Day"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_13sdp"
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -413,8 +398,7 @@
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:orientation="vertical"
-                    android:visibility="visible"
-                    />
+                    android:visibility="visible" />
 
                 <!--        <RelativeLayout-->
                 <!--            android:id="@+id/rl_circular_progress"-->
@@ -477,37 +461,33 @@
                 <!--        </RelativeLayout>-->
 
 
-
-
-
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv1"
                     android:layout_width="@dimen/_245sdp"
                     android:layout_height="@dimen/_245sdp"
-                    app:cardCornerRadius="@dimen/_265sdp"
                     android:layout_gravity="center"
-                    android:visibility="gone"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
+                    android:elevation="@dimen/_200sdp"
                     android:gravity="center"
-                    app:cardElevation="@dimen/_20sdp"
-                    android:elevation="@dimen/_200sdp">
+                    android:visibility="gone"
+                    app:cardCornerRadius="@dimen/_265sdp"
+                    app:cardElevation="@dimen/_20sdp">
 
 
                     <RelativeLayout
                         android:id="@+id/rl_circular_progress"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        >
+                        android:layout_gravity="center">
 
                         <com.yesitlab.zyvo.CircularSeekBar
                             android:id="@+id/circularSeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_centerInParent="true"
-                            app:cc_endHour="1"
                             app:cc_borderWidth="@dimen/_42sdp"
+                            app:cc_endHour="1"
                             app:cc_endIconResource="@drawable/oval_white"
                             app:cc_fillColor="#4AEAB1"
                             app:cc_metricMode="clock"
@@ -522,9 +502,9 @@
                             android:layout_height="@dimen/_157sdp"
                             android:layout_centerInParent="true"
                             android:backgroundTint="@color/white"
-                            app:cardElevation="@dimen/_15sdp"
                             android:elevation="@dimen/_200sdp"
-                            app:cardCornerRadius="@dimen/_170sdp">
+                            app:cardCornerRadius="@dimen/_170sdp"
+                            app:cardElevation="@dimen/_15sdp">
 
 
                             <androidx.constraintlayout.widget.ConstraintLayout
@@ -576,102 +556,97 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
-                    android:background="@color/grey"
-
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    />
+
+                    android:background="@color/grey" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_10sdp"
                     android:layout_marginHorizontal="@dimen/_24sdp"
-                    android:weightSum="1"
                     android:layout_marginTop="@dimen/_10sdp"
-                    >
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:weightSum="1">
 
                     <RelativeLayout
                         android:id="@+id/rl_view1"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_weight="0.4"
+                        android:layout_weight="0.43"
                         android:background="@drawable/bg_two_side_corner">
 
                         <ImageView
                             android:id="@+id/cl1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_clock_new"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_7sdp"
-                            />
+                            android:src="@drawable/ic_clock_new" />
+
                         <TextView
                             android:id="@+id/text1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3 hour"
-                            android:layout_toRightOf="@id/cl1"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_6sdp"
-                            android:textColor="@color/black"
+                            android:layout_toEndOf="@id/cl1"
                             android:fontFamily="@font/poppins"
-                            />
+                            android:text="3 hour"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10ssp" />
+
                         <ImageView
                             android:id="@+id/ic_drop_down_1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_drop_down"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="@dimen/_10sdp"
                             android:layout_centerVertical="true"
-                            />
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:src="@drawable/ic_drop_down" />
 
                     </RelativeLayout>
+
                     <RelativeLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.1"
-                        />
+                        android:layout_weight="0.1" />
 
                     <RelativeLayout
                         android:id="@+id/rl_view2"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_weight="0.4"
+                        android:layout_weight="0.43"
                         android:background="@drawable/bg_two_side_corner">
 
                         <ImageView
                             android:id="@+id/cl2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_clock_new"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_7sdp"
-                            />
+                            android:src="@drawable/ic_clock_new" />
+
                         <TextView
                             android:id="@+id/text2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="$30"
-                            android:layout_toRightOf="@id/cl2"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_6sdp"
-                            android:textColor="@color/black"
+                            android:layout_toEndOf="@id/cl2"
                             android:fontFamily="@font/poppins"
-                            />
+                            android:text="$30"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_10ssp" />
+
                         <ImageView
                             android:id="@+id/ic_drop_down_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/ic_drop_down"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="@dimen/_10sdp"
                             android:layout_centerVertical="true"
-                            />
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:src="@drawable/ic_drop_down" />
                     </RelativeLayout>
-
-
-
 
 
                 </LinearLayout>
@@ -682,79 +657,73 @@
                     android:layout_height="@dimen/_35sdp"
                     android:layout_marginHorizontal="@dimen/_19sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
-                    android:background="@drawable/bg_two_side_corners_green"
-                    >
+                    android:background="@drawable/bg_two_side_corners_green">
 
                     <TextView
                         android:id="@+id/tv_booking_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Start Booking"
-                        android:layout_centerVertical="true"
                         android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
-                        android:textSize="@dimen/_14sdp"
-                        />
+                        android:text="Start Booking"
+                        android:textSize="@dimen/_14sdp" />
                 </RelativeLayout>
 
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cancel for free within 24 hours"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
-                    />
+                    android:text="Cancel for free within 24 hours" />
 
             </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:paddingVertical="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/bg_four_side_corner_black"
-                >
+                android:paddingVertical="@dimen/_10sdp">
+
                 <ImageView
                     android:id="@+id/imageInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_eye_icon_white"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/_10sdp"
-                    />
+                    android:src="@drawable/ic_eye_icon_white" />
 
                 <ImageView
                     android:id="@+id/img_shield"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_sheild_icon"
                     android:layout_marginStart="@dimen/_13sdp"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/img_shield"
-                    android:text="ZYVO Shield"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_14sdp"
-                    android:fontFamily="@font/poppins"
-                    />
+                    android:src="@drawable/ic_sheild_icon" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Our Commitment to Your Safety \n and Protection on Zyvo"
-                    android:layout_below="@id/img_shield"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_toRightOf="@id/img_shield"
+                    android:fontFamily="@font/poppins"
+                    android:text="ZYVO Shield"
                     android:textColor="@color/white"
+                    android:textSize="@dimen/_14sdp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/img_shield"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:textSize="@dimen/_12sdp"
                     android:fontFamily="@font/poppins"
-                    />
+                    android:text="Our Commitment to Your Safety \n and Protection on Zyvo"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp" />
 
 
             </RelativeLayout>
@@ -872,106 +841,104 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/poppins"
                 android:text="About the Space"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:textSize="@dimen/_14sdp"
-                />
-
+                android:textStyle="bold" />
 
 
             <com.colormoon.readmoretextview.ReadMoreTextView
 
-                android:layout_width="match_parent"
                 android:id="@+id/tvReadMoreLess"
-                android:textColor="#000000"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:textSize="@dimen/_13sdp"
                 android:fontFamily="@font/poppins"
-                />
+                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
+has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+                android:textColor="#000000"
+                android:textSize="@dimen/_13sdp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:background="@color/grey"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginVertical="@dimen/_10sdp"
-                />
+                android:background="@color/grey" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Included in your booking"
-                android:textStyle="bold"
-                android:textColor="@color/black"
                 android:layout_marginStart="@dimen/_13sdp"
+                android:fontFamily="@font/poppins"
+
+                android:text="Included in your booking"
+                android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
-                />
+                android:textStyle="bold" />
+
             <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:flexWrap="wrap"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                app:justifyContent="flex_start"
-                app:alignItems="center"
                 android:layout_marginTop="@dimen/_10sdp"
-                >
+                app:alignItems="center"
+                app:flexWrap="wrap"
+                app:justifyContent="flex_start">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="@dimen/_10sdp"
-                    android:paddingVertical="@dimen/_11sdp"
-                    android:background="@drawable/bg_four_side_grey_corner"
-                    android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-                    >
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:paddingHorizontal="@dimen/_10sdp"
+                    android:paddingVertical="@dimen/_11sdp">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_parking"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:src="@drawable/ic_parking" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:text="Parking"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
-                        />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_18sdp"
-                    android:paddingVertical="@dimen/_11sdp"
-                    android:background="@drawable/bg_four_side_grey_corner"
-                    android:layout_marginEnd="@dimen/_14sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-                    >
+                    android:layout_marginEnd="@dimen/_14sdp"
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:paddingVertical="@dimen/_11sdp"
+                    android:paddingStart="@dimen/_10sdp"
+                    android:paddingEnd="@dimen/_18sdp">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_wifi"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:src="@drawable/ic_wifi" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:text="Wifi"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
-                        />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -979,27 +946,26 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_12sdp"
-                    android:paddingVertical="@dimen/_11sdp"
-                    android:background="@drawable/bg_four_side_grey_corner"
                     android:layout_marginTop="@dimen/_10sdp"
-                    >
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:paddingVertical="@dimen/_11sdp"
+                    android:paddingStart="@dimen/_10sdp"
+                    android:paddingEnd="@dimen/_12sdp">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_m_shape"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:src="@drawable/ic_m_shape" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:text="2 Rooms"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
-                        />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
@@ -1007,397 +973,396 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_12sdp"
-                    android:paddingVertical="@dimen/_11sdp"
-                    android:background="@drawable/bg_four_side_grey_corner"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginEnd="@dimen/_12sdp"
-                    >
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:paddingVertical="@dimen/_11sdp"
+                    android:paddingStart="@dimen/_10sdp"
+                    android:paddingEnd="@dimen/_12sdp">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_t_shape"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:src="@drawable/ic_t_shape" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:text="Tables"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
-                        />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_12sdp"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:paddingVertical="@dimen/_11sdp"
-                    android:background="@drawable/bg_four_side_grey_corner"
                     android:layout_marginTop="@dimen/_10sdp"
-                    >
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:paddingVertical="@dimen/_11sdp"
+                    android:paddingStart="@dimen/_10sdp"
+                    android:paddingEnd="@dimen/_12sdp">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_chairs"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:src="@drawable/ic_chairs" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:text="Chairs"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
-                        />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:paddingEnd="@dimen/_12sdp"
-                    android:paddingVertical="@dimen/_11sdp"
-                    android:background="@drawable/bg_four_side_grey_corner"
                     android:layout_marginTop="@dimen/_10sdp"
-                    >
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:paddingVertical="@dimen/_11sdp"
+                    android:paddingStart="@dimen/_10sdp"
+                    android:paddingEnd="@dimen/_12sdp">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_chimney"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:src="@drawable/ic_chimney" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_7sdp"
                         android:text="Kitchen"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/_7sdp"
                         android:textSize="@dimen/_12sdp"
-                        />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
             </com.google.android.flexbox.FlexboxLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:background="@color/grey"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                />
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@color/grey" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rules"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginStart="@dimen/_15sdp"
-                android:textSize="@dimen/_14sdp"
-                android:textStyle="bold"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:fontFamily="@font/poppins"
+                android:text="Rules"
                 android:textColor="@color/black"
-                />
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold" />
 
             <RelativeLayout
                 android:id="@+id/rl_parking"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
-                android:background="@drawable/bg_four_side_grey_corner"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                >
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="@drawable/bg_four_side_grey_corner">
+
                 <ImageView
                     android:id="@+id/img_parking"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_parking"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
-                    />
+                    android:src="@drawable/ic_parking" />
+
                 <TextView
-                    android:layout_width = "wrap_content"
-                    android:layout_height = "wrap_content"
-                    android:text = "Parking"
-                    android:layout_toRightOf = "@id/img_parking"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
-                    android:textSize = "@dimen/_13sdp"
+                    android:layout_toRightOf="@id/img_parking"
                     android:fontFamily="@font/poppins"
-                    />
+                    android:text="Parking"
+                    android:textSize="@dimen/_13sdp" />
+
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
                     android:layout_height="@dimen/_12sdp"
-                    android:src="@drawable/ic_drop_down"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_centerVertical="true"
-                    />
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:src="@drawable/ic_drop_down" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_parking_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:background="@drawable/rounded_bottom_corners"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_7sdp"
-                    android:text="The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy"
-                    />
+                    android:text="The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/rl_host_rule"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
-                android:background="@drawable/bg_four_side_grey_corner"
-                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                >
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="@drawable/bg_four_side_grey_corner">
+
                 <ImageView
                     android:id="@+id/img_host_rule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_host_rule"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
-                    />
+                    android:src="@drawable/ic_host_rule" />
+
                 <TextView
-                    android:layout_width = "wrap_content"
-                    android:layout_height = "wrap_content"
-                    android:text = "Host rules"
-                    android:layout_toRightOf = "@id/img_host_rule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
-                    android:textSize = "@dimen/_13sdp"
+                    android:layout_toRightOf="@id/img_host_rule"
                     android:fontFamily="@font/poppins"
-                    />
+                    android:text="Host rules"
+                    android:textSize="@dimen/_13sdp" />
+
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
                     android:layout_height="@dimen/_12sdp"
-                    android:src="@drawable/ic_drop_down"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="@dimen/_10sdp"
                     android:layout_centerVertical="true"
-                    />
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:src="@drawable/ic_drop_down" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rl_host_rule_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:background="@drawable/rounded_bottom_corners"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_7sdp"
-                    android:text="The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy"
-                    />
+                    android:text="The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy" />
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:background="@color/grey"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Add-ons from the host"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textSize="@dimen/_14sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginStart="@dimen/_15sdp"
-                />
+                android:background="@color/grey" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Host provided services, items or options. \nAvailable at checkout. "
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
+                android:text="Add-ons from the host"
                 android:textColor="@color/black"
-                />
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:fontFamily="@font/poppins"
+                android:text="Host provided services, items or options. \nAvailable at checkout. "
+                android:textColor="@color/black" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_add_on"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_13sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                />
+                android:layout_marginTop="@dimen/_10sdp" />
 
             <TextView
                 android:id="@+id/tv_show_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Show More"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginStart="@dimen/_12sdp"
-                />
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="Show More" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginVertical="@dimen/_15sdp"
-                />
+                android:layout_marginVertical="@dimen/_15sdp" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Address &amp; Location"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:textSize="@dimen/_14sdp"
                 android:layout_marginStart="@dimen/_11sdp"
-                android:textStyle="bold"
-                />
+                android:layout_marginTop="@dimen/_15sdp"
+                android:fontFamily="@font/poppins"
+                android:text="Address &amp; Location"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_location_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Midtown Manhattan, New York, NY"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
-                android:textColor="@color/black"
-                />
+                android:text="Midtown Manhattan, New York, NY"
+                android:textColor="@color/black" />
 
 
             <com.google.android.gms.maps.MapView
                 android:id="@+id/map_view"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                />
+                android:layout_marginHorizontal="@dimen/_10sdp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:background="@color/grey"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                />
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@color/grey" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_14sdp"
+                android:fontFamily="@font/poppins"
                 android:text="Reviews (30)"
-                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
-                android:layout_marginTop="@dimen/_14sdp"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:fontFamily="@font/poppins"
-                />
+                android:textStyle="bold" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_3sdp"
-                >
+                android:orientation="horizontal">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="start"
-                    >
+                    android:gravity="start">
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_start_new"
                         android:layout_gravity="center_vertical"
-                        />
+                        android:src="@drawable/ic_start_new" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
                         android:text="4.9"
                         android:textColor="#FCA800"
-                        android:textSize="@dimen/_12sdp"
-                        android:layout_marginStart="@dimen/_8sdp"
-                        />
+                        android:textSize="@dimen/_12sdp" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_7sdp"
+                        android:fontFamily="@font/poppins"
                         android:text="Rating"
                         android:textColor="@color/black"
-                        android:layout_marginStart="@dimen/_7sdp"
-                        android:textSize="@dimen/_12sdp"
-                        android:fontFamily="@font/poppins"
-                        />
+                        android:textSize="@dimen/_12sdp" />
                 </LinearLayout>
 
-                <TextView
+                <RelativeLayout
+                    android:id="@+id/rlTextReviewClick"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sort by: Positive Reviews"
-                    android:drawableEnd="@drawable/ic_drop_down"
-                    android:drawablePadding="@dimen/_5sdp"
-                    android:layout_alignParentEnd="true"
-                    android:textSize="@dimen/_12sdp"
+                    android:layout_gravity="end"
+                    android:clickable="true"
+                    android:focusable="true">
 
-                    />
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/textReviewClick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@+id/imageDropDown"
+                        android:fontFamily="@font/poppins"
+                        android:text="Sort by: Positive Reviews"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <ImageView
+                        android:id="@+id/imageDropDown"
+                        android:layout_width="@dimen/_9sdp"
+                        android:layout_height="@dimen/_10sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:src="@drawable/drop_down_black" />
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_reviews"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_5sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                />
+                android:layout_marginTop="@dimen/_5sdp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:background="@color/grey"
-                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginHorizontal="@dimen/_7sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
-                />
-            <!--            <ImageView-->
-            <!--                android:id="@+id/show_more_review"-->
-            <!--                android:layout_width="wrap_content"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:src="@drawable/ic_show_more_review"-->
-            <!--                android:layout_gravity="center_horizontal"-->
-            <!--                android:layout_marginVertical="@dimen/_15sdp"-->
-            <!--                />-->
+                android:background="@color/grey" />
+
 
             <RelativeLayout
                 android:id="@+id/showMoreReview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:background="@drawable/bg_two_side_corner"
                 android:paddingHorizontal="@dimen/_10sdp"
-                android:paddingVertical="@dimen/_10sdp"
-                android:layout_gravity="center_horizontal"
-                >
+                android:paddingVertical="@dimen/_10sdp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text = "Show more reviews"
-                    />
+                    android:text="Show more reviews" />
 
 
             </RelativeLayout>

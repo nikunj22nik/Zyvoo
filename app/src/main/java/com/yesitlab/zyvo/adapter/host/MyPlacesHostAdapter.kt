@@ -50,12 +50,12 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         return MyPlacesHostAdapter.ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currentItem = list[position]
 
         holder.binding.cl1.setOnClickListener {
             //  listener.itemClick(position)
-            mListener.onItemClick(position)
+//            mListener.onItemClick(position)
             Log.d("Adapter", "cl1 clicked at position $position")
         }
 
@@ -77,7 +77,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         val viewPagerAdapter = ViewPagerAdapter(mutableListOf(),context, object : OnLogClickListener {
             override fun itemClick(items: MutableList<ViewpagerModel>) {
                 //  listener.itemClick(position)
-                mListener.onItemClick(position)
+//                mListener.onItemClick(position)
             }
         })
 

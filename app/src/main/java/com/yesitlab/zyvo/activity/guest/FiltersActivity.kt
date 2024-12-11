@@ -706,6 +706,10 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         }
         byDefaultSelect()
 
+        binding.imageFilter.setOnClickListener {
+
+        }
+
 
     }
 

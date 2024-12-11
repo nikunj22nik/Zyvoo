@@ -109,12 +109,25 @@ android:autofillHints="creditCardNumber"
         app:layout_constraintEnd_toEndOf="@+id/etCardNumber"
         android:paddingVertical="@dimen/_4sdp"/>
 
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_7ssp"
+        app:buttonTint="#4AEA81"
+        app:layout_constraintTop_toBottomOf="@id/textYear"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Same as Mailing Address"
+        android:fontFamily="@font/poppins"
+        android:textSize="@dimen/_10ssp"/>
+
     <TextView
         android:id="@+id/textAddBillingAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Billing Address"
-        app:layout_constraintTop_toBottomOf="@+id/textMonth"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox"
         android:layout_marginStart="@dimen/_11ssp"
         app:layout_constraintStart_toStartOf="parent"
         android:fontFamily="@font/poppins"
@@ -209,17 +222,7 @@ android:autofillHints="creditCardNumber"
 
 
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_7ssp"
-        app:buttonTint="#4AEA81"
-        app:layout_constraintTop_toBottomOf="@id/etZipCode"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="Same as Mailing Address"
-        android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_10ssp"/>
+
 
     <TextView
         android:id="@+id/textSubmitButton"
@@ -228,9 +231,10 @@ android:autofillHints="creditCardNumber"
         android:text="Submit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/checkBox"
+        app:layout_constraintTop_toBottomOf="@id/etState"
         android:background="@drawable/button_bg"
         android:fontFamily="@font/poppins_light"
+        android:layout_marginTop="@dimen/_15sdp"
         android:textStyle="bold"
         android:layout_marginBottom="@dimen/_25sdp"
         app:layout_constraintBottom_toBottomOf="parent"
