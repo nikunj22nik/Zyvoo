@@ -27,6 +27,7 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
@@ -59,13 +60,14 @@ import java.time.YearMonth
 
 @AndroidEntryPoint
 class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
-
-    lateinit var binding: ActivityRestaurantDetailBinding
+private  var _binding : ActivityRestaurantDetailBinding? = null
+    private val binding get() = _binding!!
     lateinit var adapterAddon: AdapterAddOn
     lateinit var adapterReview: AdapterReview
     private lateinit var mapView: MapView
     private val viewModel: WishlistViewModel by viewModels()
     private var mMap: GoogleMap? = null
+
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         YearMonth.now()
     } else {
@@ -78,8 +80,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+<<<<<<< Updated upstream
         Log.d("TESTING_ZYVOO", "I am in Restaurent Details")
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
+=======
+        _binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
+>>>>>>> Stashed changes
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -87,7 +93,25 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             insets
         }
 
+<<<<<<< Updated upstream
         disableScrollViewScrollForChildView(binding.rlCircularProgress, binding.scrollView)
+=======
+
+        Log.d("TESTING_RestaurantDetailActivity","I AM HERE IN DEVELOPMENT")
+        binding.rlTextReviewClick?.setOnClickListener {
+            Log.d("TESTING_RestaurantDetailActivity","click")
+            Toast.makeText(
+                this@RestaurantDetailActivity,
+                "showPopupWindow(it,0)",
+                Toast.LENGTH_LONG
+            ).show()
+            showPopupWindow(it, 0)
+        }
+
+
+
+        disableScrollViewScrollForChildView(binding.rlCircularProgress,binding.scrollView)
+>>>>>>> Stashed changes
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
@@ -125,6 +149,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         val popupView =
             LayoutInflater.from(this).inflate(R.layout.popup_positive_review, null)
 
+<<<<<<< Updated upstream
         // Create PopupWindow with the custom layout
         val popupWindow = PopupWindow(
             popupView,
@@ -189,40 +214,59 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+=======
+
+
+
+>>>>>>> Stashed changes
     }
-    private fun shareApp() {
-        val appPackageName = packageName
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_TEXT,
-                "Buy this best app at: https://play.google.com/store/apps/details?id=$appPackageName"
-            )
-            type = "text/plain"
+
+
+
+
+
+        private fun shareApp() {
+            val appPackageName = packageName
+            val sendIntent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(
+                    Intent.EXTRA_TEXT,
+                    "Buy this best app at: https://play.google.com/store/apps/details?id=$appPackageName"
+                )
+                type = "text/plain"
+            }
+            startActivity(sendIntent)
         }
-        startActivity(sendIntent)
-    }
 
-    private fun showPopupWindowForPets(anchorView: View) {
-        // Inflate the popup layout
-        val inflater = LayoutInflater.from(this)
-        val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
+        private fun showPopupWindowForPets(anchorView: View) {
+            // Inflate the popup layout
+            val inflater = LayoutInflater.from(this)
+            val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
 
+<<<<<<< Updated upstream
         // Create the PopupWindow
         val popupWindow = PopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+=======
+            // Create the PopupWindow
+            val popupWindow = PopupWindow(popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+                ,
+                ViewGroup.LayoutParams.WRAP_CONTENT)
+>>>>>>> Stashed changes
 
-        // Show the popup window at the bottom right of the TextView
+            // Show the popup window at the bottom right of the TextView
 
-        popupWindow.isOutsideTouchable = true
-        popupWindow.isFocusable = true
-        popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
-    }
+            popupWindow.isOutsideTouchable = true
+            popupWindow.isFocusable = true
+            popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
+        }
 
 
+<<<<<<< Updated upstream
     fun clickListeners1() {
         binding.rlParking.setOnClickListener {
             if (binding.rlParkingView.visibility == View.VISIBLE) {
@@ -416,283 +460,553 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
+=======
+        fun clickListeners1(){
 
-    fun disableScrollViewScrollForChildView(childView: View, scrollView: ScrollView) {
-        childView.setOnTouchListener { _, event ->
-            // Prevent ScrollView from intercepting touch events when interacting with this child view
-            scrollView.requestDisallowInterceptTouchEvent(true)
 
-            // Let the child view handle its own touch event
-            childView.onTouchEvent(event)
+            binding.rlParking.setOnClickListener {
+              if(binding.rlParkingView.visibility == View.VISIBLE){
+                  binding.rlParkingView.visibility = View.GONE
+              }else{
+                  binding.rlParkingView.visibility = View.VISIBLE
+              }
+           }
+            binding.rlHostRule.setOnClickListener {
+               if(binding.rlHostRuleView.visibility == View.VISIBLE){
+                   binding.rlHostRuleView.visibility = View.GONE
+               }else{
+                   binding.rlHostRuleView.visibility = View.VISIBLE
+               }
+           }
 
-            true  // Consume the event to stop ScrollView from scrolling
-        }
-        // Reset ScrollView intercept when touch is released or canceled
-        childView.setOnTouchListener { _, event ->
-            if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
-                scrollView.requestDisallowInterceptTouchEvent(false)  // Allow ScrollView to intercept again
+
+            binding.tvWishlist.setOnClickListener {
+                showAddWishlistDialog()
+            }
+            binding.llHotelViews.setOnClickListener {
+                val dialogFragment = ViewImageDialogFragment()
+                dialogFragment.show(supportFragmentManager, "exampleDialog")
             }
 
-            childView.onTouchEvent(event)
-
-            true
-        }
-    }
-
-    private fun clickListeners() {
-
-        binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
-
-        binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-        binding.showMoreReview.setOnClickListener {
-            adapterReview.updateAdapter(7)
         }
 
-        binding.text1.setText("01:00 PM")
-        binding.text2.setText("03:00 PM")
+        private fun showAddWishlistDialog() {
+            val dialogAdapter = WishlistAdapter(this,true, mutableListOf(),null)
 
-        binding.tvDay.setOnClickListener {
+            val dialog =  Dialog(this, R.style.BottomSheetDialog)
+            dialog?.apply {
+                setCancelable(false)
+                setContentView(R.layout.dialog_add_wishlist)
+                window?.attributes = WindowManager.LayoutParams().apply {
+                    copyFrom(window?.attributes)
+                    width = WindowManager.LayoutParams.MATCH_PARENT
+                    height = WindowManager.LayoutParams.MATCH_PARENT
+                }
+
+    //            // Retrieve NavController using NavHostFragment
+    //            val navHostFragment = (context as AppCompatActivity).supportFragmentManager.findFragmentById(R.id.fragmentAuthContainerView) as NavHostFragment
+    //            val navController = navHostFragment.navController
+
+                val rvWishList : RecyclerView =  findViewById<RecyclerView>(R.id.rvWishList)
+
+                rvWishList.adapter = dialogAdapter
+
+                viewModel.list.observe(this@RestaurantDetailActivity) {
+                    dialogAdapter.updateItem(it)
+                }
+
+                findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                    dismiss()
+                }
+                findViewById<TextView>(R.id.textCreateWishList).setOnClickListener {
+                    createWishListDialog()
+                    dismiss()
+                }
+
+                // findViewById<TextView>(R.id.text).text = text
+
+
+
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                show()
+            }
+        }
+
+        private fun createWishListDialog(){
+            val dialog =   Dialog(this, R.style.BottomSheetDialog)
+            dialog?.apply {
+                setCancelable(false)
+                setContentView(R.layout.dialog_create_wishlist)
+                window?.attributes = WindowManager.LayoutParams().apply {
+                    copyFrom(window?.attributes)
+                    width = WindowManager.LayoutParams.MATCH_PARENT
+                    height = WindowManager.LayoutParams.MATCH_PARENT
+                }
+
+
+                findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                    dismiss()
+                }
+                val etDescription =    findViewById<EditText>(R.id.etDescription)
+
+                val tvMaxCount =    findViewById<TextView>(R.id.textMaxCount)
+                setupCharacterCountListener(etDescription, tvMaxCount, 50)
+                // findViewById<TextView>(R.id.text).text = text
+
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                show()
+            }
+
+        }
+
+        private fun setupCharacterCountListener(editText: EditText, textView: TextView, maxLength: Int) {
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+                @SuppressLint("SetTextI18n")
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    val remainingChars = maxLength - (s?.length ?: 0)
+                    textView.text = "max $remainingChars characters"
+                }
+
+                override fun afterTextChanged(s: Editable?) {}
+            })
+        }
+
+
+        fun share(){
+            binding.llShare.setOnClickListener {
+              shareText(this,"Here is Zyvoo Promo Code")
+            }
+        }
+
+        fun shareText(context: Context, text: String) {
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain" // Set the type to plain text
+                putExtra(Intent.EXTRA_TEXT, text) // Add the text to be shared
+            }
+
+            context.startActivity(Intent.createChooser(shareIntent, "Share via"))
+        }
+
+        fun initialization() {
+            adapterAddon = AdapterAddOn(this, getAddOnList().subList(0, 4))
+            adapterReview = AdapterReview(this, mutableListOf())
+            binding.tvReadMoreLess.setCollapsedText("Read More")
+            binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
+            binding.recyclerAddOn.adapter = adapterAddon
+            binding.recyclerAddOn.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+            binding.recyclerAddOn.isNestedScrollingEnabled = false
+            binding.recyclerReviews.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+            binding.recyclerReviews.isNestedScrollingEnabled = false
+            binding.recyclerReviews.adapter = adapterReview
+            val textView = binding.tvShowMore
+            textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            binding.tvLocationName.paintFlags = binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+            binding.tvShowMore.setOnClickListener {
+                binding.tvShowMore.visibility = View.GONE
+                adapterAddon.updateAdapter(getAddOnList())
+            }
+            binding.startBooking.setOnClickListener {
+                if(binding.tvBookingTxt.text.toString().equals("Start Booking")){
+                       binding.tvBookingTxt.setText("Proceed to Checkout")
+                }else {
+                    var intent = Intent(this@RestaurantDetailActivity, CheckOutPayActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            //nikunj sir
+    //        binding.hoursTextView.setOnTextChangedListener(object :
+    //            ObservableTextView.OnTextChangedListener {
+    //                override fun onTextChanged(newText: String) {
+    //                // This is called whenever the text changes
+    //                binding.text1.setText(newText + " hour")
+    //            }
+    //        })
+
+            clickListeners()
+            selectTime()
+        }
+
+        fun selectTime(){
+            binding.rlView1.setOnClickListener {
+               if(binding.text1.text.toString().equals("3 hour")){
+                   DateManager(this).showHourSelectionDialog(this) { selectedHour ->
+                     binding.text1.setText(selectedHour.toString())
+                   }
+               }
+               else{
+                   DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                       binding.text1.setText(selectedTime.toString())
+                   }
+               }
+            }
+            binding.rlView2.setOnClickListener {
+               if(binding.text2.text.toString().equals("$30")){
+
+               }else{
+                   DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                       binding.text2.setText(selectedTime.toString())
+                   }
+               }
+           }
+        }
+
+        fun disableScrollViewScrollForChildView(childView: View, scrollView: ScrollView) {
+            childView.setOnTouchListener { _, event ->
+                // Prevent ScrollView from intercepting touch events when interacting with this child view
+                scrollView.requestDisallowInterceptTouchEvent(true)
+>>>>>>> Stashed changes
+
+                // Let the child view handle its own touch event
+                childView.onTouchEvent(event)
+
+                true  // Consume the event to stop ScrollView from scrolling
+            }
+            // Reset ScrollView intercept when touch is released or canceled
+            childView.setOnTouchListener { _, event ->
+                if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
+                    scrollView.requestDisallowInterceptTouchEvent(false)  // Allow ScrollView to intercept again
+                }
+
+                childView.onTouchEvent(event)
+
+                true
+            }
+        }
+
+        private fun clickListeners() {
+
             binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
+
             binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.calendarLayout.visibility = View.VISIBLE
-            binding.cv1.visibility = View.GONE
+
+            binding.showMoreReview.setOnClickListener {
+                adapterReview.updateAdapter(7)
+            }
+
             binding.text1.setText("01:00 PM")
             binding.text2.setText("03:00 PM")
+
+            binding.tvDay.setOnClickListener {
+                binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
+                binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.calendarLayout.visibility = View.VISIBLE
+                binding.cv1.visibility = View.GONE
+                binding.text1.setText("01:00 PM")
+                binding.text2.setText("03:00 PM")
+            }
+
+            binding.imgBack.setOnClickListener {
+                onBackPressed()
+            }
+
+            binding.tvHour.setOnClickListener {
+                binding.tvDay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.tvHour.setBackgroundResource(R.drawable.bg_inner_manage_place)
+                binding.calendarLayout.visibility = View.GONE
+                binding.cv1.visibility = View.VISIBLE
+                binding.text1.setText("3 hour")
+                binding.text2.setText("$30")
+            }
+
         }
 
-        binding.imgBack.setOnClickListener {
-            onBackPressed()
+        private fun getAddOnList(): MutableList<String> {
+
+            var list = mutableListOf<String>()
+
+            list.add("Computer Screen")
+
+            list.add("Bed Sheets")
+
+            list.add("Phone charger")
+
+            list.add("Ring Light")
+
+            list.add("Left Light")
+
+            list.add("Water Bottle")
+
+            return list
+
         }
 
-        binding.tvHour.setOnClickListener {
-            binding.tvDay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvHour.setBackgroundResource(R.drawable.bg_inner_manage_place)
-            binding.calendarLayout.visibility = View.GONE
-            binding.cv1.visibility = View.VISIBLE
-            binding.text1.setText("3 hour")
-            binding.text2.setText("$30")
+        private fun shareText(text: String) {
+            val shareIntent = Intent(Intent.ACTION_SEND)
+            shareIntent.setType("text/plain")
+            shareIntent.putExtra(Intent.EXTRA_TEXT, text)
+            startActivity(Intent.createChooser(shareIntent, "Share via"))
         }
 
-    }
+        override fun onResume() {
+            super.onResume()
+            mapView.onResume()  // Important to call in onResume
+        }
 
-    private fun getAddOnList(): MutableList<String> {
+        override fun onPause() {
+            super.onPause()
+            mapView.onPause()  // Important to call in onPause
+        }
 
-        var list = mutableListOf<String>()
+        override fun onDestroy() {
+            super.onDestroy()
+            mapView.onDestroy()  // Important to call in onDestroy
+            _binding = null
+        }
 
-        list.add("Computer Screen")
+        override fun onLowMemory() {
+            super.onLowMemory()
+            mapView.onLowMemory()  // Important to call in onLowMemory
+        }
 
-        list.add("Bed Sheets")
+        override fun onMapReady(p0: GoogleMap) {
 
-        list.add("Phone charger")
+            mMap = p0
+            val newYork = LatLng(40.7128, -74.0060)
+            mMap?.addMarker(MarkerOptions().position(newYork).title("Marker in New York"))
+            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
 
-        list.add("Ring Light")
+        }
 
-        list.add("Left Light")
+        private fun updateCalendar() {
+            // Updates the calendar layout with the current and next month views.
 
-        list.add("Water Bottle")
+            val calendarLayout = binding.calendarLayout
+            calendarLayout.removeAllViews()
+            val topMonths = mutableListOf<YearMonth>()
+            val bottomMonths = mutableListOf<YearMonth>()
+            // Separate months into top and bottom lists
+            val allMonths = (1..12).map {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    currentMonth.plusMonths(it.toLong())
+                } else {
+                    TODO("VERSION.SDK_INT < O")
+                }
+            }
+            allMonths.forEachIndexed { index, month ->
+                if (index % 2 == 0) {
+                    topMonths.add(month)
+    //            } else {
+    //                bottomMonths.add(month)
+                }
+            }
 
-        return list
+            addMonthView(calendarLayout, currentMonth)
 
-    }
+            // addMonthView(calendarLayout, currentMonth.plusMonths(1))
+        }
 
-    private fun shareText(text: String) {
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.setType("text/plain")
-        shareIntent.putExtra(Intent.EXTRA_TEXT, text)
-        startActivity(Intent.createChooser(shareIntent, "Share via"))
-    }
+        @RequiresApi(Build.VERSION_CODES.O)
+        @SuppressLint("SetTextI18n")
+        private fun addMonthView(parentLayout: LinearLayout, yearMonth: YearMonth) {
+            // Adds a view for the specified month to the parent layout.
+            val monthView = layoutInflater.inflate(R.layout.calendar_month, parentLayout, false)
 
-    override fun onResume() {
-        super.onResume()
-        mapView.onResume()  // Important to call in onResume
-    }
+            val monthTitle = monthView.findViewById<TextView>(R.id.month_title)
 
-    override fun onPause() {
-        super.onPause()
-        mapView.onPause()  // Important to call in onPause
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mapView.onDestroy()  // Important to call in onDestroy
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        mapView.onLowMemory()  // Important to call in onLowMemory
-    }
-
-    override fun onMapReady(p0: GoogleMap) {
-
-        mMap = p0
-        val newYork = LatLng(40.7128, -74.0060)
-        mMap?.addMarker(MarkerOptions().position(newYork).title("Marker in New York"))
-        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
-
-    }
-
-    private fun updateCalendar() {
-        // Updates the calendar layout with the current and next month views.
-
-        val calendarLayout = binding.calendarLayout
-        calendarLayout.removeAllViews()
-        val topMonths = mutableListOf<YearMonth>()
-        val bottomMonths = mutableListOf<YearMonth>()
-        // Separate months into top and bottom lists
-        val allMonths = (1..12).map {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                currentMonth.plusMonths(it.toLong())
+                monthTitle.text =
+                    "${yearMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }}"
+                //${yearMonth.year}"
+            }
+            val daysLayout = monthView.findViewById<LinearLayout>(R.id.days_layout)
+            daysLayout.removeAllViews()
+            listOf("S", "M", "T", "W", "T", "F", "S").forEach { day ->
+                val dayView =
+                    layoutInflater.inflate(R.layout.calendar_day_name, daysLayout, false) as TextView
+                dayView.text = day
+                daysLayout.addView(dayView)
+            }
+
+            val weeksLayout = monthView.findViewById<LinearLayout>(R.id.weeks_layout)
+            weeksLayout.removeAllViews()
+            val weeks = generateCalendarWeeks(yearMonth)
+            weeks.forEach { week ->
+                val weekLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+                week.forEach { date ->
+                    val dateView =
+                        layoutInflater.inflate(R.layout.calendar_day, weekLayout, false) as TextView
+                    if (date != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            // dateView.text = date.dayOfMonth.toString()
+                            dateView.text = date.dayOfMonth.toString().padStart(2, '0')
+                        }
+                        dateView.setOnClickListener {
+                            selectedDate = date
+                            updateCalendar()
+                            // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
+                        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    //                        when (date) {
+    //                            LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
+    //                          //  selectedDate -> dateView.setBackgroundResource(R.drawable.selected_bg)
+    //
+    //                            else -> dateView.setBackgroundResource(android.R.color.transparent)
+    //                        }
+
+                            when (date) {
+                                //LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
+                                selectedDate -> dateView.setBackgroundResource(R.drawable.current_bg_date)
+                                else -> dateView.setBackgroundResource(R.drawable.date_bg)
+                            }
+                        }
+                        dateView.setTextColor(
+                            if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    date.month == yearMonth.month
+                                } else {
+                                    TODO("VERSION.SDK_INT < O")
+                                }
+                            ) Color.BLACK
+                            else Color.GRAY
+                        )
+                    }
+                    weekLayout.addView(dateView)
+                }
+                weeksLayout.addView(weekLayout)
+            }
+            // Display llPreviousAndNextMonth only for the current month
+            if (yearMonth == currentMonth) {
+                val previous = monthView.findViewById<ImageButton>(R.id.button_previous)
+                previous.setOnClickListener {
+                    currentMonth = currentMonth.minusMonths(1)
+                    updateCalendar()
+                }
+                val next = monthView.findViewById<ImageButton>(R.id.button_next)
+                next.setOnClickListener {
+                    currentMonth = currentMonth.plusMonths(1)
+                    updateCalendar()
+                }
+                parentLayout.addView(monthView)
+            } else {
+                // If not the current month, hide the previous and next buttons
+    //            val llPreviousAndNextMonth = monthView.findViewById<LinearLayout>(R.id.llPreviousAndNextMonth)
+    //            llPreviousAndNextMonth.visibility = View.GONE
+    //            parentLayout.addView(monthView)
+            }
+        }
+
+        private fun generateCalendarWeeks(yearMonth: YearMonth): List<List<LocalDate?>> {
+            // Generates a list of weeks, each containing dates for the specified month.
+
+            val weeks = ArrayList<List<LocalDate?>>()
+
+            var week = ArrayList<LocalDate?>()
+
+            val firstDayOfMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                yearMonth.atDay(1).dayOfWeek.value % 7
             } else {
                 TODO("VERSION.SDK_INT < O")
             }
-        }
-        allMonths.forEachIndexed { index, month ->
-            if (index % 2 == 0) {
-                topMonths.add(month)
-//            } else {
-//                bottomMonths.add(month)
+
+            // Add null values for the days before the start of the month
+
+            for (i in 0 until firstDayOfMonth) {
+                week.add(null)
             }
-        }
 
-        addMonthView(calendarLayout, currentMonth)
+            val daysInMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                yearMonth.lengthOfMonth()
+            } else {
+                TODO("VERSION.SDK_INT < O")
+            }
 
-        // addMonthView(calendarLayout, currentMonth.plusMonths(1))
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    @SuppressLint("SetTextI18n")
-    private fun addMonthView(parentLayout: LinearLayout, yearMonth: YearMonth) {
-        // Adds a view for the specified month to the parent layout.
-        val monthView = layoutInflater.inflate(R.layout.calendar_month, parentLayout, false)
-
-        val monthTitle = monthView.findViewById<TextView>(R.id.month_title)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            monthTitle.text =
-                "${yearMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }}"
-            //${yearMonth.year}"
-        }
-        val daysLayout = monthView.findViewById<LinearLayout>(R.id.days_layout)
-        daysLayout.removeAllViews()
-        listOf("S", "M", "T", "W", "T", "F", "S").forEach { day ->
-            val dayView =
-                layoutInflater.inflate(R.layout.calendar_day_name, daysLayout, false) as TextView
-            dayView.text = day
-            daysLayout.addView(dayView)
-        }
-
-        val weeksLayout = monthView.findViewById<LinearLayout>(R.id.weeks_layout)
-        weeksLayout.removeAllViews()
-        val weeks = generateCalendarWeeks(yearMonth)
-        weeks.forEach { week ->
-            val weekLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            week.forEach { date ->
-                val dateView =
-                    layoutInflater.inflate(R.layout.calendar_day, weekLayout, false) as TextView
-                if (date != null) {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        // dateView.text = date.dayOfMonth.toString()
-                        dateView.text = date.dayOfMonth.toString().padStart(2, '0')
-                    }
-                    dateView.setOnClickListener {
-                        selectedDate = date
-                        updateCalendar()
-                        // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
-                    }
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                        when (date) {
-//                            LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
-//                          //  selectedDate -> dateView.setBackgroundResource(R.drawable.selected_bg)
-//
-//                            else -> dateView.setBackgroundResource(android.R.color.transparent)
-//                        }
-
-                        when (date) {
-                            //LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
-                            selectedDate -> dateView.setBackgroundResource(R.drawable.current_bg_date)
-                            else -> dateView.setBackgroundResource(R.drawable.date_bg)
-                        }
-                    }
-                    dateView.setTextColor(
-                        if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                date.month == yearMonth.month
-                            } else {
-                                TODO("VERSION.SDK_INT < O")
-                            }
-                        ) Color.BLACK
-                        else Color.GRAY
-                    )
+            for (day in 1..daysInMonth) {
+                week.add(yearMonth.atDay(day))
+                if (week.size == 7) {
+                    weeks.add(week)
+                    week = ArrayList()
                 }
-                weekLayout.addView(dateView)
             }
-            weeksLayout.addView(weekLayout)
-        }
-        // Display llPreviousAndNextMonth only for the current month
-        if (yearMonth == currentMonth) {
-            val previous = monthView.findViewById<ImageButton>(R.id.button_previous)
-            previous.setOnClickListener {
-                currentMonth = currentMonth.minusMonths(1)
-                updateCalendar()
+
+            // Add null values for the days after the end of the month
+
+            while (week.size < 7) {
+                week.add(null)
             }
-            val next = monthView.findViewById<ImageButton>(R.id.button_next)
-            next.setOnClickListener {
-                currentMonth = currentMonth.plusMonths(1)
-                updateCalendar()
-            }
-            parentLayout.addView(monthView)
-        } else {
-            // If not the current month, hide the previous and next buttons
-//            val llPreviousAndNextMonth = monthView.findViewById<LinearLayout>(R.id.llPreviousAndNextMonth)
-//            llPreviousAndNextMonth.visibility = View.GONE
-//            parentLayout.addView(monthView)
-        }
-    }
 
-    private fun generateCalendarWeeks(yearMonth: YearMonth): List<List<LocalDate?>> {
-        // Generates a list of weeks, each containing dates for the specified month.
-
-        val weeks = ArrayList<List<LocalDate?>>()
-
-        var week = ArrayList<LocalDate?>()
-
-        val firstDayOfMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            yearMonth.atDay(1).dayOfWeek.value % 7
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
-
-        // Add null values for the days before the start of the month
-
-        for (i in 0 until firstDayOfMonth) {
-            week.add(null)
-        }
-
-        val daysInMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            yearMonth.lengthOfMonth()
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
-
-        for (day in 1..daysInMonth) {
-            week.add(yearMonth.atDay(day))
-            if (week.size == 7) {
+            if (week.isNotEmpty()) {
                 weeks.add(week)
-                week = ArrayList()
             }
+
+            return weeks
         }
 
-        // Add null values for the days after the end of the month
 
-        while (week.size < 7) {
-            week.add(null)
+
+        private fun showPopupWindow(anchorView: View, position: Int) {
+            // Inflate the custom layout for the popup menu
+            val popupView =
+                LayoutInflater.from(this).inflate(R.layout.popup_positive_review, null)
+
+            // Create PopupWindow with the custom layout
+            val popupWindow = PopupWindow(
+                popupView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                true
+            )
+
+            // Set click listeners for each menu item in the popup layout
+            popupView.findViewById<TextView>(R.id.itemHighestReview).setOnClickListener {
+
+                binding.textReviewClick?.text ="Sort by: Highest Review"
+                popupWindow.dismiss()
+            }
+            popupView.findViewById<TextView>(R.id.itemLowestReview).setOnClickListener {
+                binding.textReviewClick?.text ="Sort by: Lowest Review"
+                popupWindow.dismiss()
+            }
+            popupView.findViewById<TextView>(R.id.itemRecentReview).setOnClickListener {
+                binding.textReviewClick?.text ="Sort by: Recent Review"
+                popupWindow.dismiss()
+            }
+
+            // Get the location of the anchor view (three-dot icon)
+            val location = IntArray(2)
+            anchorView.getLocationOnScreen(location)
+
+            // Get the height of the PopupView after inflating it
+            popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+            val popupHeight = popupView.measuredHeight
+            val popupWeight = popupView.measuredWidth
+            val screenWidht = resources?.displayMetrics?.widthPixels
+            val anchorX = location[1]
+            val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
+
+            val xOffset = if (popupWeight > spaceEnd!!) {
+                // If there is not enough space below, show it above
+                -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+            } else {
+                // Otherwise, show it below
+                // 20 // This adds a small gap between the popup and the anchor view
+                -(popupWeight + 20)
+            }
+
+            // Calculate the Y offset to make the popup appear above the three-dot icon
+            val screenHeight = resources?.displayMetrics?.heightPixels
+            val anchorY = location[1]
+
+            // Calculate the available space above the anchorView
+            val spaceAbove = anchorY
+            val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
+
+            // Determine the Y offset
+            val yOffset = if (popupHeight > spaceBelow!!) {
+                // If there is not enough space below, show it above
+                -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+            } else {
+                // Otherwise, show it below
+                20 // This adds a small gap between the popup and the anchor view
+            }
+
+            // Show the popup window anchored to the view (three-dot icon)
+            popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
+            popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
         }
 
-        if (week.isNotEmpty()) {
-            weeks.add(week)
-        }
 
-        return weeks
-    }
+
+
 
 }

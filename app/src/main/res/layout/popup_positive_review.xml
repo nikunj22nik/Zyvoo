@@ -13,9 +13,14 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_light"
         android:padding="@dimen/_7sdp"
+<<<<<<< Updated upstream
 
         android:text="Highest Review"
 
+=======
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:text="Highest Review"
+>>>>>>> Stashed changes
         android:textColor="@color/black"
         android:textSize="@dimen/_11ssp"
         android:textStyle="bold"/>
@@ -44,4 +49,8 @@
         android:textStyle="bold"/>
 
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 </LinearLayout>

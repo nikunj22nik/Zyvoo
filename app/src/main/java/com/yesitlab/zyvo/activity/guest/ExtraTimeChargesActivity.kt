@@ -18,6 +18,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
@@ -108,8 +109,18 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         }
 
 
+<<<<<<< Updated upstream
         binding.tvReadMoreLess.setCollapsedText("Read More")
         binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
+=======
+        binding.tvReadMoreLess.setCollapsedText("show more")
+        binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
+
+        binding.myBooking.setOnClickListener {
+           startActivity(Intent(this,ExtraTimeActivity::class.java))
+        }
+
+>>>>>>> Stashed changes
     }
 
 

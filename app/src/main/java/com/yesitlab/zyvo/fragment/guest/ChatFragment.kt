@@ -141,7 +141,6 @@ class ChatFragment : Fragment() ,View.OnClickListener{
             popupWindow.dismiss()
         }
 
-
         // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)
         anchorView.getLocationOnScreen(location)
@@ -162,6 +161,7 @@ class ChatFragment : Fragment() ,View.OnClickListener{
             // 20 // This adds a small gap between the popup and the anchor view
             -(popupWeight + 20)
         }
+
         // Calculate the Y offset to make the popup appear above the three-dot icon
         val screenHeight = context?.resources?.displayMetrics?.heightPixels
         val anchorY = location[1]
