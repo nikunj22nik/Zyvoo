@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Hi welcome to our house!"
-        android:textColor="#000"
+        android:textColor="#80000000"
         android:layout_marginHorizontal="@dimen/_17sdp"
         android:textStyle="bold"
         android:textSize="@dimen/_11ssp"

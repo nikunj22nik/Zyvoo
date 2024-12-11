@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.AppConstant
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.databinding.FragmentFeedbackBinding
@@ -79,6 +80,11 @@ class FeedbackFragment : Fragment() {
                binding.textAddDetails.visibility = View.VISIBLE
            }
         }
+
+        binding.btnContactUs.setOnClickListener {
+findNavController().navigate(R.id.contact_us)
+        }
+
     }
 
     override fun onDestroyView() {

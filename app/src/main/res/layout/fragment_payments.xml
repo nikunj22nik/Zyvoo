@@ -118,7 +118,7 @@
                     android:fillViewport="true"
                     android:maxHeight="@dimen/_250sdp">
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
 
@@ -128,11 +128,16 @@
                             android:id="@+id/rvTransactions"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:maxHeight="@dimen/_250sdp"
+
+                            app:layout_constraintHeight_max="@dimen/_250sdp"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
                             android:nestedScrollingEnabled="true"
                             android:scrollbars="vertical"
                             tools:listitem="@layout/layout_transaction" />
-                    </LinearLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </HorizontalScrollView>
 
 

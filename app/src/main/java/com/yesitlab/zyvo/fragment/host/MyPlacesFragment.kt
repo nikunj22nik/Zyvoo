@@ -218,6 +218,7 @@ class MyPlacesFragment : Fragment(),View.OnClickListener {
             R.id.rl_add_new_place_1 ->{
                 findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag)
             }
+
             R.id.tv_places ->{
                 var intent = Intent(requireContext(),PlaceOpenActivity::class.java)
                 startActivity(intent)

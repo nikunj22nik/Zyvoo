@@ -889,13 +889,14 @@ navController = Navigation.findNavController(view)
         )
     }
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "ClickableViewAccessibility")
      fun showAddOnDialog() {
 
 
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
-            setCancelable(false)
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
 
             setContentView(R.layout.dialog_add_new_add_on_host)
             window?.attributes = WindowManager.LayoutParams().apply {
@@ -947,6 +948,16 @@ navController = Navigation.findNavController(view)
 
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            // Ensure dialog dismisses when touched outside
+       //     window?.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+
+            val rootView = findViewById<View>(android.R.id.content)
+            rootView.setOnTouchListener { _, _ ->
+                // Dismiss the dialog when touched outside
+                dialog.dismiss()
+                true
+            }
+
             show()
         }
 

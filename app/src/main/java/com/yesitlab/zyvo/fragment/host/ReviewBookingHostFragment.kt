@@ -22,6 +22,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,6 +49,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     lateinit var adapterReview: AdapterReview
     private lateinit var mapView: MapView
     private var mMap: GoogleMap? = null
+    lateinit var navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,10 +82,16 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
         initialization()
+
+
+        binding.imageBackIcon.setOnClickListener {
+            navController.navigateUp()
+        }
 
 
 binding.textReportIssueButton.setOnClickListener {

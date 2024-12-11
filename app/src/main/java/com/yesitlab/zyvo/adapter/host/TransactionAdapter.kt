@@ -1,18 +1,22 @@
 package com.yesitlab.zyvo.adapter.host
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.yesitlab.zyvo.R
 import com.yesitlab.zyvo.databinding.LayoutTransactionBinding
 import com.yesitlab.zyvo.model.TransactionModel
+import java.security.AccessController.getContext
 
-class TransactionAdapter(private var transactionsList: ArrayList<TransactionModel>) :
+
+class TransactionAdapter(var context: Context,private var transactionsList: ArrayList<TransactionModel>) :
     RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
@@ -21,13 +25,14 @@ class TransactionAdapter(private var transactionsList: ArrayList<TransactionMode
     }
 
     private fun setHeaderBg(view: View) {
-        view.setBackgroundColor(Color.parseColor("#EFF2F5"))
+        view.setBackgroundColor(ContextCompat.getColor(context, R.color.headerPaymentColor))
     }
 
     private fun setContentBg(view: View) {
         //    view.setBackgroundColor(Color.parseColor("#FFFFFF"))
         try {
-            view.setBackgroundColor(Color.parseColor("#FFFFFF"))
+
+            view.setBackgroundColor(ContextCompat.getColor(context, R.color.contentPaymentColor))
         } catch (e: IllegalArgumentException) {
             Log.e("TransactionAdapter", "Invalid color string", e)
         }

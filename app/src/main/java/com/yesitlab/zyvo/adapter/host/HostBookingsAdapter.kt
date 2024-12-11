@@ -44,6 +44,11 @@ class HostBookingsAdapter (
                 }
 
 
+                binding.clMainHeader.setOnClickListener {
+                    binding.llDeclineRequest.visibility = View.GONE
+                    binding.llAcceptRequest.visibility = View.GONE
+                }
+
 
 
 
@@ -74,7 +79,7 @@ class HostBookingsAdapter (
                     "Canceled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
                     else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback
                 }
-                binding.root.setOnClickListener{
+                binding.clMain.setOnClickListener{
                     listner.itemClick(position)
                 }
 

@@ -61,10 +61,6 @@ dependencies {
     implementation(libs.sdp.android)
 
     // Dagger - Hilt
-//    implementation ("com.google.dagger:hilt-android:2.44")
-//    kapt ("com.google.dagger:hilt-android-compiler:2.44")
-//    kapt ("androidx.hilt:hilt-compiler:1.0.0")
-//    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
     implementation("com.google.dagger:hilt-android:2.52")
     kapt("com.google.dagger:hilt-android-compiler:2.52")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")

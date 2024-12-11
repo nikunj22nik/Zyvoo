@@ -110,24 +110,14 @@ android:autofillHints="creditCardNumber"
         android:paddingVertical="@dimen/_4sdp"/>
 
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_7ssp"
-        app:buttonTint="#4AEA81"
-        app:layout_constraintTop_toBottomOf="@id/textYear"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="Same as Mailing Address"
-        android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_10ssp"/>
+
 
     <TextView
         android:id="@+id/textAddBillingAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Billing Address"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox"
+        app:layout_constraintTop_toBottomOf="@+id/textYear"
         android:layout_marginStart="@dimen/_11ssp"
         app:layout_constraintStart_toStartOf="parent"
         android:fontFamily="@font/poppins"
@@ -136,6 +126,20 @@ android:autofillHints="creditCardNumber"
         android:textSize="@dimen/_13ssp"
         android:layout_marginTop="@dimen/_5sdp"
         />
+
+
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_7ssp"
+        app:buttonTint="#4AEA81"
+        app:layout_constraintTop_toBottomOf="@id/textAddBillingAddress"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="Same as Mailing Address"
+        android:fontFamily="@font/poppins"
+        android:textSize="@dimen/_10ssp"/>
 
 
     <EditText
@@ -152,7 +156,7 @@ android:autofillHints="creditCardNumber"
         android:textColor="#000"
         android:textSize="@dimen/_11ssp"
         android:background="@drawable/button_grey_line_bg"
-        app:layout_constraintTop_toBottomOf="@id/textAddBillingAddress"
+        app:layout_constraintTop_toBottomOf="@id/checkBox"
         android:layout_marginStart="@dimen/_11ssp"
         app:layout_constraintStart_toStartOf="parent"
         android:paddingVertical="@dimen/_4sdp"/>
@@ -172,7 +176,7 @@ android:autofillHints="creditCardNumber"
         android:textColor="#000"
         android:textSize="@dimen/_11ssp"
         android:background="@drawable/button_grey_line_bg"
-        app:layout_constraintTop_toBottomOf="@id/textAddBillingAddress"
+        app:layout_constraintTop_toBottomOf="@id/checkBox"
         android:layout_marginStart="@dimen/_11ssp"
         app:layout_constraintEnd_toEndOf="@+id/etCardNumber"
         android:paddingVertical="@dimen/_4sdp"/>

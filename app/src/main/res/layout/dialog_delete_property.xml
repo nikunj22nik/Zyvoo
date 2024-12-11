@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
+    android:layout_gravity="center"
+    android:layout_marginHorizontal="@dimen/_15sdp"
     app:cardCornerRadius="@dimen/_10sdp">
 
     <LinearLayout
@@ -34,7 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Are you sure you want to delete \nthis property?"
-            android:textSize="@dimen/_13ssp"
+            android:textSize="@dimen/_12ssp"
             android:textStyle="bold"
             android:textAlignment="center"
             android:layout_gravity="center_horizontal"
@@ -58,7 +60,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:background="@drawable/bg_two_side_corner_green"
-                android:paddingHorizontal="@dimen/_32sdp"
+                android:paddingHorizontal="@dimen/_25sdp"
                 android:paddingVertical="@dimen/_8sdp">
 
                 <TextView
@@ -67,7 +69,7 @@
                     android:fontFamily="@font/poppins"
                     android:text="CONFIRM"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13ssp"
+                    android:textSize="@dimen/_11ssp"
                     android:textStyle="bold" />
 
 
@@ -81,7 +83,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:background="@drawable/bg_two_side_corner_green_layout"
-                android:paddingHorizontal="@dimen/_32sdp"
+                android:paddingHorizontal="@dimen/_25sdp"
                 android:paddingVertical="@dimen/_8sdp">
 
                 <TextView
@@ -90,7 +92,7 @@
                     android:fontFamily="@font/poppins"
                     android:text="CANCEL"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13ssp"
+                    android:textSize="@dimen/_11ssp"
                     android:textStyle="bold" />
 
 

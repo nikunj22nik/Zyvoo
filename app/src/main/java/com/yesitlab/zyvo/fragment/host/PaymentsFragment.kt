@@ -22,6 +22,8 @@ import android.widget.ToggleButton
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -40,9 +42,10 @@ import dagger.hilt.android.AndroidEntryPoint
 class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener {
 
 
-         var _binding: FragmentPaymentsBinding? = null
+         var _binding : FragmentPaymentsBinding? = null
        val binding get() = _binding!!
          var close = 0;
+    lateinit var navController: NavController
 
     val viewModel: PaymentViewModel by lazy {
             ViewModelProvider(this)[PaymentViewModel::class.java]
@@ -66,7 +69,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
         binding.lifecycleOwner = viewLifecycleOwner
 
         binding.rvTransactions.layoutManager = LinearLayoutManager(requireContext())
-        adapter = TransactionAdapter(arrayListOf())
+        adapter = TransactionAdapter(requireContext(),arrayListOf())
         binding.rvTransactions.adapter = adapter
         viewModel.list.observe(viewLifecycleOwner, Observer {
             adapter.updateItem(it)
@@ -81,14 +84,9 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
         })
 
 
-        val maxHeight = resources.getDimensionPixelSize(R.dimen._350sdp)
 
-        binding.rvTransactions.viewTreeObserver.addOnGlobalLayoutListener {
-            if (binding.rvTransactions.height > maxHeight) {
-                binding.rvTransactions.layoutParams.height = maxHeight
-                binding.rvTransactions.requestLayout()
-            }
-        }
+
+
 
         binding.imageInfo.setOnClickListener {
             showPopupWindowForPets(it)
@@ -127,11 +125,19 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
             dialogSelectPaymentMethod()
         }
 
-        binding.imageBackButton.setOnClickListener {
-            findNavController().navigateUp()
-        }
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        navController = Navigation.findNavController(view)
+
+        binding.imageBackButton.setOnClickListener {
+            navController.navigateUp()
+        }
+
     }
 
 
@@ -321,5 +327,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener 
     override fun onSubmitClicked() {
         TODO("Not yet implemented")
     }
+
+
 
 }

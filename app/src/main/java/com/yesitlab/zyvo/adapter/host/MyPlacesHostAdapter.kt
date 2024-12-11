@@ -1,13 +1,19 @@
 package com.yesitlab.zyvo.adapter.host
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -62,12 +68,12 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
        var commonAuthWorkUtils = CommonAuthWorkUtils(context,null)
 
         if(!commonAuthWorkUtils.isScreenLarge(context)){
-            holder.binding.cl1.layoutParams.height = 500
+            holder.binding.cl1.layoutParams.height = 750
         }
 
         if (position == 1 || position == 3){
-            holder.binding.textInstantBook.visibility = View.VISIBLE
-            holder.binding.imageReward.visibility = View.VISIBLE
+            holder.binding.textInstantBook.visibility = View.GONE
+            holder.binding.imageReward.visibility = View.GONE
         }
         else{
             holder.binding.textInstantBook.visibility = View.GONE
@@ -117,11 +123,13 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
 
         // Set click listeners for each menu item in the popup layout
-        popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
+        popupView.findViewById<TextView>(R.id.itemEdit).setOnClickListener {
 
             popupWindow.dismiss()
         }
-        popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
+        popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
+            dialogDelete()
+
 
             popupWindow.dismiss()
         }
@@ -168,6 +176,39 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+    }
+
+
+
+
+    fun dialogDelete() {
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_delete_property)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            findViewById<ImageView>(R.id.imgCross).setOnClickListener {
+                dismiss()
+            }
+
+
+            findViewById<RelativeLayout>(R.id.yes_btn).setOnClickListener {
+
+                dismiss()
+            }
+            findViewById<RelativeLayout>(R.id.rl_cancel_btn).setOnClickListener {
+
+                dismiss()
+            }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
     }
 
 

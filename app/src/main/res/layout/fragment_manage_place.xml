@@ -64,6 +64,7 @@
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
+                android:textColor="@color/black"
                 android:text="Manage your place"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
@@ -72,11 +73,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Setup places, avaxilability, prices and more."
                 android:textColor="#000000"
                 android:textSize="@dimen/_13sdp"
+
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -94,7 +96,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
 
                     android:background="@drawable/bg_inner_select_white"
                     android:fontFamily="@font/poppins"
@@ -102,32 +104,32 @@
                     android:paddingVertical="8dp"
                     android:text="Home Setup"
                     android:textColor="#3F3D56"
-                    android:textSize="@dimen/_10ssp" />
+                    android:textSize="@dimen/_9ssp" />
 
                 <TextView
                     android:id="@+id/tv_gallery"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="1.2"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
                     android:text="Gallery &amp; Location"
                     android:textColor="#3F3D56"
-                    android:textSize="@dimen/_10sdp" />
+                    android:textSize="@dimen/_9sdp" />
 
                 <TextView
                     android:id="@+id/tv_availability"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_weight="0.9"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
                     android:text="Availability"
                     android:textColor="#3F3D56"
-                    android:textSize="@dimen/_10ssp" />
+                    android:textSize="@dimen/_9ssp" />
             </LinearLayout>
 
             <View
@@ -162,6 +164,7 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:background="@drawable/bg_outer_manage_place"
                     android:paddingHorizontal="@dimen/_3sdp"
+                    android:paddingVertical="@dimen/_2sdp"
                     android:weightSum="2">
 
 
@@ -174,6 +177,7 @@
                         android:gravity="center"
                         android:paddingVertical="8dp"
                         android:text="Entire Home"
+                        android:background="@drawable/bg_inner_select_white"
                         android:textColor="#3F3D56"
                         android:textSize="@dimen/_10ssp" />
 
@@ -198,6 +202,7 @@
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:text="Availability"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
@@ -209,6 +214,8 @@
                     android:layout_marginStart="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:text="Property Size (Sq ft)"
+                    android:fontFamily="@font/poppins"
+                android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp"
                     android:textStyle="bold" />
 
@@ -345,6 +352,8 @@
                     android:layout_marginStart="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:text="Number of People"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp"
                     android:textStyle="bold" />
 
@@ -469,6 +478,8 @@
                     android:layout_marginTop="@dimen/_8sdp"
                     android:text="Bedrooms"
                     android:textSize="@dimen/_12sdp"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -618,6 +629,8 @@
                     android:layout_marginTop="@dimen/_8sdp"
                     android:text="Bathrooms"
                     android:textSize="@dimen/_12sdp"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -867,6 +880,7 @@
                     android:layout_marginStart="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Instant Book"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
@@ -907,6 +921,7 @@
                     android:layout_marginStart="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Self check-in"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
@@ -1093,6 +1108,7 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
                     android:text="About the Space"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13ssp"
 
@@ -1149,6 +1165,7 @@
                     android:layout_marginTop="@dimen/_20sdp"
                     android:fontFamily="@font/poppins"
                     android:text="Parking Rules"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13ssp"
 
@@ -1348,6 +1365,7 @@
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12ssp"
+                    android:layout_marginTop="@dimen/_10ssp"
                     android:textStyle="bold"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:text="Minimum hour &amp; Pricing" />
@@ -1456,6 +1474,7 @@ android:layout_alignParentRight="true"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
+                    android:layout_marginTop="@dimen/_10ssp"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"
                     android:layout_marginHorizontal="@dimen/_15sdp"
@@ -1565,6 +1584,7 @@ android:layout_alignParentRight="true"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
+                    android:layout_marginTop="@dimen/_10ssp"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"
                     android:layout_marginHorizontal="@dimen/_15sdp"
@@ -1703,6 +1723,7 @@ android:layout_alignParentRight="true"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
+                    android:layout_marginTop="@dimen/_10ssp"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"
                     android:layout_marginHorizontal="@dimen/_15sdp"
@@ -2048,6 +2069,7 @@ android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
+                    android:layout_marginTop="@dimen/_10ssp"
                     android:textSize="@dimen/_12ssp"
                     android:textStyle="bold"
                     android:layout_marginHorizontal="@dimen/_15sdp"

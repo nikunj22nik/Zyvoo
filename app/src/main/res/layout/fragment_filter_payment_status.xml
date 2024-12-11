@@ -37,7 +37,7 @@
 
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/poppins"
-
+android:textStyle="bold"
             android:text="Filter"
             android:textColor="@color/black"
             android:textSize="@dimen/_17sdp"
@@ -63,7 +63,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="@dimen/_13sdp"
             android:layout_marginTop="@dimen/_10sdp"
-
+            android:textStyle="bold"
             android:fontFamily="@font/poppins"
             android:text="Payment Status"
             android:textColor="@color/black"
@@ -91,6 +91,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:text="Completed"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11sdp" />
@@ -104,6 +105,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
+                android:textStyle="bold"
                 android:text="Pending"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp" />
@@ -116,6 +118,7 @@
                 android:layout_marginVertical="@dimen/_4ssp"
                 android:layout_marginEnd="@dimen/_2sdp"
                 android:layout_weight="1"
+                android:textStyle="bold"
                 android:fontFamily="@font/poppins"
                 android:gravity="center"
                 android:text="Cancelled"

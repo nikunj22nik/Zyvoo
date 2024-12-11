@@ -26,6 +26,13 @@
 
 
 
+
+    <color name="headerPaymentColor">#EFF2F5</color>
+    <color name="contentPaymentColor">#FFFFFF</color>
+
+
+
+
 <!--    navigation bar colors-->
 
     <color name="clickedColor">#3A4B4C</color>
