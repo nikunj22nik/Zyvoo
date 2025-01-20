@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.yesitlab.zyvo.activity.guest.FirstFragment"
+        android:name="com.business.zyvo.activity.guest.FirstFragment"
         android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_first">
 
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.yesitlab.zyvo.activity.guest.SecondFragment"
+        android:name="com.business.zyvo.activity.guest.SecondFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 

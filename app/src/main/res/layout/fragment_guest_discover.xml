@@ -216,7 +216,7 @@
 <!--            app:layout_constraintStart_toStartOf="parent"-->
 <!--            app:layout_constraintTop_toTopOf="parent" />-->
 
-        <com.yesitlab.zyvo.SemiCircleProgressBar
+        <com.business.zyvo.SemiCircleProgressBar
             android:id="@+id/customProgressBar"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_176sdp"
@@ -231,7 +231,7 @@
 
             app:layout_constraintTop_toTopOf="parent">
 
-        </com.yesitlab.zyvo.SemiCircleProgressBar>
+        </com.business.zyvo.SemiCircleProgressBar>
 
 
 

@@ -475,7 +475,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center">
 
-                        <com.yesitlab.zyvo.CircularSeekBar
+                        <com.business.zyvo.CircularSeekBar
                             android:id="@+id/circularSeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -489,7 +489,7 @@
                             app:cc_tickTextColor="?android:attr/textColorPrimary">
 
 
-                        </com.yesitlab.zyvo.CircularSeekBar>
+                        </com.business.zyvo.CircularSeekBar>
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="@dimen/_157sdp"

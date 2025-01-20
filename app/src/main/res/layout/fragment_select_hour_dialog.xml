@@ -47,7 +47,7 @@ app:cardCornerRadius="@dimen/_20sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.yesitlab.zyvo.CircularSeekBar
+            <com.business.zyvo.CircularSeekBar
                 android:id="@+id/circularSeekBar"
                 android:layout_width="@dimen/_165sdp"
                 android:layout_height="@dimen/_165sdp"
@@ -62,7 +62,7 @@ app:cardCornerRadius="@dimen/_20sdp"
                 >
 
 
-            </com.yesitlab.zyvo.CircularSeekBar>
+            </com.business.zyvo.CircularSeekBar>
 
 
             <androidx.cardview.widget.CardView

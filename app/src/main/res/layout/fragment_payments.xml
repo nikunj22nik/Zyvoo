@@ -8,7 +8,7 @@
 
         <variable
             name="viewmodel"
-            type="com.yesitlab.zyvo.viewmodel.host.PaymentViewModel" />
+            type="com.business.zyvo.viewmodel.host.PaymentViewModel" />
     </data>
 
     <LinearLayout

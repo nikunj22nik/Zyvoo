@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.yesitlab.zyvo.SimpleRangeView
+    <com.business.zyvo.SimpleRangeView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/elementRangeBar"
         android:layout_width="match_parent"

@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.yesitlab.zyvo.viewmodel.HelpCenterViewModel" />
+            type="com.business.zyvo.viewmodel.HelpCenterViewModel" />
     </data>
 
     <ScrollView

@@ -160,7 +160,7 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_10sdp" />
 
-            <com.yesitlab.zyvo.RangeBarWithChart
+            <com.business.zyvo.RangeBarWithChart
                 android:id="@+id/seekBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

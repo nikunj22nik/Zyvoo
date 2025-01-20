@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.yesitlab.zyvo.viewmodel.NotificationViewModel" />
+            type="com.business.zyvo.viewmodel.NotificationViewModel" />
     </data>
 
 

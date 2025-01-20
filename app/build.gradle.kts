@@ -7,11 +7,11 @@ plugins {
 
 android{
 
-    namespace = "com.yesitlab.zyvo"
+    namespace = "com.business.zyvo"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.yesitlab.zyvo"
+        applicationId = "com.business.zyvo"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -20,12 +20,17 @@ android{
     }
 
     buildTypes {
+        debug {
+           val BASE_URL = project.property("BASE_URL")
+            buildConfigField("String", "BASE_URL", "${BASE_URL}")
+
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            val BASE_URL = project.property("BASE_URL")
+            buildConfigField("String", "BASE_URL", "${BASE_URL}")
         }
     }
 
@@ -42,6 +47,7 @@ android{
         viewBinding = true
         //noinspection DataBindingWithoutKapt
         dataBinding = true
+        buildConfig = true
     }
 }
 
