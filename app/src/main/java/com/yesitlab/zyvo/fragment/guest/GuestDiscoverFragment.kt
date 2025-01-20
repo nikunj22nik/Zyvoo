@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -24,6 +25,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -41,6 +43,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.yesitlab.zyvo.AppConstant
@@ -134,14 +137,21 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        binding.clSearch.visibility = View.VISIBLE
         val locations = listOf(
             Location(37.7749, -122.4194, "San Francisco"),
             Location(34.0522, -118.2437, "Los Angeles"),
             Location(40.7128, -74.0060, "New York")
         )
 
+        val callback: OnBackPressedCallback =
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    requireActivity().finishAffinity()
+                }
+            }
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
 
         binding.customProgressBar.setProgressWidth(15f)
@@ -210,6 +220,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
                     binding.rlMapView.visibility = View.VISIBLE
                     binding.recyclerViewBooking.visibility = View.GONE
                     binding.clTimeLeftProgressBar.visibility = View.GONE
+                    binding.clSearch.visibility = View.GONE
                 }
                 else{
                     binding.tvMapContent.setText("Show Map")
@@ -262,32 +273,57 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
     override fun onMapReady(mp: GoogleMap) {
 
-        googleMap = mp
-        // Example coordinates
-        val locations = listOf(
-            Location(37.7749, -122.4194, " $13/h"),
-            Location(34.0522, -118.2437, " $15/h"),
-            Location(40.7128, -74.0060, " $19/h"),
-            Location(51.5074, -0.1278, " $23/h"),
-            Location(48.8566, 2.3522, " $67/h")
-        )
 
-        for (location in locations) {
-            val customMarkerBitmap = createCustomMarker(requireContext(), location.title)
+        try {
+            googleMap = mp
+            // Add a marker in New York and move the camera
 
-            val markerOptions = MarkerOptions()
-                .position(LatLng(location.latitude, location.longitude))
-                .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
-                .title(location.title)
+            // Example coordinates
+            val locations = listOf(
+                Location(37.7749, -122.4194, "$13 / h"),
+                Location(34.0522, -118.2437, "$15 / h"),
+                Location(40.7128, -74.0060, "$19 / h"),
+                Location(51.5074, -0.1278, "$23 / h"),
+                Location(48.8566, 2.3522, "$67 / h")
+            )
 
-            googleMap.addMarker(markerOptions)
+            for (location in locations) {
+                val customMarkerBitmap = createCustomMarker(requireContext(), location.title)
+
+                val markerOptions = MarkerOptions()
+                    .position(LatLng(location.latitude, location.longitude))
+                    .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
+                    .title(location.title)
+
+                googleMap.addMarker(markerOptions)
+            }
+
+            // Move and zoom the camera to the first location
+            if (locations.isNotEmpty()) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    LatLng(locations[0].latitude, locations[0].longitude), 10f))
+            }
+
+           // googleMap?.clear()
+            // Apply custom style to the map
+            val success: Boolean = googleMap!!.setMapStyle(
+                MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
+            )
+
+            if (!success) {
+                Log.e("MapsActivity", "Style parsing failed.")
+            }
+
+
+
+        } catch (e: Resources.NotFoundException) {
+            Log.e("MapsActivity", "Can't find style. Error: ", e)
         }
 
-        // Move and zoom the camera to the first location
-        if (locations.isNotEmpty()) {
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                LatLng(locations[0].latitude, locations[0].longitude), 10f))
-        }
+
+
+
+
 
     }
 

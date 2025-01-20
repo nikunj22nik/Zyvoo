@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.AppConstant
 import com.yesitlab.zyvo.OnClickListener
@@ -26,6 +28,7 @@ class HostHelpCenterFragment : Fragment(),View.OnClickListener, OnClickListener 
     private lateinit var adapterAllGuides: AdapterAllGuides
     private lateinit var adapterAllArticles: AdapterAllArticles
 
+    lateinit var  navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,13 +56,17 @@ class HostHelpCenterFragment : Fragment(),View.OnClickListener, OnClickListener 
         arguments?.let {
             Log.d("TESTING_ANDROID", "I AM ON CLICK OF HOST Arguments")
 
-            if(it.containsKey(AppConstant.Guest)){
+            if(it.containsKey(AppConstant.type) && it.getString(AppConstant.type).equals(AppConstant.Guest)){
                 binding.radioGuest.isChecked = true
 
                 binding.radioHost.isChecked = false
+
+                Log.d("TESTING_ANDROID", "Guest")
+
             }else{
                 binding.radioHost.isChecked = true
                 binding.radioGuest.isChecked = false
+                Log.d("TESTING_ANDROID", "Host")
             }
         }
 
@@ -69,6 +76,16 @@ class HostHelpCenterFragment : Fragment(),View.OnClickListener, OnClickListener 
 
 
         return binding.root
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+
+        binding.imageBackIcon.setOnClickListener {
+            navController.navigateUp()
+        }
     }
 
     override fun onClick(p0: View?) {

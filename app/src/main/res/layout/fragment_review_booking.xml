@@ -105,19 +105,14 @@
                         android:layout_centerVertical="true"
                         android:layout_toEndOf="@+id/llUserName"
                         android:gravity="center_vertical"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:orientation="horizontal">
 
                         <View
                             android:id="@+id/viewProfile"
                             android:layout_width="@dimen/_2sdp"
                             android:layout_height="@dimen/_20sdp"
-<<<<<<< Updated upstream
-                           android:layout_alignParentStart="true"
-=======
                             android:layout_alignParentStart="true"
-                            android:visibility="visible"
->>>>>>> Stashed changes
                             android:background="#24000000" />
 
                         <ImageView
@@ -154,15 +149,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@+id/imageProfilePicture"
-                       android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginStart="@dimen/_5sdp"
                         android:layout_centerVertical="true"
-                        android:layout_marginEnd="@dimen/_7sdp"
                         android:orientation="horizontal">
 
 
                         <TextView
                             android:id="@+id/textUserName"
-                            android:layout_width="@dimen/_85sdp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toEndOf="@+id/imageProfilePicture"
@@ -175,7 +169,7 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12ssp"
                             android:textStyle="normal"
-                           />
+                            />
 
 
                         <!-- Star Rating Icon -->
@@ -184,7 +178,7 @@
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
                             android:layout_gravity="center_vertical"
-android:layout_marginBottom="@dimen/_3sdp"
+                            android:layout_marginBottom="@dimen/_3sdp"
                             android:visibility="gone"
                             android:src="@drawable/ic_profile_verify_check_icon" />
 
@@ -660,66 +654,66 @@ android:layout_marginBottom="@dimen/_3sdp"
 
                 <!-- Image Grid -->
 
-<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_marginHorizontal="@dimen/_10sdp"-->
-<!--                    android:layout_marginTop="16dp"-->
-<!--                    android:layout_marginBottom="16dp"-->
-<!--                    android:background="@drawable/bg_type_manage_place"-->
-<!--                    android:backgroundTint="@color/white">-->
+                <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginHorizontal="@dimen/_10sdp"-->
+                <!--                    android:layout_marginTop="16dp"-->
+                <!--                    android:layout_marginBottom="16dp"-->
+                <!--                    android:background="@drawable/bg_type_manage_place"-->
+                <!--                    android:backgroundTint="@color/white">-->
 
 
-<!--                    <com.google.android.material.imageview.ShapeableImageView-->
-<!--                        android:id="@+id/imageView1"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:background="@drawable/right_radius_bg"-->
-<!--                        android:scaleType="centerCrop"-->
-<!--                        android:src="@drawable/ic_image_for_viewpager"-->
-<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--                    <com.google.android.material.imageview.ShapeableImageView-->
+                <!--                        android:id="@+id/imageView1"-->
+                <!--                        android:layout_width="0dp"-->
+                <!--                        android:layout_height="0dp"-->
+                <!--                        android:background="@drawable/right_radius_bg"-->
+                <!--                        android:scaleType="centerCrop"-->
+                <!--                        android:src="@drawable/ic_image_for_viewpager"-->
+                <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
 
-<!--                        app:layout_constraintEnd_toStartOf="@+id/imageView2"-->
-<!--                        app:layout_constraintStart_toStartOf="parent"-->
-<!--                        app:layout_constraintTop_toTopOf="parent"-->
-<!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded1" />-->
-
-
-<!--                    &lt;!&ndash; Large Image (Left) &ndash;&gt;-->
+                <!--                        app:layout_constraintEnd_toStartOf="@+id/imageView2"-->
+                <!--                        app:layout_constraintStart_toStartOf="parent"-->
+                <!--                        app:layout_constraintTop_toTopOf="parent"-->
+                <!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded1" />-->
 
 
-<!--                    &lt;!&ndash; Top Right Image &ndash;&gt;-->
-<!--                    <com.google.android.material.imageview.ShapeableImageView-->
-<!--                        android:id="@+id/imageView2"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_marginStart="@dimen/_10sdp"-->
-<!--                        android:layout_marginBottom="@dimen/_5sdp"-->
-<!--                        android:scaleType="centerCrop"-->
-<!--                        android:src="@drawable/ic_image_for_viewpager"-->
-<!--                        app:layout_constraintBottom_toTopOf="@+id/imageView3"-->
-<!--                        app:layout_constraintDimensionRatio="1:1"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintStart_toEndOf="@id/imageView1"-->
-<!--                        app:layout_constraintTop_toTopOf="parent"-->
-<!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />-->
+                <!--                    &lt;!&ndash; Large Image (Left) &ndash;&gt;-->
 
-<!--                    &lt;!&ndash; Bottom Right Image &ndash;&gt;-->
-<!--                    <com.google.android.material.imageview.ShapeableImageView-->
-<!--                        android:id="@+id/imageView3"-->
-<!--                        android:layout_width="0dp"-->
-<!--                        android:layout_height="0dp"-->
-<!--                        android:layout_marginStart="@dimen/_10sdp"-->
-<!--                        android:layout_marginTop="@dimen/_5sdp"-->
-<!--                        android:scaleType="centerCrop"-->
-<!--                        android:src="@drawable/ic_image_for_viewpager"-->
-<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                        app:layout_constraintDimensionRatio="1:1"-->
-<!--                        app:layout_constraintEnd_toEndOf="parent"-->
-<!--                        app:layout_constraintStart_toEndOf="@id/imageView1"-->
-<!--                        app:layout_constraintTop_toBottomOf="@id/imageView2"-->
-<!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />-->
-<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+                <!--                    &lt;!&ndash; Top Right Image &ndash;&gt;-->
+                <!--                    <com.google.android.material.imageview.ShapeableImageView-->
+                <!--                        android:id="@+id/imageView2"-->
+                <!--                        android:layout_width="0dp"-->
+                <!--                        android:layout_height="0dp"-->
+                <!--                        android:layout_marginStart="@dimen/_10sdp"-->
+                <!--                        android:layout_marginBottom="@dimen/_5sdp"-->
+                <!--                        android:scaleType="centerCrop"-->
+                <!--                        android:src="@drawable/ic_image_for_viewpager"-->
+                <!--                        app:layout_constraintBottom_toTopOf="@+id/imageView3"-->
+                <!--                        app:layout_constraintDimensionRatio="1:1"-->
+                <!--                        app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                        app:layout_constraintStart_toEndOf="@id/imageView1"-->
+                <!--                        app:layout_constraintTop_toTopOf="parent"-->
+                <!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />-->
+
+                <!--                    &lt;!&ndash; Bottom Right Image &ndash;&gt;-->
+                <!--                    <com.google.android.material.imageview.ShapeableImageView-->
+                <!--                        android:id="@+id/imageView3"-->
+                <!--                        android:layout_width="0dp"-->
+                <!--                        android:layout_height="0dp"-->
+                <!--                        android:layout_marginStart="@dimen/_10sdp"-->
+                <!--                        android:layout_marginTop="@dimen/_5sdp"-->
+                <!--                        android:scaleType="centerCrop"-->
+                <!--                        android:src="@drawable/ic_image_for_viewpager"-->
+                <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--                        app:layout_constraintDimensionRatio="1:1"-->
+                <!--                        app:layout_constraintEnd_toEndOf="parent"-->
+                <!--                        app:layout_constraintStart_toEndOf="@id/imageView1"-->
+                <!--                        app:layout_constraintTop_toBottomOf="@id/imageView2"-->
+                <!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />-->
+                <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
                 <!-- Divider -->
@@ -909,8 +903,8 @@ android:layout_marginBottom="@dimen/_3sdp"
                         android:textColor="#000"
                         android:textSize="@dimen/_13ssp" />
                 </LinearLayout>
-                
-                
+
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
@@ -1114,10 +1108,8 @@ android:layout_marginBottom="@dimen/_3sdp"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_toRightOf="@id/img_parking"
-
-                        android:text="Parking"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
+                        android:text="Parking"
                         android:textSize="@dimen/_13sdp" />
 
                     <ImageView
@@ -1144,10 +1136,6 @@ android:layout_marginBottom="@dimen/_3sdp"
                         />
 
                 </RelativeLayout>
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
                 <RelativeLayout
                     android:id="@+id/rl_host_rules"
                     android:layout_width="match_parent"
@@ -1171,7 +1159,6 @@ android:layout_marginBottom="@dimen/_3sdp"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_toRightOf="@id/img_host_rule"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
                         android:text="Host rules"
                         android:textSize="@dimen/_13sdp" />
 
@@ -1199,24 +1186,6 @@ android:layout_marginBottom="@dimen/_3sdp"
                         />
 
                 </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/tv_host_rule"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_four_side_grey_corner"
-                    android:layout_marginHorizontal="@dimen/_16sdp"
-                    android:visibility="gone"
-                    >
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
-                        android:padding="@dimen/_10sdp"
-                        />
-
-                </RelativeLayout>
-
 
                 <View
                     android:layout_width="match_parent"
@@ -1252,7 +1221,7 @@ android:layout_marginBottom="@dimen/_3sdp"
                     android:layout_marginTop="@dimen/_10sdp" />
 
                 <TextView
-                    android:id="@+id/tvShowMore"
+                    android:id="@+id/tv_show_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"

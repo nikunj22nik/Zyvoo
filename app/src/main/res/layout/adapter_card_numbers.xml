@@ -10,11 +10,11 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.25"
+        android:layout_weight="0.20"
         >
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_40sdp"
+            android:layout_height="@dimen/_25sdp"
             android:src="@drawable/ic_card_view_adapter"
             />
     </LinearLayout>
@@ -26,24 +26,28 @@
         android:orientation="vertical"
         >
         <TextView
+            android:id="@+id/textCard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Card Number"
-            android:textSize="@dimen/_13ssp"
+            android:textSize="@dimen/_10ssp"
             android:fontFamily="@font/poppins"
             android:textColor="@color/black"
             android:textStyle="bold"
             />
 
         <TextView
+            android:id="@+id/textCardNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="**** **** **** **78"
+            android:textSize="@dimen/_9ssp"
             android:textColor="#AEAEAE"
             />
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/rlThreeDot"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="0.1"

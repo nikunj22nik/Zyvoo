@@ -5,9 +5,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 android:layout_width="wrap_content"
 android:layout_height="wrap_content"
-    android:background="@drawable/bg_two_side_corner_white"
+    android:background="@drawable/bg_inner_manage_place"
 android:paddingHorizontal="@dimen/_10sdp"
-android:paddingVertical="@dimen/_7sdp">
+android:paddingVertical="@dimen/_7sdp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
 <ImageView
     android:layout_width="wrap_content"
@@ -21,9 +23,10 @@ android:paddingVertical="@dimen/_7sdp">
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="$13/h"
-    android:textStyle="bold"
+    android:textColor="@color/black"
+    android:textStyle="normal"
     android:textSize="@dimen/_13sdp"
-    android:layout_marginStart="@dimen/_7sdp"
+    android:layout_marginStart="@dimen/_2sdp"
     />
 
 </LinearLayout>

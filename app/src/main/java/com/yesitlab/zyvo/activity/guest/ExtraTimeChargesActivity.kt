@@ -109,10 +109,10 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         }
 
 
-<<<<<<< Updated upstream
+
         binding.tvReadMoreLess.setCollapsedText("Read More")
         binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
-=======
+
         binding.tvReadMoreLess.setCollapsedText("show more")
         binding.tvReadMoreLess.setCollapsedTextColor(com.yesitlab.zyvo.R.color.green_color_bar)
 
@@ -120,7 +120,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
            startActivity(Intent(this,ExtraTimeActivity::class.java))
         }
 
->>>>>>> Stashed changes
+
     }
 
 

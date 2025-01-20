@@ -38,13 +38,13 @@
             android:layout_marginStart="@dimen/_15sdp"
             android:src="@drawable/ic_back_icon" />
 
-        <ImageView
-            android:id="@+id/imageFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/_15sdp"
-            android:src="@drawable/ic_filter" />
+<!--        <ImageView-->
+<!--            android:id="@+id/imageFilter"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_marginEnd="@dimen/_15sdp"-->
+<!--            android:src="@drawable/ic_filter" />-->
     </RelativeLayout>
 
     <View

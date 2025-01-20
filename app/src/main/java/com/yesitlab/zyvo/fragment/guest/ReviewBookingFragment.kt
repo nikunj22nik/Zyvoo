@@ -12,10 +12,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
-<<<<<<< Updated upstream
 import android.view.Gravity
-=======
->>>>>>> Stashed changes
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +45,7 @@ import java.time.YearMonth
 
 
 class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
-  private var _binding : FragmentReviewBookingBinding? = null
+    private var _binding : FragmentReviewBookingBinding? = null
     private  val binding get() = _binding!!
     private var param1: String? = null
     private var param2: String? = null
@@ -57,16 +54,14 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
     lateinit var adapterReview: AdapterReview
     private lateinit var mapView: MapView
     private var mMap: GoogleMap? = null
-lateinit var  navController: NavController
-
     lateinit var  navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-           // param1 = it.getString(ARG_PARAM1)
-        //    param2 = it.getString(ARG_PARAM2)
+            // param1 = it.getString(ARG_PARAM1)
+            //    param2 = it.getString(ARG_PARAM2)
         }
     }
 
@@ -78,7 +73,7 @@ lateinit var  navController: NavController
         _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_review_booking,container,false)
 
 
-binding.textReportIssueButton.visibility = View.GONE
+        binding.textReportIssueButton.visibility = View.GONE
         binding.textUserName.visibility = View.VISIBLE
         binding.rlNeedHelp.visibility = View.VISIBLE
         binding.imageStar1.visibility = View.GONE
@@ -100,8 +95,6 @@ binding.textReportIssueButton.visibility = View.GONE
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        navController = Navigation.findNavController(view)
-
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
@@ -123,34 +116,10 @@ binding.textReportIssueButton.visibility = View.GONE
         binding.imageShare.setOnClickListener {
             shareApp()
         }
-<<<<<<< Updated upstream
         binding.textReviewClick.setOnClickListener {
             showPopupWindow(it,0)
         }
         showingMoreText()
-=======
-        binding.imageBackIcon.setOnClickListener {
-            navController.navigateUp()
-        }
-
-        showingMoreText()
-
-        binding.rlParking.setOnClickListener {
-            if(binding.tvParkingRule.visibility == View.VISIBLE){
-                binding.tvParkingRule.visibility=View.GONE
-            }else{
-                binding.tvParkingRule.visibility = View.VISIBLE
-            }
-        }
-        binding.rlHostRules.setOnClickListener {
-            if(binding.tvHostRule.visibility == View.VISIBLE){
-                binding.tvHostRule.visibility = View.GONE
-            }
-            else{
-                binding.tvHostRule.visibility = View.VISIBLE
-            }
-        }
->>>>>>> Stashed changes
 
 
         binding.rlParking.setOnClickListener {
@@ -331,7 +300,7 @@ binding.textReportIssueButton.visibility = View.GONE
 
         adapterAddon = AdapterAddOn(requireContext(), getAddOnList().subList(0, 4))
 
-      adapterReview = AdapterReview(requireContext(), mutableListOf())
+        adapterReview = AdapterReview(requireContext(), mutableListOf())
 
 
 
@@ -350,11 +319,21 @@ binding.textReportIssueButton.visibility = View.GONE
 
         binding.recyclerReviews.adapter = adapterReview
 
+        val textView = binding.tvShowMore
+
+        textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
+        binding.tvLocationName.paintFlags =
+            binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
 
+        binding.tvShowMore.setOnClickListener {
 
+            binding.tvShowMore.visibility = View.GONE
 
+            adapterAddon.updateAdapter(getAddOnList())
 
+        }
 
 
 
@@ -378,62 +357,6 @@ binding.textReportIssueButton.visibility = View.GONE
         return list
 
     }
-
-
-    private fun showingLessText() {
-        val text = "Show Less"
-        val spannableString = SpannableString(text).apply {
-            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        binding.tvShowMore.text = spannableString
-        binding.tvShowMore.paint.flags = Paint.UNDERLINE_TEXT_FLAG
-        binding.tvShowMore.paint.isAntiAlias = true
-        binding.tvShowMore.setOnClickListener {
-            adapterAddon.updateAdapter(getAddOnList().subList(0, 4))
-
-            showingMoreText()
-        }
-
-
-//        val textView = binding.tvShowMore
-//
-//        textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-//
-//        binding.tvLocationName.paintFlags =
-//            binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-//
-//
-//        binding.tvShowMore.setOnClickListener {
-//
-//            binding.tvShowMore.visibility = View.GONE
-//
-//
-//
-//        }
-
-    }
-
-
-    private fun showingMoreText() {
-        val text = "Show More"
-        val spannableString = SpannableString(text).apply {
-            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        binding.tvShowMore.text = spannableString
-        binding.tvShowMore.paint.flags = Paint.UNDERLINE_TEXT_FLAG
-        binding.tvShowMore.paint.isAntiAlias = true
-        binding.tvShowMore.setOnClickListener {
-            adapterAddon.updateAdapter(getAddOnList())
-            // binding.underlinedTextView.visibility =View.GONE
-            showingLessText()
-        }
-
-
-
-
-    }
-
-
     override fun onResume() {
         super.onResume()
         mapView.onResume()  // Important to call in onResume

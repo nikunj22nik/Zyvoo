@@ -30,6 +30,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -125,10 +126,62 @@ navController = Navigation.findNavController(view)
         onClickDialogOpenner()
 
         binding.imageBackButton.setOnClickListener {
-            navController.navigateUp()
+
+            if (binding.llHomeSetup.isVisible == true){
+
+
+                navController.navigateUp()
+
+            }else if(binding.llGalleryLocation.isVisible == true){
+                binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_select_white)
+                binding.tvGallery.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.tvAvailability.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.llHomeSetup.visibility = View.VISIBLE
+                binding.llGalleryLocation.visibility = View.GONE
+                binding.llAvailability.visibility = View.GONE
+
+
+            }else if(binding.llAvailability.isVisible == true){
+
+                binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.tvGallery.setBackgroundResource(R.drawable.bg_inner_select_white)
+                binding.tvAvailability.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.llHomeSetup.visibility = View.GONE
+                binding.llGalleryLocation.visibility = View.VISIBLE
+                binding.llAvailability.visibility = View.GONE
+
+                binding.textSaveAndContinueButton.text = "Save & Continue"
+            }
+
+
+
         }
         binding.textSaveAndContinueButton.setOnClickListener {
-            findNavController().navigate(R.id.host_fragment_properties)
+            if (binding.llHomeSetup.isVisible == true){
+                binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.tvGallery.setBackgroundResource(R.drawable.bg_inner_select_white)
+                binding.tvAvailability.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.llHomeSetup.visibility = View.GONE
+                binding.llGalleryLocation.visibility = View.VISIBLE
+                binding.llAvailability.visibility = View.GONE
+
+
+
+            }else if(binding.llGalleryLocation.isVisible == true){
+                binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.tvGallery.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.tvAvailability.setBackgroundResource(R.drawable.bg_inner_select_white)
+                binding.llHomeSetup.visibility = View.GONE
+                binding.llGalleryLocation.visibility = View.GONE
+                binding.llAvailability.visibility = View.VISIBLE
+
+                binding.textSaveAndContinueButton.text = "Publish Now"
+            }else if(binding.llAvailability.isVisible == true){
+                findNavController().navigate(R.id.host_fragment_properties)
+            }
+
+
+
         }
     }
 
@@ -319,6 +372,7 @@ navController = Navigation.findNavController(view)
             binding.llGalleryLocation.visibility = View.GONE
             binding.llHomeSetup.visibility = View.VISIBLE
             binding.llAvailability.visibility = View.GONE
+            binding.textSaveAndContinueButton.text = "Save & Continue"
         }
 
         binding.tvGallery.setOnClickListener {
@@ -329,6 +383,7 @@ navController = Navigation.findNavController(view)
             binding.llGalleryLocation.visibility = View.VISIBLE
             binding.llAvailability.visibility = View.GONE
             binding.llHomeSetup.visibility = View.GONE
+            binding.textSaveAndContinueButton.text = "Save & Continue"
         }
 
         binding.tvAvailability.setOnClickListener {
@@ -339,6 +394,8 @@ navController = Navigation.findNavController(view)
             binding.llGalleryLocation.visibility = View.GONE
             binding.llAvailability.visibility = View.VISIBLE
             binding.llHomeSetup.visibility = View.GONE
+
+            binding.textSaveAndContinueButton.text = "Publish Now"
         }
 
         binding.allowPets.setOnClickListener{
@@ -951,12 +1008,12 @@ navController = Navigation.findNavController(view)
             // Ensure dialog dismisses when touched outside
        //     window?.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
-            val rootView = findViewById<View>(android.R.id.content)
-            rootView.setOnTouchListener { _, _ ->
-                // Dismiss the dialog when touched outside
-                dialog.dismiss()
-                true
-            }
+//            val rootView = findViewById<View>(android.R.id.content)
+//            rootView.setOnTouchListener { _, _ ->
+//                // Dismiss the dialog when touched outside
+//                dialog.dismiss()
+//                true
+//            }
 
             show()
         }

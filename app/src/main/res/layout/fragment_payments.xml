@@ -244,7 +244,7 @@
                         android:background="@drawable/bg_save_button"
 
                         android:fontFamily="@font/poppins"
-                        android:paddingHorizontal="@dimen/_18ssp"
+                        android:paddingHorizontal="@dimen/_10ssp"
                         android:paddingVertical="@dimen/_8ssp"
                         android:text="Add payout Method"
                         android:textColor="#fff"

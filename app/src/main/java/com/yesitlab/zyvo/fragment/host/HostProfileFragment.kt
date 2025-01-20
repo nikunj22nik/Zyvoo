@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -18,6 +19,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -52,6 +54,8 @@ import com.yesitlab.zyvo.adapter.AddLanguageSpeakAdapter
 import com.yesitlab.zyvo.adapter.AddLocationAdapter
 import com.yesitlab.zyvo.adapter.AddPetsAdapter
 import com.yesitlab.zyvo.adapter.AddWorkAdapter
+import com.yesitlab.zyvo.adapter.host.BankNameAdapter
+import com.yesitlab.zyvo.adapter.host.CardNumberAdapter
 import com.yesitlab.zyvo.adapter.selectLanguage.LocaleAdapter
 import com.yesitlab.zyvo.databinding.FragmentHostProfileBinding
 import com.yesitlab.zyvo.databinding.FragmentProfileBinding
@@ -61,6 +65,7 @@ import com.yesitlab.zyvo.model.AddLocationModel
 import com.yesitlab.zyvo.model.AddPaymentCardModel
 import com.yesitlab.zyvo.model.AddPetsModel
 import com.yesitlab.zyvo.model.AddWorkModel
+import com.yesitlab.zyvo.model.CountryLanguage
 import com.yesitlab.zyvo.utils.CommonAuthWorkUtils
 import com.yesitlab.zyvo.viewmodel.PaymentViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -76,7 +81,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private lateinit var addLanguageSpeakAdapter: AddLanguageSpeakAdapter
     private lateinit var addHobbiesAdapter: AddHobbiesAdapter
     private lateinit var dateManager: DateManager
-    private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
+    private lateinit var bankNameAdapter: BankNameAdapter
+    private lateinit var cardNumberAdapter: CardNumberAdapter
+   // private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
     private val paymentCardViewHolder: PaymentViewModel by lazy {
         ViewModelProvider(this)[PaymentViewModel::class.java]
     }
@@ -93,6 +100,10 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private var bottomSheetDialog: BottomSheetDialog? = null
     private var imageStatus = ""
     private var isDropdownOpen = false
+
+
+    private val list1 = mutableListOf<CountryLanguage>()
+    private val list2 = mutableListOf<CountryLanguage>()
 
 
     // For handling the result of the Autocomplete Activity
@@ -162,7 +173,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         binding.textLogout.setOnClickListener(this)
         binding.textNotifications.setOnClickListener(this)
         binding.textVisitHelpCenter.setOnClickListener(this)
-        binding.textAddNewPaymentCard.setOnClickListener(this)
+
         binding.imageInfoIcon.setOnClickListener(this)
         binding.clHead.setOnClickListener(this)
         binding.imageEditPicture.setOnClickListener(this)
@@ -171,9 +182,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         binding.textConfirmNow1.setOnClickListener(this)
         binding.textPaymentWithdraw.setOnClickListener(this)
         binding.textLanguage.setOnClickListener(this)
+        binding.imageEditEmail.setOnClickListener(this)
+        binding.imageEditPhoneNumber.setOnClickListener(this)
 
         adapterInitialize()
-
+        paymentOpenCloseDropDown()
         // Initialize Places API if not already initialized
         if (!Places.isInitialized()) {
             Places.initialize(requireActivity(), apiKey)
@@ -196,6 +209,15 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             startActivity(intent)
             requireActivity().finish()
         }
+        binding.textAddNew.setOnClickListener {
+            findNavController().navigate(R.id.payoutFragment)
+        }
+
+        binding.textAddNewPaymentMethod.setOnClickListener {
+            findNavController().navigate(R.id.payoutFragment)
+        }
+
+
     }
 
 
@@ -230,7 +252,41 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 //        addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this)
 //        binding.recyclerViewPets.adapter = addPetsAdapter
 
+         bankNameAdapter =  BankNameAdapter(requireContext(), list = list1)
+         cardNumberAdapter =  CardNumberAdapter(requireContext(),list = list2)
+
+binding.recyclerViewPaymentCardList.adapter = bankNameAdapter
+binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
+
+        val initialList1 = List(6) { index ->
+            if (index % 2 == 0) {
+                CountryLanguage( "Bank Name",  "Bill gilbert, Checking .....4898(USD)")
+            } else {
+                CountryLanguage("Bank Name",  "Bill gilbert, Checking .....4898(USD)")
+            }
+        }
+
+        val initialList2 = List(4) { index ->
+            if (index % 2 == 0) {
+                CountryLanguage( "Card Number",  " ****  **** ****78")
+            } else {
+                CountryLanguage("Card Number",  " ****  **** ****78")
+            }
+        }
+        bankNameAdapter.addItems(initialList1)
+        cardNumberAdapter.addItems(initialList2)
+
+
+
+
+
+
     }
+
+
+
+
+
 
     // Function to start the location picker using Autocomplete
     private fun startLocationPicker() {
@@ -334,11 +390,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             if (isDropdownOpen) {
 
-                binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
-                binding.textAddNewPaymentCard.visibility = View.VISIBLE
+                binding.rlBankNameAndCardName.visibility = View.VISIBLE
+
             } else if (!isDropdownOpen) {
-                binding.recyclerViewPaymentCardList.visibility = View.GONE
-                binding.textAddNewPaymentCard.visibility = View.GONE
+                binding.rlBankNameAndCardName.visibility = View.GONE
+
 
             }
             binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
@@ -405,7 +461,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                startActivity(Intent(requireActivity(),PlaceOpenActivity::class.java))
             }
             R.id.textPrivacyPolicy->{
-                findNavController().navigate(R.id.privacyPolicyFragment)
+                val bundle = Bundle()
+                bundle.putInt("privacy",1)
+                findNavController().navigate(R.id.privacyPolicyFragment,bundle)
             }
             R.id.textTermServices->{
                 findNavController().navigate(R.id.termsServicesFragment)
@@ -422,6 +480,18 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             R.id.textNotifications -> {
                 findNavController().navigate(R.id.notificationFragment)
             }
+
+            R.id.imageEditEmail -> {
+                commonAuthWorkUtils.dialogEmailVerification(requireContext(), null.toString())
+
+            }
+
+            R.id.imageEditPhoneNumber -> {
+
+                commonAuthWorkUtils.dialogNumberVerification(requireContext())
+
+            }
+
             R.id.textVisitHelpCenter -> {
                 var bundle = Bundle()
                 bundle.putString(AppConstant.type, AppConstant.Host)
@@ -509,7 +579,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             btnAddPayment.setOnClickListener {
                 dismiss()
-                binding.textAddNewPaymentCard.visibility =View.GONE
+
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))

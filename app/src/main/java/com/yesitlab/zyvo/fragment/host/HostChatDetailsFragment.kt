@@ -62,7 +62,7 @@ class HostChatDetailsFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageThreeDots.setOnClickListener(this)
-        binding.imageFilter.setOnClickListener(this)
+      //  binding.imageFilter.setOnClickListener(this)
 
 
         navController = Navigation.findNavController(view)
@@ -256,10 +256,10 @@ class HostChatDetailsFragment : Fragment(), View.OnClickListener {
             }
 
 
-            R.id.imageFilter -> {
-
-                showAllBookingPopupWindow(binding.imageFilter, 0)
-            }
+//            R.id.imageFilter -> {
+//
+//                showAllBookingPopupWindow(binding.imageFilter, 0)
+//            }
         }
 
     }

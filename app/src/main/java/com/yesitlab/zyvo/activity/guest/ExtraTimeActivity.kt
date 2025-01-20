@@ -15,6 +15,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.findNavController
 import com.skydoves.powerspinner.PowerSpinnerView
 import com.yesitlab.zyvo.DateManager.DateManager
 import com.yesitlab.zyvo.R
@@ -155,7 +156,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                     txtSubmit.setText("Submitted")
                 }else{
                     dialog.dismiss()
-                     openDialogSuccess()
+                    openDialogNotification()
                 }
             }
 
@@ -173,6 +174,42 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             show()
         }
 
+    }
+
+    private fun openDialogNotification(){
+
+        val dialog=Dialog(this, R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_notification_report_submit)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            var okBtn :ImageView = findViewById<ImageView>(R.id.img_cross)
+            var cross :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            cross.setOnClickListener {
+                openDialogSuccess()
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+
+                openDialogSuccess()
+                dialog.dismiss()
+            }
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
+        }
     }
 
     private fun openDialogSuccess(){
@@ -230,14 +267,13 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
 
             okBtn.setOnClickListener {
                 dialog.dismiss()
+               startActivity(Intent(this@ExtraTimeActivity, GuesMain::class.java))
             }
             cross.setOnClickListener {
                 dialog.dismiss()
             }
 
-            okBtn.setOnClickListener {
-                dialog.dismiss()
-            }
+
 
             window?.setLayout(
                 (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen

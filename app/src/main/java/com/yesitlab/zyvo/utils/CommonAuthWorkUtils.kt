@@ -6,9 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.Image
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -153,8 +156,13 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController?) {
             var checkBox =  findViewById<CheckBox>(R.id.checkBox)
             var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
             var textForget =  findViewById<TextView>(R.id.textForget)
+            var etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
+            var imgHidePass =  findViewById<ImageView>(R.id.imgHidePass)
+            var imgShowPass =  findViewById<ImageView>(R.id.imgShowPass)
             var textDontHaveAnAccount =  findViewById<TextView>(R.id.textDontHaveAnAccount)
             var textRegister =  findViewById<TextView>(R.id.textRegister)
+
+            eyeHideShow(imgHidePass,imgShowPass,etConfirmPassword)
 
             textRegister.setOnClickListener{
                 dialogRegisterEmail(context)
@@ -179,6 +187,22 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController?) {
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
+
+
+    fun eyeHideShow(imgHidePass:ImageView,imgShowPass:ImageView,etPassword:EditText){
+        imgHidePass.setOnClickListener{
+           imgShowPass.visibility = View.VISIBLE
+            imgHidePass.visibility = View.GONE
+            etPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
+            etPassword.setSelection(etPassword.text.length)
+        }
+        imgShowPass.setOnClickListener {
+            imgShowPass.visibility = View.GONE
+            imgHidePass.visibility = View.VISIBLE
+            etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
+            etPassword.setSelection(etPassword.text.length)
+        }
+    }
 
     fun dialogRegisterEmail(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -322,7 +346,7 @@ class CommonAuthWorkUtils(var context: Context, navController: NavController?) {
 
                 val texter = if (text != null.toString()) text else text2
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto @gmail.com"
+                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
                 dialogOtp(context,texter,textHeaderOfOtpVerfication)
 
                 dismiss()

@@ -53,7 +53,6 @@ class CircularSeekBar1 @JvmOverloads constructor(
         private const val MAX_ANGLE = -240f
         private const val START_ANGLE = -90f
         private const val SWEEP_ANGLE = 360f
-
     }
 
     private val paintDot = Paint(Paint.ANTI_ALIAS_FLAG).apply {

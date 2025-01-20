@@ -15,116 +15,116 @@
         android:background="@color/white"
         tools:context=".fragment.guest.ProfileFragment">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/stroke1"
-            app:layout_constraintTop_toTopOf="parent">
+<!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--            android:id="@+id/clSearch"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@drawable/stroke1"-->
+<!--            app:layout_constraintTop_toTopOf="parent">-->
 
-            <RelativeLayout
-                android:id="@+id/rlFind"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_25sdp"
-                android:layout_marginVertical="@dimen/_13sdp"
-                android:background="@drawable/search_bar_bg"
-                android:paddingVertical="@dimen/_4sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+<!--            <RelativeLayout-->
+<!--                android:id="@+id/rlFind"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginHorizontal="@dimen/_25sdp"-->
+<!--                android:layout_marginVertical="@dimen/_13sdp"-->
+<!--                android:background="@drawable/search_bar_bg"-->
+<!--                android:paddingVertical="@dimen/_4sdp"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent">-->
 
-                <TextView
-                    android:id="@+id/textWhere"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
+<!--                <TextView-->
+<!--                    android:id="@+id/textWhere"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginHorizontal="@dimen/_15sdp"-->
 
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/where"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold" />
+<!--                    android:fontFamily="@font/poppins"-->
+<!--                    android:text="@string/where"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="@dimen/_10ssp"-->
+<!--                    android:textStyle="bold" />-->
 
-                <View
-                    android:id="@+id/viewTextWhere"
-                    android:layout_width="@dimen/_1sdp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/textWhere"
-                    android:background="#E5E5E5" />
+<!--                <View-->
+<!--                    android:id="@+id/viewTextWhere"-->
+<!--                    android:layout_width="@dimen/_1sdp"-->
+<!--                    android:layout_height="@dimen/_15sdp"-->
+<!--                    android:layout_alignParentTop="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_toEndOf="@id/textWhere"-->
+<!--                    android:background="#E5E5E5" />-->
 
-                <TextView
-                    android:id="@+id/textTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_toEndOf="@id/viewTextWhere"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/time"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/textTime"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginHorizontal="@dimen/_15sdp"-->
+<!--                    android:layout_toEndOf="@id/viewTextWhere"-->
+<!--                    android:fontFamily="@font/poppins"-->
+<!--                    android:text="@string/time"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="@dimen/_10ssp"-->
+<!--                    android:textStyle="bold" />-->
 
-                <View
-                    android:id="@+id/viewTextTime"
-                    android:layout_width="@dimen/_1sdp"
-                    android:layout_height="@dimen/_15sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_toEndOf="@id/textTime"
-                    android:background="#E5E5E5" />
+<!--                <View-->
+<!--                    android:id="@+id/viewTextTime"-->
+<!--                    android:layout_width="@dimen/_1sdp"-->
+<!--                    android:layout_height="@dimen/_15sdp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_toEndOf="@id/textTime"-->
+<!--                    android:background="#E5E5E5" />-->
 
-                <TextView
-                    android:id="@+id/textActivity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_15sdp"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_toEndOf="@id/viewTextTime"
-                    android:fontFamily="@font/poppins"
-                    android:text="@string/activity"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:id="@+id/textActivity"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginStart="@dimen/_15sdp"-->
+<!--                    android:layout_marginEnd="@dimen/_10sdp"-->
+<!--                    android:layout_toEndOf="@id/viewTextTime"-->
+<!--                    android:fontFamily="@font/poppins"-->
+<!--                    android:text="@string/activity"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="@dimen/_10ssp"-->
+<!--                    android:textStyle="bold" />-->
 
-                <ImageView
-                    android:id="@+id/imageSearchBar"
-                    android:layout_width="@dimen/_25sdp"
-                    android:layout_height="@dimen/_25sdp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    android:layout_toEndOf="@id/textActivity"
-                    android:src="@drawable/ic_search_bar_icon" />
-
-
-            </RelativeLayout>
+<!--                <ImageView-->
+<!--                    android:id="@+id/imageSearchBar"-->
+<!--                    android:layout_width="@dimen/_25sdp"-->
+<!--                    android:layout_height="@dimen/_25sdp"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:layout_marginEnd="@dimen/_5sdp"-->
+<!--                    android:layout_toEndOf="@id/textActivity"-->
+<!--                    android:src="@drawable/ic_search_bar_icon" />-->
 
 
-            <ImageView
-                android:id="@+id/filter_icon"
-                android:layout_width="@dimen/_33sdp"
-                android:layout_height="@dimen/_33sdp"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:src="@drawable/ic_filter"
-                app:layout_constraintBottom_toBottomOf="@id/rlFind"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/rlFind"
-                app:layout_constraintTop_toTopOf="@+id/rlFind" />
+<!--            </RelativeLayout>-->
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--            <ImageView-->
+<!--                android:id="@+id/filter_icon"-->
+<!--                android:layout_width="@dimen/_33sdp"-->
+<!--                android:layout_height="@dimen/_33sdp"-->
+<!--                android:layout_marginHorizontal="@dimen/_10sdp"-->
+<!--                android:src="@drawable/ic_filter"-->
+<!--                app:layout_constraintBottom_toBottomOf="@id/rlFind"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toEndOf="@+id/rlFind"-->
+<!--                app:layout_constraintTop_toTopOf="@+id/rlFind" />-->
+
+<!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_20sdp"
             android:background="@drawable/button_grey_line_bg"
-            app:layout_constraintTop_toBottomOf="@+id/clSearch">
+            app:layout_constraintTop_toTopOf="parent">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageProfilePicture"
@@ -222,7 +222,7 @@
         </androidx.cardview.widget.CardView>
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <LinearLayout
             android:id="@+id/clVerification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -230,184 +230,210 @@
             android:layout_marginTop="@dimen/_12sdp"
             android:background="@drawable/button_grey_line_bg"
             android:backgroundTint="#3A4B4C"
+            android:orientation="horizontal"
+            android:weightSum="3"
             android:paddingBottom="@dimen/_10sdp"
             app:layout_constraintTop_toBottomOf="@+id/clProfile">
 
             <!-- email address-->
 
-            <ImageView
-                android:id="@+id/imageEmail"
-                android:layout_width="@dimen/_75sdp"
-                android:layout_height="@dimen/_75sdp"
-                android:layout_margin="@dimen/_11sdp"
-                android:background="@drawable/button_grey_line_bg"
-                android:backgroundTint="#1AFFFFFF"
-                android:padding="@dimen/_20sdp"
-                android:src="@drawable/big_email_icon"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textEmailAddress"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3sdp"
-                android:fontFamily="@font/open_sans_bold"
-                android:text="Email Address"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_11ssp"
-                app:layout_constraintEnd_toEndOf="@id/imageEmail"
-                app:layout_constraintStart_toStartOf="@id/imageEmail"
-                app:layout_constraintTop_toBottomOf="@+id/imageEmail" />
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/imageEmail"
+                    android:layout_width="@dimen/_72sdp"
+                    android:layout_height="@dimen/_72sdp"
+                    android:layout_margin="@dimen/_11sdp"
+                    android:background="@drawable/button_grey_line_bg"
+                    android:backgroundTint="#1AFFFFFF"
+                    android:padding="@dimen/_20sdp"
+                    android:src="@drawable/big_email_icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/textConfirmNow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:fontFamily="@font/poppins"
-                android:text="@string/confirm_now"
-                android:textColor="#80FFFFFF"
-                android:textSize="@dimen/_10sdp"
-                app:layout_constraintEnd_toEndOf="@+id/textEmailAddress"
-                app:layout_constraintStart_toStartOf="@id/textEmailAddress"
-                app:layout_constraintTop_toBottomOf="@+id/textEmailAddress" />
+                <TextView
+                    android:id="@+id/textEmailAddress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
 
-            <TextView
-                android:id="@+id/textVerified"
-                android:layout_width="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="Email Address"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10ssp"
+                    app:layout_constraintEnd_toEndOf="@id/imageEmail"
+                    app:layout_constraintStart_toStartOf="@id/imageEmail"
+                    app:layout_constraintTop_toBottomOf="@+id/imageEmail" />
+
+                <TextView
+                    android:id="@+id/textConfirmNow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:fontFamily="@font/poppins"
+                    android:text="@string/confirm_now"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="@dimen/_9sdp"
+                    app:layout_constraintEnd_toEndOf="@+id/textEmailAddress"
+                    app:layout_constraintStart_toStartOf="@id/textEmailAddress"
+                    app:layout_constraintTop_toBottomOf="@+id/textEmailAddress" />
+
+                <TextView
+                    android:id="@+id/textVerified"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_3sdp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Verified"
+                    android:textColor="#E6FFFFFF"
+                    android:textSize="@dimen/_9sdp"
+                    android:visibility="gone"
+                    app:drawableEndCompat="@drawable/ic_verified_tick"
+                    app:layout_constraintEnd_toEndOf="@+id/textEmailAddress"
+                    app:layout_constraintStart_toStartOf="@id/textEmailAddress"
+                    app:layout_constraintTop_toBottomOf="@+id/textConfirmNow" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawablePadding="@dimen/_3sdp"
-                android:fontFamily="@font/poppins"
-                android:text="Verified"
-                android:textColor="#E6FFFFFF"
-                android:textSize="@dimen/_10sdp"
-                android:visibility="gone"
-                app:drawableEndCompat="@drawable/ic_verified_tick"
-                app:layout_constraintEnd_toEndOf="@+id/textEmailAddress"
-                app:layout_constraintStart_toStartOf="@id/textEmailAddress"
-                app:layout_constraintTop_toBottomOf="@+id/textConfirmNow" />
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/imagePhone"
+                    android:layout_width="@dimen/_72sdp"
+                    android:layout_height="@dimen/_72sdp"
+                    android:layout_marginHorizontal="@dimen/_14sdp"
+                    android:layout_marginVertical="@dimen/_11sdp"
+                    android:background="@drawable/button_grey_line_bg"
+                    android:backgroundTint="#1AFFFFFF"
+                    android:padding="@dimen/_21sdp"
+                    android:src="@drawable/big_phone_icon"
+                    app:layout_constraintStart_toEndOf="@+id/imageEmail"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textPhoneNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="Phone Number"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10ssp"
+                    app:layout_constraintEnd_toEndOf="@id/imagePhone"
+                    app:layout_constraintStart_toStartOf="@id/imagePhone"
+                    app:layout_constraintTop_toBottomOf="@+id/imagePhone" />
+
+                <TextView
+                    android:id="@+id/textConfirmNow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:fontFamily="@font/poppins"
+                    android:text="@string/confirm_now"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="@dimen/_9sdp"
+                    app:layout_constraintEnd_toEndOf="@+id/textPhoneNumber"
+
+                    app:layout_constraintStart_toStartOf="@id/textPhoneNumber"
+                    app:layout_constraintTop_toBottomOf="@+id/textPhoneNumber" />
+
+                <TextView
+                    android:id="@+id/textVerified1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_3sdp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Verified"
+                    android:textColor="#E6FFFFFF"
+                    android:textSize="@dimen/_9sdp"
+                    android:visibility="gone"
+                    app:drawableEndCompat="@drawable/ic_verified_tick"
+                    app:layout_constraintEnd_toEndOf="@+id/textPhoneNumber"
+
+                    app:layout_constraintStart_toStartOf="@id/textPhoneNumber"
+                    app:layout_constraintTop_toBottomOf="@+id/textConfirmNow1" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_weight="1">
+                <ImageView
+                    android:id="@+id/imageIdentity"
+                    android:layout_width="@dimen/_72sdp"
+                    android:layout_height="@dimen/_72sdp"
+                    android:layout_marginVertical="@dimen/_10sdp"
+                    android:background="@drawable/button_grey_line_bg"
+                    android:backgroundTint="#1AFFFFFF"
+                    android:padding="@dimen/_17sdp"
+                    android:src="@drawable/ic_author_profile_icon"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/imagePhone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="#fff" />
+
+                <TextView
+                    android:id="@+id/textIdentity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/open_sans_bold"
+                    android:text="Verify identity"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_10ssp"
+                    app:layout_constraintEnd_toEndOf="@id/imageIdentity"
+                    app:layout_constraintStart_toStartOf="@id/imageIdentity"
+                    app:layout_constraintTop_toBottomOf="@+id/imageIdentity" />
+
+                <TextView
+                    android:id="@+id/textConfirmNow2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_2sdp"
+                    android:fontFamily="@font/poppins"
+                    android:text="@string/confirm_now"
+                    android:textColor="#80FFFFFF"
+                    android:textSize="@dimen/_9sdp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/textIdentity"
+                    app:layout_constraintStart_toStartOf="@id/textIdentity"
+
+                    app:layout_constraintTop_toBottomOf="@+id/textIdentity" />
+
+                <TextView
+                    android:id="@+id/textVerified2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_3sdp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Verified"
+                    android:textColor="#E6FFFFFF"
+                    android:textSize="@dimen/_9sdp"
+                    android:visibility="visible"
+                    app:drawableEndCompat="@drawable/ic_verified_tick"
+                    app:layout_constraintEnd_toEndOf="@+id/textIdentity"
+                    app:layout_constraintStart_toStartOf="@id/textIdentity"
+                    app:layout_constraintTop_toBottomOf="@+id/textConfirmNow2" />
+
+            </LinearLayout>
+
 
             <!-- phone number-->
 
-            <ImageView
-                android:id="@+id/imagePhone"
-                android:layout_width="@dimen/_75sdp"
-                android:layout_height="@dimen/_75sdp"
-                android:layout_marginHorizontal="@dimen/_14sdp"
-                android:layout_marginVertical="@dimen/_11sdp"
-                android:background="@drawable/button_grey_line_bg"
-                android:backgroundTint="#1AFFFFFF"
-                android:padding="@dimen/_21sdp"
-                android:src="@drawable/big_phone_icon"
-                app:layout_constraintStart_toEndOf="@+id/imageEmail"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textPhoneNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3sdp"
-                android:fontFamily="@font/open_sans_bold"
-                android:text="Phone Number"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_11ssp"
-                app:layout_constraintEnd_toEndOf="@id/imagePhone"
-                app:layout_constraintStart_toStartOf="@id/imagePhone"
-                app:layout_constraintTop_toBottomOf="@+id/imagePhone" />
-
-            <TextView
-                android:id="@+id/textConfirmNow1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:fontFamily="@font/poppins"
-                android:text="@string/confirm_now"
-                android:textColor="#80FFFFFF"
-                android:textSize="@dimen/_10sdp"
-                app:layout_constraintEnd_toEndOf="@+id/textPhoneNumber"
-
-                app:layout_constraintStart_toStartOf="@id/textPhoneNumber"
-                app:layout_constraintTop_toBottomOf="@+id/textPhoneNumber" />
-
-            <TextView
-                android:id="@+id/textVerified1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="@dimen/_3sdp"
-                android:fontFamily="@font/poppins"
-                android:text="Verified"
-                android:textColor="#E6FFFFFF"
-                android:textSize="@dimen/_10sdp"
-                android:visibility="gone"
-                app:drawableEndCompat="@drawable/ic_verified_tick"
-                app:layout_constraintEnd_toEndOf="@+id/textPhoneNumber"
-
-                app:layout_constraintStart_toStartOf="@id/textPhoneNumber"
-                app:layout_constraintTop_toBottomOf="@+id/textConfirmNow1" />
 
             <!-- verify identify-->
 
 
-            <ImageView
-                android:id="@+id/imageIdentity"
-                android:layout_width="@dimen/_75sdp"
-                android:layout_height="@dimen/_75sdp"
-                android:layout_marginVertical="@dimen/_10sdp"
-                android:background="@drawable/button_grey_line_bg"
-                android:backgroundTint="#1AFFFFFF"
-                android:padding="@dimen/_17sdp"
-                android:src="@drawable/ic_author_profile_icon"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imagePhone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="#fff" />
-
-            <TextView
-                android:id="@+id/textIdentity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3sdp"
-                android:fontFamily="@font/open_sans_bold"
-                android:text="Verify identity"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_11ssp"
-                app:layout_constraintEnd_toEndOf="@id/imageIdentity"
-                app:layout_constraintStart_toStartOf="@id/imageIdentity"
-                app:layout_constraintTop_toBottomOf="@+id/imageIdentity" />
-
-            <TextView
-                android:id="@+id/textConfirmNow2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_2sdp"
-                android:fontFamily="@font/poppins"
-                android:text="@string/confirm_now"
-                android:textColor="#80FFFFFF"
-                android:textSize="@dimen/_10sdp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/textIdentity"
-                app:layout_constraintStart_toStartOf="@id/textIdentity"
-
-                app:layout_constraintTop_toBottomOf="@+id/textIdentity" />
-
-            <TextView
-                android:id="@+id/textVerified2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="@dimen/_3sdp"
-                android:fontFamily="@font/poppins"
-                android:text="Verified"
-                android:textColor="#E6FFFFFF"
-                android:textSize="@dimen/_10sdp"
-                android:visibility="visible"
-                app:drawableEndCompat="@drawable/ic_verified_tick"
-                app:layout_constraintEnd_toEndOf="@+id/textIdentity"
-                app:layout_constraintStart_toStartOf="@id/textIdentity"
-                app:layout_constraintTop_toBottomOf="@+id/textConfirmNow2" />
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
 
         <TextView

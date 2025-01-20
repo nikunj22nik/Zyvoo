@@ -1,5 +1,6 @@
 package com.yesitlab.zyvo
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -38,26 +39,15 @@ class CircularSeekBar @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr)
 {
-
-
     companion object {
         private const val MAX_SCALE = 11
         private const val MIX_SCALE = 0
-
-        private const val MAJOR_TICK_SIZE = 80f
-        private const val MINOR_TICK_SIZE = 50f
         private const val MAJOR_TICK_WIDTH = 6f
         private const val MINOR_TICK_WIDTH = 3f
-        private const val TICK_MARGIN = 30f
-        private const val TICK_TEXT_MARGIN = 15f
-
         private const val MIN_ANGLE = 90f
         private const val MAX_ANGLE = -240f
         private const val START_ANGLE = -90f
         private const val SWEEP_ANGLE = 360f
-
-
-
 
     }
 
@@ -196,7 +186,7 @@ class CircularSeekBar @JvmOverloads constructor(
     var isStartEnabled: Boolean = true
     var isEndEnabled: Boolean = true
 
-    private var is24HR = false
+    private var is24HR = true
         set(value) {
             field = value
             _angleOfAnHour = if (is24HR) 15 else 30
@@ -211,8 +201,9 @@ class CircularSeekBar @JvmOverloads constructor(
 //            invalidate()
         }
 
-    var endHours: Float = 0f
+    var endHours: Float = 2f
         set(value) {
+          //  field = value.coerceIn(0f, 24f)
             field = if (is24HR) value % 24 else value % 12
             currentEndRadian = hoursToAdian(field)
             invalidate()
@@ -233,19 +224,8 @@ class CircularSeekBar @JvmOverloads constructor(
 
 
     }
-/*
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
 
-        indicatorBorderRect.set(
-            _borderWidth.toFloat() / 2,
-            _borderWidth.toFloat() / 2,
-            height.coerceAtMost(width) - _borderWidth.toFloat() / 2,
-            height.coerceAtMost(width) - _borderWidth.toFloat() / 2
-        )
-    }
 
- */
 override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
     super.onSizeChanged(w, h, oldw, oldh)
     validateBorderWidth(w, h) // Ensure border width is valid
@@ -286,121 +266,14 @@ override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
 
 
 
-/*
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        when (event.action and event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> {
-//                if (inStartCircleButton(event.x, event.y) && isEnabled && isStartEnabled) {
-//                    isInStartIcon = true
-//                    preRadian = getRadian(event.x, event.y)
-//
-//                    parent.requestDisallowInterceptTouchEvent(true)
-//                    return true
-//                } else
-                if (inEndCircleButton(event.x, event.y) && isEnabled && isEndEnabled) {
-                    isInEndIcon = true
-                    preRadian = getRadian(event.x, event.y)
-
-                    parent.requestDisallowInterceptTouchEvent(true)
-                    updateCenterText()
-                    return true
-                }
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                if (isInStartIcon && isEnabled && isStartEnabled) {
-                    val tempRadian = getRadian(event.x, event.y)
-                    currentStartRadian = getCurrentRadian(currentStartRadian, tempRadian)
-
-                    startHours = radianToHours(currentStartRadian)
-                    return true
-                } else if (isInEndIcon && isEnabled && isEndEnabled) {
-                    val tempRadian = getRadian(event.x, event.y)
-                    currentEndRadian = getCurrentRadian(currentEndRadian, tempRadian)
-
-                    endHours = radianToHours(currentEndRadian)
-                    return true
-                }
-            }
-
-            MotionEvent.ACTION_UP -> {
-                if (isInStartIcon) {
-                    isInStartIcon = false
-
-                    timeChangedListener?.onStartChanged(
-                        startHours.toInt(),
-                        getHoursMinute(startHours)
-                    )
-                    return true
-                } else if (isInEndIcon) {
-                    isInEndIcon = false
-
-                    timeChangedListener?.onEndChanged(
-                        endHours.toInt(),
-                        getHoursMinute(endHours)
-                    )
-                    return true
-                }
-
-                performClick()
-            }
-        }
-        return false
-    }
-
- */
-
-
-
-    /*
-override fun onTouchEvent(event: MotionEvent): Boolean {
-    when (event.action and event.actionMasked) {
-        MotionEvent.ACTION_DOWN -> {
-            // Check if the touch is near any dot
-            val dotIndex = getClickedDotIndex(event.x, event.y)
-            if (dotIndex != -1) {
-                // Map dot index to hours
-                val hour = mapDotIndexToHour(dotIndex)
-                onDotClick(hour)
-                return true
-            }
-        }
-        MotionEvent.ACTION_MOVE -> {
-            // Existing logic for dragging the end indicator
-            if (isInEndIcon && isEnabled && isEndEnabled) {
-                val tempRadian = getRadian(event.x, event.y)
-                currentEndRadian = getCurrentRadian(currentEndRadian, tempRadian)
-
-                endHours = radianToHours(currentEndRadian)
-                return true
-            }
-        }
-        MotionEvent.ACTION_UP -> {
-            if (isInEndIcon) {
-                isInEndIcon = false
-
-                timeChangedListener?.onEndChanged(
-                    endHours.toInt(),
-                    getHoursMinute(endHours)
-                )
-                return true
-            }
-
-            performClick()
-        }
-    }
-    return false
-}
-
-     */
-
-
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action and event.actionMasked) {
             MotionEvent.ACTION_DOWN -> {
                 // Check if the touch is near any dot
                 val dotIndex = getClickedDotIndex(event.x, event.y)
+                Log.d("vipinDotIndex",dotIndex.toString())
+
                 if (dotIndex != -1) {
                     // Map dot index to hours
                     val hour = mapDotIndexToHour(dotIndex)
@@ -419,11 +292,23 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
 
             MotionEvent.ACTION_MOVE -> {
                 // Handle dragging logic
+//                if (isInEndIcon && isEnabled && isEndEnabled) {
+//                    val tempRadian = getRadian(event.x, event.y)
+//                    currentEndRadian = getCurrentRadian(currentEndRadian, tempRadian)
+//
+//                    endHours = radianToHours(currentEndRadian)
+//                    return true
+//                }
+
                 if (isInEndIcon && isEnabled && isEndEnabled) {
                     val tempRadian = getRadian(event.x, event.y)
                     currentEndRadian = getCurrentRadian(currentEndRadian, tempRadian)
 
-                    endHours = radianToHours(currentEndRadian)
+                    // Prevent endHours from exceeding 24 or going below 0
+                    val tempEndHours = radianToHours(currentEndRadian)
+                    if (tempEndHours in 2f..24f) {
+                        endHours = tempEndHours
+                    }
                     return true
                 }
             }
@@ -445,60 +330,71 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
         return false
     }
 
-
+/*
     private fun getClickedDotIndex(x: Float, y: Float): Int {
-        val dotCount = 12
-        val clickRadius = 30f
+        val dotCount = 24
+        val clickRadius = 50f
         for (i in 0 until dotCount) {
             val angle = Math.toRadians(START_ANGLE + i * (SWEEP_ANGLE / dotCount).toDouble())
             val dotX = centerX + radius * cos(angle)
             val dotY = centerY + radius * sin(angle)
-            if (sqrt((x - dotX).pow(2) + (y - dotY).pow(2)) <= clickRadius) {
-                // If the clicked index is 0, return 12 instead.
-                return  i
-            }
-            Log.d("timeVipin", i.toString())
-        }
-        return -1
+//            if (sqrt((x - dotX).pow(2) + (y - dotY).pow(2)) <= clickRadius) {
+//                // If the clicked index is 0, return 12 instead.
+//                return  i
+//            }
+//            Log.d("timeVipin", i.toString())
+//        }
+//        return -1
 
-
-    }
-
-
-
-
-    /*
-    private fun getClickedDotIndex(x: Float, y: Float): Int {
-        val dotCount = 12 // Number of dots (12 hours or customized)
-        val clickRadius = 40f // Adjust this value for better sensitivity
-
-        for (i in 0 until dotCount) {
-            // Calculate each dot's position
-            val angle = Math.toRadians(START_ANGLE + i * (SWEEP_ANGLE / dotCount).toDouble())
-            val dotX = centerX + radius * cos(angle)
-            val dotY = centerY + radius * sin(angle)
-
-            // Check if the touch is within the proximity of the dot
-            if (sqrt((x - dotX).pow(2) + (y - dotY).pow(2)) <= clickRadius) {
+            val distance = sqrt((x - dotX).pow(2) + (y - dotY).pow(2))
+            Log.d("DotDetection", "Dot $i at ($dotX, $dotY), touch at ($x, $y), distance: $distance")
+            if (distance <= clickRadius) {
                 return i
+
+
             }
         }
         return -1
+
+
     }
 
-     */
+ */
 
+private fun getClickedDotIndex(x: Float, y: Float): Int {
+    val dotCount = 24
+    val clickRadius = 20f
+    var closestDotIndex = -1
+    var smallestDistance = Float.MAX_VALUE
+    var closestDotLog = ""
 
+    for (i in 2 until dotCount) {
+        val angle = Math.toRadians(START_ANGLE + i * (SWEEP_ANGLE / dotCount).toDouble())
+        val dotX = centerX + radius * cos(angle)
+        val dotY = centerY + radius * sin(angle)
 
-    private fun isTouchNearDot(touchX: Float, touchY: Float, dotX: Float, dotY: Float): Boolean {
-        val touchRadius = 40f // Allowable distance to consider the touch on a dot
-        val dx = touchX - dotX
-        val dy = touchY - dotY
-        return sqrt(dx * dx + dy * dy) <= touchRadius
+        val distance = sqrt((x - dotX).pow(2) + (y - dotY).pow(2))
+        Log.d("DotDetection", "Dot $i at ($dotX, $dotY), touch at ($x, $y), distance: $distance")
+
+        if (distance < smallestDistance) {
+            smallestDistance = distance.toFloat()
+            closestDotIndex = i
+            closestDotLog = "Dot $i at ($dotX, $dotY), touch at ($x, $y), distance: $distance"
+        }
     }
 
+    Log.d("ClosestDot", closestDotLog) // Log only the closest dot
+    return if (smallestDistance <= clickRadius) closestDotIndex else -1
+}
+
+
+
+
+    @SuppressLint("SuspiciousIndentation")
     private fun mapDotIndexToHour(dotIndex: Int): Float {
-        return if (is24HR) dotIndex * 2f else dotIndex.toFloat()
+     val value = if (is24HR) dotIndex * 1f else dotIndex.toFloat()
+        Log.d("VipinValue",value.toString())
+        return  value
     }
 
 
@@ -516,62 +412,7 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
         return super.performClick()
     }
 
-    fun setOnTimeChangedListener(listener: OnTimeChangedListener) {
-        timeChangedListener = listener
-    }
-/*
-    private fun obtainStyledAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
-        context.theme.obtainStyledAttributes(
-            attrs,
-            R.styleable.CircularSeekBar,
-            defStyleAttr,
-            0
-        ).use {
-            _borderWidth = it.getDimension(
-                R.styleable.CircularSeekBar_cc_borderWidth,
-                _borderWidth
-            )
-            _metricTextSizeWidth = it.getDimension(
-                R.styleable.CircularSeekBar_cc_metricTextSize,
-                _metricTextSizeWidth
-            )
-            _borderColor = it.getColor(
-                R.styleable.CircularSeekBar_cc_borderColor,
-                _borderColor
-            )
-            _fillColor = it.getColor(
-                R.styleable.CircularSeekBar_cc_fillColor,
-                _fillColor
-            )
-            _tickTextColor = it.getColor(
-                R.styleable.CircularSeekBar_cc_tickTextColor,
-                _tickTextColor
-            )
-//            _startIconResource = it.getResourceId(
-//                R.styleable.ClockSlider_cc_startIconResource,
-//                _startIconResource
-//            )
-            _endIconResource = it.getResourceId(
-                R.styleable.CircularSeekBar_cc_endIconResource,
-                _endIconResource
-            )
-            _borderWidth =
-                it.getResourceId(R.styleable.CircularSeekBar_cc_borderWidth, _borderWidth.toInt()).toFloat()
-            isStartEnabled = it.getBoolean(R.styleable.CircularSeekBar_cc_isStartEnabled, isStartEnabled)
-            isEndEnabled = it.getBoolean(R.styleable.CircularSeekBar_cc_isEndEnabled, isEndEnabled)
-            is24HR = it.getBoolean(R.styleable.CircularSeekBar_cc_is24HR, is24HR)
-            startHours = it.getFloat(R.styleable.CircularSeekBar_cc_startHour, startHours)
-            endHours = it.getFloat(R.styleable.CircularSeekBar_cc_endHour, endHours)
-            metricMode = MetricMode.find(
-                it.getInt(
-                    R.styleable.CircularSeekBar_cc_metricMode,
-                    metricMode.ordinal
-                )
-            )
-        }
-    }
 
- */
 
     private fun obtainStyledAttributes(attrs: AttributeSet?, defStyleAttr: Int) {
         context.theme.obtainStyledAttributes(
@@ -626,8 +467,6 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
 
 
     private fun renderBorder(canvas: Canvas) {
-
-
         canvas.drawArc(
             indicatorBorderRect,
             START_ANGLE,
@@ -637,7 +476,7 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
         )
 
 
-        val dotCount = 12 // Number of dots
+        val dotCount = 24 // Number of dots
         val radius = indicatorBorderRect.width() / 2 // Radius of the circle
         val centerX = indicatorBorderRect.centerX()
         val centerY = indicatorBorderRect.centerY()
@@ -669,22 +508,16 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
             indicatorFillPaint
         )
         updateCenterText()
+
+
     }
 
-    private fun renderBorderStart(canvas: Canvas) {
-//        startIcon?.apply {
-//            val hour = if (is24HR) startHours / 2 else startHours
-//
-//            setBounds(
-//                (centerX - _iconWidth + (centerX - _borderWidth / 2) * cos(mapTextToAngle(hour).toRadian())).toInt(),
-//                (centerY - _iconWidth - (centerY - _borderWidth / 2) * sin(mapTextToAngle(hour).toRadian())).toInt(),
-//                (centerX + _iconWidth + (centerX - _borderWidth / 2) * cos(mapTextToAngle(hour).toRadian())).toInt(),
-//                (centerY + _iconWidth - (centerY - _borderWidth / 2) * sin(mapTextToAngle(hour).toRadian())).toInt()
-//            )
-//            draw(canvas)
 
+
+
+
+    private fun renderBorderStart(canvas: Canvas) {
         getHoursMinute(startHours)
-        // }
     }
 
     private fun renderBorderEnd(canvas: Canvas) {
@@ -706,9 +539,6 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
 
 
     fun renderPeriodText(canvas: Canvas) {
-
-
-
         val start = startHours.toInt() * 60 + getHoursMinute(startHours)
         val end = endHours.toInt() * 60 + getHoursMinute(endHours)
         val time = when {
@@ -719,7 +549,6 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
 
         val startText = if (startHours.toInt() == 0) 12 else startHours.toInt()
         val timeText = decimalFormat.format(time / 60 + ((time % 60).toFloat() / 100) )
-
 
 
         canvas.drawTextCentred(
@@ -742,7 +571,7 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
         }
 
         var timeHour = decimalFormat.format(time / 60 + ((time % 60).toFloat() / 100))
-        return  if (timeHour.equals("0")) "12" else  timeHour
+        return  if (timeHour.equals("0")) "0" else if (timeHour.equals("24")) "23" else  timeHour
     }
 
 

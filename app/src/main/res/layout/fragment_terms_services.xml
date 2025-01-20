@@ -50,15 +50,15 @@
 <!--                    android:textColorHint="#B0B0B0" />-->
 
                 <!-- Menu Icon -->
-                <ImageView
-                    android:layout_width="@dimen/_42sdp"
-                    android:layout_height="@dimen/_42sdp"
-                    android:layout_gravity="center_vertical"
-                    android:contentDescription="Menu"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:padding="@dimen/_6sdp"
-                    android:src="@drawable/ic_filter" />
+<!--                <ImageView-->
+<!--                    android:layout_width="@dimen/_42sdp"-->
+<!--                    android:layout_height="@dimen/_42sdp"-->
+<!--                    android:layout_gravity="center_vertical"-->
+<!--                    android:contentDescription="Menu"-->
+<!--                    android:layout_alignParentEnd="true"-->
+<!--                    android:layout_centerVertical="true"-->
+<!--                    android:padding="@dimen/_6sdp"-->
+<!--                    android:src="@drawable/ic_filter" />-->
 
             </RelativeLayout>
 
@@ -587,41 +587,41 @@
                 android:backgroundTint="#3A4B4C"
                 >
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal">
+<!--                <LinearLayout-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical"-->
+<!--                    android:gravity="center_horizontal">-->
 
-                    <!-- Descriptive Text -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Get help with your reservations, account, and more."
-                        android:textColor="#FFFFFF"
-                        android:fontFamily="@font/poppins"
-                        android:textSize="@dimen/_13ssp"
-                        android:layout_marginTop="@dimen/_10ssp"
-                        android:paddingBottom="@dimen/_14sdp"
-                        android:layout_marginHorizontal="@dimen/_14sdp"
-                        />
+<!--                    &lt;!&ndash; Descriptive Text &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Get help with your reservations, account, and more."-->
+<!--                        android:textColor="#FFFFFF"-->
+<!--                        android:fontFamily="@font/poppins"-->
+<!--                        android:textSize="@dimen/_13ssp"-->
+<!--                        android:layout_marginTop="@dimen/_10ssp"-->
+<!--                        android:paddingBottom="@dimen/_14sdp"-->
+<!--                        android:layout_marginHorizontal="@dimen/_14sdp"-->
+<!--                        />-->
 
-                    <!-- Button for Login & Signup -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Login &amp; Signup"
-                        android:backgroundTint="#32D4A4"
-                        android:background="@drawable/button_bg"
-                        android:textColor="#000000"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/poppins"
-                        android:paddingHorizontal="@dimen/_25sdp"
-                        android:paddingVertical="@dimen/_6sdp"
-                        android:layout_marginBottom="@dimen/_10ssp"
-                        android:layout_gravity="center" />
+<!--                    &lt;!&ndash; Button for Login & Signup &ndash;&gt;-->
+<!--                    <TextView-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="Login &amp; Signup"-->
+<!--                        android:backgroundTint="#32D4A4"-->
+<!--                        android:background="@drawable/button_bg"-->
+<!--                        android:textColor="#000000"-->
+<!--                        android:textStyle="bold"-->
+<!--                        android:fontFamily="@font/poppins"-->
+<!--                        android:paddingHorizontal="@dimen/_25sdp"-->
+<!--                        android:paddingVertical="@dimen/_6sdp"-->
+<!--                        android:layout_marginBottom="@dimen/_10ssp"-->
+<!--                        android:layout_gravity="center" />-->
 
-                </LinearLayout>
+<!--                </LinearLayout>-->
 
             </androidx.cardview.widget.CardView>
 

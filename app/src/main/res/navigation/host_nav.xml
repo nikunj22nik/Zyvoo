@@ -96,5 +96,10 @@
         android:name="com.yesitlab.zyvo.fragment.both.ContactUsFragment"
         android:label="Contact Us"
         />
+    <fragment
+        android:id="@+id/payoutFragment"
+        android:name="com.yesitlab.zyvo.fragment.host.PayoutFragment"
+        android:label="fragment_payout"
+        tools:layout="@layout/fragment_payout" />
 
 </navigation>

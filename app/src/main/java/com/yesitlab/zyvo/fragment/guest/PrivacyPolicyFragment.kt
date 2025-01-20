@@ -15,14 +15,16 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
     private var _binding : FragmentPrivacyPolicyBinding? = null
     private val binding get() = _binding!!
 
-    private var param1: String? = null
-    private var param2: String? = null
+    private var privacy: Int? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
           //  param1 = it.getString(ARG_PARAM1)
-         //   param2 = it.getString(ARG_PARAM2)
+            privacy = it.getInt("privacy")
+
+
         }
     }
 
@@ -49,7 +51,13 @@ binding.imageBackButton.setOnClickListener(this)
     override fun onClick(p0: View?) {
         when(p0?.id){
             R.id.imageBackButton->{
-                findNavController().navigate(R.id.profileFragment)
+                if (privacy == 0){
+                    findNavController().navigate(R.id.profileFragment)
+                }else{
+                    findNavController().navigate(R.id.hostProfileFragment)
+                }
+
+
             }
         }
     }

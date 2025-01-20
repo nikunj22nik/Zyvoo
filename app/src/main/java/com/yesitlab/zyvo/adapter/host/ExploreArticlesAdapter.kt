@@ -3,10 +3,9 @@ package com.yesitlab.zyvo.adapter.host
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.yesitlab.zyvo.adapter.host.BankNameAdapter
-import com.yesitlab.zyvo.databinding.AdapterBankNameBinding
+
 import com.yesitlab.zyvo.databinding.AdapterExploreArticlesBinding
-import com.yesitlab.zyvo.databinding.LayoutPaymentDetailsBinding
+
 import com.yesitlab.zyvo.model.TransactionModel
 
 class ExploreArticlesAdapter(private var transactionsList: MutableList<TransactionModel>) :

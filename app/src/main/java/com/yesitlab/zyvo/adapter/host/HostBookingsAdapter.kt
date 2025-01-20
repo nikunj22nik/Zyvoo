@@ -29,6 +29,9 @@ class HostBookingsAdapter (
 
 
 
+
+
+
                 binding.textApporve.setOnClickListener {
 
                     binding.llAcceptRequest.visibility = View.VISIBLE
@@ -102,6 +105,36 @@ class HostBookingsAdapter (
             val currentItem = list[position]
 
             holder.bind(currentItem)
+
+            when(position){
+                0->{
+                    holder.binding.llApproveAndDecline.visibility = View.GONE
+                    holder.binding.llAcceptRequest.visibility = View.GONE
+
+                    holder.binding.fl.visibility = View.VISIBLE
+                }
+                1->{
+                    holder.binding.llApproveAndDecline.visibility = View.GONE
+                    holder.binding.llAcceptRequest.visibility = View.GONE
+
+                    holder.binding.fl.visibility = View.VISIBLE
+                }
+                2->{
+                    holder.binding.llApproveAndDecline.visibility = View.GONE
+                    holder.binding.llAcceptRequest.visibility = View.GONE
+
+                    holder.binding.fl.visibility = View.VISIBLE
+                }
+
+                3->{
+                    holder.binding.llApproveAndDecline.visibility = View.GONE
+                    holder.binding.llAcceptRequest.visibility = View.GONE
+
+                    holder.binding.fl.visibility = View.VISIBLE
+                }
+            }
+
+
         }
 
 

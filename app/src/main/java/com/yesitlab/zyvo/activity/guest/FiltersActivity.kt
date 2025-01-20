@@ -35,6 +35,7 @@ import com.yesitlab.zyvo.RangeBarWithChart
 import com.yesitlab.zyvo.adapter.guest.ActivitiesAdapter
 import com.yesitlab.zyvo.adapter.guest.AmenitiesAdapter
 import com.yesitlab.zyvo.databinding.ActivityFiltersBinding
+import com.yesitlab.zyvo.fragment.guest.FullScreenDialogFragment
 import com.yesitlab.zyvo.locationManager.LocationManager
 import com.yesitlab.zyvo.model.ActivityModel
 import java.util.Locale
@@ -707,8 +708,10 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         byDefaultSelect()
 
         binding.imageFilter.setOnClickListener {
-
+            val dialog = FullScreenDialogFragment()
+            dialog.show(supportFragmentManager, "FullScreenDialog")
         }
+
 
 
     }

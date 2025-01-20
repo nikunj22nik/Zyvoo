@@ -25,7 +25,8 @@
             android:exported="false" />
         <activity
             android:name=".activity.HostMainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan"/>
         <activity
             android:name=".activity.guest.ExtraTimeChargesActivity"
             android:exported="false" />

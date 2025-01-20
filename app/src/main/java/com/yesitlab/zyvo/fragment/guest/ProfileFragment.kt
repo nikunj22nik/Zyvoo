@@ -188,6 +188,8 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         binding.imageEditName.setOnClickListener(this)
         binding.textConfirmNow.setOnClickListener(this)
         binding.textConfirmNow1.setOnClickListener(this)
+        binding.imageEditEmail.setOnClickListener(this)
+        binding.imageEditPhoneNumber.setOnClickListener(this)
 
 
         adapterInitialize()
@@ -200,14 +202,14 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         // Set listeners
 
 
-        binding.filterIcon.setOnClickListener {
-            startActivity(Intent(requireActivity(), FiltersActivity::class.java))
-        }
-
-        binding.rlFind.setOnClickListener {
-
-            startActivity(Intent(requireActivity(), WhereTimeActivity::class.java))
-        }
+//        binding.filterIcon.setOnClickListener {
+//            startActivity(Intent(requireActivity(), FiltersActivity::class.java))
+//        }
+//
+//        binding.rlFind.setOnClickListener {
+//
+//            startActivity(Intent(requireActivity(), WhereTimeActivity::class.java))
+//        }
 
 
     }
@@ -422,7 +424,9 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.textPrivacyPolicy -> {
-                findNavController().navigate(R.id.privacyPolicyFragment)
+                var bundle = Bundle()
+                bundle.putInt("privacy",0)
+                findNavController().navigate(R.id.privacyPolicyFragment,bundle)
             }
 
             R.id.rlPasswordTitle -> {
@@ -480,6 +484,16 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 commonAuthWorkUtils.dialogNumberVerification(requireContext())
                 binding.textConfirmNow1.visibility = View.GONE
                 binding.textVerified1.visibility = View.VISIBLE
+            }
+            R.id.imageEditEmail -> {
+                commonAuthWorkUtils.dialogEmailVerification(requireContext(), null.toString())
+
+            }
+
+            R.id.imageEditPhoneNumber -> {
+
+                commonAuthWorkUtils.dialogNumberVerification(requireContext())
+
             }
 
             R.id.textSaveButton -> {

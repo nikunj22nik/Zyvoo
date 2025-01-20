@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10ssp"
         android:layout_marginTop="@dimen/_10ssp"
-android:autofillHints="creditCardNumber"
+        android:autofillHints="creditCardNumber"
         android:background="@drawable/button_grey_line_bg"
         android:fontFamily="@font/poppins"
         android:hint="Card Number"
@@ -78,7 +78,7 @@ android:autofillHints="creditCardNumber"
         android:text="Month"
         android:maxLines="1"
         android:layout_marginTop="@dimen/_10ssp"
-       android:paddingHorizontal="@dimen/_7sdp"
+        android:paddingHorizontal="@dimen/_7sdp"
         app:drawableEndCompat="@drawable/ic_dropdown_close"
         android:fontFamily="@font/poppins"
         android:textColor="#000"
@@ -111,31 +111,13 @@ android:autofillHints="creditCardNumber"
 
 
 
-<<<<<<< Updated upstream
-=======
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/checkBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_7ssp"
-        app:buttonTint="#4AEA81"
-        app:layout_constraintTop_toBottomOf="@id/textYear"
-        app:layout_constraintStart_toStartOf="parent"
-        android:text="Same as Mailing Address"
-        android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_10ssp"/>
->>>>>>> Stashed changes
 
     <TextView
         android:id="@+id/textAddBillingAddress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add Billing Address"
-<<<<<<< Updated upstream
         app:layout_constraintTop_toBottomOf="@+id/textYear"
-=======
-        app:layout_constraintTop_toBottomOf="@+id/checkBox"
->>>>>>> Stashed changes
         android:layout_marginStart="@dimen/_11ssp"
         app:layout_constraintStart_toStartOf="parent"
         android:fontFamily="@font/poppins"
@@ -147,7 +129,6 @@ android:autofillHints="creditCardNumber"
 
 
 
-<<<<<<< Updated upstream
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
@@ -160,8 +141,6 @@ android:autofillHints="creditCardNumber"
         android:fontFamily="@font/poppins"
         android:textSize="@dimen/_10ssp"/>
 
-=======
->>>>>>> Stashed changes
 
     <EditText
         android:id="@+id/etStreet"
@@ -261,7 +240,6 @@ android:autofillHints="creditCardNumber"
         android:fontFamily="@font/poppins_light"
         android:layout_marginTop="@dimen/_15sdp"
         android:textStyle="bold"
-        android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_25sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:textColor="@color/black"

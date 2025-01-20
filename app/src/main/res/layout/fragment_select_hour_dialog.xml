@@ -52,20 +52,18 @@ app:cardCornerRadius="@dimen/_20sdp"
                 android:layout_width="@dimen/_165sdp"
                 android:layout_height="@dimen/_165sdp"
                 android:layout_centerInParent="true"
-                app:cc_endHour="1"
-
+                app:cc_endHour="2"
                 app:cc_borderWidth="@dimen/_30sdp"
                 app:cc_endIconResource="@drawable/oval_white"
                 app:cc_fillColor="#4AEAB1"
                 app:cc_metricMode="clock"
                 app:cc_startHour="0"
-
                 app:cc_tickTextColor="?android:attr/textColorPrimary"
-
                 >
 
 
             </com.yesitlab.zyvo.CircularSeekBar>
+
 
             <androidx.cardview.widget.CardView
                 android:layout_width="@dimen/_105sdp"
@@ -91,7 +89,7 @@ app:cardCornerRadius="@dimen/_20sdp"
                         android:text="4"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_25ssp"
+                        android:textSize="@dimen/_35ssp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
 
@@ -106,9 +104,10 @@ app:cardCornerRadius="@dimen/_20sdp"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
                         android:text="Hours"
+                        android:layout_marginTop="-15dp"
                         android:textAlignment="center"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_16sdp"
+                        android:textSize="@dimen/_12sdp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/textTime" />
@@ -159,7 +158,6 @@ app:cardCornerRadius="@dimen/_20sdp"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Select hours"
-
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp" />
 
@@ -170,6 +168,7 @@ app:cardCornerRadius="@dimen/_20sdp"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:src="@drawable/ic_drop_down" />
+
         </RelativeLayout>
 
 

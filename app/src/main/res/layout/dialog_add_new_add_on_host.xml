@@ -12,7 +12,7 @@
         android:id="@+id/rcy"
         android:layout_width="match_parent"
         android:layout_marginTop="@dimen/_10sdp"
-        app:layout_constraintHeight_max="@dimen/_340sdp"
+        app:layout_constraintHeight_max="@dimen/_250sdp"
         android:layout_marginHorizontal="@dimen/_5sdp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_20sdp"
             android:layout_weight="1"
-            android:background="@drawable/bg_four_side_grey_corner"
+            android:background="@drawable/bg_four_side_grey_corner_white"
             android:fontFamily="@font/poppins"
             android:hint="$0:00"
             android:inputType="number"

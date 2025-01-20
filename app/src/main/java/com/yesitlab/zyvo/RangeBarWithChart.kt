@@ -28,15 +28,11 @@ class RangeBarWithChart @JvmOverloads constructor(
         elementRangeBar = bindingEvent.findViewById<SimpleRangeView>(R.id.elementRangeBar)
         chart = bindingEvent.findViewById<BarChart>(R.id.chart)
 
-
         attrs?.let {
             parseAttr(it)
         }
-
         initChart()
-
     }
-
 
 
     var onLeftPinChanged: ((index: Int, leftPinValue: String?) -> Unit)? = null

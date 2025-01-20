@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/_260sdp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/_15sdp"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
     android:background="@drawable/dialog_bg">
@@ -130,13 +131,12 @@
 
         <EditText
             android:id="@+id/etConfirmPassword"
-            android:layout_width="@dimen/_130sdp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_toEndOf="@+id/imagePassword"
-
-            android:layout_toStartOf="@+id/eyeHide1"
+            android:layout_toStartOf="@+id/eyeHide"
             android:background="@null"
             android:drawablePadding="@dimen/_10sdp"
             android:fontFamily="@font/poppins"
@@ -149,34 +149,69 @@
             tools:ignore="Autofill,TouchTargetSizeCheck,VisualLintTextFieldSize" />
 
         <LinearLayout
-            android:id="@+id/eyeHide1"
+            android:id="@+id/eyeHide"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true">
+            android:layout_centerVertical="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="@dimen/_10sdp">
 
             <ImageView
-                android:id="@+id/imgCorrectSign1"
-                android:layout_width="@dimen/_11sdp"
-                android:layout_height="@dimen/_11sdp"
+                android:id="@+id/imgShowPass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:background="@drawable/correct_sign"
+                android:background="@drawable/eye_show_vector"
                 android:visibility="gone"
                 tools:ignore="ContentDescription" />
 
             <ImageView
-                android:id="@+id/imgWrongSign1"
-                android:layout_width="@dimen/_11sdp"
-                android:layout_height="@dimen/_11sdp"
+                android:id="@+id/imgHidePass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
+
                 android:layout_marginStart="@dimen/_5sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-                android:background="@drawable/wrong_sign"
-                android:visibility="gone"
+                android:background="@drawable/eye_icon_show"
+                android:visibility="visible"
                 tools:ignore="ContentDescription" />
         </LinearLayout>
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/eyeHide1"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentEnd="true"-->
+<!--            android:layout_centerVertical="true">-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/imgCorrectSign1"-->
+<!--                android:layout_width="@dimen/_11sdp"-->
+<!--                android:layout_height="@dimen/_11sdp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginStart="@dimen/_5sdp"-->
+<!--                android:layout_marginEnd="@dimen/_10sdp"-->
+<!--                android:background="@drawable/correct_sign"-->
+<!--                android:visibility="gone"-->
+<!--                tools:ignore="ContentDescription" />-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/imgWrongSign1"-->
+<!--                android:layout_width="@dimen/_11sdp"-->
+<!--                android:layout_height="@dimen/_11sdp"-->
+<!--                android:layout_gravity="center"-->
+<!--                android:layout_marginStart="@dimen/_5sdp"-->
+<!--                android:layout_marginEnd="@dimen/_10sdp"-->
+<!--                android:background="@drawable/wrong_sign"-->
+<!--                android:visibility="gone"-->
+<!--                tools:ignore="ContentDescription" />-->
+<!--        </LinearLayout>-->
 
 
 

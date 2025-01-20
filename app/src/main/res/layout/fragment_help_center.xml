@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.yesitlab.zyvo.viewmodel.HelpCenterViewModel" />
     </data>
 
-
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -27,6 +27,7 @@
                 android:layout_height="@dimen/_25sdp"
                 android:layout_margin="@dimen/_20sdp"
                 android:src="@drawable/ic_back_icon"
+                android:clickable="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +47,7 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:fontFamily="@font/poppins"
 
-                android:text="Hi Katelyn, how can we help?"
+                android:text="Hi Katelyn, how can we help? "
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
@@ -91,8 +92,8 @@
                         android:layout_marginStart="@dimen/_5sdp"
                         android:background="@drawable/toggle_selector"
                         android:button="@null"
+                        android:clickable="false"
                         android:fontFamily="@font/poppins"
-android:clickable="false"
                         android:paddingHorizontal="@dimen/_12sdp"
                         android:text="Host"
                         android:textAlignment="center"
@@ -100,7 +101,6 @@ android:clickable="false"
 
                 </RadioGroup>
             </LinearLayout>
-
 
             <TextView
                 android:id="@+id/textGuidesForGuests"
@@ -112,7 +112,6 @@ android:clickable="false"
                 android:text="Guides for Guests"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp"
-
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/llToggle" />
 
@@ -128,7 +127,6 @@ android:clickable="false"
                 android:text="Browse all Guides"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13ssp"
-
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/llToggle" />
@@ -138,7 +136,6 @@ android:clickable="false"
                 android:id="@+id/recyclerViewGuests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -173,7 +170,6 @@ android:clickable="false"
                 android:text="Browse all Article's"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13ssp"
-
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewGuests" />

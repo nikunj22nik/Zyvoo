@@ -8,4 +8,5 @@ class NoHorizontalScrollLayoutManager(context: Context) : LinearLayoutManager(co
     override fun canScrollHorizontally(): Boolean {
         return false // Disable horizontal scrolling for the RecyclerView
     }
+
 }

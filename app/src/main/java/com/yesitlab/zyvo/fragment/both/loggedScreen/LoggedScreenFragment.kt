@@ -14,7 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.yesitlab.zyvo.OnClickListener
 import com.yesitlab.zyvo.OnClickListener1
 import com.yesitlab.zyvo.R
+import com.yesitlab.zyvo.activity.guest.FiltersActivity
 import com.yesitlab.zyvo.activity.guest.RestaurantDetailActivity
+import com.yesitlab.zyvo.activity.guest.WhereTimeActivity
 import com.yesitlab.zyvo.adapter.LoggedScreenAdapter
 import com.yesitlab.zyvo.databinding.FragmentLoggedScreenBinding
 import com.yesitlab.zyvo.utils.CommonAuthWorkUtils
@@ -53,6 +55,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener ,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.textLogin.setOnClickListener(this)
+        binding.rlFind.setOnClickListener(this)
+        binding.filterIcon.setOnClickListener(this)
+        binding.textWishlists.setOnClickListener(this)
+        binding.textDiscover.setOnClickListener(this)
         // Set up adapter with lifecycleOwner passed
         adapter = LoggedScreenAdapter(
             requireContext(),
@@ -72,8 +78,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener ,
         adapter.setOnItemClickListener(object :LoggedScreenAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
                 Log.d("TESTING_ZYVOO","I AM HERE IN DEVELOPMENT")
-                var intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
-                startActivity(intent)
+                commonAuthWorkUtils?.dialogLogin(requireContext())
             }
         })
 
@@ -94,6 +99,20 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener ,
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.textLogin -> {
+                commonAuthWorkUtils?.dialogLogin(requireContext())
+            }
+
+            R.id.filter_icon -> {
+                startActivity(Intent(requireActivity(),FiltersActivity::class.java))
+            }
+            R.id.rlFind -> {
+                startActivity(Intent(requireActivity(),WhereTimeActivity::class.java))
+            }
+
+            R.id.textDiscover -> {
+                commonAuthWorkUtils?.dialogLogin(requireContext())
+            }
+            R.id.textWishlists -> {
                 commonAuthWorkUtils?.dialogLogin(requireContext())
             }
         }

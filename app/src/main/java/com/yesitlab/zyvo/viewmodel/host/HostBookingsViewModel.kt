@@ -26,6 +26,8 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
             MyBookingsModel(R.drawable.ic_img_girl_dumm,"Mike Jm.", "Confirmed", "October 22, 2023"),
             MyBookingsModel(R.drawable.ic_mia_pic,"Mia Williams", "Waiting payment", "October 22, 2023"),
             MyBookingsModel(R.drawable.ic_img_girl_dumm,"Cabin in Peshastin", "Canceled", "October 22, 2023"),
+            MyBookingsModel(R.drawable.ic_img_girl_dumm,"Cabin in Peshastin", "Canceled", "October 22, 2023")
+
         )
 
         _list.value = listValue
