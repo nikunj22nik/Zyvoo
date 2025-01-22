@@ -12,7 +12,7 @@
     <color name="scroll_bar_color">#4AEAB1</color>
     <color name="scroll_bar_line_color">#D9D9D9</color>
     <color name="green_color_bar">#4AEAB1</color>
-
+    <color name="white_transparent">#00FFFFFF</color>
 
 
     <color name="colorChartUnselected">#c9c9c9</color>

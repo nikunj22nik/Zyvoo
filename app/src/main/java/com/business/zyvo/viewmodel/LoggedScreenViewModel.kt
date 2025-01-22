@@ -1,11 +1,15 @@
 package com.business.zyvo.viewmodel
 
+import android.app.Dialog
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.model.LogModel
 import com.business.zyvo.repository.ZyvoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -14,7 +18,7 @@ class LoggedScreenViewModel @Inject constructor(private val repository: ZyvoRepo
     // MutableLiveData to store the list of images
     private val _imageList = MutableLiveData<MutableList<LogModel>>()
     val imageList: LiveData<MutableList<LogModel>> get() = _imageList
-
+    var phoneSignUpLiveData :MutableLiveData<NetworkResult<Pair<String,String>>> = MutableLiveData<NetworkResult<Pair<String,String>>>()
     init {
         // Initialize the list in ViewModel
         loadImages()
@@ -38,5 +42,14 @@ class LoggedScreenViewModel @Inject constructor(private val repository: ZyvoRepo
         )
         _imageList.value = images
     }
+
+     fun signupPhoneNumber(code:String,number :String){
+           viewModelScope.launch {
+              val result = repository.signUpPhoneNumber(code, number)
+              phoneSignUpLiveData.value = result
+           }
+    }
+
+
 
 }
