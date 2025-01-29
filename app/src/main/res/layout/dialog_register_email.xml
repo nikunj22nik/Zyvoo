@@ -89,15 +89,13 @@
             android:src="@drawable/ic_email" />
 
         <EditText
-            android:id="@+id/etPassword"
+            android:id="@+id/etRegisterEmail"
             android:layout_width="@dimen/_130sdp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_toEndOf="@+id/imageEmail"
-
             android:background="@null"
-
             android:fontFamily="@font/poppins"
             android:hint="Enter your Email here"
             android:inputType="textEmailAddress"
@@ -130,7 +128,7 @@
             android:src="@drawable/ic_password_lock" />
 
         <EditText
-            android:id="@+id/etConfirmPassword"
+            android:id="@+id/etRegisterPassword"
             android:layout_width="@dimen/_130sdp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

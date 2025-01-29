@@ -13,6 +13,7 @@ class AppConstant {
         var LOGIN_SESSION = "Loggin_setion"
         var Host = "Host"
         var Guest = "Guest"
+        var AuthToken = "AuthToken"
         val DATE: String? = "event_date"
         val MY_INTERESET: String? ="my_interest"
         val START_TIME: String? = "START_TIME"
@@ -64,6 +65,7 @@ class AppConstant {
         val article :String= "article"
         val VOOPON_ID :String? = "VOOPOM_ID"
         val Id: String?="ID"
+        val session: String?="UserSession"
         val LATITUDE:String ="latitude"
         val ADDRESS_ID :String ="Address_id"
         val ADDRESS:String = "Address"
@@ -141,7 +143,15 @@ class AppConstant {
             CountryLanguage("Netherlands", "Dutch"),
             CountryLanguage("Belgium", "Dutch")
         )
+        //All Error Message
+        val email = "Email Address is required"
+        val password = "Password is required"
+        val conPassword = "Confirm Password is required"
+        val mobile = "Mobile is required"
+        val otp = "Otp is required"
     }
+
+
 
 
 }

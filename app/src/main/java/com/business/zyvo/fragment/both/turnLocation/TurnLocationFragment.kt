@@ -12,6 +12,7 @@ import com.business.zyvo.databinding.FragmentTurnLocationBinding
 
 class TurnLocationFragment : Fragment() {
     lateinit var binding : FragmentTurnLocationBinding
+    var data:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,14 +25,25 @@ class TurnLocationFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = FragmentTurnLocationBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
+        arguments?.let {
+            data = requireArguments().getString("data")!!
+        }
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnLocation.setOnClickListener {findNavController().navigate(R.id.completeProfileFragment)  }
-        binding.textNotnow.setOnClickListener { findNavController().navigate(R.id.completeProfileFragment)  }
+        binding.btnLocation.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("data",data)
+            findNavController().navigate(R.id.completeProfileFragment,bundle)
+        }
+        binding.textNotnow.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putString("data",data)
+            findNavController().navigate(R.id.completeProfileFragment,bundle)
+        }
     }
 
 }

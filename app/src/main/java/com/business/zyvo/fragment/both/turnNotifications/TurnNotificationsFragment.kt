@@ -13,10 +13,12 @@ import com.business.zyvo.databinding.FragmentTurnNotificationsBinding
 class TurnNotificationsFragment : Fragment() {
 private lateinit var  binding: FragmentTurnNotificationsBinding
 
+    var data:String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
+            data = requireArguments().getString("data")!!
         }
     }
 
@@ -33,10 +35,14 @@ private lateinit var  binding: FragmentTurnNotificationsBinding
         super.onViewCreated(view, savedInstanceState)
 
         binding.textNotnow.setOnClickListener{
-            findNavController().navigate(R.id.turnLocationFragment)
+            val bundle = Bundle()
+            bundle.putString("data",data)
+            findNavController().navigate(R.id.turnLocationFragment,bundle)
         }
         binding.btnNotification.setOnClickListener{
-            findNavController().navigate(R.id.turnLocationFragment)
+            val bundle = Bundle()
+            bundle.putString("data",data)
+            findNavController().navigate(R.id.turnLocationFragment,bundle)
         }
     }
 

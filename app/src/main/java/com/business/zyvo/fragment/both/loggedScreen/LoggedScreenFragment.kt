@@ -27,10 +27,11 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
@@ -45,20 +46,23 @@ import com.business.zyvo.databinding.FragmentLoggedScreenBinding
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.TAG
+import com.business.zyvo.utils.ErrorDialog.customDialog
 import com.business.zyvo.viewmodel.ImagePopViewModel
 import com.business.zyvo.viewmodel.LoggedScreenViewModel
+import com.google.gson.Gson
 import com.hbb20.CountryCodePicker
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, OnClickListener1 {
-
-
-    lateinit  var navController :NavController
+    lateinit var navController: NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
     var resendEnabled = false
-    var otpValue: String = ""
     private lateinit var binding: FragmentLoggedScreenBinding
 
     private lateinit var adapter: LoggedScreenAdapter
@@ -75,9 +79,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
-        val navController = findNavController()
+        navController = findNavController()
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(), navController)
         binding = FragmentLoggedScreenBinding.inflate(inflater, container, false)
         return binding.root
@@ -101,20 +105,30 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         binding.recyclerViewBooking.adapter = adapter
 
         // Observe ViewModel data and update adapter
-        loggedScreenViewModel.imageList.observe(viewLifecycleOwner, Observer { images ->
+        loggedScreenViewModel.imageList.observe(viewLifecycleOwner) { images ->
             adapter.updateData(images)
-        })
-         adapterWork()
-         backPressTask()
-         liveDataObserver()
+        }
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            loggedScreenViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(requireContext(), false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
+        }
+        adapterWork()
+        backPressTask()
+        liveDataObserver()
     }
 
-    private fun liveDataObserver(){
+    private fun liveDataObserver() {
 
 
     }
 
-    private fun adapterWork(){
+    private fun adapterWork() {
         adapter.setOnItemClickListener(object : LoggedScreenAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
                 Log.d("TESTING_ZYVOO", "I AM HERE IN DEVELOPMENT")
@@ -123,7 +137,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         })
     }
 
-    private fun backPressTask(){
+    private fun backPressTask() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 findNavController().navigateUp()
@@ -134,32 +148,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     }
 
 
-    private fun callingRegisterPhone(code: String, number: String, dialog: Dialog){
-        LoadingUtils.showDialog(requireContext(),false)
-        Log.d("TESTING_ZYVOO","Inside of fragment")
-        loggedScreenViewModel.signupPhoneNumber(number,code)
-        loggedScreenViewModel.phoneSignUpLiveData.observe(viewLifecycleOwner, Observer { data ->
-            LoadingUtils.hideDialog()
-            when(data){
-                is NetworkResult.Success ->{
-                    var otp = data.data?.first
-                    Log.d("TESTING_ZYVOO",otp.toString())
-                    var text = "Your account is registered \nsuccessfully"
-                    var textHeaderOfOtpVerfication =
-                        "Please type the verification code send \n to "+code+ " "+number
-                    dialogOtp(requireContext(), text, textHeaderOfOtpVerfication)
-                    dialog.dismiss()
-                }
-                is NetworkResult.Error ->{
-                    ErrorDialog.showErrorDialog(requireContext(),data.message.toString())
-                }
-                else ->{
-
-                }
-            }
-        })
-    }
-
     override fun itemClick(obj: Int) {
         findNavController().navigate(R.id.viewImageFragment)
     }
@@ -167,8 +155,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.textLogin -> {
-
-              dialogLogin(requireContext())
+                dialogLogin(requireContext())
 
             }
 
@@ -182,11 +169,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
             R.id.textDiscover -> {
                 dialogLogin(requireContext())
-                }
+            }
 
 
             R.id.textWishlists -> {
-  dialogLogin(requireContext())
+                dialogLogin(requireContext())
             }
         }
     }
@@ -201,8 +188,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     }
 
 
-
-    fun dialogLogin(context: Context?){
+    fun dialogLogin(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -212,49 +198,116 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var imageEmailSocial =  findViewById<ImageView>(R.id.imageEmailSocial)
-            var etMobileNumber =  findViewById<EditText>(R.id.etMobileNumber)
-            var textContinueButton =  findViewById<TextView>(R.id.textContinueButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
-            var textForget =  findViewById<TextView>(R.id.textForget)
-            var textDontHaveAnAccount =  findViewById<TextView>(R.id.textDontHaveAnAccount)
-            var textRegister =  findViewById<TextView>(R.id.textRegister)
-
-            textRegister.setOnClickListener{
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            val imageEmailSocial = findViewById<ImageView>(R.id.imageEmailSocial)
+            val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
+            val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
+            val checkBox = findViewById<CheckBox>(R.id.checkBox)
+            val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
+            val textForget = findViewById<TextView>(R.id.textForget)
+            val textDontHaveAnAccount = findViewById<TextView>(R.id.textDontHaveAnAccount)
+            val textRegister = findViewById<TextView>(R.id.textRegister)
+            val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
+            textRegister.setOnClickListener {
                 dialogRegister(context)
                 dismiss()
             }
 
-            textForget.setOnClickListener{
+            textForget.setOnClickListener {
                 dialogForgotPassword(context)
                 dismiss()
             }
-            imageEmailSocial.setOnClickListener{
+            imageEmailSocial.setOnClickListener {
                 dialogLoginEmail(context)
                 dismiss()
             }
-
-
-            textContinueButton.setOnClickListener{
-                var text = "Login Successful"
-
-                var textHeaderOfOtpVerfication = "Please type the verification code send \n to +1 999 999 9999"
-
-                dialogOtp(context,text, textHeaderOfOtpVerfication)
+            textContinueButton.setOnClickListener {
+                toggleLoginButtonEnabled(false, textContinueButton)
+                lifecycleScope.launch {
+                    loggedScreenViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                customDialog(
+                                    resources.getString(R.string.no_internet_dialog_msg),
+                                    requireContext()
+                                )
+                                toggleLoginButtonEnabled(true, textContinueButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (etMobileNumber.text!!.isEmpty()) {
+                                        etMobileNumber.error = "Mobile required"
+                                        customDialog(AppConstant.mobile, requireContext())
+                                        toggleLoginButtonEnabled(true, textContinueButton)
+                                    } else {
+                                        val phoneNumber = etMobileNumber.text.toString()
+                                        Log.d(TAG, phoneNumber)
+                                        val countryCode =
+                                            countyCodePicker.selectedCountryCodeWithPlus
+                                        Log.d(TAG, countryCode)
+                                        submitLogin(
+                                            countryCode,
+                                            phoneNumber,
+                                            dialog,
+                                            textContinueButton,
+                                            checkBox
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
+            imageCross.setOnClickListener {
                 dismiss()
             }
-            imageCross.setOnClickListener{
-                dismiss()
-            }
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
+
+    private fun submitLogin(code: String, number: String, dialog: Dialog, text: TextView,
+                            checkBox:CheckBox) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.loginPhoneNumber(
+                code,
+                number
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            val text = "Login Successful"
+                            val textHeaderOfOtpVerfication =
+                                "Please type the verification code send \n to $code$number"
+                            dialog.dismiss()
+                            val userId = resp.second
+                            dialogOtp(requireActivity(), text, textHeaderOfOtpVerfication,
+                                code, number,userId,checkBox,"loginPhone")
+                        }
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(
+                            it.message,
+                            requireContext()
+                        )
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
 
 
-    fun dialogRegister(context: Context?){
+
+    private fun dialogRegister(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -264,43 +317,134 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var imageEmailSocial =  findViewById<ImageView>(R.id.imageEmailSocial)
-            var etMobileNumber =  findViewById<EditText>(R.id.etMobileNumber)
-            var textContinueButton =  findViewById<TextView>(R.id.textContinueButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            val imageEmailSocial = findViewById<ImageView>(R.id.imageEmailSocial)
+            val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
+            val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
+            val checkBox = findViewById<CheckBox>(R.id.checkBox)
+            val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
 
-            var textLoginButton =  findViewById<TextView>(R.id.textLoginButton)
+            val textLoginButton = findViewById<TextView>(R.id.textLoginButton)
 
-            textLoginButton.setOnClickListener{
+            val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
+
+            textLoginButton.setOnClickListener {
                 dialogLogin(context)
                 dismiss()
             }
-
-            textContinueButton.setOnClickListener{
-                var text = "Your account is registered \nsuccessfully"
-                var textHeaderOfOtpVerfication = "Please type the verification code send \n to +1 999 999 9999"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
-                dismiss()
+            textContinueButton.setOnClickListener {
+                toggleLoginButtonEnabled(false, textContinueButton)
+                lifecycleScope.launch {
+                    loggedScreenViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                customDialog(
+                                    resources.getString(R.string.no_internet_dialog_msg),
+                                    requireContext()
+                                )
+                                toggleLoginButtonEnabled(true, textContinueButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (etMobileNumber.text!!.isEmpty()) {
+                                        etMobileNumber.error = "Mobile required"
+                                        customDialog(AppConstant.mobile, requireContext())
+                                        toggleLoginButtonEnabled(true, textContinueButton)
+                                    } else {
+                                        val phoneNumber = etMobileNumber.text.toString()
+                                        Log.d(TAG, phoneNumber)
+                                        val countryCode =
+                                            countyCodePicker.selectedCountryCodeWithPlus
+                                        Log.d(TAG, countryCode)
+                                        callingRegisterPhone(countryCode,phoneNumber,
+                                            dialog,textContinueButton,checkBox)
+                                    }
+                                }
+                            }
+                        }
+                }
             }
 
-            imageEmailSocial.setOnClickListener{
+            imageEmailSocial.setOnClickListener {
                 dialogRegisterEmail(context)
                 dismiss()
             }
 
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             show()
-        }}
+        }
+    }
+    private fun callingRegisterPhone(code: String, number: String, dialog: Dialog,
+                                     text: TextView,checkBox: CheckBox) {
+        LoadingUtils.showDialog(requireContext(), false)
+        Log.d(TAG, "Inside of fragment")
+     /*   loggedScreenViewModel.signupPhoneNumber(number, code)
+        loggedScreenViewModel.phoneSignUpLiveData.observe(viewLifecycleOwner) { data ->
+            LoadingUtils.hideDialog()
+            when (data) {
+                is NetworkResult.Success -> {
+                    val otp = data.data?.first
+                    val temp = data.data?.second
+                    Log.d(TAG, otp.toString())
+                    val text = "Your account is registered \nsuccessfully"
+                    val textHeaderOfOtpVerfication =
+                        "Please type the verification code send \n to " + code + " " + number
+                    dialogOtp(requireContext(), text, textHeaderOfOtpVerfication, code,
+                        number,
+                        temp!!,checkBox)
+                    dialog.dismiss()
+                }
 
+                is NetworkResult.Error -> {
+                    ErrorDialog.showErrorDialog(requireContext(), data.message.toString())
+                }
 
-    fun dialogLoginEmail(context: Context?){
+                else -> {
+
+                }
+            }
+        }*/
+
+        lifecycleScope.launch {
+            loggedScreenViewModel.signupPhoneNumber(
+                code, number
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            val otp = resp.first
+                            val temp = resp.second
+                            Log.d(TAG, otp.toString())
+                            val text = "Your account is registered \nsuccessfully"
+                            val textHeaderOfOtpVerfication =
+                                "Please type the verification code send \n to " + code + " " + number
+                            dialogOtp(requireContext(), text, textHeaderOfOtpVerfication, code,
+                                number,
+                                temp!!,checkBox,"RegisterPhone")
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(it.message, requireContext())
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+    }
+    fun dialogLoginEmail(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -310,47 +454,132 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
 
-            var textLoginButton =  findViewById<TextView>(R.id.textLoginButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
-            var textForget =  findViewById<TextView>(R.id.textForget)
-            var etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
-            var imgHidePass =  findViewById<ImageView>(R.id.imgHidePass)
-            var imgShowPass =  findViewById<ImageView>(R.id.imgShowPass)
-            var textDontHaveAnAccount =  findViewById<TextView>(R.id.textDontHaveAnAccount)
-            var textRegister =  findViewById<TextView>(R.id.textRegister)
+            val textLoginButton = findViewById<TextView>(R.id.textLoginButton)
+            val checkBox = findViewById<CheckBox>(R.id.checkBox)
+            val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
+            val textForget = findViewById<TextView>(R.id.textForget)
+            val imgHidePass = findViewById<ImageView>(R.id.imgHidePass)
+            val imgShowPass = findViewById<ImageView>(R.id.imgShowPass)
+            val textDontHaveAnAccount = findViewById<TextView>(R.id.textDontHaveAnAccount)
+            val textRegister = findViewById<TextView>(R.id.textRegister)
 
-            eyeHideShow(imgHidePass,imgShowPass,etConfirmPassword)
+            val etLoginEmail = findViewById<EditText>(R.id.etLoginEmail)
+            val etLoginPassword = findViewById<EditText>(R.id.etLoginPassword)
 
-            textRegister.setOnClickListener{
+            eyeHideShow(imgHidePass, imgShowPass, etLoginPassword)
+
+            textRegister.setOnClickListener {
                 dialogRegisterEmail(context)
                 dismiss()
             }
 
-            textForget.setOnClickListener{
+            textForget.setOnClickListener {
                 dialogForgotPassword(context)
                 dismiss()
             }
-            textLoginButton.setOnClickListener{
-                var intent = Intent(context,GuesMain::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-
-                context.startActivity(intent)
-                dismiss()
+            textLoginButton.setOnClickListener {
+                toggleLoginButtonEnabled(false, textLoginButton)
+                lifecycleScope.launch {
+                    loggedScreenViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                customDialog(
+                                    resources.getString(R.string.no_internet_dialog_msg),
+                                    requireContext()
+                                )
+                                toggleLoginButtonEnabled(true, textLoginButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (etLoginEmail.text!!.isEmpty()) {
+                                        etLoginEmail.error = "Email Address required"
+                                        customDialog(AppConstant.email, requireContext())
+                                        toggleLoginButtonEnabled(true, textLoginButton)
+                                    }else if (etLoginPassword.text!!.isEmpty()) {
+                                        etLoginPassword.error = "Password required"
+                                        customDialog(AppConstant.password, requireContext())
+                                        toggleLoginButtonEnabled(true, textLoginButton)
+                                    }
+                                    else {
+                                        loginEmail(etLoginEmail.text.toString(),
+                                            etLoginPassword.text.toString(),
+                                            dialog,textLoginButton,
+                                            checkBox)
+                                    }
+                                }
+                            }
+                        }
+                }
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
+
+    private fun loginEmail(
+        email: String,
+        password: String,
+        dialog: Dialog,
+        textLoginButton: TextView,
+        checkBox: CheckBox
+    ) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.loginEmail(
+                email,
+                password
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            val session: SessionManager = SessionManager(requireActivity())
+                            if (resp.has("is_profile_complete") &&
+                                resp.get("is_profile_complete").asBoolean) {
+                                if (resp.has("user_id")) {
+                                    if (checkBox!=null && checkBox.isChecked){
+                                        session.setUserSession(true)
+                                    }
+                                    session.setUserId(resp.get("user_id").asInt)
+                                    session.setAuthToken(resp.get("token").asString)
+                                    val intent = Intent(requireActivity(), GuesMain::class.java)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                    startActivity(intent)
+                                }
+                            }else{
+                                if (checkBox!=null && checkBox.isChecked){
+                                    session.setUserSession(true)
+                                }
+                                val bundle = Bundle()
+                                bundle.putString("data",Gson().toJson(resp))
+                                findNavController().navigate(R.id.completeProfileFragment,bundle)
+                            }
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(it.message, requireContext())
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+    }
 
 
-    fun eyeHideShow(imgHidePass:ImageView,imgShowPass:ImageView,etPassword:EditText){
-        imgHidePass.setOnClickListener{
+    fun eyeHideShow(imgHidePass: ImageView, imgShowPass: ImageView, etPassword: EditText) {
+        imgHidePass.setOnClickListener {
             imgShowPass.visibility = View.VISIBLE
             imgHidePass.visibility = View.GONE
             etPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
@@ -364,7 +593,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         }
     }
 
-    fun dialogRegisterEmail(context: Context?){
+    private fun dialogRegisterEmail(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -374,39 +603,107 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
 
-            var textCreateAccountButton =  findViewById<TextView>(R.id.textCreateAccountButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
+            val textCreateAccountButton = findViewById<TextView>(R.id.textCreateAccountButton)
+            val checkBox = findViewById<CheckBox>(R.id.checkBox)
+            val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
+            val textLoginHere = findViewById<TextView>(R.id.textLoginHere)
 
+            val etRegisterEmail = findViewById<EditText>(R.id.etRegisterEmail)
+            val etRegisterPassword = findViewById<EditText>(R.id.etRegisterPassword)
 
-            var textLoginHere =  findViewById<TextView>(R.id.textLoginHere)
-
-            textLoginHere.setOnClickListener{
+            textLoginHere.setOnClickListener {
                 dialogLoginEmail(context)
                 dismiss()
             }
-            textCreateAccountButton.setOnClickListener{
-                var text = "Your account is registered \nsuccessfully"
-
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
-
-                dismiss()
+            textCreateAccountButton.setOnClickListener {
+                toggleLoginButtonEnabled(false, textCreateAccountButton)
+                lifecycleScope.launch {
+                    loggedScreenViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                customDialog(
+                                    resources.getString(R.string.no_internet_dialog_msg),
+                                    requireContext()
+                                )
+                                toggleLoginButtonEnabled(true, textCreateAccountButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (etRegisterEmail.text!!.isEmpty()) {
+                                        etRegisterEmail.error = "Email Address required"
+                                        customDialog(AppConstant.email, requireContext())
+                                        toggleLoginButtonEnabled(true, textCreateAccountButton)
+                                    }else if (etRegisterPassword.text!!.isEmpty()) {
+                                        etRegisterPassword.error = "Password required"
+                                        customDialog(AppConstant.password, requireContext())
+                                        toggleLoginButtonEnabled(true, textCreateAccountButton)
+                                    }
+                                    else {
+                                        signupEmail(etRegisterEmail.text.toString(),
+                                            etRegisterPassword.text.toString(),
+                                            dialog,textCreateAccountButton,
+                                            checkBox)
+                                    }
+                                }
+                            }
+                        }
+                }
             }
 
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
+    private fun signupEmail(
+        email: String,
+        password: String,
+        dialog: Dialog,
+        textLoginButton: TextView,
+        checkBox: CheckBox
+    ) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.signupEmail(
+                email,
+                password
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            val otp = resp.first
+                            val temp = resp.second
+                            Log.d(TAG, otp.toString())
+                            val text = "Your account is registered \nsuccessfully"
+                            val textHeaderOfOtpVerfication =
+                   "Please type the verification code send \nto "+email
+                        dialogOtp(requireActivity(), text, textHeaderOfOtpVerfication, email, password,
+                        temp,checkBox,
+                            "RegisterEmail")
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                    }
 
+                    is NetworkResult.Error -> {
+                        customDialog(it.message, requireContext())
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                    }
 
+                    else -> {
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+    }
 
     @SuppressLint("MissingInflatedId")
-    fun dialogForgotPassword(context: Context?){
+    fun dialogForgotPassword(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -416,26 +713,46 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var etEmail =  findViewById<EditText>(R.id.etEmail)
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
-                var text = "Your password has been changed\n successfully."
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            val etEmail = findViewById<EditText>(R.id.etEmail)
+            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            textSubmitButton.setOnClickListener {
+                toggleLoginButtonEnabled(false, textSubmitButton)
+                lifecycleScope.launch {
+                    loggedScreenViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                customDialog(
+                                    resources.getString(R.string.no_internet_dialog_msg),
+                                    requireContext()
+                                )
+                                toggleLoginButtonEnabled(true, textSubmitButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (etEmail.text!!.isEmpty()) {
+                                        etEmail.error = "Email Address required"
+                                        customDialog(AppConstant.email, requireContext())
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    } else {
+                                        forgotPassword(etEmail.text.toString(),
+                                            dialog,textSubmitButton)
+                                    }
+                                }
+                            }
+                        }
+                }
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
-
-
-                dismiss()
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
-    fun dialogNumberVerification(context: Context?){
+    fun dialogNumberVerification(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -445,27 +762,30 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            textSubmitButton.setOnClickListener {
 
-                var text = "Your Phone has been Verified\n  successfully."
+                val text = "Your Phone has been Verified\n  successfully."
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto +1 999 999 9999"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
+                val textHeaderOfOtpVerfication =
+                    "Please type the verification code send \nto +1 999 999 9999"
+                dialogOtp(context, text, textHeaderOfOtpVerfication, "", "",
+                    "",null,"")
 
 
                 dismiss()
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
-    fun dialogChangeName(context: Context?){
+    fun dialogChangeName(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -477,18 +797,19 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
 
 
-            var textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
-            textSaveChangesButton.setOnClickListener{
+            val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
+            textSaveChangesButton.setOnClickListener {
 
                 dismiss()
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
-    fun dialogEmailVerification(context: Context?,text: String){
+    fun dialogEmailVerification(context: Context?, text: String) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -498,30 +819,38 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
 
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
-                var text2 = "Your Email has been Verified\n  successfully."
+            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            textSubmitButton.setOnClickListener {
+                val text2 = "Your Email has been Verified\n  successfully."
 
                 val texter = if (text != null.toString()) text else text2
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(context,texter,textHeaderOfOtpVerfication)
+                val textHeaderOfOtpVerfication =
+                    "Please type the verification code send \nto abc@gmail.com"
+                dialogOtp(context, texter, textHeaderOfOtpVerfication, "", "",
+                    "",null,"")
 
                 dismiss()
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
-    @SuppressLint("SuspiciousIndentation")
-    fun dialogOtp(context: Context, text: String, textHeaderOfOtpVerfication: String){
-        val dialog =  Dialog(context, R.style.BottomSheetDialog)
+    @SuppressLint("SuspiciousIndentation", "CutPasteId")
+    fun dialogOtp(
+        context: Context, text: String, textHeaderOfOtpVerfication: String,
+        code: String, number: String, userId:String,
+        checkBox: CheckBox?,
+        otpType:String
+    ) {
+        val dialog = Dialog(context, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_otp_verification)
@@ -530,23 +859,14 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-
-            val imageCross =  findViewById<ImageView>(R.id.imageCross)
-
-            val textResend =  findViewById<TextView>(R.id.textResend)
-            val textEnterYourEmail =  findViewById<TextView>(R.id.textEnterYourEmail)
-
-            val textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            val rlResendLine =  findViewById<RelativeLayout>(R.id.rlResendLine)
-
-            val textTimeResend =  findViewById<TextView>(R.id.textTimeResend)
-            val incorrectOtp =  findViewById<TextView>(R.id.incorrectOtp)
-
-
-
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            val textResend = findViewById<TextView>(R.id.textResend)
+            val textEnterYourEmail = findViewById<TextView>(R.id.textEnterYourEmail)
+            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            val rlResendLine = findViewById<RelativeLayout>(R.id.rlResendLine)
+            val textTimeResend = findViewById<TextView>(R.id.textTimeResend)
+            val incorrectOtp = findViewById<TextView>(R.id.incorrectOtp)
             textEnterYourEmail.text = textHeaderOfOtpVerfication
-
-
             otpDigits = arrayOf<EditText>(
                 findViewById(R.id.otp_digit1),
                 findViewById(R.id.otp_digit2),
@@ -562,128 +882,626 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
                 otpDigits.get(i).addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(
-                        s: CharSequence,
-                        start: Int,
-                        count: Int,
-                        after: Int
-                    ) {
+                        s: CharSequence, start: Int, count: Int, after: Int) {
                     }
 
-                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    override fun onTextChanged(s: CharSequence, start: Int, before: Int,
+                        count: Int
+                    ) {
                         if (s.length == 1 && index < otpDigits.size - 1) {
                             otpDigits.get(index + 1).requestFocus()
                         } else if (s.length == 0 && index > 0) {
                             otpDigits.get(index - 1).requestFocus()
                         }
                     }
-
                     override fun afterTextChanged(s: Editable) {}
                 })
-
             }
-
-
-            startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
+            startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
             countDownTimer!!.cancel()
-
-
-
-
             textTimeResend.text = "${"00"}:${"00"} sec"
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true
                 textResend.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.scroll_bar_color
-                    )
-                )
+                    ContextCompat.getColor(context, R.color.scroll_bar_color))
             } else {
-                textResend.setTextColor(
-                    ContextCompat.getColor(
-                        context,
-                        R.color.grey
-                    )
-                )
+                textResend.setTextColor(ContextCompat.getColor(context, R.color.grey))
             }
-
-
-
-
-
-
-
-            textSubmitButton.setOnClickListener{
-
-                /*
-                  if (otpValue.equals("1234")) {
-
-                alertBox()
-
-            } else {
-                binding.rlResendLine.visibility = View.GONE
-                binding.incorrectOtp.visibility = View.VISIBLE
-                binding.textResend.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.orange
-                    )
-                )
-            }
-                 */
-
-
-                if (text == "Your password has been changed\n" + " successfully."){
-                    dialogNewPassword(context,text)
-                }
-                else if(text.equals("Login Successful")){
-                    var session =SessionManager(context)
-                    session.setUserId(1)
-                    var intent = Intent(context,GuesMain::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-
-                    context.startActivity(intent)
-                }
-                else{
-                    if (text == "Your password has been changed successfully" ){
-                        dialogNewPassword(context,text)
-                    }else{
-                        dialogSuccess(context,text)
+            textSubmitButton.setOnClickListener {
+                toggleLoginButtonEnabled(false, textSubmitButton)
+                if (text == "Your password has been changed\n successfully.") {
+                    lifecycleScope.launch {
+                        loggedScreenViewModel.networkMonitor.isConnected
+                            .distinctUntilChanged() // Ignore duplicate consecutive values
+                            .collect { isConn ->
+                                if (!isConn) {
+                                    customDialog(
+                                        resources.getString(R.string.no_internet_dialog_msg),
+                                        requireContext())
+                                    toggleLoginButtonEnabled(true, textSubmitButton)
+                                } else {
+                                    lifecycleScope.launch(Dispatchers.Main) {
+                                        if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
+                                            findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
+                                            findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
+                                            findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
+                                            customDialog(AppConstant.otp, requireContext())
+                                            toggleLoginButtonEnabled(true, textSubmitButton)
+                                        } else {
+                                            val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
+                                                    findViewById<EditText>(R.id.otp_digit2).text.toString()+
+                                                    findViewById<EditText>(R.id.otp_digit3).text.toString()+
+                                                    findViewById<EditText>(R.id.otp_digit4).text.toString()
+                                            otpVerifyForgotPassword(userId,
+                                                otp,
+                                                dialog,
+                                                textSubmitButton,
+                                                text)
+                                        }
+                                    }
+                                }
+                            }
                     }
+                } else if (text.equals("Login Successful")) {
+                    lifecycleScope.launch {
+                        loggedScreenViewModel.networkMonitor.isConnected
+                            .distinctUntilChanged() // Ignore duplicate consecutive values
+                            .collect { isConn ->
+                                if (!isConn) {
+                                    customDialog(
+                                        resources.getString(R.string.no_internet_dialog_msg),
+                                        requireContext())
+                                    toggleLoginButtonEnabled(true, textSubmitButton)
+                                } else {
+                                    lifecycleScope.launch(Dispatchers.Main) {
+                                        if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
+                                            findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
+                                            findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
+                                            findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
+                                            customDialog(AppConstant.otp, requireContext())
+                                            toggleLoginButtonEnabled(true, textSubmitButton)
+                                        } else {
+                                            val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
+                                             findViewById<EditText>(R.id.otp_digit2).text.toString()+
+                                            findViewById<EditText>(R.id.otp_digit3).text.toString()+
+                                            findViewById<EditText>(R.id.otp_digit4).text.toString()
+                                            otpVerifyLoginPhone(
+                                                userId,
+                                                otp,
+                                                dialog,
+                                                textSubmitButton,
+                                                checkBox)
+                                        }
+                                    }
+                                }
+                            }
+                    }
+                } else if (text.equals("Your account is registered \nsuccessfully")){
+                        lifecycleScope.launch {
+                            loggedScreenViewModel.networkMonitor.isConnected
+                                .distinctUntilChanged() // Ignore duplicate consecutive values
+                                .collect { isConn ->
+                                    if (!isConn) {
+                                        customDialog(
+                                            resources.getString(R.string.no_internet_dialog_msg),
+                                            requireContext()
+                                        )
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    } else {
+                                        lifecycleScope.launch(Dispatchers.Main) {
+                                            if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
+                                                findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
+                                                findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
+                                                findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
+                                                customDialog(AppConstant.otp, requireContext())
+                                                toggleLoginButtonEnabled(true, textSubmitButton)
+                                            } else {
+                                                val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
+                                                        findViewById<EditText>(R.id.otp_digit2).text.toString()+
+                                                        findViewById<EditText>(R.id.otp_digit3).text.toString()+
+                                                        findViewById<EditText>(R.id.otp_digit4).text.toString()
+                                                if (otpType.equals("RegisterPhone")) {
+                                                    otpVerifySignupPhone(
+                                                        userId, otp, dialog, textSubmitButton,
+                                                        checkBox,
+                                                        text
+                                                    )
+                                                }
+                                                if (otpType.equals("RegisterEmail")) {
+                                                    otpVerifySignupEmail( userId, otp, dialog, textSubmitButton,
+                                                        checkBox,
+                                                        text
 
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                        }
 
                 }
-                dismiss()
             }
+            textResend.setOnClickListener {
+                findViewById<EditText>(R.id.otp_digit1).text.clear()
+                findViewById<EditText>(R.id.otp_digit2).text.clear()
+                findViewById<EditText>(R.id.otp_digit3).text.clear()
+                findViewById<EditText>(R.id.otp_digit4).text.clear()
+                if (text.equals("Login Successful")) {
+                    lifecycleScope.launch {
+                        loggedScreenViewModel.networkMonitor.isConnected
+                            .distinctUntilChanged() // Ignore duplicate consecutive values
+                            .collect { isConn ->
+                                if (!isConn) {
+                                    customDialog(
+                                        resources.getString(R.string.no_internet_dialog_msg),
+                                        requireContext()
+                                    )
+                                } else {
+                                    if (resendEnabled) {
+                                        resendLoginMobile(
+                                            code, number, rlResendLine,
+                                            incorrectOtp, textTimeResend, textResend
+                                        )
+                                    }
+                                }
+                            }
+                    }
+                }else if (text.equals("Your account is registered \nsuccessfully")){
+                    lifecycleScope.launch {
+                        loggedScreenViewModel.networkMonitor.isConnected
+                            .distinctUntilChanged() // Ignore duplicate consecutive values
+                            .collect { isConn ->
+                                if (!isConn) {
+                                    customDialog(
+                                        resources.getString(R.string.no_internet_dialog_msg),
+                                        requireContext()
+                                    )
+                                } else {
+                                    if (otpType.equals("RegisterPhone")){
+                                        if (resendEnabled) {
+                                            resendRegisterMobile( code, number, rlResendLine,
+                                                incorrectOtp, textTimeResend, textResend)
+                                        }
+                                    }
+                                    if (otpType.equals("RegisterEmail")) {
+                                        if (resendEnabled) {
+                                            resendSignupEmail(
+                                                code, number,
+                                                rlResendLine,
+                                                incorrectOtp, textTimeResend, textResend
+                                            )
+                                        }
+                                    }
 
-
-            textResend.setOnClickListener{
-                if (resendEnabled) {
-                    rlResendLine.visibility = View.VISIBLE
-                    incorrectOtp.visibility = View.GONE
-                    countDownTimer?.cancel()
-                    startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
-                    textResend.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.grey
+                                }
+                            }
+                    }
+                }else if (text == "Your password has been changed\n successfully.") {
+                    if (resendEnabled) {
+                        resendForgotPassword(
+                            number,
+                            rlResendLine,
+                            incorrectOtp, textTimeResend, textResend
                         )
-                    )
+                    }
                 }
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
+
+
+    private fun resendSignupEmail(
+        email: String,
+        password: String,
+        rlResendLine: RelativeLayout,
+        incorrectOtp: TextView,
+        textTimeResend: TextView,
+        textResend: TextView
+    ) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.signupEmail(
+                email,
+                password
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            rlResendLine.visibility = View.VISIBLE
+                            incorrectOtp.visibility = View.GONE
+                            countDownTimer?.cancel()
+                            startCountDownTimer(
+                                requireContext(),
+                                textTimeResend,
+                                rlResendLine,
+                                textResend
+                            )
+                            textResend.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.grey
+                                )
+                            )
+                        }
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(it.message, requireContext())
+
+                    }
+
+                    else -> {
+
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun resendForgotPassword(
+        email: String,
+        rlResendLine: RelativeLayout,
+        incorrectOtp: TextView,
+        textTimeResend: TextView,
+        textResend: TextView
+    ) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.forgotPassword(
+                email
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            rlResendLine.visibility = View.VISIBLE
+                            incorrectOtp.visibility = View.GONE
+                            countDownTimer?.cancel()
+                            startCountDownTimer(
+                                requireContext(),
+                                textTimeResend,
+                                rlResendLine,
+                                textResend
+                            )
+                            textResend.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.grey
+                                )
+                            )
+                        }
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(it.message, requireContext())
+
+                    }
+
+                    else -> {
+
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun otpVerifySignupEmail(tempId:String,otp: String, dialog: Dialog, text: TextView,
+                                     checkBox: CheckBox?,dialogtext: String) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.otpVerifySignupEmail(
+                tempId,
+                otp,
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            val session = SessionManager(requireActivity())
+                            if (checkBox!=null && checkBox.isChecked){
+                                session.setUserSession(true)
+                            }
+                            dialogSuccess(context, dialogtext,Gson().toJson(resp))
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(
+                            it.message,
+                            requireContext()
+                        )
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
+
+
+    private fun otpVerifyForgotPassword(userId:String,otp: String, dialog: Dialog, text: TextView,
+                                     dialogtext: String) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.otpVerifyForgotPassword(
+                userId,
+                otp,
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let {
+                            dialogNewPassword(context, dialogtext,userId)
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(
+                            it.message,
+                            requireContext()
+                        )
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
 
 
 
+    private fun otpVerifyLoginPhone(userId:String,otp: String, dialog: Dialog, text: TextView,
+                                    checkBox: CheckBox?) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.otpVerifyLoginPhone(
+                userId,
+                otp,
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            val session: SessionManager = SessionManager(requireActivity())
+                            if (resp.has("is_profile_complete") &&
+                                resp.get("is_profile_complete").asBoolean) {
+                                if (resp.has("user_id")) {
+                                    if (checkBox!=null && checkBox.isChecked){
+                                        session.setUserSession(true)
+                                    }
+                                    session.setUserId(resp.get("user_id").asInt)
+                                    session.setAuthToken(resp.get("token").asString)
+                                    val intent = Intent(requireActivity(), GuesMain::class.java)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                    startActivity(intent)
+                                }
+                            }else{
+                                if (checkBox!=null && checkBox.isChecked){
+                                    session.setUserSession(true)
+                                }
+                                val bundle = Bundle()
+                                bundle.putString("data",Gson().toJson(resp))
+                                findNavController().navigate(R.id.completeProfileFragment,bundle)
+                            }
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(
+                            it.message,
+                            requireContext()
+                        )
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun forgotPassword(email:String,dialog: Dialog, text: TextView) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.forgotPassword(
+                email
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            val userId = resp.second
+                            val text = "Your password has been changed\n successfully."
+                            val textHeaderOfOtpVerfication =
+                                "Please type the verification code send \nto "+email
+                            dialogOtp(requireContext(),
+                                text,
+                                textHeaderOfOtpVerfication, "", email,
+                                userId,null,"ForgotPassword")
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(
+                            it.message,
+                            requireContext()
+                        )
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun otpVerifySignupPhone(tempId:String,otp: String, dialog: Dialog, text: TextView,
+                                    checkBox: CheckBox?,dialogtext: String) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.otpVerifySignupPhone(
+                tempId,
+                otp,
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            val session = SessionManager(requireActivity())
+                            if (checkBox!=null && checkBox.isChecked){
+                                session.setUserSession(true)
+                            }
+                            dialogSuccess(context, dialogtext,Gson().toJson(resp))
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(
+                            it.message,
+                            requireContext()
+                        )
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun resendLoginMobile(
+        code: String,
+        number: String,
+        rlResendLine: RelativeLayout,
+        incorrectOtp: TextView,
+        textTimeResend: TextView,
+        textResend: TextView
+    ) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.loginPhoneNumber(
+                code,
+                number
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let {
+                            rlResendLine.visibility = View.VISIBLE
+                            incorrectOtp.visibility = View.GONE
+                            countDownTimer?.cancel()
+                            startCountDownTimer(
+                                requireContext(),
+                                textTimeResend,
+                                rlResendLine,
+                                textResend
+                            )
+                            textResend.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.grey
+                                )
+                            )
+                        }
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(
+                            it.message,
+                            requireContext()
+                        )
+                    }
+
+                    else -> {
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun resendRegisterMobile(
+        code: String,
+        number: String,
+        rlResendLine: RelativeLayout,
+        incorrectOtp: TextView,
+        textTimeResend: TextView,
+        textResend: TextView
+    ) {
+        Log.d(TAG, "Inside of fragment")
+        lifecycleScope.launch {
+            loggedScreenViewModel.signupPhoneNumber(
+                code, number
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            rlResendLine.visibility = View.VISIBLE
+                            incorrectOtp.visibility = View.GONE
+                            countDownTimer?.cancel()
+                            startCountDownTimer(
+                                requireContext(),
+                                textTimeResend,
+                                rlResendLine,
+                                textResend
+                            )
+                            textResend.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.grey
+                                )
+                            )
+                        }
+                    }
+
+                    is NetworkResult.Error -> {
+                        customDialog(it.message, requireContext())
+                    }
+
+                    else -> {
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
 
 
-
-    private fun startCountDownTimer(context: Context,textTimeResend : TextView,rlResendLine: RelativeLayout, textResend : TextView) {
+    private fun startCountDownTimer(
+        context: Context,
+        textTimeResend: TextView,
+        rlResendLine: RelativeLayout,
+        textResend: TextView
+    ) {
         countDownTimer = object : CountDownTimer(120000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val f = android.icu.text.DecimalFormat("00")
@@ -717,8 +1535,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     }
 
 
-
-    fun dialogNewPassword(context: Context?,text: String){
+    private fun dialogNewPassword(context: Context?, text: String,
+                                  userId: String) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -728,25 +1546,90 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var etPassword =  findViewById<EditText>(R.id.etPassword)
-            var etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
-
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
-                dialogSuccess(context,text)
-                dismiss()
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            val etPassword = findViewById<EditText>(R.id.etPassword)
+            val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
+            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            textSubmitButton.setOnClickListener {
+                toggleLoginButtonEnabled(false, textSubmitButton)
+                lifecycleScope.launch {
+                    loggedScreenViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                customDialog(
+                                    resources.getString(R.string.no_internet_dialog_msg),
+                                    requireContext()
+                                )
+                                toggleLoginButtonEnabled(true, textSubmitButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (etPassword.text!!.isEmpty()) {
+                                        etPassword.error = "Password required"
+                                        customDialog(AppConstant.password, requireContext())
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    }else  if (etConfirmPassword.text!!.isEmpty()) {
+                                        etConfirmPassword.error = "Confirm Password required"
+                                        customDialog(AppConstant.conPassword, requireContext())
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    }
+                                    else {
+                                        resetPassword(userId,
+                                            etPassword.text.toString(),
+                                            etConfirmPassword.text.toString(),
+                                            dialog,textSubmitButton,text)
+                                    }
+                                }
+                            }
+                        }
+                }
             }
 
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
+    private fun resetPassword(userId:String,password: String, passwordConfirmation:String
+                              ,dialog: Dialog, text: TextView,
+                                        dialogtext: String) {
+        lifecycleScope.launch {
+            loggedScreenViewModel.resetPassword(
+                userId,
+                password,
+                passwordConfirmation,
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let {
+                            dialogSuccess(context, dialogtext,"")
+                            dialog.dismiss()
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, text)
+                    }
 
+                    is NetworkResult.Error -> {
+                        customDialog(
+                            it.message,
+                            requireContext()
+                        )
+                        toggleLoginButtonEnabled(true, text)
+                    }
 
-    fun dialogSuccess(context: Context?, text: String) {
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v("RegisterViewModel", "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun dialogSuccess(context: Context?, text: String, data:String) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -764,12 +1647,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             findViewById<TextView>(R.id.text).text = text
             findViewById<TextView>(R.id.textOkayButton).setOnClickListener {
                 if (text == "Your account is registered \nsuccessfully") {
-
                     Log.d("Navigation", "Navigating to turnNotificationsFragment")
-                    navController?.navigate(R.id.turnNotificationsFragment)
+                    val bundle = Bundle()
+                    bundle.putString("data",data)
+                    navController?.navigate(R.id.turnNotificationsFragment,bundle)
 
-                }
-                else if (text == "Your password has been changed\n" + " successfully."){
+                } else if (text == "Your password has been changed\n successfully.") {
                     dialogLoginEmail(context)
                 }
                 dismiss()
@@ -798,9 +1681,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
 
             findViewById<RelativeLayout>(R.id.rlYes).setOnClickListener {
-                var sessionManager = SessionManager(context)
+                val sessionManager = SessionManager(context)
                 sessionManager.setUserId(-1)
-                var intent  = Intent(context,AuthActivity::class.java)
+                val intent = Intent(context, AuthActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 context.startActivity(intent)
                 dismiss()
@@ -815,12 +1698,13 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     }
 
 
-    private fun showPopupWindow(anchorView: View, position: Int)   {
+    private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
-        val popupView = LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
+        val popupView =
+            LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
 
         // Create PopupWindow with the custom layout
-        val popupWindow =   PopupWindow(
+        val popupWindow = PopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -881,7 +1765,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+        popupWindow.showAsDropDown(
+            anchorView,
+            xOffset,
+            yOffset,
+            Gravity.END
+        )  // Adjust the Y offset dynamically
     }
 
     fun isScreenLarge(context: Context): Boolean {
@@ -899,7 +1788,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     }
 
 
-
+    private fun toggleLoginButtonEnabled(isEnabled: Boolean, text: TextView) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                text.isEnabled = isEnabled
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "exception toggleLoginButtonEnabled ${e.message}")
+            }
+        }
+    }
 
 }
 

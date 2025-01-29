@@ -62,12 +62,13 @@ import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
+import com.business.zyvo.utils.ErrorDialog
 import java.util.Locale
 
 class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
 
     private lateinit var binding: FragmentCompleteProfileBinding
-private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
+    private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
     private lateinit var addWorkAdapter: AddWorkAdapter
     private lateinit var addLanguageSpeakAdapter: AddLanguageSpeakAdapter
@@ -91,6 +92,7 @@ private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
 
     var resendEnabled = false
     var otpValue: String = ""
+    var data:String = ""
 
 
 
@@ -156,6 +158,10 @@ private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
         val newPets = AddPetsModel("Unknown Location")
 
         petsList.add(newPets)
+        arguments?.let {
+            data = requireArguments().getString("data")!!
+            Log.d(ErrorDialog.TAG,data)
+        }
 
         return binding.root
     }

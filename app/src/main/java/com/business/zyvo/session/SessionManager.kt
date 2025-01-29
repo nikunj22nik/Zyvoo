@@ -45,5 +45,26 @@ class SessionManager(var context: Context) {
         return pref?.getInt(AppConstant.Id,-1)
     }
 
+    fun setUserSession(session:Boolean){
+        editor!!.putBoolean(AppConstant.session,session)
+        editor!!.commit()
+    }
+
+    fun getUserSession():Boolean?{
+        return pref?.getBoolean(AppConstant.session,false)
+    }
+
+    fun setAuthToken(token:String){
+        editor!!.putString(AppConstant.AuthToken,token)
+        editor!!.commit()
+    }
+
+    fun getAuthToken():String?{
+        return pref?.getString(AppConstant.AuthToken,"")
+    }
+    fun logOut() {
+        editor?.clear()
+        editor?.apply()
+    }
 
 }
