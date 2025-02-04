@@ -10,22 +10,37 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.activity.PlaceOpenActivity
 import com.business.zyvo.adapter.host.MyPlacesHostAdapter
 import com.business.zyvo.databinding.FragmentMyPlacesBinding
-import com.business.zyvo.model.HostMyPlacesModel
+import com.business.zyvo.locationManager.LocationHelper
 import com.business.zyvo.model.ViewpagerModel
+import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
+import com.business.zyvo.viewmodel.host.MyPlaceViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
-class MyPlacesFragment : Fragment(),View.OnClickListener {
+@AndroidEntryPoint
+class MyPlacesFragment : Fragment(), View.OnClickListener {
 
-    lateinit var binding :FragmentMyPlacesBinding
-    lateinit var adapter : MyPlacesHostAdapter
+    lateinit var binding: FragmentMyPlacesBinding
+
+    private lateinit var locationHelper: LocationHelper
+
+    lateinit var adapter: MyPlacesHostAdapter
+    private val myPlaceViewModel: MyPlaceViewModel by lazy {
+        ViewModelProvider(this)[MyPlaceViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,10 +56,12 @@ class MyPlacesFragment : Fragment(),View.OnClickListener {
         // Inflate the layout for this fragment
         binding = FragmentMyPlacesBinding.inflate(LayoutInflater.from(requireContext()))
 
-        adapter = MyPlacesHostAdapter(requireContext(), loadDummyData())
+        adapter = MyPlacesHostAdapter(requireContext(), mutableListOf())
         binding.recyclerMyPlaces.adapter = adapter
         binding.recyclerMyPlaces.isNestedScrollingEnabled = false
-
+         binding.floatingIcon.setOnClickListener {
+             findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag)
+         }
 
         binding.imgFilter.setOnClickListener(this)
         binding.rlAddNewPlace.setOnClickListener(this)
@@ -67,11 +84,13 @@ class MyPlacesFragment : Fragment(),View.OnClickListener {
         return binding.root
     }
 
-    fun initialization(){
+    fun initialization() {
         binding.dataView.visibility = View.VISIBLE
         binding.noDataView.visibility = View.GONE
 
-        var commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(),findNavController())
+
+
+        var commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(), findNavController())
         if (commonAuthWorkUtils.isScreenLarge(requireContext())) {
             // Use GridLayoutManager for larger screens (e.g., tablets)
             val gridLayoutManager = GridLayoutManager(requireContext(), 2) // 2 columns for grid
@@ -81,20 +100,71 @@ class MyPlacesFragment : Fragment(),View.OnClickListener {
             val linearLayoutManager = LinearLayoutManager(requireContext())
             binding.recyclerMyPlaces.setLayoutManager(linearLayoutManager)
         }
+
+        locationTask()
     }
 
-    fun loadDummyData() : MutableList<HostMyPlacesModel>{
-        val images = mutableListOf<HostMyPlacesModel>(
-            HostMyPlacesModel("Cabin in Peshastin","4.0", "(1k+)", "37 miles away", "\$12 / h",loadImages()),
-            HostMyPlacesModel("Cabin in Peshastin","4.0", "(1k+)", "37 miles away", "\$12 / h",loadImages()),
-            HostMyPlacesModel("Cabin in Peshastin","4.0", "(1k+)", "37 miles away", "\$12 / h",loadImages())
-        )
-        return images
+
+    private fun locationTask(){
+        locationHelper = LocationHelper(requireContext())
+
+        // Check if location permission is granted
+        if (locationHelper.checkLocationPermission()) {
+            // If permission granted, fetch location
+            locationHelper.getLocationInBackground(lifecycle) { location ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    myPlaceApi(latitude,longitude)
+                } else {
+                   myPlaceApi(null,null)
+                }
+            }
+        } else {
+            // Request permission if not granted
+            locationHelper.requestLocationPermission(requireActivity())
+        }
     }
 
-    private fun loadImages() :MutableList<ViewpagerModel>{
-        val images = mutableListOf<ViewpagerModel>(ViewpagerModel(R.drawable.ic_image_for_viewpager),
-            ViewpagerModel(R.drawable.ic_image_for_viewpager), ViewpagerModel(R.drawable.ic_image_for_viewpager),
+    private fun myPlaceApi(latitude:Double?,longitude:Double?) {
+        var userId = SessionManager(requireContext()).getUserId()
+        LoadingUtils.showDialog(requireContext(),false)
+        lifecycleScope.launch {
+            if (userId != null) {
+                myPlaceViewModel.getMyPlaces(userId,latitude,longitude).collect{
+                    when(it){
+                        is NetworkResult.Success ->{
+                            LoadingUtils.hideDialog()
+                            it.data?.let { it1 ->
+                               if(it1.size <3){
+                                   binding.floatingIcon.visibility =View.GONE
+                               }else{
+                                   binding.floatingIcon.visibility = View.VISIBLE
+                               }
+                                adapter.updateData(it1)
+
+                            }
+                        }
+                        is NetworkResult.Error ->{
+                            LoadingUtils.hideDialog()
+                            LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                        }
+                        else ->{
+                            LoadingUtils.hideDialog()
+
+                        }
+                    }
+                }
+            }
+
+        }
+
+    }
+
+
+    private fun loadImages(): MutableList<ViewpagerModel> {
+        val images = mutableListOf<ViewpagerModel>(
+            ViewpagerModel(R.drawable.ic_image_for_viewpager), ViewpagerModel(R.drawable.ic_image_for_viewpager), ViewpagerModel(R.drawable.ic_image_for_viewpager),
             ViewpagerModel(R.drawable.ic_image_for_viewpager), ViewpagerModel(R.drawable.image_hotel), ViewpagerModel(R.drawable.image_hotel),
             ViewpagerModel(R.drawable.image_hotel)
         )
@@ -102,12 +172,37 @@ class MyPlacesFragment : Fragment(),View.OnClickListener {
     }
 
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        locationHelper.handlePermissionResult(requestCode, grantResults) {
+            // Proceed to get location if permission is granted
+            locationHelper.getLocationInBackground(lifecycle) { location ->
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                   myPlaceApi(latitude,longitude)
+                } else {
+                   myPlaceApi(null,null)
+                }
+            }
+        }
+    }
+
     private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
         val popupView = LayoutInflater.from(context).inflate(R.layout.popup_earning, null)
 
         // Create PopupWindow with the custom layout
-        val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
 
         // Set click listeners for each menu item in the popup layout
 
@@ -157,14 +252,24 @@ class MyPlacesFragment : Fragment(),View.OnClickListener {
 
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+        popupWindow.showAsDropDown(
+            anchorView,
+            xOffset,
+            yOffset,
+            Gravity.END
+        )  // Adjust the Y offset dynamically
     }
 
-    private fun showPopupWindowPrice(anchorView: View,position: Int){
+    private fun showPopupWindowPrice(anchorView: View, position: Int) {
         val popupView = LayoutInflater.from(context).inflate(R.layout.popup_layout_pets, null)
 
         // Create PopupWindow with the custom layout
-        val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
 
         // Set click listeners for each menu item in the popup layout
 
@@ -218,24 +323,26 @@ class MyPlacesFragment : Fragment(),View.OnClickListener {
     }
 
     override fun onClick(p0: View?) {
-        when(p0?.id){
-            R.id.img_filter ->{
-                showPopupWindow(binding.imgFilter,0)
+        when (p0?.id) {
+            R.id.img_filter -> {
+                showPopupWindow(binding.imgFilter, 0)
             }
-            R.id.rl_add_new_place ->{
+
+            R.id.rl_add_new_place -> {
                 findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag)
             }
 
-            R.id.rl_add_new_place_1 ->{
+            R.id.rl_add_new_place_1 -> {
                 findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag)
             }
 
-            R.id.tv_places ->{
-                var intent = Intent(requireContext(),PlaceOpenActivity::class.java)
+            R.id.tv_places -> {
+                var intent = Intent(requireContext(), PlaceOpenActivity::class.java)
                 startActivity(intent)
             }
-            R.id.rl_price->{
-                showPopupWindowPrice(binding.rlPrice,0)
+
+            R.id.rl_price -> {
+                showPopupWindowPrice(binding.rlPrice, 0)
             }
         }
     }

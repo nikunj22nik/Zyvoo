@@ -1,7 +1,9 @@
 package com.business.zyvo.locationManager
 
+import android.Manifest
 import android.R
 import android.content.Context
+import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.text.Editable
@@ -12,14 +14,26 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.business.zyvo.model.AddressDetails
+import com.business.zyvo.model.Location
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.Locale
 
 
-class LocationManager(var applicationContext : Context) {
+class LocationManager(var applicationContext : Context,var applicationActivity : AppCompatActivity? =null) {
 
     private lateinit var autocompleteTextView: AutoCompleteTextView
     private lateinit var placesClient: PlacesClient
@@ -31,10 +45,7 @@ class LocationManager(var applicationContext : Context) {
 
     }
 
-
-
-
-        fun autoCompleteLocationWork(autocompleteTextView :AutoCompleteTextView){
+    fun autoCompleteLocationWork(autocompleteTextView :AutoCompleteTextView){
             this.autocompleteTextView =autocompleteTextView
 
             autocompleteTextView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
@@ -84,8 +95,7 @@ class LocationManager(var applicationContext : Context) {
 
         }
 
-
-        private fun fetchAutocompleteSuggestions(query: String,context:Context) {
+    private fun fetchAutocompleteSuggestions(query: String,context:Context) {
             val request = FindAutocompletePredictionsRequest.builder()
                 .setQuery(query)
                 .build()
@@ -100,8 +110,6 @@ class LocationManager(var applicationContext : Context) {
                 Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
         }
-
-
 
     fun getAddressFromCoordinates(latitude: Double, longitude: Double): AddressDetails {
         // Use Geocoder to get address details
@@ -122,6 +130,93 @@ class LocationManager(var applicationContext : Context) {
         }
     }
 
+
+    private val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(applicationContext)
+
+    // Define a callback interface to return the location data
+    interface LocationCallback {
+        fun onLocationFetched(latitude: Double, longitude: Double)
+        fun onLocationError(error: String)
+    }
+
+    private var locationCallback: LocationCallback? = null
+
+    // Permission request launcher
+    private val requestPermissionLauncher =
+        applicationActivity?.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            if (permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true) {
+                // Permission granted, fetch location
+                fetchLocationInBackground()
+            } else {
+                // Handle permission denial, show a message or fallback
+                locationCallback?.onLocationError("Location permissions denied")
+            }
+        }
+
+    // Request permissions at runtime
+    fun checkAndRequestPermissions(callback: LocationCallback) {
+        locationCallback = callback
+
+        val permissionsNeeded = mutableListOf<String>()
+
+        // Check if permission is granted for foreground location
+        if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
+            permissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        }
+
+        // Check if permission is granted for background location (Android 10 and above)
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q &&
+            ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            permissionsNeeded.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+        }
+
+        if (permissionsNeeded.isNotEmpty()) {
+            requestPermissionLauncher?.launch(permissionsNeeded.toTypedArray())
+        } else {
+            // Permissions already granted, fetch location
+            fetchLocationInBackground()
+        }
+    }
+
+    // Fetch the current location in a background thread
+    private fun fetchLocationInBackground() {
+        // Use Kotlin Coroutines to run the task in the background thread
+        GlobalScope.launch(Dispatchers.Main) {
+            val location = withContext(Dispatchers.IO) {
+                getCurrentLocation()
+            }
+
+            // Now that location is fetched, invoke the callback
+            location?.let {
+                // Callback with latitude and longitude
+                locationCallback?.onLocationFetched(it.latitude, it.longitude)
+            } ?: run {
+                // Handle the case where location is null (e.g., location not available)
+                locationCallback?.onLocationError("Unable to fetch location")
+            }
+        }
+    }
+
+    // Fetch the current location using FusedLocationProviderClient
+    private suspend fun getCurrentLocation(): android.location.Location? {
+        return if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            val locationTask: Task<android.location.Location> = fusedLocationClient.lastLocation
+
+            try {
+                val location = locationTask.await() // Suspend until we get the location
+                location
+            } catch (e: Exception) {
+                // Handle any errors (e.g., task failed, no location available)
+                null
+            }
+        } else {
+            // Permissions not granted, return null
+            null
+        }
+    }
 
 
 

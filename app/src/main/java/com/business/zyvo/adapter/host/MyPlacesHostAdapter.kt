@@ -82,15 +82,26 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         holder.binding.viewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         holder.binding.viewpager2.setOffscreenPageLimit(1);
         // Observe ViewModel inside fragment and update adapter with images
-        viewPagerAdapter.updateItem(list.get(position).newList)
+        viewPagerAdapter.updateItem(list.get(position).property_images.toMutableList())
         // Tab layout mediator (no need to re-bind it every time)
         TabLayoutMediator(holder.binding.tabLayoutForIndicator, holder.binding.viewpager2) { _, _ -> }.attach()
         // Set TextView data
-        holder.binding.textHotelName.text = currentItem.textHotelName
-        holder.binding.textRating.text = currentItem.textRating
-        holder.binding.textTotal.text = currentItem.textTotal
-        holder.binding.textMiles.text = currentItem.textMiles
-        holder.binding.textPricePerHours.text = currentItem.textPricePerHours
+        holder.binding.textHotelName.text = currentItem.title
+        var rating = currentItem.property_rating +"("+ currentItem.property_review_count+")"
+        var price ="$"+currentItem.hourly_rate+" / h"
+        holder.binding.textRating.text = rating
+        holder.binding.textPricePerHours.text = price
+
+        currentItem.distance_miles?.let {   holder.binding.textMiles.text = currentItem.distance_miles +" miles away" }
+
+        if(list.get(position).fname ==null){
+            holder.binding.rlBtmView.visibility = View.GONE
+        }
+
+        if(list.get(position).distance_miles == null){
+            holder.binding.textMiles.visibility = View.GONE
+        }
+
         holder.binding.imageAddWish.setOnClickListener {
             showPopupWindow(holder.binding.imageAddWish,0)
         }

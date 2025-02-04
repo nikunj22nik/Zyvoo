@@ -367,7 +367,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             return false
         }
         if(amenitiesListResult.size ==0){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Select Aminities")
+            LoadingUtils.showErrorDialog(requireContext(),"Please Select Amenities")
             return false
         }
         if(cancellationDays.equals("00")){

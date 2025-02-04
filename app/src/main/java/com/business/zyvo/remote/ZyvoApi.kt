@@ -70,5 +70,16 @@ interface ZyvoApi {
     @POST("store_property_details")
     suspend fun addProperty(@Body addProperty : PropertyDetailsSave) : Response<JsonObject>
 
+    @POST("get_properties_lists")
+    @FormUrlEncoded
+    suspend fun getMyPlacesApi(@Field("user_id")user_id : Int,@Field("latitude")latitude :Double?,@Field("longitude")lng:Double?) : Response<JsonObject>
+
+    @POST("get_properties_lists")
+    @FormUrlEncoded
+    suspend fun getMyPlacesWithOutLatLangApi(@Field("user_id")user_id : Int) : Response<JsonObject>
+
+
+
+
 
 }

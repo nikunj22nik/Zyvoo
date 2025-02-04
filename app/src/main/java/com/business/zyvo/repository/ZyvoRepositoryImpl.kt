@@ -3,6 +3,8 @@ package com.business.zyvo.repository
 import android.util.Log
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.backgroundTask.AuthTask
+import com.business.zyvo.backgroundTask.MyPlacesTask
+import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.remote.ZyvoApi
 import com.business.zyvo.utils.ErrorDialog
@@ -528,6 +530,73 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun getPropertyList(userId:Int,latitude: Double?, longitude: Double?): Flow<NetworkResult<MutableList<HostMyPlacesModel>>> = flow {
+        try {
+            if(latitude !==null && longitude != null) {
+                api.getMyPlacesApi(userId, latitude, longitude).apply {
+                    if (isSuccessful) {
+                        body()?.let { resp ->
+                            if (resp.has("success") && resp.get("success").asBoolean) {
+                                emit(MyPlacesTask.getAllMyPlace(resp))
+                            } else {
+                                emit(NetworkResult.Error(resp.get("message").asString))
+                            }
+                        }
+                            ?: emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                    } else {
+                        try {
+                            val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                            emit(
+                                NetworkResult.Error(
+                                    jsonObj?.getString("message")
+                                        ?: "There was an unknown error. Check your connection, and try again."
+                                )
+                            )
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                            emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                        }
+                    }
+                }
+            }else{
+                api.getMyPlacesWithOutLatLangApi(userId).apply {
+                    if (isSuccessful) {
+                        body()?.let { resp ->
+                            if (resp.has("success") && resp.get("success").asBoolean) {
+                                emit(MyPlacesTask.getAllMyPlace(resp))
+                            } else {
+                                emit(NetworkResult.Error(resp.get("message").asString))
+                            }
+                        }
+                            ?: emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                    } else {
+                        try {
+                            val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                            emit(
+                                NetworkResult.Error(
+                                    jsonObj?.getString("message")
+                                        ?: "There was an unknown error. Check your connection, and try again."
+                                )
+                            )
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                            emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                        }
                     }
                 }
             }

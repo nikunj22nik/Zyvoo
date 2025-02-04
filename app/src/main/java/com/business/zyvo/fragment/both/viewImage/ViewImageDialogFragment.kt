@@ -56,7 +56,7 @@ class ViewImageDialogFragment : DialogFragment(), OnClickListener {
 
         // Observe the data in ViewModel and update the adapter
         imagePopViewModel.imageList.observe(viewLifecycleOwner, Observer { images ->
-            adapter?.updateItem(images)
+           // adapter?.updateItem(images)
         })
 
         // Set up the TabLayout mediator

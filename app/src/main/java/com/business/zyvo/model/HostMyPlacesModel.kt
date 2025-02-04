@@ -1,10 +1,21 @@
 package com.business.zyvo.model
 
 data class HostMyPlacesModel(
-    var textHotelName: String,
-    var textRating: String,
-    var textTotal: String,
-    var textMiles: String,
-    var textPricePerHours: String,
-    var newList: MutableList<ViewpagerModel> = mutableListOf()
+    val address: String,
+    val distance_miles: String?,
+    val fname: String?,
+    val host_id: Int,
+    val hourly_rate: String,
+    val is_instant_book: Int,
+    val latitude:String?,
+    val lname: Any,
+    val longitude: String?,
+    val profile_image: Any,
+    val property_id: Int,
+    val property_images : List<String>,
+    val property_rating : String,
+    val property_review_count : String,
+    val title: String
+
+
 )

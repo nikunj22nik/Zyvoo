@@ -1,6 +1,7 @@
 package com.business.zyvo.repository
 
 import com.business.zyvo.NetworkResult
+import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
@@ -33,5 +34,12 @@ interface ZyvoRepository {
 
     suspend fun getUserProfile(userId :String) : Flow<NetworkResult<JsonObject>>
 
+
+    // Host Api's
     suspend fun addPropertyData(property: PropertyDetailsSave) :Flow<NetworkResult<Pair<String, Int>>>
+
+    suspend fun  getPropertyList(userId:Int,latitude: Double?, longitude: Double?) : Flow<NetworkResult<MutableList<HostMyPlacesModel>>>
+
+
+
 }

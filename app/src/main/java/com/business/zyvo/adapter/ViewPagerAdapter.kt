@@ -1,14 +1,17 @@
 package com.business.zyvo.adapter
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.OnLogClickListener
 import com.business.zyvo.databinding.LayoutImageBinding
 import com.business.zyvo.model.ViewpagerModel
 
-class ViewPagerAdapter(private var list: MutableList<ViewpagerModel>, var context: Context,
+class ViewPagerAdapter(private var list: MutableList<String>, var context: Context,
                        var listner: OnLogClickListener?
 ) : RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>() {
 
@@ -21,20 +24,19 @@ class ViewPagerAdapter(private var list: MutableList<ViewpagerModel>, var contex
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = list[position]
-        holder.binding.image.setImageResource(currentItem.image)
 
+        Log.d("TESTING_ZYVOO",AppConstant.BASE_URL + currentItem)
+        Glide.with(context).load(AppConstant.BASE_URL + currentItem).into(holder.binding.image)
 
         holder.itemView.setOnClickListener {
-
-            listner?.itemClick(list)
+        //            listner?.itemClick(list)
         }
-
 
     }
 
     override fun getItemCount() = list.size
 
-    fun updateItem(newList: MutableList<ViewpagerModel>) {
+    fun updateItem(newList: MutableList<String>) {
         this.list = newList
         notifyDataSetChanged()
     }

@@ -95,7 +95,7 @@ class LoggedScreenAdapter(
 
         // Observe ViewModel inside fragment and update adapter with images
         imagePopViewModel.imageList.observe(lifecycleOwner, Observer { images ->
-            viewPagerAdapter.updateItem(images)
+           // viewPagerAdapter.updateItem(images)
         })
         // Tab layout mediator (no need to re-bind it every time)
         TabLayoutMediator(holder.binding.tabLayoutForIndicator, holder.binding.viewpager2) { _, _ -> }.attach()

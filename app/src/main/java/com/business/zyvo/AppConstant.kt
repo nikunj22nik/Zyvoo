@@ -99,7 +99,7 @@ class AppConstant {
         var TITLE="title"
         val EVENT = "event"
         val VOOPON ="Voopon"
-        val BASE_URL ="https://vooleyvoo.tgastaging.com"
+        val BASE_URL ="https://zyvo.tgastaging.com"
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         val years = (1900..currentYear).toList()
 

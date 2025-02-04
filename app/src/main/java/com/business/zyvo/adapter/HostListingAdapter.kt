@@ -66,7 +66,7 @@ class HostListingAdapter(private val context: Context,  private val maxItemsToSh
 
             // Observe ViewModel inside fragment and update adapter with images
             imagePopViewModel.imageList.observe(lifecycleOwner, Observer { images ->
-                viewPagerAdapter.updateItem(images)
+              //  viewPagerAdapter.updateItem(images)
             })
             // Tab layout mediator (no need to re-bind it every time)
             TabLayoutMediator(binding.tabLayoutForIndicator, binding.viewpager2) { _, _ -> }.attach()

@@ -19,6 +19,14 @@
             >
 
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_weight="1"
+    >
+
+
 
 
     <RelativeLayout
@@ -191,7 +199,17 @@
         </RelativeLayout>
 
     </RelativeLayout>
+</LinearLayout>
 
+            <ImageView
+                android:id="@+id/floating_icon"
+                android:layout_width="50sp"
+                android:layout_height="50sp"
+                android:src="@drawable/ic_add_icon_green"
+                android:layout_gravity="end|bottom"
+                 android:layout_marginHorizontal="@dimen/_15sdp"
+
+                android:layout_marginBottom="@dimen/_75sdp"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

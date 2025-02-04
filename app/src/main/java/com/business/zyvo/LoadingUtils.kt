@@ -11,10 +11,10 @@ import android.widget.TextView
 open class LoadingUtils {
 
     companion object {
+
         private var jarvisLoader: JarvisLoader? = null
-        fun showDialog(context: Context?,
-                       isCancelable: Boolean
-        ) {
+
+        fun showDialog(context: Context?, isCancelable: Boolean) {
             hideDialog()
             if (context != null) {
                 try {
@@ -24,13 +24,11 @@ open class LoadingUtils {
                         jarvisLoader.setCancelable(isCancelable)
                         jarvisLoader.show()
                     }
-
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
-
         fun hideDialog() {
             if (jarvisLoader!=null && jarvisLoader?.isShowing!!) {
                 jarvisLoader = try {
@@ -41,8 +39,6 @@ open class LoadingUtils {
                 }
             }
         }
-
-
         fun showErrorDialog(context: Context?, text: String) {
             if (context == null) return
 
@@ -52,19 +48,14 @@ open class LoadingUtils {
 
             // Find views
             val errorMessage = dialogView.findViewById<TextView>(R.id.errorMessage)
-
             val errorIcon = dialogView.findViewById<ImageView>(R.id.errorIcon)
-
             val okButton = dialogView.findViewById<Button>(R.id.okButton)
-
             val cancelBtn = dialogView.findViewById<ImageView>(R.id.imageView_Cancel)
 
             // Set the error message
-
             errorMessage.text = text
 
             // Create the dialog
-
             val dialog = AlertDialog.Builder(context)
                 .setView(dialogView)
                 .setCancelable(false)
@@ -88,8 +79,7 @@ open class LoadingUtils {
             dialog.show()
         }
 
-
-
-
     }
+
+
 }
