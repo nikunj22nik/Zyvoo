@@ -67,4 +67,14 @@ class SessionManager(var context: Context) {
         editor?.apply()
     }
 
+
+    fun getCurrentPanel() : String {
+        return pref?.getString(AppConstant.PANNEL,"")?:""
+    }
+    fun setCurrentPanel(pannel :String){
+        editor!!.putString(AppConstant.PANNEL,pannel)
+         editor!!.commit()
+    }
+
+
 }

@@ -59,10 +59,12 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, OnClickListener1 {
+
     lateinit var navController: NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
     var resendEnabled = false
+
     private lateinit var binding: FragmentLoggedScreenBinding
 
     private lateinit var adapter: LoggedScreenAdapter
@@ -81,6 +83,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
+        Log.d("TESTING","Inside On Create of LoggedScreen")
         navController = findNavController()
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(), navController)
         binding = FragmentLoggedScreenBinding.inflate(inflater, container, false)
@@ -546,14 +549,19 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                     }
                                     session.setUserId(resp.get("user_id").asInt)
                                     session.setAuthToken(resp.get("token").asString)
+                                    Log.d("Testing","Response Token is "+ resp.get("token").asString)
                                     val intent = Intent(requireActivity(), GuesMain::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     startActivity(intent)
                                 }
-                            }else{
+                            }
+                            else{
                                 if (checkBox!=null && checkBox.isChecked){
                                     session.setUserSession(true)
                                 }
+                                Log.d("Testing","Response Token is "+ resp.get("token").asString)
+                                session.setUserId(resp.get("user_id").asInt)
+                                session.setAuthToken(resp.get("token").asString)
                                 val bundle = Bundle()
                                 bundle.putString("data",Gson().toJson(resp))
                                 findNavController().navigate(R.id.completeProfileFragment,bundle)
@@ -562,7 +570,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         dialog.dismiss()
                         toggleLoginButtonEnabled(true, textLoginButton)
                     }
-
                     is NetworkResult.Error -> {
                         customDialog(it.message, requireContext())
                         toggleLoginButtonEnabled(true, textLoginButton)

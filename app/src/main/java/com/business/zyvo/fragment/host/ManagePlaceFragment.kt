@@ -2,6 +2,7 @@ package com.business.zyvo.fragment.host
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Context
@@ -10,12 +11,16 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.location.Address
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -30,6 +35,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
@@ -44,6 +51,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.AppConstant
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
@@ -54,46 +63,116 @@ import com.business.zyvo.adapter.host.AddOnItemAdapter
 import com.business.zyvo.adapter.host.GallaryAdapter
 import com.business.zyvo.adapter.host.RadioTextAdapter
 import com.business.zyvo.databinding.FragmentManagePlaceBinding
+import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.model.ActivityModel
+import com.business.zyvo.model.ViewpagerModel
 import com.business.zyvo.model.host.AddOnModel
 import com.business.zyvo.model.host.ItemRadio
+import com.business.zyvo.model.host.PropertyDetailsSave
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog.TAG
+import com.business.zyvo.utils.ErrorDialog.customDialog
+import com.business.zyvo.utils.PrepareData
+import com.business.zyvo.viewmodel.LoggedScreenViewModel
+import com.business.zyvo.viewmodel.host.CreatePropertyViewModel
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.AddressComponent
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
+import dagger.BindsInstance
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Arrays
 
 
 @AndroidEntryPoint
-class ManagePlaceFragment : Fragment() , OnMapReadyCallback , OnClickListener1 {
+class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
-    lateinit var binding :FragmentManagePlaceBinding
+        // variables for availability
+
+        var minimumHourValue = 1;
+        var hourlyPrice = 10;
+        var bulkDiscountHour = 1;
+        var bulkDiscountPrice =10;
+        var availableMonth :String ="00"
+        var fromHour :String ="00:00"
+        var toHour :String ="00:00"
+        var days ="all"
+        var cleaningCharges :String= ""
+        var addonlist :MutableList<String> = mutableListOf()
+        var addonPrice :MutableList<String> = mutableListOf()
+
+        // variables for homeSetup
+
+        var spaceType : String = "entire_home"
+        var propertySize :Int =0
+        var peopleCount :Int =0
+        var badroomCount=0;
+        var bathroomCount =0;
+        var activityListResult = mutableSetOf<String>()
+        var amenitiesListResult = mutableListOf<String>()
+        var instantBookingCheck = 0;
+        var selfCheckIn =0;
+        var allowsPets =0;
+        var cancellationDays :String = "00"
+
+      // variables for Gallery and location
+        var galleryList = mutableListOf<String>()
+        var titleResult : String =""
+        var descriptionResult : String =""
+        var parkingRule :String =""
+        var hostRule :String =""
+        var street :String =""
+        var city :String =""
+        var zipcode :String =""
+        var country :String =""
+        var state : String =""
+        var latitude :String ="0.00"
+        var longitude :String ="0.00"
+
+
+    private val viewModel: CreatePropertyViewModel by lazy {
+        ViewModelProvider(this)[CreatePropertyViewModel::class.java]
+    }
+
+    lateinit var binding: FragmentManagePlaceBinding
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
-    private lateinit var activityList : MutableList<ActivityModel>
-    private lateinit var amenitiesList :MutableList<String>
-    private lateinit var adapterActivity : ActivitiesAdapter
-    private lateinit var adapterActivity2 : ActivitiesAdapter
-    private lateinit var amenitiesAdapter : AmenitiesAdapter
+    private lateinit var activityList: MutableList<ActivityModel>
+    private lateinit var amenitiesList: MutableList<Pair<String,Boolean>>
+    private lateinit var adapterActivity: ActivitiesAdapter
+    private lateinit var adapterActivity2: ActivitiesAdapter
+    private lateinit var amenitiesAdapter: AmenitiesAdapter
     private lateinit var mapView: MapView
     private lateinit var imageList: MutableList<Uri>
-    private var PICK_IMAGES_REQUEST =210
-    private lateinit var galleryAdapter :GallaryAdapter
+
+    private var PICK_IMAGES_REQUEST = 210
+    private  var minimumHourIndex = 0
+    private var priceIndex =0
+    private var discountHourIndex =0;
+    private var discountPriceIndex =0;
+    private lateinit var galleryAdapter: GallaryAdapter
     private var mMap: GoogleMap? = null
     private val REQUEST_CODE_STORAGE_PERMISSION = 1
     val STORAGE_PERMISSION_CODE = 100
-
     private var previouslySelectedIndex: Int = -1
     private lateinit var addOnAdapter: AddOnAdapter
-
     private var addOnList: MutableList<AddOnModel> = mutableListOf()
-
     var storage_permissions = arrayOf<String>(
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
     )
-
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     var storage_permissions_33 = arrayOf<String>(
         Manifest.permission.READ_MEDIA_IMAGES,
         Manifest.permission.CAMERA, Manifest.permission.READ_MEDIA_VIDEO
     )
-
     lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,45 +181,54 @@ class ManagePlaceFragment : Fragment() , OnMapReadyCallback , OnClickListener1 {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentManagePlaceBinding.inflate(inflater,container,false)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+    : View? {
+        binding = FragmentManagePlaceBinding.inflate(inflater, container, false)
         settingDataToActivityModel()
         ActivityCompat.requestPermissions(requireActivity(), permissions(), REQUEST_CODE_STORAGE_PERMISSION)
-
         initialization()
         setUpRecyclerView()
+        locationSelection()
         mapInitialization(savedInstanceState)
         imagePermissionInitialization()
-
         val newWork = AddOnModel("Unknown Location", "0")
+        arguments?.let {
+            if(it.containsKey(AppConstant.CREATE_EVENT)){
+                viewModel.pageAfterPageWork = true
+            }
+        }
         addOnList.add(newWork)
+        swictchChangeListener()
+        galleryTextField()
         return binding.root
     }
 
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-navController = Navigation.findNavController(view)
+        navController = Navigation.findNavController(view)
         settingBackgroundAllWeek()
         settingBackgroundAllMonth()
         onClickDialogOpenner()
 
+        var session : SessionManager = SessionManager(requireContext())
+
+        Log.d("TESTING","Auth Token is "+session.getAuthToken().toString())
+        Log.d("TESTING","User Id Is "+session.getUserId().toString())
+
         binding.imageBackButton.setOnClickListener {
-
-            if (binding.llHomeSetup.isVisible == true){
-
-
+            if (binding.llHomeSetup.isVisible == true) {
                 navController.navigateUp()
-
-            }else if(binding.llGalleryLocation.isVisible == true){
+            } else if (binding.llGalleryLocation.isVisible == true) {
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_select_white)
                 binding.tvGallery.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvAvailability.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.llHomeSetup.visibility = View.VISIBLE
                 binding.llGalleryLocation.visibility = View.GONE
                 binding.llAvailability.visibility = View.GONE
-
-
-            }else if(binding.llAvailability.isVisible == true){
+            } else if (binding.llAvailability.isVisible == true) {
 
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvGallery.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -151,39 +239,353 @@ navController = Navigation.findNavController(view)
 
                 binding.textSaveAndContinueButton.text = "Save & Continue"
             }
-
-
-
         }
+
+
         binding.textSaveAndContinueButton.setOnClickListener {
-            if (binding.llHomeSetup.isVisible == true){
+            if (binding.llHomeSetup.isVisible == true) {
+                Log.d("TESTING","ActivityList size "+activityListResult.size)
+                Log.d("TESTING","AmenitiesList Size"+amenitiesList.size)
+                if(activityListResult.size==0){
+                    LoadingUtils.showErrorDialog(requireContext(),"Please Select Activity")
+                    return@setOnClickListener
+                }
+                if(amenitiesListResult.size ==0){
+                    LoadingUtils.showErrorDialog(requireContext(),"Please Select Aminities")
+                    return@setOnClickListener
+                }
+                if(cancellationDays.equals("00")){
+                    LoadingUtils.showErrorDialog(requireContext(),"Please Select Cancellation Time")
+                    return@setOnClickListener
+                }
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvGallery.setBackgroundResource(R.drawable.bg_inner_select_white)
                 binding.tvAvailability.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.llHomeSetup.visibility = View.GONE
                 binding.llGalleryLocation.visibility = View.VISIBLE
                 binding.llAvailability.visibility = View.GONE
-
-
-
-            }else if(binding.llGalleryLocation.isVisible == true){
+            }
+            else if (binding.llGalleryLocation.isVisible == true) {
+                if(!checkingGalleryValidation()){
+                    return@setOnClickListener
+                }
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvGallery.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvAvailability.setBackgroundResource(R.drawable.bg_inner_select_white)
                 binding.llHomeSetup.visibility = View.GONE
                 binding.llGalleryLocation.visibility = View.GONE
                 binding.llAvailability.visibility = View.VISIBLE
-
                 binding.textSaveAndContinueButton.text = "Publish Now"
-            }else if(binding.llAvailability.isVisible == true){
-                findNavController().navigate(R.id.host_fragment_properties)
             }
-
-
-
+            else if (binding.llAvailability.isVisible == true) {
+                callingPublishNowApi()
+                //findNavController().navigate(R.id.host_fragment_properties)
+            }
         }
     }
 
+     @RequiresApi(Build.VERSION_CODES.O)
+     fun callingPublishNowApi(){
+         var requestBody = PropertyDetailsSave()
+         var resultActivityList = mutableListOf<String>()
+
+         activityListResult.forEach {
+             resultActivityList.add(it)
+         }
+
+         if(!validation()){
+             Log.d("TESTING","Inside of Validation")
+             return
+         }
+
+         Log.d("TESTING","sIZE IS "+resultActivityList.size)
+
+         val session : SessionManager = SessionManager(requireContext())
+         requestBody.user_id = session.getUserId()!!
+
+         Log.d("TESTING", "User Id is "+session.getUserId())
+
+         requestBody.title = titleResult
+         requestBody.space_type = spaceType
+         requestBody.property_size = propertySize
+         requestBody.max_guest_count = peopleCount
+         requestBody.bedroom_count = badroomCount
+         requestBody.bathroom_count = bathroomCount
+         requestBody.is_instant_book = if(instantBookingCheck==1)true else false
+         requestBody.has_self_checkin = if(selfCheckIn == 1) true else false
+         requestBody.allows_pets = if(allowsPets ==1) true else false
+         requestBody.cancellation_duration = cancellationDays.toInt()
+         requestBody.description = descriptionResult
+         requestBody.parking_rules = parkingRule
+         requestBody.host_rules = hostRule
+         requestBody.street_address = street
+         requestBody.city = city
+         requestBody.zip_code = zipcode
+         requestBody.country = country
+         requestBody.state = state
+         requestBody.latitude = latitude.toFloat()
+         requestBody.longitude = longitude.toFloat()
+         requestBody.min_booking_hours = minimumHourValue
+         requestBody.hourly_rate = hourlyPrice
+         requestBody.bulk_discount_hour = bulkDiscountHour
+         requestBody.bulk_discount_rate = bulkDiscountPrice
+         requestBody.cleaning_fee=if(cleaningCharges.toString().length ==0)0.0f else cleaningCharges.toFloat();   ///need to correct
+         requestBody.available_month = availableMonth
+         requestBody.available_day = days
+         requestBody.available_from = fromHour
+         requestBody.available_to = toHour
+         requestBody.images = galleryList
+         requestBody.country = country
+         requestBody.activities = resultActivityList
+         requestBody.amenities = amenitiesListResult
+         requestBody.add_ons = addOnList
+
+         lifecycleScope.launch {
+             LoadingUtils.showDialog(requireContext(),false)
+             viewModel.addProperty(requestBody).collect{
+                 when(it){
+                     is NetworkResult.Success ->{
+                         LoadingUtils.hideDialog()
+                         Toast.makeText(requireContext(),"Succesfully Uploaded",Toast.LENGTH_LONG).show()
+                     }
+                     is NetworkResult.Error->{
+                         LoadingUtils.hideDialog()
+                         Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
+                     }
+                     else ->{
+                         LoadingUtils.hideDialog()
+                     }
+                 }
+             }
+         }
+     }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun validation() : Boolean{
+        if(activityListResult.size==0){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Select Activity")
+            return false
+        }
+        if(amenitiesListResult.size ==0){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Select Aminities")
+            return false
+        }
+        if(cancellationDays.equals("00")){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Select Cancellation Time")
+            return false
+        }
+        if(!checkingGalleryValidation()){
+            return false
+        }
+        if(!checkingAvailabilityData()){
+            return false
+        }
+        return true
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun checkingAvailabilityData() : Boolean{
+
+          if(addOnList.size ==0){
+              LoadingUtils.showErrorDialog(requireContext(),"Please Select Add-on")
+              return false
+          }
+          if(fromHour.equals("00::00") && toHour.equals("00:00")){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Select Availability Hours")
+            return false
+          }
+          var value =DateManager(requireContext()).isFromTimeLessThanToTime(fromHour,toHour)
+           if(!value){
+            LoadingUtils.showErrorDialog(requireContext(),"The 'from' time ($fromHour) is NOT earlier than the 'to' time ($toHour).")
+            return false
+          }
+
+         return true
+    }
+
+
+    private fun galleryTextField(){
+        binding.textType.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null && editable.isNotEmpty()) {
+                    cleaningCharges = editable.toString()
+                }
+            }
+        })
+
+
+        binding.etCity.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null && editable.isNotEmpty()) {
+                    city = editable.toString()
+                }
+            }
+        })
+
+        binding.zipcode.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null && editable.isNotEmpty()) {
+                    zipcode = editable.toString()
+                }
+            }
+        })
+
+
+
+        binding.state.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null && editable.isNotEmpty()) {
+                    state = editable.toString()
+                }
+            }
+        })
+
+        binding.etTitle.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null && editable.isNotEmpty()) {
+                   titleResult = editable.toString()
+                }
+            }
+        })
+
+        binding.etDescription.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null && editable.isNotEmpty()) {
+                    descriptionResult = editable.toString()
+                }
+            }
+        })
+
+        binding.etParkingRule.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null && editable.isNotEmpty()) {
+                    parkingRule = editable.toString()
+                }
+            }
+        })
+
+        binding.etHostRule.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null && editable.isNotEmpty()) {
+                    hostRule = editable.toString()
+                }
+            }
+        })
+
+        binding.etAddress.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                if (editable != null && editable.isNotEmpty()) {
+                    street = editable.toString()
+                }
+            }
+        })
+
+
+
+
+    }
+
+    private fun checkingGalleryValidation():Boolean{
+
+        if(galleryList.size ==0){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images of location")
+            return false
+        }
+        if(titleResult.isEmpty()){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Title of Space")
+            return false
+        }
+        if(descriptionResult.isEmpty()){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Description of Space")
+            return false
+        }
+
+       if(street.isEmpty()){
+           LoadingUtils.showErrorDialog(requireContext(),"Please Enter Street")
+           return false
+       }
+
+        if(city.isEmpty()){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Enter City Name")
+            return false
+        }
+
+        if(zipcode.isEmpty()){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Zip Code")
+            return false
+        }
+
+        if(country.isEmpty()){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Country")
+            return false
+        }
+        if(state.isEmpty()){
+            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Country")
+            return false
+        }
+        return true
+    }
+
+    fun locationSelection() {
+       binding.etCity.setOnClickListener {
+           binding.etCity.isEnabled = false
+           val apiKey = getString(R.string.api_key_location)
+           if (!Places.isInitialized()) {
+               Places.initialize(context, apiKey)
+           }
+
+               val fields: List<Place.Field> = Arrays.asList<Place.Field>(
+                   Place.Field.ID,
+                   Place.Field.NAME,
+                   Place.Field.ADDRESS,
+                   Place.Field.LAT_LNG
+               )
+
+               val intent: Intent =
+                   Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                       .build(activity)
+               startActivityForResult(intent, 103)
+           }
+
+
+    }
 
     fun permissions(): Array<String> {
         val p: Array<String>
@@ -195,15 +597,16 @@ navController = Navigation.findNavController(view)
         return p
     }
 
-    private fun imagePermissionInitialization(){
+    private fun imagePermissionInitialization() {
 
-        galleryAdapter.setOnItemClickListener(object :GallaryAdapter.onItemClickListener{
+        galleryAdapter.setOnItemClickListener(object : GallaryAdapter.onItemClickListener {
             override fun onItemClick(position: Int, type: String) {
 
-                if(type.equals(AppConstant.DELETE)){
+                if (type.equals(AppConstant.DELETE)) {
                     imageList.removeAt(position)
+                    galleryList.removeAt(position)
                     galleryAdapter.updateAdapter(imageList)
-                }else{
+                } else {
 //                    if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 //                        openGallery()
 //                    } else {
@@ -271,13 +674,10 @@ navController = Navigation.findNavController(view)
         }
 
 
-
     private fun hasPermissions(context: Context, vararg permissions: String): Boolean =
         permissions.all {
             ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
-
-
 
     private fun openGallery() {
         // Intent to pick multiple images
@@ -286,7 +686,6 @@ navController = Navigation.findNavController(view)
         intent.type = "image/*"
         startActivityForResult(intent, PICK_IMAGES_REQUEST)
     }
-
 
     private fun mapInitialization(savedInstanceState: Bundle?) {
         mapView = binding.mapView
@@ -303,12 +702,20 @@ navController = Navigation.findNavController(view)
             // Handle multiple image selection
             if (data?.clipData != null) {
                 val count = data.clipData!!.itemCount
+                Log.d("TESTING_ZYVOO","Counting is "+count)
+
                 for (i in 0 until count) {
                     val imageUri = data.clipData!!.getItemAt(i).uri
-                    imageList.add(0,imageUri)
+                      var bitmapString = PrepareData.uriToBase64(imageUri,requireContext().contentResolver)
+
+                    imageList.add(0, imageUri)
+                    if (bitmapString != null) {
+                        galleryList.add(0,bitmapString)
+                    }
                 }
                 galleryAdapter.updateAdapter(imageList)
-                Toast.makeText(requireContext(), "$count images selected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "$count images selected", Toast.LENGTH_SHORT)
+                    .show()
             } else if (data?.data != null) {
                 // Single image selected
                 val imageUri = data.data
@@ -318,9 +725,86 @@ navController = Navigation.findNavController(view)
 
             // You can now handle the selected image URIs in the imageUris list
         }
+
+        else if (requestCode == 103) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                val place = Autocomplete.getPlaceFromIntent(data)
+                //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
+                val addressComponents = place.addressComponents?.asList()
+                var address: String = place.address
+                // do query with address
+
+                val latLng = place.latLng
+
+                latitude = latLng.latitude.toString()
+                longitude = latLng.longitude.toString()
+
+                fetchAddressDetails(latitude.toDouble(),longitude.toDouble())
+                binding.etCity.isEnabled = true
+                if (latitude == null) {
+                    latitude = "0.0001"
+                }
+
+                if (longitude == null) {
+                    longitude = "0.0001"
+                }
+
+
+                var add = address
+//                setmarkeronMAp(latitude,longitude);
+                //  setmarkeronMAp(latitude,longitude,0);
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                binding.etCity.isEnabled = true
+                // TODO: Handle the error.
+                val status = Autocomplete.getStatusFromIntent(data)
+                Toast.makeText(activity, "Error: " + status.statusMessage, Toast.LENGTH_LONG)
+                    .show()
+//                Log.i(TAG, status.getStatusMessage());
+            }
+        }
     }
 
-    private fun initialization(){
+    private fun fetchAddressDetails(latitude: Double, longitude: Double) {
+        // Launching a coroutine to run the geocoding task in the background
+        lifecycleScope.launch {
+            try {
+                val addressDetails = withContext(Dispatchers.IO) {
+                    LocationManager(requireContext()).getAddressFromCoordinates(latitude, longitude)
+                }
+                binding.etCity.setText(addressDetails.city)
+                binding.zipcode.setText(addressDetails.postalCode)
+                binding.country.setText(addressDetails.country)
+                binding.state.setText(addressDetails.state)
+
+
+            } catch (e: Exception) {
+                Log.e("Geocoder", "Error fetching address: ${e.message}")
+                Toast.makeText(requireContext(), "Unable to fetch address details", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun swictchChangeListener(){
+        binding.listBookSwitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+              instantBookingCheck =1
+            } else {
+                instantBookingCheck =0
+            }
+        }
+
+        binding.selfCheckIn.setOnCheckedChangeListener { compoundButton, b ->
+            if(b) selfCheckIn=1 else selfCheckIn =0
+        }
+
+        binding.allowPetsSwitch.setOnCheckedChangeListener { compoundButton, b ->
+            if(b) allowsPets =1 else allowsPets =0
+        }
+
+    }
+
+    private fun initialization() {
 
         addOnAdapter = AddOnAdapter(requireContext(), addOnList, this)
         binding.recyclerAddOn.adapter = addOnAdapter
@@ -329,19 +813,60 @@ navController = Navigation.findNavController(view)
         imageList = mutableListOf<Uri>()
         val dummyUri = Uri.parse("http://www.example.com")
         imageList.add(dummyUri)
-        adapterActivity = ActivitiesAdapter(requireContext(),activityList.subList(0,3))
-        adapterActivity2 = ActivitiesAdapter(requireContext(),activityList.subList(3,activityList.size))
+        adapterActivity = ActivitiesAdapter(requireContext(), activityList.subList(0, 3))
+
+        adapterActivity.setOnItemClickListener{ adapterActivity,Int->
+            run {
+                savingActivityBackground(adapterActivity)
+            }
+        }
+
+        adapterActivity2 = ActivitiesAdapter(requireContext(), activityList.subList(3, activityList.size))
+
+        adapterActivity2.setOnItemClickListener { adapterActivity, Int ->
+            run {
+                savingActivityBackground(adapterActivity)
+            }
+        }
+
         amenitiesAdapter = AmenitiesAdapter(requireContext(), mutableListOf())
-        var hoursList = mutableListOf<String>("24 Hrs","3 Days","7 Days","15 Days","30 Days")
+        var hoursList = mutableListOf<String>("24 Hrs", "3 Days", "7 Days", "15 Days", "30 Days")
         binding.endHour.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.endHour.arrowAnimate = false
         binding.endHour.setItems(hoursList)
+        binding.endHour.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newText ->
+            if(newIndex ==0){
+                cancellationDays="24"
+            }
+            else if(newIndex ==1){
+                cancellationDays="72"
+
+            }
+            else if(newIndex ==2){
+                cancellationDays ="168"
+            }
+            else if(newIndex ==3){
+                cancellationDays ="360"
+            }
+            else if(newIndex ==4){
+                cancellationDays="720"
+            }
+
+        }
+
+
+
         binding.endHour.setIsFocusable(true)
         val recyclerView = binding.endHour.getSpinnerRecyclerView()
         val spacing = 16 // Spacing in pixels
 
         recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
         })
@@ -353,16 +878,30 @@ navController = Navigation.findNavController(view)
         settingClickListenertoSpaceManagePlace()
     }
 
-    private fun settingClickListenertoSpaceManagePlace(){
+    private fun savingActivityBackground(adapterActivity:MutableList<ActivityModel>){
+        CoroutineScope(Dispatchers.IO).launch {
+            adapterActivity.forEach {
+                if(it.checked){
+                    Log.d("TESTING","cHECKING nAME IS "+ it.name)
+                    activityListResult.add(it.name)
+                }
+            }
+        }
+    }
+
+    private fun settingClickListenertoSpaceManagePlace() {
         binding.tvHome.setOnClickListener {
-           binding.tvHome.setBackgroundResource(R.drawable.bg_inner_select_white)
-           binding.tvPrivateRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            binding.tvHome.setBackgroundResource(R.drawable.bg_inner_select_white)
+            binding.tvPrivateRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            spaceType = "entire_home"
 
         }
         binding.tvPrivateRoom.setOnClickListener {
             binding.tvPrivateRoom.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tvHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            spaceType = "private_room"
         }
+
         binding.tvHomeSetup.setOnClickListener {
             binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tvGallery.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -397,7 +936,7 @@ navController = Navigation.findNavController(view)
             binding.textSaveAndContinueButton.text = "Publish Now"
         }
 
-        binding.allowPets.setOnClickListener{
+        binding.allowPets.setOnClickListener {
             showPopupWindowForPets(binding.allowPets)
         }
 
@@ -412,10 +951,11 @@ navController = Navigation.findNavController(view)
         val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
 
         // Create the PopupWindow
-        val popupWindow = PopupWindow(popupView,
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
-            ,
-            ViewGroup.LayoutParams.WRAP_CONTENT)
+        )
 
         // Show the popup window at the bottom right of the TextView
 
@@ -424,7 +964,7 @@ navController = Navigation.findNavController(view)
         popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
     }
 
-    private fun settingBackgroundTaskToBedroom(){
+    private fun settingBackgroundTaskToBedroom() {
         binding.tvAnyBedrooms.setOnClickListener {
             binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -434,6 +974,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            bathroomCount =0
         }
 
         binding.tv1Bathrooms.setOnClickListener {
@@ -445,6 +986,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            bathroomCount =1
         }
 
         binding.tv2Bathroom.setOnClickListener {
@@ -456,6 +998,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            bathroomCount =2
         }
         binding.tv3Bathroom.setOnClickListener {
             binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -466,6 +1009,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            bathroomCount =3
         }
 
         binding.tv4Bathroom.setOnClickListener {
@@ -477,6 +1021,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            bathroomCount = 4
         }
 
         binding.tv5Bathroom.setOnClickListener {
@@ -488,6 +1033,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            bathroomCount = 5
         }
         binding.tv7Bathroom.setOnClickListener {
             binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -498,6 +1044,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            bathroomCount =7
         }
 
         binding.tv8Bathroom.setOnClickListener {
@@ -509,11 +1056,62 @@ navController = Navigation.findNavController(view)
             binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+            bathroomCount = 8
         }
+        binding.etBathroom.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
 
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                val newText = charSequence.toString()
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                val finalText = editable.toString()
+                bathroomCount = finalText.toInt()
+            }
+        })
+
+        binding.etCity.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                val newText = charSequence.toString()
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                val finalText = editable.toString()
+                city = finalText.toString()
+            }
+        })
+
+        binding.country.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                val newText = charSequence.toString()
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                val finalText = editable.toString()
+                country = finalText.toString()
+            }
+        })
+
+        binding.state.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                val newText = charSequence.toString()
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                val finalText = editable.toString()
+                state = finalText.toString()
+            }
+        })
     }
 
-    private fun settingBackgroundTaskToBathroom(){
+    private fun settingBackgroundTaskToBathroom() {
 
         binding.tvAnyBedrooms.setOnClickListener {
             binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -524,6 +1122,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            badroomCount =0
         }
 
         binding.tv1Bedroom.setOnClickListener {
@@ -535,6 +1134,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            badroomCount =1
         }
 
         binding.tv2Bedroom.setOnClickListener {
@@ -546,6 +1146,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            badroomCount =2
         }
 
         binding.tv3Bedroom.setOnClickListener {
@@ -557,6 +1158,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            badroomCount =3
         }
 
         binding.tv4Bedroom.setOnClickListener {
@@ -568,6 +1170,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            badroomCount =4
         }
 
         binding.tv5Bedroom.setOnClickListener {
@@ -579,6 +1182,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            badroomCount =5
         }
 
 
@@ -591,6 +1195,7 @@ navController = Navigation.findNavController(view)
             binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            badroomCount =7
         }
 
         binding.tv8Bedroom.setOnClickListener {
@@ -602,7 +1207,24 @@ navController = Navigation.findNavController(view)
             binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+            badroomCount =  8
         }
+
+        binding.etBedRoomCount.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                val newText = charSequence.toString()
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                val finalText = editable.toString()
+                badroomCount = finalText.toInt()
+            }
+        })
+
+
+
     }
 
     private fun settingBackgroundTaskToProperty() {
@@ -615,6 +1237,7 @@ navController = Navigation.findNavController(view)
             binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            propertySize =0
         }
 
         binding.tv250.setOnClickListener {
@@ -625,6 +1248,7 @@ navController = Navigation.findNavController(view)
             binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            propertySize =250
         }
 
         binding.tv350.setOnClickListener {
@@ -635,6 +1259,7 @@ navController = Navigation.findNavController(view)
             binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            propertySize = 350
         }
 
 
@@ -646,6 +1271,7 @@ navController = Navigation.findNavController(view)
             binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            propertySize = 450
         }
         binding.tv550.setOnClickListener {
             binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -655,6 +1281,7 @@ navController = Navigation.findNavController(view)
             binding.tv550.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            propertySize = 550
         }
 
         binding.tv650.setOnClickListener {
@@ -665,6 +1292,7 @@ navController = Navigation.findNavController(view)
             binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv650.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            propertySize = 650
         }
         binding.tv750.setOnClickListener {
             binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -674,11 +1302,24 @@ navController = Navigation.findNavController(view)
             binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv750.setBackgroundResource(R.drawable.bg_inner_select_white)
+            propertySize = 750
         }
+
+        binding.etPropertySize.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                val newText = charSequence.toString()
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                val finalText = editable.toString()
+                propertySize = finalText.toInt()
+            }
+        })
     }
 
-    private fun byDefaultSelectAvailability()
-    {
+    private fun byDefaultSelectAvailability() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -696,6 +1337,7 @@ navController = Navigation.findNavController(view)
             binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            peopleCount =0
         }
 
 
@@ -706,6 +1348,7 @@ navController = Navigation.findNavController(view)
             binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            peopleCount =1
         }
         binding.tv2.setOnClickListener {
             binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -714,6 +1357,7 @@ navController = Navigation.findNavController(view)
             binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            peopleCount = 2
         }
 
         binding.tv3.setOnClickListener {
@@ -723,6 +1367,7 @@ navController = Navigation.findNavController(view)
             binding.tv3.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            peopleCount =3
         }
 
         binding.tv5.setOnClickListener {
@@ -732,6 +1377,7 @@ navController = Navigation.findNavController(view)
             binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv5.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            peopleCount =5
         }
 
         binding.tv7.setOnClickListener {
@@ -741,118 +1387,36 @@ navController = Navigation.findNavController(view)
             binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tv7.setBackgroundResource(R.drawable.bg_inner_select_white)
+            peopleCount =7
         }
+
+        binding.peopleCount.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                val newText = charSequence.toString()
+            }
+            override fun afterTextChanged(editable: Editable?) {
+                val finalText = editable.toString()
+                peopleCount = finalText.toInt()
+            }
+        })
     }
 
-    fun settingDataToActivityModel(){
-        activityList = mutableListOf<ActivityModel>()
-        amenitiesList = mutableListOf()
-
-        amenitiesList.add("Wifi")
-        amenitiesList.add("Kitchen")
-        amenitiesList.add("Washer")
-        amenitiesList.add("Dryer")
-        amenitiesList.add("Air conditioning")
-        amenitiesList.add("Heating")
-        amenitiesList.add("Wifi")
-        amenitiesList.add("Kitchen")
-        amenitiesList.add("Washer")
-        amenitiesList.add("Dryer")
-        amenitiesList.add("Air conditioning")
-        amenitiesList.add("Heating")
-
-
-
-        var model1 = ActivityModel()
-        model1.name = "Stays"
-        model1.image = R.drawable.ic_stays
-        activityList.add(model1)
-
-        var model2 = ActivityModel()
-        model2.name = "Event Space"
-        model2.image = R.drawable.ic_event_space
-        activityList.add(model2)
-
-        var model3 = ActivityModel()
-        model3.name = "Photo shoot"
-        model3.image = R.drawable.ic_photo_shoot
-        activityList.add(model3)
-
-        var model4 = ActivityModel()
-        model4.name = "Meeting"
-        model4.image = R.drawable.ic_meeting
-        activityList.add(model4)
-
-
-
-        var model5 = ActivityModel()
-        model5.name = "Party"
-        model5.image = R.drawable.ic_party
-        activityList.add(model5)
-
-
-        var model6 = ActivityModel()
-        model6.name = "Film Shoot"
-        model6.image = R.drawable.ic_film_shoot
-        activityList.add(model6)
-
-        var model7 = ActivityModel()
-        model7.name = "Performance"
-        model7.image = R.drawable.ic_performance
-        activityList.add(model7)
-
-        var model8 = ActivityModel()
-        model8.name = "Workshop"
-        model8.image = R.drawable.ic_workshop
-        activityList.add(model8)
-
-        var model9 = ActivityModel()
-        model9.name = "Corporate Event"
-        model9.image = R.drawable.ic_corporate_event
-        activityList.add(model9)
-
-        var model10 = ActivityModel()
-        model10.name = "Wedding"
-        model10.image = R.drawable.ic_weding
-        activityList.add(model10)
-
-        var model11 = ActivityModel()
-        model11.name = "Dinner"
-        model11.image = R.drawable.ic_dinner
-        activityList.add(model11)
-
-        var model12 = ActivityModel()
-        model12.name = "Retreat"
-        model12.image = R.drawable.ic_retreat
-        activityList.add(model12)
-
-
-        var model13 = ActivityModel()
-        model13.name = "Pop-up"
-        model13.image = R.drawable.ic_popup_people
-        activityList.add(model13)
-
-        var model14 = ActivityModel()
-        model14.name = "Networking"
-        model14.image = R.drawable.ic_networking
-        activityList.add(model14)
-
-        var model15 = ActivityModel()
-        model15.name = "Fitness Class"
-        model15.image = R.drawable.ic_fitness_class
-        activityList.add(model15)
-
-        var model16 = ActivityModel()
-        model16.name = "Audio Recording"
-        model16.image = R.drawable.ic_audio_recording
-        activityList.add(model16)
-
+    fun settingDataToActivityModel() {
+        var data = PrepareData.getAmenitiesList()
+        activityList = data.first
+        amenitiesList = PrepareData.getOnlyAmenitiesList()
     }
 
     fun setUpRecyclerView() {
         galleryAdapter = GallaryAdapter(imageList)
-        binding.recyclerGallery.layoutManager = GridLayoutManager(requireContext(),3)
+
+
+        binding.recyclerGallery.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.recyclerGallery.adapter = galleryAdapter
+
         val gridLayoutManager = GridLayoutManager(requireContext(), 3) // Set 4 columns
         val gridLayoutManager2 = GridLayoutManager(requireContext(), 3)
         val gridLayoutManager3 = GridLayoutManager(requireContext(), 2)
@@ -875,7 +1439,30 @@ navController = Navigation.findNavController(view)
         //Amenities
         binding.recyclerAmenties.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerAmenties.adapter = amenitiesAdapter
+        binding.recyclerAmenties.isNestedScrollingEnabled = false
+
         amenitiesAdapter.updateAdapter(amenitiesList)
+
+        amenitiesAdapter.setOnItemClickListener(object:AmenitiesAdapter.onItemClickListener{
+            override fun onItemClick(list: MutableList<Pair<String, Boolean>>) {
+               amenitiesList = list
+               changingAmenitiesList(amenitiesList)
+            }
+        })
+
+
+    }
+
+    private fun changingAmenitiesList(amenitiesList: MutableList<Pair<String, Boolean>>) {
+
+        CoroutineScope(Dispatchers.IO).launch {
+          amenitiesListResult.clear()
+
+            amenitiesList.forEach {
+                if(it.second)amenitiesListResult.add(it.first)
+            }
+
+        }
     }
 
     override fun onMapReady(p0: GoogleMap) {
@@ -907,48 +1494,31 @@ navController = Navigation.findNavController(view)
     }
 
     override fun itemClick(obj: Int, text: String) {
-      when(text){
-          "add On"->{
-              showAddOnDialog()
+        when (text) {
+            "add On" -> {
+                showAddOnDialog()
+            }
+            "add On Cross" -> {
+                if (obj == addOnList.size - 1) {
+                    //  dialogSelectLanguage()
+                } else {
+                    addOnList.removeAt(obj)
+                    addonlist.removeAt(obj)
+                    addonPrice.removeAt(obj)
+                    addOnAdapter.updateAddOn(addOnList)
 
-          }
+                }
+            }
 
+        }
+    }
 
-          "add On Cross" -> {
-              if (obj == addOnList.size - 1) {
-                //  dialogSelectLanguage()
-              } else {
-                  addOnList.removeAt(obj)
-                  addOnAdapter.updateAddOn(addOnList)
-
-              }}
-
-    }}
     fun getItemList(): List<String> {
-        return listOf(
-            "Computer Screen",
-            "Studio Lights",
-            "Projectors",
-            "Speakers",
-            "Microphones",
-            "Sounds Systems",
-            "DJ Equipment",
-            "Tables",
-            "Chairs",
-            "Stage Platforms",
-            "Art Supplies (Paint, brushes)",
-            "Allow Alcohol",
-            "Onsite Food Prep (Event)",
-            "Extra Person above Max Capacity",
-            "Photographer (Per Hour)",
-            "Videographer (Per Hour)"
-        )
+        return PrepareData.getEventEquipment()
     }
 
     @SuppressLint("MissingInflatedId", "ClickableViewAccessibility")
-     fun showAddOnDialog() {
-
-
+    fun showAddOnDialog() {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(true)
@@ -963,8 +1533,11 @@ navController = Navigation.findNavController(view)
 
 
             val recyclerView: RecyclerView = findViewById(R.id.rcy)
+
             val etItemName: EditText = findViewById(R.id.etAdd)
+
             val etItemPrice: EditText = findViewById(R.id.etRupees)
+
             val btnSubmit: TextView = findViewById(R.id.textAddButton)
 
             val itemList = getItemList()
@@ -975,55 +1548,32 @@ navController = Navigation.findNavController(view)
                 selectedItem = item
                 etItemName.setText(item)
             }
-
-//            viewModel.list.observe(viewLifecycleOwner) {
-//                dialogAdapter.updateItem(it)
-//            }
-            // Handle Submit Button
             btnSubmit.setOnClickListener {
                 val itemName = etItemName.text.toString()
                 val itemPrice = etItemPrice.text.toString()
 
                 if (itemName.isNotEmpty() && itemPrice.isNotEmpty()) {
-//                    tvItemName.text = itemName
-//                    tvItemPrice.text = itemPrice
                     val newAddOn = AddOnModel(itemName, itemPrice)
                     addOnList.add(0, newAddOn)
-
-                    // Notify adapter about changes
-                    addOnAdapter.updateAddOn(addOnList) // Custom method in adapter
+                    addonlist.add(itemName)
+                    addonPrice.add(itemPrice)
+                    addOnAdapter.updateAddOn(addOnList)
                     addOnAdapter.notifyItemInserted(0)
                     dialog.dismiss()
                 } else {
-                    Toast.makeText(requireContext(), "Please enter valid details", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Please enter valid details",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
-
-
-            // findViewById<TextView>(R.id.text).text = text
-
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            // Ensure dialog dismisses when touched outside
-       //     window?.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-
-//            val rootView = findViewById<View>(android.R.id.content)
-//            rootView.setOnTouchListener { _, _ ->
-//                // Dismiss the dialog when touched outside
-//                dialog.dismiss()
-//                true
-//            }
-
             show()
         }
-
-
-
-
     }
 
-
-     fun settingBackgroundAllMonth() {
+    private fun settingBackgroundAllMonth() {
         //No of people
 
         binding.tvAll.setOnClickListener {
@@ -1034,17 +1584,18 @@ navController = Navigation.findNavController(view)
             binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
             binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            availableMonth="00"
         }
 
 
         binding.tvJan.setOnClickListener {
+            availableMonth="01"
 
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -1060,8 +1611,11 @@ navController = Navigation.findNavController(view)
             binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
         }
         binding.tvFeb.setOnClickListener {
+            availableMonth="02"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -1080,6 +1634,8 @@ navController = Navigation.findNavController(view)
 
 
         binding.tvMar.setOnClickListener {
+            availableMonth="03"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1098,6 +1654,8 @@ navController = Navigation.findNavController(view)
         }
 
         binding.tvApr.setOnClickListener {
+            availableMonth="04"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1116,6 +1674,8 @@ navController = Navigation.findNavController(view)
         }
 
         binding.tvMay.setOnClickListener {
+            availableMonth="05"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1133,6 +1693,8 @@ navController = Navigation.findNavController(view)
             binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
         }
         binding.tvJun.setOnClickListener {
+            availableMonth="06"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1150,6 +1712,8 @@ navController = Navigation.findNavController(view)
             binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
         }
         binding.tvJul.setOnClickListener {
+            availableMonth="07"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1167,6 +1731,8 @@ navController = Navigation.findNavController(view)
             binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
         }
         binding.tvAug.setOnClickListener {
+            availableMonth="08"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1184,6 +1750,8 @@ navController = Navigation.findNavController(view)
             binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
         }
         binding.tvSep.setOnClickListener {
+            availableMonth="09"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1201,6 +1769,8 @@ navController = Navigation.findNavController(view)
             binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
         }
         binding.tvOct.setOnClickListener {
+            availableMonth="10"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1218,6 +1788,8 @@ navController = Navigation.findNavController(view)
             binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
         }
         binding.tvNov.setOnClickListener {
+            availableMonth="11"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1235,6 +1807,8 @@ navController = Navigation.findNavController(view)
             binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
         }
         binding.tvDec.setOnClickListener {
+            availableMonth="12"
+
             binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1253,244 +1827,147 @@ navController = Navigation.findNavController(view)
         }
 
 
-
     }
 
-    fun settingBackgroundAllWeek(){
+    fun settingBackgroundAllWeek() {
+
         binding.tvAllDays.setOnClickListener {
             binding.tvAllDays.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-
+            days = "all"
         }
 
 
         binding.tvOnlyWorkingDays.setOnClickListener {
-
             binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
+            days = "working_days"
         }
         binding.tvOnlyWeekends.setOnClickListener {
             binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_inner_select_white)
-
+            days = "weekends"
         }
 
 
     }
-
-
 
     private fun getItemListForRadioHoursText(): MutableList<ItemRadio> {
-        var items =   mutableListOf(
-            ItemRadio("1 hour minimum", false),
-            ItemRadio("2 hour minimum", false),
-            ItemRadio("3 hour minimum", false),
-            ItemRadio("4 hour minimum", false),
-            ItemRadio("5 hour minimum", false),
-            ItemRadio("6 hour minimum", false),
-            ItemRadio("7 hour minimum", false),
-            ItemRadio("8 hour minimum", false),
-            ItemRadio("9 hour minimum", false),
-            ItemRadio("10 hour minimum", false),
-            ItemRadio("11 hour minimum", false),
-            ItemRadio("12 hour minimum", false),
-            ItemRadio("13 hour minimum", false),
-            ItemRadio("14 hour minimum", false),
-            ItemRadio("15 hour minimum", false),
-            ItemRadio("16 hour minimum", false),
-            ItemRadio("17 hour minimum", false),
-            ItemRadio("18 hour minimum", false),
-            ItemRadio("19 hour minimum", false),
-            ItemRadio("20 hour minimum", false),
-            ItemRadio("21 hour minimum", false),
-            ItemRadio("22 hour minimum", false),
-            ItemRadio("23 hour minimum", false),
-            ItemRadio("24 hour minimum", false)
-        )
+        val items = PrepareData.getHourMinimumList()
 
         // Restore the previously selected item's state
-        if (previouslySelectedIndex != -1 && previouslySelectedIndex < items.size) {
-            items[previouslySelectedIndex].isSelected = true
+        if (minimumHourIndex != -1 && minimumHourIndex < items.size) {
+            items[minimumHourIndex].isSelected = true
         }
         return items
     }
-
 
     private fun getItemListForRadioPerHoursRuppesText(): MutableList<ItemRadio> {
-        var items =   mutableListOf(
-            ItemRadio("$10 per hour", false),
-            ItemRadio("20 per hour", false),
-            ItemRadio("30 per hour", false),
-            ItemRadio("40 per hour", false),
-            ItemRadio("50 per hour", false),
-            ItemRadio("60 per hour", false),
-            ItemRadio("70 per hour", false),
-            ItemRadio("80 per hour", false),
-            ItemRadio("90 per hour", false),
-            ItemRadio("100 per hour", false),
-            ItemRadio("110 per hour", false),
-            ItemRadio("120 per hour", false),
-            ItemRadio("130 per hour", false),
-            ItemRadio("14 hour minimum", false),
-            ItemRadio("15 hour minimum", false),
-            ItemRadio("16 hour minimum", false),
-            ItemRadio("17 hour minimum", false),
-            ItemRadio("18 hour minimum", false),
-            ItemRadio("19 hour minimum", false),
-            ItemRadio("20 hour minimum", false),
-            ItemRadio("21 hour minimum", false),
-            ItemRadio("22 hour minimum", false),
-            ItemRadio("23 hour minimum", false),
-            ItemRadio("24 hour minimum", false)
-        )
-
+        val items = PrepareData.getPriceAndHourList()
         // Restore the previously selected item's state
-        if (previouslySelectedIndex != -1 && previouslySelectedIndex < items.size) {
-            items[previouslySelectedIndex].isSelected = true
+        if (priceIndex != -1 && priceIndex < items.size) {
+            items[priceIndex].isSelected = true
         }
         return items
     }
+
     private fun getItemListForRadioPerHoursBulkText(): MutableList<ItemRadio> {
-        var items =   mutableListOf(
-            ItemRadio("1 hours", false),
-            ItemRadio("2 hours", false),
-            ItemRadio("3 hours", false),
-            ItemRadio("4 hours", false),
-            ItemRadio("5 hours", false),
-            ItemRadio("6 hours", false),
-            ItemRadio("7 hours", false),
-            ItemRadio("8 hours", false),
-            ItemRadio("9 hours", false),
-            ItemRadio("10 hours", false),
-            ItemRadio("11 hours", false),
-            ItemRadio("12 hours", false),
-            ItemRadio("13 hours", false),
-            ItemRadio("14 hours", false),
-            ItemRadio("15 hours", false),
-            ItemRadio("16 hours", false),
-            ItemRadio("17 hours", false),
-            ItemRadio("18 hours", false),
-            ItemRadio("19 hours", false),
-            ItemRadio("20 hours", false),
-            ItemRadio("21 hours", false),
-            ItemRadio("22 hours", false),
-            ItemRadio("23 hours", false),
-            ItemRadio("24 hours", false)
-
-        )
+        val items = PrepareData.getPriceAndHourList1()
 
         // Restore the previously selected item's state
-        if (previouslySelectedIndex != -1 && previouslySelectedIndex < items.size) {
-            items[previouslySelectedIndex].isSelected = true
-        }
-        return items
-    }
- private fun getItemListForRadioPerHoursDiscountText(): MutableList<ItemRadio> {
-        var items =   mutableListOf(
-            ItemRadio("5% Discount", false),
-            ItemRadio("10% Discount", false),
-            ItemRadio("15% Discount", false),
-            ItemRadio("20% Discount", false),
-            ItemRadio("25% Discount", false),
-            ItemRadio("30% Discount", false),
-            ItemRadio("35% Discount", false),
-            ItemRadio("40% Discount", false),
-            ItemRadio("45% Discount", false),
-            ItemRadio("50% Discount", false),
-
-            ItemRadio("75% Discount", false)
-
-        )
-
-        // Restore the previously selected item's state
-        if (previouslySelectedIndex != -1 && previouslySelectedIndex < items.size) {
-            items[previouslySelectedIndex].isSelected = true
+        if (discountHourIndex != -1 && discountHourIndex < items.size) {
+            items[discountHourIndex].isSelected = true
         }
         return items
     }
 
+    private fun getItemListForRadioPerHoursDiscountText(): MutableList<ItemRadio> {
+        val items = PrepareData.getDiscountList()
 
+        // Restore the previously selected item's state
+        if (discountPriceIndex != -1 && discountPriceIndex < items.size) {
+            items[discountPriceIndex].isSelected = true
+        }
+        return items
+    }
 
-
-
-
-
-    fun onClickDialogOpenner(){
+    fun onClickDialogOpenner() {
         binding.llHours.setOnClickListener {
-                    val items = getItemListForRadioHoursText()
-
-            showSelectedDialog(requireContext(), items,binding.tvHoursSelect)
+            val items = getItemListForRadioHoursText()
+            showSelectedDialog(requireContext(), items, binding.tvHoursSelect,AppConstant.MINIMUM_HOUR)
         }
 
         binding.llHoursRupees.setOnClickListener {
             val items = getItemListForRadioPerHoursRuppesText()
 
-            showSelectedDialog(requireContext(), items,binding.tvHoursRupeesSelect)
+            showSelectedDialog(requireContext(), items, binding.tvHoursRupeesSelect,AppConstant.PRICE)
 
         }
         binding.llHoursBulk.setOnClickListener {
             val items = getItemListForRadioPerHoursBulkText()
-
-            showSelectedDialog(requireContext(), items,binding.tvHoursBulkSelect)
-
+            showSelectedDialog(requireContext(), items, binding.tvHoursBulkSelect,AppConstant.BULK_HOUR)
         }
 
 
         binding.llDiscount.setOnClickListener {
             val items = getItemListForRadioPerHoursDiscountText()
-
-            showSelectedDialog(requireContext(), items,binding.tvDiscountSelect)
-
+            showSelectedDialog(requireContext(), items, binding.tvDiscountSelect,AppConstant.DISCOUNT)
         }
+
         binding.llAvailabilityFromHours.setOnClickListener {
             DateManager(requireContext()).showTimePickerDialog(requireContext()) { selectedHour ->
                 binding.tvHours.setText(selectedHour.toString())
+                 fromHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
+                Log.d("TESTING_ZYVOO", "From "+fromHour)
             }
-
-
         }
+
         binding.llAvailabilityEndHours.setOnClickListener {
             DateManager(requireContext()).showTimePickerDialog(requireContext()) { selectedHour ->
                 binding.tvHours1.setText(selectedHour.toString())
+                toHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
+                Log.d("TESTING_ZYVOO","To "+toHour)
             }
-
 
         }
 
-
     }
 
-
-
-
-
-
-    fun showSelectedDialog(context: Context, items: MutableList<ItemRadio>, text: TextView) {
+    fun showSelectedDialog(context: Context, items: MutableList<ItemRadio>, text: TextView,type:String) {
         val dialog = Dialog(context, R.style.BottomSheetDialog)
         dialog.apply {
-            setCancelable(false)
-
+            setCancelable(true)
             setContentView(R.layout.dialog_for_select_radio_text)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
 
             val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
 
-
             recyclerView.layoutManager = LinearLayoutManager(context)
             val adapter = RadioTextAdapter(items, object : OnClickListener {
                 override fun itemClick(selectedIndex: Int) {
-
-
-                    previouslySelectedIndex = selectedIndex
+                     if(type.equals(AppConstant.MINIMUM_HOUR)){
+                         minimumHourIndex = selectedIndex
+                         minimumHourValue = selectedIndex+1;
+                       }
+                    else if(type.equals(AppConstant.PRICE)){
+                        priceIndex = selectedIndex
+                         hourlyPrice = (selectedIndex+1)*10
+                     }
+                    else if(type.equals(AppConstant.DISCOUNT)){
+                        discountPriceIndex = selectedIndex
+                         bulkDiscountPrice = (selectedIndex+1)*10
+                     }
+                    else if(type.equals(AppConstant.BULK_HOUR)){
+                        discountHourIndex = selectedIndex
+                         bulkDiscountHour = (selectedIndex+1)
+                     }
                 }
             }) { selectedText ->
                 // Update TextView with the selected text
@@ -1505,7 +1982,4 @@ navController = Navigation.findNavController(view)
         }
     }
 
-
-
-
-}
+  }

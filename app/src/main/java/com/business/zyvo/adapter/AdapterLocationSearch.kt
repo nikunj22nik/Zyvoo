@@ -9,6 +9,12 @@ import com.business.zyvo.databinding.AdapterLocationSearchBinding
 class AdapterLocationSearch(var context : Context,var list : MutableList<String> ) : RecyclerView.Adapter<AdapterLocationSearch.AdapterLocationViewHolder>()
 {
     private var onItemClickListener: ((String) -> Unit)? = null
+
+
+    fun setOnItemClickListener(listener: (String) -> Unit) {
+        onItemClickListener = listener
+    }
+
     inner class AdapterLocationViewHolder(val binding: AdapterLocationSearchBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterLocationViewHolder {
@@ -40,8 +46,6 @@ class AdapterLocationSearch(var context : Context,var list : MutableList<String>
         notifyDataSetChanged()
     }
 
-    fun setOnItemClickListener(listener: (String) -> Unit) {
-        onItemClickListener = listener
-    }
+
 
 }

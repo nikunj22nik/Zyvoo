@@ -124,5 +124,6 @@
 
     <string name="no_internet_dialog_msg">Check your internet connection and try again.</string>
     <string name="enter_your_email_here">Enter your Email here</string>
+    <string name="api_key_location">AIzaSyAI8v81ijt2sXkMwcPWeVSEGqB2rxXFHiA</string>
 
 </resources>

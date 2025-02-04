@@ -1,6 +1,7 @@
 package com.business.zyvo.repository
 
 import com.business.zyvo.NetworkResult
+import com.business.zyvo.model.host.PropertyDetailsSave
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
@@ -31,4 +32,6 @@ interface ZyvoRepository {
                               passwordConfirmation:String) : Flow<NetworkResult<JsonObject>>
 
     suspend fun getUserProfile(userId :String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun addPropertyData(property: PropertyDetailsSave) :Flow<NetworkResult<Pair<String, Int>>>
 }

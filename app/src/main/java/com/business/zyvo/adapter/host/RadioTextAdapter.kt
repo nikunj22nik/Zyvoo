@@ -78,6 +78,22 @@ class RadioTextAdapter(
         fun bind(item: ItemRadio, position: Int) {
             textView.text = item.text
             radioButton.isChecked = item.isSelected
+            var radioButton = itemView.findViewById<RadioButton>(R.id.itemRadioButton)
+
+            radioButton.setOnClickListener {
+                if (lastSelectedPosition != -1 && lastSelectedPosition != position) {
+                    items[lastSelectedPosition].isSelected = false
+                    notifyItemChanged(lastSelectedPosition)
+                }
+
+                // Set the current item as selected
+                item.isSelected = true
+                notifyItemChanged(position)
+
+                lastSelectedPosition = position
+                listener.itemClick(position)
+                onItemClick(item.text)
+            }
 
             itemView.setOnClickListener {
                 // Unselect the previously selected item

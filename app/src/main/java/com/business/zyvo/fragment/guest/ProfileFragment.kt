@@ -164,6 +164,8 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
         binding.switchHost.setOnClickListener{
 
+            val session = SessionManager(requireContext())
+            session.setCurrentPanel(AppConstant.Host)
             var intent = Intent(requireContext(),HostMainActivity::class.java)
 
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)

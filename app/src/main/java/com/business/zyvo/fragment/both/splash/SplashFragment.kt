@@ -4,15 +4,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
+import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.databinding.FragmentSplashBinding
 import com.business.zyvo.session.SessionManager
+import retrofit2.http.Tag
 
 
 class SplashFragment : Fragment() {
@@ -49,21 +53,23 @@ class SplashFragment : Fragment() {
 
 
         handler.postDelayed({
-            var session =SessionManager(requireContext())
+            val session =SessionManager(requireContext())
+            Log.d("TESTING","Session "+session.getUserId().toString())
+            if(session.getUserId() !=-1){
 
-           if(session.getUserId() ==1){
-                var intent = Intent(requireContext(),GuesMain::class.java)
-                startActivity(intent)
-                requireActivity().finish()
-
-       //   findNavController().navigate(R.id.paymentsFragment2)
+                if(session.getCurrentPanel().equals(AppConstant.Host)){
+                    val intent = Intent(requireContext(), HostMainActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }else {
+                    val intent = Intent(requireContext(), GuesMain::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }
+                 //   findNavController().navigate(R.id.paymentsFragment2)
             }
             else {
-                // Task to be executed after 3 seconds
-
-          //    findNavController().navigate(R.id.paymentsFragment2)
-            findNavController().navigate(R.id.loggedScreenFragment)
-
+                findNavController().navigate(R.id.loggedScreenFragment)
                 //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
                }
              }, 3000)

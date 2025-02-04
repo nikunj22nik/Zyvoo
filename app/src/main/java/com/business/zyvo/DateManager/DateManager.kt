@@ -9,8 +9,10 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
+import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Calendar
@@ -32,6 +34,19 @@ class DateManager(var context : Context) {
             }
             .setNegativeButton("Cancel", null)
             .show()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun isFromTimeLessThanToTime(fromTime: String, toTime: String): Boolean {
+        // Define the formatter for HH:mm format
+        val formatter = DateTimeFormatter.ofPattern("HH:mm")
+
+        // Parse the times into LocalTime objects
+        val from = LocalTime.parse(fromTime, formatter)
+        val to = LocalTime.parse(toTime, formatter)
+
+        // Compare if the "from" time is earlier than the "to" time
+        return from.isBefore(to)
     }
 
      fun showYearPickerDialog(onYearSelected: (Int) -> Unit) {
@@ -257,6 +272,17 @@ fun getRangeSelectedDateWithYear(
             .setNegativeButton("Cancel", null)
             .show()
     }
+
+
+    fun convertTo24HourFormat(time: String): String {
+        val inputFormat = SimpleDateFormat("h:mm a", Locale.US)  // 12-hour format with AM/PM
+        val outputFormat = SimpleDateFormat("HH:mm", Locale.US)  // 24-hour format
+
+        val date = inputFormat.parse(time)  // Parse the 12-hour formatted time
+        return outputFormat.format(date)     // Convert it to 24-hour formatted time
+    }
+
+
 
 
     /*

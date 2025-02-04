@@ -36,7 +36,7 @@ class AddOnAdapter(var context: Context, var list : MutableList<AddOnModel>, var
             }
 
             binding.textName.text = item.name
-            binding.textRupees.text = "$" +item.rupess
+            binding.textRupees.text = "$" +item.price
             binding.imageCross.setOnClickListener {
                 listner.itemClick(
                     adapterPosition,

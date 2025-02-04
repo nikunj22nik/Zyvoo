@@ -6,6 +6,9 @@ import com.business.zyvo.model.CountryLanguage
 class AppConstant {
 
     companion object {
+        val DISCOUNT: String = "Discount"
+        val BULK_HOUR: String = "Bulk_Hour"
+        val MINIMUM_HOUR: String = "Minimum Hour"
         val WHERE: String = "where"
         val TIME :String = "time"
         val ACTIVITY :String = "activity"
@@ -13,6 +16,7 @@ class AppConstant {
         var LOGIN_SESSION = "Loggin_setion"
         var Host = "Host"
         var Guest = "Guest"
+        var PANNEL = "Pannel"
         var AuthToken = "AuthToken"
         val DATE: String? = "event_date"
         val MY_INTERESET: String? ="my_interest"
@@ -52,7 +56,7 @@ class AppConstant {
         val BankModel: String? = "Bank Model"
         val ADDRESS_TYPE: String ="Address_Type"
         val LOCATION: String? ="LOCATION"
-        val PRICE: String?="PRICE"
+        val PRICE: String="PRICE"
         val PLAN_ID:String ="plan_id   "
         val Network_dialouge: String ="DIALOG_NETWORK"
         val HOME: String = "Home"

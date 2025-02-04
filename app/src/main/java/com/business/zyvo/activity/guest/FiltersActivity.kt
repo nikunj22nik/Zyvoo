@@ -33,6 +33,7 @@ import com.business.zyvo.databinding.ActivityFiltersBinding
 import com.business.zyvo.fragment.guest.FullScreenDialogFragment
 import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.model.ActivityModel
+import com.business.zyvo.utils.PrepareData
 
 class FiltersActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -43,7 +44,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var placesClient: PlacesClient
     private lateinit var autocompleteTextView: AutoCompleteTextView
     private lateinit var activityList : MutableList<ActivityModel>
-    private lateinit var amenitiesList :MutableList<String>
+    private lateinit var amenitiesList :MutableList<Pair<String,Boolean>>
     private lateinit var adapterActivity :ActivitiesAdapter
     private lateinit var adapterActivity2 :ActivitiesAdapter
     private lateinit var amenitiesAdapter :AmenitiesAdapter
@@ -861,46 +862,33 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
 
     fun settingDataToActivityModel(){
         activityList = mutableListOf<ActivityModel>()
-        amenitiesList = mutableListOf()
-
-        amenitiesList.add("Wifi")
-        amenitiesList.add("Kitchen")
-        amenitiesList.add("Washer")
-        amenitiesList.add("Dryer")
-        amenitiesList.add("Air conditioning")
-        amenitiesList.add("Heating")
-        amenitiesList.add("Wifi")
-        amenitiesList.add("Kitchen")
-        amenitiesList.add("Washer")
-        amenitiesList.add("Dryer")
-        amenitiesList.add("Air conditioning")
-        amenitiesList.add("Heating")
+        amenitiesList = PrepareData.getOnlyAmenitiesList()
 
 
 
-        var model1 = ActivityModel()
+        val model1 = ActivityModel()
         model1.name = "Stays"
         model1.image = R.drawable.ic_stays
         activityList.add(model1)
 
-        var model2 = ActivityModel()
+        val model2 = ActivityModel()
         model2.name = "Event Space"
         model2.image = R.drawable.ic_event_space
         activityList.add(model2)
 
-        var model3 = ActivityModel()
+        val model3 = ActivityModel()
         model3.name = "Photo shoot"
         model3.image = R.drawable.ic_photo_shoot
         activityList.add(model3)
 
-        var model4 = ActivityModel()
+        val model4 = ActivityModel()
         model4.name = "Meeting"
         model4.image = R.drawable.ic_meeting
         activityList.add(model4)
 
 
 
-        var model5 = ActivityModel()
+        val model5 = ActivityModel()
         model5.name = "Party"
         model5.image = R.drawable.ic_party
         activityList.add(model5)
@@ -964,48 +952,9 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
-        private fun getNationalLanguages(): MutableList<String> {
-            return listOf(
-                "Pashto, Dari",            // Afghanistan
-                "Albanian",                // Albania
-                "Arabic","Berber",          // Algeria
-                "Catalan",                 // Andorra
-                "Portuguese",              // Angola
-                "Spanish",                 // Argentina
-                "Armenian",                // Armenia
-                "English",                 // Australia
-                "German",                  // Austria
-                "Azerbaijani",             // Azerbaijan
-                "Bengali",                 // Bangladesh
-                "Dutch", "French", "German",   // Belgium
-                "Portuguese",              // Brazil
-                 "French",         // Canada
-                "Mandarin",                // China
-                "Spanish",                 // Colombia
-                "Danish",                  // Denmark
-                "Arabic",                  // Egypt
-                "Finnish", "Swedish",        // Finland
-                                  // France
-                "German",                  // Germany
-                "Hindi","English",          // India
-                "Italian",                 // Italy
-                "Japanese",                // Japan
-                "Spanish",                 // Mexico
-                "Dutch",                   // Netherlands
-                 "Māori",          // New Zealand
-                                 // Nigeria
-                "Urdu",           // Pakistan
-                "Russian",                 // Russia
-                  // South Africa
-                "Spanish",                 // Spain
-                "Swedish",                 // Sweden
-                "German", // Switzerland
-                               // United States
-                "Vietnamese"               // Vietnam
-                // Add more languages as needed
-            ).toMutableList()
-
-    }
+        private fun getNationalLanguages(): MutableList<Pair<String,Boolean>> {
+            return PrepareData.getLanguagePairs()
+        }
 
 
 

@@ -3,11 +3,13 @@ package com.business.zyvo.repository
 import android.util.Log
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.backgroundTask.AuthTask
+import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.remote.ZyvoApi
 import com.business.zyvo.utils.ErrorDialog
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
@@ -65,8 +67,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success")&& resp.get("success").asBoolean) {
                             emit(AuthTask.processSignUpData(resp))
                         }
                         else {
@@ -263,20 +264,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         }
     }
 
-    override suspend fun signupEmail(
-        email: String,
-        password: String
-    ):Flow<NetworkResult<Pair<String, String>>> = flow {
+    override suspend fun signupEmail(email: String, password: String):Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.signupEmail(
-                email,
-                password,
-            ).apply {
+            api.signupEmail(email, password,).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success")&& resp.get("success").asBoolean) {
                             emit(AuthTask.processSignUpData(resp))
                         }
                         else {
@@ -293,7 +287,8 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                     }
                 }
             }
-        } catch (e: HttpException) {
+        }
+        catch (e: HttpException) {
             Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
@@ -512,4 +507,40 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             emit(NetworkResult.Error(e.message!!))
         }
     }
+
+    override suspend fun addPropertyData(property: PropertyDetailsSave): Flow<NetworkResult<Pair<String, Int>>> = flow {
+        try {
+            api.addProperty(property).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success")&&
+                            resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair<String,Int>("Property Added Successfully",1)))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: "There was an unknown error. Check your connection, and try again."))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
 }

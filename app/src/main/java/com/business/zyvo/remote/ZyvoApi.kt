@@ -1,7 +1,9 @@
 package com.business.zyvo.remote
 
+import com.business.zyvo.model.host.PropertyDetailsSave
 import com.google.gson.JsonObject
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
@@ -64,5 +66,9 @@ interface ZyvoApi {
     @POST("get_user_profile")
     @FormUrlEncoded
     suspend fun getUserProfile(@Field("user_id")user_id :String) : Response<JsonObject>
+
+    @POST("store_property_details")
+    suspend fun addProperty(@Body addProperty : PropertyDetailsSave) : Response<JsonObject>
+
 
 }
