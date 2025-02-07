@@ -152,8 +152,19 @@ class AppConstant {
         val email = "Email Address is required"
         val password = "Password is required"
         val conPassword = "Confirm Password is required"
-        val mobile = "Mobile is required"
+        val mobile = "Mobile is required "
+        val locationCheck = "Please Add Location Details"
+        val workCheck = "Please Add Work Details"
+        val languageCheck = "Please Add Language Details"
+        val hobbiesCheck = "Please Add Hobbies Details"
+        val petsCheck = "Please Add Pets Details"
+        val name = "Name is required"
+        val firstName = "First name is required"
+        val lastName = "Last name is required"
         val otp = "Otp is required"
+        val unKnownError = "There was an unknown error. Check your connection, and try again."
+        val unknownLocation = "Unknown Location"
+        val aboutMe = "AboutMe is required"
     }
 
 

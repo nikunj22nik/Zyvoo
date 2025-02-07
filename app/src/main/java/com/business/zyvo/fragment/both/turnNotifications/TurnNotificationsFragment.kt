@@ -14,11 +14,14 @@ class TurnNotificationsFragment : Fragment() {
 private lateinit var  binding: FragmentTurnNotificationsBinding
 
     var data:String = ""
-
+    var type:String = ""
+    var email:String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             data = requireArguments().getString("data")!!
+            type = requireArguments().getString("type")!!
+            email = requireArguments().getString("email")!!
         }
     }
 
@@ -37,11 +40,15 @@ private lateinit var  binding: FragmentTurnNotificationsBinding
         binding.textNotnow.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("data",data)
+            bundle.putString("type",type)
+            bundle.putString("email",email)
             findNavController().navigate(R.id.turnLocationFragment,bundle)
         }
         binding.btnNotification.setOnClickListener{
             val bundle = Bundle()
             bundle.putString("data",data)
+            bundle.putString("type",type)
+            bundle.putString("email",email)
             findNavController().navigate(R.id.turnLocationFragment,bundle)
         }
     }

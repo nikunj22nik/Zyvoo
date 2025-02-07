@@ -11,7 +11,7 @@
         />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.business.zyvo.fragment.guest.ProfileFragment"
+        android:name="com.business.zyvo.fragment.guest.profile.ProfileFragment"
         android:label="ProfileFragment" />
     <fragment
         android:id="@+id/notificationFragment"

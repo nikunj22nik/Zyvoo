@@ -43,20 +43,10 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         handler = Handler(Looper.getMainLooper())
-
-//        val animationDrawable = AnimationDrawable().apply {
-//            images.forEach { addFrame(it, 1000 / images.size) } // Divide the duration equally between frames
-//            isOneShot = false // Loop the animation
-//        }
-//        binding.imageIcon.setImageDrawable(animationDrawable) // Set the animation drawable to the ImageView
-//        animationDrawable.start()
-
-
         handler.postDelayed({
             val session =SessionManager(requireContext())
             Log.d("TESTING","Session "+session.getUserId().toString())
-            if(session.getUserId() !=-1){
-
+            if(session.getUserId() !=-1 && session.getUserSession() !! && !session.getAuthToken().equals("")){
                 if(session.getCurrentPanel().equals(AppConstant.Host)){
                     val intent = Intent(requireContext(), HostMainActivity::class.java)
                     startActivity(intent)
@@ -66,82 +56,11 @@ class SplashFragment : Fragment() {
                     startActivity(intent)
                     requireActivity().finish()
                 }
-                 //   findNavController().navigate(R.id.paymentsFragment2)
             }
             else {
                 findNavController().navigate(R.id.loggedScreenFragment)
-                //    binding.imageIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.aquamarine))
                }
              }, 3000)
-
-//        val months = listOf(
-//            "January", "February", "March", "April", "May", "June", "July",
-//            "August", "September", "October", "November", "December"
-//        )
-//
-//        val years = (2000..2050).toList()
-//        val yearsStringList = years.map { it.toString() }
-//        val days = resources.getStringArray(R.array.day).toList()
-//
-//        binding.spinnerLanguage.layoutDirection = View.LAYOUT_DIRECTION_LTR
-//        binding.spinnerLanguage.arrowAnimate = false
-//        binding.spinnerLanguage.setItems(days)
-//        binding.spinnerLanguage.setIsFocusable(true)
-//        val recyclerView = binding.spinnerLanguage.getSpinnerRecyclerView()
-//
-//// Add item decoration for spacing
-//
-//        val spacing = 16 // Spacing in pixels
-//        recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
-//            override fun getItemOffsets(
-//                outRect: Rect,
-//                view: View,
-//                parent: RecyclerView,
-//                state: RecyclerView.State
-//            ) {
-//                outRect.top = spacing
-//            }
-//        })
-//
-//        binding.spinnermonth.layoutDirection = View.LAYOUT_DIRECTION_LTR
-//        binding.spinnermonth.arrowAnimate = false
-//        binding.spinnermonth.setItems(months)
-//        binding.spinnermonth.setIsFocusable(true)
-//        val recyclerView3 = binding.spinnermonth.getSpinnerRecyclerView()
-//
-//        recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
-//            override fun getItemOffsets(
-//                outRect: Rect,
-//                view: View,
-//                parent: RecyclerView,
-//                state: RecyclerView.State
-//            ) {
-//                outRect.top = spacing
-//            }
-//        })
-//
-//
-//        binding.spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
-//        binding.spinneryear.arrowAnimate = false
-//        binding.spinneryear.setItems(yearsStringList)
-//        binding.spinneryear.setIsFocusable(true)
-//        binding.spinneryear.post {
-//            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
-//        }
-//
-//        val recyclerView1 = binding.spinneryear.getSpinnerRecyclerView()
-//        recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
-//            override fun getItemOffsets(
-//                outRect: Rect,
-//                view: View,
-//                parent: RecyclerView,
-//                state: RecyclerView.State
-//            ) {
-//                outRect.top = spacing
-//            }
-//
-//        })
-
     }
 
     override fun onDestroyView() {
