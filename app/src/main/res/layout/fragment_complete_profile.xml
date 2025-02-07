@@ -60,9 +60,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Hey James"
+                android:hint="Hey James"
                 android:textStyle="bold"
                 android:textColor="@color/black"
+                android:textColorHint="@color/black"
                 android:textSize="@dimen/_11sdp"
                 app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
                 app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
@@ -73,7 +74,6 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins_light"
                 android:text="Guest"
-
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
                 app:layout_constraintTop_toBottomOf="@+id/textName" />
@@ -332,8 +332,9 @@
             android:fontFamily="@font/poppins"
             android:inputType="textMultiLine"
             android:padding="@dimen/_10sdp"
-            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
+            android:hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
             android:textColor="@color/black"
+            android:textColorHint="@color/black"
             android:textSize="@dimen/_10ssp"
             app:layout_constraintTop_toBottomOf="@+id/textAbout" />
 
@@ -418,7 +419,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textMyWork" />
 

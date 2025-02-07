@@ -1,12 +1,10 @@
 package com.business.zyvo.repository
 
 import com.business.zyvo.NetworkResult
+import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
-import retrofit2.http.Field
-
 interface ZyvoRepository {
 
 
@@ -34,4 +32,23 @@ interface ZyvoRepository {
     suspend fun getUserProfile(userId :String) : Flow<NetworkResult<JsonObject>>
 
     suspend fun addPropertyData(property: PropertyDetailsSave) :Flow<NetworkResult<Pair<String, Int>>>
+
+    suspend fun completeProfile(property: CompleteProfileReq) :Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun phoneVerification(userId :String,code :String,number:String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun emailVerification(userId: String,email :String) : Flow<NetworkResult<Pair<String,String>>>
+
+
+    suspend fun otpVerifyEmailVerification(userId :String,otp :String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun otpVerifyPhoneVerification(userId: String,otp :String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun uploadProfileImage(userId: String,bytes: ByteArray) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addUpdateName(userId: String,first_name: String,
+                              last_name: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addAboutMe(userId: String,about_me: String) : Flow<NetworkResult<Pair<String,String>>>
 }
+

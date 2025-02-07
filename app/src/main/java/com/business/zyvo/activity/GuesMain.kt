@@ -36,7 +36,6 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
             val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
 
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-        //    v.setPadding(0, systemBars.top, 0, 0)
 
             val isKeyboardVisible = insets.isVisible(WindowInsetsCompat.Type.ime())
             v.setPadding(

@@ -1,3 +1,5 @@
 package com.business.zyvo.model
 
-data class AddLanguageModel(var name: String)
+import com.business.zyvo.fragment.both.completeProfile.HasName
+
+data class AddLanguageModel(override var name: String): HasName

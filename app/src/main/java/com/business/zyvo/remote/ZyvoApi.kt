@@ -2,11 +2,15 @@ package com.business.zyvo.remote
 
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.google.gson.JsonObject
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface ZyvoApi {
 
@@ -69,6 +73,68 @@ interface ZyvoApi {
 
     @POST("store_property_details")
     suspend fun addProperty(@Body addProperty : PropertyDetailsSave) : Response<JsonObject>
+
+    @POST("add_live_place")
+    @FormUrlEncoded
+    suspend fun addLivePlace(@Field("user_id")user_id :String,
+                             @Field("place_name")place_name :String) : Response<JsonObject>
+
+    @POST("complete_profile")
+    @Multipart
+    suspend fun completeProfile(@Part("user_id")user_id : RequestBody,
+                                @Part("first_name")first_name :RequestBody,
+                                @Part("last_name")last_name :RequestBody,
+                                @Part("about_me")about_me :RequestBody,
+                                @Part ("where_live[]") whereLive:List<@JvmSuppressWildcards RequestBody>,
+                                @Part ("works[]") works :List<@JvmSuppressWildcards RequestBody>,
+                                @Part ("languages[]") languages :List<@JvmSuppressWildcards RequestBody>,
+                                @Part ("hobbies[]") hobbies :List<@JvmSuppressWildcards RequestBody>,
+                                @Part ("pets[]") pets :List<@JvmSuppressWildcards RequestBody>,
+                                @Part("street_address")street_address :RequestBody,
+                                @Part("city")city :RequestBody,
+                                @Part("state")state :RequestBody,
+                                @Part("zip_code")zip_code :RequestBody,
+                                @Part profile_picture: MultipartBody.Part?) : Response<JsonObject>
+
+    @POST("email_verification")
+    @FormUrlEncoded
+    suspend fun emailVerification(@Field("user_id")user_id :String,
+                             @Field("email")email :String) : Response<JsonObject>
+
+
+    @POST("phone_verification")
+    @FormUrlEncoded
+    suspend fun phoneVerification(@Field("user_id")user_id :String,
+                                  @Field("country_code")country_code :String,
+                                  @Field("phone_number")phone_number :String) : Response<JsonObject>
+
+
+    @POST("otp_verify_email_verification")
+    @FormUrlEncoded
+    suspend fun otpVerifyEmailVerification(@Field("user_id")user_id :String,
+                                  @Field("otp")otp :String) : Response<JsonObject>
+
+    @POST("otp_verify_phone_verification")
+    @FormUrlEncoded
+    suspend fun otpVerifyPhoneVerification(@Field("user_id")user_id :String,
+                                           @Field("otp")otp :String) : Response<JsonObject>
+
+    @POST("upload_profile_image")
+    @Multipart
+    suspend fun uploadProfileImage( @Part("user_id")user_id :RequestBody,
+                                    @Part profile_image: MultipartBody.Part?) : Response<JsonObject>
+
+    @POST("add_update_name")
+    @FormUrlEncoded
+    suspend fun addUpdateName(@Field("user_id")user_id :String,
+                              @Field("first_name")first_name :String,
+                              @Field("last_name")last_name :String) : Response<JsonObject>
+
+    @POST("add_about_me")
+    @FormUrlEncoded
+    suspend fun addAboutme(@Field("user_id")user_id :String,
+                              @Field("about_me")about_me :String) : Response<JsonObject>
+
 
 
 }

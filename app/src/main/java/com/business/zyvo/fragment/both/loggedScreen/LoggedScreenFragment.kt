@@ -33,6 +33,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
@@ -231,16 +232,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         .distinctUntilChanged() // Ignore duplicate consecutive values
                         .collect { isConn ->
                             if (!isConn) {
-                                customDialog(
-                                    resources.getString(R.string.no_internet_dialog_msg),
-                                    requireContext()
+                                showErrorDialog(requireContext(),
+                                    resources.getString(R.string.no_internet_dialog_msg)
                                 )
                                 toggleLoginButtonEnabled(true, textContinueButton)
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etMobileNumber.text!!.isEmpty()) {
                                         etMobileNumber.error = "Mobile required"
-                                        customDialog(AppConstant.mobile, requireContext())
+                                        showErrorDialog(requireContext(),AppConstant.mobile)
                                         toggleLoginButtonEnabled(true, textContinueButton)
                                     } else {
                                         val phoneNumber = etMobileNumber.text.toString()
@@ -291,9 +291,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(
-                            it.message,
-                            requireContext()
+                        showErrorDialog(requireContext(),
+                            it.message!!
                         )
                         toggleLoginButtonEnabled(true, text)
                     }
@@ -342,16 +341,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         .distinctUntilChanged() // Ignore duplicate consecutive values
                         .collect { isConn ->
                             if (!isConn) {
-                                customDialog(
-                                    resources.getString(R.string.no_internet_dialog_msg),
-                                    requireContext()
+                                showErrorDialog(requireContext(),
+                                    resources.getString(R.string.no_internet_dialog_msg)
                                 )
                                 toggleLoginButtonEnabled(true, textContinueButton)
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etMobileNumber.text!!.isEmpty()) {
                                         etMobileNumber.error = "Mobile required"
-                                        customDialog(AppConstant.mobile, requireContext())
+                                        showErrorDialog(requireContext(),AppConstant.mobile)
                                         toggleLoginButtonEnabled(true, textContinueButton)
                                     } else {
                                         val phoneNumber = etMobileNumber.text.toString()
@@ -435,7 +433,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(it.message, requireContext())
+                        showErrorDialog(requireContext(),it.message!!)
                         toggleLoginButtonEnabled(true, text)
                     }
 
@@ -489,20 +487,19 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         .distinctUntilChanged() // Ignore duplicate consecutive values
                         .collect { isConn ->
                             if (!isConn) {
-                                customDialog(
-                                    resources.getString(R.string.no_internet_dialog_msg),
-                                    requireContext()
+                                showErrorDialog(requireContext(),
+                                    resources.getString(R.string.no_internet_dialog_msg)
                                 )
                                 toggleLoginButtonEnabled(true, textLoginButton)
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etLoginEmail.text!!.isEmpty()) {
                                         etLoginEmail.error = "Email Address required"
-                                        customDialog(AppConstant.email, requireContext())
+                                        showErrorDialog(requireContext(),AppConstant.email)
                                         toggleLoginButtonEnabled(true, textLoginButton)
                                     }else if (etLoginPassword.text!!.isEmpty()) {
                                         etLoginPassword.error = "Password required"
-                                        customDialog(AppConstant.password, requireContext())
+                                        showErrorDialog(requireContext(),AppConstant.password)
                                         toggleLoginButtonEnabled(true, textLoginButton)
                                     }
                                     else {
@@ -564,6 +561,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 session.setAuthToken(resp.get("token").asString)
                                 val bundle = Bundle()
                                 bundle.putString("data",Gson().toJson(resp))
+                                bundle.putString("type","email")
+                                bundle.putString("email",email)
                                 findNavController().navigate(R.id.completeProfileFragment,bundle)
                             }
                         }
@@ -571,7 +570,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         toggleLoginButtonEnabled(true, textLoginButton)
                     }
                     is NetworkResult.Error -> {
-                        customDialog(it.message, requireContext())
+                        showErrorDialog(requireContext(),it.message!!)
                         toggleLoginButtonEnabled(true, textLoginButton)
                     }
 
@@ -631,20 +630,19 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         .distinctUntilChanged() // Ignore duplicate consecutive values
                         .collect { isConn ->
                             if (!isConn) {
-                                customDialog(
-                                    resources.getString(R.string.no_internet_dialog_msg),
-                                    requireContext()
+                                showErrorDialog(requireContext(),
+                                    resources.getString(R.string.no_internet_dialog_msg)
                                 )
                                 toggleLoginButtonEnabled(true, textCreateAccountButton)
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etRegisterEmail.text!!.isEmpty()) {
                                         etRegisterEmail.error = "Email Address required"
-                                        customDialog(AppConstant.email, requireContext())
+                                        showErrorDialog(requireContext(),AppConstant.email)
                                         toggleLoginButtonEnabled(true, textCreateAccountButton)
                                     }else if (etRegisterPassword.text!!.isEmpty()) {
                                         etRegisterPassword.error = "Password required"
-                                        customDialog(AppConstant.password, requireContext())
+                                        showErrorDialog(requireContext(),AppConstant.password)
                                         toggleLoginButtonEnabled(true, textCreateAccountButton)
                                     }
                                     else {
@@ -696,7 +694,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(it.message, requireContext())
+                        showErrorDialog(requireContext(),it.message!!)
                         toggleLoginButtonEnabled(true, textLoginButton)
                     }
 
@@ -730,16 +728,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         .distinctUntilChanged() // Ignore duplicate consecutive values
                         .collect { isConn ->
                             if (!isConn) {
-                                customDialog(
-                                    resources.getString(R.string.no_internet_dialog_msg),
-                                    requireContext()
+                                showErrorDialog(requireContext(),
+                                    resources.getString(R.string.no_internet_dialog_msg)
                                 )
                                 toggleLoginButtonEnabled(true, textSubmitButton)
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
                                         etEmail.error = "Email Address required"
-                                        customDialog(AppConstant.email, requireContext())
+                                        showErrorDialog(requireContext(),AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
                                         forgotPassword(etEmail.text.toString(),
@@ -922,9 +919,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             .distinctUntilChanged() // Ignore duplicate consecutive values
                             .collect { isConn ->
                                 if (!isConn) {
-                                    customDialog(
-                                        resources.getString(R.string.no_internet_dialog_msg),
-                                        requireContext())
+                                    showErrorDialog(requireContext(),
+                                        resources.getString(R.string.no_internet_dialog_msg))
                                     toggleLoginButtonEnabled(true, textSubmitButton)
                                 } else {
                                     lifecycleScope.launch(Dispatchers.Main) {
@@ -932,7 +928,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                             findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
                                             findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
                                             findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
-                                            customDialog(AppConstant.otp, requireContext())
+                                            showErrorDialog(requireContext(),AppConstant.otp)
                                             toggleLoginButtonEnabled(true, textSubmitButton)
                                         } else {
                                             val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
@@ -955,9 +951,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             .distinctUntilChanged() // Ignore duplicate consecutive values
                             .collect { isConn ->
                                 if (!isConn) {
-                                    customDialog(
-                                        resources.getString(R.string.no_internet_dialog_msg),
-                                        requireContext())
+                                    showErrorDialog(requireContext(),
+                                        resources.getString(R.string.no_internet_dialog_msg))
                                     toggleLoginButtonEnabled(true, textSubmitButton)
                                 } else {
                                     lifecycleScope.launch(Dispatchers.Main) {
@@ -965,7 +960,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                             findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
                                             findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
                                             findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
-                                            customDialog(AppConstant.otp, requireContext())
+                                            showErrorDialog(requireContext(),AppConstant.otp)
                                             toggleLoginButtonEnabled(true, textSubmitButton)
                                         } else {
                                             val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
@@ -977,7 +972,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                                 otp,
                                                 dialog,
                                                 textSubmitButton,
-                                                checkBox)
+                                                checkBox,
+                                                number)
                                         }
                                     }
                                 }
@@ -989,9 +985,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 .distinctUntilChanged() // Ignore duplicate consecutive values
                                 .collect { isConn ->
                                     if (!isConn) {
-                                        customDialog(
-                                            resources.getString(R.string.no_internet_dialog_msg),
-                                            requireContext()
+                                        showErrorDialog(requireContext(),
+                                            resources.getString(R.string.no_internet_dialog_msg)
                                         )
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
@@ -1000,7 +995,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                                 findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
                                                 findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
                                                 findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
-                                                customDialog(AppConstant.otp, requireContext())
+                                                showErrorDialog(requireContext(),AppConstant.otp)
                                                 toggleLoginButtonEnabled(true, textSubmitButton)
                                             } else {
                                                 val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
@@ -1011,13 +1006,17 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                                     otpVerifySignupPhone(
                                                         userId, otp, dialog, textSubmitButton,
                                                         checkBox,
-                                                        text
+                                                        text,
+                                                        number,
+                                                        "mobile"
                                                     )
                                                 }
                                                 if (otpType.equals("RegisterEmail")) {
                                                     otpVerifySignupEmail( userId, otp, dialog, textSubmitButton,
                                                         checkBox,
-                                                        text
+                                                        text,
+                                                        number,
+                                                        "email"
 
                                                     )
                                                 }
@@ -1040,9 +1039,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             .distinctUntilChanged() // Ignore duplicate consecutive values
                             .collect { isConn ->
                                 if (!isConn) {
-                                    customDialog(
-                                        resources.getString(R.string.no_internet_dialog_msg),
-                                        requireContext()
+                                    showErrorDialog(requireContext(),
+                                        resources.getString(R.string.no_internet_dialog_msg)
                                     )
                                 } else {
                                     if (resendEnabled) {
@@ -1060,9 +1058,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             .distinctUntilChanged() // Ignore duplicate consecutive values
                             .collect { isConn ->
                                 if (!isConn) {
-                                    customDialog(
-                                        resources.getString(R.string.no_internet_dialog_msg),
-                                        requireContext()
+                                    showErrorDialog(requireContext(),
+                                        resources.getString(R.string.no_internet_dialog_msg)
                                     )
                                 } else {
                                     if (otpType.equals("RegisterPhone")){
@@ -1139,7 +1136,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(it.message, requireContext())
+                        showErrorDialog(requireContext(),it.message!!)
 
                     }
 
@@ -1186,7 +1183,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(it.message, requireContext())
+                        showErrorDialog(requireContext(),it.message!!)
 
                     }
 
@@ -1200,7 +1197,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     }
 
     private fun otpVerifySignupEmail(tempId:String,otp: String, dialog: Dialog, text: TextView,
-                                     checkBox: CheckBox?,dialogtext: String) {
+                                     checkBox: CheckBox?,dialogtext: String,
+                                     number: String,type: String) {
         lifecycleScope.launch {
             loggedScreenViewModel.otpVerifySignupEmail(
                 tempId,
@@ -1213,16 +1211,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             if (checkBox!=null && checkBox.isChecked){
                                 session.setUserSession(true)
                             }
-                            dialogSuccess(context, dialogtext,Gson().toJson(resp))
+                            dialogSuccess(context, dialogtext,Gson().toJson(resp),number,type)
                         }
                         dialog.dismiss()
                         toggleLoginButtonEnabled(true, text)
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(
-                            it.message,
-                            requireContext()
+                        showErrorDialog(
+                            requireContext(),it.message!!
                         )
                         toggleLoginButtonEnabled(true, text)
                     }
@@ -1255,9 +1252,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(
-                            it.message,
-                            requireContext()
+                        showErrorDialog(
+                            requireContext(),it.message!!
                         )
                         toggleLoginButtonEnabled(true, text)
                     }
@@ -1275,7 +1271,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
 
     private fun otpVerifyLoginPhone(userId:String,otp: String, dialog: Dialog, text: TextView,
-                                    checkBox: CheckBox?) {
+                                    checkBox: CheckBox?,number: String) {
         lifecycleScope.launch {
             loggedScreenViewModel.otpVerifyLoginPhone(
                 userId,
@@ -1303,6 +1299,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 }
                                 val bundle = Bundle()
                                 bundle.putString("data",Gson().toJson(resp))
+                                bundle.putString("type","mobile")
+                                bundle.putString("email",number)
                                 findNavController().navigate(R.id.completeProfileFragment,bundle)
                             }
                         }
@@ -1311,9 +1309,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(
-                            it.message,
-                            requireContext()
+                        showErrorDialog(
+                            requireContext(),it.message!!
                         )
                         toggleLoginButtonEnabled(true, text)
                     }
@@ -1350,9 +1347,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(
-                            it.message,
-                            requireContext()
+                        showErrorDialog(
+                            requireContext(),it.message!!
                         )
                         toggleLoginButtonEnabled(true, text)
                     }
@@ -1368,7 +1364,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     }
 
     private fun otpVerifySignupPhone(tempId:String,otp: String, dialog: Dialog, text: TextView,
-                                    checkBox: CheckBox?,dialogtext: String) {
+                                    checkBox: CheckBox?,dialogtext: String,number: String,
+                                     type:String) {
         lifecycleScope.launch {
             loggedScreenViewModel.otpVerifySignupPhone(
                 tempId,
@@ -1381,16 +1378,16 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             if (checkBox!=null && checkBox.isChecked){
                                 session.setUserSession(true)
                             }
-                            dialogSuccess(context, dialogtext,Gson().toJson(resp))
+                            dialogSuccess(context, dialogtext,Gson().toJson(resp),
+                                number,type)
                         }
                         dialog.dismiss()
                         toggleLoginButtonEnabled(true, text)
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(
-                            it.message,
-                            requireContext()
+                        showErrorDialog(
+                            requireContext(),it.message!!
                         )
                         toggleLoginButtonEnabled(true, text)
                     }
@@ -1440,9 +1437,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(
-                            it.message,
-                            requireContext()
+                        showErrorDialog(
+                            requireContext(),it.message!!
                         )
                     }
 
@@ -1490,7 +1486,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(it.message, requireContext())
+                        showErrorDialog(requireContext(),it.message!!)
                     }
 
                     else -> {
@@ -1564,20 +1560,19 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         .distinctUntilChanged() // Ignore duplicate consecutive values
                         .collect { isConn ->
                             if (!isConn) {
-                                customDialog(
-                                    resources.getString(R.string.no_internet_dialog_msg),
-                                    requireContext()
+                                showErrorDialog(requireContext(),
+                                    resources.getString(R.string.no_internet_dialog_msg)
                                 )
                                 toggleLoginButtonEnabled(true, textSubmitButton)
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etPassword.text!!.isEmpty()) {
                                         etPassword.error = "Password required"
-                                        customDialog(AppConstant.password, requireContext())
+                                        showErrorDialog(requireContext(),AppConstant.password)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     }else  if (etConfirmPassword.text!!.isEmpty()) {
                                         etConfirmPassword.error = "Confirm Password required"
-                                        customDialog(AppConstant.conPassword, requireContext())
+                                        showErrorDialog(requireContext(),AppConstant.conPassword)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     }
                                     else {
@@ -1611,7 +1606,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 when (it) {
                     is NetworkResult.Success -> {
                         it.data?.let {
-                            dialogSuccess(context, dialogtext,"")
+                            dialogSuccess(context, dialogtext,"","","")
                             dialog.dismiss()
                         }
                         dialog.dismiss()
@@ -1619,9 +1614,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     is NetworkResult.Error -> {
-                        customDialog(
-                            it.message,
-                            requireContext()
+                        showErrorDialog(
+                            requireContext(),it.message!!
                         )
                         toggleLoginButtonEnabled(true, text)
                     }
@@ -1636,7 +1630,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
     }
 
-    private fun dialogSuccess(context: Context?, text: String, data:String) {
+    private fun dialogSuccess(context: Context?, text: String, data:String,number: String,
+                              type: String) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -1657,6 +1652,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     Log.d("Navigation", "Navigating to turnNotificationsFragment")
                     val bundle = Bundle()
                     bundle.putString("data",data)
+                    bundle.putString("type",type)
+                    bundle.putString("email",number)
                     navController?.navigate(R.id.turnNotificationsFragment,bundle)
 
                 } else if (text == "Your password has been changed\n successfully.") {
@@ -1800,7 +1797,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             try {
                 text.isEnabled = isEnabled
             } catch (e: Exception) {
-                Log.e(ErrorDialog.TAG, "exception toggleLoginButtonEnabled ${e.message}")
+                Log.e(TAG, "exception toggleLoginButtonEnabled ${e.message}")
             }
         }
     }

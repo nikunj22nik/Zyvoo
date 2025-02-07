@@ -24,6 +24,9 @@ android{
            val BASE_URL = project.property("BASE_URL")
             buildConfigField("String", "BASE_URL", "${BASE_URL}")
 
+            val MEDIA_URL = project.property("MEDIA_URL")
+            buildConfigField("String", "MEDIA_URL", "${MEDIA_URL}")
+
         }
         release {
             isMinifyEnabled = false
@@ -31,6 +34,9 @@ android{
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             val BASE_URL = project.property("BASE_URL")
             buildConfigField("String", "BASE_URL", "${BASE_URL}")
+
+            val MEDIA_URL = project.property("MEDIA_URL")
+            buildConfigField("String", "MEDIA_URL", "${MEDIA_URL}")
         }
     }
 

@@ -13,6 +13,8 @@ import com.business.zyvo.databinding.FragmentTurnLocationBinding
 class TurnLocationFragment : Fragment() {
     lateinit var binding : FragmentTurnLocationBinding
     var data:String = ""
+    var type:String = ""
+    var email:String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +29,8 @@ class TurnLocationFragment : Fragment() {
         binding = FragmentTurnLocationBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
         arguments?.let {
             data = requireArguments().getString("data")!!
+            type = requireArguments().getString("type")!!
+            email = requireArguments().getString("email")!!
         }
         return binding.root
     }
@@ -37,11 +41,15 @@ class TurnLocationFragment : Fragment() {
         binding.btnLocation.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("data",data)
+            bundle.putString("type",type)
+            bundle.putString("email",email)
             findNavController().navigate(R.id.completeProfileFragment,bundle)
         }
         binding.textNotnow.setOnClickListener {
             val bundle = Bundle()
             bundle.putString("data",data)
+            bundle.putString("type",type)
+            bundle.putString("email",email)
             findNavController().navigate(R.id.completeProfileFragment,bundle)
         }
     }

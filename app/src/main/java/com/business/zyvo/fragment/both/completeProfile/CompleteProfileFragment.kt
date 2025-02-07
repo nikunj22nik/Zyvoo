@@ -6,15 +6,17 @@ import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
-import android.text.method.HideReturnsTransformationMethod
-import android.text.method.PasswordTransformationMethod
+import android.transition.Transition
 import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
@@ -33,10 +35,17 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.business.zyvo.AppConstant
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.NetworkResult
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -46,7 +55,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.OnLocalListener
 import com.business.zyvo.R
-import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.adapter.AddHobbiesAdapter
 import com.business.zyvo.adapter.AddLanguageSpeakAdapter
@@ -55,6 +63,8 @@ import com.business.zyvo.adapter.AddPetsAdapter
 import com.business.zyvo.adapter.AddWorkAdapter
 import com.business.zyvo.adapter.selectLanguage.LocaleAdapter
 import com.business.zyvo.databinding.FragmentCompleteProfileBinding
+import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
+import com.business.zyvo.fragment.both.completeProfile.viewmodel.CompleteProfileViewModel
 import com.business.zyvo.model.AddHobbiesModel
 import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.AddLocationModel
@@ -63,8 +73,19 @@ import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.TAG
+import com.business.zyvo.utils.ErrorDialog.customDialog
+import com.business.zyvo.utils.MediaUtils
+import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.hbb20.CountryCodePicker
+import dagger.hilt.android.AndroidEntryPoint
+import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import java.util.Locale
-
+@AndroidEntryPoint
 class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
 
     private lateinit var binding: FragmentCompleteProfileBinding
@@ -89,13 +110,20 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
     lateinit  var navController :NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
-
     var resendEnabled = false
-    var otpValue: String = ""
-    var data:String = ""
+    var userId:String = ""
+    var token:String = ""
+    var type:String = ""
+    var email:String = ""
+    var session: SessionManager?=null
+    var imageBytes: ByteArray = byteArrayOf()
+    val completeProfileReq = CompleteProfileReq()
 
 
 
+    private val completeProfileViewModel: CompleteProfileViewModel by lazy {
+        ViewModelProvider(this)[CompleteProfileViewModel::class.java]
+    }
 
     // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
@@ -105,7 +133,7 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
                 if (intent != null) {
                     val place = Autocomplete.getPlaceFromIntent(intent)
                     etSearch?.text = place.name
-                    val newLocation = AddLocationModel(place.name ?: "Unknown Location")
+                    val newLocation = AddLocationModel(place.name ?: AppConstant.unknownLocation)
 
                     // Add the new location to the list and notify the adapter
                     locationList.add(0, newLocation)
@@ -118,11 +146,11 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
                     addLocationAdapter.notifyItemInserted(0)
                     //  addLocationAdapter.notifyItemInserted(locationList.size - 1)
 
-                    Log.i(TAG, "Place: ${place.name}, ${place.id}")
+                    Log.i(ErrorDialog.TAG, "Place: ${place.name}, ${place.id}")
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
                 // The user canceled the operation.
-                Log.i(TAG, "User canceled autocomplete")
+                Log.i(ErrorDialog.TAG, "User canceled autocomplete")
             }
         }
 
@@ -132,35 +160,55 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
         commonAuthWorkUtils = CommonAuthWorkUtils(requireContext(),navController)
         apiKey = getString(R.string.api_key)
 
+
     }
 
     @SuppressLint("SuspiciousIndentation")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentCompleteProfileBinding.inflate(inflater, container, false)
-        val newLocation = AddLocationModel("Unknown Location")
+        val newLocation = AddLocationModel(AppConstant.unknownLocation)
 
         locationList.add(newLocation)
 
-        val newWork = AddWorkModel("Unknown Location")
+        val newWork = AddWorkModel(AppConstant.unknownLocation)
 
         workList.add(newWork)
-        val newLanguage = AddLanguageModel("Unknown Location")
+        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
 
         languageList.add(newLanguage)
 
-        val newHobbies = AddHobbiesModel("Unknown Location")
+        val newHobbies = AddHobbiesModel(AppConstant.unknownLocation)
 
         hobbiesList.add(newHobbies)
-        val newPets = AddPetsModel("Unknown Location")
+        val newPets = AddPetsModel(AppConstant.unknownLocation)
 
         petsList.add(newPets)
+        session = SessionManager(requireActivity())
         arguments?.let {
-            data = requireArguments().getString("data")!!
-            Log.d(ErrorDialog.TAG,data)
+          val data = Gson().fromJson(requireArguments().getString("data")!!,JsonObject::class.java)
+            userId = data.get("user_id").asInt.toString()
+            token = data.get("token").asString
+            token.let {
+                session?.setAuthToken(it)
+            }
+            type = requireArguments().getString("type")!!
+            email = requireArguments().getString("email")!!
+            Log.d(ErrorDialog.TAG,userId+"\n"+type+"\n"+email+"\n"+token)
+        }
+
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            completeProfileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(requireContext(), false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
         }
 
         return binding.root
@@ -185,8 +233,20 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
         }
 
         // Set listeners
+        setCheckVerified()
 
 
+    }
+
+    private fun setCheckVerified() {
+        if ("mobile".equals(type)){
+            binding.textConfirmNow1.visibility = View.GONE
+            binding.textVerified1.visibility = View.VISIBLE
+        }
+        if ("email".equals(type)){
+            binding.textConfirmNow.visibility = View.GONE
+            binding.textVerified.visibility = View.VISIBLE
+        }
     }
 
     // Function to initialize the adapter for adding locations
@@ -285,43 +345,23 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
     }
 
 
-//    // Display a dialog to select a language
-//    private fun dialogAddItem(text: String) {
-//        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-//        dialog?.apply {
-//            setCancelable(false)
-//            setContentView(R.layout.dialog_add_data)
-//            window?.attributes = WindowManager.LayoutParams().apply {
-//                copyFrom(window?.attributes)
-//                width = WindowManager.LayoutParams.MATCH_PARENT
-//                height = WindowManager.LayoutParams.MATCH_PARENT
-//            }
-//
-//            val imageCross = findViewById<ImageView>(R.id.imageCross)
-//            findViewById<TextView>(R.id.textTitle).text = text
-//            val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
-//            val enterData = findViewById<EditText>(R.id.etAddItem)
-//
-//            textContinueButton.setOnClickListener {
-//                val enter = AddWorkModel(enterData.text.toString())
-//
-//                // Add the new location to the list and notify the adapter
-//                workList.add(0, enter)
-//                //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
-//                //  addWorkAdapter.notifyItemInserted(workList.size - 1)
-//                addWorkAdapter.notifyItemInserted(0)
-//                dismiss()
-//            }
-//
-//
-//
-//
-//            imageCross?.setOnClickListener { dismiss() }
-//
-//            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
-//            show()
-//        }
-//    }
+
+    fun validation(): Boolean{
+        if (binding.textName.text.isEmpty()){
+            showErrorDialog(requireContext(),AppConstant.name)
+            return false
+        }else if (getNames(locationList).isEmpty()){
+            showErrorDialog(requireContext(),AppConstant.locationCheck)
+            return false
+        }else if (getNames(languageList).isEmpty()){
+            showErrorDialog(requireContext(),AppConstant.languageCheck)
+            return false
+        }
+        return true
+    }
+
+
+
 
    private fun bottomSheetUploadImage(){
 
@@ -337,9 +377,11 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
 
        textCamera?.setOnClickListener {
            profileImageCameraChooser()
+           bottomSheetDialog!!.dismiss()
        }
        textGallery?.setOnClickListener {
            profileImageGalleryChooser()
+           bottomSheetDialog!!.dismiss()
        }
 
 
@@ -420,22 +462,43 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
             dialogChangeName(requireContext())
            }
            R.id.textConfirmNow->{
-              dialogEmailVerification(requireContext(), null.toString())
-
-               binding.textConfirmNow.visibility = View.GONE
-               binding.textVerified.visibility = View.VISIBLE
+              dialogEmailVerification(requireContext())
            }
            R.id.textConfirmNow1->{
                dialogNumberVerification(requireContext())
-               binding.textConfirmNow1.visibility = View.GONE
-               binding.textVerified1.visibility = View.VISIBLE
            }
 
-           R.id.textSaveButton ->{
-               var intent = Intent(requireContext(),GuesMain::class.java)
-               intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-               startActivity(intent)
-               requireActivity().finish()
+           R.id.textSaveButton -> {
+               toggleLoginButtonEnabled(false, binding.textSaveButton)
+               lifecycleScope.launch {
+                   completeProfileViewModel.networkMonitor.isConnected
+                       .distinctUntilChanged() // Ignore duplicate consecutive values
+                       .collect { isConn ->
+                           if (!isConn) {
+                               showErrorDialog(
+                                   requireContext(),
+                                   resources.getString(R.string.no_internet_dialog_msg)
+                               )
+                               toggleLoginButtonEnabled(true, binding.textSaveButton)
+                           } else {
+                               lifecycleScope.launch(Dispatchers.Main) {
+                                   if (validation()) {
+                                       completeProfileReq.user_id = userId.toInt()
+                                       completeProfileReq.about_me = binding.etAboutMe.text.toString()
+                                       completeProfileReq.where_live = getNames(locationList)
+                                       completeProfileReq.works = getNames(workList)
+                                       completeProfileReq.languages = getNames(languageList)
+                                       completeProfileReq.hobbies = getNames(hobbiesList)
+                                       completeProfileReq.pets = getNames(petsList)
+                                       completeProfileReq.bytes = imageBytes
+                                       completeProfile(completeProfileReq,binding.textSaveButton)
+                                   }else{
+                                       toggleLoginButtonEnabled(true, binding.textSaveButton)
+                                   }
+                               }
+                           }
+                       }
+               }
            }
 
            R.id.skip_now ->{
@@ -446,21 +509,72 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
            }
        }
     }
+
+    private fun completeProfile(completeProfileReq: CompleteProfileReq, textSaveButton: TextView) {
+        lifecycleScope.launch {
+            completeProfileViewModel.completeProfile(completeProfileReq).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            if (userId!=null && !userId.equals("")) {
+                                session?.setUserId(userId.toInt())
+                            }
+                            val intent = Intent(requireContext(),GuesMain::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                            startActivity(intent)
+                            requireActivity().finish()
+                        }
+
+                        toggleLoginButtonEnabled(true, textSaveButton)
+                    }
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+                        toggleLoginButtonEnabled(true, textSaveButton)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, textSaveButton)
+                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
+
     private val pickImageLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.data?.let { uri ->
-
-                    // Load image into BottomSheetDialog's ImageView if available
-                    binding.imageProfilePicture?.let {
+                    if (uri!=null) {
+                        // Load image into BottomSheetDialog's ImageView if available
+                       /* binding.imageProfilePicture.let {
+                            Glide.with(this)
+                                .load(uri)
+                                .error(R.drawable.ic_profile_login)
+                                .placeholder(R.drawable.ic_profile_login)
+                                .into(it)
+                        }*/
                         Glide.with(this)
+                            .asBitmap()
                             .load(uri)
-                            .error(R.drawable.ic_profile_login)
-                            .placeholder(R.drawable.ic_profile_login)
-                            .into(it)
-                    }
+                            .into(object : CustomTarget<Bitmap>() {
+                                override fun onResourceReady(
+                                    resource: Bitmap,
+                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                                ) {
+                                    binding.imageProfilePicture.setImageBitmap(resource)
 
-                   imageStatus = "1"
+                                    imageBytes = MediaUtils.bitmapToByteArray(resource)
+                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
+                                }
+
+                                override fun onLoadCleared(placeholder: Drawable?) {
+                                    // Handle placeholder if needed
+                                }
+                            })
+                        imageStatus = "1"
+                    }
                 }
             }
         }
@@ -488,240 +602,7 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
     }
 
 
-    fun dialogLogin(context: Context?){
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_login)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var imageEmailSocial =  findViewById<ImageView>(R.id.imageEmailSocial)
-            var etMobileNumber =  findViewById<EditText>(R.id.etMobileNumber)
-            var textContinueButton =  findViewById<TextView>(R.id.textContinueButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
-            var textForget =  findViewById<TextView>(R.id.textForget)
-            var textDontHaveAnAccount =  findViewById<TextView>(R.id.textDontHaveAnAccount)
-            var textRegister =  findViewById<TextView>(R.id.textRegister)
-
-            textRegister.setOnClickListener{
-                dialogRegister(context)
-                dismiss()
-            }
-
-            textForget.setOnClickListener{
-                dialogForgotPassword(context)
-                dismiss()
-            }
-            imageEmailSocial.setOnClickListener{
-                dialogLoginEmail(context)
-                dismiss()
-            }
-
-
-            textContinueButton.setOnClickListener{
-                var text = "Login Successful"
-
-                var textHeaderOfOtpVerfication = "Please type the verification code send \n to +1 999 999 9999"
-
-                dialogOtp(context,text, textHeaderOfOtpVerfication)
-                dismiss()
-            }
-            imageCross.setOnClickListener{
-                dismiss()
-            }
-
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }}
-
-
-    fun dialogRegister(context: Context?){
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_registration)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var imageEmailSocial =  findViewById<ImageView>(R.id.imageEmailSocial)
-            var etMobileNumber =  findViewById<EditText>(R.id.etMobileNumber)
-            var textContinueButton =  findViewById<TextView>(R.id.textContinueButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
-
-            var textLoginButton =  findViewById<TextView>(R.id.textLoginButton)
-
-            textLoginButton.setOnClickListener{
-                dialogLogin(context)
-                dismiss()
-            }
-
-            textContinueButton.setOnClickListener{
-                var text = "Your account is registered \nsuccessfully"
-                var textHeaderOfOtpVerfication = "Please type the verification code send \n to +1 999 999 9999"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
-                dismiss()
-            }
-
-            imageEmailSocial.setOnClickListener{
-                dialogRegisterEmail(context)
-                dismiss()
-            }
-
-            imageCross.setOnClickListener{
-                dismiss()
-            }
-
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-            show()
-        }}
-
-
-    fun dialogLoginEmail(context: Context?){
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_login_email)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-
-            var textLoginButton =  findViewById<TextView>(R.id.textLoginButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
-            var textForget =  findViewById<TextView>(R.id.textForget)
-            var etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
-            var imgHidePass =  findViewById<ImageView>(R.id.imgHidePass)
-            var imgShowPass =  findViewById<ImageView>(R.id.imgShowPass)
-            var textDontHaveAnAccount =  findViewById<TextView>(R.id.textDontHaveAnAccount)
-            var textRegister =  findViewById<TextView>(R.id.textRegister)
-
-            eyeHideShow(imgHidePass,imgShowPass,etConfirmPassword)
-
-            textRegister.setOnClickListener{
-                dialogRegisterEmail(context)
-                dismiss()
-            }
-
-            textForget.setOnClickListener{
-                dialogForgotPassword(context)
-                dismiss()
-            }
-            textLoginButton.setOnClickListener{
-                var intent = Intent(context,GuesMain::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-
-                context.startActivity(intent)
-                dismiss()
-            }
-            imageCross.setOnClickListener{
-                dismiss()
-            }
-
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }}
-
-
-    fun eyeHideShow(imgHidePass:ImageView,imgShowPass:ImageView,etPassword:EditText){
-        imgHidePass.setOnClickListener{
-            imgShowPass.visibility = View.VISIBLE
-            imgHidePass.visibility = View.GONE
-            etPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
-            etPassword.setSelection(etPassword.text.length)
-        }
-        imgShowPass.setOnClickListener {
-            imgShowPass.visibility = View.GONE
-            imgHidePass.visibility = View.VISIBLE
-            etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
-            etPassword.setSelection(etPassword.text.length)
-        }
-    }
-
-    fun dialogRegisterEmail(context: Context?){
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_register_email)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-
-            var textCreateAccountButton =  findViewById<TextView>(R.id.textCreateAccountButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
-
-
-            var textLoginHere =  findViewById<TextView>(R.id.textLoginHere)
-
-            textLoginHere.setOnClickListener{
-                dialogLoginEmail(context)
-                dismiss()
-            }
-            textCreateAccountButton.setOnClickListener{
-                var text = "Your account is registered \nsuccessfully"
-
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
-
-                dismiss()
-            }
-
-            imageCross.setOnClickListener{
-                dismiss()
-            }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }}
-
-
-
-    @SuppressLint("MissingInflatedId")
-    fun dialogForgotPassword(context: Context?){
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_forgot_password)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var etEmail =  findViewById<EditText>(R.id.etEmail)
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
-                var text = "Your password has been changed\n successfully."
-
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
-
-
-                dismiss()
-            }
-            imageCross.setOnClickListener{
-                dismiss()
-            }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }}
-
-    fun dialogNumberVerification(context: Context?){
+    private fun dialogNumberVerification(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -733,15 +614,37 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
             }
             var imageCross =  findViewById<ImageView>(R.id.imageCross)
             var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
+            val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
+            val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
             textSubmitButton.setOnClickListener{
-
-                var text = "Your Phone has been Verified\n  successfully."
-
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto +1 999 999 9999"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
-
-
-                dismiss()
+                toggleLoginButtonEnabled(false, textSubmitButton)
+                lifecycleScope.launch {
+                    completeProfileViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                showErrorDialog(
+                                    requireContext(),resources.getString(R.string.no_internet_dialog_msg)
+                                )
+                                toggleLoginButtonEnabled(true, textSubmitButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (etMobileNumber.text!!.isEmpty()) {
+                                        etMobileNumber.error = "Mobile required"
+                                        showErrorDialog(requireContext(),AppConstant.mobile)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    } else {
+                                        val phoneNumber = etMobileNumber.text.toString()
+                                        Log.d(ErrorDialog.TAG, phoneNumber)
+                                        val countryCode =
+                                            countyCodePicker.selectedCountryCodeWithPlus
+                                        Log.d(ErrorDialog.TAG, countryCode)
+                                        phoneVerification(userId,countryCode, phoneNumber ,dialog,textSubmitButton)
+                                    }
+                                }
+                            }
+                        }
+                }
             }
             imageCross.setOnClickListener{
                 dismiss()
@@ -751,10 +654,12 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
         }}
 
 
-    fun dialogChangeName(context: Context?){
+    @SuppressLint("SetTextI18n")
+    private fun dialogChangeName(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
-            setCancelable(false)
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
             setContentView(R.layout.dialog_change_names)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
@@ -763,10 +668,25 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
             }
 
 
-            var textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
+            val textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
+            val editTextFirstName =  findViewById<EditText>(R.id.editTextFirstName)
+            val editTextLastName =  findViewById<EditText>(R.id.editTextLastName)
+            val imageProfilePicture =  findViewById<CircleImageView>(R.id.imageProfilePicture)
+            if (imageBytes.isNotEmpty()){
+                MediaUtils.setImageFromByteArray(imageBytes,imageProfilePicture)
+            }
             textSaveChangesButton.setOnClickListener{
+                if (editTextFirstName.text.isEmpty()){
+                    showErrorDialog(requireContext(),AppConstant.firstName)
+                }else if (editTextLastName.text.isEmpty()){
+                    showErrorDialog(requireContext(),AppConstant.lastName)
+                }else{
+                    dismiss()
+                    completeProfileReq.first_name =editTextFirstName.text.toString()
+                    completeProfileReq.last_name =editTextLastName.text.toString()
+                    binding.textName.text = editTextFirstName.text.toString()+" "+editTextLastName.text.toString()
+                }
 
-                dismiss()
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -774,7 +694,7 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
         }}
 
 
-    fun dialogEmailVerification(context: Context?,text: String){
+    private fun dialogEmailVerification(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -786,16 +706,33 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
             }
             var imageCross =  findViewById<ImageView>(R.id.imageCross)
 
+            var etEmail =  findViewById<EditText>(R.id.etEmail)
+
             var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener{
-                var text2 = "Your Email has been Verified\n  successfully."
-
-                val texter = if (text != null.toString()) text else text2
-
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(context,texter,textHeaderOfOtpVerfication)
-
-                dismiss()
+                toggleLoginButtonEnabled(false, textSubmitButton)
+                lifecycleScope.launch {
+                    completeProfileViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                showErrorDialog(
+                                    requireContext(),resources.getString(R.string.no_internet_dialog_msg)
+                                )
+                                toggleLoginButtonEnabled(true, textSubmitButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (etEmail.text!!.isEmpty()) {
+                                        etEmail.error = "Email Address required"
+                                        showErrorDialog(requireContext(),AppConstant.email)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    } else {
+                                        emailVerification(userId,etEmail.text.toString(),dialog,textSubmitButton)
+                                    }
+                                }
+                            }
+                        }
+                }
             }
             imageCross.setOnClickListener{
                 dismiss()
@@ -803,12 +740,81 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
+    private fun emailVerification(
+        userId: String,
+        email :String,
+        dialog: Dialog,
+        textLoginButton: TextView
+    ) {
+        lifecycleScope.launch {
+            completeProfileViewModel.emailVerification(userId,
+                email
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            dialog.dismiss()
+                            var textHeaderOfOtpVerfication = "Please type the verification code send \nto $email"
+                            dialogOtp(requireActivity(),"",email,textHeaderOfOtpVerfication,"email")
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                    }
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                    }
+                }
+            }
+        }
+    }
 
 
-    @SuppressLint("SuspiciousIndentation")
-    fun dialogOtp(context: Context, text: String, textHeaderOfOtpVerfication: String){
+    private fun phoneVerification(
+        userId: String,
+        code :String,
+        number :String,
+        dialog: Dialog,
+        textLoginButton: TextView
+    ) {
+        lifecycleScope.launch {
+            completeProfileViewModel.phoneVerification(userId,
+                code,
+                number
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            dialog.dismiss()
+                            var textHeaderOfOtpVerfication = "Please type the verification code send \nto $number"
+                            dialogOtp(requireActivity(),code,number,textHeaderOfOtpVerfication,"mobile")
+                        }
+                        dialog.dismiss()
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                    }
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, textLoginButton)
+                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    @SuppressLint("SuspiciousIndentation", "CutPasteId", "SetTextI18n")
+    fun dialogOtp(context: Context,code:String,number:String, textHeaderOfOtpVerfication: String,type:String){
         val dialog =  Dialog(context, R.style.BottomSheetDialog)
-        dialog?.apply {
+        dialog.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_otp_verification)
             window?.attributes = WindowManager.LayoutParams().apply {
@@ -833,7 +839,7 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
             textEnterYourEmail.text = textHeaderOfOtpVerfication
 
 
-            otpDigits = arrayOf<EditText>(
+            otpDigits = arrayOf(
                 findViewById(R.id.otp_digit1),
                 findViewById(R.id.otp_digit2),
                 findViewById(R.id.otp_digit3),
@@ -893,68 +899,70 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
                 )
             }
 
-
-
-
-
-
-
             textSubmitButton.setOnClickListener{
-
-                /*
-                  if (otpValue.equals("1234")) {
-
-                alertBox()
-
-            } else {
-                binding.rlResendLine.visibility = View.GONE
-                binding.incorrectOtp.visibility = View.VISIBLE
-                binding.textResend.setTextColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.orange
-                    )
-                )
+                toggleLoginButtonEnabled(false, textSubmitButton)
+                lifecycleScope.launch {
+                    completeProfileViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                showErrorDialog(
+                                    requireContext(),resources.getString(R.string.no_internet_dialog_msg)
+                                )
+                                toggleLoginButtonEnabled(true, textSubmitButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
+                                        findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
+                                        findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
+                                        findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
+                                        showErrorDialog(requireContext(),AppConstant.otp)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    } else {
+                                        val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
+                                                findViewById<EditText>(R.id.otp_digit2).text.toString()+
+                                                findViewById<EditText>(R.id.otp_digit3).text.toString()+
+                                                findViewById<EditText>(R.id.otp_digit4).text.toString()
+                                        if ("mobile".equals(type)){
+                                            otpVerifyPhoneVerification(userId,otp,dialog,textSubmitButton)
+                                        }
+                                        if ("email".equals(type)){
+                                            otpVerifyEmailVerification(userId,otp,dialog,textSubmitButton)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                }
             }
-                 */
-
-
-                if (text == "Your password has been changed\n" + " successfully."){
-                    dialogNewPassword(context,text)
-                }
-                else if(text.equals("Login Successful")){
-                    var session =SessionManager(context)
-                    session.setUserId(1)
-                    var intent = Intent(context,GuesMain::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-
-                    context.startActivity(intent)
-                }
-                else{
-                    if (text == "Your password has been changed successfully" ){
-                        dialogNewPassword(context,text)
-                    }else{
-                        dialogSuccess(context,text)
-                    }
-
-
-                }
-                dismiss()
-            }
-
 
             textResend.setOnClickListener{
-                if (resendEnabled) {
-                    rlResendLine.visibility = View.VISIBLE
-                    incorrectOtp.visibility = View.GONE
-                    countDownTimer?.cancel()
-                    startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
-                    textResend.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.grey
-                        )
-                    )
+                findViewById<EditText>(R.id.otp_digit1).text.clear()
+                findViewById<EditText>(R.id.otp_digit2).text.clear()
+                findViewById<EditText>(R.id.otp_digit3).text.clear()
+                findViewById<EditText>(R.id.otp_digit4).text.clear()
+                lifecycleScope.launch {
+                    completeProfileViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                showErrorDialog(
+                                    requireContext(),resources.getString(R.string.no_internet_dialog_msg)
+                                )
+                            } else {
+                                if ("email".equals(type)){
+                                    if (resendEnabled) {
+                                        resendEmailVerification(userId,number,textResend,
+                                            rlResendLine,incorrectOtp,textTimeResend)
+                                    }
+                                }
+                                if ("mobile".equals(type)){
+                                    resendPhoneVerification(userId,code,number,textResend,
+                                        rlResendLine,incorrectOtp,textTimeResend)
+                                }
+
+                            }
+                        }
                 }
             }
             imageCross.setOnClickListener{
@@ -962,15 +970,168 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
+    private fun otpVerifyPhoneVerification(userId: String, otp: String, dialog: Dialog, text: TextView) {
+        lifecycleScope.launch {
+            completeProfileViewModel.otpVerifyPhoneVerification(
+                userId,
+                otp,
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            binding.textConfirmNow1.visibility = View.GONE
+                            binding.textVerified1.visibility = View.VISIBLE
+                            dialog.dismiss()
+                        }
 
+                        toggleLoginButtonEnabled(true, text)
+                    }
 
+                    is NetworkResult.Error -> {
+                        showErrorDialog(
+                            requireContext(), it.message!!
+                        )
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun otpVerifyEmailVerification(userId: String, otp: String, dialog: Dialog, text: TextView) {
+        lifecycleScope.launch {
+            completeProfileViewModel.otpVerifyEmailVerification(
+                userId,
+                otp,
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            binding.textConfirmNow.visibility = View.GONE
+                            binding.textVerified.visibility = View.VISIBLE
+                            dialog.dismiss()
+                        }
+
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    is NetworkResult.Error -> {
+                        showErrorDialog(
+                            requireContext(), it.message!!
+                        )
+                        toggleLoginButtonEnabled(true, text)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, text)
+                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                    }
+                }
+            }
+        }
+
+    }
+
+    private fun resendPhoneVerification(
+        userId: String,
+        code: String,
+        number: String,
+        textResend: TextView,
+        rlResendLine: RelativeLayout,
+        incorrectOtp: TextView,
+        textTimeResend: TextView
+    ) {
+        lifecycleScope.launch {
+            completeProfileViewModel.phoneVerification(userId,
+                code,
+                number
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            rlResendLine.visibility = View.VISIBLE
+                            incorrectOtp.visibility = View.GONE
+                            countDownTimer?.cancel()
+                            startCountDownTimer(requireContext(),textTimeResend,rlResendLine,textResend)
+                            textResend.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.grey
+                                )
+                            )
+                        }
+                        toggleLoginButtonEnabled(true, textTimeResend)
+                    }
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+                        toggleLoginButtonEnabled(true, textTimeResend)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, textTimeResend)
+                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun resendEmailVerification(
+        userId: String,
+        email: String,
+        textResend: TextView,
+        rlResendLine: RelativeLayout,
+        incorrectOtp: TextView,
+        textTimeResend: TextView
+    ) {
+        lifecycleScope.launch {
+            completeProfileViewModel.emailVerification(userId,
+                email
+            ).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        it.data?.let { resp ->
+                            rlResendLine.visibility = View.VISIBLE
+                            incorrectOtp.visibility = View.GONE
+                            countDownTimer?.cancel()
+                            startCountDownTimer(requireContext(),textTimeResend,rlResendLine,textResend)
+                            textResend.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.grey
+                                )
+                            )
+                        }
+                        toggleLoginButtonEnabled(true, textResend)
+                    }
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+                        toggleLoginButtonEnabled(true, textResend)
+                    }
+
+                    else -> {
+                        toggleLoginButtonEnabled(true, textResend)
+                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                    }
+                }
+            }
+        }
+    }
 
 
     private fun startCountDownTimer(context: Context,textTimeResend : TextView,rlResendLine: RelativeLayout, textResend : TextView) {
         countDownTimer = object : CountDownTimer(120000, 1000) {
+            @SuppressLint("SetTextI18n")
             override fun onTick(millisUntilFinished: Long) {
                 val f = android.icu.text.DecimalFormat("00")
                 val min = (millisUntilFinished / 60000) % 60
@@ -978,6 +1139,7 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
                 textTimeResend.text = "${f.format(min)}:${f.format(sec)} sec"
             }
 
+            @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 textTimeResend.text = "00:00"
                 rlResendLine.visibility = View.GONE
@@ -1002,193 +1164,20 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
         countDownTimer?.start()
     }
 
-
-
-    fun dialogNewPassword(context: Context?,text: String){
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_new_password)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+    private fun toggleLoginButtonEnabled(isEnabled: Boolean, text: TextView) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                text.isEnabled = isEnabled
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "exception toggleLoginButtonEnabled ${e.message}")
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var etPassword =  findViewById<EditText>(R.id.etPassword)
-            var etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
-
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
-                dialogSuccess(context,text)
-                dismiss()
-            }
-
-            imageCross.setOnClickListener{
-                dismiss()
-            }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }}
-
-
-    fun dialogSuccess(context: Context?, text: String) {
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_success)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-
-            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
-                dismiss()
-            }
-
-            findViewById<TextView>(R.id.text).text = text
-            findViewById<TextView>(R.id.textOkayButton).setOnClickListener {
-                if (text == "Your account is registered \nsuccessfully") {
-
-                    Log.d("Navigation", "Navigating to turnNotificationsFragment")
-                    navController?.navigate(R.id.turnNotificationsFragment)
-
-                }
-                else if (text == "Your password has been changed\n" + " successfully."){
-                    dialogLoginEmail(context)
-                }
-                dismiss()
-            }
-
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
         }
     }
 
-    @SuppressLint("MissingInflatedId")
-    fun dialogLogOut(context: Context?, text: String) {
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_logout)
-
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
-                dismiss()
-            }
-
-
-            findViewById<RelativeLayout>(R.id.rlYes).setOnClickListener {
-                var sessionManager = SessionManager(context)
-                sessionManager.setUserId(-1)
-                var intent  = Intent(context, AuthActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                context.startActivity(intent)
-                dismiss()
-            }
-
-            findViewById<RelativeLayout>(R.id.rlCancel).setOnClickListener {
-                dismiss()
-            }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }
+    // Function to extract 'name' from a list of HasName objects
+    fun <T : HasName> getNames(objectsList: MutableList<T>): MutableList<String> {
+        return objectsList.map { it.name }
+            .filter { it != AppConstant.unknownLocation }  // Remove "Unknown Location"
+            .toMutableList()
     }
-
-
-    private fun showPopupWindow(anchorView: View, position: Int)   {
-        // Inflate the custom layout for the popup menu
-        val popupView = LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
-
-        // Create PopupWindow with the custom layout
-        val popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-
-        // Set click listeners for each menu item in the popup layout
-        popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemUnread).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-
-
-        // Get the location of the anchor view (three-dot icon)
-        val location = IntArray(2)
-        anchorView.getLocationOnScreen(location)
-
-        // Get the height of the PopupView after inflating it
-        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val popupHeight = popupView.measuredHeight
-        val popupWeight = popupView.measuredWidth
-        val screenWidht = context?.resources?.displayMetrics?.widthPixels
-        val anchorX = location[1]
-        val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
-
-        val xOffset = if (popupWeight > spaceEnd!!) {
-            // If there is not enough space below, show it above
-            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
-            -(popupWeight + 20)
-        }
-        // Calculate the Y offset to make the popup appear above the three-dot icon
-        val screenHeight = context?.resources?.displayMetrics?.heightPixels
-        val anchorY = location[1]
-
-        // Calculate the available space above the anchorView
-        val spaceAbove = anchorY
-        val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
-
-        // Determine the Y offset
-        val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
-        }
-
-        // Show the popup window anchored to the view (three-dot icon)
-        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
-    }
-
-    fun isScreenLarge(context: Context): Boolean {
-        // Get the screen width
-        val display =
-            (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
-        val width = display.width
-
-        // Convert pixels to dp
-        val density = context.resources.displayMetrics.density
-        val widthInDp = (width / density).toInt()
-
-        // Check if the screen width is greater than 600dp (typical for tablets)
-        return widthInDp > 600
-    }
-
-
-
-
-
-
-
-
 }

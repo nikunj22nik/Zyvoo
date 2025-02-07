@@ -1,4 +1,4 @@
-package com.business.zyvo.fragment.guest
+package com.business.zyvo.fragment.guest.profile
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -6,8 +6,10 @@ import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -15,10 +17,12 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.transition.Transition
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -32,13 +36,17 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.target.SimpleTarget
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -46,7 +54,11 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.OnLocalListener
 import com.business.zyvo.R
@@ -61,6 +73,9 @@ import com.business.zyvo.adapter.AddPetsAdapter
 import com.business.zyvo.adapter.AddWorkAdapter
 import com.business.zyvo.adapter.selectLanguage.LocaleAdapter
 import com.business.zyvo.databinding.FragmentProfileBinding
+import com.business.zyvo.fragment.both.completeProfile.HasName
+import com.business.zyvo.fragment.guest.profile.model.UserProfile
+import com.business.zyvo.fragment.guest.profile.viewModel.ProfileViewModel
 import com.business.zyvo.model.AddHobbiesModel
 import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.AddLocationModel
@@ -69,8 +84,15 @@ import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
+import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.viewmodel.PaymentViewModel
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 @AndroidEntryPoint
@@ -85,10 +107,9 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private lateinit var dateManager: DateManager
 
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
-    private val paymentCardViewHolder: PaymentViewModel by lazy {
-        ViewModelProvider(this)[PaymentViewModel::class.java]
+    private val profileViewModel: ProfileViewModel by lazy {
+        ViewModelProvider(this)[ProfileViewModel::class.java]
     }
-    private var paymentList: MutableList<AddPaymentCardModel> = mutableListOf()
     private var petsList: MutableList<AddPetsModel> = mutableListOf()
     private var hobbiesList: MutableList<AddHobbiesModel> = mutableListOf()
     private var locationList: MutableList<AddLocationModel> = mutableListOf()
@@ -101,13 +122,13 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private var bottomSheetDialog: BottomSheetDialog? = null
     private var imageStatus = ""
     private var isDropdownOpen = false
-
     lateinit  var navController :NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
-
     var resendEnabled = false
-    var otpValue: String = ""
+    var session: SessionManager?=null
+    var imageBytes: ByteArray = byteArrayOf()
+    var userProfile:UserProfile?=null
 
     // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
@@ -137,8 +158,6 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 Log.i(TAG, "User canceled autocomplete")
             }
         }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -159,7 +178,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         // Inflate the layout for this fragment
         binding =
             FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
-        val newLocation = AddLocationModel("Unknown Location")
+        val newLocation = AddLocationModel(AppConstant.unknownLocation)
 
 
         binding.switchHost.setOnClickListener{
@@ -173,24 +192,176 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             startActivity(intent)
         }
         locationList.add(newLocation)
-        val newWork = AddWorkModel("Unknown Location")
+        val newWork = AddWorkModel(AppConstant.unknownLocation)
         workList.add(newWork)
-        val newLanguage = AddLanguageModel("Unknown Location")
+        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
         languageList.add(newLanguage)
-        val newHobbies = AddHobbiesModel("Unknown Location")
+        val newHobbies = AddHobbiesModel(AppConstant.unknownLocation)
 
         hobbiesList.add(newHobbies)
-        val newPets = AddPetsModel("Unknown Location")
+        val newPets = AddPetsModel(AppConstant.unknownLocation)
 
         petsList.add(newPets)
 
 
         addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf())
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
-        paymentCardViewHolder.paymentCardList.observe(viewLifecycleOwner, Observer { payment ->
+        profileViewModel.paymentCardList.observe(viewLifecycleOwner, Observer { payment ->
             addPaymentCardAdapter.updateItem(payment)
         })
+
+        session = SessionManager(requireActivity())
+
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(requireContext(), false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
+        }
+        initView()
+        getUserProfile()
+
         return binding.root
+    }
+
+    private fun initView() {
+        binding.imageEditAbout.setOnClickListener {
+            binding.etAboutMe.isEnabled = true
+            binding.imageEditAbout.visibility = View.GONE
+            binding.imageAboutCheckedButton.visibility = View.VISIBLE
+        }
+
+        binding.imageAboutCheckedButton.setOnClickListener {
+                if (binding.etAboutMe.text.isEmpty()){
+                    showErrorDialog(requireContext(),AppConstant.aboutMe)
+                }else{
+                    updateAddAboutMe(binding.etAboutMe.text.toString())
+                }
+        }
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    private fun getUserProfile() {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged() // Ignore duplicate consecutive values
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            var name = ""
+                                            it.data?.let { resp ->
+                                                userProfile = Gson().fromJson(resp, UserProfile::class.java)
+                                                userProfile.let {
+                                                    if (it?.first_name != null && it.last_name != null) {
+                                                        name =
+                                                            it.first_name + " " + it.last_name
+                                                    }
+                                                    it?.name = name
+                                                    binding.user = it
+                                                    if (it?.profile_image != null) {
+                                                        // Load URL in your Activity or Fragment
+                                                        /*Glide.with(requireContext())
+                                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // user.profile_image is the URL
+                                                            .into(binding.imageProfilePicture)*/
+                                                        Glide.with(requireContext())
+                                                            .asBitmap() // Convert the image into Bitmap
+                                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
+                                                            .into(object : SimpleTarget<Bitmap>() {
+                                                                override fun onResourceReady(resource: Bitmap,
+                                                                                             transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
+                                                                    // The 'resource' is the Bitmap
+                                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
+                                                                    binding.imageProfilePicture.setImageBitmap(resource)
+                                                                    imageBytes = MediaUtils.bitmapToByteArray(resource)
+                                                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
+                                                                }
+                                                            })
+                                                    }
+                                                    if (it?.email_verified != null && it.email_verified == 1) {
+                                                        binding.textConfirmNow.visibility = GONE
+                                                        binding.textVerified.visibility =
+                                                            View.VISIBLE
+                                                    }
+                                                    if (it?.phone_verified != null && it.phone_verified == 1) {
+                                                        binding.textConfirmNow1.visibility = GONE
+                                                        binding.textVerified1.visibility =
+                                                            View.VISIBLE
+                                                    }
+                                                    if (it?.identity_verified != null && it.identity_verified == 1) {
+                                                        binding.textConfirmNow2.visibility = GONE
+                                                        binding.textVerified2.visibility =
+                                                            View.VISIBLE
+                                                    }
+                                                    if (it?.where_live!=null && it.where_live.isNotEmpty()){
+                                                        locationList = getObjectsFromNames(it.where_live) { name ->
+                                                            AddLocationModel(name)  // Using the constructor of MyObject to create instances
+                                                        }
+                                                        val newLanguage = AddLocationModel(AppConstant.unknownLocation)
+                                                        locationList.add(newLanguage)
+                                                       addLocationAdapter.updateLocations(locationList)
+                                                    }
+                                                    if (it?.my_work!=null && it.my_work.isNotEmpty()){
+                                                        workList = getObjectsFromNames(it.my_work) { name ->
+                                                            AddWorkModel(name)  // Using the constructor of MyObject to create instances
+                                                        }
+                                                        val newLanguage = AddWorkModel(AppConstant.unknownLocation)
+                                                        workList.add(newLanguage)
+                                                        addWorkAdapter.updateWork(workList)
+                                                    }
+                                                    if (it?.languages!=null && it.languages.isNotEmpty()){
+                                                        languageList = getObjectsFromNames(it.languages) { name ->
+                                                            AddLanguageModel(name)  // Using the constructor of MyObject to create instances
+                                                        }
+                                                        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
+                                                        languageList.add(newLanguage)
+                                                        addLanguageSpeakAdapter.updateLanguage(languageList)
+                                                    }
+                                                    if (it?.hobbies!=null && it.hobbies.isNotEmpty()){
+                                                        hobbiesList = getObjectsFromNames(it.hobbies) { name ->
+                                                            AddHobbiesModel(name)  // Using the constructor of MyObject to create instances
+                                                        }
+                                                        val newLanguage = AddHobbiesModel(AppConstant.unknownLocation)
+                                                        hobbiesList.add(newLanguage)
+                                                        addHobbiesAdapter.updateHobbies(hobbiesList)
+                                                    }
+                                                    if (it?.pets!=null && it.pets.isNotEmpty()){
+                                                        petsList = getObjectsFromNames(it.pets) { name ->
+                                                            AddPetsModel(name)  // Using the constructor of MyObject to create instances
+                                                        }
+                                                        val newLanguage = AddPetsModel(AppConstant.unknownLocation)
+                                                        petsList.add(newLanguage)
+                                                        addPetsAdapter.updatePets(petsList)
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -342,9 +513,11 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
 
         textCamera?.setOnClickListener {
+            bottomSheetDialog!!.dismiss()
             profileImageCameraChooser()
         }
         textGallery?.setOnClickListener {
+            bottomSheetDialog!!.dismiss()
             profileImageGalleryChooser()
         }
 
@@ -545,16 +718,167 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
                     // Load image into BottomSheetDialog's ImageView if available
                     binding.imageProfilePicture?.let {
-                        Glide.with(this)
+                       /* Glide.with(this)
                             .load(uri)
                             .error(R.drawable.ic_profile_login)
                             .placeholder(R.drawable.ic_profile_login)
-                            .into(it)
+                            .into(it)*/
+                        Glide.with(this)
+                            .asBitmap()
+                            .load(uri)
+                            .error(R.drawable.ic_profile_login)
+                            .placeholder(R.drawable.ic_profile_login)
+                            .into(object : CustomTarget<Bitmap>() {
+                                override fun onResourceReady(
+                                    resource: Bitmap,
+                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                                ) {
+                                    binding.imageProfilePicture.setImageBitmap(resource)
+
+                                    imageBytes = MediaUtils.bitmapToByteArray(resource)
+                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
+                                    uploadProfile(imageBytes)
+                                }
+
+                                override fun onLoadCleared(placeholder: Drawable?) {
+                                    // Handle placeholder if needed
+                                }
+                            })
                     }
                     imageStatus = "1"
                 }
             }
         }
+
+    private fun uploadProfile(bytes: ByteArray) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged() // Ignore duplicate consecutive values
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.uploadProfileImage(session?.getUserId().toString(),
+                                    bytes).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                showErrorDialog(requireContext(),resp.first)
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun updateName(first_name: String,
+                           last_name: String,
+                           dialog:Dialog, textSaveChangesButton:TextView) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged() // Ignore duplicate consecutive values
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                        toggleLoginButtonEnabled(true, textSaveChangesButton)
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addUpdateName(session?.getUserId().toString(),
+                                    first_name,
+                                    last_name).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                showErrorDialog(requireContext(),resp.first)
+                                                userProfile?.name = first_name+" "+last_name
+                                                binding.user = userProfile
+                                            }
+                                            toggleLoginButtonEnabled(true, textSaveChangesButton)
+                                            dialog.dismiss()
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                            toggleLoginButtonEnabled(true, textSaveChangesButton)
+                                        }
+
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                            toggleLoginButtonEnabled(true, textSaveChangesButton)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun updateAddAboutMe(about_me: String) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged() // Ignore duplicate consecutive values
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addAboutMe(session?.getUserId().toString(),
+                                    about_me).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                binding.etAboutMe.isEnabled = false
+                                                binding.imageEditAbout.visibility = View.VISIBLE
+                                                binding.imageAboutCheckedButton.visibility = View.GONE
+                                                showErrorDialog(requireContext(),resp.first)
+                                                userProfile?.about_me = about_me
+                                                binding.user = userProfile
+
+
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+
 
     private fun profileImageGalleryChooser() {
         ImagePicker.with(this)
@@ -883,22 +1207,36 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         }}
 
 
-    fun dialogChangeName(context: Context?){
+    private fun dialogChangeName(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
-            setCancelable(false)
+            setCancelable(true)
             setContentView(R.layout.dialog_change_names)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
+            val imageProfilePicture =  findViewById<CircleImageView>(R.id.imageProfilePicture)
+            if (imageBytes.isNotEmpty()){
+                MediaUtils.setImageFromByteArray(imageBytes,imageProfilePicture)
+            }
 
 
-            var textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
+            val textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
+            val editTextFirstName =  findViewById<EditText>(R.id.editTextFirstName)
+            val editTextLastName =  findViewById<EditText>(R.id.editTextLastName)
             textSaveChangesButton.setOnClickListener{
-
-                dismiss()
+                if (editTextFirstName.text.isEmpty()){
+                    showErrorDialog(requireContext(),AppConstant.firstName)
+                }else if (editTextLastName.text.isEmpty()){
+                    showErrorDialog(requireContext(),AppConstant.lastName)
+                }else {
+                    toggleLoginButtonEnabled(false, textSaveChangesButton)
+                    updateName(editTextFirstName.text.toString(),
+                        editTextLastName.text.toString(),
+                        dialog,textSaveChangesButton)
+                }
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -1316,5 +1654,27 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         return widthInDp > 600
     }
 
+
+    // Function to convert List<String> to MutableList<T>
+    fun <T : HasName> getObjectsFromNames(names: List<String>, constructor: (String) -> T): MutableList<T> {
+        return names.mapNotNull {
+            if (it != AppConstant.unknownLocation) {
+                constructor(it) // Create an object of type T using the constructor
+            } else {
+                null
+            }
+        }.toMutableList()
+    }
+
+
+    private fun toggleLoginButtonEnabled(isEnabled: Boolean, text: TextView) {
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                text.isEnabled = isEnabled
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "exception toggleLoginButtonEnabled ${e.message}")
+            }
+        }
+    }
 
 }
