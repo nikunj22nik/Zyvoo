@@ -6,6 +6,7 @@ import com.business.zyvo.model.CountryLanguage
 class AppConstant {
 
     companion object {
+        val PROPERTY_ID: String? ="property_id"
         val DISCOUNT: String = "Discount"
         val BULK_HOUR: String = "Bulk_Hour"
         val MINIMUM_HOUR: String = "Minimum Hour"

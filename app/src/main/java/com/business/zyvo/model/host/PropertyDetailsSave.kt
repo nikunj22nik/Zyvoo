@@ -2,6 +2,7 @@ package com.business.zyvo.model.host
 
 class PropertyDetailsSave {
     var user_id =1;
+    var property_id = -1
     var space_type =""
     var property_size :Int= -1
     var max_guest_count :Int = -1
@@ -35,6 +36,7 @@ class PropertyDetailsSave {
     var activities :MutableList<String> = mutableListOf()
     var amenities : MutableList<String> = mutableListOf()
     var add_ons : MutableList<AddOnModel> = mutableListOf()
-
+     var fname:String?= null
+    var lname :String? = null
 
 }

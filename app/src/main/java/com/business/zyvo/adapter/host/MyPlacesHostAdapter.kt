@@ -17,6 +17,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.business.zyvo.AppConstant
 import com.google.android.material.tabs.TabLayoutMediator
 import com.business.zyvo.OnLogClickListener
 import com.business.zyvo.R
@@ -32,7 +33,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
     private lateinit var mListener: onItemClickListener
 
     interface onItemClickListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(position: Int,type:String)
     }
 
     fun setOnItemClickListener(listener: MyPlacesHostAdapter.onItemClickListener) {
@@ -126,11 +127,11 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemEdit).setOnClickListener {
-
+             mListener.onItemClick(position,AppConstant.EDIT)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
-            dialogDelete()
+            dialogDelete(position)
 
 
             popupWindow.dismiss()
@@ -183,7 +184,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
 
 
 
-    fun dialogDelete() {
+    fun dialogDelete(position :Int) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -200,7 +201,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
 
 
             findViewById<RelativeLayout>(R.id.yes_btn).setOnClickListener {
-
+                mListener.onItemClick(position,AppConstant.DELETE)
                 dismiss()
             }
             findViewById<RelativeLayout>(R.id.rl_cancel_btn).setOnClickListener {

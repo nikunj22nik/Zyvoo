@@ -1,17 +1,22 @@
 package com.business.zyvo.adapter.host
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.core.content.contentValuesOf
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 
-class GallaryAdapter(private var items: List<Uri>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+
+class GallaryAdapter(private var items: List<Uri>,var context : Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     var showImage :Int =0
@@ -37,11 +42,11 @@ class GallaryAdapter(private var items: List<Uri>) : RecyclerView.Adapter<Recycl
         return when (viewType) {
             showImage -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_gallary_show_image, parent, false)
-                RegularViewHolder(view)
+                RegularViewHolder(view,context)
             }
             else -> {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.adapter_gallery_add_image, parent, false)
-                HeaderViewHolder(view)
+                HeaderViewHolder(view,context)
             }
         }
     }
@@ -59,7 +64,7 @@ class GallaryAdapter(private var items: List<Uri>) : RecyclerView.Adapter<Recycl
     }
 
     // ViewHolder for header
-    class HeaderViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class HeaderViewHolder(itemView: View,context:Context) : RecyclerView.ViewHolder(itemView) {
 
         private val rlMain: RelativeLayout = itemView.findViewById(R.id.main)
 
@@ -71,7 +76,7 @@ class GallaryAdapter(private var items: List<Uri>) : RecyclerView.Adapter<Recycl
     }
 
     // ViewHolder for regular items
-    class RegularViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class RegularViewHolder(itemView: View,var context: Context) : RecyclerView.ViewHolder(itemView) {
         private val deleteImage: ImageView = itemView.findViewById(R.id.delete_image)
 
         private val shpImg:ShapeableImageView = itemView.findViewById(R.id.shapeableImageView)
@@ -79,7 +84,9 @@ class GallaryAdapter(private var items: List<Uri>) : RecyclerView.Adapter<Recycl
             deleteImage.setOnClickListener {
                  mListener.onItemClick(adapterPosition,AppConstant.DELETE)
             }
-            shpImg.setImageURI(item)
+
+            Glide.with(context).load(item).into(shpImg)
+
         }
     }
 

@@ -50,6 +50,11 @@ class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityMode
                 holder.bind(list[position].name, list[position].image)
                 var laypout = holder.itemView.findViewById<LinearLayout>(R.id.layout)
 
+                if(list.get(position).checked){
+                    laypout.setBackgroundResource(R.drawable.bg_four_side_selected_blue)
+                }else{
+                    laypout.setBackgroundResource(R.drawable.bg_four_side_grey_corner)
+                }
                 laypout.setOnClickListener {
                     if (!list.get(position).checked) {
                         laypout.setBackgroundResource(R.drawable.bg_four_side_selected_blue)
@@ -96,6 +101,12 @@ class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityMode
 
     override fun getItemViewType(position: Int): Int {
         return if (list[position].name.equals("Other Activities")) 1 else 0
+    }
+
+
+    fun updateAdapter(list: MutableList<ActivityModel>){
+        this.list = list
+        notifyDataSetChanged()
     }
 
 

@@ -2,6 +2,7 @@ package com.business.zyvo.fragment.host
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
@@ -22,6 +24,7 @@ import com.business.zyvo.activity.PlaceOpenActivity
 import com.business.zyvo.adapter.host.MyPlacesHostAdapter
 import com.business.zyvo.databinding.FragmentMyPlacesBinding
 import com.business.zyvo.locationManager.LocationHelper
+import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.ViewpagerModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
@@ -35,9 +38,12 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
 
     lateinit var binding: FragmentMyPlacesBinding
 
+    private lateinit var placesList: MutableList<HostMyPlacesModel>
+
     private lateinit var locationHelper: LocationHelper
 
     lateinit var adapter: MyPlacesHostAdapter
+
     private val myPlaceViewModel: MyPlaceViewModel by lazy {
         ViewModelProvider(this)[MyPlaceViewModel::class.java]
     }
@@ -45,21 +51,33 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
         }
+
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        binding = FragmentMyPlacesBinding.inflate(LayoutInflater.from(requireContext()))
 
+        binding = FragmentMyPlacesBinding.inflate(LayoutInflater.from(requireContext()))
         adapter = MyPlacesHostAdapter(requireContext(), mutableListOf())
         binding.recyclerMyPlaces.adapter = adapter
+        adapter.setOnItemClickListener(object :MyPlacesHostAdapter.onItemClickListener{
+            override fun onItemClick(position: Int,type: String) {
+                if(type.equals(AppConstant.DELETE)){
+                     deleteProperty(placesList.get(position).property_id,position)
+                }else {
+                    val bundle = Bundle()
+                    val id = placesList.get(position).property_id
+                    bundle.putInt(AppConstant.PROPERTY_ID, id)
+                    findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag, bundle)
+                }
+            }
+        })
+
+
         binding.recyclerMyPlaces.isNestedScrollingEnabled = false
-         binding.floatingIcon.setOnClickListener {
+
+        binding.floatingIcon.setOnClickListener {
              findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag)
          }
 
@@ -68,20 +86,42 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         binding.tvPlaces.setOnClickListener(this)
         binding.rlAddNewPlace1.setOnClickListener(this)
         binding.rlPrice.setOnClickListener(this)
-        initialization()
 
+        initialization()
 
         val callback: OnBackPressedCallback =
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     requireActivity().finishAffinity()
                 }
-            }
+        }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
-
         return binding.root
+    }
+
+    private fun deleteProperty(propertyId: Int,position :Int) {
+        lifecycleScope.launch {
+            Log.d("TESTING_PROPERTY_ID",propertyId.toString())
+            LoadingUtils.showDialog(requireContext(),false)
+             myPlaceViewModel.deleteProperty(propertyId).collect{
+                 when (it) {
+                         is NetworkResult.Success ->{
+                             LoadingUtils.hideDialog()
+                             Log.d("TESTING_PROPERTY_ID",propertyId.toString())
+                             placesList.removeAt(position)
+                             adapter.updateData(placesList)
+                         }
+                         is NetworkResult.Error ->{
+                             LoadingUtils.hideDialog()
+                             LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                         }
+                         else ->{
+
+                         }
+                     }
+             }
+        }
     }
 
     fun initialization() {
@@ -134,15 +174,17 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                 myPlaceViewModel.getMyPlaces(userId,latitude,longitude).collect{
                     when(it){
                         is NetworkResult.Success ->{
-                            LoadingUtils.hideDialog()
                             it.data?.let { it1 ->
-                               if(it1.size <3){
+                                placesList= it.data.first
+                               if(it1.first.size <3){
                                    binding.floatingIcon.visibility =View.GONE
                                }else{
                                    binding.floatingIcon.visibility = View.VISIBLE
                                }
-                                adapter.updateData(it1)
-
+                                binding.rlPrice.visibility = View.VISIBLE
+                                binding.tvTxt.setText(it1.second.toString())
+                                adapter.updateData(it1.first)
+                                LoadingUtils.hideDialog()
                             }
                         }
                         is NetworkResult.Error ->{
@@ -158,7 +200,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
             }
 
         }
-
     }
 
 
@@ -207,10 +248,12 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         // Set click listeners for each menu item in the popup layout
 
         popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
+           totalEarningApi()
             popupWindow.dismiss()
         }
 
         popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
+            futureEarningApi()
             popupWindow.dismiss()
         }
 
@@ -258,6 +301,58 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
             yOffset,
             Gravity.END
         )  // Adjust the Y offset dynamically
+    }
+
+    private fun futureEarningApi() {
+       lifecycleScope.launch {
+           var sessionManager:SessionManager = SessionManager(requireContext())
+           var hostId = sessionManager.getUserId()
+           binding.rlPrice.visibility = View.VISIBLE
+           if (hostId != null) {
+               LoadingUtils.showDialog(requireContext(),false)
+               myPlaceViewModel.earning(hostId,"future").collect{
+                   when(it){
+                       is NetworkResult.Success ->{
+                           var data = it.data
+                           binding.tvTxt.setText(data)
+                           LoadingUtils.hideDialog()
+                       }
+                       is NetworkResult.Error ->{
+                               LoadingUtils.hideDialog()
+                       }
+                       else ->{
+
+                       }
+                   }
+               }
+           }
+       }
+    }
+
+    private fun totalEarningApi() {
+        lifecycleScope.launch {
+            binding.rlPrice.visibility = View.VISIBLE
+            val sessionManager:SessionManager = SessionManager(requireContext())
+            val hostId = sessionManager.getUserId()
+            if (hostId != null) {
+                LoadingUtils.showDialog(requireContext(),false)
+                myPlaceViewModel.earning(hostId,"total").collect{
+                    when(it){
+                        is NetworkResult.Success ->{
+                            var data = it.data
+                            binding.tvTxt.setText(data)
+                            LoadingUtils.hideDialog()
+                        }
+                        is NetworkResult.Error ->{
+                            LoadingUtils.hideDialog()
+                        }
+                        else ->{
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun showPopupWindowPrice(anchorView: View, position: Int) {

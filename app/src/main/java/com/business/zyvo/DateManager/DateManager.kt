@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -14,8 +15,10 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeParseException
 import java.time.format.TextStyle
 import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 
 class DateManager(var context : Context) {
@@ -25,6 +28,15 @@ class DateManager(var context : Context) {
         "May", "June", "July", "August",
         "September", "October", "November", "December"
     )
+
+
+    fun convert24HourToAMPM(time24: String): String {
+        val inputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())  // 24-hour format
+        val outputFormat = SimpleDateFormat("h:mm a", Locale.getDefault())  // 12-hour format with AM/PM
+        val date:   Date = inputFormat.parse(time24)  // Parse the input time
+        return outputFormat.format(date)  // Format the date to 12-hour format
+    }
+
 
      fun showMonthSelectorDialog(onMonthSelected: (String) -> Unit) {
         AlertDialog.Builder(context)
@@ -38,15 +50,44 @@ class DateManager(var context : Context) {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun isFromTimeLessThanToTime(fromTime: String, toTime: String): Boolean {
-        // Define the formatter for HH:mm format
-        val formatter = DateTimeFormatter.ofPattern("HH:mm")
 
-        // Parse the times into LocalTime objects
-        val from = LocalTime.parse(fromTime, formatter)
-        val to = LocalTime.parse(toTime, formatter)
+        val formatter24Hour = DateTimeFormatter.ofPattern("HH:mm") // 24-hour format
+        val formatter12Hour = DateTimeFormatter.ofPattern("hh:mm a") // 12-hour format (AM/PM)
 
-        // Compare if the "from" time is earlier than the "to" time
-        return from.isBefore(to)
+        // Trim any extra spaces from the input time strings
+        val trimmedFromTime = fromTime.trim()
+        val trimmedToTime = toTime.trim()
+
+        // Declare LocalTime variables
+        val from: LocalTime
+        val to: LocalTime
+
+        try {
+            // Try parsing "from" time in 12-hour format (AM/PM)
+            from = if (trimmedFromTime.contains("AM", true) || trimmedFromTime.contains("PM", true)) {
+                LocalTime.parse(trimmedFromTime, formatter12Hour)
+            } else {
+                // Otherwise, try 24-hour format
+                LocalTime.parse(trimmedFromTime, formatter24Hour)
+            }
+
+            // Try parsing "to" time in 12-hour format (AM/PM)
+            to = if (trimmedToTime.contains("AM", true) || trimmedToTime.contains("PM", true)) {
+                LocalTime.parse(trimmedToTime, formatter12Hour)
+            } else {
+                // Otherwise, try 24-hour format
+                LocalTime.parse(trimmedToTime, formatter24Hour)
+            }
+
+            // If no exception is thrown, compare times
+            return from.isBefore(to)
+
+        } catch (e: DateTimeParseException) {
+            // Catch and handle parsing errors if the time format is not valid
+
+            Log.d("TESTING_ZYVOO" ,"Inside the error of time")
+            return false // You can return false or handle it according to your needs
+        }
     }
 
      fun showYearPickerDialog(onYearSelected: (Int) -> Unit) {

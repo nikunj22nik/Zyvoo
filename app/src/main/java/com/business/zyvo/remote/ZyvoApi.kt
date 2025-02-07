@@ -7,6 +7,7 @@ import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface ZyvoApi {
 
@@ -79,7 +80,21 @@ interface ZyvoApi {
     suspend fun getMyPlacesWithOutLatLangApi(@Field("user_id")user_id : Int) : Response<JsonObject>
 
 
+    @POST("get_property_details")
+    @FormUrlEncoded
+    suspend fun getPropertyDetails(@Field("property_id") propertyId :Int) : Response<JsonObject>
 
+
+    @POST("delete_property")
+    @FormUrlEncoded
+    suspend fun deleteProperty(@Field("property_id")propertyId: Int) : Response<JsonObject>
+
+    @POST("earnings")
+    @FormUrlEncoded
+    suspend fun totalEarning(@Field("host_id")hostId :Int, @Field("type")type:String) : Response<JsonObject>
+
+    @PUT("update_property_details")
+    suspend fun updatePropertyDetail(@Body addProperty : PropertyDetailsSave) : Response<JsonObject>
 
 
 }

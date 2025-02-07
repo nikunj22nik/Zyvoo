@@ -45,6 +45,11 @@ class AmenitiesAdapter(var context : Context, var list :MutableList<Pair<String,
             holder.binding.layout.setGravity(Gravity.END)
         }
 
+        if(list.get(position).second){
+            holder.binding.img.setImageResource(R.drawable.ic_checked_radio)
+        }else{
+            holder.binding.img.setImageResource(R.drawable.ic_uncheked_radio)
+        }
 
         holder.binding.radioBtn.setText(list.get(position).first)
         Log.d("TESTING","array value "+  list.get(position).second)

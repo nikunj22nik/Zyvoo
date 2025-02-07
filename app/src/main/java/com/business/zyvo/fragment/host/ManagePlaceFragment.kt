@@ -11,7 +11,6 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
-import android.location.Address
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -39,7 +38,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -65,28 +63,22 @@ import com.business.zyvo.adapter.host.RadioTextAdapter
 import com.business.zyvo.databinding.FragmentManagePlaceBinding
 import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.model.ActivityModel
-import com.business.zyvo.model.ViewpagerModel
 import com.business.zyvo.model.host.AddOnModel
+import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.model.host.ItemRadio
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.session.SessionManager
-import com.business.zyvo.utils.ErrorDialog.TAG
-import com.business.zyvo.utils.ErrorDialog.customDialog
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.PrepareData
-import com.business.zyvo.viewmodel.LoggedScreenViewModel
 import com.business.zyvo.viewmodel.host.CreatePropertyViewModel
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.AddressComponent
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
-import dagger.BindsInstance
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Arrays
@@ -124,7 +116,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         var cancellationDays :String = "00"
 
       // variables for Gallery and location
-        var galleryList = mutableListOf<String>()
+        var galleryList = mutableListOf<Pair<String,Boolean>>()
         var titleResult : String =""
         var descriptionResult : String =""
         var parkingRule :String =""
@@ -138,6 +130,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         var longitude :String ="0.00"
 
 
+    var galleryListId = mutableListOf<Int>()
     private val viewModel: CreatePropertyViewModel by lazy {
         ViewModelProvider(this)[CreatePropertyViewModel::class.java]
     }
@@ -151,6 +144,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     private lateinit var amenitiesAdapter: AmenitiesAdapter
     private lateinit var mapView: MapView
     private lateinit var imageList: MutableList<Uri>
+    private var propertyId :Int =-1
 
     private var PICK_IMAGES_REQUEST = 210
     private  var minimumHourIndex = 0
@@ -177,12 +171,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-        }
+
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
-    : View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):View? {
         binding = FragmentManagePlaceBinding.inflate(inflater, container, false)
         settingDataToActivityModel()
         ActivityCompat.requestPermissions(requireActivity(), permissions(), REQUEST_CODE_STORAGE_PERMISSION)
@@ -192,11 +184,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         mapInitialization(savedInstanceState)
         imagePermissionInitialization()
         val newWork = AddOnModel("Unknown Location", "0")
-        arguments?.let {
-            if(it.containsKey(AppConstant.CREATE_EVENT)){
-                viewModel.pageAfterPageWork = true
-            }
-        }
+
         addOnList.add(newWork)
         swictchChangeListener()
         galleryTextField()
@@ -240,8 +228,6 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 binding.textSaveAndContinueButton.text = "Save & Continue"
             }
         }
-
-
         binding.textSaveAndContinueButton.setOnClickListener {
             if (binding.llHomeSetup.isVisible == true) {
                 Log.d("TESTING","ActivityList size "+activityListResult.size)
@@ -282,6 +268,13 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 //findNavController().navigate(R.id.host_fragment_properties)
             }
         }
+        arguments?.let {
+            if(it.containsKey(AppConstant.PROPERTY_ID)){
+                propertyId = it.getInt(AppConstant.PROPERTY_ID)
+                callingPropertyDetailApi(propertyId)
+            }
+        }
+
     }
 
      @RequiresApi(Build.VERSION_CODES.O)
@@ -300,6 +293,13 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
          Log.d("TESTING","sIZE IS "+resultActivityList.size)
 
+         var newGalleryList = mutableListOf<String>()
+
+         galleryList.forEach {
+             if(it.second){
+                 newGalleryList.add(it.first)
+             }
+         }
          val session : SessionManager = SessionManager(requireContext())
          requestBody.user_id = session.getUserId()!!
 
@@ -334,29 +334,59 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
          requestBody.available_day = days
          requestBody.available_from = fromHour
          requestBody.available_to = toHour
-         requestBody.images = galleryList
+         requestBody.images = newGalleryList
          requestBody.country = country
          requestBody.activities = resultActivityList
          requestBody.amenities = amenitiesListResult
          requestBody.add_ons = addOnList
 
          lifecycleScope.launch {
+
              LoadingUtils.showDialog(requireContext(),false)
-             viewModel.addProperty(requestBody).collect{
-                 when(it){
-                     is NetworkResult.Success ->{
-                         LoadingUtils.hideDialog()
-                         Toast.makeText(requireContext(),"Succesfully Uploaded",Toast.LENGTH_LONG).show()
+             if(propertyId ==-1) {
+                 viewModel.addProperty(requestBody).collect {
+                     when (it) {
+                         is NetworkResult.Success -> {
+                             LoadingUtils.hideDialog()
+
+                             ErrorDialog.showErrorDialog(requireContext(),"Property Updated Succesfully")
+                         }
+
+                         is NetworkResult.Error -> {
+                             LoadingUtils.hideDialog()
+                             Toast.makeText(
+                                 requireContext(),
+                                 it.message.toString(),
+                                 Toast.LENGTH_LONG
+                             ).show()
+                         }
+
+                         else -> {
+                             LoadingUtils.hideDialog()
+                         }
                      }
-                     is NetworkResult.Error->{
-                         LoadingUtils.hideDialog()
-                         Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
-                     }
-                     else ->{
-                         LoadingUtils.hideDialog()
+                 }
+             }else{
+                 requestBody.property_id = propertyId
+                 LoadingUtils.showDialog(requireContext(),true)
+                 viewModel.updateProperty(requestBody).collect{
+                     when(it){
+                         is NetworkResult.Success ->{
+                             LoadingUtils.hideDialog()
+                             ErrorDialog.showErrorDialog(requireContext(),it.data.toString())
+                         }
+                         is NetworkResult.Error ->{
+                             LoadingUtils.hideDialog()
+                              LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                         }
+                         is NetworkResult.Loading ->{
+
+                         }
                      }
                  }
              }
+
+
          }
      }
 
@@ -384,6 +414,432 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
+    private fun callingPropertyDetailApi(propertyId :Int){
+       LoadingUtils.showDialog(requireContext(),false)
+
+        lifecycleScope.launch {
+            viewModel.propertyDetail(propertyId).collect{
+                when(it){
+                    is NetworkResult.Success ->{
+                        LoadingUtils.hideDialog()
+                        detailsDataSetToUi(it.data)
+                    }
+                    is NetworkResult.Error ->{
+                        LoadingUtils.hideDialog()
+                    }
+                    else ->{
+
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun detailsDataSetToUi(data: GetPropertyDetail?) {
+        data?.let {
+            //first Screen Work
+            if(it.space_type.equals("entire_home")){
+                homeSelectTask()
+            }
+            else{
+                privateRoomSelectTask()
+            }
+            checkChangeWork(it)
+            propertySetDataToUi(it.property_size)
+            numberOfPeopleSetDataToUi(it.max_guest_count)
+            bedRoomSetDataToUi(it.bedroom_count)
+            BathRoomSetDataToUi(it.bathroom_count)
+            activitiesSetDataToUi(it.activities)
+            amenitiesAdapter(it.amenities)
+
+            //Second Screen Work
+            galleryLocationScreenTask(it)
+
+           // third Screen Work
+            availabilityScreenTask(it)
+        }
+    }
+
+    private fun availabilityScreenTask(data: GetPropertyDetail?){
+              data?.let {
+                  if(it.available_month.equals("00")){
+                      availableMonth ="00"
+                      anyMonth()
+                  }
+                  else if(it.available_month.equals("01")){
+                      availableMonth ="01"
+                      janSelect()
+                  }else if(it.available_month.equals("02")){
+                      availableMonth ="02"
+                      febSelect()
+                  }else if(it.available_month.equals("03")){
+                      availableMonth ="03"
+                      marchSelect()
+                  }else if(it.available_month.equals("04")){
+                      availableMonth ="04"
+                      aprilSelect()
+                  }else if(it.available_month.equals("05")){
+                      availableMonth ="05"
+                      maySelect()
+                  }else if(it.available_month.equals("06")){
+                      availableMonth ="06"
+                      juneSelect()
+                  }
+                  else if(it.available_month.equals("07")){
+                      availableMonth ="07"
+                      julySelect()
+                  }else if(it.available_month.equals("08")){
+                      availableMonth ="08"
+                      augustSelect()
+                  }else if(it.available_month.equals("09")){
+                      availableMonth ="09"
+                      septemberSelect()
+                  }else if(it.available_month.equals("10")){
+                      availableMonth ="10"
+                      octoberSelect()
+                  }else if(it.available_month.equals("11")){
+                      availableMonth ="11"
+                      novemberSelect()
+                  }else if(it.available_month.equals("12")){
+                       decSelect()
+                      availableMonth ="12"
+                  }
+
+                  binding.etType.setText(it.cleaning_fee)
+                  cleaningCharges = it.cleaning_fee
+
+                  if(it.available_day.equals("working_days")){
+                      onlyWorkingDay()
+                      days = "working_days"
+                  }
+                  else if(it.available_month.equals("all")){
+                      anyWeekSelect()
+                      days ="all"
+                  }else{
+                      onlyWeekend()
+                      days = "weekends"
+                  }
+                  var fromHour = DateManager(requireContext()).convert24HourToAMPM(it.available_from)
+                  var toHour = DateManager(requireContext()).convert24HourToAMPM(it.available_to)
+                  binding.tvHours.setText(fromHour)
+                  binding.tvHours1.setText(toHour)
+                 this.fromHour = it.available_from
+                  this.toHour = it.available_to
+
+                  var minHour = it.min_booking_hours.toDouble()
+                  minimumHourValue = minHour.toInt()
+                  binding.tvHoursSelect.setText(minimumHourValue.toString()+" hour minimum")
+
+                  var hPrice = it.hourly_rate.toDouble()
+                  hourlyPrice = hPrice.toInt()
+                  binding.tvHoursRupeesSelect.setText("$"+hourlyPrice.toString())
+
+
+                  var discountHour = it.bulk_discount_hour.toDouble()
+                  bulkDiscountHour= discountHour.toInt()
+                  binding.tvHoursBulkSelect.setText(bulkDiscountHour.toString()+" hour minimum")
+
+
+
+                  val disCountPrice = it.bulk_discount_rate.toDouble()
+                  val disPrice = disCountPrice.toInt()
+                  bulkDiscountPrice = disPrice
+                  binding.tvDiscountSelect.setText(bulkDiscountPrice.toString()+"%  Discount")
+
+
+
+                  addOnList = it.add_ons.toMutableList()
+                  addOnAdapter.updateAddOn(addOnList)
+              }
+    }
+
+
+    private fun galleryLocationScreenTask(data: GetPropertyDetail?){
+        binding.etTitle.setText(data?.title)
+        titleResult = data?.title.toString()
+        if(data?.latitude != null){
+            latitude = data.latitude
+        }
+        if(data?.longitude != null){
+            longitude = data.longitude
+
+        }
+        binding.etDescription.setText(data?.property_description)
+        descriptionResult = data?.property_description.toString()
+        data?.parking_rules?.let {
+            binding.etParkingRule.setText(it.toString())
+            parkingRule = it.toString()
+        }
+        data?.host_rules?.let {
+            binding.etHostRule.setText(it.toString())
+            hostRule = it.toString()
+        }
+
+        data?.street_address?.let {
+            binding.etAddress.setText(it.toString())
+            street = it.toString()
+        }
+        data?.city?.let {
+            binding.etCity.setText(it.toString())
+            city = it.toString()
+        }
+
+        data?.zip_code?.let {
+            binding.zipcode.setText(it.toString())
+            zipcode = it.toString()
+        }
+
+        data?.country?.let {
+            binding.country.setText(it.toString())
+            country = it
+        }
+
+        data?.state?.let {
+            binding.state.setText(it.toString())
+            state = it.toString()
+        }
+
+        if(!latitude.equals("00") && !longitude.equals("00")) {
+            Log.d("TESTING_LATITUDE",latitude.toString() +" "+longitude.toString())
+
+        }
+
+
+
+        val resultList = mutableListOf<Uri>()
+        galleryListId.clear()
+        data?.property_images?.forEach {
+            val str = AppConstant.BASE_URL + it.image_url
+            val uri = Uri.parse(str)
+            galleryListId.add(it.id)
+            galleryList.add(Pair<String,Boolean>(str,false))
+            Log.d("TESTING_URL", str.toString())
+            resultList.add(uri)
+        }
+        imageList = resultList
+
+        galleryAdapter.updateAdapter(resultList)
+
+    }
+
+    private fun checkChangeWork(data: GetPropertyDetail?){
+        data?.let {
+            if(it.is_instant_book == 1){
+                binding.listBookSwitch.isChecked = true
+                instantBookingCheck =1
+            }else{
+                binding.listBookSwitch.isChecked = false
+                instantBookingCheck =0
+            }
+
+            if(it.has_self_checkin ==1){
+                binding.selfCheckIn.isChecked = true
+                selfCheckIn =1
+            }else{
+                binding.selfCheckIn.isChecked = false
+                selfCheckIn =0
+            }
+
+            if(it.allows_pets ==1){
+                binding.allowPetsSwitch.isChecked = true
+                allowsPets =1
+            }else{
+                binding.allowPetsSwitch.isChecked = false
+                allowsPets =0
+            }
+
+            cancellationDays = it.cancellation_duration.toString()
+
+            if(cancellationDays.equals("24")){
+
+                binding.endHour.selectItemByIndex(0)
+            }
+            else if(cancellationDays.equals("72")){
+                binding.endHour.selectItemByIndex(1)
+
+            }
+            else if(cancellationDays.equals("168")){
+                binding.endHour.selectItemByIndex(2)
+            }
+            else if(cancellationDays.equals("360")){
+                binding.endHour.selectItemByIndex(3)
+            }
+            else if(cancellationDays.equals("720")){
+                binding.endHour.selectItemByIndex(4)
+            }
+        }
+
+
+
+    }
+
+    private fun amenitiesAdapter(list :List<String>){
+        val dataTmp = PrepareData.getOnlyAmenitiesList()
+        var count =0
+
+        amenitiesListResult.clear()
+
+        dataTmp.forEach {
+          if(list.contains(it.first)){
+              Log.d("TESTING_RESULT","Inside Truth")
+              val pair = Pair(it.first, true)
+              dataTmp.set(count,pair)
+              amenitiesListResult.add(it.first)
+          }
+            count++
+        }
+        amenitiesAdapter.updateAdapter(dataTmp)
+    }
+
+
+    private fun activitiesSetDataToUi(list :List<String>){
+        val dataTmp = PrepareData.getAmenitiesList()
+        val dataFirst = dataTmp.first
+        var count =0
+        activityListResult.clear()
+        dataFirst.forEach {
+           if(list.contains(it.name.trim())){
+               var newFormed = it
+               newFormed.checked = true
+               dataFirst.set(count,newFormed)
+               activityListResult.add(it.name)
+           }
+            count++
+        }
+        adapterActivity.updateAdapter(dataFirst.subList(0,3))
+        adapterActivity2.updateAdapter(dataFirst.subList(3,dataFirst.size))
+
+    }
+
+    private fun BathRoomSetDataToUi(count:Int){
+        if(count ==0){
+            bathRoomAnySelect()
+        }
+        else if(viewModel.numberSelectMap.containsKey(count)){
+            if(count ==1){
+                bathRoomFirstSelect()
+            }
+            else if(count ==2){
+                bathRoomSecondSelect()
+            }
+            else if(count ==3){
+                bathRoomThirdSelect()
+            }
+            else if(count ==4){
+                bathRoomFourthSelect()
+            }
+            else if(count ==5){
+                bathRoomFifthSelect()
+            }
+            else if(count ==7){
+                bathroom7Select()
+            }
+            else if(count ==8){
+                bathRoom8Select()
+            }
+        }
+
+        else{
+            binding.etBathroom.setText(count.toString())
+            bathroomCount = count
+        }
+    }
+
+    private fun bedRoomSetDataToUi(count: Int){
+        if(count==0){
+            bedRoomAnySelect()
+        }
+        else if(viewModel.numberSelectMap.containsKey(count)){
+            if(count==1){
+                bedRoomFirstSelect()
+            }
+            else if(count ==2){
+                bedRoomSecondSelect()
+            }
+            else if(count ==3){
+                bedRoomThirdSelect()
+            }
+            else if(count ==4){
+                bedRoomFourthSelect()
+            }else if(count ==5){
+                bedRoomFifthSelect()
+            }
+            else if(count ==7){
+                bedroom7Select()
+            }else if(count ==8) {
+                bedRoom8Select()
+            }
+        }
+        else{
+           binding.etBedRoomCount.setText(count.toString())
+            badroomCount = count
+        }
+    }
+
+    private fun numberOfPeopleSetDataToUi(count:Int){
+        if(count==6){
+            peopleCount =6
+            binding.peopleCount.setText(peopleCount.toString())
+        }
+        else if(viewModel.numberSelectMap.containsKey(count)){
+           if(count==1){
+              onePeopleCount()
+           }
+            else if(count ==2){
+                twoPeopleCount()
+           }
+            else if(count==3){
+                peopleCount3()
+           }
+            else if(count ==5){
+                peopleCount5()
+           }
+            else if(count == 7){
+                peopleCount7()
+           }
+        }
+        else if( count == 0 ){
+               anyPeopleCount()
+        }
+        else{
+            peopleCount =count
+            binding.peopleCount.setText(peopleCount.toString())
+        }
+
+    }
+
+
+    private fun propertySetDataToUi(propertySize: Int){
+        if(viewModel.propertyMap.containsKey(propertySize)){
+                if(propertySize == 250){
+                    propertyRoomFirstSelect()
+                } else if(propertySize == 350){
+                    propertySecondSelect()
+                }
+                else if(propertySize == 450){
+                    propertyThirdSelect()
+                }
+                 else if(propertySize == 550){
+                     propertyFourthSelect()
+                }else if(propertySize == 650){
+                    propertyFifthSelect()
+                }
+            else if(propertySize == 750){
+                property7Select()
+                }
+
+        }
+        else if(propertySize == 0){
+            propertyRoomAnySelect()
+        }
+        else{
+           binding.etPropertySize.setText(propertySize.toString())
+            this.propertySize = propertySize
+        }
+
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun checkingAvailabilityData() : Boolean{
 
@@ -395,11 +851,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             LoadingUtils.showErrorDialog(requireContext(),"Please Select Availability Hours")
             return false
           }
-          var value =DateManager(requireContext()).isFromTimeLessThanToTime(fromHour,toHour)
-           if(!value){
-            LoadingUtils.showErrorDialog(requireContext(),"The 'from' time ($fromHour) is NOT earlier than the 'to' time ($toHour).")
-            return false
-          }
+       //   var value =DateManager(requireContext()).isFromTimeLessThanToTime(fromHour,toHour)
+         //  if(!value){
+           // LoadingUtils.showErrorDialog(requireContext(),"The 'from' time ($fromHour) is NOT earlier than the 'to' time ($toHour).")
+           // return false
+
 
          return true
     }
@@ -510,15 +966,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
             override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
             }
-            override fun afterTextChanged(editable: Editable?) {
+            override fun afterTextChanged(editable: Editable?)   {
                 if (editable != null && editable.isNotEmpty()) {
                     street = editable.toString()
                 }
             }
         })
-
-
-
 
     }
 
@@ -528,10 +981,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images of location")
             return false
         }
+
         if(titleResult.isEmpty()){
             LoadingUtils.showErrorDialog(requireContext(),"Please Enter Title of Space")
             return false
         }
+
         if(descriptionResult.isEmpty()){
             LoadingUtils.showErrorDialog(requireContext(),"Please Enter Description of Space")
             return false
@@ -565,7 +1020,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     fun locationSelection() {
        binding.etCity.setOnClickListener {
-           binding.etCity.isEnabled = false
+
            val apiKey = getString(R.string.api_key_location)
            if (!Places.isInitialized()) {
                Places.initialize(context, apiKey)
@@ -583,7 +1038,6 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                        .build(activity)
                startActivityForResult(intent, 103)
            }
-
 
     }
 
@@ -710,7 +1164,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
                     imageList.add(0, imageUri)
                     if (bitmapString != null) {
-                        galleryList.add(0,bitmapString)
+                        galleryList.add(0,Pair<String,Boolean>(bitmapString,true))
                     }
                 }
                 galleryAdapter.updateAdapter(imageList)
@@ -739,7 +1193,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
                 latitude = latLng.latitude.toString()
                 longitude = latLng.longitude.toString()
-
+                val location = LatLng(latitude.toDouble(), longitude.toDouble())
+                // Move the camera to the specified location
+                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+                // Add a marker at that location
+                mMap?.addMarker(MarkerOptions().position(location))
                 fetchAddressDetails(latitude.toDouble(),longitude.toDouble())
                 binding.etCity.isEnabled = true
                 if (latitude == null) {
@@ -834,6 +1292,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.endHour.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.endHour.arrowAnimate = false
         binding.endHour.setItems(hoursList)
+
         binding.endHour.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newText ->
             if(newIndex ==0){
                 cancellationDays="24"
@@ -889,17 +1348,24 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
     }
 
+    private fun homeSelectTask(){
+        binding.tvHome.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvPrivateRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        spaceType = "entire_home"
+    }
+
+    private fun privateRoomSelectTask(){
+        binding.tvPrivateRoom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        spaceType = "private_room"
+    }
+
     private fun settingClickListenertoSpaceManagePlace() {
         binding.tvHome.setOnClickListener {
-            binding.tvHome.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvPrivateRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            spaceType = "entire_home"
-
+          homeSelectTask()
         }
         binding.tvPrivateRoom.setOnClickListener {
-            binding.tvPrivateRoom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            spaceType = "private_room"
+         privateRoomSelectTask()
         }
 
         binding.tvHomeSetup.setOnClickListener {
@@ -964,99 +1430,132 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
     }
 
+    private fun bathRoomAnySelect(){
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        bathroomCount =0
+    }
+
+    private fun bathRoomFirstSelect(){
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        bathroomCount =1
+    }
+
+    private fun bathRoomSecondSelect(){
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        bathroomCount =2
+    }
+
+    private fun bathRoomThirdSelect(){
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        bathroomCount =3
+    }
+
+    private fun bathRoomFourthSelect(){
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        bathroomCount = 4
+    }
+
+    private fun bathRoomFifthSelect(){
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        bathroomCount = 5
+    }
+
+    private fun bathroom7Select(){
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        bathroomCount =7
+    }
+
+    private fun bathRoom8Select(){
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        bathroomCount = 8
+    }
+
+
     private fun settingBackgroundTaskToBedroom() {
         binding.tvAnyBedrooms.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            bathroomCount =0
+            bathRoomAnySelect()
         }
 
         binding.tv1Bathrooms.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            bathroomCount =1
+            bathRoomFirstSelect()
         }
 
         binding.tv2Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            bathroomCount =2
+            bathRoomSecondSelect()
         }
         binding.tv3Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            bathroomCount =3
+            bathRoomThirdSelect()
         }
 
         binding.tv4Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            bathroomCount = 4
+            bathRoomFourthSelect()
         }
 
         binding.tv5Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            bathroomCount = 5
+            bathRoomFifthSelect()
         }
         binding.tv7Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            bathroomCount =7
+            bathroom7Select()
         }
 
         binding.tv8Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            bathroomCount = 8
+            bathRoom8Select()
         }
         binding.etBathroom.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
@@ -1111,103 +1610,139 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         })
     }
 
+
+    private fun bedRoomAnySelect(){
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        badroomCount =0
+    }
+
+
+    private fun bedRoomFirstSelect(){
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        badroomCount =1
+    }
+
+    private fun bedRoomSecondSelect(){
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        badroomCount =2
+    }
+
+    private fun bedRoomThirdSelect(){
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        badroomCount =3
+    }
+
+    private fun bedRoomFourthSelect(){
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        badroomCount =4
+    }
+
+    private fun bedRoomFifthSelect(){
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        badroomCount =5
+    }
+
+    private fun bedroom7Select(){
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        badroomCount =7
+    }
+
+    private fun bedRoom8Select(){
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        badroomCount =  8
+    }
+
+
+
     private fun settingBackgroundTaskToBathroom() {
 
         binding.tvAnyBedrooms.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            badroomCount =0
+            bedRoomAnySelect()
         }
 
         binding.tv1Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            badroomCount =1
+            bedRoomFirstSelect()
         }
 
         binding.tv2Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            badroomCount =2
+            bedRoomSecondSelect()
         }
 
         binding.tv3Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            badroomCount =3
+            bedRoomThirdSelect()
         }
 
         binding.tv4Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            badroomCount =4
+            bedRoomFourthSelect()
         }
 
         binding.tv5Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            badroomCount =5
+            bedRoomFifthSelect()
         }
 
 
         binding.tv7Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            badroomCount =7
+          bedroom7Select()
         }
 
         binding.tv8Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            badroomCount =  8
+            bedRoom8Select()
         }
 
         binding.etBedRoomCount.addTextChangedListener(object : TextWatcher {
@@ -1222,88 +1757,112 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 badroomCount = finalText.toInt()
             }
         })
+    }
 
 
+    private fun propertyRoomAnySelect(){
+        binding.tvAny.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        propertySize =0
+    }
+
+
+    private fun propertyRoomFirstSelect(){
+        binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv250.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        propertySize =250
 
     }
 
+    private fun propertySecondSelect(){
+        binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv350.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        propertySize = 350
+    }
+
+    private fun propertyThirdSelect(){
+        binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv450.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        propertySize = 450
+    }
+
+    private fun propertyFourthSelect(){
+        binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv550.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        propertySize = 550
+    }
+
+    private fun propertyFifthSelect(){
+        binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv650.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        propertySize = 650
+    }
+
+    private fun property7Select(){
+        binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv750.setBackgroundResource(R.drawable.bg_inner_select_white)
+        propertySize = 750
+    }
+
+
     private fun settingBackgroundTaskToProperty() {
-
         binding.tvAny.setOnClickListener {
-            binding.tvAny.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            propertySize =0
+            propertyRoomAnySelect()
         }
-
         binding.tv250.setOnClickListener {
-            binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv250.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            propertySize =250
+            propertyRoomFirstSelect()
         }
-
         binding.tv350.setOnClickListener {
-            binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv350.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            propertySize = 350
+            propertySecondSelect()
         }
-
-
         binding.tv450.setOnClickListener {
-            binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv450.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            propertySize = 450
+            propertyThirdSelect()
         }
         binding.tv550.setOnClickListener {
-            binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv550.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            propertySize = 550
+            propertyFourthSelect()
         }
-
         binding.tv650.setOnClickListener {
-            binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv650.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            propertySize = 650
+            propertyFifthSelect()
         }
         binding.tv750.setOnClickListener {
-            binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv750.setBackgroundResource(R.drawable.bg_inner_select_white)
-            propertySize = 750
+            property7Select()
         }
+
 
         binding.etPropertySize.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
@@ -1324,70 +1883,92 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+    }
 
+    private fun anyPeopleCount(){
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        peopleCount =0
+    }
+
+    private fun onePeopleCount(){
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        peopleCount =1
+    }
+
+    private fun twoPeopleCount(){
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        peopleCount = 2
+    }
+
+    private fun peopleCount3(){
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        peopleCount =3
+    }
+
+    private fun peopleCount5(){
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        peopleCount =5
+    }
+
+    private fun peopleCount7(){
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7.setBackgroundResource(R.drawable.bg_inner_select_white)
+        peopleCount =7
     }
 
     private fun settingBackgroundTaskToPeople() {
         //No of people
-
         binding.tvAnyPeople.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            peopleCount =0
+          anyPeopleCount()
         }
 
 
         binding.tv1.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            peopleCount =1
+            onePeopleCount()
         }
         binding.tv2.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            peopleCount = 2
+            twoPeopleCount()
         }
 
         binding.tv3.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            peopleCount =3
+         peopleCount3()
         }
 
         binding.tv5.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            peopleCount =5
+            peopleCount5()
         }
 
         binding.tv7.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_inner_select_white)
-            peopleCount =7
+          peopleCount7()
         }
 
         binding.peopleCount.addTextChangedListener(object : TextWatcher {
@@ -1411,7 +1992,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
     fun setUpRecyclerView() {
-        galleryAdapter = GallaryAdapter(imageList)
+        galleryAdapter = GallaryAdapter(imageList,requireContext())
 
 
         binding.recyclerGallery.layoutManager = GridLayoutManager(requireContext(), 3)
@@ -1467,9 +2048,9 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
-        val newYork = LatLng(40.7128, -74.0060)
-        mMap?.addMarker(MarkerOptions().position(newYork).title("Marker in New York"))
-        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
+//        val newYork = LatLng(40.7128, -74.0060)
+//        mMap?.addMarker(MarkerOptions().position(newYork).title("Marker in New York"))
+//        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
     }
 
     override fun onResume() {
@@ -1519,11 +2100,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     @SuppressLint("MissingInflatedId", "ClickableViewAccessibility")
     fun showAddOnDialog() {
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        val dialog = context?.let {
+            Dialog(it, R.style.BottomSheetDialog)
+        }
         dialog?.apply {
             setCancelable(true)
             setCanceledOnTouchOutside(true)
-
             setContentView(R.layout.dialog_add_new_add_on_host)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
@@ -1561,11 +2143,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                     addOnAdapter.notifyItemInserted(0)
                     dialog.dismiss()
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Please enter valid details",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(requireContext(), "Please enter valid details", Toast.LENGTH_SHORT).show()
                 }
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -1573,283 +2151,345 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
     }
 
+
+    private fun anyMonth(){
+        binding.tvAll.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        availableMonth="00"
+    }
+
+    private fun janSelect(){
+        availableMonth="01"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+    private fun febSelect(){
+        availableMonth="02"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+    }
+
+
+    private fun marchSelect(){
+        availableMonth="03"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+    private fun aprilSelect(){
+        availableMonth="04"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+    private fun maySelect(){
+        availableMonth="05"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+    private fun juneSelect(){
+        availableMonth="06"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_inner_select_white)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+    private fun julySelect(){
+        availableMonth="07"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+    private fun augustSelect(){
+        availableMonth="08"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+    private fun septemberSelect(){
+        availableMonth="09"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+    private fun octoberSelect(){
+        availableMonth="10"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+    private fun novemberSelect(){
+        availableMonth="11"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
     private fun settingBackgroundAllMonth() {
         //No of people
-
         binding.tvAll.setOnClickListener {
-            binding.tvAll.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            availableMonth="00"
+            anyMonth()
         }
 
 
         binding.tvJan.setOnClickListener {
-            availableMonth="01"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
+            janSelect()
         }
         binding.tvFeb.setOnClickListener {
-            availableMonth="02"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            febSelect()
         }
 
 
         binding.tvMar.setOnClickListener {
-            availableMonth="03"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+           marchSelect()
         }
 
         binding.tvApr.setOnClickListener {
-            availableMonth="04"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+           aprilSelect()
         }
 
         binding.tvMay.setOnClickListener {
-            availableMonth="05"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            maySelect()
         }
         binding.tvJun.setOnClickListener {
-            availableMonth="06"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_inner_select_white)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            juneSelect()
         }
         binding.tvJul.setOnClickListener {
-            availableMonth="07"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+           julySelect()
         }
         binding.tvAug.setOnClickListener {
-            availableMonth="08"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            augustSelect()
         }
         binding.tvSep.setOnClickListener {
-            availableMonth="09"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+          septemberSelect()
         }
         binding.tvOct.setOnClickListener {
-            availableMonth="10"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+            octoberSelect()
         }
         binding.tvNov.setOnClickListener {
-            availableMonth="11"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
+          novemberSelect()
         }
         binding.tvDec.setOnClickListener {
-            availableMonth="12"
-
-            binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-            binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvDec.setBackgroundResource(R.drawable.bg_inner_select_white)
+         decSelect()
         }
 
 
     }
 
+    private fun decSelect(){
+        availableMonth="12"
+
+        binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvMar.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvApr.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvMay.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvJun.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+        binding.tvJul.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvAug.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvSep.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvDec.setBackgroundResource(R.drawable.bg_inner_select_white)
+    }
+
+    private fun anyWeekSelect(){
+        binding.tvAllDays.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        days = "all"
+    }
+
+    fun onlyWorkingDay(){
+        binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        days = "working_days"
+    }
+     fun onlyWeekend(){
+        binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_inner_select_white)
+        days = "weekends"
+    }
+
     fun settingBackgroundAllWeek() {
 
         binding.tvAllDays.setOnClickListener {
-            binding.tvAllDays.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            days = "all"
+            anyWeekSelect()
         }
-
-
         binding.tvOnlyWorkingDays.setOnClickListener {
-            binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            days = "working_days"
+            onlyWorkingDay()
         }
         binding.tvOnlyWeekends.setOnClickListener {
-            binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_inner_select_white)
-            days = "weekends"
+            onlyWeekend()
         }
 
 

@@ -64,7 +64,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
+    implementation("com.github.bumptech.glide:glide:4.8.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.8.0")
     //sdp and ssp
     implementation(libs.ssp.android)
     implementation(libs.sdp.android)
