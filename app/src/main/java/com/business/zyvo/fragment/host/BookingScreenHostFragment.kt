@@ -14,14 +14,19 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 
 import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.adapter.host.HostBookingsAdapter
 import com.business.zyvo.model.MyBookingsModel
+import com.business.zyvo.session.SessionManager
 import com.business.zyvo.viewmodel.host.HostBookingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListener {
@@ -55,13 +60,38 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
             adapterMyBookingsAdapter!!.updateItem(list)
         })
 
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageFilter.setOnClickListener(this)
+        callingBookingData()
+    }
+
+    private fun callingBookingData(){
+        lifecycleScope.launch {
+            val session = SessionManager(requireContext())
+            var userId = session.getUserId()
+            if (userId != null) {
+               LoadingUtils.showDialog(requireContext(),false)
+                viewModel.load(userId).collect{
+                   when(it){
+                       is NetworkResult.Success ->{
+                           LoadingUtils.hideDialog()
+                           it.data?.let { it1 -> adapterMyBookingsAdapter?.updateItem(it1) }
+                       }
+                       is NetworkResult.Error ->{
+                           LoadingUtils.hideDialog()
+                       }
+                       else ->{
+
+                       }
+                   }
+                }
+            }
+
+        }
 
     }
 

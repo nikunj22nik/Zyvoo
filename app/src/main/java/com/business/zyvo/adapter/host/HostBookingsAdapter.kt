@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutHostBookingBinding
@@ -25,10 +26,6 @@ class HostBookingsAdapter (
         inner class MyBookingsViewHolder(var binding: LayoutHostBookingBinding) :
             RecyclerView.ViewHolder(binding.root) {
             fun bind(currentItem: MyBookingsModel) {
-
-
-
-
 
 
                 binding.textApporve.setOnClickListener {
@@ -51,10 +48,6 @@ class HostBookingsAdapter (
                     binding.llAcceptRequest.visibility = View.GONE
                 }
 
-
-
-
-
                 binding.rlDeclineRequestBtn.setOnClickListener {
                     binding.llApproveAndDecline.visibility = View.GONE
                     binding.llDeclineRequest.visibility = View.GONE
@@ -67,12 +60,12 @@ class HostBookingsAdapter (
                     binding.llAcceptRequest.visibility = View.GONE
                 }
 
-
-
-
-
                 textStatus = binding.textStatus
-                binding.imagePicture.setImageResource(currentItem.image)
+
+
+                Glide.with(context).load().into( binding.imagePicture)
+
+
 
 
                 when (list.get(position).textStatus) {

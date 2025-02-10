@@ -164,7 +164,9 @@ interface ZyvoApi {
     suspend fun addAboutme(@Field("user_id")user_id :String,
                               @Field("about_me")about_me :String) : Response<JsonObject>
 
-
+    @POST("get_host_booking_list")
+    @FormUrlEncoded
+    suspend fun getHostBookingList(@Field("user_id")userid:Int): Response<JsonObject>
 
 
 }

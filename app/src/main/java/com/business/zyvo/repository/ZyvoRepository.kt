@@ -6,10 +6,13 @@ import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.host.GetPropertyDetail
 
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
+import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
+import retrofit2.http.Field
+
 interface ZyvoRepository {
 
 
@@ -69,6 +72,8 @@ interface ZyvoRepository {
                               last_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun addAboutMe(userId: String,about_me: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun getHostBookingList(@Field("user_id")userid:Int) : Flow<NetworkResult<MutableList<MyBookingsModel>>>
 }
 
 

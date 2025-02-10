@@ -10,6 +10,7 @@ import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.host.GetPropertyDetail
 
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
+import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.remote.ZyvoApi
@@ -17,6 +18,7 @@ import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.createMultipartList
 import com.business.zyvo.utils.ErrorDialog.createRequestBody
 import com.business.zyvo.utils.ErrorDialog.toMultiPartFile
+import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -526,9 +528,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             Flow<NetworkResult<Pair<String, String>>> =flow {
         try {
             var multipart:  MultipartBody.Part? = null
-            if (completeProfileReq.bytes != null) {
-                multipart = toMultiPartFile("profile_image", "image.jpg", completeProfileReq.bytes)
-            }
+            if (completeProfileReq.bytes != null) { }
             val user_id: RequestBody = createRequestBody(completeProfileReq.user_id.toString())
             val first_name: RequestBody = createRequestBody(completeProfileReq.first_name)
             val last_name: RequestBody = createRequestBody(completeProfileReq.last_name)
@@ -584,11 +584,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.phoneVerification(
-                userId,
-                code,
-                number
-            ).apply {
+            api.phoneVerification(userId, code, number).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success")&& resp.get("success").asBoolean) {
@@ -620,16 +616,10 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         }
     }
 
-    override suspend fun emailVerification(
-        userId: String,
-        email: String
-    ): Flow<NetworkResult<Pair<String, String>>> = flow {
+    override suspend fun emailVerification(userId: String, email: String): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.emailVerification(
-                userId,
-                email,
-            ).apply {
+            api.emailVerification(userId, email).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success")&& resp.get("success").asBoolean) {
@@ -662,15 +652,11 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     }
 
     override suspend fun otpVerifyEmailVerification(
-        userId: String,
-        otp: String
+        userId: String, otp: String
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.otpVerifyEmailVerification(
-                userId,
-                otp,
-            ).apply {
+            api.otpVerifyEmailVerification(userId, otp).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success")&& resp.get("success").asBoolean) {
@@ -863,6 +849,48 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             emit(NetworkResult.Error(e.message!!))
         }
 
+    }
+
+    override suspend fun getHostBookingList(userid: Int): Flow<NetworkResult<MutableList<MyBookingsModel>>> = flow {
+        try {
+            api.getHostBookingList(userid).apply {
+                if(isSuccessful){
+                    body()?.let { resp ->
+                        if (resp.has("success")&& resp.get("success").asBoolean) {
+                            val arr = resp.get("data").asJsonArray
+                            val result = mutableListOf<MyBookingsModel>()
+                            arr.forEach {
+                                val model: MyBookingsModel = Gson().fromJson(it.toString(), MyBookingsModel::class.java)
+                                 result.add(model)
+                            }
+
+                                emit(NetworkResult.Success(result))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                }
+                else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        }catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
     }
 
     override suspend fun getPropertyList(userId:Int,latitude: Double?, longitude: Double?): Flow<NetworkResult<Pair<MutableList<HostMyPlacesModel>,String>>> = flow {

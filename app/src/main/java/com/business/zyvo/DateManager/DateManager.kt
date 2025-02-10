@@ -29,6 +29,13 @@ class DateManager(var context : Context) {
         "September", "October", "November", "December"
     )
 
+    fun getHoursAndMinutes(timeString: String): String {
+        // Split the time string using ':' as the separator
+        val timeParts = timeString.split(":")
+
+        // Return the hours and minutes part (ignoring seconds)
+        return "${timeParts[0]}:${timeParts[1]}"
+    }
 
     fun convert24HourToAMPM(time24: String): String {
         val inputFormat = SimpleDateFormat("HH:mm", Locale.getDefault())  // 24-hour format
