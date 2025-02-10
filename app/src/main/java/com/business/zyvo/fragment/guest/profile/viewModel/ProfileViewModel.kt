@@ -3,6 +3,7 @@ package com.business.zyvo.fragment.guest.profile.viewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.model.AddPaymentCardModel
 import com.business.zyvo.repository.ZyvoRepository
@@ -10,7 +11,9 @@ import com.business.zyvo.utils.NetworkMonitor
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +30,7 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
     init {
         loadPaymentDetail()
     }
+
 
 
     private fun loadPaymentDetail(){
@@ -99,6 +103,38 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
             Flow<NetworkResult<Pair<String,String>>> {
         return repository.addAboutMe(userId,
             about_me).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addLivePlace(userId: String,place_name: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addLivePlace(userId,
+            place_name).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun deleteLivePlace(userId: String,index: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.deleteLivePlace(userId,
+            index).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true

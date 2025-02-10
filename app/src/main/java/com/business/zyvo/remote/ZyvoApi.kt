@@ -103,11 +103,6 @@ interface ZyvoApi {
     @PUT("update_property_details")
     suspend fun updatePropertyDetail(@Body addProperty : PropertyDetailsSave) : Response<JsonObject>
 
-    @POST("add_live_place")
-    @FormUrlEncoded
-    suspend fun addLivePlace(@Field("user_id")user_id :String,
-                             @Field("place_name")place_name :String) : Response<JsonObject>
-
     @POST("complete_profile")
     @Multipart
     suspend fun completeProfile(@Part("user_id")user_id : RequestBody,
@@ -164,9 +159,23 @@ interface ZyvoApi {
     suspend fun addAboutme(@Field("user_id")user_id :String,
                               @Field("about_me")about_me :String) : Response<JsonObject>
 
+
     @POST("get_host_booking_list")
     @FormUrlEncoded
     suspend fun getHostBookingList(@Field("user_id")userid:Int): Response<JsonObject>
+
+    @POST("add_live_place")
+    @FormUrlEncoded
+    suspend fun addLivePlace(@Field("user_id")user_id :String,
+                           @Field("place_name")place_name :String) : Response<JsonObject>
+
+    @POST("delete_live_place")
+    @FormUrlEncoded
+    suspend fun deleteLivePlace(@Field("user_id")user_id :String,
+                             @Field("index")index :String) : Response<JsonObject>
+
+
+
 
 
 }

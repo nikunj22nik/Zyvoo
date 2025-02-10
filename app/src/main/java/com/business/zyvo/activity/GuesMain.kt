@@ -9,11 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.R
 import com.business.zyvo.databinding.ActivityGuesMainBinding
+import com.business.zyvo.utils.NetworkMonitorCheck
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GuesMain : AppCompatActivity() ,OnClickListener {
@@ -54,6 +58,7 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
                 else -> showBottomNavigation()
             }
         }
+        observeButtonState()
 }
 
     override fun onResume() {
@@ -199,6 +204,17 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
         }
     }
 
-
+    private fun observeButtonState() {
+        lifecycleScope.launch {
+            NetworkMonitorCheck._isConnected.collect { isConnected ->
+                if (!isConnected) {
+                    showErrorDialog(
+                        this@GuesMain,
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                }
+            }
+        }
+    }
 
 }
