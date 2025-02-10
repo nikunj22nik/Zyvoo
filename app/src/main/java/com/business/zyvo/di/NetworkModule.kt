@@ -34,6 +34,8 @@ object  NetworkModule {
         return  retrofit.client(okHttpClient).build().create(ZyvoApi::class.java)
     }
 
+
+
     @Provides
     @Singleton
     fun provideVoolayVooUserRepository(api:ZyvoApi): ZyvoRepository {

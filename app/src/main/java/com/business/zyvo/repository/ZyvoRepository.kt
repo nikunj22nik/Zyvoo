@@ -69,6 +69,11 @@ interface ZyvoRepository {
                               last_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun addAboutMe(userId: String,about_me: String) : Flow<NetworkResult<Pair<String,String>>>
+
+
+    suspend fun addLivePlace(userId: String,place_name: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteLivePlace(userId: String,index: String) : Flow<NetworkResult<Pair<String,String>>>
 }
 
 

@@ -49,6 +49,7 @@ import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.TAG
 import com.business.zyvo.utils.ErrorDialog.customDialog
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.ImagePopViewModel
 import com.business.zyvo.viewmodel.LoggedScreenViewModel
 import com.google.gson.Gson
@@ -227,38 +228,32 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
             textContinueButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textContinueButton)
-                lifecycleScope.launch {
-                    loggedScreenViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textContinueButton)
-                            } else {
-                                lifecycleScope.launch(Dispatchers.Main) {
-                                    if (etMobileNumber.text!!.isEmpty()) {
-                                        etMobileNumber.error = "Mobile required"
-                                        showErrorDialog(requireContext(),AppConstant.mobile)
-                                        toggleLoginButtonEnabled(true, textContinueButton)
-                                    } else {
-                                        val phoneNumber = etMobileNumber.text.toString()
-                                        Log.d(TAG, phoneNumber)
-                                        val countryCode =
-                                            countyCodePicker.selectedCountryCodeWithPlus
-                                        Log.d(TAG, countryCode)
-                                        submitLogin(
-                                            countryCode,
-                                            phoneNumber,
-                                            dialog,
-                                            textContinueButton,
-                                            checkBox
-                                        )
-                                    }
-                                }
-                            }
+                if (NetworkMonitorCheck._isConnected.value) {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        if (etMobileNumber.text!!.isEmpty()) {
+                            etMobileNumber.error = "Mobile required"
+                            showErrorDialog(requireContext(), AppConstant.mobile)
+                            toggleLoginButtonEnabled(true, textContinueButton)
+                        } else {
+                            val phoneNumber = etMobileNumber.text.toString()
+                            Log.d(TAG, phoneNumber)
+                            val countryCode =
+                                countyCodePicker.selectedCountryCodeWithPlus
+                            Log.d(TAG, countryCode)
+                            submitLogin(
+                                countryCode,
+                                phoneNumber,
+                                dialog,
+                                textContinueButton,
+                                checkBox
+                            )
                         }
+                    }
+                }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                    toggleLoginButtonEnabled(true, textContinueButton)
                 }
             }
             imageCross.setOnClickListener {
@@ -336,35 +331,31 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
             textContinueButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textContinueButton)
-                lifecycleScope.launch {
-                    loggedScreenViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textContinueButton)
-                            } else {
-                                lifecycleScope.launch(Dispatchers.Main) {
-                                    if (etMobileNumber.text!!.isEmpty()) {
-                                        etMobileNumber.error = "Mobile required"
-                                        showErrorDialog(requireContext(),AppConstant.mobile)
-                                        toggleLoginButtonEnabled(true, textContinueButton)
-                                    } else {
-                                        val phoneNumber = etMobileNumber.text.toString()
-                                        Log.d(TAG, phoneNumber)
-                                        val countryCode =
-                                            countyCodePicker.selectedCountryCodeWithPlus
-                                        Log.d(TAG, countryCode)
-                                        callingRegisterPhone(countryCode,phoneNumber,
-                                            dialog,textContinueButton,checkBox)
-                                    }
-                                }
-                            }
+                if (NetworkMonitorCheck._isConnected.value) {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        if (etMobileNumber.text!!.isEmpty()) {
+                            etMobileNumber.error = "Mobile required"
+                            showErrorDialog(requireContext(),AppConstant.mobile)
+                            toggleLoginButtonEnabled(true, textContinueButton)
+                        } else {
+                            val phoneNumber = etMobileNumber.text.toString()
+                            Log.d(TAG, phoneNumber)
+                            val countryCode =
+                                countyCodePicker.selectedCountryCodeWithPlus
+                            Log.d(TAG, countryCode)
+                            callingRegisterPhone(countryCode,phoneNumber,
+                                dialog,textContinueButton,checkBox)
                         }
+                    }
+                }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                    toggleLoginButtonEnabled(true, textContinueButton)
                 }
+
             }
+
 
             imageEmailSocial.setOnClickListener {
                 dialogRegisterEmail(context)
@@ -482,35 +473,29 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
             textLoginButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textLoginButton)
-                lifecycleScope.launch {
-                    loggedScreenViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textLoginButton)
-                            } else {
-                                lifecycleScope.launch(Dispatchers.Main) {
-                                    if (etLoginEmail.text!!.isEmpty()) {
-                                        etLoginEmail.error = "Email Address required"
-                                        showErrorDialog(requireContext(),AppConstant.email)
-                                        toggleLoginButtonEnabled(true, textLoginButton)
-                                    }else if (etLoginPassword.text!!.isEmpty()) {
-                                        etLoginPassword.error = "Password required"
-                                        showErrorDialog(requireContext(),AppConstant.password)
-                                        toggleLoginButtonEnabled(true, textLoginButton)
-                                    }
-                                    else {
-                                        loginEmail(etLoginEmail.text.toString(),
-                                            etLoginPassword.text.toString(),
-                                            dialog,textLoginButton,
-                                            checkBox)
-                                    }
-                                }
-                            }
+                if (NetworkMonitorCheck._isConnected.value) {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        if (etLoginEmail.text!!.isEmpty()) {
+                            etLoginEmail.error = "Email Address required"
+                            showErrorDialog(requireContext(),AppConstant.email)
+                            toggleLoginButtonEnabled(true, textLoginButton)
+                        }else if (etLoginPassword.text!!.isEmpty()) {
+                            etLoginPassword.error = "Password required"
+                            showErrorDialog(requireContext(),AppConstant.password)
+                            toggleLoginButtonEnabled(true, textLoginButton)
                         }
+                        else {
+                            loginEmail(etLoginEmail.text.toString(),
+                                etLoginPassword.text.toString(),
+                                dialog,textLoginButton,
+                                checkBox)
+                        }
+                    }
+                }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                    toggleLoginButtonEnabled(true, textLoginButton)
                 }
             }
             imageCross.setOnClickListener {
@@ -625,35 +610,29 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
             textCreateAccountButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textCreateAccountButton)
-                lifecycleScope.launch {
-                    loggedScreenViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textCreateAccountButton)
-                            } else {
-                                lifecycleScope.launch(Dispatchers.Main) {
-                                    if (etRegisterEmail.text!!.isEmpty()) {
-                                        etRegisterEmail.error = "Email Address required"
-                                        showErrorDialog(requireContext(),AppConstant.email)
-                                        toggleLoginButtonEnabled(true, textCreateAccountButton)
-                                    }else if (etRegisterPassword.text!!.isEmpty()) {
-                                        etRegisterPassword.error = "Password required"
-                                        showErrorDialog(requireContext(),AppConstant.password)
-                                        toggleLoginButtonEnabled(true, textCreateAccountButton)
-                                    }
-                                    else {
-                                        signupEmail(etRegisterEmail.text.toString(),
-                                            etRegisterPassword.text.toString(),
-                                            dialog,textCreateAccountButton,
-                                            checkBox)
-                                    }
-                                }
-                            }
+                if (NetworkMonitorCheck._isConnected.value) {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        if (etRegisterEmail.text!!.isEmpty()) {
+                            etRegisterEmail.error = "Email Address required"
+                            showErrorDialog(requireContext(),AppConstant.email)
+                            toggleLoginButtonEnabled(true, textCreateAccountButton)
+                        }else if (etRegisterPassword.text!!.isEmpty()) {
+                            etRegisterPassword.error = "Password required"
+                            showErrorDialog(requireContext(),AppConstant.password)
+                            toggleLoginButtonEnabled(true, textCreateAccountButton)
                         }
+                        else {
+                            signupEmail(etRegisterEmail.text.toString(),
+                                etRegisterPassword.text.toString(),
+                                dialog,textCreateAccountButton,
+                                checkBox)
+                        }
+                    }
+                }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                    toggleLoginButtonEnabled(true, textCreateAccountButton)
                 }
             }
 
@@ -723,28 +702,22 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
-                lifecycleScope.launch {
-                    loggedScreenViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textSubmitButton)
-                            } else {
-                                lifecycleScope.launch(Dispatchers.Main) {
-                                    if (etEmail.text!!.isEmpty()) {
-                                        etEmail.error = "Email Address required"
-                                        showErrorDialog(requireContext(),AppConstant.email)
-                                        toggleLoginButtonEnabled(true, textSubmitButton)
-                                    } else {
-                                        forgotPassword(etEmail.text.toString(),
-                                            dialog,textSubmitButton)
-                                    }
-                                }
-                            }
+                if (NetworkMonitorCheck._isConnected.value) {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        if (etEmail.text!!.isEmpty()) {
+                            etEmail.error = "Email Address required"
+                            showErrorDialog(requireContext(),AppConstant.email)
+                            toggleLoginButtonEnabled(true, textSubmitButton)
+                        } else {
+                            forgotPassword(etEmail.text.toString(),
+                                dialog,textSubmitButton)
                         }
+                    }
+                }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                    toggleLoginButtonEnabled(true, textSubmitButton)
                 }
 
             }
@@ -914,118 +887,105 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 if (text == "Your password has been changed\n successfully.") {
-                    lifecycleScope.launch {
-                        loggedScreenViewModel.networkMonitor.isConnected
-                            .distinctUntilChanged() // Ignore duplicate consecutive values
-                            .collect { isConn ->
-                                if (!isConn) {
-                                    showErrorDialog(requireContext(),
-                                        resources.getString(R.string.no_internet_dialog_msg))
-                                    toggleLoginButtonEnabled(true, textSubmitButton)
-                                } else {
-                                    lifecycleScope.launch(Dispatchers.Main) {
-                                        if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
-                                            findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
-                                            findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
-                                            findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
-                                            showErrorDialog(requireContext(),AppConstant.otp)
-                                            toggleLoginButtonEnabled(true, textSubmitButton)
-                                        } else {
-                                            val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
-                                                    findViewById<EditText>(R.id.otp_digit2).text.toString()+
-                                                    findViewById<EditText>(R.id.otp_digit3).text.toString()+
-                                                    findViewById<EditText>(R.id.otp_digit4).text.toString()
-                                            otpVerifyForgotPassword(userId,
-                                                otp,
-                                                dialog,
-                                                textSubmitButton,
-                                                text)
-                                        }
-                                    }
-                                }
+                    if (NetworkMonitorCheck._isConnected.value) {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
+                                findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
+                                findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
+                                findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
+                                showErrorDialog(requireContext(),AppConstant.otp)
+                                toggleLoginButtonEnabled(true, textSubmitButton)
+                            } else {
+                                val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
+                                        findViewById<EditText>(R.id.otp_digit2).text.toString()+
+                                        findViewById<EditText>(R.id.otp_digit3).text.toString()+
+                                        findViewById<EditText>(R.id.otp_digit4).text.toString()
+                                otpVerifyForgotPassword(userId,
+                                    otp,
+                                    dialog,
+                                    textSubmitButton,
+                                    text)
                             }
-                    }
-                } else if (text.equals("Login Successful")) {
-                    lifecycleScope.launch {
-                        loggedScreenViewModel.networkMonitor.isConnected
-                            .distinctUntilChanged() // Ignore duplicate consecutive values
-                            .collect { isConn ->
-                                if (!isConn) {
-                                    showErrorDialog(requireContext(),
-                                        resources.getString(R.string.no_internet_dialog_msg))
-                                    toggleLoginButtonEnabled(true, textSubmitButton)
-                                } else {
-                                    lifecycleScope.launch(Dispatchers.Main) {
-                                        if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
-                                            findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
-                                            findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
-                                            findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
-                                            showErrorDialog(requireContext(),AppConstant.otp)
-                                            toggleLoginButtonEnabled(true, textSubmitButton)
-                                        } else {
-                                            val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
-                                             findViewById<EditText>(R.id.otp_digit2).text.toString()+
-                                            findViewById<EditText>(R.id.otp_digit3).text.toString()+
-                                            findViewById<EditText>(R.id.otp_digit4).text.toString()
-                                            otpVerifyLoginPhone(
-                                                userId,
-                                                otp,
-                                                dialog,
-                                                textSubmitButton,
-                                                checkBox,
-                                                number)
-                                        }
-                                    }
-                                }
-                            }
-                    }
-                } else if (text.equals("Your account is registered \nsuccessfully")){
-                        lifecycleScope.launch {
-                            loggedScreenViewModel.networkMonitor.isConnected
-                                .distinctUntilChanged() // Ignore duplicate consecutive values
-                                .collect { isConn ->
-                                    if (!isConn) {
-                                        showErrorDialog(requireContext(),
-                                            resources.getString(R.string.no_internet_dialog_msg)
-                                        )
-                                        toggleLoginButtonEnabled(true, textSubmitButton)
-                                    } else {
-                                        lifecycleScope.launch(Dispatchers.Main) {
-                                            if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
-                                                findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
-                                                findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
-                                                findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
-                                                showErrorDialog(requireContext(),AppConstant.otp)
-                                                toggleLoginButtonEnabled(true, textSubmitButton)
-                                            } else {
-                                                val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
-                                                        findViewById<EditText>(R.id.otp_digit2).text.toString()+
-                                                        findViewById<EditText>(R.id.otp_digit3).text.toString()+
-                                                        findViewById<EditText>(R.id.otp_digit4).text.toString()
-                                                if (otpType.equals("RegisterPhone")) {
-                                                    otpVerifySignupPhone(
-                                                        userId, otp, dialog, textSubmitButton,
-                                                        checkBox,
-                                                        text,
-                                                        number,
-                                                        "mobile"
-                                                    )
-                                                }
-                                                if (otpType.equals("RegisterEmail")) {
-                                                    otpVerifySignupEmail( userId, otp, dialog, textSubmitButton,
-                                                        checkBox,
-                                                        text,
-                                                        number,
-                                                        "email"
-
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
                         }
+                    }else{
+                        showErrorDialog(requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                        toggleLoginButtonEnabled(true, textSubmitButton)
+                    }
 
+
+                } else if (text.equals("Login Successful")) {
+                    if (NetworkMonitorCheck._isConnected.value) {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
+                                findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
+                                findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
+                                findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
+                                showErrorDialog(requireContext(),AppConstant.otp)
+                                toggleLoginButtonEnabled(true, textSubmitButton)
+                            } else {
+                                val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
+                                        findViewById<EditText>(R.id.otp_digit2).text.toString()+
+                                        findViewById<EditText>(R.id.otp_digit3).text.toString()+
+                                        findViewById<EditText>(R.id.otp_digit4).text.toString()
+                                otpVerifyLoginPhone(
+                                    userId,
+                                    otp,
+                                    dialog,
+                                    textSubmitButton,
+                                    checkBox,
+                                    number)
+                            }
+                        }
+                    }else{
+                        showErrorDialog(requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                        toggleLoginButtonEnabled(true, textSubmitButton)
+                    }
+
+
+                } else if (text.equals("Your account is registered \nsuccessfully")){
+                    if (NetworkMonitorCheck._isConnected.value) {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
+                                findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
+                                findViewById<EditText>(R.id.otp_digit3).text.toString().isEmpty()&&
+                                findViewById<EditText>(R.id.otp_digit4).text.toString().isEmpty()) {
+                                showErrorDialog(requireContext(),AppConstant.otp)
+                                toggleLoginButtonEnabled(true, textSubmitButton)
+                            } else {
+                                val otp = findViewById<EditText>(R.id.otp_digit1).text.toString()+
+                                        findViewById<EditText>(R.id.otp_digit2).text.toString()+
+                                        findViewById<EditText>(R.id.otp_digit3).text.toString()+
+                                        findViewById<EditText>(R.id.otp_digit4).text.toString()
+                                if (otpType.equals("RegisterPhone")) {
+                                    otpVerifySignupPhone(
+                                        userId, otp, dialog, textSubmitButton,
+                                        checkBox,
+                                        text,
+                                        number,
+                                        "mobile"
+                                    )
+                                }
+                                if (otpType.equals("RegisterEmail")) {
+                                    otpVerifySignupEmail( userId, otp, dialog, textSubmitButton,
+                                        checkBox,
+                                        text,
+                                        number,
+                                        "email"
+
+                                    )
+                                }
+                            }
+                        }
+                    }else{
+                        showErrorDialog(requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                        toggleLoginButtonEnabled(true, textSubmitButton)
+                    }
                 }
             }
             textResend.setOnClickListener {
@@ -1034,61 +994,58 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 findViewById<EditText>(R.id.otp_digit3).text.clear()
                 findViewById<EditText>(R.id.otp_digit4).text.clear()
                 if (text.equals("Login Successful")) {
-                    lifecycleScope.launch {
-                        loggedScreenViewModel.networkMonitor.isConnected
-                            .distinctUntilChanged() // Ignore duplicate consecutive values
-                            .collect { isConn ->
-                                if (!isConn) {
-                                    showErrorDialog(requireContext(),
-                                        resources.getString(R.string.no_internet_dialog_msg)
-                                    )
-                                } else {
-                                    if (resendEnabled) {
-                                        resendLoginMobile(
-                                            code, number, rlResendLine,
-                                            incorrectOtp, textTimeResend, textResend
-                                        )
-                                    }
-                                }
-                            }
-                    }
-                }else if (text.equals("Your account is registered \nsuccessfully")){
-                    lifecycleScope.launch {
-                        loggedScreenViewModel.networkMonitor.isConnected
-                            .distinctUntilChanged() // Ignore duplicate consecutive values
-                            .collect { isConn ->
-                                if (!isConn) {
-                                    showErrorDialog(requireContext(),
-                                        resources.getString(R.string.no_internet_dialog_msg)
-                                    )
-                                } else {
-                                    if (otpType.equals("RegisterPhone")){
-                                        if (resendEnabled) {
-                                            resendRegisterMobile( code, number, rlResendLine,
-                                                incorrectOtp, textTimeResend, textResend)
-                                        }
-                                    }
-                                    if (otpType.equals("RegisterEmail")) {
-                                        if (resendEnabled) {
-                                            resendSignupEmail(
-                                                code, number,
-                                                rlResendLine,
-                                                incorrectOtp, textTimeResend, textResend
-                                            )
-                                        }
-                                    }
-
-                                }
-                            }
-                    }
-                }else if (text == "Your password has been changed\n successfully.") {
-                    if (resendEnabled) {
-                        resendForgotPassword(
-                            number,
-                            rlResendLine,
-                            incorrectOtp, textTimeResend, textResend
+                    if (NetworkMonitorCheck._isConnected.value) {
+                        if (resendEnabled) {
+                            resendLoginMobile(
+                                code, number, rlResendLine,
+                                incorrectOtp, textTimeResend, textResend
+                            )
+                        }
+                    }else{
+                        showErrorDialog(requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
                         )
                     }
+
+
+                }else if (text.equals("Your account is registered \nsuccessfully")){
+                    if (NetworkMonitorCheck._isConnected.value) {
+                        if (otpType.equals("RegisterPhone")){
+                            if (resendEnabled) {
+                                resendRegisterMobile( code, number, rlResendLine,
+                                    incorrectOtp, textTimeResend, textResend)
+                            }
+                        }
+                        if (otpType.equals("RegisterEmail")) {
+                            if (resendEnabled) {
+                                resendSignupEmail(
+                                    code, number,
+                                    rlResendLine,
+                                    incorrectOtp, textTimeResend, textResend
+                                )
+                            }
+                        }
+                    }else{
+                        showErrorDialog(requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    }
+
+                }else if (text == "Your password has been changed\n successfully.") {
+                    if (NetworkMonitorCheck._isConnected.value) {
+                        if (resendEnabled) {
+                            resendForgotPassword(
+                                number,
+                                rlResendLine,
+                                incorrectOtp, textTimeResend, textResend
+                            )
+                        }
+                    }else{
+                        showErrorDialog(requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    }
+
                 }
             }
             imageCross.setOnClickListener {
@@ -1555,38 +1512,31 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
-                lifecycleScope.launch {
-                    loggedScreenViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textSubmitButton)
-                            } else {
-                                lifecycleScope.launch(Dispatchers.Main) {
-                                    if (etPassword.text!!.isEmpty()) {
-                                        etPassword.error = "Password required"
-                                        showErrorDialog(requireContext(),AppConstant.password)
-                                        toggleLoginButtonEnabled(true, textSubmitButton)
-                                    }else  if (etConfirmPassword.text!!.isEmpty()) {
-                                        etConfirmPassword.error = "Confirm Password required"
-                                        showErrorDialog(requireContext(),AppConstant.conPassword)
-                                        toggleLoginButtonEnabled(true, textSubmitButton)
-                                    }
-                                    else {
-                                        resetPassword(userId,
-                                            etPassword.text.toString(),
-                                            etConfirmPassword.text.toString(),
-                                            dialog,textSubmitButton,text)
-                                    }
-                                }
-                            }
+                if (NetworkMonitorCheck._isConnected.value) {
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        if (etPassword.text!!.isEmpty()) {
+                            etPassword.error = "Password required"
+                            showErrorDialog(requireContext(),AppConstant.password)
+                            toggleLoginButtonEnabled(true, textSubmitButton)
+                        }else  if (etConfirmPassword.text!!.isEmpty()) {
+                            etConfirmPassword.error = "Confirm Password required"
+                            showErrorDialog(requireContext(),AppConstant.conPassword)
+                            toggleLoginButtonEnabled(true, textSubmitButton)
                         }
+                        else {
+                            resetPassword(userId,
+                                etPassword.text.toString(),
+                                etConfirmPassword.text.toString(),
+                                dialog,textSubmitButton,text)
+                        }
+                    }
+                }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                    toggleLoginButtonEnabled(true, textSubmitButton)
                 }
-            }
-
+                            }
             imageCross.setOnClickListener {
                 dismiss()
             }
