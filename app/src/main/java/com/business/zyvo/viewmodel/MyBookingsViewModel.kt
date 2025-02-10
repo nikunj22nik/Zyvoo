@@ -22,13 +22,13 @@ class MyBookingsViewModel @Inject constructor(private var repository: ZyvoReposi
     }
 
     private fun load() {
-       val listValue = mutableListOf<MyBookingsModel>(
-           MyBookingsModel(R.drawable.image_hotel,"Cabin in Peshastin", "Finished", "October 22, 2023"),
-           MyBookingsModel(R.drawable.image_hotel,"Cabin in Peshastin", "Confirmed", "October 22, 2023"),
-           MyBookingsModel(R.drawable.image_hotel,"Cabin in Peshastin", "Waiting payment", "October 22, 2023"),
-           MyBookingsModel(R.drawable.image_hotel,"Cabin in Peshastin", "Canceled", "October 22, 2023"),
-       )
+//       val listValue = mutableListOf<MyBookingsModel>(
+//           MyBookingsModel(R.drawable.image_hotel,"Cabin in Peshastin", "Finished", "October 22, 2023"),
+//           MyBookingsModel(R.drawable.image_hotel,"Cabin in Peshastin", "Confirmed", "October 22, 2023"),
+//           MyBookingsModel(R.drawable.image_hotel,"Cabin in Peshastin", "Waiting payment", "October 22, 2023"),
+//           MyBookingsModel(R.drawable.image_hotel,"Cabin in Peshastin", "Canceled", "October 22, 2023"),
+//       )
 
-        _list.value = listValue
+      //  _list.value = listValue
     }
 }

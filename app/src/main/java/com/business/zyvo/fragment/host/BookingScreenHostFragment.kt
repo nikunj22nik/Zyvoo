@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.business.zyvo.R
 import com.business.zyvo.databinding.FragmentBookingScreenHostBinding
-
-
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.fragment.app.viewModels

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutHostBookingBinding
@@ -62,25 +63,24 @@ class HostBookingsAdapter (
 
                 textStatus = binding.textStatus
 
-
-                Glide.with(context).load().into( binding.imagePicture)
-
+                Glide.with(context).load(AppConstant.BASE_URL+currentItem.guest_avatar).into( binding.imagePicture)
 
 
 
-                when (list.get(position).textStatus) {
-                    "Confirmed" -> binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
-                    "Waiting payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-                    "Canceled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
+
+                when (list.get(position).booking_status) {
+                    "confirmed" -> binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
+                    "waiting_payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                    "cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
                     else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback
                 }
                 binding.clMain.setOnClickListener{
                     listner.itemClick(position)
                 }
 
-                binding.textName.setText(currentItem.textName)
-                binding.textDate.setText(currentItem.textDate)
-                binding.textStatus.setText(currentItem.textStatus)
+                binding.textName.setText(currentItem.guest_name)
+                binding.textDate.setText(currentItem.booking_date)
+                binding.textStatus.setText(currentItem.booking_status)
             }
 
         }
