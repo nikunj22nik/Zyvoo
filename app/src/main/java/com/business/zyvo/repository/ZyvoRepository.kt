@@ -81,13 +81,10 @@ interface ZyvoRepository {
 
     suspend fun deleteLivePlace(userId: String,index: String) : Flow<NetworkResult<Pair<String,String>>>
 
-    suspend fun approveDeclineBooking(bookingId :Int, status :String, message :String) : Flow<NetworkResult<String>>
+    suspend fun approveDeclineBooking(bookingId :Int, status :String, message :String,reason :String) : Flow<NetworkResult<String>>
 
 
 
-    suspend fun getHostBookingList(@Field("user_id")userid:Int) : Flow<NetworkResult<MutableList<MyBookingsModel>>>
-
-    suspend fun addLivePlace(userId: String,place_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun deleteLivePlace(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
 

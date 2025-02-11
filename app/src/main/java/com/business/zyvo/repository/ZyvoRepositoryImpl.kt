@@ -42,8 +42,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         emit(NetworkResult.Loading())
         try {
             api.signUpPhoneNumber(
-                phoneNumber,
-                code,
+                phoneNumber, code,
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
@@ -851,43 +850,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
 
     }
 
-    override suspend fun addLivePlace(
-        userId: String,
-        place_name: String
-    ): Flow<NetworkResult<Pair<String, String>>> = flow {
-        try {
-            api.addLivePlace(userId,place_name).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(AppConstant.unKnownError))
-                    }
-                }
-            }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
-        }
-    }
+
 
     override suspend fun deleteLivePlace(
         userId: String,
@@ -1252,10 +1215,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     }
 
 
-    override suspend fun addLivePlace(
-        userId: String,
-        place_name: String
-    ): Flow<NetworkResult<Pair<String, String>>>  = flow{
+    override suspend fun addLivePlace(userId: String, place_name: String): Flow<NetworkResult<Pair<String, String>>>  = flow{
         try {
             api.addLivePlace(userId,place_name).apply {
                 if (isSuccessful) {
@@ -1332,10 +1292,11 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun approveDeclineBooking(
         bookingId: Int,
         status: String,
-        message: String
+        message: String,
+        reason :String
     ): Flow<NetworkResult<String>> = flow {
         try {
-            api.approveDeclineBooking(bookingId,status,message).apply {
+            api.approveDeclineBooking(bookingId,status,message,reason).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success")&& resp.get("success").asBoolean) {

@@ -68,11 +68,30 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     }
 
     private fun setUpAdapterMyBookings(){
-        lifecycleScope.launch {
-            adapterMyBookingsAdapter?.setOnItemClickListener(object : HostBookingsAdapter{
 
+            adapterMyBookingsAdapter?.setOnItemClickListener(object : HostBookingsAdapter.onItemClickListener{
+                override fun onItemClick(bookingId: Int, status: String, message: String, reason: String) {
+                    lifecycleScope.launch {
+                        LoadingUtils.showDialog(requireContext(),false)
+                        viewModel.approveDeclineBooking(bookingId, status, message, reason)
+                            .collect {
+                                when(it){
+                                    is NetworkResult.Success ->{
+                                        LoadingUtils.hideDialog()
+                                        LoadingUtils.showSuccessDialog(requireContext(),it.data.toString())
+                                    }
+                                    is NetworkResult.Error ->{
+                                        LoadingUtils.hideDialog()
+                                        LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                                    }
+                                    else ->{
+
+                                    }
+                                }
+                            }
+                    }
+                }
             })
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

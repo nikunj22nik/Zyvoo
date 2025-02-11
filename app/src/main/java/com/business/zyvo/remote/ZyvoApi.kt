@@ -180,15 +180,10 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun getHostBookingList(@Field("user_id")userid:Int): Response<JsonObject>
 
-    @POST("add_live_place")
-    @FormUrlEncoded
-    suspend fun addLivePlace(@Field("user_id")user_id :String,
-                           @Field("place_name")place_name :String) : Response<JsonObject>
 
     @POST("delete_live_place")
     @FormUrlEncoded
-    suspend fun deleteLivePlace(@Field("user_id")user_id :String,
-                             @Field("index")index :String) : Response<JsonObject>
+    suspend fun deleteLivePlace(@Field("user_id")user_id :String, @Field("index")index :String) : Response<JsonObject>
 
 
     @POST("approve_decline_booking")
@@ -196,7 +191,8 @@ interface ZyvoApi {
     suspend fun approveDeclineBooking(
         @Field("booking_id") bookingId :Int,
         @Field("status") status :String,
-        @Field("message") message :String
+        @Field("message") message :String,
+        @Field("declined_reason") declineReason :String
     ) : Response<JsonObject>
 
 

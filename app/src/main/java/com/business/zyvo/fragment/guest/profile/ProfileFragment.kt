@@ -139,12 +139,6 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 val intent = result.data
                 if (intent != null) {
 
-                    val place = Autocomplete.getPlaceFromIntent(intent)
-                    etSearch?.text = place.name
-                    addLivePlace(place.name)
-
-                    Log.i(TAG, "Place: ${place.name}, ${place.id}")
-
                     place = Autocomplete.getPlaceFromIntent(intent).name ?: "Unknown Location"
                     etSearch?.text = place
                     val newLocation = AddLocationModel(place)
@@ -158,6 +152,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 Log.i(TAG, "User canceled autocomplete")
             }
         }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -244,63 +239,30 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         }
     }
 
-    @SuppressLint("SuspiciousIndentation")
     private fun getUserProfile() {
-        if (NetworkMonitorCheck._isConnected.value) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                lifecycleScope.launch {
-                    profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
-                        when (it) {
-                            is NetworkResult.Success -> {
-                                var name = ""
-                                it.data?.let { resp ->
-                                    userProfile = Gson().fromJson(resp, UserProfile::class.java)
-                                    userProfile.let {
-                                        if (it?.first_name != null && it.last_name != null) {
-                                            name =
-                                                it.first_name + " " + it.last_name
-                                        }
-                                        it?.name = name
-                                        binding.user = it
-                                        if (it?.profile_image != null) {
-                                            // Load URL in your Activity or Fragment
-                                            /*Glide.with(requireContext())
-                                                .load(BuildConfig.MEDIA_URL + it.profile_image) // user.profile_image is the URL
-                                                .into(binding.imageProfilePicture)*/
-                                            Glide.with(requireContext())
-                                                .asBitmap() // Convert the image into Bitmap
-                                                .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
-                                                .into(object : SimpleTarget<Bitmap>() {
-                                                    override fun onResourceReady(resource: Bitmap,
-                                                                                 transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?) {
-                                                        // The 'resource' is the Bitmap
-                                                        // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
-                                                        binding.imageProfilePicture.setImageBitmap(resource)
-                                                        imageBytes = MediaUtils.bitmapToByteArray(resource)
-                                                        Log.d(ErrorDialog.TAG, imageBytes.toString())
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged() // Ignore duplicate consecutive values
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            var name = ""
+                                            it.data?.let { resp ->
+                                                userProfile = Gson().fromJson(resp, UserProfile::class.java)
+                                                userProfile.let {
+                                                    if (it?.first_name != null && it.last_name != null) {
+                                                        name =
+                                                            it.first_name + " " + it.last_name
                                                     }
-
-                                                })
-                                        }
-                                        if (it?.email_verified != null && it.email_verified == 1) {
-                                            binding.textConfirmNow.visibility = GONE
-                                            binding.textVerified.visibility =
-                                                View.VISIBLE
-                                        }
-                                        if (it?.phone_verified != null && it.phone_verified == 1) {
-                                            binding.textConfirmNow1.visibility = GONE
-                                            binding.textVerified1.visibility =
-                                                View.VISIBLE
-                                        }
-                                        if (it?.identity_verified != null && it.identity_verified == 1) {
-                                            binding.textConfirmNow2.visibility = GONE
-                                            binding.textVerified2.visibility =
-                                                View.VISIBLE
-                                        }
-                                        if (it?.where_live!=null && it.where_live.isNotEmpty()){
-                                            locationList = getObjectsFromNames(it.where_live) { name ->
-                                                AddLocationModel(name)  // Using the constructor of MyObject to create instances
-
                                                     it?.name = name
                                                     binding.user = it
                                                     if (it?.profile_image != null) {
@@ -340,7 +302,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                                                         }
                                                         val newLanguage = AddLocationModel(AppConstant.unknownLocation)
                                                         locationList.add(newLanguage)
-                                                       addLocationAdapter.updateLocations(locationList)
+                                                        addLocationAdapter.updateLocations(locationList)
                                                     }
                                                     if (it?.my_work!=null && it.my_work.isNotEmpty()){
                                                         workList = getObjectsFromNames(it.my_work) { name ->
@@ -375,47 +337,238 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                                                         addPetsAdapter.updatePets(petsList)
                                                     }
                                                 }
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
 
-                                            }
-                                            val newLanguage = AddLocationModel(AppConstant.unknownLocation)
-                                            locationList.add(newLanguage)
-                                            addLocationAdapter.updateLocations(locationList)
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
                                         }
-                                        if (it?.my_work!=null && it.my_work.isNotEmpty()){
-                                            workList = getObjectsFromNames(it.my_work) { name ->
-                                                AddWorkModel(name)  // Using the constructor of MyObject to create instances
-                                            }
-                                            val newLanguage = AddWorkModel(AppConstant.unknownLocation)
-                                            workList.add(newLanguage)
-                                            addWorkAdapter.updateWork(workList)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    /*@SuppressLint("SuspiciousIndentation")
+    private fun getUserProfile() {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                lifecycleScope.launch {
+                    profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                var name = ""
+                                it.data?.let { resp ->
+                                    userProfile = Gson().fromJson(resp, UserProfile::class.java)
+                                    userProfile.let {
+                                        if (it?.first_name != null && it.last_name != null) {
+                                            name =
+                                                it.first_name + " " + it.last_name
                                         }
-                                        if (it?.languages!=null && it.languages.isNotEmpty()){
-                                            languageList = getObjectsFromNames(it.languages) { name ->
-                                                AddLanguageModel(name)  // Using the constructor of MyObject to create instances
-                                            }
-                                            val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
-                                            languageList.add(newLanguage)
-                                            addLanguageSpeakAdapter.updateLanguage(languageList)
+                                        it?.name = name
+                                        binding.user = it
+                                        if (it?.profile_image != null) {
+                                            // Load URL in your Activity or Fragment
+                                            *//*Glide.with(requireContext())
+                                                .load(BuildConfig.MEDIA_URL + it.profile_image) // user.profile_image is the URL
+                                                .into(binding.imageProfilePicture)*//*
+                                            Glide.with(requireContext())
+                                                .asBitmap() // Convert the image into Bitmap
+                                                .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
+                                                .into(object : SimpleTarget<Bitmap>() {
+                                                    override fun onResourceReady(
+                                                        resource: Bitmap,
+                                                        transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                                                    ) {
+                                                        // The 'resource' is the Bitmap
+                                                        // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
+                                                        binding.imageProfilePicture.setImageBitmap(
+                                                            resource
+                                                        )
+                                                        imageBytes =
+                                                            MediaUtils.bitmapToByteArray(resource)
+                                                        Log.d(
+                                                            ErrorDialog.TAG,
+                                                            imageBytes.toString()
+                                                        )
+                                                    }
+
+                                                })
                                         }
-                                        if (it?.hobbies!=null && it.hobbies.isNotEmpty()){
-                                            hobbiesList = getObjectsFromNames(it.hobbies) { name ->
-                                                AddHobbiesModel(name)  // Using the constructor of MyObject to create instances
-                                            }
-                                            val newLanguage = AddHobbiesModel(AppConstant.unknownLocation)
+                                        if (it?.email_verified != null && it.email_verified == 1) {
+                                            binding.textConfirmNow.visibility = GONE
+                                            binding.textVerified.visibility =
+                                                View.VISIBLE
+                                        }
+                                        if (it?.phone_verified != null && it.phone_verified == 1) {
+                                            binding.textConfirmNow1.visibility = GONE
+                                            binding.textVerified1.visibility =
+                                                View.VISIBLE
+                                        }
+                                        if (it?.identity_verified != null && it.identity_verified == 1) {
+                                            binding.textConfirmNow2.visibility = GONE
+                                            binding.textVerified2.visibility =
+                                                View.VISIBLE
+                                        }
+                                        if (it?.where_live != null && it.where_live.isNotEmpty()) {
+                                            locationList =
+                                                getObjectsFromNames(it.where_live) { name ->
+                                                    AddLocationModel(name)  // Using the constructor of MyObject to create instances
+                                                }
+                                        }
+                                        *//* it?.name = name
+                                                    binding.user = it
+                                                    if (it?.profile_image != null) {
+
+                                                        Glide.with(requireContext())
+                                                            .asBitmap() // Convert the image into Bitmap
+                                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
+                                                            .into(object : SimpleTarget<Bitmap>() {
+                                                                override fun onResourceReady(
+                                                                    resource: Bitmap,
+                                                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                                                                ) {
+                                                                    // The 'resource' is the Bitmap
+                                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
+                                                                    binding.imageProfilePicture.setImageBitmap(
+                                                                        resource
+                                                                    )
+                                                                    imageBytes =
+                                                                        MediaUtils.bitmapToByteArray(
+                                                                            resource
+                                                                        )
+                                                                    Log.d(
+                                                                        ErrorDialog.TAG,
+                                                                        imageBytes.toString()
+                                                                    )
+                                                                }
+                                                            })
+                                                    }
+                                                    if (it?.email_verified != null && it.email_verified == 1) {
+                                                        binding.textConfirmNow.visibility = GONE
+                                                        binding.textVerified.visibility =
+                                                            View.VISIBLE
+                                                    }
+                                                    if (it?.phone_verified != null && it.phone_verified == 1) {
+                                                        binding.textConfirmNow1.visibility = GONE
+                                                        binding.textVerified1.visibility =
+                                                            View.VISIBLE
+                                                    }
+                                                    if (it?.identity_verified != null && it.identity_verified == 1) {
+                                                        binding.textConfirmNow2.visibility = GONE
+                                                        binding.textVerified2.visibility =
+                                                            View.VISIBLE
+                                                    }
+                                                    if (it?.where_live != null && it.where_live.isNotEmpty()) {
+                                                        locationList =
+                                                            getObjectsFromNames(it.where_live) { name ->
+                                                                AddLocationModel(name)  // Using the constructor of MyObject to create instances
+                                                            }
+                                                        val newLanguage =
+                                                            AddLocationModel(AppConstant.unknownLocation)
+                                                        locationList.add(newLanguage)
+                                                        addLocationAdapter.updateLocations(
+                                                            locationList
+                                                        )
+                                                    }
+                                                    if (it?.my_work != null && it.my_work.isNotEmpty()) {
+                                                        workList =
+                                                            getObjectsFromNames(it.my_work) { name ->
+                                                                AddWorkModel(name)  // Using the constructor of MyObject to create instances
+                                                            }
+                                                        val newLanguage =
+                                                            AddWorkModel(AppConstant.unknownLocation)
+                                                        workList.add(newLanguage)
+                                                        addWorkAdapter.updateWork(workList)
+                                                    }
+                                                    if (it?.languages != null && it.languages.isNotEmpty()) {
+                                                        languageList =
+                                                            getObjectsFromNames(it.languages) { name ->
+                                                                AddLanguageModel(name)  // Using the constructor of MyObject to create instances
+                                                            }
+                                                        val newLanguage =
+                                                            AddLanguageModel(AppConstant.unknownLocation)
+                                                        languageList.add(newLanguage)
+                                                        addLanguageSpeakAdapter.updateLanguage(
+                                                            languageList
+                                                        )
+                                                    }*//*
+                                        if (it?.hobbies != null && it.hobbies.isNotEmpty()) {
+                                            hobbiesList =
+                                                getObjectsFromNames(it.hobbies) { name ->
+                                                    AddHobbiesModel(name)  // Using the constructor of MyObject to create instances
+                                                }
+                                            val newLanguage =
+                                                AddHobbiesModel(AppConstant.unknownLocation)
                                             hobbiesList.add(newLanguage)
                                             addHobbiesAdapter.updateHobbies(hobbiesList)
                                         }
-                                        if (it?.pets!=null && it.pets.isNotEmpty()){
-                                            petsList = getObjectsFromNames(it.pets) { name ->
-                                                AddPetsModel(name)  // Using the constructor of MyObject to create instances
-                                            }
-                                            val newLanguage = AddPetsModel(AppConstant.unknownLocation)
+                                        if (it?.pets != null && it.pets.isNotEmpty()) {
+                                            petsList =
+                                                getObjectsFromNames(it.pets) { name ->
+                                                    AddPetsModel(name)  // Using the constructor of MyObject to create instances
+                                                }
+                                            val newLanguage =
+                                                AddPetsModel(AppConstant.unknownLocation)
+                                            petsList.add(newLanguage)
+                                            addPetsAdapter.updatePets(petsList)
+                                        }
+                                        *//*  val newLanguage = AddLocationModel(AppConstant.unknownLocation)
+                                            locationList.add(newLanguage)
+                                            addLocationAdapter.updateLocations(locationList)
+                                        }*//*
+                                        if (it?.my_work != null && it.my_work.isNotEmpty()) {
+                                            workList =
+                                                getObjectsFromNames(it.my_work) { name ->
+                                                    AddWorkModel(name)  // Using the constructor of MyObject to create instances
+                                                }
+                                            val newLanguage =
+                                                AddWorkModel(AppConstant.unknownLocation)
+                                            workList.add(newLanguage)
+                                            addWorkAdapter.updateWork(workList)
+                                        }
+                                        if (it?.languages != null && it.languages.isNotEmpty()) {
+                                            languageList =
+                                                getObjectsFromNames(it.languages) { name ->
+                                                    AddLanguageModel(name)  // Using the constructor of MyObject to create instances
+                                                }
+                                            val newLanguage =
+                                                AddLanguageModel(AppConstant.unknownLocation)
+                                            languageList.add(newLanguage)
+                                            addLanguageSpeakAdapter.updateLanguage(
+                                                languageList
+                                            )
+                                        }
+                                        if (it?.hobbies != null && it.hobbies.isNotEmpty()) {
+                                            hobbiesList =
+                                                getObjectsFromNames(it.hobbies) { name ->
+                                                    AddHobbiesModel(name)  // Using the constructor of MyObject to create instances
+                                                }
+                                            val newLanguage =
+                                                AddHobbiesModel(AppConstant.unknownLocation)
+                                            hobbiesList.add(newLanguage)
+                                            addHobbiesAdapter.updateHobbies(hobbiesList)
+                                        }
+                                        if (it?.pets != null && it.pets.isNotEmpty()) {
+                                            petsList =
+                                                getObjectsFromNames(it.pets) { name ->
+                                                    AddPetsModel(name)  // Using the constructor of MyObject to create instances
+                                                }
+                                            val newLanguage =
+                                                AddPetsModel(AppConstant.unknownLocation)
                                             petsList.add(newLanguage)
                                             addPetsAdapter.updatePets(petsList)
                                         }
                                     }
                                 }
                             }
+
                             is NetworkResult.Error -> {
                                 showErrorDialog(requireContext(), it.message!!)
                             }
@@ -426,14 +579,21 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                         }
                     }
                 }
+                //}
             }
-        }else{
-            showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg)
-            )
         }
+        else{
 
-    }
+                    showErrorDialog(
+                        requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                }
+
+                }
+      *//*      }
+        }
+    }*/
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -783,80 +943,6 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         }
     }
 
-    private fun addLivePlace(place: String) {
-        lifecycleScope.launch {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged() // Ignore duplicate consecutive values
-                .collect { isConn ->
-                    if (!isConn) {
-                        showErrorDialog(
-                            requireContext(),
-                            resources.getString(R.string.no_internet_dialog_msg)
-                        )
-                    } else {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            lifecycleScope.launch {
-                                profileViewModel.addLivePlaceApi(session?.getUserId().toString(),
-                                    place
-                                ).collect {
-                                    when (it) {
-                                        is NetworkResult.Success -> {
-                                            it.data?.let { resp ->
-                                                Toast.makeText(requireContext(),"item added successfully",Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-                                        is NetworkResult.Error -> {
-                                            showErrorDialog(requireContext(), it.message!!)
-                                        }
-                                        else -> {
-                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-        }
-    }
-
-    private fun deleteLivePlace(index: Int) {
-        lifecycleScope.launch {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConn ->
-                    if (!isConn) {
-                        showErrorDialog(
-                            requireContext(),
-                            resources.getString(R.string.no_internet_dialog_msg)
-                        )
-                    } else {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            lifecycleScope.launch {
-                                profileViewModel.deleteLivePlaceApi(session?.getUserId().toString(),
-                                    index
-                                ).collect {
-                                    when (it) {
-                                        is NetworkResult.Success -> {
-                                            it.data?.let { resp ->
-                                                Toast.makeText(requireContext(),"item removed",Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-                                        is NetworkResult.Error -> {
-                                            showErrorDialog(requireContext(), it.message!!)
-                                        }
-                                        else -> {
-                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-        }
-    }
-
     private fun addMyWork(work: String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
@@ -1041,8 +1127,8 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 lifecycleScope.launch {
-                    profileViewModel.deleteLivePlace(session?.getUserId().toString(),
-                        index.toString()).collect {
+                    profileViewModel.deleteLivePlaceApi(session?.getUserId().toString(),
+                        index).collect {
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
