@@ -83,12 +83,33 @@ interface ZyvoRepository {
 
     suspend fun approveDeclineBooking(bookingId :Int, status :String, message :String,reason :String) : Flow<NetworkResult<String>>
 
-
-
-
     suspend fun deleteLivePlace(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun addMyWork(userId: String,workName: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteMyWork(userId: String,work_index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addLanguage(userId: String,language: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteLanguage(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addHobbies(userId: String,hobbies_name: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteHobbies(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addPets(userId: String,pet_name: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deletePets(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addStreetAddress(userId: String,street_address: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addCity(userId: String,city: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addState(userId: String,state: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addZipCode(userId: String,zip_code: String) : Flow<NetworkResult<Pair<String,String>>>
+
+
 
 
 }
