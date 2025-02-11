@@ -108,6 +108,16 @@ interface ZyvoApi {
     suspend fun addLivePlace(@Field("user_id")user_id :String,
                              @Field("place_name")place_name :String) : Response<JsonObject>
 
+    @POST("delete_live_place")
+    @FormUrlEncoded
+    suspend fun deleteLivePlace(@Field("user_id")user_id :String,
+                             @Field("index")index :Int) : Response<JsonObject>
+
+    @POST("add_my_work")
+    @FormUrlEncoded
+    suspend fun addMyWork(@Field("user_id")user_id :String,
+                          @Field("work_name")work_name :String) : Response<JsonObject>
+
     @POST("complete_profile")
     @Multipart
     suspend fun completeProfile(@Part("user_id")user_id : RequestBody,

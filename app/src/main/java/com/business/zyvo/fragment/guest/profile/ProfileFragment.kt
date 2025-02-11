@@ -17,7 +17,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.transition.Transition
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -32,11 +31,11 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -79,14 +78,12 @@ import com.business.zyvo.fragment.guest.profile.viewModel.ProfileViewModel
 import com.business.zyvo.model.AddHobbiesModel
 import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.AddLocationModel
-import com.business.zyvo.model.AddPaymentCardModel
 import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.MediaUtils
-import com.business.zyvo.viewmodel.PaymentViewModel
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
@@ -121,6 +118,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private var etSearch: TextView? = null
     private var bottomSheetDialog: BottomSheetDialog? = null
     private var imageStatus = ""
+    private var place = ""
     private var isDropdownOpen = false
     lateinit  var navController :NavController
     private lateinit var otpDigits: Array<EditText>
@@ -136,25 +134,15 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 if (intent != null) {
-                    val place = Autocomplete.getPlaceFromIntent(intent)
-                    etSearch?.text = place.name
-                    val newLocation = AddLocationModel(place.name ?: "Unknown Location")
-
-                    // Add the new location to the list and notify the adapter
+                    place = Autocomplete.getPlaceFromIntent(intent).name ?: "Unknown Location"
+                    etSearch?.text = place
+                    val newLocation = AddLocationModel(place)
+                    addLivePlace(newLocation.name)
                     locationList.add(0, newLocation)
-
-                    //   Toast.makeText(requireContext(),"count${locationList.size}",Toast.LENGTH_LONG).show()
-
-//                    // Check if we need to hide the "Add New" button
-
-                    //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
                     addLocationAdapter.notifyItemInserted(0)
-                    //  addLocationAdapter.notifyItemInserted(locationList.size - 1)
-
-                    Log.i(TAG, "Place: ${place.name}, ${place.id}")
+                    Log.i(TAG, "Place: ${place}, $place")
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
-                // The user canceled the operation.
                 Log.i(TAG, "User canceled autocomplete")
             }
         }
@@ -231,7 +219,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private fun initView() {
         binding.imageEditAbout.setOnClickListener {
             binding.etAboutMe.isEnabled = true
-            binding.imageEditAbout.visibility = View.GONE
+            binding.imageEditAbout.visibility = GONE
             binding.imageAboutCheckedButton.visibility = View.VISIBLE
         }
 
@@ -272,10 +260,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                                                     it?.name = name
                                                     binding.user = it
                                                     if (it?.profile_image != null) {
-                                                        // Load URL in your Activity or Fragment
-                                                        /*Glide.with(requireContext())
-                                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // user.profile_image is the URL
-                                                            .into(binding.imageProfilePicture)*/
+
                                                         Glide.with(requireContext())
                                                             .asBitmap() // Convert the image into Bitmap
                                                             .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
@@ -550,8 +535,8 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
                 binding.textAddNewPaymentCard.visibility = View.VISIBLE
             } else if (!isDropdownOpen) {
-                binding.recyclerViewPaymentCardList.visibility = View.GONE
-                binding.textAddNewPaymentCard.visibility = View.GONE
+                binding.recyclerViewPaymentCardList.visibility = GONE
+                binding.textAddNewPaymentCard.visibility = GONE
 
             }
             binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
@@ -564,15 +549,16 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 if (obj == locationList.size - 1) {
                     startLocationPicker()
                 } else {
+                    deleteLivePlace(obj)
                     locationList.removeAt(obj)
                     addLocationAdapter.updateLocations(locationList)
+
                 }
             }
 
             "work" -> {
                 if (obj == workList.size - 1) {
-//                    var text: String = "Add Your Work Here"
-//                    dialogAddItem(text)
+                   addMyWork(workList.toString())
                 } else {
                     workList.removeAt(obj)
                     addWorkAdapter.updateWork(workList)
@@ -657,7 +643,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             }
 
             R.id.clHead -> {
-                binding.cvInfo.visibility = View.GONE
+                binding.cvInfo.visibility = GONE
             }
 
             R.id.imageEditPicture -> {
@@ -670,14 +656,14 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             R.id.textConfirmNow -> {
                dialogEmailVerification(requireContext(), null.toString())
-                binding.textConfirmNow.visibility = View.GONE
+                binding.textConfirmNow.visibility = GONE
                 binding.textVerified.visibility = View.VISIBLE
             }
 
             R.id.textConfirmNow1 -> {
 
                 dialogNumberVerification(requireContext())
-                binding.textConfirmNow1.visibility = View.GONE
+                binding.textConfirmNow1.visibility = GONE
                 binding.textVerified1.visibility = View.VISIBLE
             }
             R.id.imageEditEmail -> {
@@ -708,6 +694,117 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             R.id.textAddNewPaymentCard -> {
                 dialogAddCard()
             }
+        }
+    }
+
+    private fun addLivePlace(place: String) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged() // Ignore duplicate consecutive values
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addLivePlaceApi(session?.getUserId().toString(),
+                                    place
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"item added successfully",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun deleteLivePlace(index: Int) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.deleteLivePlaceApi(session?.getUserId().toString(),
+                                    index
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"item removed",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun addMyWork(work: String) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addMyWorkApi(session?.getUserId().toString(),
+                                    work
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"item added successfully",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
         }
     }
 
@@ -855,7 +952,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                                             it.data?.let { resp ->
                                                 binding.etAboutMe.isEnabled = false
                                                 binding.imageEditAbout.visibility = View.VISIBLE
-                                                binding.imageAboutCheckedButton.visibility = View.GONE
+                                                binding.imageAboutCheckedButton.visibility = GONE
                                                 showErrorDialog(requireContext(),resp.first)
                                                 userProfile?.about_me = about_me
                                                 binding.user = userProfile
@@ -1042,6 +1139,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         }}
 
 
+    @SuppressLint("MissingInflatedId")
     fun dialogLoginEmail(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -1058,7 +1156,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             var checkBox =  findViewById<CheckBox>(R.id.checkBox)
             var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
             var textForget =  findViewById<TextView>(R.id.textForget)
-            var etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
+            val etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
             var imgHidePass =  findViewById<ImageView>(R.id.imgHidePass)
             var imgShowPass =  findViewById<ImageView>(R.id.imgShowPass)
             var textDontHaveAnAccount =  findViewById<TextView>(R.id.textDontHaveAnAccount)
@@ -1094,12 +1192,12 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     fun eyeHideShow(imgHidePass:ImageView,imgShowPass:ImageView,etPassword:EditText){
         imgHidePass.setOnClickListener{
             imgShowPass.visibility = View.VISIBLE
-            imgHidePass.visibility = View.GONE
+            imgHidePass.visibility = GONE
             etPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
             etPassword.setSelection(etPassword.text.length)
         }
         imgShowPass.setOnClickListener {
-            imgShowPass.visibility = View.GONE
+            imgShowPass.visibility = GONE
             imgHidePass.visibility = View.VISIBLE
             etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
             etPassword.setSelection(etPassword.text.length)
@@ -1416,7 +1514,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             textResend.setOnClickListener{
                 if (resendEnabled) {
                     rlResendLine.visibility = View.VISIBLE
-                    incorrectOtp.visibility = View.GONE
+                    incorrectOtp.visibility = GONE
                     countDownTimer?.cancel()
                     startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
                     textResend.setTextColor(
@@ -1450,7 +1548,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             override fun onFinish() {
                 textTimeResend.text = "00:00"
-                rlResendLine.visibility = View.GONE
+                rlResendLine.visibility = GONE
                 if (textTimeResend.text == "00:00") {
                     resendEnabled = true
                     textResend.setTextColor(

@@ -15,8 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel  @Inject constructor(private val repository: ZyvoRepository,
-                                            val networkMonitor: NetworkMonitor
-) : ViewModel(){
+                                            val networkMonitor: NetworkMonitor) : ViewModel(){
 
     val isLoading = MutableLiveData<Boolean>()
 
@@ -77,11 +76,9 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         }
     }
 
-    suspend fun addUpdateName(userId: String,first_name: String,
-                              last_name: String):
+    suspend fun addUpdateName(userId: String,first_name: String, last_name: String):
             Flow<NetworkResult<Pair<String,String>>> {
-        return repository.addUpdateName(userId,first_name,
-            last_name).onEach {
+        return repository.addUpdateName(userId,first_name, last_name).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
@@ -99,6 +96,51 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
             Flow<NetworkResult<Pair<String,String>>> {
         return repository.addAboutMe(userId,
             about_me).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addLivePlaceApi(userId: String,place_name: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addLivePlace(userId,place_name ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun deleteLivePlaceApi(userId: String,index: Int):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.deleteLivePlace(userId,index ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addMyWorkApi(userId: String, workName: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addMyWork(userId,workName ).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true

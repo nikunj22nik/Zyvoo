@@ -68,12 +68,18 @@ interface ZyvoRepository {
 
     suspend fun uploadProfileImage(userId: String,bytes: ByteArray) : Flow<NetworkResult<Pair<String,String>>>
 
-    suspend fun addUpdateName(userId: String,first_name: String,
-                              last_name: String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun addUpdateName(userId: String,first_name: String, last_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun addAboutMe(userId: String,about_me: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun getHostBookingList(@Field("user_id")userid:Int) : Flow<NetworkResult<MutableList<MyBookingsModel>>>
+
+    suspend fun addLivePlace(userId: String,place_name: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteLivePlace(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addMyWork(userId: String,workName: String) : Flow<NetworkResult<Pair<String,String>>>
+
 }
 
 
