@@ -23,20 +23,22 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     val list: LiveData<MutableList<MyBookingsModel>> get() = _list
 
 
-    suspend fun load(userid: Int) : Flow<NetworkResult<MutableList<MyBookingsModel>>> = flow {
-        repository.getHostBookingList(userid).onEach {
+    suspend fun load(userid: Int) : Flow<NetworkResult<MutableList<MyBookingsModel>>>  {
+        return repository.getHostBookingList(userid).onEach {
             when (it) {
-                is NetworkResult.Success -> {
-
-                }
-                is NetworkResult.Error -> {
-
-                }
-                else -> {
-
-                }
+                is NetworkResult.Success -> { }
+                is NetworkResult.Error -> { }
+                else -> { }
             }
         }
     }
+
+     suspend fun approveDeclineBooking(
+        bookingId: Int,
+        status: String,
+        message: String
+    ) : Flow<NetworkResult<String>>{
+         return repository.approveDeclineBooking(bookingId,status, message).onEach {  }
+     }
 
 }

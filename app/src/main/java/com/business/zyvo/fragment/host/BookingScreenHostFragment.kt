@@ -1,6 +1,7 @@
 package com.business.zyvo.fragment.host
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,8 +11,8 @@ import com.business.zyvo.R
 import com.business.zyvo.databinding.FragmentBookingScreenHostBinding
 import android.widget.PopupWindow
 import android.widget.TextView
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.LoadingUtils
@@ -31,8 +32,11 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     private var _binding: FragmentBookingScreenHostBinding? = null
     private val binding get() = _binding!!
     private var adapterMyBookingsAdapter: HostBookingsAdapter? = null
-    private val viewModel: HostBookingsViewModel by viewModels()
+    private lateinit var viewModel: HostBookingsViewModel
     private var list: MutableList<MyBookingsModel> = mutableListOf()
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1000
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,16 +46,18 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentBookingScreenHostBinding.inflate(
-            LayoutInflater.from(requireContext()),
-            container,
+            LayoutInflater.from(requireContext()), container,
             false
         )
+        viewModel = ViewModelProvider(this)[HostBookingsViewModel::class.java]
+
         // Inflate the layout for this fragment
         adapterMyBookingsAdapter = HostBookingsAdapter(requireContext(), mutableListOf(), this)
+
+        setUpAdapterMyBookings()
+
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
 
         viewModel.list.observe(viewLifecycleOwner, Observer { list ->
@@ -61,6 +67,14 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         return binding.root
     }
 
+    private fun setUpAdapterMyBookings(){
+        lifecycleScope.launch {
+            adapterMyBookingsAdapter?.setOnItemClickListener(object : HostBookingsAdapter{
+
+            })
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageFilter.setOnClickListener(this)
@@ -68,10 +82,12 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     }
 
     private fun callingBookingData(){
+
         lifecycleScope.launch {
             val session = SessionManager(requireContext())
-            var userId = session.getUserId()
+            val userId = session.getUserId()
             if (userId != null) {
+                Log.d("TESTING_BOOKING","calling booking data "+userId)
                LoadingUtils.showDialog(requireContext(),false)
                 viewModel.load(userId).collect{
                    when(it){
@@ -88,9 +104,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                    }
                 }
             }
-
         }
-
     }
 
     private fun showPopupWindow(anchorView: View, position: Int) {
@@ -202,6 +216,8 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         super.onResume()
         (activity as? HostMainActivity)?.bookingResume()
     }
+
+
 
 
 }

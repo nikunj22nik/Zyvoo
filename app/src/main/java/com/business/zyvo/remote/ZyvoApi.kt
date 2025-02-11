@@ -175,6 +175,13 @@ interface ZyvoApi {
                              @Field("index")index :String) : Response<JsonObject>
 
 
+    @POST("approve_decline_booking")
+    @FormUrlEncoded
+    suspend fun approveDeclineBooking(
+        @Field("booking_id") bookingId :Int,
+        @Field("status") status :String,
+        @Field("message") message :String
+    ) : Response<JsonObject>
 
 
 

@@ -1,6 +1,7 @@
 package com.business.zyvo.fragment.host
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -9,7 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -31,6 +34,7 @@ import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.viewmodel.host.MyPlaceViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.util.jar.Manifest
 
 
 @AndroidEntryPoint
@@ -128,8 +132,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         binding.dataView.visibility = View.VISIBLE
         binding.noDataView.visibility = View.GONE
 
-
-
         var commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(), findNavController())
         if (commonAuthWorkUtils.isScreenLarge(requireContext())) {
             // Use GridLayoutManager for larger screens (e.g., tablets)
@@ -160,9 +162,10 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                    myPlaceApi(null,null)
                 }
             }
-        } else {
-            // Request permission if not granted
-            locationHelper.requestLocationPermission(requireActivity())
+        }
+        else {
+            permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+          //  locationHelper.requestLocationPermission(requireActivity())
         }
     }
 
@@ -213,24 +216,54 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     }
 
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        locationHelper.handlePermissionResult(requestCode, grantResults) {
-            // Proceed to get location if permission is granted
-            locationHelper.getLocationInBackground(lifecycle) { location ->
-                if (location != null) {
-                    val latitude = location.latitude
-                    val longitude = location.longitude
-                   myPlaceApi(latitude,longitude)
-                } else {
-                   myPlaceApi(null,null)
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // Permission granted, fetch location
+                locationHelper.getLocationInBackground(viewLifecycleOwner.lifecycle) { location ->
+                    if (location != null) {
+                        val latitude = location.latitude
+                        val longitude = location.longitude
+                        myPlaceApi(latitude, longitude)
+                    } else {
+                        myPlaceApi(null, null)
+                    }
                 }
+            } else {
+                // Permission denied, show a message
+                Toast.makeText(requireContext(), "Location permission is required.", Toast.LENGTH_SHORT).show()
             }
         }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+         Log.d("TESTING","Inside ZYVOO Permission")
+        // Check if the permission is granted
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // Permission granted, proceed with fetching the location
+
+
+            locationHelper.getLocationInBackground(lifecycle) { location ->
+                if (location != null) {
+                    Log.d("TESTING","Inside Location not null")
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    // Call the API with the location
+                    myPlaceApi(latitude, longitude)
+                } else {
+                    Log.d("TESTING","Inside Location  null")
+                    // Call the API with null values if location is null
+                    myPlaceApi(null, null)
+                }
+            }
+        } else {
+            // Permission denied, handle accordingly
+            // You can show a message to the user explaining that the permission is required
+            Toast.makeText(requireContext(), "Location permission denied", Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 
     private fun showPopupWindow(anchorView: View, position: Int) {

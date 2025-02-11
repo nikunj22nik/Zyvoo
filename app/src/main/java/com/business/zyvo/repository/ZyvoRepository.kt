@@ -74,12 +74,16 @@ interface ZyvoRepository {
     suspend fun addAboutMe(userId: String,about_me: String) : Flow<NetworkResult<Pair<String,String>>>
 
 
-    suspend fun getHostBookingList(@Field("user_id")userid:Int) : Flow<NetworkResult<MutableList<MyBookingsModel>>>
+    suspend fun getHostBookingList(userid:Int) : Flow<NetworkResult<MutableList<MyBookingsModel>>>
 
 
     suspend fun addLivePlace(userId: String,place_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun deleteLivePlace(userId: String,index: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun approveDeclineBooking(bookingId :Int, status :String, message :String) : Flow<NetworkResult<String>>
+
+
 
 }
 
