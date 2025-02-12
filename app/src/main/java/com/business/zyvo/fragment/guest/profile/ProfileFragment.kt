@@ -662,9 +662,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                     addPetsAdapter.updatePets(petsList)
                 }
             }
-
         }
-
     }
 
     override fun onClick(p0: View?) {
@@ -674,34 +672,24 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 bundle.putInt("privacy",0)
                 findNavController().navigate(R.id.privacyPolicyFragment,bundle)
             }
-
             R.id.textFaq->{
                 findNavController().navigate(R.id.frequentlyAskedQuestionsFragment)
             }
-
-
             R.id.rlPasswordTitle -> {
                 var text = "Your password has been changed successfully"
-               dialogNewPassword(requireContext(),text)
             }
-
             R.id.textTermServices -> {
                 findNavController().navigate(R.id.termsServicesFragment)
             }
-
             R.id.textLogout -> {
                 dialogLogOut(requireContext(), "LogOut")
             }
-
             R.id.textGiveFeedback -> {
                 findNavController().navigate(R.id.feedbackFragment)
             }
-
-
             R.id.textNotifications -> {
                 findNavController().navigate(R.id.notificationFragment)
             }
-
             R.id.textVisitHelpCenter -> {
                 var bundle = Bundle()
                 bundle.putString(AppConstant.type, AppConstant.Guest)
@@ -711,40 +699,32 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             R.id.imageInfoIcon -> {
                 binding.cvInfo.visibility = View.VISIBLE
             }
-
             R.id.clHead -> {
                 binding.cvInfo.visibility = GONE
             }
-
             R.id.imageEditPicture -> {
                 bottomSheetUploadImage()
             }
-
             R.id.imageEditName -> {
               dialogChangeName(requireContext())
             }
-
             R.id.textConfirmNow -> {
-               dialogEmailVerification(requireContext(), null.toString())
+                dialogEmailVerification(requireContext(), null.toString())
                 binding.textConfirmNow.visibility = GONE
                 binding.textVerified.visibility = View.VISIBLE
             }
 
             R.id.textConfirmNow1 -> {
-
                 dialogNumberVerification(requireContext())
                 binding.textConfirmNow1.visibility = GONE
                 binding.textVerified1.visibility = View.VISIBLE
             }
             R.id.imageEditEmail -> {
               dialogEmailVerification(requireContext(), null.toString())
-
             }
 
             R.id.imageEditPhoneNumber -> {
-
-              dialogNumberVerification(requireContext())
-
+                dialogNumberVerification(requireContext())
             }
 
             R.id.textSaveButton -> {

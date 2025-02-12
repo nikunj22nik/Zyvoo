@@ -32,6 +32,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListener {
+
     private var _binding: FragmentBookingScreenHostBinding? = null
     private val binding get() = _binding!!
     private var adapterMyBookingsAdapter: HostBookingsAdapter? = null
@@ -39,17 +40,16 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     private var list: MutableList<MyBookingsModel> = mutableListOf()
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
 
+        arguments?.let {
         }
+
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         _binding = FragmentBookingScreenHostBinding.inflate(
             LayoutInflater.from(requireContext()), container,
             false
@@ -64,8 +64,9 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
 
-        viewModel.list.observe(viewLifecycleOwner, Observer { list ->
-            adapterMyBookingsAdapter!!.updateItem(list)
+        viewModel.list.observe(viewLifecycleOwner, Observer { list1 ->
+            adapterMyBookingsAdapter!!.updateItem(list1)
+            list = list1
         })
 
         return binding.root
@@ -82,6 +83,10 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                                 when(it){
                                     is NetworkResult.Success ->{
                                         LoadingUtils.hideDialog()
+                                        if(status.equals("decline")){
+                                            list.removeAll { it.booking_id == bookingId }
+                                            adapterMyBookingsAdapter!!.updateItem(list)
+                                        }
                                         LoadingUtils.showSuccessDialog(requireContext(),it.data.toString())
                                     }
                                     is NetworkResult.Error ->{
@@ -117,6 +122,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                         when (it) {
                             is NetworkResult.Success -> {
                                 LoadingUtils.hideDialog()
+
                                 it.data?.let { it1 -> adapterMyBookingsAdapter?.updateItem(it1) }
                             }
 

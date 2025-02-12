@@ -1,6 +1,8 @@
 package com.business.zyvo.repository
 
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresExtension
 import com.business.zyvo.AppConstant
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.backgroundTask.AuthTask
@@ -19,6 +21,7 @@ import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.createMultipartList
 import com.business.zyvo.utils.ErrorDialog.createRequestBody
 import com.business.zyvo.utils.ErrorDialog.toMultiPartFile
+import com.business.zyvo.utils.ErrorHandler
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +34,7 @@ import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
+import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
 
@@ -1580,6 +1584,8 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     }
 
 
+
+
     override suspend fun deleteMyWork(
         userId: String,
         work_index: Int
@@ -1775,10 +1781,8 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         }
     }
 
-    override suspend fun addPets(
-        userId: String,
-        pet_name: String
-    ): Flow<NetworkResult<Pair<String, String>>> = flow {
+    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+    override suspend fun addPets(userId: String, pet_name: String): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.addPets(userId,pet_name).apply {
@@ -1793,24 +1797,12 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(AppConstant.unKnownError))
-                    }
+                         emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
                 }
             }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
+        }
+        catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
         }
     }
 
@@ -1931,7 +1923,14 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
+    }
+
+    override suspend fun propertyImageDelete(imageId: Int) {
 
     }
+
+
+
+
 
 }

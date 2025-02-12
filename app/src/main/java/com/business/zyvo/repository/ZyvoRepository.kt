@@ -12,6 +12,7 @@ import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 import retrofit2.http.Field
 
 interface ZyvoRepository {
@@ -122,6 +123,8 @@ interface ZyvoRepository {
     suspend fun feedback(user_id : String,type: String,details: String) : Flow<NetworkResult<String>>
 
     suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
+
+    suspend fun propertyImageDelete(imageId :Int) : Response<JsonObject>
 }
 
 

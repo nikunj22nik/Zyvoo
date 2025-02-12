@@ -1,6 +1,7 @@
 package com.business.zyvo.remote
 
 import com.business.zyvo.model.host.PropertyDetailsSave
+import com.google.android.gms.common.annotation.KeepForSdkWithMembers
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -268,4 +269,9 @@ interface ZyvoApi {
 
     @GET("get_faq")
     suspend fun getFaq():Response<JsonObject>
+
+
+    @POST("property_image_delete")
+    @FormUrlEncoded
+    suspend fun propertyImageDelete(@Field("image_id")imageId :Int) : Response<JsonObject>
 }
