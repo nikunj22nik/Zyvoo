@@ -160,5 +160,170 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
             }
         }
     }
+    suspend fun deleteMyWorkApi(userId: String,index: Int):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.deleteMyWork(userId,index ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addLanguageApi(userId: String,language: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addLanguage(userId,language ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun deleteLanguageApi(userId: String,index: Int):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.deleteLanguage(userId,index ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addHobbiesApi(userId: String,hobbies_name: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addHobbies(userId,hobbies_name ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun deleteHobbiesApi(userId: String,index: Int):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.deleteHobbies(userId,index ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addPetApi(userId: String,pet_name: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addPets(userId,pet_name ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun deletePetsApi(userId: String,index: Int):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.deletePets(userId,index ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addStreetAddressApi(userId: String,street_address: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addStreetAddress(userId,street_address ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addCityApi(userId: String,city: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addCity(userId,city ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addStateApi(userId: String,state: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addState(userId,state ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun addZipCodeApi(userId: String,zip_code: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.addZipCode(userId,zip_code ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
 
 }

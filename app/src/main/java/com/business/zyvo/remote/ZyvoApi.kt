@@ -118,6 +118,61 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun addMyWork(@Field("user_id")user_id :String,
                           @Field("work_name")work_name :String) : Response<JsonObject>
+    @POST("delete_my_work")
+    @FormUrlEncoded
+    suspend fun deleteMyWork(@Field("user_id")user_id :String,
+                             @Field("index")work_index :Int) : Response<JsonObject>
+
+    @POST("add_language")
+    @FormUrlEncoded
+    suspend fun addLanguage(@Field("user_id")user_id :String,
+                            @Field("language")language_name :String) : Response<JsonObject>
+
+    @POST("delete_language")
+    @FormUrlEncoded
+    suspend fun deleteLanguage(@Field("user_id")user_id :String,
+                               @Field("index")index :Int) : Response<JsonObject>
+
+    @POST("add_hobby")
+    @FormUrlEncoded
+    suspend fun addHobbies(@Field("user_id")user_id :String,
+                           @Field("language")hobbies_name :String) : Response<JsonObject>
+
+    @POST("delete_hobby")
+    @FormUrlEncoded
+    suspend fun deleteHobbies(@Field("user_id")user_id :String,
+                              @Field("index")index :Int) : Response<JsonObject>
+
+    @POST("add_pet")
+    @FormUrlEncoded
+    suspend fun addPets(@Field("user_id")user_id :String,
+                        @Field("language")pet_name :String) : Response<JsonObject>
+
+    @POST("delete_pet")
+    @FormUrlEncoded
+    suspend fun deletePets(@Field("user_id")user_id :String,
+                           @Field("index")index :Int) : Response<JsonObject>
+
+    @POST("add_street_address")
+    @FormUrlEncoded
+    suspend fun addStreetAddress(@Field("user_id")user_id :String,
+                                 @Field("street_address")street_address :String) : Response<JsonObject>
+
+    @POST("add_city")
+    @FormUrlEncoded
+    suspend fun addCity(@Field("user_id")user_id :String,
+                        @Field("city")city :String) : Response<JsonObject>
+
+    @POST("add_state")
+    @FormUrlEncoded
+    suspend fun addState(@Field("user_id")user_id :String,
+                        @Field("State")state :String) : Response<JsonObject>
+
+    @POST("add_zip_code")
+    @FormUrlEncoded
+    suspend fun addZipCode(@Field("user_id")user_id :String,
+                        @Field("ZipCode")zipCode :String) : Response<JsonObject>
+
 
     @POST("complete_profile")
     @Multipart
