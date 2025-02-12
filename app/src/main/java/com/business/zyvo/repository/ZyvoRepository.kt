@@ -6,6 +6,7 @@ import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.host.GetPropertyDetail
 
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
+import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
@@ -90,7 +91,13 @@ interface ZyvoRepository {
 
     suspend fun addMyWork(userId: String,workName: String) : Flow<NetworkResult<Pair<String,String>>>
 
+    suspend fun getPrivacyPolicy() : Flow<NetworkResult<String>>
 
+    suspend fun  getTermCondition() : Flow<NetworkResult<String>>
+
+    suspend fun feedback(user_id : String,type: String,details: String) : Flow<NetworkResult<String>>
+
+    suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
 }
 
 

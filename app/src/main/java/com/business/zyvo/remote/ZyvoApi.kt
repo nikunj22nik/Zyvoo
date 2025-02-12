@@ -8,6 +8,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 
@@ -196,5 +197,20 @@ interface ZyvoApi {
     ) : Response<JsonObject>
 
 
+    @GET("get_privacy_policy")
+    suspend fun getPrivacyPolicy():Response<JsonObject>
 
+    @GET("get_term_condition")
+    suspend fun getTermCondition():Response<JsonObject>
+
+    @POST("feedback")
+    @FormUrlEncoded
+    suspend fun feedback(
+        @Field("user_id") user_id : String,
+        @Field("type") type : String,
+        @Field("details") details : String
+    ) :Response<JsonObject>
+
+    @GET("get_faq")
+    suspend fun getFaq():Response<JsonObject>
 }
