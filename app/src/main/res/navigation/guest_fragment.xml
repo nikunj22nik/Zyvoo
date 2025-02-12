@@ -33,12 +33,12 @@
         tools:layout="@layout/fragment_browse_all_guides_article_open" />
     <fragment
         android:id="@+id/privacyPolicyFragment"
-        android:name="com.business.zyvo.fragment.guest.PrivacyPolicyFragment"
+        android:name="com.business.zyvo.fragment.guest.privacy.PrivacyPolicyFragment"
         android:label="fragment_privacy_policy"
         tools:layout="@layout/fragment_privacy_policy" />
     <fragment
         android:id="@+id/feedbackFragment"
-        android:name="com.business.zyvo.fragment.guest.FeedbackFragment"
+        android:name="com.business.zyvo.fragment.guest.feedback.FeedbackFragment"
         android:label="fragment_feedback"
         tools:layout="@layout/fragment_feedback" />
     <fragment
@@ -76,7 +76,7 @@
         tools:layout="@layout/fragment_listing" />
     <fragment
         android:id="@+id/termsServicesFragment"
-        android:name="com.business.zyvo.fragment.guest.TermsServicesFragment"
+        android:name="com.business.zyvo.fragment.guest.termAndCondition.TermsServicesFragment"
         android:label="fragment_terms_services"
         tools:layout="@layout/fragment_terms_services" />
     <fragment
@@ -110,6 +110,11 @@
         android:name="com.business.zyvo.fragment.both.ContactUsFragment"
         android:label="Contact Us"
         />
+    <fragment
+        android:id="@+id/frequentlyAskedQuestionsFragment"
+        android:name="com.business.zyvo.fragment.both.faq.FrequentlyAskedQuestionsFragment"
+        android:label="fragment_frequently_asked_questions"
+        tools:layout="@layout/fragment_frequently_asked_questions" />
 
 
 </navigation>

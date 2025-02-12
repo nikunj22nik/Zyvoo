@@ -6,10 +6,14 @@ import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.host.GetPropertyDetail
 
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
+import com.business.zyvo.fragment.both.faq.model.FaqModel
+import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
+import retrofit2.http.Field
+
 interface ZyvoRepository {
 
 
@@ -65,15 +69,59 @@ interface ZyvoRepository {
 
     suspend fun uploadProfileImage(userId: String,bytes: ByteArray) : Flow<NetworkResult<Pair<String,String>>>
 
-    suspend fun addUpdateName(userId: String,first_name: String,
-                              last_name: String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun addUpdateName(userId: String,first_name: String, last_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun addAboutMe(userId: String,about_me: String) : Flow<NetworkResult<Pair<String,String>>>
+
+
+
+    suspend fun getHostBookingList(userid:Int) : Flow<NetworkResult<MutableList<MyBookingsModel>>>
 
 
     suspend fun addLivePlace(userId: String,place_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun deleteLivePlace(userId: String,index: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun approveDeclineBooking(bookingId :Int, status :String, message :String,reason :String) : Flow<NetworkResult<String>>
+
+    suspend fun deleteLivePlace(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addMyWork(userId: String,workName: String) : Flow<NetworkResult<Pair<String,String>>>
+
+
+    suspend fun deleteMyWork(userId: String,work_index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addLanguage(userId: String,language: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteLanguage(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addHobbies(userId: String,hobbies_name: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteHobbies(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addPets(userId: String,pet_name: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deletePets(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addStreetAddress(userId: String,street_address: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addCity(userId: String,city: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addState(userId: String,state: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun addZipCode(userId: String,zip_code: String) : Flow<NetworkResult<Pair<String,String>>>
+
+
+
+
+    suspend fun getPrivacyPolicy() : Flow<NetworkResult<String>>
+
+
+    suspend fun  getTermCondition() : Flow<NetworkResult<String>>
+
+    suspend fun feedback(user_id : String,type: String,details: String) : Flow<NetworkResult<String>>
+
+    suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
 }
 
 

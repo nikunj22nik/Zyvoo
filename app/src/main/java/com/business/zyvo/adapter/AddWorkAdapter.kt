@@ -1,5 +1,6 @@
 package com.business.zyvo.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -65,10 +66,10 @@ class AddWorkAdapter(
     inner class WorkViewHolderFixed(var binding: LayoutAddTextBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("NotifyDataSetChanged")
         fun bind() {
             // Handle click on "Add New"
             binding.textAddNew.setOnClickListener {
-                // Show the input layout and hide the "Add New" button
                 binding.textAddNew.visibility = View.GONE
                 binding.rlEnterData.visibility = View.VISIBLE
             }

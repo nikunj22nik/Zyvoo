@@ -260,6 +260,16 @@ override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
 
     }
 
+    fun rotateToDot(dotIndex: Int) {
+        Log.d("TESTING","i AM HERE IN TOTA");
+        val angleOfDot = dotIndex * (360 / 12)  // Assuming 12 dots
+        val radian = Math.toRadians(angleOfDot.toDouble()).toFloat()
+
+        // Update either the start or end angle based on your need
+        currentStartRadian = radian
+
+        invalidate()  // Redraw the view
+    }
 
 
 

@@ -17,7 +17,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
-import android.transition.Transition
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -32,11 +31,11 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.databinding.BindingAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -79,15 +78,16 @@ import com.business.zyvo.fragment.guest.profile.viewModel.ProfileViewModel
 import com.business.zyvo.model.AddHobbiesModel
 import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.AddLocationModel
-import com.business.zyvo.model.AddPaymentCardModel
 import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.MediaUtils
+
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.PaymentViewModel
+
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
@@ -122,6 +122,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private var etSearch: TextView? = null
     private var bottomSheetDialog: BottomSheetDialog? = null
     private var imageStatus = ""
+    private var place = ""
     private var isDropdownOpen = false
     lateinit  var navController :NavController
     private lateinit var otpDigits: Array<EditText>
@@ -137,17 +138,21 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 if (intent != null) {
-                    val place = Autocomplete.getPlaceFromIntent(intent)
-                    etSearch?.text = place.name
-                    addLivePlace(place.name)
 
-                    Log.i(TAG, "Place: ${place.name}, ${place.id}")
+                    place = Autocomplete.getPlaceFromIntent(intent).name ?: "Unknown Location"
+                    etSearch?.text = place
+                    val newLocation = AddLocationModel(place)
+                    addLivePlace(newLocation.name)
+                    locationList.add(0, newLocation)
+                    addLocationAdapter.notifyItemInserted(0)
+                    Log.i(TAG, "Place: ${place}, $place")
+
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
-                // The user canceled the operation.
                 Log.i(TAG, "User canceled autocomplete")
             }
         }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -219,31 +224,92 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     }
 
     private fun initView() {
-        binding.imageEditAbout.setOnClickListener {
-            binding.etAboutMe.isEnabled = true
-            binding.imageEditAbout.visibility = View.GONE
-            binding.imageAboutCheckedButton.visibility = View.VISIBLE
-        }
+        binding.apply {
+            imageEditAbout.setOnClickListener {
+                etAboutMe.isEnabled = true
+                imageEditAbout.visibility = GONE
+                imageAboutCheckedButton.visibility = View.VISIBLE
+            }
 
-        binding.imageAboutCheckedButton.setOnClickListener {
-                if (binding.etAboutMe.text.isEmpty()){
+            imageAboutCheckedButton.setOnClickListener {
+                if (etAboutMe.text.isEmpty()){
                     showErrorDialog(requireContext(),AppConstant.aboutMe)
                 }else{
-                    updateAddAboutMe(binding.etAboutMe.text.toString())
+                    updateAddAboutMe(etAboutMe.text.toString())
                 }
+            }
+
+            imageEditStreetAddress.setOnClickListener {
+                streetEditText.isEnabled = true
+                imageEditStreetAddress.visibility = GONE
+                imageStreetCheckedButton.visibility = View.VISIBLE
+            }
+            imageStreetCheckedButton.setOnClickListener {
+                if (streetEditText.text.isEmpty()){
+                    showErrorDialog(requireContext(),"Street Cannot be Empty")
+                }else{
+                    updateAddStreetAddress(streetEditText.text.toString())
+                }
+                binding.streetEditText.isEnabled = false
+                binding.imageEditStreetAddress.visibility = View.VISIBLE
+                binding.imageStreetCheckedButton.visibility = GONE
+            }
+
+            imageEditCityAddress.setOnClickListener {
+                cityET.isEnabled = true
+                imageEditCityAddress.visibility = GONE
+                CityCheckedButton.visibility = View.VISIBLE
+            }
+            CityCheckedButton.setOnClickListener {
+                if (cityET.text.isEmpty()) {
+                    showErrorDialog(requireContext(), "City Cannot be Empty")
+                } else {
+                    updateCityAddress(cityET.text.toString())
+                }
+                binding.cityET.isEnabled = false
+                binding.imageEditCityAddress.visibility = View.VISIBLE
+                binding.CityCheckedButton.visibility = GONE
+            }
+
+            imageEditStateAddress.setOnClickListener {
+                stateEt.isEnabled = true
+                imageEditStateAddress.visibility = GONE
+                stateCheckedButton.visibility = View.VISIBLE
+            }
+            stateCheckedButton.setOnClickListener {
+                if (stateEt.text.isEmpty()) {
+                    showErrorDialog(requireContext(), "State Cannot be Empty")
+                } else {
+                    updateStateAddress(stateEt.text.toString())
+                }
+            }
+
+            imageEditZipAddress.setOnClickListener {
+                zipEt.isEnabled = true
+                imageEditZipAddress.visibility = GONE
+                zipCodeCheckedButton.visibility = View.VISIBLE
+            }
+            zipCodeCheckedButton.setOnClickListener {
+                if (zipEt.text.isEmpty()) {
+                    showErrorDialog(requireContext(), "Zip Cannot be Empty")
+                } else {
+                    updateZipCode(zipEt.text.toString())
+                }
+            }
+
         }
+
     }
 
-    @SuppressLint("SuspiciousIndentation")
     private fun getUserProfile() {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                lifecycleScope.launch {
-                    profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
+                profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
                         when (it) {
                             is NetworkResult.Success -> {
                                 var name = ""
                                 it.data?.let { resp ->
+                                    Log.d("TESTING_PROFILE","HERE IN A USER PROFILE ,"+resp.toString())
                                     userProfile = Gson().fromJson(resp, UserProfile::class.java)
                                     userProfile.let {
                                         if (it?.first_name != null && it.last_name != null) {
@@ -253,10 +319,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                                         it?.name = name
                                         binding.user = it
                                         if (it?.profile_image != null) {
-                                            // Load URL in your Activity or Fragment
-                                            /*Glide.with(requireContext())
-                                                .load(BuildConfig.MEDIA_URL + it.profile_image) // user.profile_image is the URL
-                                                .into(binding.imageProfilePicture)*/
+
                                             Glide.with(requireContext())
                                                 .asBitmap() // Convert the image into Bitmap
                                                 .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
@@ -338,14 +401,11 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                             }
                         }
                     }
-                }
             }
         }else{
-            showErrorDialog(requireContext(),
+            LoadingUtils.showErrorDialog(requireContext(),
                 resources.getString(R.string.no_internet_dialog_msg)
-            )
-        }
-
+            )}
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -355,6 +415,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         binding.rlPasswordTitle.setOnClickListener(this)
         binding.textTermServices.setOnClickListener(this)
         binding.textPrivacyPolicy.setOnClickListener(this)
+        binding.textFaq.setOnClickListener(this)
         binding.textLogout.setOnClickListener(this)
         binding.textNotifications.setOnClickListener(this)
         binding.textVisitHelpCenter.setOnClickListener(this)
@@ -465,7 +526,10 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             // Set the adapter for RecyclerView
             localeAdapter = LocaleAdapter(locales, object : OnLocalListener {
                 override fun onItemClick(local: String) {
+                    val languageName = Locale(local).getDisplayLanguage(Locale.ENGLISH)
                     val newLanguage = AddLanguageModel(local)
+                    Log.d("language", "onItemClick: $languageName")
+                    addLanguageApi(languageName)
 
                     // Add the new location to the list and notify the adapter
                     languageList.add(0, newLanguage)
@@ -534,8 +598,8 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
                 binding.textAddNewPaymentCard.visibility = View.VISIBLE
             } else if (!isDropdownOpen) {
-                binding.recyclerViewPaymentCardList.visibility = View.GONE
-                binding.textAddNewPaymentCard.visibility = View.GONE
+                binding.recyclerViewPaymentCardList.visibility = GONE
+                binding.textAddNewPaymentCard.visibility = GONE
 
             }
             binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
@@ -549,14 +613,17 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                     startLocationPicker()
                 } else {
                     deleteLivePlace(obj)
+                    locationList.removeAt(obj)
+                    addLocationAdapter.updateLocations(locationList)
+
                 }
             }
 
             "work" -> {
                 if (obj == workList.size - 1) {
-//                    var text: String = "Add Your Work Here"
-//                    dialogAddItem(text)
+//                   addMyWork()
                 } else {
+                    deleteMyWork(obj)
                     workList.removeAt(obj)
                     addWorkAdapter.updateWork(workList)
 
@@ -567,6 +634,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                 if (obj == languageList.size - 1) {
                     dialogSelectLanguage()
                 } else {
+                    deleteLanguageApi(obj)
                     languageList.removeAt(obj)
                     addLanguageSpeakAdapter.updateLanguage(languageList)
 
@@ -576,8 +644,9 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             "Hobbies" -> {
                 if (obj == hobbiesList.size - 1) {
-
+//                    addHobbiesApi()
                 } else {
+                    deleteHobbiesApi(obj)
                     hobbiesList.removeAt(obj)
                     addHobbiesAdapter.updateHobbies(hobbiesList)
 
@@ -586,12 +655,11 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             "Pets" -> {
                 if (obj == petsList.size - 1) {
-
-
+//                    addPetApi()
                 } else {
+                    deletePetsApi(obj)
                     petsList.removeAt(obj)
                     addPetsAdapter.updatePets(petsList)
-
                 }
             }
 
@@ -602,10 +670,15 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.textPrivacyPolicy -> {
-                var bundle = Bundle()
+                val bundle = Bundle()
                 bundle.putInt("privacy",0)
                 findNavController().navigate(R.id.privacyPolicyFragment,bundle)
             }
+
+            R.id.textFaq->{
+                findNavController().navigate(R.id.frequentlyAskedQuestionsFragment)
+            }
+
 
             R.id.rlPasswordTitle -> {
                 var text = "Your password has been changed successfully"
@@ -640,7 +713,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             }
 
             R.id.clHead -> {
-                binding.cvInfo.visibility = View.GONE
+                binding.cvInfo.visibility = GONE
             }
 
             R.id.imageEditPicture -> {
@@ -653,14 +726,14 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             R.id.textConfirmNow -> {
                dialogEmailVerification(requireContext(), null.toString())
-                binding.textConfirmNow.visibility = View.GONE
+                binding.textConfirmNow.visibility = GONE
                 binding.textVerified.visibility = View.VISIBLE
             }
 
             R.id.textConfirmNow1 -> {
 
                 dialogNumberVerification(requireContext())
-                binding.textConfirmNow1.visibility = View.GONE
+                binding.textConfirmNow1.visibility = GONE
                 binding.textVerified1.visibility = View.VISIBLE
             }
             R.id.imageEditEmail -> {
@@ -691,6 +764,193 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             R.id.textAddNewPaymentCard -> {
                 dialogAddCard()
             }
+        }
+    }
+
+    private fun updateAddStreetAddress(streetAddress: String) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addStreetAddressApi(session?.getUserId().toString(),
+                                    streetAddress
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"Street Address added successfully",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun updateCityAddress(cityName: String) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addCityApi(session?.getUserId().toString(),
+                                    cityName
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"City added successfully",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun updateStateAddress(stateName: String) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addStateApi(session?.getUserId().toString(),
+                                    stateName
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"State added successfully",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun updateZipCode(zipCode : String){
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addZipCodeApi(session?.getUserId().toString(),
+                                    zipCode
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"State added successfully",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+
+
+    private fun addMyWork(work: String) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addMyWorkApi(session?.getUserId().toString(),
+                                    work
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"item added successfully",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
         }
     }
 
@@ -814,43 +1074,10 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
                                 it.data?.let { resp ->
                                     binding.etAboutMe.isEnabled = false
                                     binding.imageEditAbout.visibility = View.VISIBLE
-                                    binding.imageAboutCheckedButton.visibility = View.GONE
+                                    binding.imageAboutCheckedButton.visibility = GONE
                                     showErrorDialog(requireContext(),resp.first)
                                     userProfile?.about_me = about_me
                                     binding.user = userProfile
-
-
-                                }
-                            }
-                            is NetworkResult.Error -> {
-                                showErrorDialog(requireContext(), it.message!!)
-                            }
-                            else -> {
-                                Log.v(ErrorDialog.TAG, "error::" + it.message)
-                            }
-                        }
-                    }
-                }
-            }
-        }else{
-            showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg)
-            )
-        }
-    }
-
-    private fun deleteLivePlace(index: Int) {
-        if (NetworkMonitorCheck._isConnected.value) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                lifecycleScope.launch {
-                    profileViewModel.deleteLivePlace(session?.getUserId().toString(),
-                        index.toString()).collect {
-                        when (it) {
-                            is NetworkResult.Success -> {
-                                it.data?.let { resp ->
-                                    showErrorDialog(requireContext(),resp.first)
-                                    locationList.removeAt(index)
-                                    addLocationAdapter.updateLocations(locationList)
                                 }
                             }
                             is NetworkResult.Error -> {
@@ -908,8 +1135,301 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         }
     }
 
+    private fun deleteLivePlace(index: Int) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.deleteLivePlaceApi(session?.getUserId().toString(),
+                                    index
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"item removed",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
 
+    private fun deleteMyWork(index: Int) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.deleteMyWorkApi(session?.getUserId().toString(),
+                                    index
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"item removed",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
 
+    private fun addLanguageApi(languageName: String) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addLanguageApi(session?.getUserId().toString(),
+                                    languageName
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"Language added!",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun deleteLanguageApi(index: Int) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.deleteLanguageApi(session?.getUserId().toString(),
+                                    index
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"Language added!",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun addHobbiesApi(hobbies:String) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addHobbiesApi(session?.getUserId().toString(),
+                                    hobbies
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"Hobbie added!",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun deleteHobbiesApi(index: Int) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.deleteHobbiesApi(session?.getUserId().toString(),
+                                    index
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"Hobbie removed!",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun addPetApi(petName : String){
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.addPetApi(session?.getUserId().toString(),
+                                    petName
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"Hobbie added!",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun deletePetsApi(index: Int) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                profileViewModel.deletePetsApi(session?.getUserId().toString(),
+                                    index
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let { resp ->
+                                                Toast.makeText(requireContext(),"Pet removed!",Toast.LENGTH_SHORT).show()
+                                            }
+                                        }
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
 
 
     private fun profileImageGalleryChooser() {
@@ -1074,6 +1594,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         }}
 
 
+    @SuppressLint("MissingInflatedId")
     fun dialogLoginEmail(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -1090,7 +1611,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             var checkBox =  findViewById<CheckBox>(R.id.checkBox)
             var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
             var textForget =  findViewById<TextView>(R.id.textForget)
-            var etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
+            val etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
             var imgHidePass =  findViewById<ImageView>(R.id.imgHidePass)
             var imgShowPass =  findViewById<ImageView>(R.id.imgShowPass)
             var textDontHaveAnAccount =  findViewById<TextView>(R.id.textDontHaveAnAccount)
@@ -1126,12 +1647,12 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     fun eyeHideShow(imgHidePass:ImageView,imgShowPass:ImageView,etPassword:EditText){
         imgHidePass.setOnClickListener{
             imgShowPass.visibility = View.VISIBLE
-            imgHidePass.visibility = View.GONE
+            imgHidePass.visibility = GONE
             etPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
             etPassword.setSelection(etPassword.text.length)
         }
         imgShowPass.setOnClickListener {
-            imgShowPass.visibility = View.GONE
+            imgShowPass.visibility = GONE
             imgHidePass.visibility = View.VISIBLE
             etPassword.transformationMethod = PasswordTransformationMethod.getInstance()
             etPassword.setSelection(etPassword.text.length)
@@ -1448,7 +1969,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             textResend.setOnClickListener{
                 if (resendEnabled) {
                     rlResendLine.visibility = View.VISIBLE
-                    incorrectOtp.visibility = View.GONE
+                    incorrectOtp.visibility = GONE
                     countDownTimer?.cancel()
                     startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
                     textResend.setTextColor(
@@ -1482,7 +2003,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
             override fun onFinish() {
                 textTimeResend.text = "00:00"
-                rlResendLine.visibility = View.GONE
+                rlResendLine.visibility = GONE
                 if (textTimeResend.text == "00:00") {
                     resendEnabled = true
                     textResend.setTextColor(

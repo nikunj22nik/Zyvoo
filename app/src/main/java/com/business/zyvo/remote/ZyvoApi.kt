@@ -8,6 +8,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 
@@ -103,6 +104,77 @@ interface ZyvoApi {
     @PUT("update_property_details")
     suspend fun updatePropertyDetail(@Body addProperty : PropertyDetailsSave) : Response<JsonObject>
 
+
+    @POST("add_live_place")
+    @FormUrlEncoded
+    suspend fun addLivePlace(@Field("user_id")user_id :String,
+                             @Field("place_name")place_name :String) : Response<JsonObject>
+
+    @POST("delete_live_place")
+    @FormUrlEncoded
+    suspend fun deleteLivePlace(@Field("user_id")user_id :String,
+                             @Field("index")index :Int) : Response<JsonObject>
+
+    @POST("add_my_work")
+    @FormUrlEncoded
+    suspend fun addMyWork(@Field("user_id")user_id :String,
+                          @Field("work_name")work_name :String) : Response<JsonObject>
+    @POST("delete_my_work")
+    @FormUrlEncoded
+    suspend fun deleteMyWork(@Field("user_id")user_id :String,
+                             @Field("index")work_index :Int) : Response<JsonObject>
+
+    @POST("add_language")
+    @FormUrlEncoded
+    suspend fun addLanguage(@Field("user_id")user_id :String,
+                            @Field("language")language_name :String) : Response<JsonObject>
+
+    @POST("delete_language")
+    @FormUrlEncoded
+    suspend fun deleteLanguage(@Field("user_id")user_id :String,
+                               @Field("index")index :Int) : Response<JsonObject>
+
+    @POST("add_hobby")
+    @FormUrlEncoded
+    suspend fun addHobbies(@Field("user_id")user_id :String,
+                           @Field("language")hobbies_name :String) : Response<JsonObject>
+
+    @POST("delete_hobby")
+    @FormUrlEncoded
+    suspend fun deleteHobbies(@Field("user_id")user_id :String,
+                              @Field("index")index :Int) : Response<JsonObject>
+
+    @POST("add_pet")
+    @FormUrlEncoded
+    suspend fun addPets(@Field("user_id")user_id :String,
+                        @Field("language")pet_name :String) : Response<JsonObject>
+
+    @POST("delete_pet")
+    @FormUrlEncoded
+    suspend fun deletePets(@Field("user_id")user_id :String,
+                           @Field("index")index :Int) : Response<JsonObject>
+
+    @POST("add_street_address")
+    @FormUrlEncoded
+    suspend fun addStreetAddress(@Field("user_id")user_id :String,
+                                 @Field("street_address")street_address :String) : Response<JsonObject>
+
+    @POST("add_city")
+    @FormUrlEncoded
+    suspend fun addCity(@Field("user_id")user_id :String,
+                        @Field("city")city :String) : Response<JsonObject>
+
+    @POST("add_state")
+    @FormUrlEncoded
+    suspend fun addState(@Field("user_id")user_id :String,
+                        @Field("State")state :String) : Response<JsonObject>
+
+    @POST("add_zip_code")
+    @FormUrlEncoded
+    suspend fun addZipCode(@Field("user_id")user_id :String,
+                        @Field("ZipCode")zipCode :String) : Response<JsonObject>
+
+
     @POST("complete_profile")
     @Multipart
     suspend fun completeProfile(@Part("user_id")user_id : RequestBody,
@@ -159,17 +231,41 @@ interface ZyvoApi {
     suspend fun addAboutme(@Field("user_id")user_id :String,
                               @Field("about_me")about_me :String) : Response<JsonObject>
 
-    @POST("add_live_place")
+
+    @POST("get_host_booking_list")
     @FormUrlEncoded
-    suspend fun addLivePlace(@Field("user_id")user_id :String,
-                           @Field("place_name")place_name :String) : Response<JsonObject>
+    suspend fun getHostBookingList(@Field("user_id")userid:Int): Response<JsonObject>
+
 
     @POST("delete_live_place")
     @FormUrlEncoded
-    suspend fun deleteLivePlace(@Field("user_id")user_id :String,
-                             @Field("index")index :String) : Response<JsonObject>
+    suspend fun deleteLivePlace(@Field("user_id")user_id :String, @Field("index")index :String) : Response<JsonObject>
 
 
+    @POST("approve_decline_booking")
+    @FormUrlEncoded
+    suspend fun approveDeclineBooking(
+        @Field("booking_id") bookingId :Int,
+        @Field("status") status :String,
+        @Field("message") message :String,
+        @Field("declined_reason") declineReason :String
+    ) : Response<JsonObject>
 
 
+    @GET("get_privacy_policy")
+    suspend fun getPrivacyPolicy():Response<JsonObject>
+
+    @GET("get_term_condition")
+    suspend fun getTermCondition():Response<JsonObject>
+
+    @POST("feedback")
+    @FormUrlEncoded
+    suspend fun feedback(
+        @Field("user_id") user_id : String,
+        @Field("type") type : String,
+        @Field("details") details : String
+    ) :Response<JsonObject>
+
+    @GET("get_faq")
+    suspend fun getFaq():Response<JsonObject>
 }

@@ -7,94 +7,105 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
+import com.business.zyvo.adapter.guest.AmenitiesAdapter
 import com.business.zyvo.databinding.LayoutHostBookingBinding
 import com.business.zyvo.model.MyBookingsModel
 
-class HostBookingsAdapter (
-        var context: Context,
-        var list: MutableList<MyBookingsModel>,
-        var listner: OnClickListener
-    ) : RecyclerView.Adapter<HostBookingsAdapter.MyBookingsViewHolder>()
-    {
+class HostBookingsAdapter (var context: Context, var list: MutableList<MyBookingsModel>, var listner: OnClickListener)
+    : RecyclerView.Adapter<HostBookingsAdapter.MyBookingsViewHolder>() {
+      private lateinit var mListener: onItemClickListener
+      interface onItemClickListener {
+            fun onItemClick(bookingId : Int,status :String, message :String,reason:String)
+        }
+
+        fun setOnItemClickListener(listener: HostBookingsAdapter.onItemClickListener) {
+            mListener = listener
+        }
 
         lateinit var textStatus : TextView
         lateinit var text : String
 
-        inner class MyBookingsViewHolder(var binding: LayoutHostBookingBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        inner class MyBookingsViewHolder(var binding: LayoutHostBookingBinding) : RecyclerView.ViewHolder(binding.root) {
             fun bind(currentItem: MyBookingsModel) {
 
-
-
-
-
-
                 binding.textApporve.setOnClickListener {
-
-                    binding.llAcceptRequest.visibility = View.VISIBLE
-                    binding.llDeclineRequest.visibility = View.GONE
-
+                    if(binding.llAcceptRequest.visibility == View.GONE) {
+                        binding.llAcceptRequest.visibility = View.VISIBLE
+                        binding.llDeclineRequest.visibility = View.GONE
+                    }
+                    else{
+                        binding.llAcceptRequest.visibility = View.GONE
+                        binding.llDeclineRequest.visibility = View.GONE
+                    }
                 }
 
                 binding.rlAcceptRequestBtn.setOnClickListener {
                     binding.llApproveAndDecline.visibility = View.GONE
                     binding.llAcceptRequest.visibility = View.GONE
-
                     binding.fl.visibility = View.VISIBLE
+                    val bookingId = list.get(position).booking_id
+                    val status = "approve"
+                    val message = binding.tvShareMessage.text.toString()
+                    mListener.onItemClick(bookingId,status,message,"")
                 }
-
 
                 binding.clMainHeader.setOnClickListener {
                     binding.llDeclineRequest.visibility = View.GONE
                     binding.llAcceptRequest.visibility = View.GONE
                 }
-
-
-
-
-
                 binding.rlDeclineRequestBtn.setOnClickListener {
                     binding.llApproveAndDecline.visibility = View.GONE
                     binding.llDeclineRequest.visibility = View.GONE
+                    val msg =binding.tvShareMessage1.text.toString()
+                    mListener.onItemClick(list.get(position).booking_id,"declined",msg,"")
                     removeItem(position)
                 }
 
-
                 binding.textDecline.setOnClickListener {
-                    binding.llDeclineRequest.visibility = View.VISIBLE
-                    binding.llAcceptRequest.visibility = View.GONE
+                    if(binding.llDeclineRequest.visibility == View.GONE) {
+                        binding.llDeclineRequest.visibility = View.VISIBLE
+                        binding.llAcceptRequest.visibility = View.GONE
+                    }
+                    else{
+                        binding.llDeclineRequest.visibility = View.GONE
+                        binding.llAcceptRequest.visibility = View.GONE
+                    }
                 }
 
-
-
-
-
                 textStatus = binding.textStatus
-                binding.imagePicture.setImageResource(currentItem.image)
+                Glide.with(context).load(AppConstant.BASE_URL+currentItem.guest_avatar).into( binding.imagePicture)
+                if(currentItem.booking_status.equals("pending")){
+                    binding.llApproveAndDecline.visibility = View.VISIBLE
+                    binding.textStatus.visibility = View.GONE
+                }
+                else{
+                    binding.llApproveAndDecline.visibility = View.GONE
+                    binding.textStatus.visibility = View.VISIBLE
+                }
+                when (list.get(position).booking_status) {
 
-
-                when (list.get(position).textStatus) {
-                    "Confirmed" -> binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
-                    "Waiting payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-                    "Canceled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                    "confirmed" -> binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
+                    "waiting_payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                    "cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
                     else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback
                 }
                 binding.clMain.setOnClickListener{
                     listner.itemClick(position)
                 }
+                binding.textName.setText(currentItem.guest_name)
+                binding.textDate.setText(currentItem.booking_date)
+                binding.textStatus.setText(currentItem.booking_status)
 
-                binding.textName.setText(currentItem.textName)
-                binding.textDate.setText(currentItem.textDate)
-                binding.textStatus.setText(currentItem.textStatus)
             }
 
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyBookingsViewHolder {
-            val binding =
-                LayoutHostBookingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding = LayoutHostBookingBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return MyBookingsViewHolder(binding)
         }
 
@@ -102,41 +113,8 @@ class HostBookingsAdapter (
 
         override fun onBindViewHolder(holder: MyBookingsViewHolder, position: Int) {
             val currentItem = list[position]
-
             holder.bind(currentItem)
-
-            when(position){
-                0->{
-                    holder.binding.llApproveAndDecline.visibility = View.GONE
-                    holder.binding.llAcceptRequest.visibility = View.GONE
-
-                    holder.binding.fl.visibility = View.VISIBLE
-                }
-                1->{
-                    holder.binding.llApproveAndDecline.visibility = View.GONE
-                    holder.binding.llAcceptRequest.visibility = View.GONE
-
-                    holder.binding.fl.visibility = View.VISIBLE
-                }
-                2->{
-                    holder.binding.llApproveAndDecline.visibility = View.GONE
-                    holder.binding.llAcceptRequest.visibility = View.GONE
-
-                    holder.binding.fl.visibility = View.VISIBLE
-                }
-
-                3->{
-                    holder.binding.llApproveAndDecline.visibility = View.GONE
-                    holder.binding.llAcceptRequest.visibility = View.GONE
-
-                    holder.binding.fl.visibility = View.VISIBLE
-                }
-            }
-
-
         }
-
-
 
         private fun removeItem(position: Int) {
             if (position >= 0 && position < list.size) {

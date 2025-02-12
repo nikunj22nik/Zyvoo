@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/_8ssp"
+    android:paddingVertical="@dimen/_8sdp"
+    android:background="@drawable/bg_four_side_grey_corner_white">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:id="@+id/textFaqQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+            android:fontFamily="@font/poppins"
+            android:layout_toStartOf="@+id/imageIcon"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/_12ssp"
+            android:text="Tests"
+            />
+
+        <ImageView
+            android:id="@+id/imageIcon"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:src="@drawable/ic_show_faq"
+            android:layout_alignParentEnd="true"
+            />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textFaqAnswer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/poppins"
+        android:text="Test"
+        android:visibility="gone"
+        android:layout_marginStart="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_30sdp" />
+
+
+</LinearLayout>

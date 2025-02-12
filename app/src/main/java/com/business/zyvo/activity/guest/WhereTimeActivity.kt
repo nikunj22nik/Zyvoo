@@ -57,6 +57,7 @@ class WhereTimeActivity : AppCompatActivity() {
     private var selectedDate: LocalDate? = LocalDate.now()
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -66,6 +67,7 @@ class WhereTimeActivity : AppCompatActivity() {
         placesClient = Places.createClient(applicationContext)
         actList = mutableListOf()
         adapterIntialization()
+
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -101,6 +103,7 @@ class WhereTimeActivity : AppCompatActivity() {
                 binding.llTime.visibility = View.GONE
             }
         }
+
 
         binding.imgSearch.setOnClickListener {
             count++;
@@ -268,6 +271,7 @@ class WhereTimeActivity : AppCompatActivity() {
         editText.requestFocus() // Focus on the EditText
         // Set the existing text if needed
     }
+
 
     private fun handleEditTextInput() {
         val input = editText.text.toString().trim()

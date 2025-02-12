@@ -1,6 +1,7 @@
 package com.business.zyvo.fragment.host
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -8,28 +9,37 @@ import android.view.View
 import android.view.ViewGroup
 import com.business.zyvo.R
 import com.business.zyvo.databinding.FragmentBookingScreenHostBinding
-
-
 import android.widget.PopupWindow
 import android.widget.TextView
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 
 import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.adapter.host.HostBookingsAdapter
 import com.business.zyvo.model.MyBookingsModel
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.NetworkMonitor
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.host.HostBookingsViewModel
+import com.google.android.datatransport.cct.internal.NetworkConnectionInfo
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListener {
     private var _binding: FragmentBookingScreenHostBinding? = null
     private val binding get() = _binding!!
     private var adapterMyBookingsAdapter: HostBookingsAdapter? = null
-    private val viewModel: HostBookingsViewModel by viewModels()
+    private lateinit var viewModel: HostBookingsViewModel
     private var list: MutableList<MyBookingsModel> = mutableListOf()
+    private val LOCATION_PERMISSION_REQUEST_CODE = 1000
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,30 +49,92 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = FragmentBookingScreenHostBinding.inflate(
-            LayoutInflater.from(requireContext()),
-            container,
+            LayoutInflater.from(requireContext()), container,
             false
         )
+
+        viewModel = ViewModelProvider(this)[HostBookingsViewModel::class.java]
+
         // Inflate the layout for this fragment
         adapterMyBookingsAdapter = HostBookingsAdapter(requireContext(), mutableListOf(), this)
+
+        setUpAdapterMyBookings()
+
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
 
         viewModel.list.observe(viewLifecycleOwner, Observer { list ->
             adapterMyBookingsAdapter!!.updateItem(list)
         })
 
-
         return binding.root
+    }
+
+    private fun setUpAdapterMyBookings(){
+
+            adapterMyBookingsAdapter?.setOnItemClickListener(object : HostBookingsAdapter.onItemClickListener{
+                override fun onItemClick(bookingId: Int, status: String, message: String, reason: String) {
+                    lifecycleScope.launch {
+                        LoadingUtils.showDialog(requireContext(),false)
+                        viewModel.approveDeclineBooking(bookingId, status, message, reason)
+                            .collect {
+                                when(it){
+                                    is NetworkResult.Success ->{
+                                        LoadingUtils.hideDialog()
+                                        LoadingUtils.showSuccessDialog(requireContext(),it.data.toString())
+                                    }
+                                    is NetworkResult.Error ->{
+                                        LoadingUtils.hideDialog()
+                                        LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                                    }
+                                    else ->{
+
+                                    }
+                                }
+                            }
+                    }
+                }
+            })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageFilter.setOnClickListener(this)
+        callingBookingData()
+    }
 
+    private fun callingBookingData(){
+
+        if(NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                val session = SessionManager(requireContext())
+                val userId = session.getUserId()
+                if (userId != null) {
+                    Log.d("TESTING_BOOKING", "calling booking data " + userId)
+                    LoadingUtils.showDialog(requireContext(), false)
+                    viewModel.load(userId).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                LoadingUtils.hideDialog()
+                                it.data?.let { it1 -> adapterMyBookingsAdapter?.updateItem(it1) }
+                            }
+
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            LoadingUtils.showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
     }
 
     private fun showPopupWindow(anchorView: View, position: Int) {
@@ -174,6 +246,8 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         super.onResume()
         (activity as? HostMainActivity)?.bookingResume()
     }
+
+
 
 
 }

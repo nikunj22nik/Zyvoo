@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Lifecycle
@@ -39,19 +40,7 @@ class LocationHelper(private val context: Context) {
         }
 
         // Method to handle the permission result (this should be called in your Activity or Fragment)
-        fun handlePermissionResult(
-            requestCode: Int,
-            grantResults: IntArray,
-            onPermissionGranted: () -> Unit
-        ) {
-            if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    onPermissionGranted()
-                } else {
-                    Toast.makeText(context, "Location permission is required to access your location.", Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
+
 
         // Method to get the last known location in the background (asynchronously)
         fun getLocationInBackground(lifecycleOwner: Lifecycle, onLocationFetched: (Location?) -> Unit) {
@@ -69,9 +58,7 @@ class LocationHelper(private val context: Context) {
         }
 
         // Method to fetch the current location using FusedLocationProviderClient in the background
-
-
-    private suspend fun fetchLocationInBackground(): Location? {
+        private suspend fun fetchLocationInBackground(): Location? {
         return withContext(Dispatchers.IO) {
             try {
                 // Check if location permission is granted
@@ -96,4 +83,20 @@ class LocationHelper(private val context: Context) {
         }
     }
 
+
+    fun handlePermissionResult(
+        requestCode: Int,
+        grantResults: IntArray,
+        onPermissionGranted: () -> Unit
+    ) {
+        Log.d("TESTING","Location Request Code : "+requestCode.toString())
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                onPermissionGranted()
+            } else {
+                Toast.makeText(context, "Location permission is required to access your location.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    }
 }

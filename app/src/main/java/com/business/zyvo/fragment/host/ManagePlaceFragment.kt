@@ -349,7 +349,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                          is NetworkResult.Success -> {
                              LoadingUtils.hideDialog()
 
-                             ErrorDialog.showErrorDialog(requireContext(),"Property Updated Succesfully")
+                             LoadingUtils.showSuccessDialog(requireContext(),"Property Updated Succesfully")
                          }
 
                          is NetworkResult.Error -> {
@@ -373,7 +373,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                      when(it){
                          is NetworkResult.Success ->{
                              LoadingUtils.hideDialog()
-                             ErrorDialog.showErrorDialog(requireContext(),it.data.toString())
+                             LoadingUtils.showSuccessDialog(requireContext(),it.data.toString())
                          }
                          is NetworkResult.Error ->{
                              LoadingUtils.hideDialog()
@@ -520,14 +520,17 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                       onlyWeekend()
                       days = "weekends"
                   }
+                  it.available_to =DateManager(requireContext()).getHoursAndMinutes(it.available_to)
+                  it.available_from = DateManager(requireContext()).getHoursAndMinutes(it.available_from)
                   var fromHour = DateManager(requireContext()).convert24HourToAMPM(it.available_from)
                   var toHour = DateManager(requireContext()).convert24HourToAMPM(it.available_to)
                   binding.tvHours.setText(fromHour)
                   binding.tvHours1.setText(toHour)
-                 this.fromHour = it.available_from
+                  Log.d("TESTING_ZYvoo", "Available From "+ it.available_from +" Available To "+ it.available_to)
+                  this.fromHour = it.available_from
                   this.toHour = it.available_to
 
-                  var minHour = it.min_booking_hours.toDouble()
+                  val minHour = it.min_booking_hours.toDouble()
                   minimumHourValue = minHour.toInt()
                   binding.tvHoursSelect.setText(minimumHourValue.toString()+" hour minimum")
 
@@ -554,23 +557,28 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
               }
     }
 
-
     private fun galleryLocationScreenTask(data: GetPropertyDetail?){
         binding.etTitle.setText(data?.title)
         titleResult = data?.title.toString()
+
         if(data?.latitude != null){
             latitude = data.latitude
         }
+
         if(data?.longitude != null){
             longitude = data.longitude
 
         }
+
         binding.etDescription.setText(data?.property_description)
+
         descriptionResult = data?.property_description.toString()
+
         data?.parking_rules?.let {
             binding.etParkingRule.setText(it.toString())
             parkingRule = it.toString()
         }
+
         data?.host_rules?.let {
             binding.etHostRule.setText(it.toString())
             hostRule = it.toString()
@@ -580,6 +588,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             binding.etAddress.setText(it.toString())
             street = it.toString()
         }
+
         data?.city?.let {
             binding.etCity.setText(it.toString())
             city = it.toString()
@@ -605,10 +614,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         }
 
-
-
         val resultList = mutableListOf<Uri>()
+
         galleryListId.clear()
+
         data?.property_images?.forEach {
             val str = AppConstant.BASE_URL + it.image_url
             val uri = Uri.parse(str)
@@ -617,10 +626,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             Log.d("TESTING_URL", str.toString())
             resultList.add(uri)
         }
+
         imageList = resultList
 
         galleryAdapter.updateAdapter(resultList)
-
     }
 
     private fun checkChangeWork(data: GetPropertyDetail?){
@@ -652,12 +661,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             cancellationDays = it.cancellation_duration.toString()
 
             if(cancellationDays.equals("24")){
-
                 binding.endHour.selectItemByIndex(0)
             }
             else if(cancellationDays.equals("72")){
                 binding.endHour.selectItemByIndex(1)
-
             }
             else if(cancellationDays.equals("168")){
                 binding.endHour.selectItemByIndex(2)
@@ -669,8 +676,6 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 binding.endHour.selectItemByIndex(4)
             }
         }
-
-
 
     }
 
@@ -743,6 +748,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         else{
             binding.etBathroom.setText(count.toString())
             bathroomCount = count
+            clearBathRommBackground()
         }
     }
 
@@ -774,6 +780,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         else{
            binding.etBedRoomCount.setText(count.toString())
             badroomCount = count
+            badRoomClearBackground()
         }
     }
 
@@ -805,6 +812,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         else{
             peopleCount =count
             binding.peopleCount.setText(peopleCount.toString())
+            clearPeopleCountBackground()
         }
 
     }
@@ -836,6 +844,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         else{
            binding.etPropertySize.setText(propertySize.toString())
             this.propertySize = propertySize
+            clearPropertyBackground()
         }
 
     }
@@ -1430,6 +1439,19 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
     }
 
+
+    private fun clearBathRommBackground(){
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+    }
+
+
     private fun bathRoomAnySelect(){
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1567,6 +1589,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
                 bathroomCount = finalText.toInt()
+                clearBathRommBackground()
             }
         })
 
@@ -1609,6 +1632,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
         })
     }
+
 
 
     private fun bedRoomAnySelect(){
@@ -1755,8 +1779,20 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
                 badroomCount = finalText.toInt()
+                badRoomClearBackground()
             }
         })
+    }
+
+    private fun badRoomClearBackground(){
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
 
@@ -1805,6 +1841,18 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
         propertySize = 450
     }
+
+    private fun clearPropertyBackground(){
+        binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+    }
+
 
     private fun propertyFourthSelect(){
         binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1874,6 +1922,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
                 propertySize = finalText.toInt()
+                clearPropertyBackground()
             }
         })
     }
@@ -1981,8 +2030,18 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
                 peopleCount = finalText.toInt()
+                clearPeopleCountBackground()
             }
         })
+    }
+
+    fun clearPeopleCountBackground(){
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
     fun settingDataToActivityModel() {
