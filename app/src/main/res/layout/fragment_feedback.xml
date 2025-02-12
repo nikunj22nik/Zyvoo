@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.guest.FeedbackFragment">
+    tools:context=".fragment.guest.feedback.FeedbackFragment">
 
 
     <ScrollView
@@ -21,8 +21,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_10sdp">
 
                 <ImageView
@@ -38,15 +38,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_15sdp"
-                   android:layout_toEndOf="@+id/imageBackIcon"
+                    android:layout_toEndOf="@+id/imageBackIcon"
                     android:fontFamily="@font/poppins_light"
                     android:text="Share Feedback"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_16ssp"
                     android:textStyle="bold" />
             </RelativeLayout>
-
-
 
 
             <View
@@ -174,7 +172,7 @@
                 android:paddingVertical="@dimen/_6sdp"
                 android:text="Contact us"
                 android:textColor="#000000"
-                app:buttonTint="@color/black"/>
+                app:buttonTint="@color/black" />
 
             <!-- Submit Button -->
             <TextView

@@ -61,13 +61,13 @@
         />
 
     <fragment android:id="@+id/feedbackFragment"
-        android:name="com.business.zyvo.fragment.guest.FeedbackFragment"
+        android:name="com.business.zyvo.fragment.guest.feedback.FeedbackFragment"
         android:label="Feedback_Fragment"
         />
 
     <fragment
         android:id="@+id/privacyPolicyFragment"
-        android:name="com.business.zyvo.fragment.guest.PrivacyPolicyFragment"
+        android:name="com.business.zyvo.fragment.guest.privacy.PrivacyPolicyFragment"
         android:label="fragment_privacy_policy"
         tools:layout="@layout/fragment_privacy_policy" />
 

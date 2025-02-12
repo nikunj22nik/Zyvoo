@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.guest.PrivacyPolicyFragment">
+    tools:context=".fragment.guest.privacy.PrivacyPolicyFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-           android:background="@color/white"
             android:paddingHorizontal="@dimen/_10sdp"
             android:orientation="vertical">
 
@@ -34,31 +35,31 @@
                     android:src="@drawable/ic_back_icon" />
 
 
-<!--                &lt;!&ndash; Search Bar &ndash;&gt;-->
-<!--                <EditText-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="@dimen/_34sdp"-->
-<!--                    android:layout_gravity="center_vertical"-->
-<!--                    android:layout_marginStart="@dimen/_10ssp"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:background="@drawable/search_bar_bg"-->
-<!--                    android:drawableEnd="@drawable/ic_search_bar_icon22"-->
-<!--                    android:drawablePadding="@dimen/_6sdp"-->
-<!--                    android:hint="Search..."-->
-<!--                    android:inputType="text"-->
-<!--                    android:padding="@dimen/_6sdp"-->
-<!--                    android:textColorHint="#B0B0B0" />-->
+                <!--                &lt;!&ndash; Search Bar &ndash;&gt;-->
+                <!--                <EditText-->
+                <!--                    android:layout_width="0dp"-->
+                <!--                    android:layout_height="@dimen/_34sdp"-->
+                <!--                    android:layout_gravity="center_vertical"-->
+                <!--                    android:layout_marginStart="@dimen/_10ssp"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    android:background="@drawable/search_bar_bg"-->
+                <!--                    android:drawableEnd="@drawable/ic_search_bar_icon22"-->
+                <!--                    android:drawablePadding="@dimen/_6sdp"-->
+                <!--                    android:hint="Search..."-->
+                <!--                    android:inputType="text"-->
+                <!--                    android:padding="@dimen/_6sdp"-->
+                <!--                    android:textColorHint="#B0B0B0" />-->
 
                 <!-- Menu Icon -->
-<!--                <ImageView-->
-<!--                    android:layout_width="@dimen/_42sdp"-->
-<!--                    android:layout_height="@dimen/_42sdp"-->
-<!--                    android:layout_gravity="end"-->
-<!--                    android:contentDescription="Menu"-->
-<!--                    android:layout_alignParentEnd="true"-->
-<!--                    android:layout_centerVertical="true"-->
-<!--                    android:padding="@dimen/_6sdp"-->
-<!--                    android:src="@drawable/ic_filter" />-->
+                <!--                <ImageView-->
+                <!--                    android:layout_width="@dimen/_42sdp"-->
+                <!--                    android:layout_height="@dimen/_42sdp"-->
+                <!--                    android:layout_gravity="end"-->
+                <!--                    android:contentDescription="Menu"-->
+                <!--                    android:layout_alignParentEnd="true"-->
+                <!--                    android:layout_centerVertical="true"-->
+                <!--                    android:padding="@dimen/_6sdp"-->
+                <!--                    android:src="@drawable/ic_filter" />-->
 
             </RelativeLayout>
 
@@ -79,500 +80,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10ssp"
                 android:fontFamily="@font/poppins"
-               android:textSize="@dimen/_13ssp"
+                android:textSize="@dimen/_13ssp"
                 android:textStyle="bold"
                 android:text="Privacy Policy"
                 android:textColor="@color/black"
                 app:layout_constraintTop_toBottomOf="@+id/llHeader" />
 
+
             <TextView
-                android:id="@+id/textLastUpdated"
+                android:id="@+id/textDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10ssp"
-                android:fontFamily="@font/poppins"
-                android:text="Last Updated 07/04/2024"
-                android:textColor="#807B7B"
-                android:textSize="@dimen/_9ssp"
-                app:layout_constraintTop_toBottomOf="@id/textTitle" />
-
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_10ssp"
-                android:background="#C4C4C4C4"
-                app:layout_constraintTop_toBottomOf="@+id/textLastUpdated" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:fontFamily="@font/poppins"
-                android:text="@string/table_of_content"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toBottomOf="@id/view" />
-
-            <!-- Section 1 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10ssp"
-
-                android:layout_marginBottom="@dimen/_6sdp"
-                android:fontFamily="@font/poppins"
-                android:text="1.1 Privacy Policy"
-                android:textColor="#000000"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_4sdp"
-                android:fontFamily="@font/poppins"
-                android:text="1.2 What Personal Information we collect"
-                android:textColor="#333333"
-                android:textSize="@dimen/_9ssp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_24sdp"
-
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_14sdp"
-                android:fontFamily="@font/poppins"
-                android:text="1.3 Security Services"
-                android:textColor="#333333"
-                android:textSize="@dimen/_9ssp" />
-
-            <!-- Section 2 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10ssp"
-
-                android:layout_marginBottom="@dimen/_6sdp"
-                android:fontFamily="@font/poppins"
-                android:text="2. Other things"
-                android:textColor="#000000"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_4sdp"
-                android:fontFamily="@font/poppins"
-                android:text="2.1 Lorem Ipsum"
-                android:textColor="#333333"
-                android:textSize="@dimen/_9ssp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_24sdp"
-
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_14sdp"
-                android:fontFamily="@font/poppins"
-                android:text="2.2 Lorem Ipsum is simply a dummy"
-                android:textColor="#333333"
-                android:textSize="@dimen/_9ssp" />
-
-            <!-- Section 3 -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_6sdp"
-                android:fontFamily="@font/poppins"
-                android:text="3. What Personal Information we collect"
-                android:textColor="#000000"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_4sdp"
-                android:fontFamily="@font/poppins"
-                android:text="3.1 Security Services"
-                android:textColor="#333333"
-                android:textSize="@dimen/_9ssp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_4sdp"
-                android:fontFamily="@font/poppins"
-                android:text="3.2 Other things"
-                android:textColor="#333333"
-                android:textSize="@dimen/_9ssp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_4sdp"
-                android:fontFamily="@font/poppins"
-                android:text="3.3 Lorem Ipsum"
-                android:textColor="#333333"
-                android:textSize="@dimen/_9ssp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_14sdp"
-                android:fontFamily="@font/poppins"
-                android:text="3.4 Lorem Ipsum is simply a dummy"
-                android:textColor="#333333"
-                android:textSize="@dimen/_9ssp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_20sdp"
-                android:fontFamily="@font/poppins"
-                android:lineSpacingExtra="@dimen/_3sdp"
-                android:textColor="@color/black"
-                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
-                android:textSize="@dimen/_10ssp" />
-
-
-
-
-            <!-- Section 1: Information We Collect -->
-            <TextView
-                android:id="@+id/section1_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1.1. Information We Collect"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginTop="@dimen/_20sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/section1_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="We collect and process various types of information to provide and improve our services, including:"
-                android:fontFamily="@font/poppins"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
+                android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_10ssp"
                 android:textSize="@dimen/_9ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <!-- Subsection: Personal Information -->
-            <TextView
-                android:id="@+id/personal_info_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Personal Information:"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:fontFamily="@font/poppins"
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
+                android:textColor="#4E4E4E"
+                android:paddingBottom="@dimen/_10sdp"
                 />
-
-            <TextView
-                android:id="@+id/personal_info_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="When you visit our website, sign up for our newsletter, make a purchase, or contact us, we may collect your name, email address, and other contact details."
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:textColor="#4E4E4E"
-                android:paddingBottom="@dimen/_8sdp" />
-
-            <!-- Subsection: Payment Information -->
-            <TextView
-                android:id="@+id/payment_info_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Payment Information:"
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="@color/black"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                 />
-
-            <TextView
-                android:id="@+id/payment_info_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="When making a purchase, we collect payment details, such as credit card information, to facilitate transactions."
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:paddingBottom="@dimen/_8sdp" />
-
-            <!-- Subsection: Usage Data -->
-            <TextView
-                android:id="@+id/usage_data_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Usage Data:"
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="@color/black"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/usage_data_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="We collect data on how you interact with our website, including pages visited, links clicked, and the duration of your visit."
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:paddingBottom="@dimen/_4sdp"/>
-
-            <!-- Subsection: Cookies and Tracking Technologies -->
-            <TextView
-                android:id="@+id/cookies_info_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cookies and Tracking Technologies:"
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="@color/black"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/cookies_info_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="We use cookies and similar technologies to collect information about your browsing behavior. You can manage your cookie preferences through your browser settings."
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-
-                android:paddingBottom="@dimen/_16sdp" />
-
-            <!-- Section 2: Data Sharing -->
-            <TextView
-                android:id="@+id/section2_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2. Data Sharing"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_marginStart="@dimen/_24sdp"
-               android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/section2_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="We may share your personal information with:"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:paddingBottom="@dimen/_4sdp"/>
-
-            <!-- Subsection: Service Providers -->
-            <TextView
-                android:id="@+id/service_providers_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Service Providers:"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:layout_marginStart="@dimen/_24sdp"
-
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/service_providers_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="We may share your information with third-party service providers who assist us in delivering our services, such as payment processors and email marketing services."
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <!-- Subsection: Legal Compliance -->
-            <TextView
-                android:id="@+id/legal_compliance_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Legal Compliance:"
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="@color/black"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/legal_compliance_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="We may disclose your information when required by law or in response to a valid legal request."
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-
-                android:paddingBottom="@dimen/_10sdp" />
-
-            <!-- Section 2.1: Your Rights -->
-            <TextView
-                android:id="@+id/section3_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="2.1. Your Rights"
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="@color/black"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/section3_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You have certain rights regarding your personal information under GDPR, including:"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/right_access_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Right to Access: "
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="@color/black"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/right_access_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You can request access to the personal information we hold about you."
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <!-- Subsection: Legal Compliance -->
-            <TextView
-                android:id="@+id/right_to_rectification_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Right to Rectification: "
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="@color/black"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/right_to_rectification_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You can request corrections to inaccurate or incomplete data."
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:textColor="#4E4E4E"
-                android:paddingBottom="@dimen/_10sdp" />
-
-            <TextView
-                android:id="@+id/right_access_title1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Right to Access: "
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="@color/black"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/right_access_description1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You can request access to the personal information we hold about you."
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="#4E4E4E"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <!-- Subsection: Legal Compliance -->
-            <TextView
-                android:id="@+id/right_to_rectification_title1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Right to Rectification: "
-                android:textStyle="bold"
-                android:layout_marginStart="@dimen/_24sdp"
-android:textColor="@color/black"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_10ssp"
-                android:paddingBottom="@dimen/_4sdp" />
-
-            <TextView
-                android:id="@+id/right_to_rectification_description1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="You can request corrections to inaccurate or incomplete data."
-                android:layout_marginStart="@dimen/_24sdp"
-                android:layout_marginEnd="@dimen/_10ssp"
-                android:textSize="@dimen/_9ssp"
-                android:textColor="#4E4E4E"
-                android:paddingBottom="@dimen/_10sdp" />
 
 
 
@@ -587,46 +111,46 @@ android:textColor="@color/black"
                 android:backgroundTint="#3A4B4C"
                 >
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:orientation="vertical"-->
-<!--                    android:gravity="center_horizontal">-->
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:orientation="vertical"-->
+                <!--                    android:gravity="center_horizontal">-->
 
-<!--                    &lt;!&ndash; Descriptive Text &ndash;&gt;-->
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="Get help with your reservations, account, and more."-->
-<!--                        android:textColor="#FFFFFF"-->
-<!--                        android:fontFamily="@font/poppins"-->
-<!--                        android:textSize="@dimen/_13ssp"-->
-<!--                        android:layout_marginTop="@dimen/_10ssp"-->
-<!--                        android:paddingBottom="@dimen/_14sdp"-->
-<!--                        android:layout_marginHorizontal="@dimen/_14sdp"-->
-<!--                        />-->
+                <!--                    &lt;!&ndash; Descriptive Text &ndash;&gt;-->
+                <!--                    <TextView-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="Get help with your reservations, account, and more."-->
+                <!--                        android:textColor="#FFFFFF"-->
+                <!--                        android:fontFamily="@font/poppins"-->
+                <!--                        android:textSize="@dimen/_13ssp"-->
+                <!--                        android:layout_marginTop="@dimen/_10ssp"-->
+                <!--                        android:paddingBottom="@dimen/_14sdp"-->
+                <!--                        android:layout_marginHorizontal="@dimen/_14sdp"-->
+                <!--                        />-->
 
-<!--                    &lt;!&ndash; Button for Login & Signup &ndash;&gt;-->
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="Login &amp; Signup"-->
-<!--                        android:backgroundTint="#32D4A4"-->
-<!--                       android:background="@drawable/button_bg"-->
-<!--                        android:textColor="#000000"-->
-<!--                        android:textStyle="bold"-->
-<!--                        android:fontFamily="@font/poppins"-->
-<!--                        android:paddingHorizontal="@dimen/_25sdp"-->
-<!--                        android:paddingVertical="@dimen/_6sdp"-->
-<!--                        android:layout_marginBottom="@dimen/_10ssp"-->
-<!--                        android:layout_gravity="center" />-->
+                <!--                    &lt;!&ndash; Button for Login & Signup &ndash;&gt;-->
+                <!--                    <TextView-->
+                <!--                        android:layout_width="wrap_content"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="Login &amp; Signup"-->
+                <!--                        android:backgroundTint="#32D4A4"-->
+                <!--                       android:background="@drawable/button_bg"-->
+                <!--                        android:textColor="#000000"-->
+                <!--                        android:textStyle="bold"-->
+                <!--                        android:fontFamily="@font/poppins"-->
+                <!--                        android:paddingHorizontal="@dimen/_25sdp"-->
+                <!--                        android:paddingVertical="@dimen/_6sdp"-->
+                <!--                        android:layout_marginBottom="@dimen/_10ssp"-->
+                <!--                        android:layout_gravity="center" />-->
 
-<!--                </LinearLayout>-->
+                <!--                </LinearLayout>-->
 
             </androidx.cardview.widget.CardView>
 
-
         </LinearLayout>
+
     </ScrollView>
 
 </layout>

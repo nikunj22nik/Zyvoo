@@ -415,6 +415,7 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         binding.rlPasswordTitle.setOnClickListener(this)
         binding.textTermServices.setOnClickListener(this)
         binding.textPrivacyPolicy.setOnClickListener(this)
+        binding.textFaq.setOnClickListener(this)
         binding.textLogout.setOnClickListener(this)
         binding.textNotifications.setOnClickListener(this)
         binding.textVisitHelpCenter.setOnClickListener(this)
@@ -669,10 +670,15 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.textPrivacyPolicy -> {
-                var bundle = Bundle()
+                val bundle = Bundle()
                 bundle.putInt("privacy",0)
                 findNavController().navigate(R.id.privacyPolicyFragment,bundle)
             }
+
+            R.id.textFaq->{
+                findNavController().navigate(R.id.frequentlyAskedQuestionsFragment)
+            }
+
 
             R.id.rlPasswordTitle -> {
                 var text = "Your password has been changed successfully"

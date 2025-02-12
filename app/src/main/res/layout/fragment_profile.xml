@@ -1260,6 +1260,25 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textTermServices" />
 
+            <TextView
+                android:id="@+id/textFaq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:drawableStart="@drawable/ic_notebook_icon"
+                android:drawablePadding="@dimen/_7ssp"
+                android:fontFamily="@font/poppins"
+                android:gravity="center_vertical"
+                android:text="FAQ’s"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp"
+                android:textStyle="normal"
+                app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textPrivacyPolicy" />
+
+
             <View
                 android:id="@+id/viewPrivacy"
                 android:layout_width="match_parent"
@@ -1267,7 +1286,7 @@
                 android:layout_marginHorizontal="@dimen/_23sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#C4C4C4"
-                app:layout_constraintTop_toBottomOf="@+id/textPrivacyPolicy" />
+                app:layout_constraintTop_toBottomOf="@+id/textFaq" />
 
 
             <TextView
