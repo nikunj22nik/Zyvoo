@@ -78,6 +78,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         Log.d("TESTING_ZYVOO", "I am in Restaurent Details")
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
@@ -86,6 +87,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        binding.circularSeekBar.rotateToDot(7)
 
         disableScrollViewScrollForChildView(binding.rlCircularProgress, binding.scrollView)
         mapView = binding.mapView

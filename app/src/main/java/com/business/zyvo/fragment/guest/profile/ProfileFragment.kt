@@ -346,9 +346,6 @@ class ProfileFragment : Fragment(), OnClickListener1, OnClickListener {
             )}
     }
 
-
-
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         paymentOpenCloseDropDown()

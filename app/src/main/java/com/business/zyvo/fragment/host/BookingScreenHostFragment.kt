@@ -23,7 +23,10 @@ import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.adapter.host.HostBookingsAdapter
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.NetworkMonitor
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.host.HostBookingsViewModel
+import com.google.android.datatransport.cct.internal.NetworkConnectionInfo
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -51,6 +54,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
             LayoutInflater.from(requireContext()), container,
             false
         )
+
         viewModel = ViewModelProvider(this)[HostBookingsViewModel::class.java]
 
         // Inflate the layout for this fragment
@@ -102,27 +106,34 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
     private fun callingBookingData(){
 
-        lifecycleScope.launch {
-            val session = SessionManager(requireContext())
-            val userId = session.getUserId()
-            if (userId != null) {
-                Log.d("TESTING_BOOKING","calling booking data "+userId)
-               LoadingUtils.showDialog(requireContext(),false)
-                viewModel.load(userId).collect{
-                   when(it){
-                       is NetworkResult.Success ->{
-                           LoadingUtils.hideDialog()
-                           it.data?.let { it1 -> adapterMyBookingsAdapter?.updateItem(it1) }
-                       }
-                       is NetworkResult.Error ->{
-                           LoadingUtils.hideDialog()
-                       }
-                       else ->{
+        if(NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                val session = SessionManager(requireContext())
+                val userId = session.getUserId()
+                if (userId != null) {
+                    Log.d("TESTING_BOOKING", "calling booking data " + userId)
+                    LoadingUtils.showDialog(requireContext(), false)
+                    viewModel.load(userId).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                LoadingUtils.hideDialog()
+                                it.data?.let { it1 -> adapterMyBookingsAdapter?.updateItem(it1) }
+                            }
 
-                       }
-                   }
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
                 }
             }
+        }else{
+            LoadingUtils.showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 

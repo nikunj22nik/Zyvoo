@@ -16,13 +16,9 @@ import com.business.zyvo.databinding.LayoutHostBookingBinding
 import com.business.zyvo.model.MyBookingsModel
 
 class HostBookingsAdapter (var context: Context, var list: MutableList<MyBookingsModel>, var listner: OnClickListener)
-    : RecyclerView.Adapter<HostBookingsAdapter.MyBookingsViewHolder>()
-    {
-
-
-        private lateinit var mListener: onItemClickListener
-
-        interface onItemClickListener {
+    : RecyclerView.Adapter<HostBookingsAdapter.MyBookingsViewHolder>() {
+      private lateinit var mListener: onItemClickListener
+      interface onItemClickListener {
             fun onItemClick(bookingId : Int,status :String, message :String,reason:String)
         }
 
@@ -35,8 +31,9 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
 
         inner class MyBookingsViewHolder(var binding: LayoutHostBookingBinding) : RecyclerView.ViewHolder(binding.root) {
             fun bind(currentItem: MyBookingsModel) {
+
                 binding.textApporve.setOnClickListener {
-                    if(binding.llAcceptRequest.visibility == View.VISIBLE) {
+                    if(binding.llAcceptRequest.visibility == View.GONE) {
                         binding.llAcceptRequest.visibility = View.VISIBLE
                         binding.llDeclineRequest.visibility = View.GONE
                     }
@@ -45,15 +42,17 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                         binding.llDeclineRequest.visibility = View.GONE
                     }
                 }
+
                 binding.rlAcceptRequestBtn.setOnClickListener {
                     binding.llApproveAndDecline.visibility = View.GONE
                     binding.llAcceptRequest.visibility = View.GONE
                     binding.fl.visibility = View.VISIBLE
                     val bookingId = list.get(position).booking_id
-                    val status = "approved"
+                    val status = "approve"
                     val message = binding.tvShareMessage.text.toString()
                     mListener.onItemClick(bookingId,status,message,"")
                 }
+
                 binding.clMainHeader.setOnClickListener {
                     binding.llDeclineRequest.visibility = View.GONE
                     binding.llAcceptRequest.visibility = View.GONE
@@ -83,7 +82,12 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     binding.llApproveAndDecline.visibility = View.VISIBLE
                     binding.textStatus.visibility = View.GONE
                 }
+                else{
+                    binding.llApproveAndDecline.visibility = View.GONE
+                    binding.textStatus.visibility = View.VISIBLE
+                }
                 when (list.get(position).booking_status) {
+
                     "confirmed" -> binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
                     "waiting_payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
                     "cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
