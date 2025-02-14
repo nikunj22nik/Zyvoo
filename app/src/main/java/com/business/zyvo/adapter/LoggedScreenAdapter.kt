@@ -20,8 +20,11 @@ import com.business.zyvo.model.ViewpagerModel
 import com.business.zyvo.viewmodel.ImagePopViewModel
 
 class LoggedScreenAdapter(
-    private val context: Context, private var list: MutableList<LogModel>, private val listener: OnClickListener,
-    private val lifecycleOwner: LifecycleOwner, private val imagePopViewModel: ImagePopViewModel, private val listener2: OnClickListener1
+    private val context: Context, private var list: MutableList<LogModel>
+    , private val listener: OnClickListener,
+    private val lifecycleOwner: LifecycleOwner,
+    private val imagePopViewModel: ImagePopViewModel,
+    private val listener2: OnClickListener1
 ) : RecyclerView.Adapter<LoggedScreenAdapter.LoggedViewHolder>() {
 
     private lateinit var mListener: onItemClickListener
@@ -30,7 +33,7 @@ class LoggedScreenAdapter(
         fun onItemClick(position: Int)
     }
 
-    fun setOnItemClickListener(listener: LoggedScreenAdapter.onItemClickListener) {
+    fun setOnItemClickListener(listener: onItemClickListener) {
         mListener = listener
     }
 
@@ -48,26 +51,15 @@ class LoggedScreenAdapter(
     override fun onBindViewHolder(holder: LoggedViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currentItem = list[position]
 
-
-
             holder.binding.imageAddWish.setOnClickListener{
                 listener2.itemClick(position,"Add Wish")
             }
-
-
-
 
         holder.binding.cl1.setOnClickListener {
           //  listener.itemClick(position)
             mListener.onItemClick(position)
             Log.d("Adapter", "cl1 clicked at position $position")
         }
-        // Disable user interaction on ViewPager2
-       // holder.binding.viewpager2.isUserInputEnabled = false
-//        holder.binding.viewpager2.setOnClickListener{
-//            listener.itemClick(position)
-//            Log.d("vipin","click")
-//        }
 
         if (position == 1 || position == 3){
             holder.binding.textInstantBook.visibility = View.VISIBLE
@@ -85,10 +77,6 @@ class LoggedScreenAdapter(
               mListener.onItemClick(position)
             }
         })
-
-//        holder.binding.clHead.setOnClickListener {
-//            mListener.onItemClick(position)
-//        }
 
         holder.binding.viewpager2.adapter = viewPagerAdapter
         holder.binding.viewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL

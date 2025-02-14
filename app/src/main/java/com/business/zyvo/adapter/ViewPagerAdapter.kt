@@ -29,12 +29,11 @@ class ViewPagerAdapter(private var list: MutableList<String>, var context: Conte
         Glide.with(context).load(AppConstant.BASE_URL + currentItem).into(holder.binding.image)
 
         holder.itemView.setOnClickListener {
-        //            listner?.itemClick(list)
         }
 
     }
 
-    override fun getItemCount() = list.size
+    override fun getItemCount() = list?.size ?: 0
 
     fun updateItem(newList: MutableList<String>) {
         this.list = newList

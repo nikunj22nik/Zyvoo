@@ -6,7 +6,7 @@
     >
 
     <fragment android:id="@+id/guest_fragment"
-        android:name="com.business.zyvo.fragment.guest.GuestDiscoverFragment"
+        android:name="com.business.zyvo.fragment.guest.home.GuestDiscoverFragment"
         android:label="guestdiscoverfragement"
         />
     <fragment
@@ -57,7 +57,7 @@
         tools:layout="@layout/fragment_review_booking" />
     <fragment
         android:id="@+id/wishlistFragment"
-        android:name="com.business.zyvo.fragment.guest.WishlistFragment"
+        android:name="com.business.zyvo.fragment.guest.wishlists.WishlistFragment"
         android:label="WishlistFragment" />
     <fragment
         android:id="@+id/chatDetailsFragment"
@@ -81,7 +81,7 @@
         tools:layout="@layout/fragment_terms_services" />
     <fragment
         android:id="@+id/recentlyViewedFragment"
-        android:name="com.business.zyvo.fragment.guest.RecentlyViewedFragment"
+        android:name="com.business.zyvo.fragment.guest.recentlyViewe.RecentlyViewedFragment"
         android:label="fragment_recently_viewed"
         tools:layout="@layout/fragment_recently_viewed" />
     <fragment

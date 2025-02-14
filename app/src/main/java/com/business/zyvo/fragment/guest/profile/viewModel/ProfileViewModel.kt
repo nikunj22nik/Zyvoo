@@ -136,7 +136,8 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
-                } is NetworkResult.Success -> {
+                }
+                is NetworkResult.Success -> {
                 isLoading.value = false
             } else -> {
                 isLoading.value = false
@@ -175,9 +176,9 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         }
     }
 
-    suspend fun addLanguageApi(userId: String,language: String):
+    suspend fun addLanguageApi(userId: String,language_name: String):
             Flow<NetworkResult<Pair<String,String>>> {
-        return repository.addLanguage(userId,language ).onEach {
+        return repository.addLanguage(userId,language_name ).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
@@ -190,9 +191,9 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         }
     }
 
-    suspend fun deleteLanguageApi(userId: String,index: Int):
+    suspend fun deleteLanguageApi(userId: String,language_index: Int):
             Flow<NetworkResult<Pair<String,String>>> {
-        return repository.deleteLanguage(userId,index ).onEach {
+        return repository.deleteLanguage(userId,language_index ).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
@@ -313,6 +314,81 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
     suspend fun addZipCodeApi(userId: String,zip_code: String):
             Flow<NetworkResult<Pair<String,String>>> {
         return repository.addZipCode(userId,zip_code ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun updatePasswordApi(userId: String,password: String, password_confirmation: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.updatePassword(userId,password,password_confirmation ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun emailVerification(userId: String,email :String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.emailVerification(userId, email).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun phoneVerification(userId :String,code :String,number:String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.phoneVerification(userId, code,number).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun otpVerifyPhoneVerification(userId :String,otp :String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.otpVerifyPhoneVerification(userId, otp).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun otpVerifyEmailVerification(userId :String,otp :String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.otpVerifyEmailVerification(userId, otp).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true

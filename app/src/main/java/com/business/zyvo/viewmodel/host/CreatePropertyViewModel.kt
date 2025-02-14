@@ -9,6 +9,7 @@ import com.business.zyvo.repository.ZyvoRepository
 import com.business.zyvo.utils.NetworkMonitor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
@@ -43,6 +44,12 @@ class CreatePropertyViewModel @Inject constructor(
         propertyMap.put(750,6)
 
     }
+
+     suspend fun propertyImageDelete(imageId: Int) : Flow<NetworkResult<String>> {
+        return repository.propertyImageDelete(imageId).onEach {
+
+        }
+     }
 
 
     suspend fun addProperty(code: PropertyDetailsSave): Flow<NetworkResult<Pair<String, Int>>> {

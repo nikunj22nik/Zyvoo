@@ -274,7 +274,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             rvWishList.adapter = dialogAdapter
 
             viewModel.list.observe(this@RestaurantDetailActivity) {
-                dialogAdapter.updateItem(it)
+              //  dialogAdapter.updateItem(it)
             }
 
             findViewById<ImageView>(R.id.imageCross).setOnClickListener {

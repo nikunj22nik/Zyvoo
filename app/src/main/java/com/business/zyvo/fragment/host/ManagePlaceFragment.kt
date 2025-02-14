@@ -100,6 +100,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         var cleaningCharges :String= ""
         var addonlist :MutableList<String> = mutableListOf()
         var addonPrice :MutableList<String> = mutableListOf()
+        var deleteImage :MutableList<Int> = mutableListOf()
 
         // variables for homeSetup
 
@@ -293,13 +294,18 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
          Log.d("TESTING","sIZE IS "+resultActivityList.size)
 
-         var newGalleryList = mutableListOf<String>()
+         val newGalleryList = mutableListOf<String>()
 
          galleryList.forEach {
              if(it.second){
                  newGalleryList.add(it.first)
              }
          }
+         if(newGalleryList.size ==0){
+             LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images")
+             return
+         }
+
          val session : SessionManager = SessionManager(requireContext())
          requestBody.user_id = session.getUserId()!!
 
@@ -366,8 +372,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                          }
                      }
                  }
-             }else{
+             }
+             else{
                  requestBody.property_id = propertyId
+                 requestBody.delete_images = deleteImage
                  LoadingUtils.showDialog(requireContext(),true)
                  viewModel.updateProperty(requestBody).collect{
                      when(it){
@@ -385,8 +393,6 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                      }
                  }
              }
-
-
          }
      }
 
@@ -567,7 +573,6 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         if(data?.longitude != null){
             longitude = data.longitude
-
         }
 
         binding.etDescription.setText(data?.property_description)
@@ -623,7 +628,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             val uri = Uri.parse(str)
             galleryListId.add(it.id)
             galleryList.add(Pair<String,Boolean>(str,false))
-            Log.d("TESTING_URL", str.toString())
+            Log.d("TESTING_URL", uri.toString())
             resultList.add(uri)
         }
 
@@ -1066,9 +1071,15 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             override fun onItemClick(position: Int, type: String) {
 
                 if (type.equals(AppConstant.DELETE)) {
+                    //callImageDeleteApi(galleryListId.get(position),position)
+
                     imageList.removeAt(position)
                     galleryList.removeAt(position)
+                    deleteImage.add(galleryListId.get(position))
+                    galleryListId.removeAt(position)
                     galleryAdapter.updateAdapter(imageList)
+
+
                 } else {
 //                    if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 //                        openGallery()
@@ -1091,6 +1102,27 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
         })
 
+    }
+
+    fun callImageDeleteApi(id:Int,position :Int){
+        lifecycleScope.launch {
+            LoadingUtils.showDialog(requireContext(),false)
+            viewModel.propertyImageDelete(id).collect{
+                when(it){
+                    is NetworkResult.Success ->{
+                        LoadingUtils.hideDialog()
+
+                    }
+                    is NetworkResult.Error ->{
+                        LoadingUtils.hideDialog()
+                        LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                    }
+                    else ->{
+                    }
+                }
+            }
+
+        }
     }
 
     private fun requestPermission() {
@@ -1278,8 +1310,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
 
         imageList = mutableListOf<Uri>()
-        val dummyUri = Uri.parse("http://www.example.com")
-        imageList.add(dummyUri)
+
         adapterActivity = ActivitiesAdapter(requireContext(), activityList.subList(0, 3))
 
         adapterActivity.setOnItemClickListener{ adapterActivity,Int->
@@ -2052,6 +2083,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     fun setUpRecyclerView() {
         galleryAdapter = GallaryAdapter(imageList,requireContext())
+        galleryAdapter.updateAdapter(imageList)
 
 
         binding.recyclerGallery.layoutManager = GridLayoutManager(requireContext(), 3)
@@ -2574,7 +2606,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
     private fun getItemListForRadioPerHoursBulkText(): MutableList<ItemRadio> {
-        val items = PrepareData.getPriceAndHourList1()
+        val items = PrepareData.getPriceAndHourList()
 
         // Restore the previously selected item's state
         if (discountHourIndex != -1 && discountHourIndex < items.size) {

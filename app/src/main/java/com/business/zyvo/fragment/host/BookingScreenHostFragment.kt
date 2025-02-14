@@ -15,6 +15,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
@@ -32,6 +33,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListener {
+
     private var _binding: FragmentBookingScreenHostBinding? = null
     private val binding get() = _binding!!
     private var adapterMyBookingsAdapter: HostBookingsAdapter? = null
@@ -39,17 +41,16 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     private var list: MutableList<MyBookingsModel> = mutableListOf()
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
 
+        arguments?.let {
         }
+
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
         _binding = FragmentBookingScreenHostBinding.inflate(
             LayoutInflater.from(requireContext()), container,
             false
@@ -64,8 +65,9 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
 
-        viewModel.list.observe(viewLifecycleOwner, Observer { list ->
-            adapterMyBookingsAdapter!!.updateItem(list)
+        viewModel.list.observe(viewLifecycleOwner, Observer { list1 ->
+            adapterMyBookingsAdapter!!.updateItem(list1)
+            list = list1
         })
 
         return binding.root
@@ -77,22 +79,42 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                 override fun onItemClick(bookingId: Int, status: String, message: String, reason: String) {
                     lifecycleScope.launch {
                         LoadingUtils.showDialog(requireContext(),false)
-                        viewModel.approveDeclineBooking(bookingId, status, message, reason)
-                            .collect {
-                                when(it){
-                                    is NetworkResult.Success ->{
-                                        LoadingUtils.hideDialog()
-                                        LoadingUtils.showSuccessDialog(requireContext(),it.data.toString())
-                                    }
-                                    is NetworkResult.Error ->{
-                                        LoadingUtils.hideDialog()
-                                        LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
-                                    }
-                                    else ->{
+                     if(status.equals("-11")){
 
-                                    }
-                                }
-                            }
+                         val bundle = Bundle()
+                         bundle.putInt(AppConstant.BOOKING_ID,bookingId)
+                         findNavController().navigate(R.id.reviewBookingHostFragment,bundle)
+
+                     }else {
+                         viewModel.approveDeclineBooking(bookingId, status, message, reason)
+                             .collect {
+                                 when (it) {
+                                     is NetworkResult.Success -> {
+                                         LoadingUtils.hideDialog()
+                                         if (status.equals("decline")) {
+                                             list.removeAll { it.booking_id == bookingId }
+                                             adapterMyBookingsAdapter!!.updateItem(list)
+                                         }
+                                         LoadingUtils.showSuccessDialog(
+                                             requireContext(),
+                                             it.data.toString()
+                                         )
+                                     }
+
+                                     is NetworkResult.Error -> {
+                                         LoadingUtils.hideDialog()
+                                         LoadingUtils.showErrorDialog(
+                                             requireContext(),
+                                             it.message.toString()
+                                         )
+                                     }
+
+                                     else -> {
+
+                                     }
+                                 }
+                             }
+                     }
                     }
                 }
             })
@@ -117,6 +139,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                         when (it) {
                             is NetworkResult.Success -> {
                                 LoadingUtils.hideDialog()
+
                                 it.data?.let { it1 -> adapterMyBookingsAdapter?.updateItem(it1) }
                             }
 
@@ -232,7 +255,8 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     override fun itemClick(obj: Int) {
 
       //  Toast.makeText(requireContext(),obj.toString(),Toast.LENGTH_LONG).show()
-        findNavController().navigate(R.id.reviewBookingHostFragment)
+
+
     }
 
     override fun onClick(p0: View?) {

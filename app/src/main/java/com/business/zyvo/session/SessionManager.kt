@@ -76,5 +76,26 @@ class SessionManager(var context: Context) {
          editor!!.commit()
     }
 
+    fun setLatitude(latitude :String){
+        editor!!.putString(AppConstant.LATITUDE,latitude)
+        editor!!.commit()
+    }
+
+    fun setLongitude(longitude :String){
+        editor!!.putString(AppConstant.LONGITUDE,longitude)
+        editor!!.commit()
+    }
+
+
+    fun getLatitude(): String{
+        return pref?.getString(AppConstant.LATITUDE,"")?:""
+    }
+
+    fun getLongitude() : String{
+        return pref?.getString(AppConstant.LONGITUDE,"")?:""
+    }
+
+
+
 
 }

@@ -2,21 +2,20 @@ package com.business.zyvo.adapter.host
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import androidx.core.content.contentValuesOf
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.google.android.material.imageview.ShapeableImageView
 import com.business.zyvo.AppConstant
 import com.business.zyvo.R
+import com.google.android.material.imageview.ShapeableImageView
 
 
-
-class GallaryAdapter(private var items: List<Uri>,var context : Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class GallaryAdapter(private var items: MutableList<Uri>,var context : Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     var showImage :Int =0
@@ -70,7 +69,7 @@ class GallaryAdapter(private var items: List<Uri>,var context : Context) : Recyc
 
         fun bind(mListener: onItemClickListener) {
             rlMain.setOnClickListener {
-              mListener.onItemClick(adapterPosition, AppConstant.ADD_IMAGE)
+              mListener.onItemClick(adapterPosition-1, AppConstant.ADD_IMAGE)
             }
         }
     }
@@ -85,13 +84,22 @@ class GallaryAdapter(private var items: List<Uri>,var context : Context) : Recyc
                  mListener.onItemClick(adapterPosition,AppConstant.DELETE)
             }
 
-            Glide.with(context).load(item).into(shpImg)
+            Glide.with(context)
+                .load(item)               // Your image URL or resource
+                .error(R.drawable.ic_error)  // Placeholder if the image fails to load
+                .into(shpImg);
+
+//            Glide.with(context).load(item).into(shpImg)
 
         }
     }
 
     public fun updateAdapter(items: List<Uri>){
-        this.items = items
+        this.items = items.toMutableList()
+        val dummyUri = Uri.parse("https://example.com/dummy_image.jpg")
+
+        this.items.add(dummyUri)
+        Log.d("TESTING","ITEMS IN A LIST ARE "+items.size)
         notifyDataSetChanged()
     }
 

@@ -304,6 +304,7 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_name_place"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
@@ -398,6 +399,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/time"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -407,6 +409,7 @@
                                 android:textSize="@dimen/_13ssp" />
 
                             <TextView
+                                android:id="@+id/money"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
@@ -432,6 +435,7 @@
                                 android:textSize="@dimen/_13ssp" />
 
                             <TextView
+                                android:id="@+id/tv_cleaning_fee"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
@@ -459,6 +463,7 @@
                                 android:textSize="@dimen/_13ssp" />
 
                             <TextView
+                                android:id="@+id/tv_service_fee"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
@@ -486,6 +491,7 @@
                                 android:textSize="@dimen/_13ssp" />
 
                             <TextView
+                                android:id="@+id/tv_taxes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
@@ -513,6 +519,7 @@
                                 android:textSize="@dimen/_13ssp" />
 
                             <TextView
+                                android:id="@+id/tv_add_on"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
@@ -545,6 +552,7 @@
                                 android:textSize="@dimen/_13ssp" />
 
                             <TextView
+                                android:id="@+id/tv_total_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
@@ -569,9 +577,9 @@
 
                     <!-- Title -->
                     <TextView
+                        android:id="@+id/tv_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:fontFamily="@font/poppins"
                         android:text="Cabin in Peshastin"
                         android:textColor="@color/black"
@@ -580,6 +588,7 @@
 
                     <!-- Status Badge -->
                     <TextView
+                        android:id="@+id/tv_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10sdp"
@@ -834,6 +843,7 @@
                             android:src="@drawable/ic_calendar_icon" />
 
                         <TextView
+                            android:id="@+id/tv_booking_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
@@ -866,6 +876,7 @@
                             android:src="@drawable/ic_clock_new" />
 
                         <TextView
+                            android:id="@+id/tv_booking_total_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="2 Hours"
@@ -896,6 +907,7 @@
                         android:src="@drawable/ic_clock_new" />
 
                     <TextView
+                        android:id="@+id/booking_from_to"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="From 01pm to 03pm"
@@ -924,150 +936,14 @@
                     android:layout_marginTop="@dimen/_20sdp"
                     android:textStyle="bold" />
 
-                <com.google.android.flexbox.FlexboxLayout
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_iclude_booking"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-                    app:alignItems="center"
-                    app:flexWrap="wrap"
-                    app:justifyContent="flex_start">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_marginEnd="@dimen/_10sdp"
-                        android:background="@drawable/bg_four_side_grey_corner"
-                        android:paddingHorizontal="@dimen/_10sdp"
-                        android:paddingVertical="@dimen/_11sdp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_parking" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_7sdp"
-                            android:text="Parking"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_marginEnd="@dimen/_14sdp"
-                        android:background="@drawable/bg_four_side_grey_corner"
-                        android:paddingVertical="@dimen/_11sdp"
-                        android:paddingStart="@dimen/_10sdp"
-                        android:paddingEnd="@dimen/_18sdp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_wifi" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_7sdp"
-                            android:text="Wifi"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_marginEnd="@dimen/_12sdp"
-                        android:background="@drawable/bg_four_side_grey_corner"
-                        android:paddingVertical="@dimen/_11sdp"
-                        android:paddingStart="@dimen/_10sdp"
-                        android:paddingEnd="@dimen/_12sdp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_t_shape" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_7sdp"
-                            android:text="Tables"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:layout_marginEnd="@dimen/_10sdp"
-                        android:background="@drawable/bg_four_side_grey_corner"
-                        android:paddingVertical="@dimen/_11sdp"
-                        android:paddingStart="@dimen/_10sdp"
-                        android:paddingEnd="@dimen/_12sdp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_chairs" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_7sdp"
-                            android:text="Chairs"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_10sdp"
-                        android:background="@drawable/bg_four_side_grey_corner"
-                        android:paddingVertical="@dimen/_11sdp"
-                        android:paddingStart="@dimen/_10sdp"
-                        android:paddingEnd="@dimen/_12sdp">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_chimney" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_7sdp"
-                            android:text="Kitchen"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                </com.google.android.flexbox.FlexboxLayout>
+                    />
 
                 <View
                     android:layout_width="match_parent"
@@ -1129,6 +1005,7 @@
                     android:visibility="gone"
                     >
                     <TextView
+                        android:id="@+id/tv_parking_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
@@ -1179,6 +1056,7 @@
                     android:visibility="gone"
                     >
                     <TextView
+                        android:id="@+id/tv_host_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
@@ -1202,6 +1080,7 @@
                     android:text="Add-ons from the host"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp"
+                    android:visibility="gone"
                     android:textStyle="bold" />
 
                 <TextView
@@ -1210,6 +1089,7 @@
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
+                    android:visibility="gone"
                     android:text="Host provided services, items or options. \nAvailable at checkout. "
                     android:textColor="@color/black" />
 
@@ -1217,6 +1097,7 @@
                     android:id="@+id/recycler_add_on"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_10sdp" />
 
@@ -1226,11 +1107,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:text="Show More" />
+                    android:text="Show More"
+                    android:visibility="gone"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
+                    android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginVertical="@dimen/_15sdp" />
 
@@ -1245,6 +1128,7 @@
                     android:textStyle="bold" />
 
                 <TextView
+
                     android:id="@+id/tv_location_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

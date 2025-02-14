@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -46,7 +45,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_15sdp"
-
         android:layout_marginTop="@dimen/_15sdp"
         android:fontFamily="@font/poppins"
         android:text="Please Enter the name"
@@ -83,6 +81,7 @@
         android:background="@drawable/button_grey_line_bg"
         android:gravity="start"
         android:hint="Description"
+        android:maxLength="50"
         android:textColorHint="#80000000"
         android:paddingHorizontal="@dimen/_13sdp"
         android:paddingVertical="@dimen/_7sdp"

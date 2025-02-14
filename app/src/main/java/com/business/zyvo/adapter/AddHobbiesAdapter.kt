@@ -11,9 +11,10 @@ import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutAddHobbiesBinding
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.model.AddHobbiesModel
+import com.business.zyvo.onItemClickData
 
 
-class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesModel>,var listner : OnClickListener1): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesModel>,var listner : OnClickListener1,var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val uploadHobbiesCode = 1 // Represents normal location entries
     private val uploadHobbiesFixed = 0
@@ -66,6 +67,8 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
                 if (enteredText.isNotEmpty()) {
+
+                    listner2.itemClick(adapterPosition,"Hobbies",enteredText)
                     // Add the new work item to the list
                     list.add(0, AddHobbiesModel(enteredText))
                     notifyDataSetChanged() // Notify adapter to update RecyclerView

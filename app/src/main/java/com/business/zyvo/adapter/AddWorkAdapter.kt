@@ -6,16 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.databinding.LayoutMyWorkBinding
 import com.business.zyvo.model.AddWorkModel
+import com.business.zyvo.onItemClickData
 
 class AddWorkAdapter(
     var context: Context,
     var list: MutableList<AddWorkModel>,
-    var listner: OnClickListener1
+    var listner: OnClickListener1,
+    var listner2: onItemClickData
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val uploadWorkCode = 1
     private val uploadWorkFixed = 0
@@ -78,6 +81,7 @@ class AddWorkAdapter(
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
                 if (enteredText.isNotEmpty()) {
+                    listner2.itemClick(position,"work",enteredText)
                     // Add the new work item to the list
                     list.add(0, AddWorkModel(enteredText))
                     notifyDataSetChanged() // Notify adapter to update RecyclerView
@@ -88,6 +92,8 @@ class AddWorkAdapter(
 
                     // Clear EditText field for the next input
                     binding.etType.text.clear()
+                }else{
+                    Toast.makeText(context,"Please Enter Work",Toast.LENGTH_LONG).show()
                 }
             }
         }

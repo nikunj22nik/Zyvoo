@@ -14,6 +14,13 @@
             />
     </fragment>
 
+    <fragment
+        android:id="@+id/termsServicesFragment"
+        android:name="com.business.zyvo.fragment.guest.termAndCondition.TermsServicesFragment"
+        android:label="fragment_terms_services"
+        tools:layout="@layout/fragment_terms_services" />
+
+
     <fragment android:id="@+id/host_manage_property_frag"
         android:name="com.business.zyvo.fragment.host.ManagePlaceFragment"
         android:label="manageFragment"

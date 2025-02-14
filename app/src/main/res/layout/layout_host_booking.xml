@@ -86,7 +86,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:background="@drawable/button_bg"
-
                 android:fontFamily="@font/poppins"
                 android:maxLines="1"
                 android:paddingHorizontal="@dimen/_10ssp"
@@ -223,11 +222,13 @@
             android:paddingHorizontal="@dimen/_6sdp"
             android:paddingVertical="@dimen/_6sdp">
 
-            <TextView
+            <EditText
+                android:id="@+id/other_reason_et"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/poppins"
-                android:text="Other reason..."
+                android:hint="Other reason.."
+                android:background="@null"
                 android:textColor="#663F3D56"
                 android:textSize="@dimen/_10ssp"
                 android:textStyle="bold" />

@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="user"
+            type="com.business.zyvo.fragment.guest.profile.model.UserProfile" />
+    </data>
+
+
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     tools:context=".fragment.host.HostProfileFragment">
+
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clHead"
@@ -609,6 +621,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textEmail">
 
             <EditText
+                android:id="@+id/et_email"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
@@ -671,6 +684,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textPhoneNumberTitle">
 
             <EditText
+                android:id="@+id/et_phone_numeber"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
@@ -733,6 +747,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textPasswordTitle">
 
             <EditText
+                android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
@@ -798,13 +813,14 @@
             >
 
             <EditText
+                android:id="@+id/et_street"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:background="@null"
                 android:fontFamily="@font/poppins"
-                android:hint="Country"
+                android:hint="Street"
                 android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/black"
@@ -836,6 +852,7 @@
             app:layout_constraintTop_toBottomOf="@+id/textMailingAddressTitle">
 
             <EditText
+                android:id="@+id/etcity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
@@ -843,7 +860,7 @@
                 android:background="@null"
                 android:fontFamily="@font/poppins"
                 android:hint="City"
-                android:inputType="textPassword"
+                android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -876,6 +893,7 @@
             >
 
             <EditText
+                android:id="@+id/et_state"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
@@ -883,7 +901,7 @@
                 android:background="@null"
                 android:fontFamily="@font/poppins"
                 android:hint="State"
-                android:inputType="textPassword"
+                android:inputType="text"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -914,14 +932,16 @@
             app:layout_constraintTop_toBottomOf="@+id/rlMailingCityTitle">
 
             <EditText
+                android:id="@+id/et_zipcode"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:background="@null"
                 android:fontFamily="@font/poppins"
-                  android:inputType="textPassword"
+                  android:inputType="text"
                 android:maxLines="1"
+                android:hint="Zipcode"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textSize="@dimen/_12ssp"
@@ -1431,3 +1451,4 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
+</layout>

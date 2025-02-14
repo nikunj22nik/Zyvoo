@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -22,11 +23,14 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.business.zyvo.AppConstant
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -34,29 +38,41 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.adapter.AdapterAddOn
 import com.business.zyvo.adapter.guest.AdapterReview
+import com.business.zyvo.adapter.host.AdapterIncludeInBooking
 import com.business.zyvo.databinding.FragmentReviewBookingBinding
+import com.business.zyvo.model.host.hostdetail.HostDetailModel
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.PrepareData
+import com.business.zyvo.viewmodel.host.HostBookingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
+
     private var _binding: FragmentReviewBookingBinding? = null
     private val binding get() = _binding!!
-    private var param1: String? = null
-    private var param2: String? = null
-
+    private var bookingId: Int = -1
     lateinit var adapterAddon: AdapterAddOn
     lateinit var adapterReview: AdapterReview
     private lateinit var mapView: MapView
+    private lateinit var viewModel: HostBookingsViewModel
     private var mMap: GoogleMap? = null
     lateinit var navController: NavController
+    lateinit var adapterIncludeInBooking: AdapterIncludeInBooking
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            // param1 = it.getString(ARG_PARAM1)
-            //    param2 = it.getString(ARG_PARAM2)
+            if (it.containsKey(AppConstant.BOOKING_ID)) {
+                bookingId = it.getInt(AppConstant.BOOKING_ID)
+            }
         }
     }
 
@@ -65,38 +81,57 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
         _binding = DataBindingUtil.inflate(
-            inflater,
-            R.layout.fragment_review_booking, container, false
+            inflater, R.layout.fragment_review_booking, container, false
         )
+
+        adapterIncludeInBooking = AdapterIncludeInBooking(mutableListOf(), requireContext())
+
+        val gridLayoutManager = GridLayoutManager(requireContext(), PrepareData.numberOFColumn(requireActivity()))
+
+        binding.recyclerIcludeBooking.layoutManager = gridLayoutManager
+        binding.recyclerIcludeBooking.adapter = adapterIncludeInBooking
 
 
         binding.textMessageTheHostButton.text = "Message the Guest"
         binding.rlNeedHelp.visibility = View.GONE
+
         binding.imageVerifyCheck.visibility = View.GONE
         binding.imageStar1.visibility = View.VISIBLE
         binding.textRatingStar1.visibility = View.VISIBLE
+
+        viewModel = ViewModelProvider(this)[HostBookingsViewModel::class.java]
+
+        if (bookingId != -1) {
+            Log.d("TESTING","Booking Id is "+ bookingId)
+          callingBookingDetailApi()
+        }
 
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         super.onViewCreated(view, savedInstanceState)
+
         navController = Navigation.findNavController(view)
+
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-        initialization()
 
+        initialization()
 
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
         }
 
 
-binding.textReportIssueButton.setOnClickListener {
-    dialogReportIssue()
-}
+        binding.textReportIssueButton.setOnClickListener {
+            dialogReportIssue()
+        }
+
         binding.textReviewBookingButton.setOnClickListener {
             dialogReview()
         }
@@ -109,26 +144,155 @@ binding.textReportIssueButton.setOnClickListener {
             shareApp()
         }
         binding.textReviewClick.setOnClickListener {
-            showPopupWindow(it,0)
+            showPopupWindow(it, 0)
         }
         showingMoreText()
 
 
         binding.rlParking.setOnClickListener {
-            if(binding.tvParkingRule.visibility == View.VISIBLE){
-                binding.tvParkingRule.visibility= View.GONE
-            }else{
+            if (binding.tvParkingRule.visibility == View.VISIBLE) {
+                binding.tvParkingRule.visibility = View.GONE
+            } else {
                 binding.tvParkingRule.visibility = View.VISIBLE
             }
         }
 
         binding.rlHostRules.setOnClickListener {
-            if(binding.tvHostRule.visibility == View.VISIBLE){
-                binding.tvHostRule.visibility= View.GONE
-            }else{
+            if (binding.tvHostRule.visibility == View.VISIBLE) {
+                binding.tvHostRule.visibility = View.GONE
+            } else {
                 binding.tvHostRule.visibility = View.VISIBLE
             }
         }
+
+
+
+    }
+
+
+
+    private fun callingBookingDetailApi() {
+        lifecycleScope.launch {
+            var sessionManager = SessionManager(requireContext())
+            var latitude = sessionManager.getLatitude()
+            var longitude = sessionManager.getLongitude()
+            LoadingUtils.showDialog(requireContext(), false)
+            if (latitude.equals("") || longitude.equals("")) {
+                viewModel.hostBookingDetails(bookingId, null, null).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            LoadingUtils.hideDialog()
+                            it.data?.second?.let { it1 -> showingDataToUi(it1) }
+                        }
+
+                        is NetworkResult.Error -> {
+                            LoadingUtils.hideDialog()
+                            LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
+                        }
+
+                        else -> {
+                            LoadingUtils.hideDialog()
+                        }
+                    }
+                }
+            } else {
+                viewModel.hostBookingDetails(bookingId, latitude, longitude).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            LoadingUtils.hideDialog()
+                            it.data?.let { it1 -> showingDataToUi(it1.second) }
+                        }
+
+                        is NetworkResult.Error -> {
+                            LoadingUtils.hideDialog()
+                            LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
+                        }
+
+                        else -> {
+                            LoadingUtils.hideDialog()
+                        }
+                    }
+                }
+            }
+            // viewModel.hostBookingDetails()
+        }
+
+    }
+
+
+    private fun showingDataToUi(data: HostDetailModel) {
+
+        binding.tvNamePlace.setText(data.property_title)
+        binding.textRatingStar.setText(data.guest_rating)
+        binding.textK.setText(data.reviews_total_rating)
+        binding.textMiles.setText(data.distance_miles + " miles away")
+        binding.time.setText(data.booking_hour)
+        binding.money.setText("$ " + data.booking_amount)
+
+        data.cleaning_fee?.let {
+            binding.tvCleaningFee.setText("$" + it)
+        } ?: binding.tvCleaningFee.setText("$ 0")
+
+        data.service_fee?.let {
+            binding.tvServiceFee.setText("$" + it)
+        } ?: binding.tvServiceFee.setText("$ 0")
+
+        data.tax?.let {
+            binding.tvTaxes.setText("$ " + it)
+        } ?: binding.tvTaxes.setText("$ 0")
+
+        data.add_on_total?.let {
+            binding.tvAddOn.setText("$ " + it)
+        } ?: binding.tvAddOn.setText("$ 0")
+
+        data.guest_name?.let {
+            binding.textUserName.setText(it)
+        } ?: binding.textUserName.setText("")
+
+        data.guest_rating?.let {
+            binding.textRatingStar1.setText(it)
+        } ?: binding.textRatingStar1.setText("")
+
+        data.property_title?.let {
+            binding.tvTitle.setText(it)
+        } ?: binding.tvTitle.setText("")
+
+        data.booking_status?.let {
+            binding.tvStatus.setText(it)
+        } ?: binding.tvStatus.setText("")
+
+        data.booking_date?.let {
+            binding.tvBookingDate.setText(it)
+        } ?: binding.tvBookingDate.setText("")
+
+        data.booking_hour?.let {
+            binding.tvBookingTotalTime.setText(it)
+        } ?: binding.tvBookingTotalTime.setText("")
+
+        binding.bookingFromTo.setText("From " + data.booking_start_time + " to " + data.booking_end_time)
+
+
+        data.parking_rules?.let {
+            binding.tvParkingContent.setText(it)
+        }?: binding.tvParkingContent.setText("")
+
+
+        data.host_rules?.let {
+            binding.tvHostContent.setText(it)
+        }?: binding.tvHostContent.setText("")
+
+        adapterIncludeInBooking.updateAdapter(data.amenities)
+
+        binding.tvLocationName.setText(data.address)
+
+        data.latitude?.let {
+            val location = data.longitude?.let { it1 -> LatLng(data.latitude.toDouble(), it1.toDouble()) }
+
+            // Add a marker on the map at the given location
+            location?.let { it1 -> MarkerOptions().position(it1).title("Marker in San Francisco") }
+                ?.let { it2 -> mMap?.addMarker(it2) }
+        }
+
     }
 
 
@@ -145,8 +309,6 @@ binding.textReportIssueButton.setOnClickListener {
             // binding.underlinedTextView.visibility =View.GONE
             showingLessText()
         }
-
-
 
 
     }
@@ -167,10 +329,7 @@ binding.textReportIssueButton.setOnClickListener {
         }
 
 
-
-
     }
-
 
 
     private fun showPopupWindow(anchorView: View, position: Int) {
@@ -189,15 +348,15 @@ binding.textReportIssueButton.setOnClickListener {
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemHighestReview).setOnClickListener {
 
-            binding.textReviewClick.text ="Sort by: Highest Review"
+            binding.textReviewClick.text = "Sort by: Highest Review"
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemLowestReview).setOnClickListener {
-            binding.textReviewClick.text ="Sort by: Lowest Review"
+            binding.textReviewClick.text = "Sort by: Lowest Review"
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemRecentReview).setOnClickListener {
-            binding.textReviewClick.text ="Sort by: Recent Review"
+            binding.textReviewClick.text = "Sort by: Recent Review"
             popupWindow.dismiss()
         }
 
@@ -241,7 +400,12 @@ binding.textReportIssueButton.setOnClickListener {
 
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+        popupWindow.showAsDropDown(
+            anchorView,
+            xOffset,
+            yOffset,
+            Gravity.END
+        )  // Adjust the Y offset dynamically
     }
 
 
@@ -291,7 +455,7 @@ binding.textReportIssueButton.setOnClickListener {
 
     private fun dialogReportIssue() {
         var dateManager = DateManager(requireContext())
-        val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
+        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(true)
             setContentView(R.layout.report_violation)
@@ -302,13 +466,13 @@ binding.textReportIssueButton.setOnClickListener {
 //            }
 
             val crossButton: ImageView = findViewById(R.id.img_cross)
-            val submit : RelativeLayout = findViewById(R.id.rl_submit_report)
-            val txtSubmit : TextView = findViewById(R.id.txt_submit)
+            val submit: RelativeLayout = findViewById(R.id.rl_submit_report)
+            val txtSubmit: TextView = findViewById(R.id.txt_submit)
 
             submit.setOnClickListener {
                 if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
                     txtSubmit.setText("Submitted")
-                }else{
+                } else {
                     dialog.dismiss()
                     openDialogNotification()
                 }
@@ -330,9 +494,9 @@ binding.textReportIssueButton.setOnClickListener {
 
     }
 
-    private fun openDialogNotification(){
+    private fun openDialogNotification() {
 
-        val dialog=Dialog(requireContext(), R.style.BottomSheetDialog)
+        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(true)
             setContentView(R.layout.dialog_notification_report_submit)
@@ -342,8 +506,8 @@ binding.textReportIssueButton.setOnClickListener {
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
 
-            var cross :ImageView = findViewById<ImageView>(R.id.img_cross)
-            var okBtn :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+            var cross: ImageView = findViewById<ImageView>(R.id.img_cross)
+            var okBtn: RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
             okBtn.setOnClickListener {
                 dialog.dismiss()
             }
@@ -363,9 +527,10 @@ binding.textReportIssueButton.setOnClickListener {
             show()
         }
     }
-    private fun openDialogSuccess(){
 
-        val dialog=Dialog(requireContext(), R.style.BottomSheetDialog)
+    private fun openDialogSuccess() {
+
+        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(true)
             setContentView(R.layout.dialog_success_report_submit)
@@ -375,8 +540,8 @@ binding.textReportIssueButton.setOnClickListener {
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
 
-            var cross :ImageView = findViewById<ImageView>(R.id.img_cross)
-            var okBtn :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+            var cross: ImageView = findViewById<ImageView>(R.id.img_cross)
+            var okBtn: RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
             okBtn.setOnClickListener {
                 dialog.dismiss()
             }
@@ -424,9 +589,6 @@ binding.textReportIssueButton.setOnClickListener {
 
         binding.tvLocationName.paintFlags =
             binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-
-
-
 
 
     }

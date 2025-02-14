@@ -1,6 +1,7 @@
 package com.business.zyvo.remote
 
 import com.business.zyvo.model.host.PropertyDetailsSave
+import com.google.android.gms.common.annotation.KeepForSdkWithMembers
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -127,17 +128,17 @@ interface ZyvoApi {
     @POST("add_language")
     @FormUrlEncoded
     suspend fun addLanguage(@Field("user_id")user_id :String,
-                            @Field("language")language_name :String) : Response<JsonObject>
+                            @Field("language_name")language_name :String) : Response<JsonObject>
 
     @POST("delete_language")
     @FormUrlEncoded
     suspend fun deleteLanguage(@Field("user_id")user_id :String,
-                               @Field("index")index :Int) : Response<JsonObject>
+                               @Field("language_index")language_index :Int) : Response<JsonObject>
 
     @POST("add_hobby")
     @FormUrlEncoded
     suspend fun addHobbies(@Field("user_id")user_id :String,
-                           @Field("language")hobbies_name :String) : Response<JsonObject>
+                           @Field("hobby_name")hobbies_name :String) : Response<JsonObject>
 
     @POST("delete_hobby")
     @FormUrlEncoded
@@ -147,7 +148,7 @@ interface ZyvoApi {
     @POST("add_pet")
     @FormUrlEncoded
     suspend fun addPets(@Field("user_id")user_id :String,
-                        @Field("language")pet_name :String) : Response<JsonObject>
+                        @Field("pet_name")pet_name :String) : Response<JsonObject>
 
     @POST("delete_pet")
     @FormUrlEncoded
@@ -167,12 +168,19 @@ interface ZyvoApi {
     @POST("add_state")
     @FormUrlEncoded
     suspend fun addState(@Field("user_id")user_id :String,
-                        @Field("State")state :String) : Response<JsonObject>
+                        @Field("state")state :String) : Response<JsonObject>
 
     @POST("add_zip_code")
     @FormUrlEncoded
     suspend fun addZipCode(@Field("user_id")user_id :String,
-                        @Field("ZipCode")zipCode :String) : Response<JsonObject>
+                        @Field("zip_code")zipCode :String) : Response<JsonObject>
+
+    @POST("update_password")
+    @FormUrlEncoded
+    suspend fun updatePassword(@Field("user_id")user_id :String,
+                              @Field("password")password :String,
+                              @Field("password_confirmation")password_confirmation :String) : Response<JsonObject>
+
 
 
     @POST("complete_profile")
@@ -269,6 +277,18 @@ interface ZyvoApi {
     @GET("get_faq")
     suspend fun getFaq():Response<JsonObject>
 
+
+
+
+    @POST("property_image_delete")
+    @FormUrlEncoded
+    suspend fun propertyImageDelete(@Field("image_id")imageId :Int) : Response<JsonObject>
+
+    @POST("host_booking_details")
+    @FormUrlEncoded
+    suspend fun hostBookingDetails(@Field("booking_id") bookingId:Int, @Field("latitude")latitude :String?,
+                                   @Field("longitude") longitude :String?) : Response<JsonObject>
+
     @POST("contact_us")
     @FormUrlEncoded
     suspend fun contactUs(
@@ -297,4 +317,47 @@ interface ZyvoApi {
     suspend fun getGuideDetails(
         @Field("guide_id") guide_id : String
     ) :Response<JsonObject>
+
+
+    @POST("get_home_data")
+    @FormUrlEncoded
+    suspend fun getHomeData(
+        @Field("user_id") user_id : String,
+        @Field("latitude") latitude : String,
+        @Field("longitude") longitude : String
+    ) :Response<JsonObject>
+
+    @POST("get_wishlist")
+    @FormUrlEncoded
+    suspend fun getWisList(
+        @Field("user_id") user_id : String) :Response<JsonObject>
+
+    @POST("create_wishlist")
+    @FormUrlEncoded
+    suspend fun createWishlist(
+        @Field("user_id") user_id : String,
+        @Field("name") name : String,
+        @Field("description") description : String,
+        @Field("property_id") property_id : String) :Response<JsonObject>
+
+    @POST("delete_wishlist")
+    @FormUrlEncoded
+    suspend fun deleteWishlist(
+        @Field("user_id") user_id : String,
+        @Field("wishlist_id") wishlist_id : String) :Response<JsonObject>
+
+    @POST("remove_item_from_wishlist")
+    @FormUrlEncoded
+    suspend fun removeItemFromWishlist(
+        @Field("user_id") user_id : String,
+        @Field("property_id") property_id : String) :Response<JsonObject>
+
+
+    @POST("save_item_in_wishlist")
+    @FormUrlEncoded
+    suspend fun saveItemInWishlist(
+        @Field("user_id") user_id : String,
+        @Field("property_id") property_id : String,
+        @Field("wishlist_id") wishlist_id : String) :Response<JsonObject>
+
 }

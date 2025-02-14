@@ -6,6 +6,7 @@ import com.business.zyvo.model.CountryLanguage
 class AppConstant {
 
     companion object {
+        val BOOKING_ID: String? ="Booking_id"
         val PROPERTY_ID: String? ="property_id"
         val DISCOUNT: String = "Discount"
         val BULK_HOUR: String = "Bulk_Hour"
@@ -167,8 +168,12 @@ class AppConstant {
         val aboutMe = "AboutMe is required"
         val details = "Details is required"
         val feedbackAbout = "Please select feedback about"
+
       val message = "Message is required"
         val emailValid = "Please enter a valid email"
+
+        val description = "Name is Description"
+
     }
 
 
