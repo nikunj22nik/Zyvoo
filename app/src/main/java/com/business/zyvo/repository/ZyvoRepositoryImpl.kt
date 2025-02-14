@@ -1061,6 +1061,46 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         }
     }
 
+    override suspend fun updatePassword(
+        userId: String,
+        password: String,
+        password_confirmation: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+        emit(NetworkResult.Loading())
+        try {
+            api.updatePassword(userId,password,password_confirmation).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success")&&
+                            resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
 
     override suspend fun getHostBookingList(userid: Int): Flow<NetworkResult<MutableList<MyBookingsModel>>> = flow {
         emit(NetworkResult.Loading())
@@ -1786,11 +1826,11 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
 
     override suspend fun addLanguage(
         userId: String,
-        language: String
+        language_name: String
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.addLanguage(userId,language).apply {
+            api.addLanguage(userId,language_name).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success")&&
@@ -1825,11 +1865,11 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
 
     override suspend fun deleteLanguage(
         userId: String,
-        index: Int
+        language_index: Int
     ): Flow<NetworkResult<Pair<String, String>>> = flow{
         emit(NetworkResult.Loading())
         try {
-            api.deleteLanguage(userId,index).apply {
+            api.deleteLanguage(userId,language_index).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success")&&
@@ -2042,6 +2082,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             emit(NetworkResult.Error(e.message!!))
         }
     }
+
 
 
     override suspend fun approveDeclineBooking(

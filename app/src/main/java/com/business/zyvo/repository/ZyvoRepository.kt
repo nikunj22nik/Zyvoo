@@ -93,7 +93,7 @@ interface ZyvoRepository {
 
     suspend fun deleteMyWork(userId: String,work_index: Int) : Flow<NetworkResult<Pair<String,String>>>
 
-    suspend fun addLanguage(userId: String,language: String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun addLanguage(userId: String,language_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun deleteLanguage(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
 
@@ -112,6 +112,8 @@ interface ZyvoRepository {
     suspend fun addState(userId: String,state: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun addZipCode(userId: String,zip_code: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun updatePassword(userId: String,password: String,password_confirmation: String) : Flow<NetworkResult<Pair<String,String>>>
 
 
 

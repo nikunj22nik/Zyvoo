@@ -128,17 +128,17 @@ interface ZyvoApi {
     @POST("add_language")
     @FormUrlEncoded
     suspend fun addLanguage(@Field("user_id")user_id :String,
-                            @Field("language")language_name :String) : Response<JsonObject>
+                            @Field("language_name")language_name :String) : Response<JsonObject>
 
     @POST("delete_language")
     @FormUrlEncoded
     suspend fun deleteLanguage(@Field("user_id")user_id :String,
-                               @Field("index")index :Int) : Response<JsonObject>
+                               @Field("language_index")language_index :Int) : Response<JsonObject>
 
     @POST("add_hobby")
     @FormUrlEncoded
     suspend fun addHobbies(@Field("user_id")user_id :String,
-                           @Field("language")hobbies_name :String) : Response<JsonObject>
+                           @Field("hobby_name")hobbies_name :String) : Response<JsonObject>
 
     @POST("delete_hobby")
     @FormUrlEncoded
@@ -148,7 +148,7 @@ interface ZyvoApi {
     @POST("add_pet")
     @FormUrlEncoded
     suspend fun addPets(@Field("user_id")user_id :String,
-                        @Field("language")pet_name :String) : Response<JsonObject>
+                        @Field("pet_name")pet_name :String) : Response<JsonObject>
 
     @POST("delete_pet")
     @FormUrlEncoded
@@ -168,12 +168,19 @@ interface ZyvoApi {
     @POST("add_state")
     @FormUrlEncoded
     suspend fun addState(@Field("user_id")user_id :String,
-                        @Field("State")state :String) : Response<JsonObject>
+                        @Field("state")state :String) : Response<JsonObject>
 
     @POST("add_zip_code")
     @FormUrlEncoded
     suspend fun addZipCode(@Field("user_id")user_id :String,
-                        @Field("ZipCode")zipCode :String) : Response<JsonObject>
+                        @Field("zip_code")zipCode :String) : Response<JsonObject>
+
+    @POST("update_password")
+    @FormUrlEncoded
+    suspend fun updatePassword(@Field("user_id")user_id :String,
+                              @Field("password")password :String,
+                              @Field("password_confirmation")password_confirmation :String) : Response<JsonObject>
+
 
 
     @POST("complete_profile")
