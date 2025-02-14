@@ -1104,8 +1104,6 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
 
 
     override suspend fun getPropertyList(userId:Int,latitude: Double?, longitude: Double?): Flow<NetworkResult<Pair<MutableList<HostMyPlacesModel>,String>>> = flow {
-
-
         try {
             // Create a coroutine scope to run concurrent tasks
             val responseDeferred = CoroutineScope(Dispatchers.IO).async {
