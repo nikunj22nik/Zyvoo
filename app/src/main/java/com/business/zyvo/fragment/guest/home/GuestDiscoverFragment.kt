@@ -934,5 +934,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         // Set other dialog properties
         alertDialog.setCancelable(false)
         alertDialog.show()
+
+
+
+        
     }
 }
