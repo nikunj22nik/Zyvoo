@@ -19,7 +19,7 @@
         android:label="NotificationFragment" />
     <fragment
         android:id="@+id/helpCenterFragment"
-        android:name="com.business.zyvo.fragment.guest.HelpCenterFragment"
+        android:name="com.business.zyvo.fragment.guest.helpCenter.HelpCenterFragment"
         android:label="HelpCenterFragment" />
     <fragment
         android:id="@+id/browseAllGuidesAndArticlesFragment"
@@ -92,7 +92,7 @@
 
     <fragment
         android:id="@+id/helpCenterFragment_host"
-        android:name="com.business.zyvo.fragment.host.HostHelpCenterFragment"
+        android:name="com.business.zyvo.fragment.guest.helpCenter.HostHelpCenterFragment"
         android:label="HelpCenterFragment" />
 
     <fragment
@@ -102,12 +102,12 @@
         />
 
     <fragment android:id="@+id/browse_aricle_details"
-        android:name="com.business.zyvo.fragment.host.BrowseGuideArtcileDetailFragment"
+        android:name="com.business.zyvo.fragment.both.browseGuideArtcileDetail.BrowseGuideArtcileDetailFragment"
         android:label="Browse Article Details"
         />
 
     <fragment android:id="@+id/contact_us"
-        android:name="com.business.zyvo.fragment.both.ContactUsFragment"
+        android:name="com.business.zyvo.fragment.both.contactUs.ContactUsFragment"
         android:label="Contact Us"
         />
     <fragment

@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -30,7 +32,7 @@ class FrequentlyAskedQuestionsFragment : Fragment() {
     private val binding get() = _binding!!
 private lateinit var adapter : FaqAdapter
 private var list : MutableList<FaqModel> = mutableListOf()
-
+    lateinit var navController: NavController
     private val viewModel : FaqViewModel by lazy {
         ViewModelProvider(this)[FaqViewModel::class.java]
     }
@@ -54,9 +56,12 @@ private var list : MutableList<FaqModel> = mutableListOf()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
           adapter = FaqAdapter(requireContext(), mutableListOf())
         binding.recyclerViewItem.adapter = adapter
-
+        binding.imageBackButton.setOnClickListener {
+            navController.navigateUp()
+        }
 
         lifecycleScope.launch {
             if (NetworkMonitorCheck._isConnected.value) {
@@ -89,12 +94,12 @@ private var list : MutableList<FaqModel> = mutableListOf()
                 when(it){
 
                     is NetworkResult.Success -> {
-                        if (it.data?.isEmpty() == true){
 
-                        }else{
+                        if (it.data?.isNotEmpty() == true){
                             it.data?.let { it1 -> adapter.updateItem(it1) }
-                        }
+                        }else{
 
+                        }
 
                     }
                     is NetworkResult.Error -> {

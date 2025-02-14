@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragment.host.HostHelpCenterFragment">
+    tools:context=".fragment.guest.helpCenter.HostHelpCenterFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#fff"
-            tools:context=".fragment.guest.HelpCenterFragment">
+            tools:context=".fragment.guest.helpCenter.HelpCenterFragment">
 
             <ImageView
                 android:id="@+id/imageBackIcon"

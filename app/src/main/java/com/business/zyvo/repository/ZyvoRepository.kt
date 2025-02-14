@@ -122,6 +122,14 @@ interface ZyvoRepository {
     suspend fun feedback(user_id : String,type: String,details: String) : Flow<NetworkResult<String>>
 
     suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
+
+    suspend fun contactUs(user_id : String,name : String,email: String,message: String) : Flow<NetworkResult<String>>
+
+    suspend fun getHelpCenter(user_id : String,user_type : String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun getArticleDetails(article_id : String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun getGuideDetails(guide_id : String) : Flow<NetworkResult<JsonObject>>
 }
 
 

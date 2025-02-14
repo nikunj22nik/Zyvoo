@@ -10,14 +10,15 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener
+import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.adapter.AdapterAllGuides
 import com.business.zyvo.databinding.FragmentBrowseAllGuidesAndArticlesBinding
-import com.business.zyvo.viewmodel.HelpCenterViewModel
+import com.business.zyvo.fragment.guest.helpCenter.viewModel.HelpCenterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BrowseAllGuidesAndArticlesFragment : Fragment(), OnClickListener,View.OnClickListener {
+class BrowseAllGuidesAndArticlesFragment : Fragment(), OnClickListener1,View.OnClickListener {
   private var _binding : FragmentBrowseAllGuidesAndArticlesBinding? = null
     private val binding get() = _binding!!
     private  val viewModel : HelpCenterViewModel by viewModels()
@@ -40,10 +41,10 @@ textType = it.getString(AppConstant.textType)
         adapterAllGuides = AdapterAllGuides(requireContext(), arrayListOf(),maxItemsToShow = null,this)
         binding.recyclerViewGuests.adapter = adapterAllGuides
 
-        viewModel.list.observe(viewLifecycleOwner, Observer {
-                list ->
-            adapterAllGuides.updateItem(list)
-        })
+//        viewModel.list.observe(viewLifecycleOwner, Observer {
+//                list ->
+//            adapterAllGuides.updateItem(list)
+//        })
 
 
         return binding.root
@@ -65,9 +66,7 @@ textType = it.getString(AppConstant.textType)
 
     }
 
-    override fun itemClick(obj: Int) {
-        findNavController().navigate(R.id.browseAllGuidesArticleOpenFragment)
-    }
+
 
     override fun onClick(p0: View?) {
        when(p0?.id){
@@ -75,6 +74,10 @@ textType = it.getString(AppConstant.textType)
                findNavController().navigate(R.id.helpCenterFragment)
            }
        }
+    }
+
+    override fun itemClick(obj: Int, text: String) {
+        findNavController().navigate(R.id.browseAllGuidesArticleOpenFragment)
     }
 
 
