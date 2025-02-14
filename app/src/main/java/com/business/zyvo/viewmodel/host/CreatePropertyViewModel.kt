@@ -45,11 +45,11 @@ class CreatePropertyViewModel @Inject constructor(
 
     }
 
-     suspend fun propertyImageDelete(imageId: Int) : Flow<NetworkResult<String>> {
-        return repository.propertyImageDelete(imageId).onEach {
-
-        }
-     }
+//     suspend fun propertyImageDelete(imageId: Int) : Flow<NetworkResult<String>> {
+//        return repository.propertyImageDelete(imageId).onEach {
+//
+//        }
+//     }
 
 
     suspend fun addProperty(code: PropertyDetailsSave): Flow<NetworkResult<Pair<String, Int>>> {
