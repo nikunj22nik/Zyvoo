@@ -268,4 +268,45 @@ interface ZyvoApi {
 
     @GET("get_faq")
     suspend fun getFaq():Response<JsonObject>
+
+    @POST("get_home_data")
+    @FormUrlEncoded
+    suspend fun getHomeData(
+        @Field("user_id") user_id : String,
+        @Field("latitude") latitude : String,
+        @Field("longitude") longitude : String
+    ) :Response<JsonObject>
+
+    @POST("get_wishlist")
+    @FormUrlEncoded
+    suspend fun getWisList(
+        @Field("user_id") user_id : String) :Response<JsonObject>
+
+    @POST("create_wishlist")
+    @FormUrlEncoded
+    suspend fun createWishlist(
+        @Field("user_id") user_id : String,
+        @Field("name") name : String,
+        @Field("description") description : String,
+        @Field("property_id") property_id : String) :Response<JsonObject>
+
+    @POST("delete_wishlist")
+    @FormUrlEncoded
+    suspend fun deleteWishlist(
+        @Field("user_id") user_id : String,
+        @Field("wishlist_id") wishlist_id : String) :Response<JsonObject>
+
+    @POST("remove_item_from_wishlist")
+    @FormUrlEncoded
+    suspend fun removeItemFromWishlist(
+        @Field("user_id") user_id : String,
+        @Field("property_id") property_id : String) :Response<JsonObject>
+
+
+    @POST("save_item_in_wishlist")
+    @FormUrlEncoded
+    suspend fun saveItemInWishlist(
+        @Field("user_id") user_id : String,
+        @Field("property_id") property_id : String,
+        @Field("wishlist_id") wishlist_id : String) :Response<JsonObject>
 }

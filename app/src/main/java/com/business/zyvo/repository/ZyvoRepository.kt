@@ -10,6 +10,7 @@ import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import retrofit2.http.Field
@@ -122,6 +123,25 @@ interface ZyvoRepository {
     suspend fun feedback(user_id : String,type: String,details: String) : Flow<NetworkResult<String>>
 
     suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
+
+    suspend fun  getHomeData(userId: String,latitude: String,longitude: String) : Flow<NetworkResult<JsonArray>>
+
+    suspend fun  getWisList(userId: String) : Flow<NetworkResult<JsonArray>>
+
+    suspend fun createWishlist(userId: String,
+                               name: String,
+                               description: String,
+                               property_id: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteWishlist(userId: String,
+                               wishlist_id: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun removeItemFromWishlist(userId: String,
+                                       property_id: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun saveItemInWishlist(userId: String,
+                                       property_id: String,
+                                   wishlist_id: String) : Flow<NetworkResult<Pair<String,String>>>
 }
 
 

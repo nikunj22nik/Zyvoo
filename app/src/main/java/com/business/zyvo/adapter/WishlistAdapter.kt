@@ -1,43 +1,52 @@
 package com.business.zyvo.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutWishlistBinding
+import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.model.WishListModel
 
-class WishlistAdapter(var context: Context, private val isSmall: Boolean, var list: MutableList<WishListModel>, var listener: OnClickListener?) :
+class WishlistAdapter(var context: Context, private val isSmall: Boolean,
+                      var list: MutableList<WishlistItem>,
+                      var listener: OnClickListener?) :
     RecyclerView.Adapter<WishlistAdapter.WishlistViewHolder>() {
 
     inner class WishlistViewHolder(var binding: LayoutWishlistBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(currentItem: WishListModel) {
-            binding.imageWishList.setImageResource(currentItem.image)
-            binding.textSaved.setText(currentItem.text2)
-            binding.textTitle.setText(currentItem.text1)
+        fun bind(currentItem: WishlistItem) {
+            currentItem.last_saved_property_image.let {
+                Glide.with(context).load(AppConstant.BASE_URL + it).into( binding.imageWishList)
+            }
+            currentItem.items_in_wishlist.let {
+                binding.textSaved.text = "$it saved"
+            }
+            currentItem.wishlist_name.let {
+                binding.textTitle.setText(it)
+            }
 
             binding.root.setOnClickListener {
                 listener?.itemClick(position)
             }
 
-
           //   Adjust size based on isSmall flag using dimensions from dimens.xml
             val resources = itemView.context.resources
-            val (imageWidth, imageHeight, textSize) = if (isSmall) {
+            val (imageWidth, imageHeight, _) = if (isSmall) {
                 Triple(
                     resources.getDimensionPixelSize(R.dimen.imageWishListWidthSmall),
                     resources.getDimensionPixelSize(R.dimen.imageWishListHeightSmall),
-                    resources.getDimension(R.dimen.text_small_size)
-                )
+                    resources.getDimension(R.dimen.text_small_size))
             } else {
                 Triple(
                     resources.getDimensionPixelSize(R.dimen.imageWishListWidthLarge),
                     resources.getDimensionPixelSize(R.dimen.imageWishListHeightLarge),
-                    resources.getDimension(R.dimen.text_large_size)
-                )
+                    resources.getDimension(R.dimen.text_large_size))
             }
 
             // Apply dimensions to ImageView
@@ -46,14 +55,7 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean, var li
                 height = imageHeight
             }
             binding.imageWishList.requestLayout()
-
-            // Apply text size to TextViews
-           // binding.textSaved.textSize = textSize
-         //   binding.textTitle.textSize = textSize
-
-                    }
-
-
+        }
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WishlistViewHolder {
@@ -66,10 +68,10 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean, var li
     override fun getItemCount() = list.size
     override fun onBindViewHolder(holder: WishlistViewHolder, position: Int) {
         val currentItem = list.get(position)
-
         holder.bind(currentItem)
     }
-    fun updateItem(newItem : MutableList<WishListModel>){
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItem(newItem : MutableList<WishlistItem>){
         this.list = newItem
         notifyDataSetChanged()
     }

@@ -88,6 +88,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/imageWishFull"
+            android:layout_width="@dimen/_18sdp"
+            android:layout_height="@dimen/_18sdp"
+            android:layout_margin="@dimen/_10sdp"
+            android:src="@drawable/wishlistfull"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
@@ -163,7 +173,7 @@
         android:id="@+id/textPricePerHours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="37 miles away"
+        android:text="0 miles away"
         android:textColor="#000"
         android:textStyle="bold"
         android:drawablePadding="@dimen/_4sdp"

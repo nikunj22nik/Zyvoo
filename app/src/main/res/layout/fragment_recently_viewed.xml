@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".fragment.guest.RecentlyViewedFragment">
+    tools:context=".fragment.guest.recentlyViewe.RecentlyViewedFragment">
 
     <RelativeLayout
         android:id="@+id/llHeader"

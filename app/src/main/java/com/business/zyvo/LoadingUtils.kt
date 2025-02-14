@@ -68,6 +68,7 @@ open class LoadingUtils {
 
 
             cancelBtn.setOnClickListener {
+                dialog.dismiss()
                 }
 
             // Set button click listener

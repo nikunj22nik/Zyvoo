@@ -1,7 +1,10 @@
 package com.business.zyvo.backgroundTask
 
 import com.business.zyvo.NetworkResult
+import com.google.gson.Gson
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import org.json.JSONObject
 
 class AuthTask {
@@ -27,6 +30,12 @@ class AuthTask {
 
          fun processData(apiResponse: JsonObject): NetworkResult<JsonObject> {
              val obj = apiResponse.get("data").asJsonObject
+             return NetworkResult.Success(obj)
+
+         }
+
+         fun processDataArray(apiResponse: JsonObject): NetworkResult<JsonArray> {
+             val obj = apiResponse.get("data").asJsonArray
              return NetworkResult.Success(obj)
 
          }
