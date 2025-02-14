@@ -72,6 +72,7 @@ import com.business.zyvo.model.AddPaymentCardModel
 import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.model.CountryLanguage
+import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.viewmodel.PaymentViewModel
@@ -80,7 +81,7 @@ import java.util.Locale
 
 
 @AndroidEntryPoint
-class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
+class HostProfileFragment : Fragment(),OnClickListener1, onItemClickData, OnClickListener {
     lateinit var binding :FragmentHostProfileBinding
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
@@ -238,7 +239,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
     // Function to initialize the adapter for adding locations
     private fun adapterInitialize() {
-        addLocationAdapter = AddLocationAdapter(requireContext(), locationList, this)
+        addLocationAdapter = AddLocationAdapter(requireContext(), locationList, this,this)
 
         binding.recyclerViewLocation.adapter = addLocationAdapter
 
@@ -246,7 +247,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
         addLocationAdapter.updateLocations(locationList)
 
-        addWorkAdapter = AddWorkAdapter(requireContext(), workList, this)
+        addWorkAdapter = AddWorkAdapter(requireContext(), workList, this,this)
 
         binding.recyclerViewWork.adapter = addWorkAdapter
 
@@ -416,15 +417,11 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
         }
     }
 
-    override fun itemClick(obj: Int, text: String) {
+    override fun itemClick(obj: Int, text: String, enteredText: String)  {
         when (text) {
             "location" -> {
                 if (obj == locationList.size - 1) {
                     startLocationPicker()
-                } else {
-                    locationList.removeAt(obj)
-                    addLocationAdapter.updateLocations(locationList)
-
                 }
             }
 
@@ -432,30 +429,17 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 if (obj == workList.size - 1) {
 //                    var text: String = "Add Your Work Here"
 //                    dialogAddItem(text)
-                } else {
-                    workList.removeAt(obj)
-                    addWorkAdapter.updateWork(workList)
-
                 }
             }
 
             "language" -> {
                 if (obj == languageList.size - 1) {
                     dialogSelectLanguage()
-                } else {
-                    languageList.removeAt(obj)
-                    addLanguageSpeakAdapter.updateLanguage(languageList)
-
                 }
-
             }
 
             "Hobbies" -> {
                 if (obj == hobbiesList.size - 1) {
-                } else {
-                    hobbiesList.removeAt(obj)
-                    addHobbiesAdapter.updateHobbies(hobbiesList)
-
                 }
             }
 
@@ -463,7 +447,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
     }
 
 
-//cfupg7644r
+
     override fun onClick(p0: View?) {
         when (p0?.id) {
 
@@ -849,6 +833,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
         }}
 
 
+    @SuppressLint("MissingInflatedId")
     fun dialogLoginEmail(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -1447,13 +1432,34 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
         return widthInDp > 600
     }
 
+    override fun itemClick(obj: Int, text: String) {
+        when (text) {
+            "location" -> {
+                locationList.removeAt(obj)
+                addLocationAdapter.updateLocations(locationList)
+            }
 
+            "work" -> {
+                workList.removeAt(obj)
+                addWorkAdapter.updateWork(workList)
+            }
+
+            "language" -> {
+                languageList.removeAt(obj)
+                addLanguageSpeakAdapter.updateLanguage(languageList)
+
+            }
+
+            "Hobbies" -> {
+                hobbiesList.removeAt(obj)
+                addHobbiesAdapter.updateHobbies(hobbiesList)
+
+            }
+
+        }
+    }
 
 
 }
-
-// 14-01-1967
-// 10-12-1971
-//50100614300827
 
 

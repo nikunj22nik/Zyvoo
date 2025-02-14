@@ -1,5 +1,6 @@
 package com.business.zyvo.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -12,8 +13,9 @@ import com.business.zyvo.databinding.LayoutAddPetsBinding
 import com.business.zyvo.databinding.LayoutAddTextBinding
 
 import com.business.zyvo.model.AddPetsModel
+import com.business.zyvo.onItemClickData
 
-class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>, var listner : OnClickListener1): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>, var listner : OnClickListener1,var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val uploadPetsCode = 1 // Represents normal location entries
     private val uploadPetsFixed = 0
@@ -51,6 +53,7 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
     inner class PetsViewHolderFixed(var binding: LayoutAddTextBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("NotifyDataSetChanged")
         fun bind() {
 
             binding.imageIcon.setImageResource(R.drawable.ic_add_pets_icon)
@@ -65,6 +68,7 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
                 if (enteredText.isNotEmpty()) {
+                    listner2.itemClick(adapterPosition,"Pets",enteredText)
                     // Add the new work item to the list
                     list.add(0, AddPetsModel(enteredText))
                     notifyDataSetChanged() // Notify adapter to update RecyclerView

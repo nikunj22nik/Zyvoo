@@ -11,11 +11,13 @@ import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.databinding.LayoutWhereILiveBinding
 import com.business.zyvo.model.AddLocationModel
+import com.business.zyvo.onItemClickData
 
 class AddLocationAdapter(
     var context: Context,
     var list: MutableList<AddLocationModel>,
-    var listener: OnClickListener1
+    var listener: OnClickListener1,
+    var listner2 : onItemClickData
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val uploadLocationCode = 1 // Represents normal location entries
@@ -26,10 +28,7 @@ class AddLocationAdapter(
 
     // ViewHolder for Location Items
     inner class LocationViewHolder(var binding: LayoutWhereILiveBinding) : RecyclerView.ViewHolder(binding.root) {
-        init {
 
-
-        }
 
         fun bind(location: AddLocationModel) {
 
@@ -54,7 +53,7 @@ class AddLocationAdapter(
         init {
 
             binding.root.setOnClickListener {
-                listener.itemClick(adapterPosition,"location") // Handle "Add New" button click
+               listner2.itemClick(position,"location","")// Handle "Add New" button click
             }
         }
 

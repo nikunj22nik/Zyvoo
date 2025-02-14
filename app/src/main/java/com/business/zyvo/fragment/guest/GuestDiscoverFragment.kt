@@ -52,6 +52,7 @@ import com.business.zyvo.adapter.LoggedScreenAdapter
 import com.business.zyvo.adapter.WishlistAdapter
 import com.business.zyvo.databinding.FragmentGuestDiscoverBinding
 import com.business.zyvo.model.Location
+import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.viewmodel.ImagePopViewModel
 import com.business.zyvo.viewmodel.WishlistViewModel
@@ -129,6 +130,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("CheckUserId",SessionManager(requireContext())?.getUserId().toString())
         binding.clSearch.visibility = View.VISIBLE
         val locations = listOf(
             Location(37.7749, -122.4194, "San Francisco"),

@@ -70,6 +70,7 @@ import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.AddLocationModel
 import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.model.AddWorkModel
+import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
@@ -86,7 +87,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.util.Locale
 @AndroidEntryPoint
-class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
+class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , OnClickListener{
 
     private lateinit var binding: FragmentCompleteProfileBinding
     private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
@@ -191,6 +192,7 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
         arguments?.let {
           val data = Gson().fromJson(requireArguments().getString("data")!!,JsonObject::class.java)
             userId = data.get("user_id").asInt.toString()
+            session!!.setUserId(userId.toInt())
             token = data.get("token").asString
             token.let {
                 session?.setAuthToken(it)
@@ -251,7 +253,7 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
 
     // Function to initialize the adapter for adding locations
     private fun adapterInitialize() {
-        addLocationAdapter = AddLocationAdapter(requireContext(), locationList, this)
+        addLocationAdapter = AddLocationAdapter(requireContext(), locationList, this,this)
         binding.recyclerViewLocation.adapter = addLocationAdapter
 
         // Update the adapter with the initial location list (if any)
@@ -259,7 +261,8 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
 
 
 
-        addWorkAdapter = AddWorkAdapter(requireContext(), workList, this)
+        addWorkAdapter = AddWorkAdapter(requireContext(), workList, this,this)
+
         binding.recyclerViewWork.adapter = addWorkAdapter
 
         addWorkAdapter.updateWork(workList)
@@ -270,13 +273,13 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
         addLanguageSpeakAdapter.updateLanguage(languageList)
 
 
-        addHobbiesAdapter = AddHobbiesAdapter(requireContext(),hobbiesList,this)
+        addHobbiesAdapter = AddHobbiesAdapter(requireContext(),hobbiesList,this,this)
         binding.recyclerViewHobbies.adapter = addHobbiesAdapter
 
         addHobbiesAdapter.updateHobbies(hobbiesList)
 
 
-        addPetsAdapter = AddPetsAdapter(requireContext(),petsList,this)
+        addPetsAdapter = AddPetsAdapter(requireContext(),petsList,this,this)
         binding.recyclerViewPets.adapter = addPetsAdapter
 
         addPetsAdapter.updatePets(petsList)
@@ -387,15 +390,11 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
 
    }
 
-    override fun itemClick(obj: Int, text: String) {
+    override fun itemClick(obj: Int, text: String, enteredText: String)  {
         when (text) {
             "location" -> {
                 if (obj == locationList.size - 1) {
                     startLocationPicker()
-                } else {
-                    locationList.removeAt(obj)
-                    addLocationAdapter.updateLocations(locationList)
-
                 }
             }
 
@@ -403,20 +402,12 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
                 if (obj == workList.size - 1) {
 //                    var text: String = "Add Your Work Here"
 //                    dialogAddItem(text)
-                } else {
-                    workList.removeAt(obj)
-                    addWorkAdapter.updateWork(workList)
-
                 }
             }
 
             "language" ->{
                 if (obj == languageList.size - 1) {
                     dialogSelectLanguage()
-                } else {
-                    languageList.removeAt(obj)
-                    addLanguageSpeakAdapter.updateLanguage(languageList)
-
                 }
 
             }
@@ -425,20 +416,12 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
                 if (obj == hobbiesList.size - 1) {
 
 
-                } else {
-                    hobbiesList.removeAt(obj)
-                    addHobbiesAdapter.updateHobbies(hobbiesList)
-
                 }
             }
 
             "Pets"->{
                 if (obj == petsList.size - 1) {
 
-
-                } else {
-                    petsList.removeAt(obj)
-                    addPetsAdapter.updatePets(petsList)
 
                 }
             }
@@ -517,7 +500,9 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             if (userId!=null && !userId.equals("")) {
+
                                 session?.setUserId(userId.toInt())
+                                Log.d("CheckUserIdComplete",session?.getUserId().toString())
                             }
                             val intent = Intent(requireContext(),GuesMain::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -754,7 +739,7 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             dialog.dismiss()
-                            var textHeaderOfOtpVerfication = "Please type the verification code send \nto $email"
+                            val textHeaderOfOtpVerfication = "Please type the verification code send \nto $email"
                             dialogOtp(requireActivity(),"",email,textHeaderOfOtpVerfication,"email")
                         }
                         dialog.dismiss()
@@ -1180,4 +1165,36 @@ class CompleteProfileFragment : Fragment(), OnClickListener1 , OnClickListener{
             .filter { it != AppConstant.unknownLocation }  // Remove "Unknown Location"
             .toMutableList()
     }
+
+    override fun itemClick(obj: Int, text: String) {
+        when (text) {
+            "location" -> {
+                locationList.removeAt(obj)
+                addLocationAdapter.updateLocations(locationList)
+            }
+
+            "work" -> {
+                workList.removeAt(obj)
+                addWorkAdapter.updateWork(workList)
+            }
+
+            "language" ->{
+                languageList.removeAt(obj)
+                addLanguageSpeakAdapter.updateLanguage(languageList)
+
+            }
+
+            "Hobbies"->{
+                hobbiesList.removeAt(obj)
+                addHobbiesAdapter.updateHobbies(hobbiesList)
+            }
+
+            "Pets"->{
+                petsList.removeAt(obj)
+                addPetsAdapter.updatePets(petsList)
+            }
+
+        }
+    }
+
 }
