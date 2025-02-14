@@ -1104,26 +1104,26 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     }
 
-    fun callImageDeleteApi(id:Int,position :Int){
-        lifecycleScope.launch {
-            LoadingUtils.showDialog(requireContext(),false)
-            viewModel.propertyImageDelete(id).collect{
-                when(it){
-                    is NetworkResult.Success ->{
-                        LoadingUtils.hideDialog()
-
-                    }
-                    is NetworkResult.Error ->{
-                        LoadingUtils.hideDialog()
-                        LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
-                    }
-                    else ->{
-                    }
-                }
-            }
-
-        }
-    }
+//    fun callImageDeleteApi(id:Int,position :Int){
+//        lifecycleScope.launch {
+//            LoadingUtils.showDialog(requireContext(),false)
+//            viewModel.propertyImageDelete(id).collect{
+//                when(it){
+//                    is NetworkResult.Success ->{
+//                        LoadingUtils.hideDialog()
+//
+//                    }
+//                    is NetworkResult.Error ->{
+//                        LoadingUtils.hideDialog()
+//                        LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+//                    }
+//                    else ->{
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
 
     private fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
