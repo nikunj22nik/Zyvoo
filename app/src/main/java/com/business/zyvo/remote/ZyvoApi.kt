@@ -271,6 +271,7 @@ interface ZyvoApi {
     suspend fun getFaq():Response<JsonObject>
 
 
+
     @POST("property_image_delete")
     @FormUrlEncoded
     suspend fun propertyImageDelete(@Field("image_id")imageId :Int) : Response<JsonObject>
@@ -280,5 +281,33 @@ interface ZyvoApi {
     suspend fun hostBookingDetails(@Field("booking_id") bookingId:Int, @Field("latitude")latitude :String?,
                                    @Field("longitude") longitude :String?) : Response<JsonObject>
 
+    @POST("contact_us")
+    @FormUrlEncoded
+    suspend fun contactUs(
+        @Field("user_id") user_id : String,
+        @Field("name") name : String,
+        @Field("email") email : String,
+        @Field("message") message : String,
+    ) :Response<JsonObject>
+
+
+    @POST("get_help_center")
+    @FormUrlEncoded
+    suspend fun getHelpCenter(
+        @Field("user_id") user_id : String,
+        @Field("user_type") user_type : String
+    ) :Response<JsonObject>
+
+    @POST("get_article_details")
+    @FormUrlEncoded
+    suspend fun getArticleDetails(
+        @Field("article_id") article_id : String
+    ) :Response<JsonObject>
+
+    @POST("get_guide_details")
+    @FormUrlEncoded
+    suspend fun getGuideDetails(
+        @Field("guide_id") guide_id : String
+    ) :Response<JsonObject>
 
 }

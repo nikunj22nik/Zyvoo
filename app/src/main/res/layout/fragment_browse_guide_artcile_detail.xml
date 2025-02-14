@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".fragment.host.BrowseGuideArtcileDetailFragment">
+    tools:context=".fragment.both.browseGuideArtcileDetail.BrowseGuideArtcileDetailFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -113,6 +113,7 @@
                 android:paddingHorizontal="@dimen/_10sdp"
                 >
                 <TextView
+                    android:id="@+id/textCategory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="RANKING"
@@ -123,6 +124,7 @@
             </RelativeLayout>
 
             <TextView
+                android:id="@+id/textTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Post title article title name article blog"
@@ -147,9 +149,10 @@
                     android:src="@drawable/ic_clock_dot_new"
                     android:background="@drawable/ic_clock_dot_new_white"
                     android:backgroundTint="@color/white"
-                    android:tint="@color/white"
+                    app:tint="@color/white"
                     />
                 <TextView
+                    android:id="@+id/textTimeRequired"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="3 min read"
@@ -165,10 +168,11 @@
                     android:src="@drawable/ic_clock_dot_new"
                     android:background="@drawable/ic_calendar_white"
                     android:backgroundTint="@color/white"
-                    android:tint="@color/white"
+                    app:tint="@color/white"
                     android:layout_marginStart="@dimen/_25sdp"
                     />
                 <TextView
+                    android:id="@+id/textDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mar 13, 2022"
@@ -188,6 +192,7 @@
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/textDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy"
@@ -202,6 +207,7 @@
         android:layout_height="@dimen/_1sdp"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_15sdp"
+        android:visibility="gone"
         android:background="@color/grey" />
 
     <TextView
@@ -210,6 +216,7 @@
         android:text="Introducing Reader. A Stunning Experience"
         android:textColor="@color/black"
         android:textSize="@dimen/_13sdp"
+        android:visibility="gone"
         android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginStart="@dimen/_10sdp"
         android:textStyle="bold"
@@ -220,6 +227,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_13sdp"
+                android:visibility="gone"
                 android:fontFamily="@font/poppins"
                 android:layout_marginEnd="@dimen/_10sdp"
                 android:text="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy"
@@ -231,6 +239,7 @@
                 app:shapeAppearance="@style/RoundedImageViewShape"
                 android:src="@drawable/ic_psychologist_img"
                 android:scaleType="fitXY"
+                android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 />
@@ -241,8 +250,8 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:layout_marginEnd="@dimen/_10sdp"
-
                 android:fontFamily="@font/poppins"
+                android:visibility="gone"
                 android:text="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy"
                 android:textColor="@color/black" />
 

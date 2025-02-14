@@ -1,5 +1,6 @@
 package com.business.zyvo.fragment.guest.feedback
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -39,6 +40,7 @@ class FeedbackFragment : Fragment() {
     var session: SessionManager?=null
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -57,6 +59,7 @@ class FeedbackFragment : Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
@@ -64,11 +67,30 @@ class FeedbackFragment : Fragment() {
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
         }
-
-
         binding.spinnerFeedback.setItems(
             listOf(AppConstant.Host, AppConstant.Guest)
         )
+
+
+
+
+
+    if (session?.getCurrentPanel().equals(AppConstant.Host)){
+        binding.spinnerFeedback.isEnabled = false
+        binding.spinnerFeedback.setText("Host")
+        type = "host"
+        binding.etAddDetails.visibility = View.VISIBLE
+        binding.textAddDetails.visibility = View.VISIBLE
+    }else {
+        binding.spinnerFeedback.isEnabled = false
+        binding.spinnerFeedback.setText("Guest")
+        type = "guest"
+        binding.etAddDetails.visibility = View.VISIBLE
+        binding.textAddDetails.visibility = View.VISIBLE
+    }
+
+
+
 
 
         binding.spinnerFeedback.setOnFocusChangeListener { _, b ->
@@ -143,12 +165,10 @@ class FeedbackFragment : Fragment() {
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.feedback(session?.getUserId().toString(),type, binding.etAddDetails.text.toString().trim()).collect{
                 when(it){
-
                     is NetworkResult.Success -> {
                         if (it.data != null){
                            LoadingUtils.showSuccessDialog(requireContext(),it.data)
                         }
-
                     }
                     is NetworkResult.Error -> {
                         showErrorDialog(requireContext(),it.message!!)

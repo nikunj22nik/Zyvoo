@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/ic_dots_bg"
     android:orientation="vertical"
-    tools:context=".fragment.both.ContactUsFragment">
+    tools:context=".fragment.both.contactUs.ContactUsFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -87,6 +87,7 @@
 
 
                     <EditText
+                        android:id="@+id/etName"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35sdp"
                         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -96,6 +97,7 @@
                         android:textSize="@dimen/_11sdp" />
 
                     <EditText
+                        android:id="@+id/etEmail"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35sdp"
                         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -123,8 +125,9 @@
                         android:background="@drawable/bg_four_side_grey_corner">
 
                         <EditText
+                            android:id="@+id/etMessage"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_marginHorizontal="@dimen/_10sdp"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:background="@null" />
@@ -132,6 +135,7 @@
 
 
                     <RelativeLayout
+                        android:id="@+id/rlSubmitBtn"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35sdp"
                         android:layout_marginHorizontal="@dimen/_30sdp"

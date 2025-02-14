@@ -125,9 +125,19 @@ interface ZyvoRepository {
 
     suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
 
+
     suspend fun propertyImageDelete(imageId :Int) : Flow<NetworkResult<String>>
 
     suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String,HostDetailModel>>>
+
+    suspend fun contactUs(user_id : String,name : String,email: String,message: String) : Flow<NetworkResult<String>>
+
+    suspend fun getHelpCenter(user_id : String,user_type : String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun getArticleDetails(article_id : String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun getGuideDetails(guide_id : String) : Flow<NetworkResult<JsonObject>>
+
 }
 
 
