@@ -4,7 +4,7 @@
 <data>
     <variable
         name="viewModel"
-        type="com.business.zyvo.viewmodel.WishlistViewModel" />
+        type="com.business.zyvo.fragment.guest.wishlists.viewModel.WishListsViewModel" />
 </data>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -13,7 +13,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context=".fragment.guest.WishlistFragment">
+    tools:context=".fragment.guest.wishlists.WishlistFragment">
 
   <TextView
       android:id="@+id/textHeader"

@@ -10,7 +10,11 @@ import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
+
 import com.business.zyvo.model.host.hostdetail.HostDetailModel
+
+import com.google.gson.JsonArray
+
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
@@ -128,7 +132,8 @@ interface ZyvoRepository {
     suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
 
 
-    suspend fun propertyImageDelete(imageId :Int) : Flow<NetworkResult<String>>
+
+
 
     suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String,HostDetailModel>>>
 
@@ -139,6 +144,26 @@ interface ZyvoRepository {
     suspend fun getArticleDetails(article_id : String) : Flow<NetworkResult<JsonObject>>
 
     suspend fun getGuideDetails(guide_id : String) : Flow<NetworkResult<JsonObject>>
+
+
+    suspend fun  getHomeData(userId: String,latitude: String,longitude: String) : Flow<NetworkResult<JsonArray>>
+
+    suspend fun  getWisList(userId: String) : Flow<NetworkResult<JsonArray>>
+
+    suspend fun createWishlist(userId: String,
+                               name: String,
+                               description: String,
+                               property_id: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteWishlist(userId: String,
+                               wishlist_id: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun removeItemFromWishlist(userId: String,
+                                       property_id: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun saveItemInWishlist(userId: String,
+                                       property_id: String,
+                                   wishlist_id: String) : Flow<NetworkResult<Pair<String,String>>>
 
 }
 

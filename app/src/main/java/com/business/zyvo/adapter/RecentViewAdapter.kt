@@ -1,32 +1,39 @@
 package com.business.zyvo.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
+import com.business.zyvo.OnClickListener
 import com.business.zyvo.databinding.LayoutRecentViewBinding
+import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.model.WishListModel
 
 class RecentViewAdapter(
     var context: Context,
-    var list: MutableList<WishListModel>,
-    var edit: Boolean
+    var list: MutableList<WishlistItem>,
+    var edit: Boolean,
+    var listener: OnClickListener?
 ) :
     RecyclerView.Adapter<RecentViewAdapter.RecentViewtViewHolder>() {
 
     inner class RecentViewtViewHolder(var binding: LayoutRecentViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(currentItem: WishListModel) {
-            binding.imageWishList.setImageResource(currentItem.image)
-
-            binding.textTitle.setText(currentItem.text1)
-
-
-            binding.imageCross.setOnClickListener {
-                removeItem(position)
+        fun bind(currentItem: WishlistItem) {
+            currentItem.last_saved_property_image.let {
+                Glide.with(context).load(AppConstant.BASE_URL + it).into( binding.imageWishList)
+            }
+            currentItem.wishlist_name.let {
+                binding.textTitle.setText(it)
             }
 
+            binding.imageCross.setOnClickListener {
+                listener?.itemClick(position)
+            }
 
             if (edit) {
                 binding.imageCross.visibility = View.VISIBLE
@@ -62,11 +69,13 @@ class RecentViewAdapter(
         ) // Optional: updates positions of remaining items
     }
 
-    fun updateItem(newItem: MutableList<WishListModel>) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItem(newItem: MutableList<WishlistItem>) {
         this.list = newItem
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateEditMode(isEdit: Boolean) {
         this.edit = isEdit
         notifyDataSetChanged() // Notify the adapter to refresh the views

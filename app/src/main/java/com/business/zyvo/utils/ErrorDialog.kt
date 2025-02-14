@@ -1,5 +1,6 @@
 package com.business.zyvo.utils
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -9,7 +10,9 @@ import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.databinding.CustomDialogBinding
 import okhttp3.MediaType
@@ -124,13 +127,25 @@ object ErrorDialog {
         val mediaType = "multipart/form-data".toMediaType()
         return items.map { it.toRequestBody(mediaType) }
     }
-  /* fun createMultipartList(name: String, items: List<String>): List<MultipartBody.Part> {
-       val mediaType = "text/plain".toMediaType()
-       return items.mapIndexed  { index,item ->
-           val requestBody = item.toRequestBody(mediaType)
-           MultipartBody.Part.createFormData("$name[$index]", item,requestBody)
-       }
-   }*/
+
+
+    @SuppressLint("DefaultLocale")
+    fun formatConvertCount(count: String): String {
+        return try {
+            val num = count.toInt()
+            when {
+                num >= 1_000_000 -> if (num % 1_000_000 == 0) "${num / 1_000_000}M" else String.format("%.1fM", num / 1_000_000.0)
+                num >= 1_000 -> if (num % 1_000 == 0) "${num / 1_000}K" else String.format("%.1fK", num / 1_000.0)
+                else -> num.toString()
+            }
+        } catch (e: NumberFormatException) {
+            count
+        }
+    }
+
+    fun showToast(context: Context?,string: String?){
+        Toast.makeText(context,string, Toast.LENGTH_SHORT).show()
+    }
 
 
 

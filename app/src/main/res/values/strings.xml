@@ -22,6 +22,7 @@
     <string name="previous">Previous</string>
     <string name="resizable_text_read_more">…Show More</string>
     <string name="resizable_text_read_less">…Show Less</string>
+    <string name="dialogMessage">"Please Turn On Your Location.Your location helps us enhance your overall experience, making it more convenient and efficient. Rest assured, your privacy is our priority, and your location data will be handled securely and responsibly.Thank you for helping us serve you better!"</string>
 
 
     <string-array name="day">
