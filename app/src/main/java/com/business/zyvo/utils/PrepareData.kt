@@ -1,5 +1,6 @@
 package com.business.zyvo.utils
 
+import android.app.Activity
 import android.content.ContentResolver
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -378,6 +379,20 @@ object PrepareData {
 
         // Create a resized Bitmap
         return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+    }
+
+    fun numberOFColumn(activity :Activity) :Int{
+
+        val displayMetrics = activity.resources.displayMetrics
+        val screenWidth = displayMetrics.widthPixels
+
+        // Calculate the number of columns based on screen width
+        val columns: Int = when {
+            screenWidth > 1800 ->  return 4  // Large screens (e.g., tablets or large devices)
+            screenWidth > 1000 -> return 3  // Medium screens (e.g., some tablets)
+            else -> return 2  // Small screens (e.g., phones)
+        }
+
     }
 
 }

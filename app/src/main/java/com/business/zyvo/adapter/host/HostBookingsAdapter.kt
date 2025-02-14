@@ -129,7 +129,8 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback
                 }
                 binding.clMain.setOnClickListener{
-                    listner.itemClick(position)
+//                    listner.itemClick(position)
+                   mListener.onItemClick(list.get(position).booking_id,"-11","","")
                 }
                 binding.textName.setText(currentItem.guest_name)
                 binding.textDate.setText(currentItem.booking_date)

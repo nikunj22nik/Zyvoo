@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.model.MyBookingsModel
+import com.business.zyvo.model.host.hostdetail.HostDetailModel
 import com.business.zyvo.repository.ZyvoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -39,5 +40,13 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     ) : Flow<NetworkResult<String>>{
          return repository.approveDeclineBooking(bookingId,status, message,reason).onEach {  }
      }
+
+    suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String, HostDetailModel>>> {
+        return repository.hostBookingDetails(bookingId, latitude, longitude).onEach {
+
+        }
+    }
+
+
 
 }

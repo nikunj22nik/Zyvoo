@@ -6,6 +6,7 @@ import androidx.annotation.RequiresExtension
 import com.business.zyvo.AppConstant
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.backgroundTask.AuthTask
+import com.business.zyvo.backgroundTask.HostDetailsTask
 
 import com.business.zyvo.backgroundTask.MyPlacesTask
 import com.business.zyvo.model.HostMyPlacesModel
@@ -16,6 +17,7 @@ import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
+import com.business.zyvo.model.host.hostdetail.HostDetailModel
 import com.business.zyvo.remote.ZyvoApi
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.createMultipartList
@@ -1925,11 +1927,51 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         }
     }
 
-    override suspend fun propertyImageDelete(imageId: Int) {
 
+    override suspend fun propertyImageDelete(imageId: Int) : Flow<NetworkResult<String>> =flow{
+        try {
+            api.propertyImageDelete(imageId).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(resp.get("message").asString))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        }
+        catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
     }
 
 
+    override suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String, HostDetailModel>>> = flow{
+        try {
+            api.hostBookingDetails(bookingId, latitude, longitude).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(HostDetailsTask.processPrivacyData(resp))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        }
+        catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
 
 
 

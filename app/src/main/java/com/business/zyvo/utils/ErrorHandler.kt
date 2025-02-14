@@ -15,13 +15,9 @@ object ErrorHandler {
 
 
 
-    @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
+
     fun emitError(e: Exception) :String {
         when (e) {
-            is HttpException -> {
-                Log.e("ERROR", "HTTP exception: ${e.message}")
-               return e.message ?: AppConstant.unKnownError
-            }
             is IOException -> {
                 Log.e("ERROR", "IO exception: ${e.message} :: ${e.localizedMessage}")
                 return e.message ?: AppConstant.unKnownError

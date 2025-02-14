@@ -29,6 +29,7 @@ class TermsServicesFragment : Fragment() ,OnClickListener{
     private  var  _binding : FragmentTermsServicesBinding? = null
     private  val binding  get() =  _binding!!
 
+    private var privacy: Int? = null
     private  val viewModel : TermsViewModel by lazy {
         ViewModelProvider(this)[TermsViewModel::class.java]
     }
@@ -37,6 +38,10 @@ class TermsServicesFragment : Fragment() ,OnClickListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+
+            if(it.containsKey("privacy")) {
+                privacy = it.getInt("privacy")
+            }
 
         }
     }
@@ -123,7 +128,11 @@ class TermsServicesFragment : Fragment() ,OnClickListener{
     override fun onClick(p0: View?) {
        when(p0?.id){
            R.id.imageBackButton->{
-               findNavController().navigate(R.id.profileFragment)
+               if(privacy ==1){
+                  findNavController().navigate(R.id.hostProfileFragment)
+               }else {
+                   findNavController().navigateUp()
+               }
            }
        }
     }

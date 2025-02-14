@@ -136,7 +136,8 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
-                } is NetworkResult.Success -> {
+                }
+                is NetworkResult.Success -> {
                 isLoading.value = false
             } else -> {
                 isLoading.value = false

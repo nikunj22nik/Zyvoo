@@ -10,6 +10,7 @@ import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
+import com.business.zyvo.model.host.hostdetail.HostDetailModel
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
@@ -124,7 +125,9 @@ interface ZyvoRepository {
 
     suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
 
-    suspend fun propertyImageDelete(imageId :Int) : Response<JsonObject>
+    suspend fun propertyImageDelete(imageId :Int) : Flow<NetworkResult<String>>
+
+    suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String,HostDetailModel>>>
 }
 
 

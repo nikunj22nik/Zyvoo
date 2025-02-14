@@ -93,8 +93,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
 
         initialization()
 
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true) {
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     requireActivity().finishAffinity()
                 }
@@ -157,6 +156,10 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                 if (location != null) {
                     val latitude = location.latitude
                     val longitude = location.longitude
+                    var sessionManager = SessionManager(requireContext())
+
+                    sessionManager.setLatitude(latitude.toString())
+                    sessionManager.setLongitude(longitude.toString())
                     myPlaceApi(latitude,longitude)
                 } else {
                    myPlaceApi(null,null)
@@ -165,7 +168,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         }
         else {
             permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-          //  locationHelper.requestLocationPermission(requireActivity())
+            //  locationHelper.requestLocationPermission(requireActivity())
         }
     }
 
@@ -224,6 +227,12 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                     if (location != null) {
                         val latitude = location.latitude
                         val longitude = location.longitude
+
+                        var sessionManager = SessionManager(requireContext())
+
+                        sessionManager.setLatitude(latitude.toString())
+                        sessionManager.setLongitude(longitude.toString())
+
                         myPlaceApi(latitude, longitude)
                     } else {
                         myPlaceApi(null, null)
@@ -232,6 +241,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
             } else {
                 // Permission denied, show a message
                 Toast.makeText(requireContext(), "Location permission is required.", Toast.LENGTH_SHORT).show()
+                   myPlaceApi(null,null)
             }
         }
 
@@ -250,6 +260,11 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                     val latitude = location.latitude
                     val longitude = location.longitude
                     // Call the API with the location
+
+                    var sessionManager = SessionManager(requireContext())
+
+                    sessionManager.setLatitude(latitude.toString())
+                    sessionManager.setLongitude(longitude.toString())
                     myPlaceApi(latitude, longitude)
                 } else {
                     Log.d("TESTING","Inside Location  null")

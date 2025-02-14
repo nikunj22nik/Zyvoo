@@ -6,6 +6,7 @@ import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
@@ -21,6 +22,7 @@ import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -38,10 +40,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.SimpleTarget
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -50,7 +54,11 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.skydoves.powerspinner.PowerSpinnerView
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.OnLocalListener
 import com.business.zyvo.R
@@ -60,11 +68,15 @@ import com.business.zyvo.activity.PlaceOpenActivity
 import com.business.zyvo.adapter.AddHobbiesAdapter
 import com.business.zyvo.adapter.AddLanguageSpeakAdapter
 import com.business.zyvo.adapter.AddLocationAdapter
+import com.business.zyvo.adapter.AddPetsAdapter
 import com.business.zyvo.adapter.AddWorkAdapter
 import com.business.zyvo.adapter.host.BankNameAdapter
 import com.business.zyvo.adapter.host.CardNumberAdapter
 import com.business.zyvo.adapter.selectLanguage.LocaleAdapter
 import com.business.zyvo.databinding.FragmentHostProfileBinding
+import com.business.zyvo.fragment.both.completeProfile.HasName
+import com.business.zyvo.fragment.guest.profile.model.UserProfile
+import com.business.zyvo.fragment.guest.profile.viewModel.ProfileViewModel
 import com.business.zyvo.model.AddHobbiesModel
 import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.AddLocationModel
@@ -74,14 +86,20 @@ import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.model.CountryLanguage
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
+import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.MediaUtils
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.PaymentViewModel
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 
 @AndroidEntryPoint
 class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
-    lateinit var binding :FragmentHostProfileBinding
+    lateinit var binding: FragmentHostProfileBinding
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
     private lateinit var addWorkAdapter: AddWorkAdapter
@@ -90,10 +108,19 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private lateinit var dateManager: DateManager
     private lateinit var bankNameAdapter: BankNameAdapter
     private lateinit var cardNumberAdapter: CardNumberAdapter
-   // private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
+    private lateinit var addPetsAdapter: AddPetsAdapter
+    var userProfile: UserProfile? = null
+    var imageBytes: ByteArray = byteArrayOf()
+
+    // private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
     private val paymentCardViewHolder: PaymentViewModel by lazy {
         ViewModelProvider(this)[PaymentViewModel::class.java]
     }
+
+    private val profileViewModel: ProfileViewModel by lazy {
+        ViewModelProvider(this)[ProfileViewModel::class.java]
+    }
+
     private var paymentList: MutableList<AddPaymentCardModel> = mutableListOf()
     private var petsList: MutableList<AddPetsModel> = mutableListOf()
     private var hobbiesList: MutableList<AddHobbiesModel> = mutableListOf()
@@ -107,7 +134,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
     private var bottomSheetDialog: BottomSheetDialog? = null
     private var imageStatus = ""
     private var isDropdownOpen = false
-    lateinit var navController :NavController
+    lateinit var navController: NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
 
@@ -121,8 +148,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
     // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            result: ActivityResult ->
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val intent = result.data
                 if (intent != null) {
@@ -143,8 +169,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 
                     Log.i(TAG, "Place: ${place.name}, ${place.id}")
                 }
-            }
-            else if (result.resultCode == Activity.RESULT_CANCELED) {
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
                 // The user canceled the operation.
                 Log.i(TAG, "User canceled autocomplete")
             }
@@ -157,8 +182,16 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         apiKey = getString(R.string.api_key)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentHostProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentHostProfileBinding.inflate(
+            LayoutInflater.from(requireContext()),
+            container,
+            false
+        )
         dateManager = DateManager(requireContext())
         // Inflate the layout for this fragment
         val newLocation = AddLocationModel("Unknown Location")
@@ -181,7 +214,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         binding.textGiveFeedback.setOnClickListener(this)
         binding.textBooking.setOnClickListener(this)
         binding.textCreateList.setOnClickListener(this)
-     //   binding.textTermServices.setOnClickListener(this)
+        //   binding.textTermServices.setOnClickListener(this)
         binding.textPrivacyPolicy.setOnClickListener(this)
         binding.textLogout.setOnClickListener(this)
         binding.textNotifications.setOnClickListener(this)
@@ -197,6 +230,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         binding.textLanguage.setOnClickListener(this)
         binding.imageEditEmail.setOnClickListener(this)
         binding.imageEditPhoneNumber.setOnClickListener(this)
+        binding.textTermServices.setOnClickListener(this)
 
         adapterInitialize()
         paymentOpenCloseDropDown()
@@ -231,7 +265,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
         binding.textAddNewPaymentMethod.setOnClickListener {
             findNavController().navigate(R.id.payoutFragment)
         }
-
+        getUserProfile()
 
     }
 
@@ -267,40 +301,196 @@ class HostProfileFragment : Fragment(), OnClickListener1, OnClickListener {
 //        addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this)
 //        binding.recyclerViewPets.adapter = addPetsAdapter
 
-         bankNameAdapter =  BankNameAdapter(requireContext(), list = list1)
-         cardNumberAdapter =  CardNumberAdapter(requireContext(),list = list2)
-
-binding.recyclerViewPaymentCardList.adapter = bankNameAdapter
-binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
-
+        bankNameAdapter = BankNameAdapter(requireContext(), list = list1)
+        cardNumberAdapter = CardNumberAdapter(requireContext(), list = list2)
+        binding.recyclerViewPaymentCardList.adapter = bankNameAdapter
+        binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
         val initialList1 = List(6) { index ->
             if (index % 2 == 0) {
-                CountryLanguage( "Bank Name",  "Bill gilbert, Checking .....4898(USD)")
+                CountryLanguage("Bank Name", "Bill gilbert, Checking .....4898(USD)")
             } else {
-                CountryLanguage("Bank Name",  "Bill gilbert, Checking .....4898(USD)")
+                CountryLanguage("Bank Name", "Bill gilbert, Checking .....4898(USD)")
             }
         }
 
         val initialList2 = List(4) { index ->
             if (index % 2 == 0) {
-                CountryLanguage( "Card Number",  " ****  **** ****78")
+                CountryLanguage("Card Number", " ****  **** ****78")
             } else {
-                CountryLanguage("Card Number",  " ****  **** ****78")
+                CountryLanguage("Card Number", " ****  **** ****78")
             }
         }
         bankNameAdapter.addItems(initialList1)
         cardNumberAdapter.addItems(initialList2)
 
-
-
-
-
+        addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this)
 
     }
 
 
+    private fun getUserProfile() {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                LoadingUtils.showDialog(requireContext(),false)
+                var session = SessionManager(requireContext())
+                profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            var name = ""
+                            LoadingUtils.hideDialog()
+                            it.data?.let { resp ->
+                                Log.d(
+                                    "TESTING_PROFILE", "HERE IN A USER PROFILE ," + resp.toString()
+                                )
+                                userProfile = Gson().fromJson(resp, UserProfile::class.java)
+                                userProfile.let {
+                                    if (it?.first_name != null && it.last_name != null) {
+                                        name =
+                                            it.first_name + " " + it.last_name
+                                    }
+                                    it?.name = name
+                                    binding.user = it
 
+                                    it?.email?.let {
+                                        binding.etEmail.setText(it)
+                                        binding.etEmail.isEnabled = false
+                                    }
+                                    it?.phone_number?.let {
+                                       binding.etPhoneNumeber.setText(it)
+                                        binding.etPhoneNumeber.isEnabled = false
+                                    }
+                                    it?.street?.let {
+                                        binding.etStreet.setText(it)
+                                    }
 
+                                    it?.state?.let {
+                                        binding.etState.setText(it)
+                                    }
+
+                                    it?.zip_code?.let {
+                                        binding.etZipcode.setText(it)
+                                    }
+
+                                    it?.city?.let{
+                                        binding.etcity.setText(it)
+                                         }
+
+                                    if (it?.profile_image != null) {
+
+                                        Glide.with(requireContext())
+                                            .asBitmap() // Convert the image into Bitmap
+                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
+                                            .into(object : SimpleTarget<Bitmap>() {
+                                                override fun onResourceReady(
+                                                    resource: Bitmap,
+                                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                                                ) {
+                                                    // The 'resource' is the Bitmap
+                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
+                                                    binding.imageProfilePicture.setImageBitmap(
+                                                        resource
+                                                    )
+                                                    imageBytes =
+                                                        MediaUtils.bitmapToByteArray(resource)
+                                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
+                                                }
+                                            })
+                                    }
+                                    if (it?.email_verified != null && it.email_verified == 1) {
+                                        binding.textConfirmNow.visibility = GONE
+                                        binding.textVerified.visibility =
+                                            View.VISIBLE
+                                    }
+                                    if (it?.phone_verified != null && it.phone_verified == 1) {
+                                        binding.textConfirmNow1.visibility = GONE
+                                        binding.textVerified1.visibility =
+                                            View.VISIBLE
+                                    }
+                                    if (it?.identity_verified != null && it.identity_verified == 1) {
+                                        binding.textConfirmNow2.visibility = GONE
+                                        binding.textVerified2.visibility =
+                                            View.VISIBLE
+                                    }
+                                    if (it?.where_live != null && it.where_live.isNotEmpty()) {
+                                        locationList = getObjectsFromNames(it.where_live) { name ->
+                                            AddLocationModel(name)  // Using the constructor of MyObject to create instances
+                                        }
+                                        val newLanguage =
+                                            AddLocationModel(AppConstant.unknownLocation)
+                                        locationList.add(newLanguage)
+                                        addLocationAdapter.updateLocations(locationList)
+                                    }
+                                    if (it?.my_work != null && it.my_work.isNotEmpty()) {
+                                        workList = getObjectsFromNames(it.my_work) { name ->
+                                            AddWorkModel(name)  // Using the constructor of MyObject to create instances
+                                        }
+                                        val newLanguage = AddWorkModel(AppConstant.unknownLocation)
+                                        workList.add(newLanguage)
+                                        addWorkAdapter.updateWork(workList)
+                                    }
+                                    if (it?.languages != null && it.languages.isNotEmpty()) {
+                                        languageList = getObjectsFromNames(it.languages) { name ->
+                                            AddLanguageModel(name)  // Using the constructor of MyObject to create instances
+                                        }
+                                        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
+                                        languageList.add(newLanguage)
+                                        addLanguageSpeakAdapter.updateLanguage(languageList)
+                                    }
+//                                    if (it?.hobbies != null && it.hobbies.isNotEmpty()) {
+//                                        hobbiesList = getObjectsFromNames(it.hobbies) { name ->
+//                                            AddHobbiesModel(name)  // Using the constructor of MyObject to create instances
+//                                        }
+//                                        val newLanguage =
+//                                            AddHobbiesModel(AppConstant.unknownLocation)
+//                                        hobbiesList.add(newLanguage)
+//                                        addHobbiesAdapter.updateHobbies(hobbiesList)
+//                                    }
+//                                    if (it?.pets != null && it.pets.isNotEmpty()) {
+//                                        petsList = getObjectsFromNames(it.pets) { name ->
+//                                            AddPetsModel(name)  // Using the constructor of MyObject to create instances
+//                                        }
+//                                        val newLanguage = AddPetsModel(AppConstant.unknownLocation)
+//                                        petsList.add(newLanguage)
+//                                        addPetsAdapter.updatePets(petsList)
+//                                    }
+                                }
+                            }
+                        }
+
+                        is NetworkResult.Error -> {
+                            LoadingUtils.hideDialog()
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            LoadingUtils.hideDialog()
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+
+                    }
+                }
+            }
+        } else {
+            LoadingUtils.hideDialog()
+            LoadingUtils.showErrorDialog(
+                requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
+        }
+    }
+
+    fun <T : HasName> getObjectsFromNames(
+        names: List<String>,
+        constructor: (String) -> T
+    ): MutableList<T> {
+        return names.mapNotNull {
+            if (it != AppConstant.unknownLocation) {
+                constructor(it) // Create an object of type T using the constructor
+            } else {
+                null
+            }
+        }.toMutableList()
+    }
 
 
     // Function to start the location picker using Autocomplete
@@ -463,41 +653,49 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
     }
 
 
-//cfupg7644r
+    //cfupg7644r
     override fun onClick(p0: View?) {
         when (p0?.id) {
 
 
-
-            R.id.textBooking->{
+            R.id.textBooking -> {
                 findNavController().navigate(R.id.bookingScreenHostFragment)
             }
-            R.id.textCreateList->{
-               startActivity(Intent(requireActivity(),PlaceOpenActivity::class.java))
+
+            R.id.textCreateList -> {
+                startActivity(Intent(requireActivity(), PlaceOpenActivity::class.java))
             }
-            R.id.textPrivacyPolicy->{
+
+            R.id.textPrivacyPolicy -> {
                 val bundle = Bundle()
-                bundle.putInt("privacy",1)
-                findNavController().navigate(R.id.privacyPolicyFragment,bundle)
+                bundle.putInt("privacy", 1)
+                findNavController().navigate(R.id.privacyPolicyFragment, bundle)
             }
-            R.id.textTermServices->{
-                findNavController().navigate(R.id.termsServicesFragment)
+
+            R.id.textTermServices -> {
+                val bundle = Bundle()
+                bundle.putInt("privacy", 1)
+                findNavController().navigate(R.id.termsServicesFragment, bundle)
             }
-            R.id.textLogout->{
-                dialogLogOut(requireContext(),"LogOut")
+
+            R.id.textLogout -> {
+                dialogLogOut(requireContext(), "LogOut")
             }
-            R.id.textGiveFeedback->{
+
+            R.id.textGiveFeedback -> {
                 findNavController().navigate(R.id.feedbackFragment)
             }
-            R.id.textLanguage ->{
+
+            R.id.textLanguage -> {
                 findNavController().navigate(R.id.language_fragment_host)
             }
+
             R.id.textNotifications -> {
                 findNavController().navigate(R.id.notificationFragment)
             }
 
             R.id.imageEditEmail -> {
-             dialogEmailVerification(requireContext(), null.toString())
+                dialogEmailVerification(requireContext(), null.toString())
 
             }
 
@@ -510,20 +708,23 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
             R.id.textVisitHelpCenter -> {
                 var bundle = Bundle()
                 bundle.putString(AppConstant.type, AppConstant.Host)
-                findNavController().navigate(R.id.helpCenterFragment_host,bundle)
+                findNavController().navigate(R.id.helpCenterFragment_host, bundle)
             }
+
             R.id.imageInfoIcon -> {
                 binding.cvInfo.visibility = View.VISIBLE
             }
+
             R.id.clHead -> {
                 binding.cvInfo.visibility = View.GONE
             }
+
             R.id.imageEditPicture -> {
                 bottomSheetUploadImage()
             }
 
             R.id.imageEditName -> {
-           dialogChangeName(requireContext())
+                dialogChangeName(requireContext())
             }
 
             R.id.textConfirmNow -> {
@@ -555,7 +756,8 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
             R.id.textAddNewPaymentCard -> {
                 dialogSelectPaymentMethod()
             }
-            R.id.textPaymentWithdraw ->{
+
+            R.id.textPaymentWithdraw -> {
                 findNavController().navigate(R.id.hostPaymentFragment)
             }
         }
@@ -568,7 +770,8 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
 
         dialog1.setCancelable(false)
         dialog1.apply {
-            val togglePaymentTypeSelectButton = findViewById<ToggleButton>(R.id.togglePaymentTypeSelectButton)
+            val togglePaymentTypeSelectButton =
+                findViewById<ToggleButton>(R.id.togglePaymentTypeSelectButton)
             val rlBankAccount = findViewById<RelativeLayout>(R.id.rlBankAccount)
             val llDebitCard = findViewById<LinearLayout>(R.id.llDebitCard)
             val spinnermonth = findViewById<PowerSpinnerView>(R.id.spinnermonth)
@@ -576,15 +779,14 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
 
             val btnAddPayment = findViewById<TextView>(R.id.btnAddPayment)
 
-            callingSelectionOfDate(spinnermonth,spinneryear)
+            callingSelectionOfDate(spinnermonth, spinneryear)
 
-            togglePaymentTypeSelectButton.setOnCheckedChangeListener{v1, isChecked->
-                if (!isChecked){
+            togglePaymentTypeSelectButton.setOnCheckedChangeListener { v1, isChecked ->
+                if (!isChecked) {
                     llDebitCard.visibility = View.GONE
                     rlBankAccount.visibility = View.VISIBLE
 
-                }
-                else {
+                } else {
                     rlBankAccount.visibility = View.GONE
                     llDebitCard.visibility = View.VISIBLE
                 }
@@ -604,11 +806,28 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
     }
 
     fun callingSelectionOfDate(spinnermonth: PowerSpinnerView, spinneryear: PowerSpinnerView) {
-        val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
+        val months = listOf(
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        )
         // val am_pm_list = listOf("AM","PM")
         val years = (2024..2050).toList()
         val yearsStringList = years.map { it.toString() }
-        Toast.makeText(requireContext(),"Year String List: "+yearsStringList.size, Toast.LENGTH_LONG).show()
+        Toast.makeText(
+            requireContext(),
+            "Year String List: " + yearsStringList.size,
+            Toast.LENGTH_LONG
+        ).show()
         val days = resources.getStringArray(R.array.day).toList()
 
 
@@ -625,7 +844,12 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
         val recyclerView3 = spinnermonth.getSpinnerRecyclerView()
 
         recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
         })
@@ -633,7 +857,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
         spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
         spinneryear.arrowAnimate = false
         spinneryear.spinnerPopupHeight = 400
-        spinneryear.setItems(yearsStringList.subList(0,16))
+        spinneryear.setItems(yearsStringList.subList(0, 16))
         spinneryear.setIsFocusable(true)
 //        binding.spinneryear.post {
 //            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
@@ -645,31 +869,31 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
 //        }
 
 
-
 //        binding.startAmPm.post {
 //            binding.startAmPm.spinnerPopupWidth = binding.startAmPm.width
 //        }
 
 
-
-
-
-
         val recyclerView1 = spinneryear.getSpinnerRecyclerView()
         recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
 
         })
 
 
-
     }
 
 
-    private val pickImageLauncher: ActivityResultLauncher<Intent> = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        result -> if (result.resultCode == Activity.RESULT_OK) {
+    private val pickImageLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.data?.let { uri ->
 
                     // Load image into BottomSheetDialog's ImageView if available
@@ -691,8 +915,8 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
             .galleryOnly().crop() // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
-            .createIntent {
-                intent -> pickImageLauncher.launch(intent)
+            .createIntent { intent ->
+                pickImageLauncher.launch(intent)
             }
     }
 
@@ -748,10 +972,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
     }
 
 
-
-
-
-    fun dialogLogin(context: Context?){
+    fun dialogLogin(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -761,49 +982,51 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var imageEmailSocial =  findViewById<ImageView>(R.id.imageEmailSocial)
-            var etMobileNumber =  findViewById<EditText>(R.id.etMobileNumber)
-            var textContinueButton =  findViewById<TextView>(R.id.textContinueButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
-            var textForget =  findViewById<TextView>(R.id.textForget)
-            var textDontHaveAnAccount =  findViewById<TextView>(R.id.textDontHaveAnAccount)
-            var textRegister =  findViewById<TextView>(R.id.textRegister)
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
+            var imageEmailSocial = findViewById<ImageView>(R.id.imageEmailSocial)
+            var etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
+            var textContinueButton = findViewById<TextView>(R.id.textContinueButton)
+            var checkBox = findViewById<CheckBox>(R.id.checkBox)
+            var textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
+            var textForget = findViewById<TextView>(R.id.textForget)
+            var textDontHaveAnAccount = findViewById<TextView>(R.id.textDontHaveAnAccount)
+            var textRegister = findViewById<TextView>(R.id.textRegister)
 
-            textRegister.setOnClickListener{
+            textRegister.setOnClickListener {
                 dialogRegister(context)
                 dismiss()
             }
 
-            textForget.setOnClickListener{
+            textForget.setOnClickListener {
                 dialogForgotPassword(context)
                 dismiss()
             }
-            imageEmailSocial.setOnClickListener{
+            imageEmailSocial.setOnClickListener {
                 dialogLoginEmail(context)
                 dismiss()
             }
 
 
-            textContinueButton.setOnClickListener{
+            textContinueButton.setOnClickListener {
                 var text = "Login Successful"
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \n to +1 999 999 9999"
+                var textHeaderOfOtpVerfication =
+                    "Please type the verification code send \n to +1 999 999 9999"
 
-                dialogOtp(context,text, textHeaderOfOtpVerfication)
+                dialogOtp(context, text, textHeaderOfOtpVerfication)
                 dismiss()
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
-    fun dialogRegister(context: Context?){
+    fun dialogRegister(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -813,43 +1036,46 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var imageEmailSocial =  findViewById<ImageView>(R.id.imageEmailSocial)
-            var etMobileNumber =  findViewById<EditText>(R.id.etMobileNumber)
-            var textContinueButton =  findViewById<TextView>(R.id.textContinueButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
+            var imageEmailSocial = findViewById<ImageView>(R.id.imageEmailSocial)
+            var etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
+            var textContinueButton = findViewById<TextView>(R.id.textContinueButton)
+            var checkBox = findViewById<CheckBox>(R.id.checkBox)
+            var textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
 
-            var textLoginButton =  findViewById<TextView>(R.id.textLoginButton)
+            var textLoginButton = findViewById<TextView>(R.id.textLoginButton)
 
-            textLoginButton.setOnClickListener{
+            textLoginButton.setOnClickListener {
                 dialogLogin(context)
                 dismiss()
             }
 
-            textContinueButton.setOnClickListener{
+            textContinueButton.setOnClickListener {
                 var text = "Your account is registered \nsuccessfully"
-                var textHeaderOfOtpVerfication = "Please type the verification code send \n to +1 999 999 9999"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
+                var textHeaderOfOtpVerfication =
+                    "Please type the verification code send \n to +1 999 999 9999"
+                dialogOtp(context, text, textHeaderOfOtpVerfication)
                 dismiss()
             }
 
-            imageEmailSocial.setOnClickListener{
+            imageEmailSocial.setOnClickListener {
                 dialogRegisterEmail(context)
                 dismiss()
             }
 
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             show()
-        }}
+        }
+    }
 
 
-    fun dialogLoginEmail(context: Context?){
+    @SuppressLint("MissingInflatedId")
+    fun dialogLoginEmail(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -859,47 +1085,49 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
 
-            var textLoginButton =  findViewById<TextView>(R.id.textLoginButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
-            var textForget =  findViewById<TextView>(R.id.textForget)
-            var etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
-            var imgHidePass =  findViewById<ImageView>(R.id.imgHidePass)
-            var imgShowPass =  findViewById<ImageView>(R.id.imgShowPass)
-            var textDontHaveAnAccount =  findViewById<TextView>(R.id.textDontHaveAnAccount)
-            var textRegister =  findViewById<TextView>(R.id.textRegister)
+            var textLoginButton = findViewById<TextView>(R.id.textLoginButton)
+            var checkBox = findViewById<CheckBox>(R.id.checkBox)
+            var textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
+            var textForget = findViewById<TextView>(R.id.textForget)
+            val etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
 
-            eyeHideShow(imgHidePass,imgShowPass,etConfirmPassword)
+            var imgHidePass = findViewById<ImageView>(R.id.imgHidePass)
+            var imgShowPass = findViewById<ImageView>(R.id.imgShowPass)
+            var textDontHaveAnAccount = findViewById<TextView>(R.id.textDontHaveAnAccount)
+            var textRegister = findViewById<TextView>(R.id.textRegister)
 
-            textRegister.setOnClickListener{
+            eyeHideShow(imgHidePass, imgShowPass, etConfirmPassword)
+
+            textRegister.setOnClickListener {
                 dialogRegisterEmail(context)
                 dismiss()
             }
 
-            textForget.setOnClickListener{
+            textForget.setOnClickListener {
                 dialogForgotPassword(context)
                 dismiss()
             }
-            textLoginButton.setOnClickListener{
-                var intent = Intent(context,GuesMain::class.java)
+            textLoginButton.setOnClickListener {
+                var intent = Intent(context, GuesMain::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
                 context.startActivity(intent)
                 dismiss()
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
-    fun eyeHideShow(imgHidePass:ImageView,imgShowPass:ImageView,etPassword:EditText){
-        imgHidePass.setOnClickListener{
+    fun eyeHideShow(imgHidePass: ImageView, imgShowPass: ImageView, etPassword: EditText) {
+        imgHidePass.setOnClickListener {
             imgShowPass.visibility = View.VISIBLE
             imgHidePass.visibility = View.GONE
             etPassword.transformationMethod = HideReturnsTransformationMethod.getInstance()
@@ -913,7 +1141,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
         }
     }
 
-    fun dialogRegisterEmail(context: Context?){
+    fun dialogRegisterEmail(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -923,39 +1151,40 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
 
-            var textCreateAccountButton =  findViewById<TextView>(R.id.textCreateAccountButton)
-            var checkBox =  findViewById<CheckBox>(R.id.checkBox)
-            var textKeepLogged =  findViewById<TextView>(R.id.textKeepLogged)
+            var textCreateAccountButton = findViewById<TextView>(R.id.textCreateAccountButton)
+            var checkBox = findViewById<CheckBox>(R.id.checkBox)
+            var textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
 
 
-            var textLoginHere =  findViewById<TextView>(R.id.textLoginHere)
+            var textLoginHere = findViewById<TextView>(R.id.textLoginHere)
 
-            textLoginHere.setOnClickListener{
+            textLoginHere.setOnClickListener {
                 dialogLoginEmail(context)
                 dismiss()
             }
-            textCreateAccountButton.setOnClickListener{
+            textCreateAccountButton.setOnClickListener {
                 var text = "Your account is registered \nsuccessfully"
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
+                var textHeaderOfOtpVerfication =
+                    "Please type the verification code send \nto abc@gmail.com"
+                dialogOtp(context, text, textHeaderOfOtpVerfication)
 
                 dismiss()
             }
 
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
-
+        }
+    }
 
 
     @SuppressLint("MissingInflatedId")
-    fun dialogForgotPassword(context: Context?){
+    fun dialogForgotPassword(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -965,26 +1194,28 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var etEmail =  findViewById<EditText>(R.id.etEmail)
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
+            var etEmail = findViewById<EditText>(R.id.etEmail)
+            var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            textSubmitButton.setOnClickListener {
                 var text = "Your password has been changed\n successfully."
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
+                var textHeaderOfOtpVerfication =
+                    "Please type the verification code send \nto abc@gmail.com"
+                dialogOtp(context, text, textHeaderOfOtpVerfication)
 
 
                 dismiss()
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
-    fun dialogNumberVerification(context: Context?){
+    fun dialogNumberVerification(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -994,27 +1225,29 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
+            var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            textSubmitButton.setOnClickListener {
 
                 var text = "Your Phone has been Verified\n  successfully."
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto +1 999 999 9999"
-                dialogOtp(context,text,textHeaderOfOtpVerfication)
+                var textHeaderOfOtpVerfication =
+                    "Please type the verification code send \nto +1 999 999 9999"
+                dialogOtp(context, text, textHeaderOfOtpVerfication)
 
 
                 dismiss()
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
-    fun dialogChangeName(context: Context?){
+    fun dialogChangeName(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -1026,18 +1259,19 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
             }
 
 
-            var textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
-            textSaveChangesButton.setOnClickListener{
+            var textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
+            textSaveChangesButton.setOnClickListener {
 
                 dismiss()
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
-    fun dialogEmailVerification(context: Context?,text: String){
+    fun dialogEmailVerification(context: Context?, text: String) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -1047,30 +1281,32 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
 
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
+            var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            textSubmitButton.setOnClickListener {
                 var text2 = "Your Email has been Verified\n  successfully."
 
                 val texter = if (text != null.toString()) text else text2
 
-                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(context,texter,textHeaderOfOtpVerfication)
+                var textHeaderOfOtpVerfication =
+                    "Please type the verification code send \nto abc@gmail.com"
+                dialogOtp(context, texter, textHeaderOfOtpVerfication)
 
                 dismiss()
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
     @SuppressLint("SuspiciousIndentation")
-    fun dialogOtp(context: Context, text: String, textHeaderOfOtpVerfication: String){
-        val dialog =  Dialog(context, R.style.BottomSheetDialog)
+    fun dialogOtp(context: Context, text: String, textHeaderOfOtpVerfication: String) {
+        val dialog = Dialog(context, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_otp_verification)
@@ -1080,16 +1316,16 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
 
-            val imageCross =  findViewById<ImageView>(R.id.imageCross)
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
 
-            val textResend =  findViewById<TextView>(R.id.textResend)
-            val textEnterYourEmail =  findViewById<TextView>(R.id.textEnterYourEmail)
+            val textResend = findViewById<TextView>(R.id.textResend)
+            val textEnterYourEmail = findViewById<TextView>(R.id.textEnterYourEmail)
 
-            val textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            val rlResendLine =  findViewById<RelativeLayout>(R.id.rlResendLine)
+            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            val rlResendLine = findViewById<RelativeLayout>(R.id.rlResendLine)
 
-            val textTimeResend =  findViewById<TextView>(R.id.textTimeResend)
-            val incorrectOtp =  findViewById<TextView>(R.id.incorrectOtp)
+            val textTimeResend = findViewById<TextView>(R.id.textTimeResend)
+            val incorrectOtp = findViewById<TextView>(R.id.incorrectOtp)
 
 
 
@@ -1118,7 +1354,12 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                     ) {
                     }
 
-                    override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+                    override fun onTextChanged(
+                        s: CharSequence,
+                        start: Int,
+                        before: Int,
+                        count: Int
+                    ) {
                         if (s.length == 1 && index < otpDigits.size - 1) {
                             otpDigits.get(index + 1).requestFocus()
                         } else if (s.length == 0 && index > 0) {
@@ -1132,7 +1373,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
             }
 
 
-            startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
+            startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
             countDownTimer!!.cancel()
 
 
@@ -1162,7 +1403,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
 
 
 
-            textSubmitButton.setOnClickListener{
+            textSubmitButton.setOnClickListener {
 
                 /*
                   if (otpValue.equals("1234")) {
@@ -1182,22 +1423,20 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                  */
 
 
-                if (text == "Your password has been changed\n" + " successfully."){
-                    dialogNewPassword(context,text)
-                }
-                else if(text.equals("Login Successful")){
-                    var session =SessionManager(context)
+                if (text == "Your password has been changed\n" + " successfully.") {
+                    dialogNewPassword(context, text)
+                } else if (text.equals("Login Successful")) {
+                    var session = SessionManager(context)
                     session.setUserId(1)
-                    var intent = Intent(context,GuesMain::class.java)
+                    var intent = Intent(context, GuesMain::class.java)
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
                     context.startActivity(intent)
-                }
-                else{
-                    if (text == "Your password has been changed successfully" ){
-                        dialogNewPassword(context,text)
-                    }else{
-                        dialogSuccess(context,text)
+                } else {
+                    if (text == "Your password has been changed successfully") {
+                        dialogNewPassword(context, text)
+                    } else {
+                        dialogSuccess(context, text)
                     }
 
 
@@ -1206,12 +1445,12 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
             }
 
 
-            textResend.setOnClickListener{
+            textResend.setOnClickListener {
                 if (resendEnabled) {
                     rlResendLine.visibility = View.VISIBLE
                     incorrectOtp.visibility = View.GONE
                     countDownTimer?.cancel()
-                    startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
+                    startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
                     textResend.setTextColor(
                         ContextCompat.getColor(
                             context,
@@ -1220,19 +1459,21 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                     )
                 }
             }
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
-
-
-
-
-    private fun startCountDownTimer(context: Context,textTimeResend : TextView,rlResendLine: RelativeLayout, textResend : TextView) {
+    private fun startCountDownTimer(
+        context: Context,
+        textTimeResend: TextView,
+        rlResendLine: RelativeLayout,
+        textResend: TextView
+    ) {
         countDownTimer = object : CountDownTimer(120000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val f = android.icu.text.DecimalFormat("00")
@@ -1266,8 +1507,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
     }
 
 
-
-    fun dialogNewPassword(context: Context?,text: String){
+    fun dialogNewPassword(context: Context?, text: String) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -1277,22 +1517,23 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross =  findViewById<ImageView>(R.id.imageCross)
-            var etPassword =  findViewById<EditText>(R.id.etPassword)
-            var etConfirmPassword =  findViewById<EditText>(R.id.etConfirmPassword)
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
+            var etPassword = findViewById<EditText>(R.id.etPassword)
+            var etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
 
-            var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener{
-                dialogSuccess(context,text)
+            var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            textSubmitButton.setOnClickListener {
+                dialogSuccess(context, text)
                 dismiss()
             }
 
-            imageCross.setOnClickListener{
+            imageCross.setOnClickListener {
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-        }}
+        }
+    }
 
 
     fun dialogSuccess(context: Context?, text: String) {
@@ -1317,8 +1558,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
                     Log.d("Navigation", "Navigating to turnNotificationsFragment")
                     navController?.navigate(R.id.turnNotificationsFragment)
 
-                }
-                else if (text == "Your password has been changed\n" + " successfully."){
+                } else if (text == "Your password has been changed\n" + " successfully.") {
                     dialogLoginEmail(context)
                 }
                 dismiss()
@@ -1349,7 +1589,7 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
             findViewById<RelativeLayout>(R.id.rlYes).setOnClickListener {
                 var sessionManager = SessionManager(context)
                 sessionManager.setUserId(-1)
-                var intent  = Intent(context, AuthActivity::class.java)
+                var intent = Intent(context, AuthActivity::class.java)
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 context.startActivity(intent)
                 dismiss()
@@ -1364,9 +1604,10 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
     }
 
 
-    private fun showPopupWindow(anchorView: View, position: Int)   {
+    private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
-        val popupView = LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
+        val popupView =
+            LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
 
         // Create PopupWindow with the custom layout
         val popupWindow = PopupWindow(
@@ -1430,7 +1671,12 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
 
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+        popupWindow.showAsDropDown(
+            anchorView,
+            xOffset,
+            yOffset,
+            Gravity.END
+        )  // Adjust the Y offset dynamically
     }
 
     fun isScreenLarge(context: Context): Boolean {
@@ -1446,8 +1692,6 @@ binding.recyclerViewCardNumberList.adapter = cardNumberAdapter
         // Check if the screen width is greater than 600dp (typical for tablets)
         return widthInDp > 600
     }
-
-
 
 
 }

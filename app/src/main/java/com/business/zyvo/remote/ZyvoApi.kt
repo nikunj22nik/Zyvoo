@@ -274,4 +274,11 @@ interface ZyvoApi {
     @POST("property_image_delete")
     @FormUrlEncoded
     suspend fun propertyImageDelete(@Field("image_id")imageId :Int) : Response<JsonObject>
+
+    @POST("host_booking_details")
+    @FormUrlEncoded
+    suspend fun hostBookingDetails(@Field("booking_id") bookingId:Int, @Field("latitude")latitude :String?,
+                                   @Field("longitude") longitude :String?) : Response<JsonObject>
+
+
 }
