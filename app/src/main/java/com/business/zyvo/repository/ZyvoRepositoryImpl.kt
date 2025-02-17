@@ -2831,8 +2831,18 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
 
     }
 
+    override suspend fun hostReportViolation(
+        userId: Int,
+        bookingId: Int,
+        propertyId: Int,
+        reportReasonId: Int,
+        additionalDetails: String
+    ) {
 
-   override suspend fun reportListReason() : Flow<NetworkResult<MutableList<Pair<Int,String>>>> = flow{
+    }
+
+
+    override suspend fun reportListReason() : Flow<NetworkResult<MutableList<Pair<Int,String>>>> = flow{
        try {
            api.reportListReason().apply {
                if(isSuccessful) {
@@ -2844,7 +2854,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
 
                            data.forEach {
 
-                               obj.get("")
+
 
                            }
 
