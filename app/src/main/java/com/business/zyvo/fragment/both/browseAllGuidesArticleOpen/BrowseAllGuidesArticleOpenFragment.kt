@@ -1,4 +1,4 @@
-package com.business.zyvo.fragment.guest
+package com.business.zyvo.fragment.both.browseAllGuidesArticleOpen
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

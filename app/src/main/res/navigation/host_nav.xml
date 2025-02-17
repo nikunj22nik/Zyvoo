@@ -90,7 +90,7 @@
 
     <fragment
         android:id="@+id/browse_article_host"
-        android:name="com.business.zyvo.fragment.host.BrowseArticleHostFragment"
+        android:name="com.business.zyvo.fragment.both.browseArticleHost.BrowseArticleHostFragment"
         android:label="BrowseArticleHost"
         />
 

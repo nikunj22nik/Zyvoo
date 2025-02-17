@@ -26,143 +26,196 @@ import retrofit2.http.Field
 interface ZyvoRepository {
 
 
-    suspend fun signUpPhoneNumber(phoneNumber :String,code:String) : Flow<NetworkResult<Pair<String, String>>>
+    suspend fun signUpPhoneNumber(
+        phoneNumber: String,
+        code: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun loginPhoneNumber(phoneNumber :String,code:String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun loginPhoneNumber(
+        phoneNumber: String,
+        code: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun otpVerifyLoginPhone(userId :String,otp:String) : Flow<NetworkResult<JsonObject>>
+    suspend fun otpVerifyLoginPhone(userId: String, otp: String): Flow<NetworkResult<JsonObject>>
 
-    suspend fun otpVerifySignupPhone(tempId :String,otp:String) : Flow<NetworkResult<JsonObject>>
+    suspend fun otpVerifySignupPhone(tempId: String, otp: String): Flow<NetworkResult<JsonObject>>
 
-    suspend fun loginEmail(email :String,password:String) : Flow<NetworkResult<JsonObject>>
+    suspend fun loginEmail(email: String, password: String): Flow<NetworkResult<JsonObject>>
 
-    suspend fun signupEmail(email :String,password:String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun signupEmail(
+        email: String,
+        password: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun otpVerifySignupEmail(temp_id :String,otp:String) : Flow<NetworkResult<JsonObject>>
+    suspend fun otpVerifySignupEmail(temp_id: String, otp: String): Flow<NetworkResult<JsonObject>>
 
-    suspend fun forgotPassword(email :String) : Flow<NetworkResult<Pair<String, String>>>
+    suspend fun forgotPassword(email: String): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun otpVerifyForgotPassword(userId :String,otp:String) : Flow<NetworkResult<JsonObject>>
+    suspend fun otpVerifyForgotPassword(
+        userId: String,
+        otp: String
+    ): Flow<NetworkResult<JsonObject>>
 
-    suspend fun resetPassword(userId :String,password:String,
-                              passwordConfirmation:String) : Flow<NetworkResult<JsonObject>>
+    suspend fun resetPassword(
+        userId: String, password: String,
+        passwordConfirmation: String
+    ): Flow<NetworkResult<JsonObject>>
 
-    suspend fun getUserProfile(userId :String) : Flow<NetworkResult<JsonObject>>
+    suspend fun getUserProfile(userId: String): Flow<NetworkResult<JsonObject>>
 
 
     // Host Api's
-    suspend fun addPropertyData(property: PropertyDetailsSave) :Flow<NetworkResult<Pair<String, Int>>>
+    suspend fun addPropertyData(property: PropertyDetailsSave): Flow<NetworkResult<Pair<String, Int>>>
 
 
-    suspend fun  getPropertyList(userId:Int,latitude: Double?, longitude: Double?) : Flow<NetworkResult<Pair<MutableList<HostMyPlacesModel>,String>>>
+    suspend fun getPropertyList(
+        userId: Int,
+        latitude: Double?,
+        longitude: Double?
+    ): Flow<NetworkResult<Pair<MutableList<HostMyPlacesModel>, String>>>
 
-    suspend fun getPropertyDetails(propertyId :Int) : Flow<NetworkResult<GetPropertyDetail>>
+    suspend fun getPropertyDetails(propertyId: Int): Flow<NetworkResult<GetPropertyDetail>>
 
-    suspend fun deleteProperty(propertyId: Int) : Flow<NetworkResult<String>>
+    suspend fun deleteProperty(propertyId: Int): Flow<NetworkResult<String>>
 
-    suspend fun earning(hostId:Int,type:String) : Flow<NetworkResult<String>>
+    suspend fun earning(hostId: Int, type: String): Flow<NetworkResult<String>>
 
-    suspend fun updateProperty(requestBody: PropertyDetailsSave) :Flow<NetworkResult<String>>
-
-
-    suspend fun completeProfile(property: CompleteProfileReq) :Flow<NetworkResult<Pair<String, String>>>
-
-    suspend fun phoneVerification(userId :String,code :String,number:String) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun emailVerification(userId: String,email :String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun updateProperty(requestBody: PropertyDetailsSave): Flow<NetworkResult<String>>
 
 
-    suspend fun otpVerifyEmailVerification(userId :String,otp :String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun completeProfile(property: CompleteProfileReq): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun otpVerifyPhoneVerification(userId: String,otp :String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun phoneVerification(
+        userId: String,
+        code: String,
+        number: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun uploadProfileImage(userId: String,bytes: ByteArray) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun addUpdateName(userId: String,first_name: String, last_name: String) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun addAboutMe(userId: String,about_me: String) : Flow<NetworkResult<Pair<String,String>>>
-
-
-
-    suspend fun getHostBookingList(userid:Int) : Flow<NetworkResult<MutableList<MyBookingsModel>>>
-
-
-    suspend fun addLivePlace(userId: String,place_name: String) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun deleteLivePlace(userId: String,index: String) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun approveDeclineBooking(bookingId :Int, status :String, message :String,reason :String) : Flow<NetworkResult<String>>
-
-    suspend fun deleteLivePlace(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun addMyWork(userId: String,workName: String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun emailVerification(
+        userId: String,
+        email: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
 
-    suspend fun deleteMyWork(userId: String,work_index: Int) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun otpVerifyEmailVerification(
+        userId: String,
+        otp: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun addLanguage(userId: String,language_name: String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun otpVerifyPhoneVerification(
+        userId: String,
+        otp: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun deleteLanguage(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun uploadProfileImage(
+        userId: String,
+        bytes: ByteArray
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun addHobbies(userId: String,hobbies_name: String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun addUpdateName(
+        userId: String,
+        first_name: String,
+        last_name: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun deleteHobbies(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun addPets(userId: String,pet_name: String) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun deletePets(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun addStreetAddress(userId: String,street_address: String) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun addCity(userId: String,city: String) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun addState(userId: String,state: String) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun addZipCode(userId: String,zip_code: String) : Flow<NetworkResult<Pair<String,String>>>
-
-    suspend fun updatePassword(userId: String,password: String,password_confirmation: String) : Flow<NetworkResult<Pair<String,String>>>
-
-
-
-
-    suspend fun getPrivacyPolicy() : Flow<NetworkResult<String>>
+    suspend fun addAboutMe(
+        userId: String,
+        about_me: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
 
-    suspend fun  getTermCondition() : Flow<NetworkResult<String>>
-
-    suspend fun feedback(user_id : String,type: String,details: String) : Flow<NetworkResult<String>>
-
-    suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
-
-    suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String,HostDetailModel>>>
-
-    suspend fun contactUs(user_id : String,name : String,email: String,message: String) : Flow<NetworkResult<String>>
-
-    suspend fun getHelpCenter(user_id : String,user_type : String) : Flow<NetworkResult<JsonObject>>
-
-    suspend fun getArticleDetails(article_id : String) : Flow<NetworkResult<JsonObject>>
-
-    suspend fun getGuideDetails(guide_id : String) : Flow<NetworkResult<JsonObject>>
+    suspend fun getHostBookingList(userid: Int): Flow<NetworkResult<MutableList<MyBookingsModel>>>
 
 
-    suspend fun  getHomeData(userId: String,latitude: String,longitude: String) : Flow<NetworkResult<JsonArray>>
+    suspend fun addLivePlace(
+        userId: String,
+        place_name: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun  getWisList(userId: String) : Flow<NetworkResult<JsonArray>>
+    suspend fun deleteLivePlace(
+        userId: String,
+        index: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun createWishlist(userId: String,
-                               name: String,
-                               description: String,
-                               property_id: String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun approveDeclineBooking(
+        bookingId: Int,
+        status: String,
+        message: String,
+        reason: String
+    ): Flow<NetworkResult<String>>
 
-    suspend fun deleteWishlist(userId: String,
-                               wishlist_id: String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun deleteLivePlace(
+        userId: String,
+        index: Int
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun removeItemFromWishlist(userId: String,
-                                       property_id: String) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun addMyWork(
+        userId: String,
+        workName: String
+    ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun saveItemInWishlist(userId: String,
-                                       property_id: String,
-                                   wishlist_id: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun deleteMyWork(
+        userId: String,
+        work_index: Int
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun addLanguage(
+        userId: String,
+        language_name: String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun deleteLanguage(
+        userId: String,
+        index: Int
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun addHobbies(
+        userId: String,
+        hobbies_name: String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun deleteHobbies(userId: String, index: Int): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun addPets(userId: String, pet_name: String): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun deletePets(userId: String, index: Int): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun addStreetAddress(
+        userId: String,
+        street_address: String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun addCity(userId: String, city: String): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun addState(userId: String, state: String): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun addZipCode(
+        userId: String,
+        zip_code: String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun updatePassword(
+        userId: String,
+        password: String,
+        password_confirmation: String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+
+    suspend fun getPrivacyPolicy(): Flow<NetworkResult<String>>
+
+
+    suspend fun getTermCondition(): Flow<NetworkResult<String>>
+
+    suspend fun feedback(
+        user_id: String,
+        type: String,
+        details: String
+    ): Flow<NetworkResult<String>>
+
+    suspend fun getFaq(): Flow<NetworkResult<MutableList<FaqModel>>>
+
+
 
 
     suspend fun propertyFilterReviews(
@@ -184,6 +237,44 @@ interface ZyvoRepository {
 
     suspend fun reportListReason() : Flow<NetworkResult<MutableList<Pair<Int,String>>>>
 
+
+
+
+    suspend fun getHomeData(
+        userId: String,
+        latitude: String,
+        longitude: String
+    ): Flow<NetworkResult<JsonArray>>
+
+    suspend fun getWisList(userId: String): Flow<NetworkResult<JsonArray>>
+
+    suspend fun createWishlist(
+        userId: String,
+        name: String,
+        description: String,
+        property_id: String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun deleteWishlist(
+        userId: String,
+        wishlist_id: String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun removeItemFromWishlist(
+        userId: String,
+        property_id: String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+    suspend fun saveItemInWishlist(
+        userId: String,
+        property_id: String,
+        wishlist_id: String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+
+    suspend fun getArticleList(search_term: String): Flow<NetworkResult<JsonObject>>
+
+    suspend fun getGuideList(search_term: String): Flow<NetworkResult<JsonObject>>
 
 }
 

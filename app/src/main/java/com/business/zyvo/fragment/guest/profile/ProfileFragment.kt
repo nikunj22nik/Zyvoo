@@ -628,7 +628,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     override fun itemClick(obj: Int, text: String, enteredText: String) {
         when (text) {
-            "location" -> {
+            "locationOpen" -> {
                 if (obj == locationList.size - 1) {
                     startLocationPicker()
                 }

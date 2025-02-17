@@ -45,7 +45,7 @@ import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
 
-class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoRepository {
+class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRepository {
 
     override suspend fun signUpPhoneNumber(
         phoneNumber: String,
@@ -58,17 +58,20 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
                             emit(AuthTask.processSignUpData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(e.message!!))
@@ -76,13 +79,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -96,21 +99,27 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             api.loginPhoneNumber(
                 phoneNumber,
                 code,
-                ).apply {
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processLoginData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
-                    } ?: emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                    }
+                        ?: emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: "There was an unknown error. Check your connection, and try again."))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message")
+                                    ?: "There was an unknown error. Check your connection, and try again."
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
@@ -118,13 +127,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -132,7 +141,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun otpVerifyLoginPhone(
         userId: String,
         otp: String
-    ): Flow<NetworkResult<JsonObject>> = flow{
+    ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.otpVerifyLoginPhone(
@@ -141,18 +150,22 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -160,13 +173,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -174,7 +187,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun otpVerifySignupPhone(
         tempId: String,
         otp: String
-    ): Flow<NetworkResult<JsonObject>> = flow{
+    ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.otpVerifySignupPhone(
@@ -183,18 +196,22 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -202,13 +219,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -216,7 +233,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun loginEmail(
         email: String,
         password: String
-    ): Flow<NetworkResult<JsonObject>>  = flow{
+    ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.loginEmail(
@@ -225,18 +242,22 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -244,49 +265,54 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
-    override suspend fun signupEmail(email: String, password: String):Flow<NetworkResult<Pair<String, String>>> = flow {
+    override suspend fun signupEmail(
+        email: String,
+        password: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.signupEmail(email, password).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
                             emit(AuthTask.processSignUpData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
                     }
                 }
             }
-        }
-        catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -294,7 +320,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun otpVerifySignupEmail(
         tempId: String,
         otp: String
-    ): Flow<NetworkResult<JsonObject>> = flow{
+    ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.otpVerifySignupEmail(
@@ -303,18 +329,22 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -322,20 +352,20 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
     override suspend fun forgotPassword(
         email: String
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.forgotPassword(
@@ -343,18 +373,22 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processLoginData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -362,13 +396,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -376,7 +410,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun otpVerifyForgotPassword(
         userId: String,
         otp: String
-    ): Flow<NetworkResult<JsonObject>> = flow{
+    ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.otpVerifyForgotPassword(
@@ -385,18 +419,22 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(NetworkResult.Success(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -404,13 +442,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -420,7 +458,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         userId: String,
         password: String,
         passwordConfirmation: String
-    ): Flow<NetworkResult<JsonObject>> = flow{
+    ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.resetPassword(
@@ -430,18 +468,22 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(NetworkResult.Success(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -449,38 +491,43 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
     override suspend fun getUserProfile(
         userId: String
-    ): Flow<NetworkResult<JsonObject>>  = flow{
+    ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.getUserProfile(
-                userId).apply {
+                userId
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -488,59 +535,72 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
-    override suspend fun addPropertyData(property: PropertyDetailsSave): Flow<NetworkResult<Pair<String, Int>>> = flow {
+    override suspend fun addPropertyData(property: PropertyDetailsSave): Flow<NetworkResult<Pair<String, Int>>> =
+        flow {
 
-        try {
-            api.addProperty(property).apply {
+            try {
+                api.addProperty(property).apply {
 
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair<String,Int>("Property Added Successfully",1)))
+                    if (isSuccessful) {
+                        body()?.let { resp ->
+                            if (resp.has("success") &&
+                                resp.get("success").asBoolean
+                            ) {
+                                emit(
+                                    NetworkResult.Success(
+                                        Pair<String, Int>(
+                                            "Property Added Successfully",
+                                            1
+                                        )
+                                    )
+                                )
+                            } else {
+                                emit(NetworkResult.Error(resp.get("message").asString))
+                            }
+                        } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                    } else {
+                        try {
+                            val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                            emit(
+                                NetworkResult.Error(
+                                    jsonObj?.getString("message") ?: AppConstant.unKnownError
+                                )
+                            )
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                            emit(NetworkResult.Error(AppConstant.unKnownError))
                         }
-                        else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(AppConstant.unKnownError))
                     }
                 }
+            } catch (e: HttpException) {
+                Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: IOException) {
+                Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                emit(NetworkResult.Error(e.message!!))
             }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
         }
-    }
 
     override suspend fun completeProfile(completeProfileReq: CompleteProfileReq):
-            Flow<NetworkResult<Pair<String, String>>> =flow {
+            Flow<NetworkResult<Pair<String, String>>> = flow {
         try {
-            var multipart:  MultipartBody.Part? = null
-            if (completeProfileReq.bytes != null) { }
+            var multipart: MultipartBody.Part? = null
+            if (completeProfileReq.bytes != null) {
+            }
             val user_id: RequestBody = createRequestBody(completeProfileReq.user_id.toString())
             val first_name: RequestBody = createRequestBody(completeProfileReq.first_name)
             val last_name: RequestBody = createRequestBody(completeProfileReq.last_name)
@@ -554,23 +614,29 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             val city: RequestBody = createRequestBody(completeProfileReq.city)
             val state: RequestBody = createRequestBody(completeProfileReq.state)
             val zip_code: RequestBody = createRequestBody(completeProfileReq.zip_code)
-            api.completeProfile(user_id,
-                first_name,last_name,about_me,where_live,
-                works,languages,hobbies,pets,street_address,city,state,zip_code,multipart).apply {
+            api.completeProfile(
+                user_id,
+                first_name, last_name, about_me, where_live,
+                works, languages, hobbies, pets, street_address, city, state, zip_code, multipart
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair("Profile update Successfully","200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair("Profile update Successfully", "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -578,13 +644,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -599,17 +665,20 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             api.phoneVerification(userId, code, number).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
                             emit(AuthTask.processLoginData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(e.message!!))
@@ -617,34 +686,40 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
-    override suspend fun emailVerification(userId: String, email: String): Flow<NetworkResult<Pair<String, String>>> = flow {
+    override suspend fun emailVerification(
+        userId: String,
+        email: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.emailVerification(userId, email).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
                             emit(AuthTask.processLoginData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(e.message!!))
@@ -652,13 +727,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -671,17 +746,27 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             api.otpVerifyEmailVerification(userId, otp).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair<String,String>("Email verified successfully.","200")))
-                        }
-                        else {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(
+                                NetworkResult.Success(
+                                    Pair<String, String>(
+                                        "Email verified successfully.",
+                                        "200"
+                                    )
+                                )
+                            )
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(e.message!!))
@@ -689,13 +774,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -703,7 +788,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun otpVerifyPhoneVerification(
         userId: String,
         otp: String
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.otpVerifyPhoneVerification(
@@ -712,17 +797,27 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair<String,String>("Phone Number verified successfully.","200")))
-                        }
-                        else {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(
+                                NetworkResult.Success(
+                                    Pair<String, String>(
+                                        "Phone Number verified successfully.",
+                                        "200"
+                                    )
+                                )
+                            )
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(e.message!!))
@@ -730,13 +825,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -744,29 +839,33 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun uploadProfileImage(
         userId: String,
         bytes: ByteArray
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            var multipart:  MultipartBody.Part? = null
+            var multipart: MultipartBody.Part? = null
             if (bytes != null) {
                 multipart = toMultiPartFile("profile_image", "image.jpg", bytes)
             }
             val user_id: RequestBody = createRequestBody(userId)
-            api.uploadProfileImage(user_id,multipart).apply {
+            api.uploadProfileImage(user_id, multipart).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -774,13 +873,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -792,22 +891,28 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.addUpdateName(userId,first_name,
-                last_name).apply {
+            api.addUpdateName(
+                userId, first_name,
+                last_name
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -815,13 +920,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -829,24 +934,28 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun addAboutMe(
         userId: String,
         about_me: String
-    ): Flow<NetworkResult<Pair<String, String>>>  = flow{
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.addAboutme(userId,about_me).apply {
+            api.addAboutme(userId, about_me).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -854,41 +963,44 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
 
     }
 
 
-
     override suspend fun deleteLivePlace(
         userId: String,
         index: Int
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.deleteLivePlace(userId,index).apply {
+            api.deleteLivePlace(userId, index).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -896,13 +1008,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -910,66 +1022,28 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun addMyWork(
         userId: String,
         workName: String
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
-        emit(NetworkResult.Loading())
-        try {
-            api.addMyWork(userId,workName).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(AppConstant.unKnownError))
-                    }
-                }
-            }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
-        }
-    }
-
-
-
-
-    override suspend fun addCity(
-        userId: String,
-        city: String
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.addCity(userId,city).apply {
+            api.addMyWork(userId, workName).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -977,171 +1051,6 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
-        }
-    }
-
-    override suspend fun addState(
-        userId: String,
-        state: String
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
-        emit(NetworkResult.Loading())
-        try {
-            api.addState(userId,state).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(AppConstant.unKnownError))
-                    }
-                }
-            }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
-        }
-    }
-
-    override suspend fun addZipCode(
-        userId: String,
-        zip_code: String
-    ): Flow<NetworkResult<Pair<String, String>>> = flow {
-        emit(NetworkResult.Loading())
-        try {
-            api.addZipCode(userId,zip_code).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(AppConstant.unKnownError))
-                    }
-                }
-            }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
-        }
-    }
-
-    override suspend fun updatePassword(
-        userId: String,
-        password: String,
-        password_confirmation: String
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
-        emit(NetworkResult.Loading())
-        try {
-            api.updatePassword(userId,password,password_confirmation).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(AppConstant.unKnownError))
-                    }
-                }
-            }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
-        }
-    }
-
-
-    override suspend fun getHostBookingList(userid: Int): Flow<NetworkResult<MutableList<MyBookingsModel>>> = flow {
-        emit(NetworkResult.Loading())
-        try {
-            Log.d("TESTING","Host Booking Api is here")
-
-            api.getHostBookingList(userid).apply {
-                if(isSuccessful){
-                    body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
-                            val arr = resp.get("data").asJsonArray
-                            val result = mutableListOf<MyBookingsModel>()
-                            arr.forEach {
-                                val model: MyBookingsModel = Gson().fromJson(it.toString(), MyBookingsModel::class.java)
-                                 result.add(model)
-                            }
-                            Log.d("TESTING","Size of Booking Array is "+result.size)
-
-                                emit(NetworkResult.Success(result))
-                        }
-                        else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                }
-                else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(AppConstant.unKnownError))
-                    }
-                }
-            }
-        }catch (e: HttpException) {
             Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
@@ -1154,7 +1063,236 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     }
 
 
-    override suspend fun getPropertyList(userId:Int,latitude: Double?, longitude: Double?): Flow<NetworkResult<Pair<MutableList<HostMyPlacesModel>,String>>> = flow {
+    override suspend fun addCity(
+        userId: String,
+        city: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.addCity(userId, city).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun addState(
+        userId: String,
+        state: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.addState(userId, state).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun addZipCode(
+        userId: String,
+        zip_code: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.addZipCode(userId, zip_code).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun updatePassword(
+        userId: String,
+        password: String,
+        password_confirmation: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.updatePassword(userId, password, password_confirmation).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+
+    override suspend fun getHostBookingList(userid: Int): Flow<NetworkResult<MutableList<MyBookingsModel>>> =
+        flow {
+            emit(NetworkResult.Loading())
+            try {
+                Log.d("TESTING", "Host Booking Api is here")
+
+                api.getHostBookingList(userid).apply {
+                    if (isSuccessful) {
+                        body()?.let { resp ->
+                            if (resp.has("success") && resp.get("success").asBoolean) {
+                                val arr = resp.get("data").asJsonArray
+                                val result = mutableListOf<MyBookingsModel>()
+                                arr.forEach {
+                                    val model: MyBookingsModel =
+                                        Gson().fromJson(it.toString(), MyBookingsModel::class.java)
+                                    result.add(model)
+                                }
+                                Log.d("TESTING", "Size of Booking Array is " + result.size)
+
+                                emit(NetworkResult.Success(result))
+                            } else {
+                                emit(NetworkResult.Error(resp.get("message").asString))
+                            }
+                        } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                    } else {
+                        try {
+                            val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                            emit(
+                                NetworkResult.Error(
+                                    jsonObj?.getString("message") ?: AppConstant.unKnownError
+                                )
+                            )
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                            emit(NetworkResult.Error(AppConstant.unKnownError))
+                        }
+                    }
+                }
+            } catch (e: HttpException) {
+                Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: IOException) {
+                Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                emit(NetworkResult.Error(e.message!!))
+            }
+        }
+
+
+    override suspend fun getPropertyList(
+        userId: Int,
+        latitude: Double?,
+        longitude: Double?
+    ): Flow<NetworkResult<Pair<MutableList<HostMyPlacesModel>, String>>> = flow {
 
 
         try {
@@ -1169,7 +1307,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             }
 
             val responseDeferred1 = CoroutineScope(Dispatchers.IO).async {
-                api.totalEarning(userId,"total")
+                api.totalEarning(userId, "total")
             }
 
             // Await for the result of the API call
@@ -1184,34 +1322,65 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
 
                         Log.d("TESTING_ZYVOO_Size", response.body().toString())
 
-                        if(response1.body()!=null){
+                        if (response1.body() != null) {
                             response1.body()?.let { resp ->
                                 if (resp.has("success") && resp.get("success").asBoolean) {
                                     var obj = resp.get("data").asJsonObject
-                                    var amountStr =   obj.get("amount").asString
-                                    emit(NetworkResult.Success(Pair<MutableList<HostMyPlacesModel>,String>(v1,amountStr)))
+                                    var amountStr = obj.get("amount").asString
+                                    emit(
+                                        NetworkResult.Success(
+                                            Pair<MutableList<HostMyPlacesModel>, String>(
+                                                v1,
+                                                amountStr
+                                            )
+                                        )
+                                    )
                                 } else {
-                                    emit(NetworkResult.Success(Pair<MutableList<HostMyPlacesModel>,String>(v1,"0.00")))
+                                    emit(
+                                        NetworkResult.Success(
+                                            Pair<MutableList<HostMyPlacesModel>, String>(
+                                                v1,
+                                                "0.00"
+                                            )
+                                        )
+                                    )
                                 }
                             }
-                                ?: emit(NetworkResult.Success(Pair<MutableList<HostMyPlacesModel>,String>(v1,"0.00")))
+                                ?: emit(
+                                    NetworkResult.Success(
+                                        Pair<MutableList<HostMyPlacesModel>, String>(
+                                            v1,
+                                            "0.00"
+                                        )
+                                    )
+                                )
 
-                        }else{
-                            emit(NetworkResult.Success(Pair<MutableList<HostMyPlacesModel>,String>(v1,"0.00")))
+                        } else {
+                            emit(
+                                NetworkResult.Success(
+                                    Pair<MutableList<HostMyPlacesModel>, String>(
+                                        v1,
+                                        "0.00"
+                                    )
+                                )
+                            )
                         }
 
                     } else {
                         emit(NetworkResult.Error(resp.get("message").asString))
                     }
-                } ?: emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                }
+                    ?: emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
             } else {
                 // Handle the error from the API response
                 try {
                     val jsonObj = response.errorBody()?.string()?.let { JSONObject(it) }
-                    emit(NetworkResult.Error(
-                        jsonObj?.getString("message")
-                            ?: "There was an unknown error. Check your connection, and try again."
-                    ))
+                    emit(
+                        NetworkResult.Error(
+                            jsonObj?.getString("message")
+                                ?: "There was an unknown error. Check your connection, and try again."
+                        )
+                    )
                 } catch (e: JSONException) {
                     e.printStackTrace()
                     emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
@@ -1231,9 +1400,10 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
 
     }
 
-    override suspend fun getPropertyDetails(propertyId: Int): Flow<NetworkResult<GetPropertyDetail>> = flow {
-        try {
-            api.getPropertyDetails(propertyId).apply {
+    override suspend fun getPropertyDetails(propertyId: Int): Flow<NetworkResult<GetPropertyDetail>> =
+        flow {
+            try {
+                api.getPropertyDetails(propertyId).apply {
                     if (isSuccessful) {
                         body()?.let { resp ->
                             if (resp.has("success") && resp.get("success").asBoolean) {
@@ -1258,18 +1428,18 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                         }
                     }
                 }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
-        }
+            } catch (e: HttpException) {
+                Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: IOException) {
+                Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                emit(NetworkResult.Error(e.message!!))
+            }
 
-    }
+        }
 
     override suspend fun deleteProperty(propertyId: Int): Flow<NetworkResult<String>> = flow {
         try {
@@ -1299,13 +1469,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
 
@@ -1313,13 +1483,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
 
     override suspend fun earning(hostId: Int, type: String): Flow<NetworkResult<String>> = flow {
         try {
-            api.totalEarning(hostId,type).apply {
+            api.totalEarning(hostId, type).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if(resp.has("success") && resp.get("success").asBoolean) {
-                          var obj = resp.get("data").asJsonObject
-                          var amountStr =   obj.get("amount").asString
-                          emit(NetworkResult.Success(amountStr))
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            var obj = resp.get("data").asJsonObject
+                            var amountStr = obj.get("amount").asString
+                            emit(NetworkResult.Success(amountStr))
 
                         } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
@@ -1342,76 +1512,83 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
-    override suspend fun updateProperty(requestBody: PropertyDetailsSave): Flow<NetworkResult<String>> = flow {
-        try {
-            api.updatePropertyDetail(requestBody).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if(resp.has("success") && resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success("Property Updated Successfully"))
-                        } else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
+    override suspend fun updateProperty(requestBody: PropertyDetailsSave): Flow<NetworkResult<String>> =
+        flow {
+            try {
+                api.updatePropertyDetail(requestBody).apply {
+                    if (isSuccessful) {
+                        body()?.let { resp ->
+                            if (resp.has("success") && resp.get("success").asBoolean) {
+                                emit(NetworkResult.Success("Property Updated Successfully"))
+                            } else {
+                                emit(NetworkResult.Error(resp.get("message").asString))
+                            }
                         }
-                    }
-                        ?: emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(
-                            NetworkResult.Error(
-                                jsonObj?.getString("message")
-                                    ?: "There was an unknown error. Check your connection, and try again."
+                            ?: emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                    } else {
+                        try {
+                            val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                            emit(
+                                NetworkResult.Error(
+                                    jsonObj?.getString("message")
+                                        ?: "There was an unknown error. Check your connection, and try again."
+                                )
                             )
-                        )
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                            emit(NetworkResult.Error("There was an unknown error. Check your connection, and try again."))
+                        }
                     }
                 }
+            } catch (e: HttpException) {
+                Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: IOException) {
+                Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                emit(NetworkResult.Error(e.message!!))
             }
-          }
-        catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
         }
-    }
 
 
-    override suspend fun addLivePlace(userId: String, place_name: String): Flow<NetworkResult<Pair<String, String>>>  = flow{
+    override suspend fun addLivePlace(
+        userId: String,
+        place_name: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         try {
             emit(NetworkResult.Loading())
-            api.addLivePlace(userId,place_name).apply {
+            api.addLivePlace(userId, place_name).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1419,13 +1596,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
 
@@ -1437,21 +1614,25 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.deleteLivePlace(userId,index).apply {
+            api.deleteLivePlace(userId, index).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1459,13 +1640,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -1477,18 +1658,22 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             api.getPrivacyPolicy().apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processPrivacyData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1496,13 +1681,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -1514,18 +1699,22 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             api.getTermCondition().apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processTermAndConditionData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1533,38 +1722,46 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
 
     }
 
-    override suspend fun feedback(user_id: String, type: String, details: String): Flow<NetworkResult<String>> = flow {
+    override suspend fun feedback(
+        user_id: String,
+        type: String,
+        details: String
+    ): Flow<NetworkResult<String>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.feedback(user_id,type, details).apply {
+            api.feedback(user_id, type, details).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
 
                             if (resp.has("message") && !resp.get("message").isJsonNull)
                                 emit(NetworkResult.Success(resp.get("message").asString))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1572,25 +1769,26 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
-    override suspend fun getFaq(): Flow<NetworkResult<MutableList<FaqModel>>> = flow{
+    override suspend fun getFaq(): Flow<NetworkResult<MutableList<FaqModel>>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.getFaq().apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
 
                             if (resp.has("data") && !resp.get("data").isJsonNull) {
                                 val faqList = mutableListOf<FaqModel>()
@@ -1603,15 +1801,19 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                                     faqList.add(faq)
                                 }
                                 emit(NetworkResult.Success(faqList))
-                            } }
-                        else {
+                            }
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1619,13 +1821,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -1637,25 +1839,29 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         email: String,
         message: String
     ): Flow<NetworkResult<String>> = flow {
-       emit(NetworkResult.Loading())
+        emit(NetworkResult.Loading())
         try {
-            api.contactUs(user_id,name, email, message).apply {
+            api.contactUs(user_id, name, email, message).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
 
                             if (resp.has("message") && !resp.get("message").isJsonNull)
                                 emit(NetworkResult.Success(resp.get("message").asString))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1663,13 +1869,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -1677,24 +1883,28 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun getHelpCenter(
         user_id: String,
         user_type: String
-    ): Flow<NetworkResult<JsonObject>> = flow{
+    ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.getHelpCenter(user_id,user_type).apply {
+            api.getHelpCenter(user_id, user_type).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(NetworkResult.Success(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1702,74 +1912,82 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
     override suspend fun getArticleDetails(article_id: String): Flow<NetworkResult<JsonObject>> =
-        flow{
-        emit(NetworkResult.Loading())
-        try {
-            api.getArticleDetails(article_id).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+        flow {
+            emit(NetworkResult.Loading())
+            try {
+                api.getArticleDetails(article_id).apply {
+                    if (isSuccessful) {
+                        body()?.let { resp ->
+                            if (resp.has("success") &&
+                                resp.get("success").asBoolean
+                            ) {
 
                                 emit(NetworkResult.Success(resp))
+                            } else {
+                                emit(NetworkResult.Error(resp.get("message").asString))
+                            }
+                        } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                    } else {
+                        try {
+                            val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                            emit(
+                                NetworkResult.Error(
+                                    jsonObj?.getString("message") ?: AppConstant.unKnownError
+                                )
+                            )
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                            emit(NetworkResult.Error(AppConstant.unKnownError))
                         }
-                        else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(AppConstant.unKnownError))
                     }
                 }
+            } catch (e: HttpException) {
+                Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: IOException) {
+                Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                emit(NetworkResult.Error(e.message!!))
             }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
         }
-    }
 
-    override suspend fun getGuideDetails(guide_id: String): Flow<NetworkResult<JsonObject>> = flow{
+    override suspend fun getGuideDetails(guide_id: String): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.getGuideDetails(guide_id).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
 
-                                emit(NetworkResult.Success(resp))
-                        }
-                        else {
+                            emit(NetworkResult.Success(resp))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1777,42 +1995,43 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
 
-
-
-
     override suspend fun deleteMyWork(
         userId: String,
         work_index: Int
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.deleteMyWork(userId,work_index).apply {
+            api.deleteMyWork(userId, work_index).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1820,13 +2039,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -1837,21 +2056,25 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.addLanguage(userId,language_name).apply {
+            api.addLanguage(userId, language_name).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1859,13 +2082,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -1873,24 +2096,28 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun deleteLanguage(
         userId: String,
         language_index: Int
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.deleteLanguage(userId,language_index).apply {
+            api.deleteLanguage(userId, language_index).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1898,13 +2125,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -1915,21 +2142,25 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.addHobbies(userId,hobbies_name).apply {
+            api.addHobbies(userId, hobbies_name).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1937,13 +2168,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -1951,24 +2182,28 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun deleteHobbies(
         userId: String,
         index: Int
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.deleteHobbies(userId,index).apply {
+            api.deleteHobbies(userId, index).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1976,63 +2211,75 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
     @RequiresExtension(extension = Build.VERSION_CODES.S, version = 7)
-    override suspend fun addPets(userId: String, pet_name: String): Flow<NetworkResult<Pair<String, String>>> = flow {
+    override suspend fun addPets(
+        userId: String,
+        pet_name: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.addPets(userId,pet_name).apply {
+            api.addPets(userId, pet_name).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
-                         emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                    emit(
+                        NetworkResult.Error(
+                            ErrorHandler.handleErrorBody(
+                                this.errorBody()?.string()
+                            )
+                        )
+                    )
                 }
             }
-        }
-        catch (e: Exception) {
-             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
         }
     }
 
     override suspend fun deletePets(
         userId: String,
         index: Int
-    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.deletePets(userId,index).apply {
+            api.deletePets(userId, index).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -2040,13 +2287,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -2057,21 +2304,25 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.addStreetAddress(userId,street_address).apply {
+            api.addStreetAddress(userId, street_address).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -2079,41 +2330,43 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
-
 
 
     override suspend fun approveDeclineBooking(
         bookingId: Int,
         status: String,
         message: String,
-        reason :String
+        reason: String
     ): Flow<NetworkResult<String>> = flow {
         try {
-            api.approveDeclineBooking(bookingId,status,message,reason).apply {
+            api.approveDeclineBooking(bookingId, status, message, reason).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
                             val obj = resp.get("message").asString
                             emit(NetworkResult.Success(obj))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -2121,19 +2374,16 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
-
-
-
 
 
     override suspend fun getHomeData(
@@ -2144,47 +2394,61 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         emit(NetworkResult.Loading())
         try {
             api.getHomeData(
-                userId,latitude,longitude).apply {
+                userId, latitude, longitude
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processDataArray(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
 
-                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                    emit(
+                        NetworkResult.Error(
+                            ErrorHandler.handleErrorBody(
+                                this.errorBody()?.string()
+                            )
+                        )
+                    )
                 }
             }
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
         }
     }
 
 
-    override suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String, HostDetailModel>>> = flow{
+    override suspend fun hostBookingDetails(
+        bookingId: Int,
+        latitude: String?,
+        longitude: String?
+    ): Flow<NetworkResult<Pair<String, HostDetailModel>>> = flow {
         try {
             api.hostBookingDetails(bookingId, latitude, longitude).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success") && resp.get("success").asBoolean) {
                             emit(HostDetailsTask.processPrivacyData(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
-                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                    emit(
+                        NetworkResult.Error(
+                            ErrorHandler.handleErrorBody(
+                                this.errorBody()?.string()
+                            )
+                        )
+                    )
                 }
             }
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
         }
     }
@@ -2195,21 +2459,26 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         emit(NetworkResult.Loading())
         try {
             api.getWisList(
-                userId).apply {
+                userId
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
                             emit(AuthTask.processDataArray(resp))
-                        }
-                        else {
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -2217,18 +2486,16 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
-
-
 
 
     override suspend fun createWishlist(
@@ -2239,21 +2506,26 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.createWishlist(userId,name,
-                description,property_id).apply {
+            api.createWishlist(
+                userId, name,
+                description, property_id
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(e.message!!))
@@ -2261,13 +2533,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -2275,24 +2547,30 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
 
     override suspend fun deleteWishlist(
         userId: String,
-        wishlist_id: String): Flow<NetworkResult<Pair<String, String>>> = flow {
+        wishlist_id: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.deleteWishlist(userId,
-                wishlist_id).apply {
+            api.deleteWishlist(
+                userId,
+                wishlist_id
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(e.message!!))
@@ -2300,37 +2578,43 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
 
     override suspend fun removeItemFromWishlist(
         userId: String,
-        property_id: String): Flow<NetworkResult<Pair<String, String>>> = flow {
+        property_id: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.removeItemFromWishlist(userId,
-                property_id).apply {
+            api.removeItemFromWishlist(
+                userId,
+                property_id
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(e.message!!))
@@ -2338,13 +2622,13 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
@@ -2353,25 +2637,31 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
     override suspend fun saveItemInWishlist(
         userId: String,
         property_id: String,
-        wishlist_id: String): Flow<NetworkResult<Pair<String, String>>> = flow {
+        wishlist_id: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.saveItemInWishlist(userId,
+            api.saveItemInWishlist(
+                userId,
                 property_id,
-                wishlist_id).apply {
+                wishlist_id
+            ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
-                        if (resp.has("success")&& resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
-                        }
-                        else {
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         emit(NetworkResult.Error(e.message!!))
@@ -2379,13 +2669,90 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                 }
             }
         } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
             emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun getArticleList(search_term: String): Flow<NetworkResult<JsonObject>> =
+        flow {
+            emit(NetworkResult.Loading())
+            try {
+                api.getArticleList(search_term).apply {
+                    if (isSuccessful) {
+                        body()?.let { resp ->
+                            if (resp.has("success") && resp.get("success").asBoolean) {
+                                emit(NetworkResult.Success(resp))
+                            } else {
+                                emit(NetworkResult.Error(resp.get("message").asString))
+                            }
+                        } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                    } else {
+                        try {
+                            val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                            emit(
+                                NetworkResult.Error(
+                                    jsonObj?.getString("message") ?: AppConstant.unKnownError
+                                )
+                            )
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                            emit(NetworkResult.Error(e.message!!))
+                        }
+                    }
+                }
+            } catch (e: HttpException) {
+                Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: IOException) {
+                Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                emit(NetworkResult.Error(e.message!!))
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                emit(NetworkResult.Error(e.message!!))
+            }
+        }
+
+    override suspend fun getGuideList(search_term: String): Flow<NetworkResult<JsonObject>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.getGuideList(search_term).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(resp))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(e.message!!))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
     }
