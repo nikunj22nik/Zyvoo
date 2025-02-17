@@ -1,6 +1,8 @@
 package com.business.zyvo.fragment.both.browseGuideArtcileDetail
 
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -121,7 +123,11 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                         }
 
                         if (model.data.description != null) {
-                            binding.textDescription.text = model.data.description
+                            binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
+                            } else {
+                                Html.fromHtml(model.data.description)
+                            }
                         }
                         if (model.data.author_name != null){
                             binding.textAuthorName.text = model.data.author_name
@@ -177,7 +183,11 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                         }
 
                         if (model.data.description != null) {
-                            binding.textDescription.text = model.data.description
+                            binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
+                            } else {
+                                Html.fromHtml(model.data.description)
+                            }
                         }
                         if (model.data.author_name != null){
                             binding.textAuthorName.text = model.data.author_name

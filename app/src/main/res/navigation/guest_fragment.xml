@@ -23,12 +23,12 @@
         android:label="HelpCenterFragment" />
     <fragment
         android:id="@+id/browseAllGuidesAndArticlesFragment"
-        android:name="com.business.zyvo.fragment.guest.BrowseAllGuidesAndArticlesFragment"
+        android:name="com.business.zyvo.fragment.both.browseAllGuidesAndArticles.BrowseAllGuidesAndArticlesFragment"
         android:label="fragment_browse_all_guides_and_articles"
         tools:layout="@layout/fragment_browse_all_guides_and_articles" />
     <fragment
         android:id="@+id/browseAllGuidesArticleOpenFragment"
-        android:name="com.business.zyvo.fragment.guest.BrowseAllGuidesArticleOpenFragment"
+        android:name="com.business.zyvo.fragment.both.browseAllGuidesArticleOpen.BrowseAllGuidesArticleOpenFragment"
         android:label="fragment_browse_all_guides_article_open"
         tools:layout="@layout/fragment_browse_all_guides_article_open" />
     <fragment
@@ -97,7 +97,7 @@
 
     <fragment
         android:id="@+id/browse_article_host"
-        android:name="com.business.zyvo.fragment.host.BrowseArticleHostFragment"
+        android:name="com.business.zyvo.fragment.both.browseArticleHost.BrowseArticleHostFragment"
         android:label="BrowseArticleHost"
         />
 

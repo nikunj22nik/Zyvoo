@@ -360,4 +360,16 @@ interface ZyvoApi {
         @Field("property_id") property_id : String,
         @Field("wishlist_id") wishlist_id : String) :Response<JsonObject>
 
+
+         @POST("get_article_list")
+         @FormUrlEncoded
+         suspend fun getArticleList(
+             @Field("search_term") search_term : String
+         ):Response<JsonObject>
+
+    @POST("get_guide_list")
+    @FormUrlEncoded
+    suspend fun getGuideList(
+        @Field("search_term") search_term : String
+    ):Response<JsonObject>
 }

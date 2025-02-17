@@ -1,4 +1,4 @@
-package com.business.zyvo.fragment.guest
+package com.business.zyvo.fragment.both.browseAllGuidesAndArticles
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,10 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
-import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.adapter.AdapterAllGuides
