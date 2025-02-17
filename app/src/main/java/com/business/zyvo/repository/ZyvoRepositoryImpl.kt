@@ -2849,15 +2849,16 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                    body()?.let { resp ->
                        if (resp.has("success") && resp.get("success").asBoolean) {
                            var obj = resp.get("message").asString
-                           var data = resp.get("data").asJsonArray
-                           var result = mutableListOf<Pair<Int,String>>()
-
+                           val data = resp.get("data").asJsonArray
+                           val result = mutableListOf<Pair<Int,String>>()
                            data.forEach {
-
-
-
+                                  var newObj = it.asJsonObject
+                                  var id = newObj.get("id").asInt
+                                   var reason = newObj.get("reason").asString
+                                   var p = Pair<Int,String>(id,reason)
+                                    result.add(p)
                            }
-
+                           emit(NetworkResult.Success<MutableList<Pair<Int,String>>>(result))
                        }
                        else {
                            emit(NetworkResult.Error(resp.get("message").asString))

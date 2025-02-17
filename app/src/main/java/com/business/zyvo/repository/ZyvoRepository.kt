@@ -242,11 +242,11 @@ interface ZyvoRepository {
     suspend fun deleteNotificationHost(userId: Int, notificationId :Int) : Flow<NetworkResult<String>>
 
     suspend fun hostReportViolation(
-        @Field("user_id") userId :Int,
-        @Field("booking_id") bookingId :Int,
-        @Field("property_id") propertyId :Int,
-        @Field("report_reasons_id")reportReasonId :Int,
-        @Field("additional_details") additionalDetails :String
+         userId :Int,
+         bookingId :Int,
+        propertyId :Int,
+        reportReasonId :Int,
+        additionalDetails :String
     )
 
     suspend fun reportListReason() : Flow<NetworkResult<MutableList<Pair<Int,String>>>>
