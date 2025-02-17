@@ -75,7 +75,17 @@ class HostDetailsFragment : Fragment() , OnClickListener, OnItemClickListener {
         binding.imgBack.setOnClickListener{
             navController.navigateUp()
         }
+
+        callingReportReasonList()
     }
+
+    private fun callingReportReasonList(){
+
+
+    }
+
+
+
 
     fun initialization(){
         adapter = HostListingAdapter(requireContext(),3, mutableListOf(),
@@ -114,7 +124,7 @@ class HostDetailsFragment : Fragment() , OnClickListener, OnItemClickListener {
 
 
         binding.showMoreReview.setOnClickListener {
-            adapterReview.updateAdapter(7)
+         //   adapterReview.updateAdapter(7)
         }
 
 

@@ -273,6 +273,7 @@
                 android:id="@+id/rl_btm_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:background="@drawable/bg_four_side_corner_white"
                 android:paddingVertical="@dimen/_5sdp"

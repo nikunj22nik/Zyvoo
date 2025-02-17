@@ -189,7 +189,7 @@
                             android:layout_width="@dimen/_13sdp"
                             android:layout_height="@dimen/_13sdp"
                             android:layout_gravity="center_vertical"
-
+                            android:layout_marginStart="@dimen/_5sdp"
                             android:src="@drawable/ic_star"
                             app:tint="#FFBB00" />
 
@@ -201,6 +201,7 @@
                             android:layout_toEndOf="@+id/imageStar"
                             android:fontFamily="@font/inter"
                             android:text="5.0"
+                            android:layout_marginLeft="@dimen/_2sdp"
                             android:textColor="#FFBB00"
                             android:textSize="@dimen/_13ssp" />
 
@@ -1135,7 +1136,8 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
-                    android:text="Midtown Manhattan, New York, NY"
+                    android:layout_marginBottom="@dimen/_10sdp"
+                    android:text=""
                     android:textColor="@color/black" />
 
 
@@ -1154,6 +1156,7 @@
 
 
                 <TextView
+                    android:id="@+id/tv_reviews_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
@@ -1182,6 +1185,7 @@
                             android:src="@drawable/ic_start_new" />
 
                         <TextView
+                            android:id="@+id/end_rating_tv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_8sdp"

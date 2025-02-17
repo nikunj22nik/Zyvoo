@@ -6,13 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.databinding.AdapterReviewsBinding
+import com.business.zyvo.model.host.HostReviewModel
 
-class AdapterReview(var context : Context, var list :MutableList<String>) :
+class AdapterReview(var context : Context, var list :MutableList<HostReviewModel> = mutableListOf()) :
 RecyclerView.Adapter<AdapterReview.ViewHolder>()
 {
     var count =4
 
-    class ViewHolder(var binding: AdapterReviewsBinding) : RecyclerView.ViewHolder(binding.root){}
+    class ViewHolder(var binding: AdapterReviewsBinding) : RecyclerView.ViewHolder(binding.root){
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -21,17 +23,17 @@ RecyclerView.Adapter<AdapterReview.ViewHolder>()
     }
 
     override fun getItemCount(): Int {
-     return count
+     return list.size
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if(position == count-1) {
-            holder.binding.v1.visibility = View.GONE
+        if(position == list.size-1) {
+
         }
     }
 
-    fun updateAdapter(currentCount :Int){
-        count = currentCount
+    fun updateAdapter(list :MutableList<HostReviewModel>){
+        this.list = list
         notifyDataSetChanged()
     }
 

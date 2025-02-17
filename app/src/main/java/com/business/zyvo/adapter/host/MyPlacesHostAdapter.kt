@@ -33,7 +33,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
     private lateinit var mListener: onItemClickListener
 
     interface onItemClickListener {
-        fun onItemClick(position: Int,type:String)
+        fun onItemClick(position: HostMyPlacesModel,type:String)
     }
 
     fun setOnItemClickListener(listener: MyPlacesHostAdapter.onItemClickListener) {
@@ -56,6 +56,8 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
 //            mListener.onItemClick(position)
             Log.d("Adapter", "cl1 clicked at position $position")
         }
+
+        Log.d("TESTING_ID","Here in a adapter "+list.get(position).property_id.toString())
 
        var commonAuthWorkUtils = CommonAuthWorkUtils(context,null)
 
@@ -104,7 +106,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         }
 
         holder.binding.imageAddWish.setOnClickListener {
-            showPopupWindow(holder.binding.imageAddWish,0)
+            showPopupWindow(holder.binding.imageAddWish,position)
         }
     }
 
@@ -127,7 +129,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemEdit).setOnClickListener {
-             mListener.onItemClick(position,AppConstant.EDIT)
+             mListener.onItemClick(list.get(position),AppConstant.EDIT)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
@@ -201,7 +203,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
 
 
             findViewById<RelativeLayout>(R.id.yes_btn).setOnClickListener {
-                mListener.onItemClick(position,AppConstant.DELETE)
+                mListener.onItemClick(list.get(position),AppConstant.DELETE)
                 dismiss()
             }
             findViewById<RelativeLayout>(R.id.rl_cancel_btn).setOnClickListener {

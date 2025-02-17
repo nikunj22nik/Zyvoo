@@ -1,21 +1,31 @@
 package com.business.zyvo.fragment.both
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.business.zyvo.AppConstant
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 
 import com.business.zyvo.R
 import com.business.zyvo.adapter.AdapterNotificationScreen
 import com.business.zyvo.databinding.FragmentNotificationBinding
+import com.business.zyvo.model.NotificationScreenModel
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.NotificationViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class NotificationFragment : Fragment(),OnClickListener,View.OnClickListener {
@@ -26,8 +36,8 @@ class NotificationFragment : Fragment(),OnClickListener,View.OnClickListener {
     private val viewModel: NotificationViewModel by viewModels()
     private lateinit var adapterNotificationScreen : AdapterNotificationScreen
     // var  list : ArrayList<NotificationScreenModel> = arrayListOf()
-private lateinit var navController: NavController
-
+     private lateinit var navController: NavController
+    private  var list: MutableList<NotificationScreenModel> = mutableListOf()
     // 1. Called when fragment is attached to its parent activity
     override fun onAttach(context: android.content.Context) {
         super.onAttach(context)
@@ -63,9 +73,11 @@ private lateinit var navController: NavController
 
 
         // Observe the LiveData from ViewModel
-        viewModel.list.observe(viewLifecycleOwner, Observer { list ->
-            adapterNotificationScreen.updateItem(list)
-        })
+//        viewModel.list.observe(viewLifecycleOwner, Observer { list ->
+//            adapterNotificationScreen.updateItem(list)
+//        })
+
+
 
         return binding.root
     }
@@ -78,6 +90,105 @@ private lateinit var navController: NavController
         navController = Navigation.findNavController(view)
         binding.imageBackButton.setOnClickListener(this)
 
+        arguments?.let {
+            if(it.containsKey(AppConstant.Host)){
+                Log.d("TESTING","I am here in the host")
+                val sessionManager = SessionManager(requireContext())
+                val userId = sessionManager.getUserId()
+                Log.d("TESTING","UserId is "+userId)
+                if (userId != null) {
+                    callingNotificationApiHost(userId)
+                }
+            }
+        }
+
+        adapterNotificationScreen.setOnItemClickListener(object : AdapterNotificationScreen.onItemClickListener{
+            override fun onItemClick(obj: NotificationScreenModel) {
+                var sessionManager = SessionManager(requireContext())
+                Log.d("TESTING","booking id is "+obj.notificationId)
+                var userId = sessionManager.getUserId()
+                callingNotificationDelete(obj,userId)
+            }
+        })
+
+
+
+    }
+
+    private fun callingNotificationDelete(obj: NotificationScreenModel, userId: Int?) {
+
+        lifecycleScope.launch {
+            if(NetworkMonitorCheck._isConnected.value) {
+                LoadingUtils.showDialog(requireContext(), false)
+                if (userId != null) {
+
+                    viewModel.deleteNotificationHost(userId, obj.notificationId).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                LoadingUtils.hideDialog()
+
+                                val newList = mutableListOf<NotificationScreenModel>()
+
+                                list.forEach {
+                                    if (it.notificationId != obj.notificationId) {
+                                        newList.add(it)
+                                    }
+                                }
+
+
+                                adapterNotificationScreen.updateItem(newList)
+                                list = newList
+                            }
+
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                ErrorDialog.showErrorDialog(requireContext(), it.message.toString())
+
+                            }
+
+                            else -> {
+                                LoadingUtils.hideDialog()
+
+                            }
+                        }
+                    }
+                }
+            }else{
+                LoadingUtils.showErrorDialog(requireContext(),"Please Check Your Internet")
+            }
+        }
+
+    }
+
+    fun callingNotificationApiHost(userId :Int){
+        lifecycleScope.launch {
+            if(NetworkMonitorCheck._isConnected.value) {
+                LoadingUtils.showDialog(requireContext(), false)
+                viewModel.getNotificationHost(userId).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            Log.d("Testing", "list here is " + it.data?.size)
+
+                            it.data?.let { it1 -> adapterNotificationScreen.updateItem(it1) }
+
+                            list = it.data!!
+
+                            LoadingUtils.hideDialog()
+                        }
+
+                        is NetworkResult.Error -> {
+                            LoadingUtils.hideDialog()
+                        }
+
+                        else -> {
+                            LoadingUtils.hideDialog()
+                        }
+                    }
+                }
+            }else{
+                LoadingUtils.showErrorDialog(requireContext(),"Please Check Your Internet")
+            }
+        }
     }
 
     // 5. Called when the fragment becomes visible
@@ -124,7 +235,7 @@ private lateinit var navController: NavController
     }
 
     override fun itemClick(obj: Int) {
-        viewModel.removeItemAt(obj) // Update the adapter with the new list
+      //  viewModel.removeItemAt(obj) // Update the adapter with the new list
     }
 
     override fun onClick(p0: View?) {

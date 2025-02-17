@@ -8,6 +8,9 @@ import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.model.MyBookingsModel
+import com.business.zyvo.model.NotificationScreenModel
+import com.business.zyvo.model.host.HostReviewModel
+import com.business.zyvo.model.host.PaginationModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
 
@@ -131,10 +134,6 @@ interface ZyvoRepository {
 
     suspend fun  getFaq() : Flow<NetworkResult<MutableList<FaqModel>>>
 
-
-
-
-
     suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String,HostDetailModel>>>
 
     suspend fun contactUs(user_id : String,name : String,email: String,message: String) : Flow<NetworkResult<String>>
@@ -164,6 +163,27 @@ interface ZyvoRepository {
     suspend fun saveItemInWishlist(userId: String,
                                        property_id: String,
                                    wishlist_id: String) : Flow<NetworkResult<Pair<String,String>>>
+
+
+    suspend fun propertyFilterReviews(
+      propertyId :Int, filter: String, page :Int
+    ) : Flow<NetworkResult<Pair<PaginationModel,MutableList<HostReviewModel>>>>
+
+
+    suspend fun getNotificationHost(@Field("user_id") userId :Int) : Flow<NetworkResult<MutableList<NotificationScreenModel>>>
+
+    suspend fun deleteNotificationHost(userId: Int, notificationId :Int) : Flow<NetworkResult<String>>
+
+    suspend fun hostReportViolation(
+        @Field("user_id") userId :Int,
+        @Field("booking_id") bookingId :Int,
+        @Field("property_id") propertyId :Int,
+        @Field("report_reasons_id")reportReasonId :Int,
+        @Field("additional_details") additionalDetails :String
+    )
+
+    suspend fun reportListReason() : Flow<NetworkResult<MutableList<Pair<Int,String>>>>
+
 
 }
 

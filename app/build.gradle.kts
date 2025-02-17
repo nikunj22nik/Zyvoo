@@ -67,6 +67,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation(libs.places)
+    implementation(libs.androidx.paging.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -108,6 +109,7 @@ dependencies {
     implementation("com.github.colourmoon:readmore-textview:v1.0.2")
     //Spinner
     implementation("com.github.skydoves:powerspinner:1.2.7")
-
+// Paging library
+    implementation("androidx.paging:paging-runtime:3.1.0")
 
 }
