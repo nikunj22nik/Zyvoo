@@ -66,12 +66,14 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         adapter = MyPlacesHostAdapter(requireContext(), mutableListOf())
         binding.recyclerMyPlaces.adapter = adapter
         adapter.setOnItemClickListener(object :MyPlacesHostAdapter.onItemClickListener{
-            override fun onItemClick(position: Int,type: String) {
+            override fun onItemClick(position: HostMyPlacesModel,type: String) {
                 if(type.equals(AppConstant.DELETE)){
-                     deleteProperty(placesList.get(position).property_id,position)
+
+                     deleteProperty(position.property_id)
                 }else {
                     val bundle = Bundle()
-                    val id = placesList.get(position).property_id
+                    val id = position.property_id
+                    Log.d("TESTING_ID",id.toString())
                     bundle.putInt(AppConstant.PROPERTY_ID, id)
                     findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag, bundle)
                 }
@@ -103,7 +105,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         return binding.root
     }
 
-    private fun deleteProperty(propertyId: Int,position :Int) {
+    private fun deleteProperty(propertyId: Int) {
         lifecycleScope.launch {
             Log.d("TESTING_PROPERTY_ID",propertyId.toString())
             LoadingUtils.showDialog(requireContext(),false)
@@ -112,8 +114,11 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                          is NetworkResult.Success ->{
                              LoadingUtils.hideDialog()
                              Log.d("TESTING_PROPERTY_ID",propertyId.toString())
-                             placesList.removeAt(position)
-                             adapter.updateData(placesList)
+                             var pp =placesList.filter {
+                                 it.property_id != propertyId
+                             }
+
+                             adapter.updateData(pp.toMutableList())
                          }
                          is NetworkResult.Error ->{
                              LoadingUtils.hideDialog()

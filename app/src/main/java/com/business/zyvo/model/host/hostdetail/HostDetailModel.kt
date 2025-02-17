@@ -29,7 +29,6 @@ data class HostDetailModel(
     val property_description: String,
     val property_id: Int,
     val property_title: String,
-    val reviews: List<Review>,
     val reviews_total_count: String?,
     val reviews_total_rating: String?,
     val service_fee: String?,

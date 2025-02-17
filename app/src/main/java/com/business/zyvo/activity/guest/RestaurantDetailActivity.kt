@@ -447,9 +447,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
 
-        binding.showMoreReview.setOnClickListener {
-            adapterReview.updateAdapter(7)
-        }
+//        binding.showMoreReview.setOnClickListener {
+//            adapterReview.updateAdapter(7)
+//        }
 
         binding.text1.setText("01:00 PM")
         binding.text2.setText("03:00 PM")

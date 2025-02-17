@@ -30,6 +30,8 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -53,7 +55,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
+class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
 
     private var _binding: FragmentReviewBookingBinding? = null
     private val binding get() = _binding!!
@@ -65,6 +67,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     lateinit var navController: NavController
     lateinit var adapterIncludeInBooking: AdapterIncludeInBooking
+    var latitude :Double =0.00
+    var longitude :Double =0.00
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -181,21 +185,22 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                 viewModel.hostBookingDetails(bookingId, null, null).collect {
                     when (it) {
                         is NetworkResult.Success -> {
-                            LoadingUtils.hideDialog()
-                            it.data?.second?.let { it1 -> showingDataToUi(it1) }
+                            it.data?.second?.let { it1 ->{ 
+                                showingDataToUi(it1) 
+                               }
+                            }
                         }
-
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
                             LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
                         }
-
                         else -> {
                             LoadingUtils.hideDialog()
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 viewModel.hostBookingDetails(bookingId, latitude, longitude).collect {
                     when (it) {
                         is NetworkResult.Success -> {
@@ -214,9 +219,27 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             }
-            // viewModel.hostBookingDetails()
         }
+    }
 
+    private fun callingReviewData(propertyId: Int) {
+        lifecycleScope.launch {
+            viewModel.propertyFilterReviews(propertyId, viewModel.filter, viewModel.currentPage)
+                .collect {
+                    when(it){
+                      is NetworkResult.Success ->{
+                          LoadingUtils.hideDialog()
+                          it.data?.let { it1 -> adapterReview.updateAdapter(it1.second) }
+                      }
+                      is NetworkResult.Error ->{
+                          LoadingUtils.hideDialog()
+                      }
+                      else->{
+                          LoadingUtils.hideDialog()
+                      }
+                  }
+                }
+         }
     }
 
 
@@ -224,9 +247,9 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         binding.tvNamePlace.setText(data.property_title)
         binding.textRatingStar.setText(data.guest_rating)
-        binding.textK.setText(data.reviews_total_rating)
+        binding.textK.setText(" ( "+data.reviews_total_rating+" )")
         binding.textMiles.setText(data.distance_miles + " miles away")
-        binding.time.setText(data.booking_hour)
+        binding.time.setText(data.booking_hour + " Hours")
         binding.money.setText("$ " + data.booking_amount)
 
         data.cleaning_fee?.let {
@@ -236,6 +259,10 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         data.service_fee?.let {
             binding.tvServiceFee.setText("$" + it)
         } ?: binding.tvServiceFee.setText("$ 0")
+
+        data.guest_avatar?.let {
+            Glide.with(requireContext()).load(AppConstant.BASE_URL+it).into(binding.imageProfilePicture)
+        }
 
         data.tax?.let {
             binding.tvTaxes.setText("$ " + it)
@@ -259,6 +286,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         data.booking_status?.let {
             binding.tvStatus.setText(it)
+            if(it.equals("pending")) binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
         } ?: binding.tvStatus.setText("")
 
         data.booking_date?.let {
@@ -266,31 +294,50 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         } ?: binding.tvBookingDate.setText("")
 
         data.booking_hour?.let {
-            binding.tvBookingTotalTime.setText(it)
+            binding.tvBookingTotalTime.setText(it +" Hours")
         } ?: binding.tvBookingTotalTime.setText("")
 
         binding.bookingFromTo.setText("From " + data.booking_start_time + " to " + data.booking_end_time)
 
+        data.reviews_total_count?.let {
+            binding.tvReviewsCount.setText("Reviews ("+ it +" )")
+        }
+
+        data.reviews_total_rating?.let {
+            binding.endRatingTv.setText(it)
+        }
 
         data.parking_rules?.let {
             binding.tvParkingContent.setText(it)
         }?: binding.tvParkingContent.setText("")
 
+        data.address?.let {
+            binding.tvLocationName.setText(it)
+        }
 
         data.host_rules?.let {
             binding.tvHostContent.setText(it)
-        }?: binding.tvHostContent.setText("")
-
-        adapterIncludeInBooking.updateAdapter(data.amenities)
-
-        binding.tvLocationName.setText(data.address)
+        }
 
         data.latitude?.let {
-            val location = data.longitude?.let { it1 -> LatLng(data.latitude.toDouble(), it1.toDouble()) }
+            latitude = it.toDouble()
+            longitude = data.longitude?.let {
+                it.toDouble()
+            }?:0.00
 
-            // Add a marker on the map at the given location
-            location?.let { it1 -> MarkerOptions().position(it1).title("Marker in San Francisco") }
-                ?.let { it2 -> mMap?.addMarker(it2) }
+            val newYork = LatLng(latitude, longitude)
+            mMap?.clear()
+            mMap?.addMarker(MarkerOptions().position(newYork).title(data.property_title))
+            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
+
+
+//            val location = data.longitude?.let { it1 -> LatLng(data.latitude.toDouble(), it1.toDouble()) }
+//            mMap?.clear()
+//
+//            Log.d("TESTING","inside api LATITUDE IS "+latitude +"Map Ready LONGITUDE "+longitude)
+//            // Add a marker on the map at the given location
+//            location?.let { it1 -> MarkerOptions().position(it1).title("Marker in San Francisco") }
+//                ?.let { it2 -> mMap?.addMarker(it2) }
         }
 
     }
@@ -309,7 +356,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             // binding.underlinedTextView.visibility =View.GONE
             showingLessText()
         }
-
 
     }
 
@@ -443,11 +489,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
 
             textPublishReview.setOnClickListener {
-
                 dismiss()
             }
-
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
@@ -528,6 +571,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+
     private fun openDialogSuccess() {
 
         val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
@@ -567,18 +611,11 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         adapterReview = AdapterReview(requireContext(), mutableListOf())
 
-
-
-
-
         binding.recyclerAddOn.adapter = adapterAddon
-
         binding.recyclerAddOn.layoutManager = GridLayoutManager(requireContext(), 2)
-
         binding.recyclerAddOn.isNestedScrollingEnabled = false
 
-        binding.recyclerReviews.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.recyclerReviews.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.recyclerReviews.isNestedScrollingEnabled = false
 
@@ -590,8 +627,16 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         binding.tvLocationName.paintFlags =
             binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
 
+        recyclerPagination()
 
     }
+
+
+    private fun recyclerPagination(){
+
+    }
+
+
 
     private fun getAddOnList(): MutableList<String> {
 
@@ -641,12 +686,15 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     }
 
     override fun onMapReady(p0: GoogleMap) {
-
         mMap = p0
         val newYork = LatLng(40.7128, -74.0060)
         mMap?.addMarker(MarkerOptions().position(newYork).title("Marker in New York"))
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
-
+//        val location =  LatLng(latitude, longitude)
+//        Log.d("TESTING","Map Ready LATITUDE IS "+latitude +"Map Ready LONGITUDE "+longitude)
+//        // Add a marker on the map at the given location
+//        location?.let { it1 -> MarkerOptions().position(it1).title("Marker in San Francisco") }
+//            ?.let { it2 -> mMap?.addMarker(it2) }
     }
 
 }

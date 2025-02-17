@@ -43,28 +43,27 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
         }
-
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentBookingScreenHostBinding.inflate(
-            LayoutInflater.from(requireContext()), container,
+            LayoutInflater.from(requireContext()),
+            container,
             false
         )
 
         viewModel = ViewModelProvider(this)[HostBookingsViewModel::class.java]
 
-        // Inflate the layout for this fragment
+
         adapterMyBookingsAdapter = HostBookingsAdapter(requireContext(), mutableListOf(), this)
-
         setUpAdapterMyBookings()
-
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
-
         viewModel.list.observe(viewLifecycleOwner, Observer { list1 ->
             adapterMyBookingsAdapter!!.updateItem(list1)
             list = list1
@@ -73,51 +72,56 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         return binding.root
     }
 
-    private fun setUpAdapterMyBookings(){
+    private fun setUpAdapterMyBookings() {
 
-            adapterMyBookingsAdapter?.setOnItemClickListener(object : HostBookingsAdapter.onItemClickListener{
-                override fun onItemClick(bookingId: Int, status: String, message: String, reason: String) {
-                    lifecycleScope.launch {
-                        LoadingUtils.showDialog(requireContext(),false)
-                     if(status.equals("-11")){
+        adapterMyBookingsAdapter?.setOnItemClickListener(object :
+            HostBookingsAdapter.onItemClickListener {
+            override fun onItemClick(
+                bookingId: Int,
+                status: String,
+                message: String,
+                reason: String
+            ) {
+                lifecycleScope.launch {
+                    LoadingUtils.showDialog(requireContext(), false)
+                    if (status.equals("-11")) {
+                        val bundle = Bundle()
+                        bundle.putInt(AppConstant.BOOKING_ID, bookingId)
+                        findNavController().navigate(R.id.reviewBookingHostFragment, bundle)
+                    } else {
+                        viewModel.approveDeclineBooking(bookingId, status, message, reason)
+                            .collect {
+                                when (it) {
+                                    is NetworkResult.Success -> {
+                                        LoadingUtils.hideDialog()
+                                        if (status.equals("decline")) {
+                                            list.removeAll { it.booking_id == bookingId }
+                                            adapterMyBookingsAdapter!!.updateItem(list)
+                                        }
+                                        LoadingUtils.showSuccessDialog(
+                                            requireContext(),
+                                            it.data.toString()
+                                        )
+                                    }
 
-                         val bundle = Bundle()
-                         bundle.putInt(AppConstant.BOOKING_ID,bookingId)
-                         findNavController().navigate(R.id.reviewBookingHostFragment,bundle)
+                                    is NetworkResult.Error -> {
+                                        LoadingUtils.hideDialog()
+                                        LoadingUtils.showErrorDialog(
+                                            requireContext(),
+                                            it.message.toString()
+                                        )
+                                    }
 
-                     }else {
-                         viewModel.approveDeclineBooking(bookingId, status, message, reason)
-                             .collect {
-                                 when (it) {
-                                     is NetworkResult.Success -> {
-                                         LoadingUtils.hideDialog()
-                                         if (status.equals("decline")) {
-                                             list.removeAll { it.booking_id == bookingId }
-                                             adapterMyBookingsAdapter!!.updateItem(list)
-                                         }
-                                         LoadingUtils.showSuccessDialog(
-                                             requireContext(),
-                                             it.data.toString()
-                                         )
-                                     }
+                                    else -> {
 
-                                     is NetworkResult.Error -> {
-                                         LoadingUtils.hideDialog()
-                                         LoadingUtils.showErrorDialog(
-                                             requireContext(),
-                                             it.message.toString()
-                                         )
-                                     }
-
-                                     else -> {
-
-                                     }
-                                 }
-                             }
-                     }
+                                    }
+                                }
+                            }
                     }
                 }
-            })
+            }
+        })
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -126,9 +130,9 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         callingBookingData()
     }
 
-    private fun callingBookingData(){
+    private fun callingBookingData() {
 
-        if(NetworkMonitorCheck._isConnected.value) {
+        if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch {
                 val session = SessionManager(requireContext())
                 val userId = session.getUserId()
@@ -154,9 +158,11 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                     }
                 }
             }
-        }else{
-            LoadingUtils.showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            LoadingUtils.showErrorDialog(
+                requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -175,27 +181,21 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener {
-
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener {
-
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemBookingRequests).setOnClickListener {
-
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemWaitingPayment).setOnClickListener {
-
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener {
-
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener {
-
             popupWindow.dismiss()
         }
 
@@ -254,7 +254,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
     override fun itemClick(obj: Int) {
 
-      //  Toast.makeText(requireContext(),obj.toString(),Toast.LENGTH_LONG).show()
+        //  Toast.makeText(requireContext(),obj.toString(),Toast.LENGTH_LONG).show()
 
 
     }
@@ -266,12 +266,11 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         (activity as? HostMainActivity)?.bookingResume()
     }
-
-
 
 
 }

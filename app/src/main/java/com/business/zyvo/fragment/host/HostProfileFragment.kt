@@ -678,7 +678,9 @@ class HostProfileFragment : Fragment(),OnClickListener1, onItemClickData, OnClic
             }
 
             R.id.textNotifications -> {
-                findNavController().navigate(R.id.notificationFragment)
+                var bundle = Bundle()
+                bundle.putString(AppConstant.Host,"HOST")
+                findNavController().navigate(R.id.notificationFragment,bundle)
             }
 
             R.id.imageEditEmail -> {

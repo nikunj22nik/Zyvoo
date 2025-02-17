@@ -6,6 +6,7 @@ import androidx.annotation.RequiresExtension
 import com.business.zyvo.AppConstant
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.backgroundTask.AuthTask
+import com.business.zyvo.backgroundTask.BookingDetails
 import com.business.zyvo.backgroundTask.HostDetailsTask
 
 import com.business.zyvo.backgroundTask.MyPlacesTask
@@ -15,6 +16,9 @@ import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.model.MyBookingsModel
+import com.business.zyvo.model.NotificationScreenModel
+import com.business.zyvo.model.host.HostReviewModel
+import com.business.zyvo.model.host.PaginationModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.model.host.hostdetail.HostDetailModel
@@ -2751,6 +2755,123 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
             Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
         }
+    }
+
+    override suspend fun propertyFilterReviews(
+        propertyId :Int, filter: String, page :Int
+    ) : Flow<NetworkResult<Pair<PaginationModel,MutableList<HostReviewModel>>>> = flow{
+        try {
+            api.propertyFilterReviews(propertyId, filter, page).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success")&&
+                            resp.get("success").asBoolean) {
+                            emit(BookingDetails.getReviewsData(resp))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        }
+        catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+    override suspend fun getNotificationHost(userId: Int): Flow<NetworkResult<MutableList<NotificationScreenModel>>> =flow{
+        try {
+            api.getNotificationHost(userId).apply {
+                if(isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(BookingDetails.getNotificationHost(resp))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        }
+        catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+    override suspend fun deleteNotificationHost(
+        userId: Int,
+        notificationId: Int
+    ): Flow<NetworkResult<String>> =flow{
+        try {
+            api.deleteNotificationHost(userId,notificationId).apply {
+                if(isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            var obj = resp.get("message").asString
+                            emit(NetworkResult.Success(obj))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        }
+        catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+
+    }
+
+    override suspend fun hostReportViolation(
+        userId: Int,
+        bookingId: Int,
+        propertyId: Int,
+        reportReasonId: Int,
+        additionalDetails: String
+    ) {
+
+    }
+
+
+    override suspend fun reportListReason() : Flow<NetworkResult<MutableList<Pair<Int,String>>>> = flow{
+       try {
+           api.reportListReason().apply {
+               if(isSuccessful) {
+                   body()?.let { resp ->
+                       if (resp.has("success") && resp.get("success").asBoolean) {
+                           var obj = resp.get("message").asString
+                           val data = resp.get("data").asJsonArray
+                           val result = mutableListOf<Pair<Int,String>>()
+                           data.forEach {
+                                  var newObj = it.asJsonObject
+                                  var id = newObj.get("id").asInt
+                                   var reason = newObj.get("reason").asString
+                                   var p = Pair<Int,String>(id,reason)
+                                    result.add(p)
+                           }
+                           emit(NetworkResult.Success<MutableList<Pair<Int,String>>>(result))
+                       }
+                       else {
+                           emit(NetworkResult.Error(resp.get("message").asString))
+                       }
+                   } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+               } else {
+                   emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+               }
+           }
+       }
+       catch (e: Exception) {
+           emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+       }
     }
 
 

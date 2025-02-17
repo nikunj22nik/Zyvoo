@@ -8,6 +8,9 @@ import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.model.MyBookingsModel
+import com.business.zyvo.model.NotificationScreenModel
+import com.business.zyvo.model.host.HostReviewModel
+import com.business.zyvo.model.host.PaginationModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
 
@@ -213,24 +216,42 @@ interface ZyvoRepository {
     suspend fun getFaq(): Flow<NetworkResult<MutableList<FaqModel>>>
 
 
-    suspend fun hostBookingDetails(
-        bookingId: Int,
-        latitude: String?,
-        longitude: String?
-    ): Flow<NetworkResult<Pair<String, HostDetailModel>>>
 
-    suspend fun contactUs(
-        user_id: String,
-        name: String,
-        email: String,
-        message: String
-    ): Flow<NetworkResult<String>>
 
-    suspend fun getHelpCenter(user_id: String, user_type: String): Flow<NetworkResult<JsonObject>>
 
-    suspend fun getArticleDetails(article_id: String): Flow<NetworkResult<JsonObject>>
 
-    suspend fun getGuideDetails(guide_id: String): Flow<NetworkResult<JsonObject>>
+
+
+    suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String,HostDetailModel>>>
+
+    suspend fun contactUs(user_id : String,name : String,email: String,message: String) : Flow<NetworkResult<String>>
+
+    suspend fun getHelpCenter(user_id : String,user_type : String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun getArticleDetails(article_id : String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun getGuideDetails(guide_id : String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun propertyFilterReviews(
+      propertyId :Int, filter: String, page :Int
+    ) : Flow<NetworkResult<Pair<PaginationModel,MutableList<HostReviewModel>>>>
+
+
+    suspend fun getNotificationHost(@Field("user_id") userId :Int) : Flow<NetworkResult<MutableList<NotificationScreenModel>>>
+
+    suspend fun deleteNotificationHost(userId: Int, notificationId :Int) : Flow<NetworkResult<String>>
+
+    suspend fun hostReportViolation(
+         userId :Int,
+         bookingId :Int,
+        propertyId :Int,
+        reportReasonId :Int,
+        additionalDetails :String
+    )
+
+    suspend fun reportListReason() : Flow<NetworkResult<MutableList<Pair<Int,String>>>>
+
+
 
 
     suspend fun getHomeData(
@@ -268,6 +289,7 @@ interface ZyvoRepository {
     suspend fun getArticleList(search_term: String): Flow<NetworkResult<JsonObject>>
 
     suspend fun getGuideList(search_term: String): Flow<NetworkResult<JsonObject>>
+
 }
 
 

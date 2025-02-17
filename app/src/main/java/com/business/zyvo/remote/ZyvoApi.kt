@@ -16,6 +16,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 import retrofit2.http.Part
+import java.nio.file.DirectoryStream.Filter
 
 
 interface ZyvoApi {
@@ -361,6 +362,39 @@ interface ZyvoApi {
         @Field("wishlist_id") wishlist_id : String) :Response<JsonObject>
 
 
+
+    @POST("filter_property_reviews")
+    @FormUrlEncoded
+    suspend fun propertyFilterReviews(
+        @Field("property_id") propertyId :Int,
+        @Field("filter") filter: String,
+        @Field("page") page :Int
+    ) : Response<JsonObject>
+
+    @POST("get_notification_host")
+    @FormUrlEncoded
+    suspend fun getNotificationHost(@Field("user_id") userId :Int) : Response<JsonObject>
+
+
+    @POST("mark_notification_read")
+    @FormUrlEncoded
+    suspend fun deleteNotificationHost(@Field("user_id") userId :Int,@Field("notification_id") notificationId:Int) : Response<JsonObject>
+
+
+    @POST("host_report_violation")
+    @FormUrlEncoded
+    suspend fun hostReportViolation(
+        @Field("user_id") userId :Int,
+        @Field("booking_id") bookingId :Int,
+        @Field("property_id") propertyId :Int,
+        @Field("report_reasons_id")reportReasonId :Int,
+        @Field("additional_details") additionalDetails :String
+    ) : Response<JsonObject>
+
+    @GET("list_report_reasons")
+    suspend fun reportListReason() : Response<JsonObject>
+
+
          @POST("get_article_list")
          @FormUrlEncoded
          suspend fun getArticleList(
@@ -372,4 +406,5 @@ interface ZyvoApi {
     suspend fun getGuideList(
         @Field("search_term") search_term : String
     ):Response<JsonObject>
+
 }
