@@ -10,8 +10,9 @@ import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddLanguageBinding
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.model.AddLanguageModel
+import com.business.zyvo.onItemClickData
 
-class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLanguageModel>,var listner : OnClickListener1)
+class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLanguageModel>,var listner : OnClickListener1,var listner2 : onItemClickData)
     :RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private val uploadLanguageCode = 1 // Represents normal location entries
@@ -29,10 +30,7 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
 
             binding.textMyWorkName.text = languageItem.name
             binding.imageCross.setOnClickListener {
-                listner.itemClick(
-                    adapterPosition,
-                    "language"
-                )
+                listner.itemClick(adapterPosition, "language")
             }
         }
 
@@ -42,7 +40,7 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
 
         init {
             binding.root.setOnClickListener {
-                listner.itemClick(adapterPosition,"language") // Handle "Add New" button click
+                listner2.itemClick(adapterPosition,"language","") // Handle "Add New" button click
             }
         }
         fun bind() {

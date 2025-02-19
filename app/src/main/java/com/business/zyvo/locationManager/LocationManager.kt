@@ -2,6 +2,7 @@ package com.business.zyvo.locationManager
 
 import android.Manifest
 import android.R
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
@@ -18,13 +19,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.business.zyvo.model.AddressDetails
-import com.business.zyvo.model.Location
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -36,7 +37,10 @@ import java.util.Locale
 class LocationManager(var applicationContext : Context,var applicationActivity : AppCompatActivity? =null) {
 
     private lateinit var autocompleteTextView: AutoCompleteTextView
-    private lateinit var placesClient: PlacesClient
+    private var selectedLatitude: Double? = null
+    private var selectedLongitude: Double? = null
+
+    private var placesClient: PlacesClient
     private val geocoder by lazy { Geocoder(applicationContext, Locale.getDefault()) }
 
     init {
@@ -45,6 +49,7 @@ class LocationManager(var applicationContext : Context,var applicationActivity :
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun autoCompleteLocationWork(autocompleteTextView :AutoCompleteTextView){
             this.autocompleteTextView =autocompleteTextView
 
@@ -71,11 +76,19 @@ class LocationManager(var applicationContext : Context,var applicationActivity :
                 override fun afterTextChanged(s: Editable?) {}
             })
 
-            autocompleteTextView.setOnItemClickListener { parent, _, position, _ ->
-                val selectedLocation = parent.getItemAtPosition(position) as String
-            }
+        autocompleteTextView.setOnItemClickListener { parent, _, position, _ ->
+            val selectedLocation = parent.getItemAtPosition(position) as String
 
-            autocompleteTextView.setOnFocusChangeListener { _, hasFocus ->
+            fetchPlaceDetails(selectedLocation) { latitude, longitude ->
+                selectedLatitude = latitude
+                selectedLongitude = longitude
+
+                Log.d("Location", "Lat: $latitude, Lng: $longitude")
+            }
+        }
+
+
+        autocompleteTextView.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     if (autocompleteTextView.text.isNotEmpty()) {
                         autocompleteTextView.showDropDown()
@@ -130,6 +143,36 @@ class LocationManager(var applicationContext : Context,var applicationActivity :
         }
     }
 
+    private fun fetchPlaceDetails(placeName: String, callback: (Double, Double) -> Unit) {
+        val request = FindAutocompletePredictionsRequest.builder()
+            .setQuery(placeName)
+            .build()
+
+        placesClient.findAutocompletePredictions(request)
+            .addOnSuccessListener { response ->
+                if (response.autocompletePredictions.isNotEmpty()) {
+                    val placeId = response.autocompletePredictions[0].placeId
+
+                    val placeRequest = com.google.android.libraries.places.api.model.Place.Field.LAT_LNG
+                    val fetchRequest = com.google.android.libraries.places.api.net.FetchPlaceRequest.builder(placeId, listOf(placeRequest)).build()
+
+                    placesClient.fetchPlace(fetchRequest)
+                        .addOnSuccessListener { placeResponse ->
+                            placeResponse.place.latLng?.let { latLng ->
+                                callback(latLng.latitude, latLng.longitude)
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e("FetchPlaceError", "Error fetching place details: ${exception.message}")
+                        }
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.e("PredictionError", "Error fetching predictions: ${exception.message}")
+            }
+    }
+
+
 
     private val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(applicationContext)
 
@@ -182,6 +225,7 @@ class LocationManager(var applicationContext : Context,var applicationActivity :
     }
 
     // Fetch the current location in a background thread
+    @OptIn(DelicateCoroutinesApi::class)
     private fun fetchLocationInBackground() {
         // Use Kotlin Coroutines to run the task in the background thread
         GlobalScope.launch(Dispatchers.Main) {
@@ -201,7 +245,7 @@ class LocationManager(var applicationContext : Context,var applicationActivity :
     }
 
     // Fetch the current location using FusedLocationProviderClient
-    private suspend fun getCurrentLocation(): android.location.Location? {
+    suspend fun getCurrentLocation(): android.location.Location? {
         return if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             val locationTask: Task<android.location.Location> = fusedLocationClient.lastLocation
 

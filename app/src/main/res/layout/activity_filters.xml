@@ -40,6 +40,7 @@
                     android:src="@drawable/ic_back_icon" />
 
                 <ImageView
+                    android:id="@+id/clearAllBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_14sdp"
@@ -223,7 +224,7 @@
                     android:background="@drawable/bg_four_side_grey_corner">
 
                     <TextView
-                        android:id="@+id/tv_miximum"
+                        android:id="@+id/tv_maximum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_10sdp"
@@ -237,7 +238,7 @@
                         android:id="@+id/tv_maximum_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tv_miximum"
+                        android:layout_below="@id/tv_maximum"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:text="$100"
                         android:textColor="@color/black"
@@ -587,9 +588,11 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:id="@+id/availEditText"
                         android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@null"
+                        android:inputType="number"
                         android:hint="Type.."
                         android:textColor="#3F3D56" />
 

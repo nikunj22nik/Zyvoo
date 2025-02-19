@@ -248,14 +248,16 @@
                 android:id="@+id/imageIdentity"
                 android:layout_width="@dimen/_75sdp"
                 android:layout_height="@dimen/_65sdp"
+                android:layout_margin="@dimen/_10sdp"
                 android:layout_marginVertical="@dimen/_10sdp"
                 android:background="@drawable/button_grey_line_bg"
                 android:backgroundTint="#1AFFFFFF"
-                android:padding="@dimen/_22sdp"
-                android:src="@drawable/big_phone_icon"
+                android:padding="@dimen/_17sdp"
+                android:src="@drawable/ic_author_profile_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imagePhone"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#fff" />
 
             <TextView
                 android:id="@+id/textIdentity"

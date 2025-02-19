@@ -536,7 +536,9 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             Flow<NetworkResult<Pair<String, String>>> =flow {
         try {
             var multipart:  MultipartBody.Part? = null
-            if (completeProfileReq.bytes != null) { }
+            if (completeProfileReq.bytes != null) {
+                multipart = toMultiPartFile("profile_image", "image.jpg", completeProfileReq.bytes)
+            }
             val user_id: RequestBody = createRequestBody(completeProfileReq.user_id.toString())
             val first_name: RequestBody = createRequestBody(completeProfileReq.first_name)
             val last_name: RequestBody = createRequestBody(completeProfileReq.last_name)
@@ -550,9 +552,10 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
             val city: RequestBody = createRequestBody(completeProfileReq.city)
             val state: RequestBody = createRequestBody(completeProfileReq.state)
             val zip_code: RequestBody = createRequestBody(completeProfileReq.zip_code)
+            val identity_verify : RequestBody = createRequestBody(completeProfileReq.identityVerified.toString())
             api.completeProfile(user_id,
                 first_name,last_name,about_me,where_live,
-                works,languages,hobbies,pets,street_address,city,state,zip_code,multipart).apply {
+                works,languages,hobbies,pets,street_address,city,state,zip_code,multipart,identity_verify).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success")&&
@@ -1099,6 +1102,100 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         } catch (e: Exception) {
             Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
             emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun getPaymentMethods(userId: String): Flow<NetworkResult<Pair<String, String>>> = flow {
+        try {
+            api.getPaymentMethods(userId).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success")&&
+                            resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        }
+        catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+    override suspend fun getFiltereHomeData(
+        userId: String,
+        latitude: String,
+        longitude: String,
+        place_type: String,
+        minimum_price: String,
+        maximum_price: String,
+        location: String,
+        date: String,
+        time: String,
+        people_count: String,
+        property_size: String,
+        bedroom: String,
+        bathroom: String,
+        instant_booking: String,
+        self_check_in: String,
+        allows_pets: String,
+        activities: List<String>,
+        amenities: List<String>,
+        languages: List<String>
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
+        try {
+            api.getFilteredHomeData(userId,latitude,longitude,place_type,minimum_price,maximum_price,
+                location,date,time,people_count,property_size,bedroom,bathroom,instant_booking,self_check_in,allows_pets,activities,amenities,languages).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success")&&
+                            resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        }
+        catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+
+    override suspend fun verifyIdentity(
+        userId: String,
+        identity_verify: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow{
+        try {
+            api.verifyIdentity(userId,identity_verify).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success")&&
+                            resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString,"200")))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        }
+        catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
         }
     }
 
@@ -1868,11 +1965,11 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
 
     override suspend fun deleteLanguage(
         userId: String,
-        language_index: Int
+        index: Int
     ): Flow<NetworkResult<Pair<String, String>>> = flow{
         emit(NetworkResult.Loading())
         try {
-            api.deleteLanguage(userId,language_index).apply {
+            api.deleteLanguage(userId,index).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success")&&

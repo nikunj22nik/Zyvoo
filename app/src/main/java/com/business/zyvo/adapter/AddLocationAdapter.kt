@@ -96,20 +96,8 @@ class AddLocationAdapter(
 
 
     override fun getItemCount(): Int {
-        // If the list size is exactly 3, don't show any items (or return 0)
-//        return if (list.size >= 3) {
-//            count = 3
-//            list.size // Adjust this according to your logic; you might want to return the actual size or an indicator for hiding.
-//        } else {
-//            list.size // Return the current size of the list
-//        }
 return  list.size
-      //  return if (list.size < 3) list.size + 1 else list.size
-
-        // Toast.makeText(context, list.size.toString(), Toast.LENGTH_SHORT).show()
-    }
-
-
+     }
 
     // Determine the view type (whether it's a location or the "Add New" button)
     override fun getItemViewType(position: Int): Int {
@@ -121,9 +109,13 @@ return  list.size
     }
 
     // Update the list with new locations
-    fun updateLocations(newList: MutableList<AddLocationModel>) {
-        this.list = newList
-        Log.d("TESTING_ZYVOO","list size : - "+list.size )
-        notifyDataSetChanged()
+    fun updateLocations(newList: List<AddLocationModel>) {
+        if (list != newList) {
+            list.clear()
+            list.addAll(newList)
+            Log.d("ZYVOO_ADAPTER", "Updated list size: ${list.size}")
+            notifyDataSetChanged()
+        }
     }
+
 }

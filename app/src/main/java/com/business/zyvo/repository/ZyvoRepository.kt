@@ -99,7 +99,7 @@ interface ZyvoRepository {
 
     suspend fun addLanguage(userId: String,language_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
-    suspend fun deleteLanguage(userId: String,index: Int) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun deleteLanguage(userId: String,language_index: Int) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun addHobbies(userId: String,hobbies_name: String) : Flow<NetworkResult<Pair<String,String>>>
 
@@ -119,8 +119,13 @@ interface ZyvoRepository {
 
     suspend fun updatePassword(userId: String,password: String,password_confirmation: String) : Flow<NetworkResult<Pair<String,String>>>
 
+    suspend fun getPaymentMethods(userId: String) : Flow<NetworkResult<Pair<String,String>>>
 
+    suspend fun getFiltereHomeData(userId: String,latitude: String,longitude: String,place_type:String,minimum_price:String,
+                                   maximum_price:String,location:String,date:String,time:String,people_count:String,property_size:String,bedroom:String,
+                                   bathroom:String,instant_booking:String,self_check_in:String,allows_pets:String,activities:List<String>,amenities:List<String>,languages:List<String>) : Flow<NetworkResult<Pair<String,String>>>
 
+    suspend fun verifyIdentity(userId: String,identity_verify: String) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun getPrivacyPolicy() : Flow<NetworkResult<String>>
 

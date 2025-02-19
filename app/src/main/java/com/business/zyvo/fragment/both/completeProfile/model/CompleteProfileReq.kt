@@ -15,6 +15,6 @@ class CompleteProfileReq {
     var languages : MutableList<String> = mutableListOf()
     var hobbies : MutableList<String> = mutableListOf()
     var pets : MutableList<String> = mutableListOf()
-
+    var identityVerified = 0
 
 }

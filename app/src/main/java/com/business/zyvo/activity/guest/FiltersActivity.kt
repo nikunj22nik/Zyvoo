@@ -1,11 +1,13 @@
 package com.business.zyvo.activity.guest
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.method.TextKeyListener.clear
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.Gravity
@@ -17,23 +19,37 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import com.business.zyvo.AppConstant.Companion.session
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.adapter.guest.ActivitiesAdapter
 import com.business.zyvo.adapter.guest.AmenitiesAdapter
 import com.business.zyvo.databinding.ActivityFiltersBinding
 import com.business.zyvo.fragment.guest.FullScreenDialogFragment
+import com.business.zyvo.fragment.guest.home.viewModel.FilterViewModel
 import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.model.ActivityModel
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.PrepareData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FiltersActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -42,7 +58,11 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var popupWindow: PopupWindow
     private val items = listOf("1 Hour", "2 Hour", "3 Hour", "4 Hour", "5 Hour")
     private lateinit var placesClient: PlacesClient
+    private val filterViewModel: FilterViewModel by lazy {
+        ViewModelProvider(this)[FilterViewModel::class.java]
+    }
     private lateinit var autocompleteTextView: AutoCompleteTextView
+    private lateinit var locationManager: LocationManager
     private lateinit var activityList : MutableList<ActivityModel>
     private lateinit var amenitiesList :MutableList<Pair<String,Boolean>>
     private lateinit var adapterActivity :ActivitiesAdapter
@@ -50,6 +70,9 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var amenitiesAdapter :AmenitiesAdapter
     private lateinit var languageAdapter:AmenitiesAdapter
     private lateinit var dateManager :DateManager
+    private var selectedOption: String? = null
+    private var availOption: String? = null
+    private lateinit var sessionManager: SessionManager
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +92,8 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             insets
         }
 
+        sessionManager = SessionManager(this)
+
         selectedItemTextView = binding.tvHour
         settingDataToActivityModel()
         binding.imgBack.setOnClickListener {
@@ -82,8 +107,9 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         callingPriceRangeGraphSelection()
         setUpRecyclerView()
 
-        var locationManager = LocationManager(this)
+        val locationManager = LocationManager(this,this)
         locationManager.autoCompleteLocationWork(binding.autocompleteLocation)
+
 
         byDefaultSelectAvailability()
         settingBackgroundTaskToPeople()
@@ -91,9 +117,9 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         settingBackgroundTaskToParking()
         settingBackgroundTaskToBedroom()
         settingBackgroundTaskToBathroom()
-        binding.allowPets.setOnClickListener({
+        binding.allowPets.setOnClickListener {
             showPopupWindowForPets(it)
-        })
+        }
         showingMoreText()
         showingMoreAmText()
     }
@@ -431,14 +457,12 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             }
         }
 
-    private fun byDefaultSelectAvailability()
-    {
+    private fun byDefaultSelectAvailability() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-
     }
 
     private fun settingBackgroundTaskToPeople() {
@@ -590,6 +614,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     fun setUpRecyclerView(){
 
@@ -627,8 +652,8 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         amenitiesAdapter.updateAdapter(amenitiesList.subList(0,6))
 
        var p= dateManager.getCurrentMonthAndYear()
-        binding.tvMonthName.setText(p.first)
-        binding.tvYear.setText(p.second.toString())
+        binding.tvMonthName.text = p.first
+        binding.tvYear.text = p.second.toString()
 
         binding.llDate.setOnClickListener {
             if(binding.rlDateSelection.visibility ==View.VISIBLE){
@@ -652,7 +677,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         binding.rlSave.setOnClickListener {
-            binding.tvDateSelect.setText(binding.tvMonthName.text.toString()+" / "+binding.tvYear.text.toString())
+            binding.tvDateSelect.text = binding.tvMonthName.text.toString()+" / "+binding.tvYear.text.toString()
             binding.rlDateSelection.visibility = View.GONE
 
         }
@@ -690,26 +715,109 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun clickListenerCalls() {
-        binding.tvHomeSetup.setOnClickListener(this)
-        binding.tvRoom.setOnClickListener(this)
-        binding.tvEntireHome.setOnClickListener(this)
-        binding.llDate.setOnClickListener(this)
-        binding.llTime.setOnClickListener {
-            DateManager(this).showHourSelectionDialog(this) { selectedHour ->
-                binding.tvHour.setText(selectedHour)
+
+        binding.apply {
+            tvHomeSetup.setOnClickListener(this@FiltersActivity)
+            tvRoom.setOnClickListener(this@FiltersActivity)
+            tvEntireHome.setOnClickListener(this@FiltersActivity)
+            llDate.setOnClickListener(this@FiltersActivity)
+            llTime.setOnClickListener {
+                DateManager(this@FiltersActivity).showHourSelectionDialog(this@FiltersActivity) { selectedHour ->
+                    tvHour.text = selectedHour
+                }
             }
-        }
-        byDefaultSelect()
+            byDefaultSelect()
 
-        binding.imageFilter.setOnClickListener {
-            val dialog = FullScreenDialogFragment()
-            dialog.show(supportFragmentManager, "FullScreenDialog")
-        }
+            imageFilter.setOnClickListener {
+                val dialog = FullScreenDialogFragment()
+                dialog.show(supportFragmentManager, "FullScreenDialog")
+            }
 
+            clearAllBtn.setOnClickListener {
+                tvMinimum.text = ""
+                tvMaximum.text = ""
+                autocompleteLocation.text.clear()
+                tvHomeSetup.performClick()
+                tvRoom.performClick()
+                tvEntireHome.performClick()
+            }
+
+        }
 
 
     }
+
+//    private fun filterClick() {
+//        lifecycleScope.launch(Dispatchers.IO) {
+//            filterViewModel.networkMonitor.isConnected
+//                .distinctUntilChanged()
+//                .collect { isConnected ->
+//                    withContext(Dispatchers.Main) {
+//                        if (!isConnected) {
+//                            showErrorDialog(
+//                                this@FiltersActivity,
+//                                resources.getString(R.string.no_internet_dialog_msg)
+//                            )
+//                        } else {
+//                            try {
+//                                // Fetch location asynchronously
+//                                val location = locationManager.getCurrentLocation()
+//
+//                                if (location != null) {
+//                                    val lat = location.latitude.toString()
+//                                    val lng = location.longitude.toString()
+//
+//                                    // Call API with lat, lng
+//                                    filterViewModel.getFilterHomeDataApi(
+//                                        sessionManager.getUserId().toString(),
+//                                        lat,
+//                                        lng,
+//                                        selectedOption!!,
+//                                        binding.tvMinimum.text.toString(),
+//                                        binding.tvMaximum.text.toString(),
+//                                        location,
+//                                        binding.tvDateSelect.text.toString(),
+//                                        binding.tvHour.text.toString(),
+//
+//
+//                                    ).collect { result ->
+//                                        when (result) {
+//                                            is NetworkResult.Success -> {
+//                                                result.data?.let {
+//                                                    Toast.makeText(
+//                                                        this@FiltersActivity,
+//                                                        "State added successfully",
+//                                                        Toast.LENGTH_SHORT
+//                                                    ).show()
+//                                                }
+//                                            }
+//
+//                                            is NetworkResult.Error -> {
+//                                                showErrorDialog(
+//                                                    this@FiltersActivity,
+//                                                    result.message ?: "Unknown error"
+//                                                )
+//                                            }
+//
+//                                            else -> {
+//                                                Log.v(ErrorDialog.TAG, "error::${result.message}")
+//                                            }
+//                                        }
+//                                    }
+//                                } else {
+//                                    showErrorDialog(this@FiltersActivity, "Unable to fetch location")
+//                                }
+//                            } catch (e: Exception) {
+//                                showErrorDialog(this@FiltersActivity, "Error: ${e.message}")
+//                            }
+//                        }
+//                    }
+//                }
+//        }
+//    }
+
 
     private fun byDefaultSelect() {
         binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
@@ -814,11 +922,6 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         // Show the PopupWindow at the calculated position
         popupWindow.showAtLocation(anchorView.rootView, Gravity.NO_GRAVITY, location[0], yPosition)
 
-
-
-
-
-
 //        dropdownView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
 //        val dropdownHeight = dropdownView.measuredHeight
 //
@@ -843,21 +946,23 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+                selectedOption = "any_type"
             }
             R.id.tv_room -> {
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                selectedOption = "room"
             }
 
             R.id.tv_entire_home -> {
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_inner_manage_place)
+                selectedOption = "entire_home"
             }
-
         }
-
     }
 
     fun settingDataToActivityModel(){
@@ -955,8 +1060,6 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         private fun getNationalLanguages(): MutableList<Pair<String,Boolean>> {
             return PrepareData.getLanguagePairs()
         }
-
-
 
     private fun showPopupWindowForPets(anchorView: View) {
         // Inflate the popup layout

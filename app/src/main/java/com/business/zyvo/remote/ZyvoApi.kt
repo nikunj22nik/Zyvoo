@@ -133,7 +133,7 @@ interface ZyvoApi {
     @POST("delete_language")
     @FormUrlEncoded
     suspend fun deleteLanguage(@Field("user_id")user_id :String,
-                               @Field("language_index")language_index :Int) : Response<JsonObject>
+                               @Field("index")index :Int) : Response<JsonObject>
 
     @POST("add_hobby")
     @FormUrlEncoded
@@ -175,11 +175,42 @@ interface ZyvoApi {
     suspend fun addZipCode(@Field("user_id")user_id :String,
                         @Field("zip_code")zipCode :String) : Response<JsonObject>
 
+    @POST("get_payment_methods")
+    @FormUrlEncoded
+    suspend fun getPaymentMethods(@Field("user_id")user_id :String ): Response<JsonObject>
+
+    @POST("get_home_data_filter")
+    @FormUrlEncoded
+    suspend fun getFilteredHomeData(@Field("user_id")user_id :String,
+                                    @Field("lattitude")lattitude :String,
+                                    @Field("longitude")longitude :String,
+                                    @Field("place_type")place_type :String,
+                                    @Field("minimum_price")minimum_price :String,
+                                    @Field("maximum_price")maximum_price :String,
+                                    @Field("location")location :String,
+                                    @Field("date")date :String,
+                                    @Field("time")time :String,
+                                    @Field("people_count")people_count :String,
+                                    @Field("property_size")property_size :String,
+                                    @Field("bedroom")bedroom :String,
+                                    @Field("bathroom")bathroom :String,
+                                    @Field("instant_booking")instant_booking :String,
+                                    @Field("self_check_in")self_check_in :String,
+                                    @Field("allows_pets")allows_pets :String,
+                                    @Field("activities[]")activities :List<String>,
+                                    @Field("amenities[]")amenities :List<String>,
+                                    @Field("language[]")languages :List<String>) : Response<JsonObject>
+
     @POST("update_password")
     @FormUrlEncoded
     suspend fun updatePassword(@Field("user_id")user_id :String,
                               @Field("password")password :String,
                               @Field("password_confirmation")password_confirmation :String) : Response<JsonObject>
+
+    @POST("verify_identity")
+    @FormUrlEncoded
+    suspend fun  verifyIdentity(@Field("user_id")user_id :String,
+                                @Field("identity_verify")identity_verify :String) : Response<JsonObject>
 
 
 
@@ -198,7 +229,8 @@ interface ZyvoApi {
                                 @Part("city")city :RequestBody,
                                 @Part("state")state :RequestBody,
                                 @Part("zip_code")zip_code :RequestBody,
-                                @Part profile_picture: MultipartBody.Part?) : Response<JsonObject>
+                                @Part profile_picture: MultipartBody.Part?,
+                                @Part("identity_verify")identity_verify:RequestBody) : Response<JsonObject>
 
     @POST("email_verification")
     @FormUrlEncoded

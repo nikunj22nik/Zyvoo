@@ -119,7 +119,7 @@ class LoggedScreenViewModel @Inject constructor(private val repository: ZyvoRepo
 
     suspend fun otpVerifySignupPhone(tempId:String,otp :String):
             Flow<NetworkResult<JsonObject>> {
-        return repository.otpVerifyLoginPhone(tempId, otp).onEach {
+        return repository.otpVerifySignupPhone(tempId, otp).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true

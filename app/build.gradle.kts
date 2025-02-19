@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id ("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android{
@@ -67,6 +68,8 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation(libs.places)
+//    implementation(libs.firebase.auth)
+//    implementation(libs.firebase.messaging.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -108,6 +111,10 @@ dependencies {
     implementation("com.github.colourmoon:readmore-textview:v1.0.2")
     //Spinner
     implementation("com.github.skydoves:powerspinner:1.2.7")
+    //persona API
+    implementation (libs.sdk2.inquiry)
+
+
 
 
 }
