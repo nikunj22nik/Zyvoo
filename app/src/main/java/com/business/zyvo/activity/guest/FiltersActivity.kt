@@ -1,11 +1,14 @@
 package com.business.zyvo.activity.guest
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.Gravity
@@ -17,32 +20,50 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.github.mikephil.charting.data.BarEntry
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.adapter.guest.ActivitiesAdapter
 import com.business.zyvo.adapter.guest.AmenitiesAdapter
 import com.business.zyvo.databinding.ActivityFiltersBinding
 import com.business.zyvo.fragment.guest.FullScreenDialogFragment
+import com.business.zyvo.fragment.guest.home.viewModel.FilterViewModel
 import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.model.ActivityModel
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
-
-class FiltersActivity : AppCompatActivity(), View.OnClickListener {
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+@AndroidEntryPoint
+class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListener , View.OnClickListener {
 
     lateinit var binding: ActivityFiltersBinding
     private lateinit var selectedItemTextView: TextView
     private lateinit var popupWindow: PopupWindow
     private val items = listOf("1 Hour", "2 Hour", "3 Hour", "4 Hour", "5 Hour")
     private lateinit var placesClient: PlacesClient
+    private val filterViewModel: FilterViewModel by lazy {
+        ViewModelProvider(this)[FilterViewModel::class.java]
+    }
     private lateinit var autocompleteTextView: AutoCompleteTextView
+    private lateinit var locationManager: LocationManager
     private lateinit var activityList : MutableList<ActivityModel>
     private lateinit var amenitiesList :MutableList<Pair<String,Boolean>>
     private lateinit var adapterActivity :ActivitiesAdapter
@@ -50,6 +71,19 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var amenitiesAdapter :AmenitiesAdapter
     private lateinit var languageAdapter:AmenitiesAdapter
     private lateinit var dateManager :DateManager
+    private var selectedOption: String? = null
+    private var availOption = "any"
+    private var propertySize: String = "any"
+    private var bedroomCount: String = "any"
+    private var bathroomCount: String = "any"
+    private var instantBookingCount = 0
+    private var selfCheckIn = 0
+    private var petCheckIn = 0
+    private var selectedAmenities = mutableListOf<String>()
+    private var selectedActivities = mutableListOf<ActivityModel>()
+    private var selectedActivityName = listOf<String>()
+    private var selectedLanguages = listOf<String>()
+    private lateinit var sessionManager: SessionManager
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +103,8 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             insets
         }
 
+        sessionManager = SessionManager(this)
+
         selectedItemTextView = binding.tvHour
         settingDataToActivityModel()
         binding.imgBack.setOnClickListener {
@@ -82,8 +118,9 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         callingPriceRangeGraphSelection()
         setUpRecyclerView()
 
-        var locationManager = LocationManager(this)
+        val locationManager = LocationManager(this,this)
         locationManager.autoCompleteLocationWork(binding.autocompleteLocation)
+
 
         byDefaultSelectAvailability()
         settingBackgroundTaskToPeople()
@@ -91,11 +128,12 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         settingBackgroundTaskToParking()
         settingBackgroundTaskToBedroom()
         settingBackgroundTaskToBathroom()
-        binding.allowPets.setOnClickListener({
+        binding.allowPets.setOnClickListener {
             showPopupWindowForPets(it)
-        })
+        }
         showingMoreText()
         showingMoreAmText()
+
     }
 
     private fun showingMoreText() {
@@ -111,12 +149,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
            // binding.underlinedTextView.visibility =View.GONE
             showingLessText()
         }
-
-
-
-
     }
-
 
     private fun showingLessText() {
         val text = "Show Less"
@@ -130,12 +163,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             languageAdapter.updateAdapter(getNationalLanguages().subList(0,6))
             showingMoreText()
         }
-
-
-
-
     }
-
 
     private fun showingMoreAmText() {
         val text = "Show More"
@@ -150,12 +178,7 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             // binding.underlinedTextView.visibility =View.GONE
             showingLessAmText()
         }
-
-
-
-
     }
-
 
     private fun showingLessAmText() {
         val text = "Show Less"
@@ -170,269 +193,135 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             showingMoreAmText()
         }
 
-
-
-
     }
 
+    private fun settingBackgroundTaskToBedroom() {
+        val bedroomOptions = listOf(
+            binding.tvAnyBedrooms to "any",
+            binding.tv1Bedroom to "1",
+            binding.tv2Bedroom to "2",
+            binding.tv3Bedroom to "3",
+            binding.tv4Bedroom to "4",
+            binding.tv5Bedroom to "5",
+            binding.tv7Bedroom to "7",
+            binding.tv8Bedroom to "8"
+        )
 
+        bedroomOptions.forEach { (textView, value) ->
+            textView.setOnClickListener {
+                clearSelections(bedroomOptions)
+                textView.setBackgroundResource(R.drawable.bg_inner_select_white)
+                bedroomCount = value
+                binding.etCustomBedroom.text.clear()
 
-
-    private fun settingBackgroundTaskToBedroom(){
-        binding.tvAnyBedrooms.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                Log.d("bedroomCount", "Selected: $bedroomCount")
+            }
         }
+        binding.etCustomBedroom.setOnClickListener {
+            clearSelections(bedroomOptions)
+        }
+        binding.etCustomBedroom.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val input = s.toString()
+                if (input.isNotEmpty()) {
+                    bedroomCount = input
+                    Log.d("bedroomCount", "Manual Input: $bedroomCount")
+                }
+            }
 
-        binding.tv1Bathrooms.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv2Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-        binding.tv3Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv4Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv5Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-        binding.tv7Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv8Bathroom.setOnClickListener {
-            binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-        }
-
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 
     private fun settingBackgroundTaskToBathroom(){
 
-        binding.tvAnyBedrooms.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        val bathroomOptions = listOf(
+            binding.tvAnyBathroom to "any",
+            binding.tv1Bathrooms to "1",
+            binding.tv2Bathroom to "2",
+            binding.tv3Bathroom to "3",
+            binding.tv4Bathroom to "4",
+            binding.tv5Bathroom to "5",
+            binding.tv7Bathroom to "7",
+            binding.tv8Bathroom to "8",
+        )
+        bathroomOptions.forEach { (textView, value) ->
+            textView.setOnClickListener {
+                clearSelections(bathroomOptions)
+                textView.setBackgroundResource(R.drawable.bg_inner_select_white)
+                bathroomCount = value
+                binding.etBathroom.text.clear()
+
+                Log.d("bathroomCount", "Selected: $bathroomCount")
+            }
         }
 
-        binding.tv1Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.etBathroom.setOnClickListener {
+            clearSelections(bathroomOptions)
         }
 
-        binding.tv2Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
+        binding.etBathroom.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val input = s.toString()
+                if (input.isNotEmpty()) {
+                    bathroomCount = input
+                    Log.d("bathroomCount", "Manual Input: $bathroomCount")
+                }
+            }
 
-        binding.tv3Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv4Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv5Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-
-        binding.tv7Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv8Bedroom.setOnClickListener {
-            binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-        }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
     }
 
     private fun settingBackgroundTaskToProperty() {
+        val propertyOptions = listOf(
+            binding.tvAny to "any",
+            binding.tv250 to "250",
+            binding.tv350 to "350",
+            binding.tv450 to "450",
+            binding.tv550 to "550",
+            binding.tv650 to "650",
+            binding.tv750 to "750"
+        )
 
-            binding.tvAny.setOnClickListener {
-                binding.tvAny.setBackgroundResource(R.drawable.bg_inner_select_white)
-                binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            }
+        propertyOptions.forEach { (textView, value) ->
+            textView.setOnClickListener {
+                clearSelections(propertyOptions)
+                textView.setBackgroundResource(R.drawable.bg_inner_select_white)
+                propertySize = value
+                binding.etCustomPropertySize.text.clear()
 
-            binding.tv250.setOnClickListener {
-                binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv250.setBackgroundResource(R.drawable.bg_inner_select_white)
-                binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            }
-
-            binding.tv350.setOnClickListener {
-                binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv350.setBackgroundResource(R.drawable.bg_inner_select_white)
-                binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            }
-
-
-            binding.tv450.setOnClickListener {
-                binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv450.setBackgroundResource(R.drawable.bg_inner_select_white)
-                binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            }
-            binding.tv550.setOnClickListener {
-                binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv550.setBackgroundResource(R.drawable.bg_inner_select_white)
-                binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            }
-
-            binding.tv650.setOnClickListener {
-                binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv650.setBackgroundResource(R.drawable.bg_inner_select_white)
-                binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            }
-            binding.tv750.setOnClickListener {
-                binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv450.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.tv750.setBackgroundResource(R.drawable.bg_inner_select_white)
+                Log.d("propertySize", "Selected: $propertySize")
             }
         }
 
-    private fun byDefaultSelectAvailability()
-    {
+        binding.etCustomPropertySize.setOnClickListener {
+            clearSelections(propertyOptions)
+        }
+
+        binding.etCustomPropertySize.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val input = s.toString()
+                if (input.isNotEmpty()) {
+                    propertySize = input
+                    Log.d("propertySize", "Manual Input: $propertySize")
+                }
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+
+    private fun clearSelections(options: List<Pair<TextView, String>>) {
+        options.forEach { (textView, _) ->
+            textView.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        }
+    }
+
+    private fun byDefaultSelectAvailability() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -442,61 +331,55 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun settingBackgroundTaskToPeople() {
-        //No of people
+        // Predefined Options ke liye click listeners
+        binding.tv1.setOnClickListener { updateSelection(1) }
+        binding.tv2.setOnClickListener { updateSelection(2) }
+        binding.tv3.setOnClickListener { updateSelection(3) }
+        binding.tv5.setOnClickListener { updateSelection(5) }
+        binding.tv7.setOnClickListener { updateSelection(7) }
+        binding.tvAnyPeople.setOnClickListener { updateSelection(0) }
 
-        binding.tvAnyPeople.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.availEditText.setOnClickListener {
+            resetBackgrounds()
         }
+        binding.availEditText.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                val input = s.toString()
+                if (input.isNotEmpty()) {
+                    availOption = input
+                    Log.d("availOption", "Manual Input: $availOption")
+                }
+            }
 
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
 
-        binding.tv1.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-        binding.tv2.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
+    private fun updateSelection(value: Int) {
+        resetBackgrounds()
 
-        binding.tv3.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        when (value) {
+            1 -> binding.tv1.setBackgroundResource(R.drawable.bg_inner_select_white)
+            2 -> binding.tv2.setBackgroundResource(R.drawable.bg_inner_select_white)
+            3 -> binding.tv3.setBackgroundResource(R.drawable.bg_inner_select_white)
+            5 -> binding.tv5.setBackgroundResource(R.drawable.bg_inner_select_white)
+            7 -> binding.tv7.setBackgroundResource(R.drawable.bg_inner_select_white)
+            0 -> binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
         }
+        // availOption update karo
+        availOption = if (value == 0) "any" else value.toString()
+        binding.availEditText.text.clear()
+        Log.d("availOption", "Selected: $availOption")
+    }
 
-        binding.tv5.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv7.setOnClickListener {
-            binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7.setBackgroundResource(R.drawable.bg_inner_select_white)
-        }
+    private fun resetBackgrounds() {
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
     private fun settingBackgroundTaskToParking(){
@@ -590,86 +473,120 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
-    fun setUpRecyclerView(){
+    fun setUpRecyclerView() {
+        // Grid Layout Managers
+        val gridLayoutManager = GridLayoutManager(this, 3) // Activity (Main) - 3 columns
+        val gridLayoutManager2 = GridLayoutManager(this, 3) // Activity (Other) - 3 columns
+        val gridLayoutManager3 = GridLayoutManager(this, 2) // Languages - 2 columns
+        val gridLayoutManager4 = GridLayoutManager(this, 2) // Amenities - 2 columns
 
-        val gridLayoutManager = GridLayoutManager(this, 3) // Set 4 columns
-        val gridLayoutManager2 = GridLayoutManager(this,3)
-        val gridLayoutManager3 = GridLayoutManager(this,2)
-        binding.recyclerActivity2.layoutManager = gridLayoutManager2
-        binding.recyclerActivity.layoutManager = gridLayoutManager
-        binding.recyclerActivity2.isNestedScrollingEnabled = false
-        binding.recyclerActivity.adapter = adapterActivity
-        binding.recyclerLanguage.isNestedScrollingEnabled = false
-        binding.recyclerActivity.isNestedScrollingEnabled = false
+        // RecyclerView Setup - Activity (Main)
+        binding.recyclerActivity.apply {
+            layoutManager = gridLayoutManager
+            adapter = adapterActivity
+            isNestedScrollingEnabled = false
+        }
 
-        binding.recyclerActivity2.adapter = adapterActivity2
-        binding.recyclerActivity2.visibility =View.GONE
-        binding.recyclerLanguage.layoutManager = gridLayoutManager3
-        binding.recyclerLanguage.adapter= languageAdapter
-        languageAdapter.updateAdapter(getNationalLanguages().subList(0,6))
+        // RecyclerView Setup - Activity (Other)
+        binding.recyclerActivity2.apply {
+            layoutManager = gridLayoutManager2
+            adapter = adapterActivity2
+            isNestedScrollingEnabled = false
+            visibility = View.GONE
+        }
 
+        // RecyclerView Setup - Languages
+        binding.recyclerLanguage.apply {
+            layoutManager = gridLayoutManager3
+            adapter = languageAdapter
+            isNestedScrollingEnabled = false
+        }
 
+        // Update language adapter and capture selected languages
+        languageAdapter.updateAdapter(getNationalLanguages().subList(0, 6))
+
+        languageAdapter.setOnItemClickListener(object : AmenitiesAdapter.onItemClickListener {
+            override fun onItemClick(list: MutableList<Pair<String, Boolean>>) {
+                // Capture selected languages
+                selectedLanguages = listOf(list.filter { it.second }.map { it.first }.toString())
+                Log.d("SelectedLanguages", selectedLanguages.toString())
+            }
+        })
+
+        // RecyclerView Setup - Amenities
+        binding.recyclerAmenties.apply {
+            layoutManager = gridLayoutManager4
+            adapter = amenitiesAdapter
+            isNestedScrollingEnabled = false
+        }
+
+        // Update amenities adapter and capture selected amenities
+        amenitiesAdapter.updateAdapter(amenitiesList.subList(0, 6))
+
+        amenitiesAdapter.setOnItemClickListener(object : AmenitiesAdapter.onItemClickListener {
+            override fun onItemClick(list: MutableList<Pair<String, Boolean>>) {
+                selectedAmenities = list.filter { it.second }.map { it.first }.toMutableList()
+                Log.d("Selected Amenities", selectedAmenities.toString())
+            }
+        })
+
+        // Capture selected activities
+        adapterActivity.setOnItemClickListener { list, _ ->
+            selectedActivities = list.filter { it.checked }.toMutableList()
+            selectedActivities.forEach { activity ->
+                selectedActivityName = listOf(activity.name)
+                Log.d("Selected Activity", "Name: ${activity.name}, Checked: ${activity.checked}")
+            }
+        }
+
+        // Toggle Other Activities RecyclerView
         binding.tvOtherActivity.setOnClickListener {
-            if(binding.recyclerActivity2.visibility == View.VISIBLE){
-                binding.recyclerActivity2.visibility =View.GONE
-            }
-            else{
-                binding.recyclerActivity2.visibility = View.VISIBLE
-                binding.recyclerActivity2.scrollToPosition(activityList.size-3)
+            with(binding.recyclerActivity2) {
+                visibility = if (visibility == View.VISIBLE) {
+                    View.GONE
+                } else {
+                    View.VISIBLE.also {
+                        scrollToPosition(adapterActivity2.itemCount - 1) // Scroll to last item
+                    }
+                }
             }
         }
 
-        //Amenities
+        // Date Manager Integration
+        val (currentMonth, currentYear) = dateManager.getCurrentMonthAndYear()
+        binding.tvMonthName.text = currentMonth
+        binding.tvYear.text = currentYear.toString()
 
-        binding.recyclerAmenties.layoutManager = GridLayoutManager(this,2)
-        binding.recyclerAmenties.adapter = amenitiesAdapter
-        amenitiesAdapter.updateAdapter(amenitiesList.subList(0,6))
-
-       var p= dateManager.getCurrentMonthAndYear()
-        binding.tvMonthName.setText(p.first)
-        binding.tvYear.setText(p.second.toString())
-
+        // Date Selector Toggle
         binding.llDate.setOnClickListener {
-            if(binding.rlDateSelection.visibility ==View.VISIBLE){
-                binding.rlDateSelection.visibility = View.GONE
-            }else{
-                binding.rlDateSelection.visibility = View.VISIBLE
-            }
+            binding.rlDateSelection.visibility =
+                if (binding.rlDateSelection.visibility == View.VISIBLE) View.GONE else View.VISIBLE
         }
-
+        // Month Selector Dialog
         binding.rlMonth.setOnClickListener {
             dateManager.showMonthSelectorDialog { selectedMonth ->
                 binding.tvMonthName.text = selectedMonth
             }
         }
-
+        // Year Picker Dialog
         binding.rlYearView.setOnClickListener {
-            dateManager.showYearPickerDialog{
-                year-> binding.tvYear.text = year.toString()
-
+            dateManager.showYearPickerDialog { year ->
+                binding.tvYear.text = year.toString()
             }
         }
-
+        // Save Date Action
         binding.rlSave.setOnClickListener {
-            binding.tvDateSelect.setText(binding.tvMonthName.text.toString()+" / "+binding.tvYear.text.toString())
+            binding.tvDateSelect.text = "${binding.tvMonthName.text} / ${binding.tvYear.text}"
             binding.rlDateSelection.visibility = View.GONE
-
         }
-
     }
 
-    fun keyboardUp(){
-
-    }
-
+    @SuppressLint("SetTextI18n")
     private fun callingPriceRangeGraphSelection(){
         val barEntrys = ArrayList<BarEntry>()
         var seekBar = binding.seekBar
-
-//        barEntrys.add(BarEntry(1.0f, 5.0f))
-//        barEntrys.add(BarEntry(2.0f, 7.0f))
-//        barEntrys.add(BarEntry(3.0f, 10.0f))
 
         val heights = arrayOf(5f, 3f, 4f, 7f, 8f, 15f, 13f, 12f, 10f, 5f, 17f, 16f, 13f, 12f, 8f,
             13f,10f,6f,9f,11f,7f)
@@ -677,39 +594,131 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         for (i in heights.indices) {
             barEntrys.add(BarEntry(i.toFloat(), heights[i]))
         }
-
         seekBar.setEntries(barEntrys)
 
         seekBar.onRangeChanged = { leftPinValue, rightPinValue ->
             val leftVal = (leftPinValue?.toInt()?.div(2))?.times(10)
             val rightVal = (rightPinValue?.toInt()?.div(2))?.times(10)
-            binding.tvMinimumVal.setText("$"+leftVal.toString())
-            binding.tvMaximumValue.setText("$"+rightVal.toString())
+            binding.tvMinimumVal.text = "$"+leftVal.toString()
+            binding.tvMaximumValue.text = "$"+rightVal.toString()
         }
-
-
     }
 
+    @SuppressLint("SetTextI18n")
     private fun clickListenerCalls() {
-        binding.tvHomeSetup.setOnClickListener(this)
-        binding.tvRoom.setOnClickListener(this)
-        binding.tvEntireHome.setOnClickListener(this)
-        binding.llDate.setOnClickListener(this)
-        binding.llTime.setOnClickListener {
-            DateManager(this).showHourSelectionDialog(this) { selectedHour ->
-                binding.tvHour.setText(selectedHour)
+
+        binding.apply {
+            tvHomeSetup.setOnClickListener(this@FiltersActivity)
+            tvRoom.setOnClickListener(this@FiltersActivity)
+            tvEntireHome.setOnClickListener(this@FiltersActivity)
+            llDate.setOnClickListener(this@FiltersActivity)
+            llTime.setOnClickListener {
+                DateManager(this@FiltersActivity).showHourSelectionDialog(this@FiltersActivity) { selectedHour ->
+                    tvHour.text = selectedHour
+                }
             }
+            byDefaultSelect()
+
+            imageFilter.setOnClickListener {
+                if (NetworkMonitorCheck._isConnected.value){
+                    filterClick()
+//                    val dialog = FullScreenDialogFragment()
+//                    dialog.show(supportFragmentManager, "FullScreenDialog")
+                }else{
+                    showErrorDialog(this@FiltersActivity,
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                }
+
+            }
+
+            clearAllBtn.setOnClickListener {
+                tvMinimum.text = ""
+                tvMaximum.text = ""
+                autocompleteLocation.text.clear()
+                tvHomeSetup.performClick()
+                tvRoom.performClick()
+                tvEntireHome.performClick()
+            }
+
+            instantBookingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+                instantBookingCount = if (isChecked) {
+                    1
+                }else{
+                    0
+                }
+            }
+
+            selfCheckinToggle.setOnCheckedChangeListener { buttonView, isChecked ->
+                selfCheckIn = if (isChecked) {
+                    1
+                }else{
+                    0
+                }
+            }
+
+            petToggle.setOnCheckedChangeListener { buttonView, isChecked ->
+                petCheckIn = if (isChecked){
+                    1
+                }else{
+                    0
+                }
+            }
+
         }
-        byDefaultSelect()
-
-        binding.imageFilter.setOnClickListener {
-            val dialog = FullScreenDialogFragment()
-            dialog.show(supportFragmentManager, "FullScreenDialog")
-        }
-
-
-
     }
+
+    private fun filterClick() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            filterViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConnected ->
+                    withContext(Dispatchers.Main) {
+                        if (!isConnected) {
+                            showErrorDialog(this@FiltersActivity, resources.getString(R.string.no_internet_dialog_msg))
+                        } else {
+                            try {
+                                // Fetch location asynchronously
+                                val location = locationManager.getCurrentLocation()
+                                if (location != null) {
+                                    val lat = location.latitude.toString()
+                                    val lng = location.longitude.toString()
+
+                                    filterViewModel.getFilterHomeDataApi(
+                                        sessionManager.getUserId().toString(),
+                                        lat, lng, selectedOption!!, binding.tvMinimum.text.toString(),
+                                        binding.tvMaximum.text.toString(), binding.autocompleteLocation.text.toString(),
+                                        binding.tvDateSelect.text.toString(), binding.tvHour.text.toString(),
+                                        availOption, propertySize, bedroomCount, bathroomCount, instantBookingCount.toString(),
+                                        selfCheckIn.toString(), petCheckIn.toString(), selectedActivityName, selectedAmenities, selectedLanguages
+                                    ).collect { result ->
+                                        when (result) {
+                                            is NetworkResult.Success -> {
+                                                result.data?.let {
+                                                    Toast.makeText(this@FiltersActivity, "successfully", Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
+
+                                            is NetworkResult.Error -> {
+                                                showErrorDialog(this@FiltersActivity, result.message ?: "Unknown error")
+                                            }
+                                            else -> {
+                                                Log.v(ErrorDialog.TAG, "error::${result.message}")
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    showErrorDialog(this@FiltersActivity, "Unable to fetch location")
+                                }
+                            } catch (e: Exception) {
+                                showErrorDialog(this@FiltersActivity, "Error: ${e.message}")
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
 
     private fun byDefaultSelect() {
         binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
@@ -814,11 +823,6 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         // Show the PopupWindow at the calculated position
         popupWindow.showAtLocation(anchorView.rootView, Gravity.NO_GRAVITY, location[0], yPosition)
 
-
-
-
-
-
 //        dropdownView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
 //        val dropdownHeight = dropdownView.measuredHeight
 //
@@ -843,21 +847,23 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
+
+                selectedOption = "any_type"
             }
             R.id.tv_room -> {
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                selectedOption = "room"
             }
 
             R.id.tv_entire_home -> {
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_inner_manage_place)
+                selectedOption = "entire_home"
             }
-
         }
-
     }
 
     fun settingDataToActivityModel(){
@@ -956,8 +962,6 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
             return PrepareData.getLanguagePairs()
         }
 
-
-
     private fun showPopupWindowForPets(anchorView: View) {
         // Inflate the popup layout
         val inflater = LayoutInflater.from(this)
@@ -974,6 +978,11 @@ class FiltersActivity : AppCompatActivity(), View.OnClickListener {
         popupWindow.isOutsideTouchable = true
         popupWindow.isFocusable = true
         popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
+    }
+
+    override fun onItemClick(list: MutableList<Pair<String, Boolean>>) {
+        val selectedItems = list.filter { it.second }
+        Log.d("FilterActivity", "Selected Amenities: $selectedItems")
     }
 
 }

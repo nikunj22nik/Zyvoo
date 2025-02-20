@@ -191,9 +191,9 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         }
     }
 
-    suspend fun deleteLanguageApi(userId: String,language_index: Int):
+    suspend fun deleteLanguageApi(userId: String,index: Int):
             Flow<NetworkResult<Pair<String,String>>> {
-        return repository.deleteLanguage(userId,language_index ).onEach {
+        return repository.deleteLanguage(userId,index ).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
@@ -389,6 +389,36 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
     suspend fun otpVerifyEmailVerification(userId :String,otp :String):
             Flow<NetworkResult<Pair<String,String>>> {
         return repository.otpVerifyEmailVerification(userId, otp).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun getPaymentMethodApi(userId :String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.getPaymentMethods(userId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun getVerifyIdentityApi(userId: String, identity_verify: String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.verifyIdentity(userId,identity_verify).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true

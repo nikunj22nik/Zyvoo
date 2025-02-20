@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id ("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android{
@@ -21,7 +22,7 @@ android{
 
     buildTypes {
         debug {
-           val BASE_URL = project.property("BASE_URL")
+            val BASE_URL = project.property("BASE_URL")
             buildConfigField("String", "BASE_URL", "${BASE_URL}")
 
             val MEDIA_URL = project.property("MEDIA_URL")
@@ -111,5 +112,17 @@ dependencies {
     implementation("com.github.skydoves:powerspinner:1.2.7")
 // Paging library
     implementation("androidx.paging:paging-runtime:3.1.0")
+
+    //persona API
+    implementation (libs.sdk2.inquiry)
+    //firebase BOM
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
+
+
+
+
 
 }

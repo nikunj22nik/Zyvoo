@@ -1,5 +1,4 @@
 package com.business.zyvo.fragment.both.loggedScreen
-
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
@@ -14,7 +13,6 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,8 +23,10 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -46,17 +46,22 @@ import com.business.zyvo.adapter.LoggedScreenAdapter
 import com.business.zyvo.databinding.FragmentLoggedScreenBinding
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
-import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.TAG
-import com.business.zyvo.utils.ErrorDialog.customDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.ImagePopViewModel
 import com.business.zyvo.viewmodel.LoggedScreenViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.messaging.FirebaseMessaging
+
 import com.google.gson.Gson
 import com.hbb20.CountryCodePicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -66,12 +71,14 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
     var resendEnabled = false
-
+    private lateinit var auth: FirebaseAuth
+    private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var binding: FragmentLoggedScreenBinding
-
     private lateinit var adapter: LoggedScreenAdapter
-
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
+    private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
+    private var showOneTapUI = true
+    private var Token = ""
 
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
@@ -92,6 +99,18 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         return binding.root
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        auth = FirebaseAuth.getInstance()
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id)) // Ensure it's correct
+            .requestEmail()
+            .build()
+
+        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.textLogin.setOnClickListener(this)
@@ -99,6 +118,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         binding.filterIcon.setOnClickListener(this)
         binding.textWishlists.setOnClickListener(this)
         binding.textDiscover.setOnClickListener(this)
+
+
         // Set up adapter with lifecycleOwner passed
         adapter = LoggedScreenAdapter(
             requireContext(),
@@ -125,12 +146,61 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         }
         adapterWork()
         backPressTask()
-        liveDataObserver()
     }
 
-    private fun liveDataObserver() {
+    override fun onStart() {
+        super.onStart()
 
+        getFCMToken()
 
+//        val currentUser = auth.currentUser
+//        updateUI(currentUser)
+    }
+
+    private fun startGoogleSignIn() {
+        val signInIntent = googleSignInClient.signInIntent
+        startActivityForResult(signInIntent, REQ_ONE_TAP)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQ_ONE_TAP) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                Log.d("AUTH", "Google sign in successful: ${account.id}")
+                firebaseAuthWithGoogle(account.idToken!!)
+            } catch (e: ApiException) {
+                Log.w("AUTH", "Google sign-in failed", e)
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(idToken: String) {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(requireActivity()) { task ->
+                if (task.isSuccessful) {
+                    Log.d("AUTH", "signInWithCredential:success")
+                    Toast.makeText(requireContext(), "Authentication successful", Toast.LENGTH_SHORT).show()
+                } else {
+                    Log.w("AUTH", "signInWithCredential:failure", task.exception)
+                    Toast.makeText(requireContext(), "Authentication failed", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
+
+    private fun getFCMToken(){
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Token = task.result
+                    Log.d("FCM", "Device Token: $Token")
+                } else {
+                    Log.e("FCM", "Token retrieval failed", task.exception)
+                }
+            }
     }
 
     private fun adapterWork() {
@@ -193,6 +263,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     }
 
 
+    @SuppressLint("MissingInflatedId")
     fun dialogLogin(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -205,6 +276,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
             val imageCross = findViewById<ImageView>(R.id.imageCross)
             val imageEmailSocial = findViewById<ImageView>(R.id.imageEmailSocial)
+            val googleLoginBtn = findViewById<ImageView>(R.id.googleLogin)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
             val checkBox = findViewById<CheckBox>(R.id.checkBox)
@@ -258,6 +330,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
             imageCross.setOnClickListener {
                 dismiss()
+            }
+            googleLoginBtn.setOnClickListener {
+                if (NetworkMonitorCheck._isConnected.value){
+                    startGoogleSignIn()
+                }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                }
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
@@ -1238,8 +1319,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             val session: SessionManager = SessionManager(requireActivity())
-                            if (resp.has("is_profile_complete") &&
-                                resp.get("is_profile_complete").asBoolean) {
+//                            if (resp.has("is_profile_complete") &&
+//                                resp.get("is_profile_complete").asBoolean) {
                                 if (resp.has("user_id")) {
                                     if (checkBox!=null && checkBox.isChecked){
                                         session.setUserSession(true)
@@ -1250,7 +1331,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     startActivity(intent)
                                 }
-                            }else{
+//                            }
+                            else{
                                 if (checkBox!=null && checkBox.isChecked){
                                     session.setUserSession(true)
                                 }

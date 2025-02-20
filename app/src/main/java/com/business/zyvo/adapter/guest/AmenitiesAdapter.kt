@@ -40,34 +40,34 @@ class AmenitiesAdapter(var context : Context, var list :MutableList<Pair<String,
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if(position%2==0){
-            holder.binding.layout.setGravity(Gravity.START)
+            holder.binding.layout.gravity = Gravity.START
         } else{
-            holder.binding.layout.setGravity(Gravity.END)
+            holder.binding.layout.gravity = Gravity.END
         }
 
-        if(list.get(position).second){
+        if(list[position].second){
             holder.binding.img.setImageResource(R.drawable.ic_checked_radio)
         }else{
             holder.binding.img.setImageResource(R.drawable.ic_uncheked_radio)
         }
 
-        holder.binding.radioBtn.setText(list.get(position).first)
-        Log.d("TESTING","array value "+  list.get(position).second)
+        holder.binding.radioBtn.text = list[position].first
+        Log.d("TESTING","array value "+  list[position].second)
 
         holder.binding.img.setOnClickListener {
-            var pair = list.get(position)
+            var pair = list[position]
 //            Log.d("TESTING", holder.binding.img.drawable.toString())
 //            Log.d("TESTING",R.drawable.ic_uncheked_radio)
 
            if(!pair.second){
                holder.binding.img.setImageResource(R.drawable.ic_checked_radio)
                val newValue =Pair(pair.first,true)
-               list.set(position,newValue)
+               list[position] = newValue
                mListener.onItemClick(list)
            }else{
                holder.binding.img.setImageResource(R.drawable.ic_uncheked_radio)
                val newValue =Pair(pair.first,false)
-               list.set(position,newValue)
+               list[position] = newValue
                mListener.onItemClick(list)
            }
         }

@@ -22,6 +22,7 @@ import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -31,6 +32,7 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -77,9 +79,14 @@ import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.TAG
 import com.business.zyvo.utils.ErrorDialog.customDialog
 import com.business.zyvo.utils.MediaUtils
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.hbb20.CountryCodePicker
+import com.withpersona.sdk2.inquiry.Environment
+import com.withpersona.sdk2.inquiry.Fields
+import com.withpersona.sdk2.inquiry.Inquiry
+import com.withpersona.sdk2.inquiry.InquiryResponse
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
@@ -101,24 +108,25 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     private var locationList: MutableList<AddLocationModel> = mutableListOf()
     private var workList: MutableList<AddWorkModel> = mutableListOf()
     private var languageList: MutableList<AddLanguageModel> = mutableListOf()
+    private lateinit var getInquiryResult: ActivityResultLauncher<Inquiry>
     private lateinit var apiKey: String
     private lateinit var localeAdapter: LocaleAdapter
     private var locales: List<Locale> = listOf()
     private var etSearch: TextView? = null
     private  var bottomSheetDialog : BottomSheetDialog? = null
     private var imageStatus = ""
-
     lateinit  var navController :NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
+    private var identityVerified = 0
     var resendEnabled = false
     var userId:String = ""
-    var token:String = ""
+    private var token:String = ""
     var type:String = ""
     var email:String = ""
     var session: SessionManager?=null
     var imageBytes: ByteArray = byteArrayOf()
-    val completeProfileReq = CompleteProfileReq()
+    private val completeProfileReq = CompleteProfileReq()
 
 
 
@@ -161,6 +169,30 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         commonAuthWorkUtils = CommonAuthWorkUtils(requireContext(),navController)
         apiKey = getString(R.string.api_key)
 
+        getInquiryResult = registerForActivityResult(Inquiry.Contract()) { result ->
+            when (result) {
+                is InquiryResponse.Complete -> {
+                    // User identity verification completed successfully
+                    binding.textConfirmNow2.visibility = GONE
+                    binding.textVerified2.visibility = View.VISIBLE
+                    identityVerified = 1
+                    Toast.makeText(requireContext(), "Verified Successfully!", Toast.LENGTH_SHORT).show()
+                }
+                is InquiryResponse.Cancel -> {
+                    // User abandoned the verification process
+                    binding.textConfirmNow2.visibility = View.VISIBLE
+                    binding.textVerified2.visibility = GONE
+                    Toast.makeText(requireContext(),"Request Cancelled",Toast.LENGTH_LONG).show()
+                }
+                is InquiryResponse.Error -> {
+                    // Error occurred during identity verification
+                    binding.textConfirmNow2.visibility = View.VISIBLE
+                    binding.textVerified2.visibility = GONE
+                    Toast.makeText(requireContext(),"Error Occurred, Try Again",Toast.LENGTH_LONG).show()
+
+                }
+            }
+        }
 
     }
 
@@ -202,6 +234,14 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             Log.d(ErrorDialog.TAG,userId+"\n"+type+"\n"+email+"\n"+token)
         }
 
+        binding.textConfirmNow2.setOnClickListener {
+            if (NetworkMonitorCheck._isConnected.value) {
+                launchVerifyIdentity()
+            } else {
+                showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
+            }
+        }
+
         // Observe the isLoading state
         lifecycleScope.launch {
             completeProfileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -240,6 +280,22 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
     }
 
+    private fun launchVerifyIdentity(){
+        val TEMPLATE_ID = "itmpl_yEu1QvFA5fJ1zZ9RbUo1yroGahx2"
+
+        val inquiry = Inquiry.fromTemplate(TEMPLATE_ID)
+            .environment(Environment.SANDBOX) // Use Environment.PRODUCTION for live verification
+            .referenceId(session?.getUserId().toString()) // Link the inquiry to a specific user
+            .fields(
+                Fields.Builder()
+                    .build()
+            )
+            .locale(Locale.getDefault().language) // Set the locale for the verification process
+            .build()
+
+        getInquiryResult.launch(inquiry)
+
+    }
     private fun setCheckVerified() {
         if ("mobile".equals(type)){
             binding.textConfirmNow1.visibility = View.GONE
@@ -474,6 +530,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                        completeProfileReq.hobbies = getNames(hobbiesList)
                                        completeProfileReq.pets = getNames(petsList)
                                        completeProfileReq.bytes = imageBytes
+                                       completeProfileReq.identityVerified = identityVerified
                                        completeProfile(completeProfileReq,binding.textSaveButton)
                                    }else{
                                        toggleLoginButtonEnabled(true, binding.textSaveButton)
@@ -494,6 +551,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     }
 
     private fun completeProfile(completeProfileReq: CompleteProfileReq, textSaveButton: TextView) {
+
         lifecycleScope.launch {
             completeProfileViewModel.completeProfile(completeProfileReq).collect {
                 when (it) {
