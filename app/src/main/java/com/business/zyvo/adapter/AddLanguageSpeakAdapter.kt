@@ -1,5 +1,6 @@
 package com.business.zyvo.adapter
 
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -10,8 +11,9 @@ import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddLanguageBinding
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.model.AddLanguageModel
+import com.business.zyvo.onItemClickData
 
-class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLanguageModel>,var listner : OnClickListener1)
+class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLanguageModel>,var listner : OnClickListener1,var listner2 : onItemClickData)
     :RecyclerView.Adapter<RecyclerView.ViewHolder>(){
 
     private val uploadLanguageCode = 1 // Represents normal location entries
@@ -19,7 +21,7 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
     private  var textAddNew : TextView? = null
 
     inner class LanguageViewHolder(var binding: LayoutAddLanguageBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(languageItem: AddLanguageModel) {
             if (list.size >= 3) {
                 textAddNew?.visibility = View.GONE
@@ -29,10 +31,7 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
 
             binding.textMyWorkName.text = languageItem.name
             binding.imageCross.setOnClickListener {
-                listner.itemClick(
-                    adapterPosition,
-                    "language"
-                )
+                listner.itemClick(adapterPosition, "language")
             }
         }
 
@@ -42,7 +41,7 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
 
         init {
             binding.root.setOnClickListener {
-                listner.itemClick(adapterPosition,"language") // Handle "Add New" button click
+                listner2.itemClick(adapterPosition,"language","") // Handle "Add New" button click
             }
         }
         fun bind() {
@@ -54,13 +53,13 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-       return  if (viewType == uploadLanguageCode){
-           val binding = LayoutAddLanguageBinding.inflate(LayoutInflater.from(context),parent,false)
-       LanguageViewHolder(binding)
-       } else{
-           val  binding = LayoutAddTextBinding.inflate(LayoutInflater.from(context), parent, false)
-       LanguageViewHolderFixed(binding)
-       }
+        return  if (viewType == uploadLanguageCode){
+            val binding = LayoutAddLanguageBinding.inflate(LayoutInflater.from(context),parent,false)
+            LanguageViewHolder(binding)
+        } else{
+            val  binding = LayoutAddTextBinding.inflate(LayoutInflater.from(context), parent, false)
+            LanguageViewHolderFixed(binding)
+        }
     }
 
     override fun getItemCount() = list.size
