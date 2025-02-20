@@ -43,11 +43,12 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
-                    android:text="Emily James"
+                    android:hint="Emily James"
+                    android:id="@+id/tvReviewName"
+                    android:textColorHint="@color/black"
                     android:textColor="@color/black"
-
                     android:layout_centerVertical="true"
-                    android:layout_toStartOf="@+id/ratingbar"
+                    android:layout_toStartOf="@+id/reviewratingbar"
                     android:textSize="@dimen/_12sdp"
                     android:layout_alignParentStart="true"
                     android:textStyle="bold" />
@@ -61,7 +62,7 @@
 <!--                    />-->
 
                 <RatingBar
-                    android:id="@+id/ratingbar"
+                    android:id="@+id/reviewratingbar"
                     style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -70,14 +71,14 @@
                     android:stepSize="1"
                     android:progressTint="#E8963C"
                     android:rating="4"
-                    android:layout_toStartOf="@+id/tvDate"
+                    android:layout_toStartOf="@+id/tvReviewDate"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="@dimen/_8sdp"
                     android:secondaryProgressTint="#E8963C" />
 
 
                 <TextView
-                    android:id="@+id/tvDate"
+                    android:id="@+id/tvReviewDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mar 09, 22"
@@ -99,8 +100,10 @@
                     android:id="@+id/tv_host_detail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Host was very helpful. thank you so much"
+                    android:hint="Host was very helpful. thank you so much"
+                    android:textColorHint="@color/black"
                     android:textSize="@dimen/_12sdp"
+                    android:id="@+id/tvReviewDis"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"/>
 

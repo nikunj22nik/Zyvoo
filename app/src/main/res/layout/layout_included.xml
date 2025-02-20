@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_80sdp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_four_side_grey_corner"
+    android:paddingHorizontal="@dimen/_5sdp"
+    android:layout_marginStart="@dimen/_5sdp"
+    android:gravity="center"
+    android:paddingVertical="@dimen/_5sdp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ivincluded"
+        android:visibility="gone"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_parking" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Parking"
+        android:textAlignment="center"
+        android:id="@+id/tvincluded"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="bold" />
+
+</LinearLayout>

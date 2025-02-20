@@ -35,10 +35,10 @@
             android:name="com.business.zyvo.activity.guest.ExtraTimeActivity"
             android:exported="false" />
         <activity
-            android:name="com.business.zyvo.activity.CheckOutPayActivity"
+            android:name="com.business.zyvo.activity.guest.checkout.CheckOutPayActivity"
             android:exported="false" />
         <activity
-            android:name="com.business.zyvo.activity.guest.RestaurantDetailActivity"
+            android:name="com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity"
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".activity.guest.RestaurentDeatilActivity" -->
         <!-- android:exported="false" -->

@@ -297,6 +297,17 @@ interface ZyvoRepository {
                                        additionalDetail :String) : Flow<NetworkResult<String>>
 
 
+
+    suspend fun getHomePropertyDetails(userId :String,
+                                       propertyId :String) : Flow<NetworkResult<Pair<JsonObject, JsonObject>>>
+
+
+    suspend fun filterPropertyReviews(propertyId :String,
+                                      filter :String,
+                                      page :String) : Flow<NetworkResult<Pair<JsonArray, JsonObject>>>
+
+
+    suspend fun getUserCards(userId :String) : Flow<NetworkResult<JsonObject>>
 }
 
 

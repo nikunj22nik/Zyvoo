@@ -10,28 +10,21 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.business.zyvo.OnClickListener1
-import com.business.zyvo.OnLogClickListener
-import com.business.zyvo.adapter.ViewPagerAdapter
 import com.business.zyvo.databinding.LayoutLoggedRecyclerviewBinding
 import com.business.zyvo.fragment.guest.home.model.HomePropertyData
-import com.business.zyvo.model.ViewpagerModel
+import com.business.zyvo.fragment.guest.home.model.OnViewPagerImageClickListener
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 
 class HomeScreenAdapter(
     private val context: Context, private var list: MutableList<HomePropertyData>,
-    private val listener2: OnClickListener1
+    private val listener2: OnClickListener1,private val mListener:onItemClickListener
 ) : RecyclerView.Adapter<HomeScreenAdapter.LoggedViewHolder>() {
 
-    private lateinit var mListener: onItemClickListener
 
     interface onItemClickListener {
         fun onItemClick(position: Int)
     }
-
-    fun setOnItemClickListener(listener: onItemClickListener) {
-        mListener = listener
-    }
-
 
     inner class LoggedViewHolder(val binding: LayoutLoggedRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -55,16 +48,15 @@ class HomeScreenAdapter(
 
         holder.binding.cl1.setOnClickListener {
             mListener.onItemClick(position)
-            Log.d("Adapter", "cl1 clicked at position $position")
+            Log.d(ErrorDialog.TAG, "cl1 clicked at position $position")
         }
         // Setup ViewPager and its adapter
         currentItem.images.let {
-            val viewPagerAdapter = ViewPagerAdapter(
+            val viewPagerAdapter = GuestViewPagerAdapter(
                 currentItem.images.toMutableList(),
                 context,
-                object : OnLogClickListener {
-                    override fun itemClick(items: MutableList<ViewpagerModel>) {
-                        //  listener.itemClick(position)
+                object : OnViewPagerImageClickListener {
+                    override fun itemClick(items: Int) {
                         mListener.onItemClick(position)
                     }
                 })
