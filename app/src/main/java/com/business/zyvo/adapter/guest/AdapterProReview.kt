@@ -36,7 +36,7 @@ RecyclerView.Adapter<AdapterProReview.ViewHolder>() {
             holder.binding.tvReviewName.text = it
         }
         currentItem?.review_message?.let {
-            holder.binding.tvReviewDis.text = it
+            holder.binding.tvHostDetail.text = it
         }
         currentItem?.review_rating?.let {
             holder.binding.reviewratingbar.rating = it.toFloat()

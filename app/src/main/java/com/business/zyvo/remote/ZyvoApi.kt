@@ -362,7 +362,7 @@ interface ZyvoApi {
         @Field("wishlist_id") wishlist_id : String) :Response<JsonObject>
 
 
-<<<<<<< HEAD
+
 
     @POST("filter_property_reviews")
     @FormUrlEncoded
@@ -416,7 +416,7 @@ interface ZyvoApi {
                                     @Field("property_id") propertyId :Int,
                                     @Field("report_reasons_id")reportReasonId :Int,
                                     @Field("additional_details")additionalDetail :String) : Response<JsonObject>
-=======
+
     @POST("get_home_property_details")
     @FormUrlEncoded
     suspend fun getHomePropertyDetails(
@@ -434,6 +434,6 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun getUserCards(
         @Field("userId") userId : String) :Response<JsonObject>
->>>>>>> shrawanbranch
+
 
 }
