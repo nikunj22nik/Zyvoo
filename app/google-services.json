@@ -1,41 +1,41 @@
 {
   "project_info": {
-    "project_number": "352338258329",
-    "project_id": "zyvo-abcf5",
-    "storage_bucket": "zyvo-abcf5.firebasestorage.app"
+    "project_number": "81364080009",
+    "project_id": "zyvo-1aea1",
+    "storage_bucket": "zyvo-1aea1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:352338258329:android:382337203c36ddfa2b8b08",
+        "mobilesdk_app_id": "1:81364080009:android:05b13223f99aa1a073bd58",
         "android_client_info": {
           "package_name": "com.business.zyvo"
         }
       },
       "oauth_client": [
         {
-          "client_id": "352338258329-g92a7rg6g98hfr64h0k5gpia5ts3b2pd.apps.googleusercontent.com",
+          "client_id": "81364080009-lgaq60rp3r1fducq3jcnisghptnke25t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.business.zyvo",
-            "certificate_hash": "d6fd912b372c32fd616c317da35dcd7fd493776f"
+            "certificate_hash": "2139a3855d628045c657b3e123cc9fc83782d871"
           }
         },
         {
-          "client_id": "352338258329-h14db6ihn21f8470iu9fgv9bc1hd2dd0.apps.googleusercontent.com",
+          "client_id": "81364080009-mo66b0m5vf06t8otlsvs4vli9qpvav15.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB2wVYWSNGTjDJ6CXHqZZ5PuCM9RWHWVyY"
+          "current_key": "AIzaSyCvtyOu6EPApNyKO0yhp8tFsZD5hoLbqCw"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "352338258329-h14db6ihn21f8470iu9fgv9bc1hd2dd0.apps.googleusercontent.com",
+              "client_id": "81364080009-mo66b0m5vf06t8otlsvs4vli9qpvav15.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

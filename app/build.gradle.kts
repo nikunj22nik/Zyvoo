@@ -22,7 +22,7 @@ android{
 
     buildTypes {
         debug {
-           val BASE_URL = project.property("BASE_URL")
+            val BASE_URL = project.property("BASE_URL")
             buildConfigField("String", "BASE_URL", "${BASE_URL}")
 
             val MEDIA_URL = project.property("MEDIA_URL")
@@ -68,8 +68,6 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation(libs.places)
-//    implementation(libs.firebase.auth)
-//    implementation(libs.firebase.messaging.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -113,6 +111,11 @@ dependencies {
     implementation("com.github.skydoves:powerspinner:1.2.7")
     //persona API
     implementation (libs.sdk2.inquiry)
+    //firebase BOM
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
 
 
 

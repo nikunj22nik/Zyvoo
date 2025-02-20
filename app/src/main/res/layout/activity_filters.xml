@@ -735,9 +735,11 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:id="@+id/etCustomPropertySize"
                         android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@null"
+                        android:inputType="number"
                         android:hint="Type.."
                         android:textColor="#3F3D56" />
 
@@ -1055,6 +1057,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_3sdp"
+                        android:id="@+id/etCustomBedroom"
+                        android:inputType="number"
                         android:background="@null"
                         android:hint="Type.."
                         android:textColor="#3F3D56" />
@@ -1215,6 +1219,7 @@
                         android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@null"
+                        android:id="@+id/etBathroom"
                         android:hint="Type.."
                         android:textColor="#3F3D56" />
 
@@ -1369,7 +1374,7 @@
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:theme="@style/SCBSwitch"
-                    android:id="@+id/idSwitch"
+                    android:id="@+id/instantBookingSwitch"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -1409,7 +1414,7 @@
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:theme="@style/SCBSwitch"
-                    android:id="@+id/idSwitch_1"
+                    android:id="@+id/selfCheckinToggle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
@@ -1446,7 +1451,7 @@
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:theme="@style/SCBSwitch"
-                    android:id="@+id/hjhj"
+                    android:id="@+id/petToggle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"

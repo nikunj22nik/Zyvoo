@@ -50,24 +50,24 @@ class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityMode
                 holder.bind(list[position].name, list[position].image)
                 var laypout = holder.itemView.findViewById<LinearLayout>(R.id.layout)
 
-                if(list.get(position).checked){
+                if(list[position].checked){
                     laypout.setBackgroundResource(R.drawable.bg_four_side_selected_blue)
                 }else{
                     laypout.setBackgroundResource(R.drawable.bg_four_side_grey_corner)
                 }
                 laypout.setOnClickListener {
-                    if (!list.get(position).checked) {
+                    if (!list[position].checked) {
                         laypout.setBackgroundResource(R.drawable.bg_four_side_selected_blue)
-                       var pair = list.get(position)
+                       var pair = list[position]
                         pair.checked = true
-                        list.set(position,pair)
+                        list[position] = pair
                         onItemClickListener?.invoke(list,position)
                     }
                     else{
                       laypout.setBackgroundResource(R.drawable.bg_four_side_grey_corner)
-                        var pair = list.get(position)
+                        var pair = list[position]
                         pair.checked = false
-                        list.set(position,pair)
+                        list[position] = pair
                         onItemClickListener?.invoke(list,position)
                     }
                 }
