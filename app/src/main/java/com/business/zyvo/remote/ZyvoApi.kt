@@ -134,7 +134,7 @@ interface ZyvoApi {
     @POST("delete_language")
     @FormUrlEncoded
     suspend fun deleteLanguage(@Field("user_id")user_id :String,
-                               @Field("language_index")language_index :Int) : Response<JsonObject>
+                               @Field("index")index :Int) : Response<JsonObject>
 
     @POST("add_hobby")
     @FormUrlEncoded

@@ -492,7 +492,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         Log.d("checkWorkList", workList.toString())
         addWorkAdapter.updateWork(workList)
 
-        addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this)
+        addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this,this)
         binding.recyclerViewlanguages.adapter = addLanguageSpeakAdapter
 
         addLanguageSpeakAdapter.updateLanguage(languageList)

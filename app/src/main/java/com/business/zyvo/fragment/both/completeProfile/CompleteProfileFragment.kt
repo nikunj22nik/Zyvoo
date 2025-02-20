@@ -267,7 +267,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
         addWorkAdapter.updateWork(workList)
 
-        addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this)
+        addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this,this)
         binding.recyclerViewlanguages.adapter = addLanguageSpeakAdapter
 
         addLanguageSpeakAdapter.updateLanguage(languageList)
