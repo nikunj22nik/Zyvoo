@@ -168,6 +168,10 @@ class AppConstant {
         val aboutMe = "AboutMe is required"
         val details = "Details is required"
         val feedbackAbout = "Please select feedback about"
+        val hours = "Hours is required"
+        val price = "Price is required"
+        val stTime = "Start time is required"
+        val edTime = "End time is required"
 
       val message = "Message is required"
         val emailValid = "Please enter a valid email"

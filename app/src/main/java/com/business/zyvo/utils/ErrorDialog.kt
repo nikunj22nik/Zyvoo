@@ -6,11 +6,13 @@ import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Build
 import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import com.business.zyvo.AppConstant
 import com.business.zyvo.R
@@ -21,6 +23,9 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 
@@ -146,6 +151,39 @@ object ErrorDialog {
     fun showToast(context: Context?,string: String?){
         Toast.makeText(context,string, Toast.LENGTH_SHORT).show()
     }
+
+    fun convertHoursToHrMin(timeInHours: Double): String {
+        return try {
+            val hours = timeInHours.toInt() // Get whole hours
+            val minutes = ((timeInHours - hours) * 60).toInt() // Convert decimal part to minutes
+            "$hours hr $minutes min"
+        } catch (e: Exception) {
+            Log.e("TimeConversion", "Error converting time: ${e.message}")
+            "Invalid input"
+        }
+    }
+
+
+    fun formatDateyyyyMMddToMMMMddyyyy(inputDate: String): String {
+        val inputFormatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        val outputFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH)
+
+        val date = LocalDate.parse(inputDate, inputFormatter)
+        return date.format(outputFormatter)
+    }
+
+    fun calculatePercentage(value: Double?, percentage: Double?): Double  {
+        return if (value != null && percentage != null) {
+            value * (percentage / 100)
+        } else {
+            0.0 // Return 0.0 if any value is null
+        }
+    }
+
 
 
 
