@@ -1,6 +1,7 @@
 package com.business.zyvo.viewmodel.host
 
 import android.net.http.HttpException
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -26,9 +27,10 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     ViewModel() {
 
     var _list = MutableLiveData<MutableList<MyBookingsModel>>()
-
+    var reviewlist :MutableList<Pair<Int,String>> = mutableListOf()
     var currentPage =1
     var filter = "recent_review"
+    var reviewListLiveData = MutableLiveData<MutableList<Pair<Int,String>>>()
 
     val list: LiveData<MutableList<MyBookingsModel>> get() = _list
 
@@ -69,5 +71,42 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
 
         }
     }
+
+    suspend fun reportListReason() : Flow<NetworkResult<MutableList<Pair<Int,String>>>>{
+        return repository.reportListReason().onEach {
+            when(it){
+                is NetworkResult.Success ->{
+                     it.data?.let {
+                         Log.d("TESTING","ReviewList Inside ViewModel "+it.size)
+                         reviewlist= it
+                         reviewListLiveData.value = reviewlist
+                     }
+
+                }
+                is NetworkResult.Error ->{
+
+                }
+                else ->{
+
+                }
+            }
+        }
+    }
+
+
+    suspend fun hostReportViolationSend(
+        userId: Int,
+        bookingId: Int,
+        propertyId: Int,
+        reportReasonId: Int,
+        additionalDetail: String
+    ): Flow<NetworkResult<String>>{
+        return repository.hostReportViolationSend(userId, bookingId, propertyId, reportReasonId, additionalDetail).onEach {
+
+        }
+    }
+
+
+
 
 }

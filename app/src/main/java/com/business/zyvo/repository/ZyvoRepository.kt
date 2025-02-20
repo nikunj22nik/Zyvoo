@@ -290,6 +290,13 @@ interface ZyvoRepository {
 
     suspend fun getGuideList(search_term: String): Flow<NetworkResult<JsonObject>>
 
+    suspend fun hostReportViolationSend(userId :Int,
+                                         bookingId :Int,
+                                        propertyId :Int,
+                                       reportReasonId :Int,
+                                       additionalDetail :String) : Flow<NetworkResult<String>>
+
+
 }
 
 

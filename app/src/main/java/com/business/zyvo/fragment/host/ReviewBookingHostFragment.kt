@@ -6,9 +6,12 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
+import android.net.Network
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.Gravity
@@ -16,13 +19,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.RatingBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -51,6 +58,8 @@ import com.business.zyvo.model.host.hostdetail.HostDetailModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.viewmodel.host.HostBookingsViewModel
+import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
+import com.skydoves.powerspinner.PowerSpinnerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -69,6 +78,10 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
     lateinit var adapterIncludeInBooking: AdapterIncludeInBooking
     var latitude :Double =0.00
     var longitude :Double =0.00
+    var reviewlist :MutableList<Pair<Int,String>> = mutableListOf()
+    var reviewListStr :MutableList<String> = mutableListOf()
+     lateinit  var spinnerView :PowerSpinnerView
+     var propertyId :Int =-1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -170,6 +183,45 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
         }
 
 
+        callingReportReason()
+    }
+
+
+    private fun callingReportReason(loadingShowing :Boolean = false){
+        lifecycleScope.launch {
+            if(loadingShowing){
+                LoadingUtils.showDialog(requireContext(),false)
+            }
+            viewModel.reportListReason().collect{
+                when(it){
+                    is NetworkResult.Success ->{
+                        if(loadingShowing) {
+                            LoadingUtils.hideDialog()
+                        }
+                    }
+                    is NetworkResult.Error ->{
+                        if(loadingShowing) {
+                            LoadingUtils.hideDialog()
+                        }
+                    }
+                    else ->{
+
+                    }
+                }
+            }
+        }
+
+        viewModel.reviewListLiveData.observe(viewLifecycleOwner, Observer { reviewList ->
+            reviewlist = reviewList
+            Log.d("TESTING","ReviewList Inside observer "+reviewList.size)
+            reviewListStr.clear()
+            reviewList.forEach {
+                reviewListStr.add(it.second)
+            }
+            if(::spinnerView.isInitialized){
+                spinnerView.setItems(reviewListStr)
+            }
+        })
 
     }
 
@@ -186,7 +238,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.second?.let { it1 ->{ 
-                                showingDataToUi(it1) 
+                                    showingDataToUi(it1)
+                                propertyId = it1.property_id
                                }
                             }
                         }
@@ -206,6 +259,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
                         is NetworkResult.Success -> {
                             LoadingUtils.hideDialog()
                             it.data?.let { it1 -> showingDataToUi(it1.second) }
+                            propertyId = it.data?.second?.property_id!!
+
                         }
 
                         is NetworkResult.Error -> {
@@ -511,14 +566,87 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
             val crossButton: ImageView = findViewById(R.id.img_cross)
             val submit: RelativeLayout = findViewById(R.id.rl_submit_report)
             val txtSubmit: TextView = findViewById(R.id.txt_submit)
+            var additionalDetail :EditText = findViewById<EditText>(R.id.et_addiotnal_detail)
+            spinnerView  = findViewById(R.id.spinnerView1)
+            Log.d("TESTING","Size of review list is "+reviewListStr.size )
+            if(reviewListStr.size >0) {
+                spinnerView.setItems(reviewListStr)
+            }else{
+                callingReportReason(true)
+            }
+            var selectedPosition =-1
+            var additionalTxt :String =""
+            additionalDetail.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                }
+
+                override fun onTextChanged(
+                    charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+                    if (charSequence != null) {
+                        // Get the current text as a String
+                        val currentText = charSequence.toString()
+
+                    }
+                }
+
+                override fun afterTextChanged(editable: Editable?) {
+                    if (editable != null) {
+                        println("Updated text: ${editable.toString()}")
+                        additionalTxt = editable.toString()
+                    }
+                }
+            })
+
+
+
+           spinnerView.setOnSpinnerItemSelectedListener(object :OnSpinnerItemSelectedListener<String>{
+               override fun onItemSelected(
+                   oldIndex: Int,
+                   oldItem: String?,
+                   newIndex: Int,
+                   newItem: String
+               ) {
+                   selectedPosition =newIndex
+                   Log.d("TESTING_INDEX","Selected index is "+selectedPosition)
+
+               }
+
+           })
+
 
             submit.setOnClickListener {
-                if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
-                    txtSubmit.setText("Submitted")
-                } else {
-                    dialog.dismiss()
-                    openDialogNotification()
+
+                if(selectedPosition == -1){
+                    Toast.makeText(requireContext(),"Please Select reason",Toast.LENGTH_LONG).show()
+                    return@setOnClickListener
                 }
+                lifecycleScope.launch {
+                    val sessionManager = SessionManager(requireContext())
+                    val userId = sessionManager.getUserId()
+                    if(userId != null){
+                        LoadingUtils.showDialog(requireContext(),false)
+                        viewModel.hostReportViolationSend(userId,bookingId,propertyId,reviewlist.get(selectedPosition).first,additionalTxt).collect{
+                            when(it){
+                                is NetworkResult.Success ->{
+                                    LoadingUtils.hideDialog()
+                                    dialog.dismiss()
+                                    openDialogNotification()
+                                }
+                                is NetworkResult.Error ->{
+                                    LoadingUtils.hideDialog()
+                                    dialog.dismiss()
+                                }
+                                else ->{
+                                    LoadingUtils.hideDialog()
+                                }
+                            }
+                        }
+                    }
+                }
+
+               // }
             }
 
             crossButton.setOnClickListener {

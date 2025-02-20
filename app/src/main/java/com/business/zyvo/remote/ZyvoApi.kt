@@ -407,4 +407,13 @@ interface ZyvoApi {
         @Field("search_term") search_term : String
     ):Response<JsonObject>
 
+
+    @POST("host_report_violation")
+    @FormUrlEncoded
+    suspend fun hostReportViolationSend(@Field("user_id")userId :Int,
+                                    @Field("booking_id") bookingId :Int,
+                                    @Field("property_id") propertyId :Int,
+                                    @Field("report_reasons_id")reportReasonId :Int,
+                                    @Field("additional_details")additionalDetail :String) : Response<JsonObject>
+
 }

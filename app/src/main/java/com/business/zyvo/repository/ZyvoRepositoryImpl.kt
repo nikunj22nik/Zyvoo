@@ -2757,6 +2757,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         }
     }
 
+
     override suspend fun propertyFilterReviews(
         propertyId :Int, filter: String, page :Int
     ) : Flow<NetworkResult<Pair<PaginationModel,MutableList<HostReviewModel>>>> = flow{
@@ -2872,6 +2873,38 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
        catch (e: Exception) {
            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
        }
+    }
+
+
+    override suspend fun hostReportViolationSend(
+        userId: Int,
+        bookingId: Int,
+        propertyId: Int,
+        reportReasonId: Int,
+        additionalDetail: String
+    ): Flow<NetworkResult<String>> = flow {
+        try {
+            api.reportListReason().apply {
+                if(isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            var obj = resp.get("message").asString
+
+                            emit(NetworkResult.Success<String>(obj))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        }
+        catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+
     }
 
 

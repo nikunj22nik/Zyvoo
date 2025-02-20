@@ -7,6 +7,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,14 +20,16 @@ import com.business.zyvo.model.MyBookingsModel
 
 
 class HostBookingsAdapter (var context: Context, var list: MutableList<MyBookingsModel>, var listner: OnClickListener)
-    : RecyclerView.Adapter<HostBookingsAdapter.MyBookingsViewHolder>() {
+    : RecyclerView.Adapter<HostBookingsAdapter.MyBookingsViewHolder>(), Filterable {
 
-      private lateinit var mListener: onItemClickListener
-      private var declineReason :String =""
 
-      interface onItemClickListener {
+        private lateinit var mListener: onItemClickListener
+        private var declineReason :String =""
+        private var filteredList: List<MyBookingsModel> = list
+
+        interface onItemClickListener {
             fun onItemClick(bookingId : Int,status :String, message :String,reason:String)
-      }
+        }
 
        fun setOnItemClickListener(listener: HostBookingsAdapter.onItemClickListener) {
             mListener = listener
@@ -105,8 +109,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     }
                     else{
                         binding.llDeclineRequest.visibility = View.GONE
-                        binding.llAcceptRequest.visibility = View.GONE
-                    }
+                        }
                 }
 
                 textStatus = binding.textStatus
@@ -122,7 +125,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     binding.textStatus.visibility = View.VISIBLE
                     binding.fl.visibility = View.VISIBLE
                 }
-                when (list.get(position).booking_status) {
+                when (filteredList.get(position).booking_status) {
                     "confirmed" ->  binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
                     "waiting_payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
                     "cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
@@ -130,7 +133,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                 }
                 binding.clMain.setOnClickListener{
 //                    listner.itemClick(position)
-                   mListener.onItemClick(list.get(position).booking_id,"-11","","")
+                   mListener.onItemClick(filteredList.get(position).booking_id,"-11","","")
                 }
                 binding.textName.setText(currentItem.guest_name)
                 binding.textDate.setText(currentItem.booking_date)
@@ -145,10 +148,10 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
             return MyBookingsViewHolder(binding)
         }
 
-        override fun getItemCount() = list.size
+        override fun getItemCount() = filteredList.size
 
         override fun onBindViewHolder(holder: MyBookingsViewHolder, position: Int) {
-            val currentItem = list[position]
+            val currentItem = filteredList[position]
             holder.bind(currentItem)
         }
 
@@ -163,8 +166,35 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
         @SuppressLint("NotifyDataSetChanged")
         fun updateItem(newList : MutableList<MyBookingsModel>){
             this.list = newList
+            filteredList = newList
             notifyDataSetChanged()
         }
 
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val query = constraint?.toString()?.toLowerCase()
+                val results = FilterResults()
 
+                if (query.isNullOrBlank()) {
+                    results.values = list
+                }
+                else {
+                    val filteredItems = list.filter {
+                         it.guest_name.toLowerCase().contains(query)
+                    }
+                    results.values = filteredItems
+                }
+                return results
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredList = results?.values as List<MyBookingsModel>
+                notifyDataSetChanged()
+            }
+        }
     }
+
+
+}
