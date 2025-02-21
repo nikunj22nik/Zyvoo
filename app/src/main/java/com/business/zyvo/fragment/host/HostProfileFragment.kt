@@ -2645,7 +2645,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
-                                    showErrorDialog(requireContext(), resp.first)
+                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                     val newLocation =
                                         AddLocationModel(place_name ?: "Unknown Location")
 

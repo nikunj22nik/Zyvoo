@@ -152,6 +152,15 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     }
 
 
+    suspend fun reviewGuest(
+        userId: Int, bookingId: Int, propertyId: Int, responseRate: Int, communication: Int,
+        onTime: Int, reviewMessage: String
+    ) : Flow<NetworkResult<String>>{
+        return repository.reviewGuest(userId, bookingId, propertyId, responseRate, communication, onTime, reviewMessage).onEach {
+
+        }
+    }
+
 
 
 }

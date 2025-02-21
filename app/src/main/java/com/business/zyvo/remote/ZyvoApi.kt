@@ -468,6 +468,17 @@ interface ZyvoApi {
         @Field("userId") userId : String) :Response<JsonObject>
 
 
+    @POST("review_guest")
+    @FormUrlEncoded
+    suspend fun reviewGuest(
+                 @Field("user_id") userId :Int,
+                 @Field("booking_id") bookingId :Int,
+                 @Field("property_id") propertyId :Int,
+                 @Field("response_rate") responseRate :Int,
+                 @Field("communication") communication :Int,
+                 @Field("on_time") onTime :Int,
+                 @Field("review_message") reviewMessage :String
+     ) : Response<JsonObject>
 
 
 

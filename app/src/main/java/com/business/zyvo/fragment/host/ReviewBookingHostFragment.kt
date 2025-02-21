@@ -56,6 +56,7 @@ import com.business.zyvo.adapter.host.AdapterIncludeInBooking
 import com.business.zyvo.databinding.FragmentReviewBookingBinding
 import com.business.zyvo.model.host.hostdetail.HostDetailModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.viewmodel.host.HostBookingsViewModel
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
@@ -64,7 +65,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
+class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
     private var _binding: FragmentReviewBookingBinding? = null
     private val binding get() = _binding!!
@@ -76,12 +77,12 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
     private var mMap: GoogleMap? = null
     lateinit var navController: NavController
     lateinit var adapterIncludeInBooking: AdapterIncludeInBooking
-    var latitude :Double =0.00
-    var longitude :Double =0.00
-    var reviewlist :MutableList<Pair<Int,String>> = mutableListOf()
-    var reviewListStr :MutableList<String> = mutableListOf()
-     lateinit  var spinnerView :PowerSpinnerView
-     var propertyId :Int =-1
+    var latitude: Double = 0.00
+    var longitude: Double = 0.00
+    var reviewlist: MutableList<Pair<Int, String>> = mutableListOf()
+    var reviewListStr: MutableList<String> = mutableListOf()
+    lateinit var spinnerView: PowerSpinnerView
+    var propertyId: Int = -1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,7 +106,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
 
         adapterIncludeInBooking = AdapterIncludeInBooking(mutableListOf(), requireContext())
 
-        val gridLayoutManager = GridLayoutManager(requireContext(), PrepareData.numberOFColumn(requireActivity()))
+        val gridLayoutManager =
+            GridLayoutManager(requireContext(), PrepareData.numberOFColumn(requireActivity()))
 
         binding.recyclerIcludeBooking.layoutManager = gridLayoutManager
         binding.recyclerIcludeBooking.adapter = adapterIncludeInBooking
@@ -121,8 +123,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
         viewModel = ViewModelProvider(this)[HostBookingsViewModel::class.java]
 
         if (bookingId != -1) {
-            Log.d("TESTING","Booking Id is "+ bookingId)
-          callingBookingDetailApi()
+            Log.d("TESTING", "Booking Id is " + bookingId)
+            callingBookingDetailApi()
         }
 
         return binding.root
@@ -187,24 +189,26 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
     }
 
 
-    private fun callingReportReason(loadingShowing :Boolean = false){
+    private fun callingReportReason(loadingShowing: Boolean = false) {
         lifecycleScope.launch {
-            if(loadingShowing){
-                LoadingUtils.showDialog(requireContext(),false)
+            if (loadingShowing) {
+                LoadingUtils.showDialog(requireContext(), false)
             }
-            viewModel.reportListReason().collect{
-                when(it){
-                    is NetworkResult.Success ->{
-                        if(loadingShowing) {
+            viewModel.reportListReason().collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        if (loadingShowing) {
                             LoadingUtils.hideDialog()
                         }
                     }
-                    is NetworkResult.Error ->{
-                        if(loadingShowing) {
+
+                    is NetworkResult.Error -> {
+                        if (loadingShowing) {
                             LoadingUtils.hideDialog()
                         }
                     }
-                    else ->{
+
+                    else -> {
 
                     }
                 }
@@ -213,18 +217,17 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
 
         viewModel.reviewListLiveData.observe(viewLifecycleOwner, Observer { reviewList ->
             reviewlist = reviewList
-            Log.d("TESTING","ReviewList Inside observer "+reviewList.size)
+            Log.d("TESTING", "ReviewList Inside observer " + reviewList.size)
             reviewListStr.clear()
             reviewList.forEach {
                 reviewListStr.add(it.second)
             }
-            if(::spinnerView.isInitialized){
+            if (::spinnerView.isInitialized) {
                 spinnerView.setItems(reviewListStr)
             }
         })
 
     }
-
 
 
     private fun callingBookingDetailApi() {
@@ -237,23 +240,25 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
                 viewModel.hostBookingDetails(bookingId, null, null).collect {
                     when (it) {
                         is NetworkResult.Success -> {
-                            it.data?.second?.let { it1 ->{ 
+                            it.data?.second?.let { it1 ->
+                                {
                                     showingDataToUi(it1)
-                                propertyId = it1.property_id
-                               }
+                                    propertyId = it1.property_id
+                                }
                             }
                         }
+
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
                             LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
                         }
+
                         else -> {
                             LoadingUtils.hideDialog()
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 viewModel.hostBookingDetails(bookingId, latitude, longitude).collect {
                     when (it) {
                         is NetworkResult.Success -> {
@@ -281,20 +286,22 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
         lifecycleScope.launch {
             viewModel.propertyFilterReviews(propertyId, viewModel.filter, viewModel.currentPage)
                 .collect {
-                    when(it){
-                      is NetworkResult.Success ->{
-                          LoadingUtils.hideDialog()
-                          it.data?.let { it1 -> adapterReview.updateAdapter(it1.second) }
-                      }
-                      is NetworkResult.Error ->{
-                          LoadingUtils.hideDialog()
-                      }
-                      else->{
-                          LoadingUtils.hideDialog()
-                      }
-                  }
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            LoadingUtils.hideDialog()
+                            it.data?.let { it1 -> adapterReview.updateAdapter(it1.second) }
+                        }
+
+                        is NetworkResult.Error -> {
+                            LoadingUtils.hideDialog()
+                        }
+
+                        else -> {
+                            LoadingUtils.hideDialog()
+                        }
+                    }
                 }
-         }
+        }
     }
 
 
@@ -302,7 +309,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
 
         binding.tvNamePlace.setText(data.property_title)
         binding.textRatingStar.setText(data.guest_rating)
-        binding.textK.setText(" ( "+data.reviews_total_rating+" )")
+        binding.textK.setText(" ( " + data.reviews_total_rating + " )")
         binding.textMiles.setText(data.distance_miles + " miles away")
         binding.time.setText(data.booking_hour + " Hours")
         binding.money.setText("$ " + data.booking_amount)
@@ -316,7 +323,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
         } ?: binding.tvServiceFee.setText("$ 0")
 
         data.guest_avatar?.let {
-            Glide.with(requireContext()).load(AppConstant.BASE_URL+it).into(binding.imageProfilePicture)
+            Glide.with(requireContext()).load(AppConstant.BASE_URL + it)
+                .into(binding.imageProfilePicture)
         }
 
         data.tax?.let {
@@ -341,7 +349,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
 
         data.booking_status?.let {
             binding.tvStatus.setText(it)
-            if(it.equals("pending")) binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
+            if (it.equals("pending")) binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
         } ?: binding.tvStatus.setText("")
 
         data.booking_date?.let {
@@ -349,13 +357,13 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
         } ?: binding.tvBookingDate.setText("")
 
         data.booking_hour?.let {
-            binding.tvBookingTotalTime.setText(it +" Hours")
+            binding.tvBookingTotalTime.setText(it + " Hours")
         } ?: binding.tvBookingTotalTime.setText("")
 
         binding.bookingFromTo.setText("From " + data.booking_start_time + " to " + data.booking_end_time)
 
         data.reviews_total_count?.let {
-            binding.tvReviewsCount.setText("Reviews ("+ it +" )")
+            binding.tvReviewsCount.setText("Reviews (" + it + " )")
         }
 
         data.reviews_total_rating?.let {
@@ -364,7 +372,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
 
         data.parking_rules?.let {
             binding.tvParkingContent.setText(it)
-        }?: binding.tvParkingContent.setText("")
+        } ?: binding.tvParkingContent.setText("")
 
         data.address?.let {
             binding.tvLocationName.setText(it)
@@ -378,7 +386,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
             latitude = it.toDouble()
             longitude = data.longitude?.let {
                 it.toDouble()
-            }?:0.00
+            } ?: 0.00
 
             val newYork = LatLng(latitude, longitude)
             mMap?.clear()
@@ -540,10 +548,62 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
             var ratingbar3 = findViewById<RatingBar>(R.id.ratingbar3)
             var textPublishReview = findViewById<TextView>(R.id.textPublishReview)
             var etMessage = findViewById<TextView>(R.id.etMessage)
+            var message: String = ""
+            etMessage.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(
+                    charSequence: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
 
+                }
+
+                override fun onTextChanged(
+                    charSequence: CharSequence?, start: Int, before: Int, count: Int
+                ) {
+                    message = charSequence.toString()
+                }
+
+                override fun afterTextChanged(editable: Editable?) {
+
+                }
+            })
 
 
             textPublishReview.setOnClickListener {
+                var responseRate = ratingbar.rating
+                var communicationRate = ratingbar2.rating
+                var onTimeRate = ratingbar3.rating
+                var sessionManager = SessionManager(requireContext())
+                var userId = sessionManager.getUserId()
+                lifecycleScope.launch {
+                    if (NetworkMonitorCheck._isConnected.value) {
+                        if (userId != null) {
+                            LoadingUtils.showDialog(requireContext(), false)
+                            viewModel.reviewGuest(
+                                userId, bookingId, propertyId, responseRate.toInt(), communicationRate.toInt(), onTimeRate.toInt(), message
+                            ).collect {
+                                when(it){
+                                    is NetworkResult.Success ->{
+                                        LoadingUtils.hideDialog()
+                                        LoadingUtils.showSuccessDialog(requireContext(),it.data.toString())
+                                    }
+                                    is NetworkResult.Error ->{
+                                        LoadingUtils.hideDialog()
+                                        LoadingUtils.showErrorDialog(requireContext(),it.data.toString())
+                                    }
+                                    else ->{
+                                        LoadingUtils.hideDialog()
+                                    }
+                                }
+                            }
+                        }
+                    } else{
+                        LoadingUtils.showErrorDialog(requireContext(),"Please Check Internet Connection")
+                    }
+                }
+
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -566,23 +626,25 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
             val crossButton: ImageView = findViewById(R.id.img_cross)
             val submit: RelativeLayout = findViewById(R.id.rl_submit_report)
             val txtSubmit: TextView = findViewById(R.id.txt_submit)
-            var additionalDetail :EditText = findViewById<EditText>(R.id.et_addiotnal_detail)
-            spinnerView  = findViewById(R.id.spinnerView1)
-            Log.d("TESTING","Size of review list is "+reviewListStr.size )
-            if(reviewListStr.size >0) {
+            var additionalDetail: EditText = findViewById<EditText>(R.id.et_addiotnal_detail)
+            spinnerView = findViewById(R.id.spinnerView1)
+            Log.d("TESTING", "Size of review list is " + reviewListStr.size)
+            if (reviewListStr.size > 0) {
                 spinnerView.setItems(reviewListStr)
-            }else{
+            } else {
                 callingReportReason(true)
             }
-            var selectedPosition =-1
-            var additionalTxt :String =""
+            var selectedPosition = -1
+            var additionalTxt: String = ""
             additionalDetail.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
-                    charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                    charSequence: CharSequence?, start: Int, before: Int, count: Int
+                ) {
                 }
 
                 override fun onTextChanged(
-                    charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                    charSequence: CharSequence?, start: Int, before: Int, count: Int
+                ) {
 
                     if (charSequence != null) {
                         // Get the current text as a String
@@ -601,44 +663,54 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
 
 
 
-           spinnerView.setOnSpinnerItemSelectedListener(object :OnSpinnerItemSelectedListener<String>{
-               override fun onItemSelected(
-                   oldIndex: Int,
-                   oldItem: String?,
-                   newIndex: Int,
-                   newItem: String
-               ) {
-                   selectedPosition =newIndex
-                   Log.d("TESTING_INDEX","Selected index is "+selectedPosition)
+            spinnerView.setOnSpinnerItemSelectedListener(object :
+                OnSpinnerItemSelectedListener<String> {
+                override fun onItemSelected(
+                    oldIndex: Int,
+                    oldItem: String?,
+                    newIndex: Int,
+                    newItem: String
+                ) {
+                    selectedPosition = newIndex
+                    Log.d("TESTING_INDEX", "Selected index is " + selectedPosition)
 
-               }
+                }
 
-           })
+            })
 
 
             submit.setOnClickListener {
 
-                if(selectedPosition == -1){
-                    Toast.makeText(requireContext(),"Please Select reason",Toast.LENGTH_LONG).show()
+                if (selectedPosition == -1) {
+                    Toast.makeText(requireContext(), "Please Select reason", Toast.LENGTH_LONG)
+                        .show()
                     return@setOnClickListener
                 }
                 lifecycleScope.launch {
                     val sessionManager = SessionManager(requireContext())
                     val userId = sessionManager.getUserId()
-                    if(userId != null){
-                        LoadingUtils.showDialog(requireContext(),false)
-                        viewModel.hostReportViolationSend(userId,bookingId,propertyId,reviewlist.get(selectedPosition).first,additionalTxt).collect{
-                            when(it){
-                                is NetworkResult.Success ->{
+                    if (userId != null) {
+                        LoadingUtils.showDialog(requireContext(), false)
+                        viewModel.hostReportViolationSend(
+                            userId,
+                            bookingId,
+                            propertyId,
+                            reviewlist.get(selectedPosition).first,
+                            additionalTxt
+                        ).collect {
+                            when (it) {
+                                is NetworkResult.Success -> {
                                     LoadingUtils.hideDialog()
                                     dialog.dismiss()
                                     openDialogNotification()
                                 }
-                                is NetworkResult.Error ->{
+
+                                is NetworkResult.Error -> {
                                     LoadingUtils.hideDialog()
                                     dialog.dismiss()
                                 }
-                                else ->{
+
+                                else -> {
                                     LoadingUtils.hideDialog()
                                 }
                             }
@@ -646,7 +718,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
                     }
                 }
 
-               // }
+                // }
             }
 
             crossButton.setOnClickListener {
@@ -743,7 +815,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
         binding.recyclerAddOn.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerAddOn.isNestedScrollingEnabled = false
 
-        binding.recyclerReviews.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        binding.recyclerReviews.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.recyclerReviews.isNestedScrollingEnabled = false
 
@@ -760,10 +833,9 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback{
     }
 
 
-    private fun recyclerPagination(){
+    private fun recyclerPagination() {
 
     }
-
 
 
     private fun getAddOnList(): MutableList<String> {
