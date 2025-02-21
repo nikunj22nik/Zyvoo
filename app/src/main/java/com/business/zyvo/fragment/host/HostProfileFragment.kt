@@ -629,12 +629,8 @@ private val startAutocomplete =
 
     private fun paymentOpenCloseDropDown() {
         // Set initial drawable
-        binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(
-            0,
-            0,
-            R.drawable.ic_dropdown_close,
-            0
-        )
+        binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0,
+            0, R.drawable.ic_dropdown_close, 0)
 
         binding.textPaymentMethod.setOnClickListener {
             // Toggle the state

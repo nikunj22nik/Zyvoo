@@ -158,7 +158,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                         when (it) {
                             is NetworkResult.Success -> {
                                 LoadingUtils.hideDialog()
-
+                                adapterMyBookingsAdapter?.updateItem(viewModel.finishedList)
                                 it.data?.let { it1 -> adapterMyBookingsAdapter?.updateItem(it1) }
                             }
 
@@ -196,21 +196,78 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener {
+            adapterMyBookingsAdapter?.updateItem(viewModel.finalList)
+            if(viewModel.finalList.size ==0){
+                  binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener {
+             adapterMyBookingsAdapter?.updateItem(viewModel.confirmedList)
+            if(viewModel.confirmedList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
+
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemBookingRequests).setOnClickListener {
+            adapterMyBookingsAdapter?.updateItem(viewModel.pendingList)
+            if(viewModel.pendingList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
+
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemWaitingPayment).setOnClickListener {
+            adapterMyBookingsAdapter?.updateItem(viewModel.waitingPaymentList)
+
+            if(viewModel.waitingPaymentList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
+
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener {
+            adapterMyBookingsAdapter?.updateItem(viewModel.finishedList)
+
+            if(viewModel.finishedList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
+
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener {
+            adapterMyBookingsAdapter?.updateItem(viewModel.cancelledList)
+
+            if(viewModel.cancelledList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
+
+
             popupWindow.dismiss()
         }
 
