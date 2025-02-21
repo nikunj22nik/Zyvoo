@@ -57,5 +57,35 @@ class CheckOutPayViewModel  @Inject constructor(private val repository: ZyvoRepo
         }
     }
 
+    suspend fun sameAsMailingAddress( userId: String):
+            Flow<NetworkResult<JsonObject>>{
+        return repository.sameAsMailingAddress(userId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun saveCardStripe( userId: String, token_stripe: String):
+            Flow<NetworkResult<Pair<String,String>>>{
+        return repository.saveCardStripe(userId,token_stripe).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
 
 }

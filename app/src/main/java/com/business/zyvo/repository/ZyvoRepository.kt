@@ -353,6 +353,12 @@ interface ZyvoRepository {
 
 
     suspend fun getUserCards(userId :String) : Flow<NetworkResult<JsonObject>>
+
+    //Shrawan Call Api
+    suspend fun sameAsMailingAddress(userId :String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun saveCardStripe(userId :String,
+                               token_stripe :String) :  Flow<NetworkResult<Pair<String,String>>>
 }
 
 

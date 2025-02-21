@@ -465,7 +465,19 @@ interface ZyvoApi {
     @POST("get_user_cards")
     @FormUrlEncoded
     suspend fun getUserCards(
-        @Field("userId") userId : String) :Response<JsonObject>
+        @Field("user_id") userId : String) :Response<JsonObject>
+
+
+    @POST("same_as_mailing_address")
+    @FormUrlEncoded
+    suspend fun sameAsMailingAddress(
+        @Field("user_id") userId : String) :Response<JsonObject>
+
+    @POST("save_card_stripe")
+    @FormUrlEncoded
+    suspend fun saveCardStripe(
+        @Field("user_id") userId : String,
+        @Field("token_stripe") token_stripe : String) :Response<JsonObject>
 
 
 }

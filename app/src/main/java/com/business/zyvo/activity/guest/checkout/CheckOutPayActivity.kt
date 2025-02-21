@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowManager
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -29,12 +30,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.activity.guest.ExtraTimeActivity
+import com.business.zyvo.activity.guest.checkout.model.MailingAddress
 import com.business.zyvo.activity.guest.checkout.viewmodel.CheckOutPayViewModel
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.activity.guest.propertydetails.model.Pagination
@@ -49,14 +52,21 @@ import com.business.zyvo.utils.ErrorDialog.calculatePercentage
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.formatDateyyyyMMddToMMMMddyyyy
+import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.PaymentViewModel
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.stripe.android.ApiResultCallback
+import com.stripe.android.Stripe
+import com.stripe.android.model.CardParams
+import com.stripe.android.model.Token
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.util.Objects
 
 @AndroidEntryPoint
 class CheckOutPayActivity : AppCompatActivity() {
@@ -345,7 +355,7 @@ class CheckOutPayActivity : AppCompatActivity() {
         val am_pm_list = listOf("AM","PM")
         val years = (2024..2050).toList()
         val yearsStringList = years.map { it.toString() }
-        Toast.makeText(this,"Year String List: "+yearsStringList.size,Toast.LENGTH_LONG).show()
+        //Toast.makeText(this,"Year String List: "+yearsStringList.size,Toast.LENGTH_LONG).show()
         val days = resources.getStringArray(R.array.day).toList()
 
 
@@ -542,24 +552,153 @@ class CheckOutPayActivity : AppCompatActivity() {
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            val month: TextView = findViewById(R.id.textMonth)
-            val year: TextView = findViewById(R.id.textYear)
+            val textMonth: TextView = findViewById(R.id.textMonth)
+            val textYear: TextView = findViewById(R.id.textYear)
+            val etCardNumber: EditText = findViewById(R.id.etCardNumber)
+            val etCardHolderName: EditText = findViewById(R.id.etCardHolderName)
             val submitButton: TextView = findViewById(R.id.textSubmitButton)
-            month.setOnClickListener {
+            val etStreet: EditText = findViewById(R.id.etStreet)
+            val etCity: EditText = findViewById(R.id.etCity)
+            val etState: EditText = findViewById(R.id.etState)
+            val etZipCode: EditText = findViewById(R.id.etZipCode)
+            val etCardCvv: EditText = findViewById(R.id.etCardCvv)
+            val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+            textMonth.setOnClickListener {
                 dateManager.showMonthSelectorDialog { selectedMonth ->
-                    month.text = selectedMonth
+                    textMonth.text = selectedMonth
                 }
-                year.setOnClickListener {
+                textYear.setOnClickListener {
                     dateManager.showYearPickerDialog { selectedYear ->
-                        year.text = selectedYear.toString()
+                        textYear.text = selectedYear.toString()
                     }
                 }
             }
             submitButton.setOnClickListener {
-                dismiss()
+                if (etCardHolderName.text.isEmpty()){
+                    showToast(this@CheckOutPayActivity,AppConstant.cardName)
+                }else if (textMonth.text.isEmpty()){
+                    showToast(this@CheckOutPayActivity,AppConstant.cardMonth)
+                }else if (textYear.text.isEmpty()){
+                    showToast(this@CheckOutPayActivity,AppConstant.cardYear)
+                }else if (etCardCvv.text.isEmpty()){
+                    showToast(this@CheckOutPayActivity,AppConstant.cardCVV)
+                }else {
+                 //   dismiss()
+                    LoadingUtils.showDialog(this@CheckOutPayActivity, false)
+                    val stripe = Stripe(this@CheckOutPayActivity, BuildConfig.STRIPE_KEY)
+                    var month: Int? = null
+                    var year: Int? = null
+                    val cardNumber: String =
+                        Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
+                    val cvvNumber: String =
+                        Objects.requireNonNull(etCardCvv.text.toString().trim()).toString()
+                    val name: String = etCardHolderName.text.toString().trim()
+                    month = dateManager.getMonthNumber(textMonth.text.toString())
+                    year = textYear.text.toString().toInt()
+                    val card = CardParams(
+                        cardNumber,
+                        Integer.valueOf(month!!),
+                        Integer.valueOf(year!!),
+                        cvvNumber,
+                        name)
+                    stripe?.createCardToken(card, null, null,
+                        object : ApiResultCallback<Token> {
+                        override fun onError(e: Exception) {
+                            Log.d("******  Token Error :-", "${e.message}")
+                            showErrorDialog(this@CheckOutPayActivity, e.message.toString())
+                            LoadingUtils.hideDialog()
+                        }
+
+                        override fun onSuccess(result: Token) {
+                            val id = result.id
+                            Log.d("******  Token payment :-", "data $id")
+                            LoadingUtils.hideDialog()
+                            saveCardStripe(dialog,id,checkBox.isChecked)
+
+                        }
+                    })
+                }
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
+            sameAsMailingAddress(etStreet,etCity,etState,etZipCode)
+
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun sameAsMailingAddress(etStreet:EditText,
+                                     etCity:EditText,
+                                     etState:EditText,
+                                     etZipCode:EditText) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                checkOutPayViewModel.sameAsMailingAddress(session?.getUserId().toString()).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                            val mailingAddress:MailingAddress = Gson().fromJson(resp,MailingAddress::class.java)
+                                mailingAddress?.let {
+                                   it.street_address?.let {
+                                       etStreet.setText(it)
+                                   }
+                                    it.city?.let {
+                                        etCity.setText(it)
+                                    }
+                                    it.state?.let {
+                                        etState.setText(it)
+                                    }
+                                    it.zip_code?.let {
+                                        etZipCode.setText(it)
+                                    }
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(this@CheckOutPayActivity, it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private fun saveCardStripe(dialog: Dialog,
+                               tokenId:String,
+                               saveasMail:Boolean) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                checkOutPayViewModel.saveCardStripe(session?.getUserId().toString(),
+                    tokenId).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                               dialog.dismiss()
+                                getUserCards()
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(this@CheckOutPayActivity, it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 

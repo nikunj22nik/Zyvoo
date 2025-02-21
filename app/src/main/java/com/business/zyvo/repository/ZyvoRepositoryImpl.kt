@@ -3154,7 +3154,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else if (code() == 400) {
-                    // emit(NetworkResult.Error("You have not added any payment method yet. Please add a card to proceed."))
+                     emit(NetworkResult.Error("You have not added any payment method yet. Please add a card to proceed."))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
@@ -3328,6 +3328,97 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         }
 
 
+    }
+
+
+    //Shrawan Call Api
+    override suspend fun sameAsMailingAddress(
+        userId: String
+    ): Flow<NetworkResult<JsonObject>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.sameAsMailingAddress(
+                userId
+            ).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(AuthTask.processData(resp))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                }else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun saveCardStripe(
+        userId: String,
+        token_stripe: String
+    ):  Flow<NetworkResult<Pair<String,String>>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.saveCardStripe(
+                userId,token_stripe
+            ).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
     }
 
 

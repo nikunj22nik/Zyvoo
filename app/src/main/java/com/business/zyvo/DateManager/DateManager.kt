@@ -273,7 +273,9 @@ fun getRangeSelectedDateWithYear(
 
 
 
-
+    fun getMonthNumber(monthName: String): Int? {
+        return months.indexOf(monthName).takeIf { it >= 0 }?.plus(1)
+    }
 
     fun showTimePickerDialog(context: Context, onTimeSelected: (String) -> Unit) {
         val calendar = Calendar.getInstance()

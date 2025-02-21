@@ -178,6 +178,14 @@ class AppConstant {
 
         val description = "Name is Description"
 
+        val cardName = "Card holder name is required"
+
+        val cardMonth = "Card month is required"
+
+        val cardYear = "Card year is required"
+
+        val cardCVV = "Card Cvv is required"
+
     }
 
 
