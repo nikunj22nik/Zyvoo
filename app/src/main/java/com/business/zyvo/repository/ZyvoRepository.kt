@@ -353,6 +353,8 @@ interface ZyvoRepository {
 
 
     suspend fun getUserCards(userId :String) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun logout(userId :String) : Flow<NetworkResult<String>>
 }
 
 

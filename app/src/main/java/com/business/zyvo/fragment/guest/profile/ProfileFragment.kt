@@ -15,6 +15,7 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
+import android.text.Html
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -686,7 +687,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     override fun itemClick(obj: Int, text: String, enteredText: String) {
         when (text) {
-            "locationOpen" -> {
+            "location" -> {
                 if (obj == locationList.size - 1) {
                     startLocationPicker()
                 }
@@ -2605,11 +2606,23 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
             findViewById<RelativeLayout>(R.id.rlYes).setOnClickListener {
-                val sessionManager = SessionManager(context)
-                sessionManager.setUserId(-1)
-                val intent = Intent(context, AuthActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                context.startActivity(intent)
+                lifecycleScope.launch {
+                    profileViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged()
+                        .collect{isConn ->
+                            if (!isConn){
+                                LoadingUtils.showErrorDialog(requireContext(),resources.getString(R.string.no_internet_dialog_msg))
+                            }else{
+                                logout()
+                            }
+
+                        }
+                }
+//                val sessionManager = SessionManager(context)
+//                sessionManager.setUserId(-1)
+//                val intent = Intent(context, AuthActivity::class.java)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                context.startActivity(intent)
                 dismiss()
             }
 
@@ -3085,4 +3098,33 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     }
 
 
+
+    private fun logout() {
+        lifecycleScope.launch {
+            profileViewModel.logout(session?.getUserId().toString()).collect{
+                when(it){
+
+                    is NetworkResult.Success -> {
+                        showErrorDialog(requireContext(),it.data!!)
+
+                        val sessionManager = SessionManager(requireContext())
+                        sessionManager.setUserId(-1)
+                        val intent = Intent(requireContext(), AuthActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        requireActivity().startActivity(intent)
+                    }
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(),it.message!!)
+
+                    }
+                    else ->{
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
 }
