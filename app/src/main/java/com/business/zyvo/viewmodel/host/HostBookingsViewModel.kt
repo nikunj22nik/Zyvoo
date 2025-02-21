@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.business.zyvo.AppConstant
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.model.MyBookingsModel
@@ -30,7 +31,14 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     var reviewlist :MutableList<Pair<Int,String>> = mutableListOf()
     var currentPage =1
     var filter = "recent_review"
-    var reviewListLiveData = MutableLiveData<MutableList<Pair<Int,String>>>()
+  //  pending,waiting_payment,confirmed,cancelled,finished
+   var reviewListLiveData = MutableLiveData<MutableList<Pair<Int,String>>>()
+    var pendingList = mutableListOf<MyBookingsModel>()
+    var waitingPaymentList = mutableListOf<MyBookingsModel>()
+    var confirmedList = mutableListOf<MyBookingsModel>()
+    var cancelledList = mutableListOf<MyBookingsModel>()
+    var finishedList = mutableListOf<MyBookingsModel>()
+    var finalList = mutableListOf<MyBookingsModel>()
 
     val list: LiveData<MutableList<MyBookingsModel>> get() = _list
 
@@ -38,7 +46,44 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     suspend fun load(userid: Int): Flow<NetworkResult<MutableList<MyBookingsModel>>> {
         return repository.getHostBookingList(userid).onEach {
             when (it) {
-                is NetworkResult.Success -> {}
+                is NetworkResult.Success -> {
+                    var data = it.data
+                    pendingList.clear()
+                    pendingList.clear()
+                    waitingPaymentList.clear()
+                    confirmedList.clear()
+                    cancelledList.clear()
+                    finishedList.clear()
+                    finalList.clear()
+                    it.data?.let {
+                        finalList = it
+                        _list.value = it
+                    }
+
+
+                    data?.forEach {
+                        when(it.booking_status) {
+
+                           AppConstant.PENDING ->{
+                             pendingList.add(it)
+                           }
+                            AppConstant.WAITING_PAYMENT ->{
+                                waitingPaymentList.add(it)
+                            }
+                            AppConstant.CONFIRMED ->{
+                                confirmedList.add(it)
+                            }
+                            AppConstant.CANCEL ->{
+                                cancelledList.add(it)
+                            }
+                            AppConstant.FINISHED ->{
+                                finishedList.add(it)
+                            }
+
+
+                        }
+                    }
+                }
                 is NetworkResult.Error -> {}
                 else -> {}
             }

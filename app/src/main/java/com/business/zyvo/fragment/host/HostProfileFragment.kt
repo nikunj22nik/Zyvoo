@@ -289,7 +289,7 @@ class HostProfileFragment : Fragment(),OnClickListener1, onItemClickData, OnClic
 
         addWorkAdapter.updateWork(workList)
 
-        addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this)
+        addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this,this)
         binding.recyclerViewlanguages.adapter = addLanguageSpeakAdapter
 
         addLanguageSpeakAdapter.updateLanguage(languageList)
@@ -577,12 +577,8 @@ class HostProfileFragment : Fragment(),OnClickListener1, onItemClickData, OnClic
 
     private fun paymentOpenCloseDropDown() {
         // Set initial drawable
-        binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(
-            0,
-            0,
-            R.drawable.ic_dropdown_close,
-            0
-        )
+        binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0,
+            0, R.drawable.ic_dropdown_close, 0)
 
         binding.textPaymentMethod.setOnClickListener {
             // Toggle the state
