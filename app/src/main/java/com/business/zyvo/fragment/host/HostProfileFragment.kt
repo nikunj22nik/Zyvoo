@@ -156,26 +156,32 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private val list2 = mutableListOf<CountryLanguage>()
 
 
-    private val startAutocomplete =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val intent = result.data
-                if (intent != null) {
-                    place = Autocomplete.getPlaceFromIntent(intent).name ?: "Unknown Location"
-                    etSearch?.text = place
-                    val newLocation = AddLocationModel(place)
-                    addLivePlace(newLocation.name)
 
-                    // Add the new location to the list and notify the adapter
-                    //    locationList.add(0, newLocation)
-                    //   addLocationAdapter.notifyItemInserted(0)
-                    Log.i(TAG, "Place: ${place}, ${place}")
-                }
-            } else if (result.resultCode == Activity.RESULT_CANCELED) {
-                // The user canceled the operation.
-                Log.i(TAG, "User canceled autocomplete")
+
+
+private val startAutocomplete =
+    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.let { intent ->
+                val place = Autocomplete.getPlaceFromIntent(intent)
+                val placeName = place.name ?: AppConstant.unknownLocation
+
+                Log.d("@@@@@", "Location: $placeName")
+
+                val newLocation = AddLocationModel(placeName)
+                addLivePlace(place_name = placeName)
+
+                // Update the list and notify adapter in one step
+                locationList.add(0, newLocation)
+                addLocationAdapter.notifyItemInserted(0)
+
+                Log.i(ErrorDialog.TAG, "Place: $placeName, ${place.id}")
             }
+        } else if (result.resultCode == Activity.RESULT_CANCELED) {
+            Log.i(ErrorDialog.TAG, "User canceled autocomplete")
         }
+    }
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -659,37 +665,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }
     }
 
-    /*
-    override fun itemClick(obj: Int, text: String, enteredText: String)  {
-        when (text) {
-            "location" -> {
-                if (obj == locationList.size - 1) {
-                    startLocationPicker()
-                }
-            }
 
-            "work" -> {
-                if (obj == workList.size - 1) {
-//                    var text: String = "Add Your Work Here"
-//                    dialogAddItem(text)
-                }
-            }
 
-            "language" -> {
-                if (obj == languageList.size - 1) {
-                    dialogSelectLanguage()
-                }
-            }
-
-            "Hobbies" -> {
-                if (obj == hobbiesList.size - 1) {
-                }
-            }
-
-        }
-    }
-
-     */
     override fun itemClick(obj: Int, text: String, enteredText: String) {
         when (text) {
             "location" -> {
@@ -697,6 +674,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     startLocationPicker()
                 }
             }
+
 
             "work" -> {
                 if (obj == workList.size - 1) {
@@ -734,7 +712,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
         }
     }
-
 
     override fun onClick(p0: View?) {
         when (p0?.id) {
@@ -795,7 +772,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
 
             R.id.textVisitHelpCenter -> {
-                var bundle = Bundle()
+                val bundle = Bundle()
                 bundle.putString(AppConstant.type, AppConstant.Host)
                 findNavController().navigate(R.id.helpCenterFragment_host, bundle)
             }
@@ -2221,11 +2198,23 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
 
             findViewById<RelativeLayout>(R.id.rlYes).setOnClickListener {
-                var sessionManager = SessionManager(context)
-                sessionManager.setUserId(-1)
-                var intent = Intent(context, AuthActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                context.startActivity(intent)
+                lifecycleScope.launch {
+                    profileViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged()
+                        .collect{isConn ->
+                            if (!isConn){
+                                LoadingUtils.showErrorDialog(requireContext(),resources.getString(R.string.no_internet_dialog_msg))
+                            }else{
+                                logout()
+                            }
+
+                        }
+                }
+//                var sessionManager = SessionManager(context)
+//                sessionManager.setUserId(-1)
+//                var intent = Intent(context, AuthActivity::class.java)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+//                context.startActivity(intent)
                 dismiss()
             }
 
@@ -2645,17 +2634,20 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
+
                                     LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                     val newLocation =
                                         AddLocationModel(place_name ?: "Unknown Location")
 
-                                    // Add the new location to the list and notify the adapter
-                                    locationList.add(0, newLocation)
+                                    // Prevent duplicates before adding
+                                    if (!locationList.any { it.name == place_name }) {
+                                        val newLocation = AddLocationModel(place_name)
 
-                                    //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
-                                    addLocationAdapter.notifyItemInserted(0)
-                                    //  addLocationAdapter.notifyItemInserted(locationList.size - 1)
-                                }
+                                        // Update the list and adapter safely
+                                        locationList.add(0, newLocation)
+                                        addLocationAdapter.updateLocations(locationList)
+                                    } }
+
                             }
 
                             is NetworkResult.Error -> {
@@ -2985,6 +2977,34 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }
     }
 
+    private fun logout() {
+        lifecycleScope.launch {
+            profileViewModel.logout(session?.getUserId().toString()).collect{
+                when(it){
+
+                    is NetworkResult.Success -> {
+                        showErrorDialog(requireContext(),it.data!!)
+
+                        val sessionManager = SessionManager(requireContext())
+                        sessionManager.setUserId(-1)
+                        val intent = Intent(requireContext(), AuthActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        requireActivity().startActivity(intent)
+                    }
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(),it.message!!)
+
+                    }
+                    else ->{
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
 
 }
 

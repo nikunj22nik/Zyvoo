@@ -355,6 +355,7 @@ interface ZyvoRepository {
     suspend fun getUserCards(userId :String) : Flow<NetworkResult<JsonObject>>
 
 
+
     suspend fun reviewGuest(
          userId :Int,
          bookingId :Int,
@@ -365,6 +366,9 @@ interface ZyvoRepository {
          reviewMessage :String
     )  : Flow<NetworkResult<String>>
 
+
+
+    suspend fun logout(userId :String) : Flow<NetworkResult<String>>
 
 }
 

@@ -45,7 +45,12 @@ class AdapterInnerPlaceOrder(private var list: List<String>) :
                  val tint = ColorStateList.valueOf(android.graphics.Color.parseColor("#008000")) // Red color
                  holder.binding.subtraO14.setBackgroundTintList(tint)
              }
+
+
+
         }
+
+
     }
 
 }

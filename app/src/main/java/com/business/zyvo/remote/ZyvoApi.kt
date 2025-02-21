@@ -467,6 +467,11 @@ interface ZyvoApi {
     suspend fun getUserCards(
         @Field("userId") userId : String) :Response<JsonObject>
 
+    @POST("logout")
+    @FormUrlEncoded
+    suspend fun logout(
+        @Field("user_id") user_id : String) :Response<JsonObject>
+
 
     @POST("review_guest")
     @FormUrlEncoded
