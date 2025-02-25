@@ -12,6 +12,7 @@ data class HostMyPlacesModel(
     val longitude: String?,
     val profile_image: Any,
     val property_id: Int,
+    val property_status: String?,
     val property_images : List<String>,
     val property_rating : String,
     val property_review_count : String,

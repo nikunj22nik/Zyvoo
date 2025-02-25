@@ -3,7 +3,6 @@ package com.business.zyvo.fragment.host
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -11,7 +10,6 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -66,7 +64,6 @@ import com.business.zyvo.OnLocalListener
 import com.business.zyvo.R
 import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
-import com.business.zyvo.activity.PlaceOpenActivity
 import com.business.zyvo.adapter.AddHobbiesAdapter
 import com.business.zyvo.adapter.AddLanguageSpeakAdapter
 import com.business.zyvo.adapter.AddLocationAdapter
@@ -719,7 +716,8 @@ private val startAutocomplete =
             }
 
             R.id.textCreateList -> {
-                startActivity(Intent(requireActivity(), PlaceOpenActivity::class.java))
+              //  startActivity(Intent(requireActivity(), PlaceOpenActivity::class.java))
+
             }
             R.id.textPrivacyPolicy -> {
                 val bundle = Bundle()

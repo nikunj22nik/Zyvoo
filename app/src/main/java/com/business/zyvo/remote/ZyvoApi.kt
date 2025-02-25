@@ -489,5 +489,22 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun getChatToken(@Field("user_id") user_Id:Int,@Field("role") role :String) : Response<JsonObject>
 
+    @POST("property_booking_details")
+    @FormUrlEncoded
+    suspend fun propertyBookingDetails(
+        @Field("property_id") property_id : String,
+        @Field("user_id") user_id : String,
+        @Field("start_date") start_date : String,
+        @Field("end_date") end_date : String,
+        @Field("latitude") latitude : String,
+        @Field("longitude") longitude : String,
+    ) :Response<JsonObject>
 
+
+    @POST("toggle_property_booking")
+    @FormUrlEncoded
+    suspend fun togglePropertyBooking(
+        @Field("property_id") property_id : String,
+        @Field("user_id") user_id : String
+    ) :Response<JsonObject>
 }

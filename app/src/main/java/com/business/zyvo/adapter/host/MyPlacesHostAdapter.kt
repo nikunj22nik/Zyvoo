@@ -108,6 +108,9 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         holder.binding.imageAddWish.setOnClickListener {
             showPopupWindow(holder.binding.imageAddWish,position)
         }
+        holder.itemView.setOnClickListener {
+            mListener.onItemClick(list.get(position),AppConstant.placeOpenActivity)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -134,8 +137,6 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
             dialogDelete(position)
-
-
             popupWindow.dismiss()
         }
 
