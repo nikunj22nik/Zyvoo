@@ -6,6 +6,11 @@ import com.business.zyvo.model.CountryLanguage
 class AppConstant {
 
     companion object {
+        val FRIEND_ID: String? ="FRIENDiD"
+        val CHANNEL_NAME: String? ="Channel_Name"
+        val GUEST_ID: String? ="GUEST_ID"
+        val HOST_ID :String? = "HOST_ID"
+        val CHAT_TOKEN: String? ="chat_token"
         val PENDING: String ="pending"
         val WAITING_PAYMENT ="waiting_payment"
         val CONFIRMED ="confirmed"

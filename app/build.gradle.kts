@@ -121,7 +121,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:21.1.1")
 
-
+    implementation("com.twilio:conversations-android:1.4.1")
+    implementation("com.getkeepsafe.relinker:relinker:1.4.4") // Explicitly include Relinker
 
 
 

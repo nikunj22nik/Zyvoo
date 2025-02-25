@@ -3455,6 +3455,31 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         }
     }
 
+
+    override suspend fun getChatToken(userId :Int,role:String) :Flow<NetworkResult<String>> = flow{
+        try {
+            api.getChatToken(userId,role).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            var obj = resp.get("data").asJsonObject
+                            var token = obj.get("token").asString
+                            emit(NetworkResult.Success<String>(token))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+
+
 }
 
 

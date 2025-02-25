@@ -9,15 +9,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import com.business.zyvo.AppConstant
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.databinding.ActivityHostMainBinding
+import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.viewmodel.GuestMainActivityModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
 
     lateinit var binding : ActivityHostMainBinding
+    lateinit var guestViewModel : GuestMainActivityModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +38,7 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        guestViewModel = ViewModelProvider(this)[GuestMainActivityModel::class.java]
 
         binding.imageProperties.setImageResource(R.drawable.ic_select_home)
         binding.tvProperties.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
@@ -37,8 +47,35 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         binding.navigationBookings.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
 
+        callingGetUserToken()
+        var sessionManager = SessionManager(this)
+        sessionManager.setUserType(AppConstant.Host)
 //        val currentDestination = findNavController().currentDestination
 //        Log.d("NAVIGATION_DEBUG", "Current Destination: $currentDestination")
+
+    }
+
+
+    private fun callingGetUserToken() {
+        var sessionManager = SessionManager(this)
+        var userId = sessionManager.getUserId()
+        userId?.let {
+            lifecycleScope.launch {
+                guestViewModel.getChatToken(it, "host").collect {
+                    when(it){
+                        is NetworkResult.Success ->{
+                            it.data?.let { it1 -> sessionManager.setChatToken(it1) }
+                        }
+                        is NetworkResult.Error ->{
+
+                        }
+                        else ->{
+
+                        }
+                    }
+                }
+            }
+        }
 
     }
 

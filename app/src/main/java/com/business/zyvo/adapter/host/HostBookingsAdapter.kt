@@ -79,7 +79,6 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
 
                     override fun onTextChanged(charSequence: CharSequence, start: Int, before: Int, count: Int) {
                         reason = charSequence.toString()
-
                         binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
                         binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
                     }

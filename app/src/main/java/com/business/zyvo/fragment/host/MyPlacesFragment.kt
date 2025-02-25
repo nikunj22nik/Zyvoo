@@ -122,7 +122,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                          }
                          is NetworkResult.Error ->{
                              LoadingUtils.hideDialog()
-                             LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                             LoadingUtils.showSuccessDialog(requireContext(),it.message.toString())
                          }
                          else ->{
 
@@ -200,7 +200,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                         }
                         is NetworkResult.Error ->{
                             LoadingUtils.hideDialog()
-                            LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                            LoadingUtils.showSuccessDialog(requireContext(),it.message.toString())
                         }
                         else ->{
                             LoadingUtils.hideDialog()

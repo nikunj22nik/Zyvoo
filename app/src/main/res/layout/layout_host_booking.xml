@@ -57,7 +57,8 @@
             android:maxLines="1"
             android:text="Katelyn Francy"
             android:textColor="@color/black"
-            android:textSize="@dimen/_13ssp"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/imagePicture"
             app:layout_constraintTop_toTopOf="parent" />
         <LinearLayout
@@ -68,8 +69,11 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/imagePicture"
-            app:layout_constraintTop_toBottomOf="@+id/fl"
-            android:layout_marginBottom="@dimen/_4sdp">
+            app:layout_constraintBottom_toTopOf="@+id/fl"
+            app:layout_constraintTop_toBottomOf="@id/textName"
+            android:visibility="gone"
+
+            android:layout_marginBottom="@dimen/_10sdp">
 
 
             <TextView
@@ -99,14 +103,15 @@
             android:id="@+id/fl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             app:alignItems="center"
             app:flexDirection="row"
             app:flexWrap="wrap"
+            android:layout_marginVertical="@dimen/_5sdp"
             app:justifyContent="flex_start"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/imagePicture"
-            app:layout_constraintTop_toBottomOf="@+id/textName">
+            app:layout_constraintTop_toBottomOf="@+id/llApproveAndDecline">
 
             <TextView
                 android:id="@+id/textStatus"
@@ -132,7 +137,7 @@
                 android:maxLines="1"
                 android:text="October 22, 2023"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp" />
+                android:textSize="@dimen/_11ssp" />
         </com.google.android.flexbox.FlexboxLayout>
 
 

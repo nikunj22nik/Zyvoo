@@ -402,14 +402,11 @@ private val startAutocomplete =
                             var name = ""
                             LoadingUtils.hideDialog()
                             it.data?.let { resp ->
-                                Log.d(
-                                    "TESTING_PROFILE", "HERE IN A USER PROFILE ," + resp.toString()
-                                )
+                                Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ," + resp.toString())
                                 userProfile = Gson().fromJson(resp, UserProfile::class.java)
                                 userProfile.let {
                                     if (it?.first_name != null && it.last_name != null) {
-                                        name =
-                                            it.first_name + " " + it.last_name
+                                        name = it.first_name + " " + it.last_name
                                     }
                                     it?.name = name
                                     binding.user = it
@@ -724,7 +721,6 @@ private val startAutocomplete =
             R.id.textCreateList -> {
                 startActivity(Intent(requireActivity(), PlaceOpenActivity::class.java))
             }
-
             R.id.textPrivacyPolicy -> {
                 val bundle = Bundle()
                 bundle.putInt("privacy", 1)
@@ -732,10 +728,8 @@ private val startAutocomplete =
             }
             R.id.rlPasswordTitle -> {
                 val text = "Your password has been changed successfully"
-
                 dialogNewPassword(requireContext(), text)
             }
-
             R.id.textTermServices -> {
                 val bundle = Bundle()
                 bundle.putInt("privacy", 1)
@@ -2164,14 +2158,14 @@ private val startAutocomplete =
 
             findViewById<TextView>(R.id.text).text = text
             findViewById<TextView>(R.id.textOkayButton).setOnClickListener {
-                if (text == "Your account is registered \nsuccessfully") {
-
-                    Log.d("Navigation", "Navigating to turnNotificationsFragment")
-                    navController?.navigate(R.id.turnNotificationsFragment)
-
-                } else if (text == "Your password has been changed\n" + " successfully.") {
-                    dialogLoginEmail(context)
-                }
+//                if (text == "Your account is registered \nsuccessfully") {
+//
+//                    Log.d("Navigation", "Navigating to turnNotificationsFragment")
+//                    navController?.navigate(R.id.turnNotificationsFragment)
+//
+//                } else if (text == "Your password has been changed\n" + " successfully.") {
+//                    dialogLoginEmail(context)
+//                }
                 dismiss()
             }
 
@@ -2419,7 +2413,7 @@ private val startAutocomplete =
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
-                                    showErrorDialog(requireContext(), resp.first)
+                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                 }
                             }
 
@@ -2458,7 +2452,7 @@ private val startAutocomplete =
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
-                                    showErrorDialog(requireContext(), resp.first)
+                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.name = first_name + " " + last_name
                                     binding.user = userProfile
                                 }
@@ -2510,7 +2504,7 @@ private val startAutocomplete =
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "item removed",
+                                                    "Place removed",
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -2554,7 +2548,7 @@ private val startAutocomplete =
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "item removed",
+                                                    "My Work Place Removed",
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -2691,7 +2685,7 @@ private val startAutocomplete =
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "item added successfully",
+                                                    "Work added successfully",
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -2953,11 +2947,7 @@ private val startAutocomplete =
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "State added successfully",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+                                                Toast.makeText(requireContext(), "Zipcode added successfully", Toast.LENGTH_SHORT).show()
                                             }
                                         }
 
@@ -2983,7 +2973,7 @@ private val startAutocomplete =
                 when(it){
 
                     is NetworkResult.Success -> {
-                        showErrorDialog(requireContext(),it.data!!)
+                        LoadingUtils.showSuccessDialog(requireContext(),it.data!!)
 
                         val sessionManager = SessionManager(requireContext())
                         sessionManager.setUserId(-1)

@@ -21,6 +21,15 @@ class SessionManager(var context: Context) {
         editor!!.commit()
     }
 
+    fun setChatToken(token :String){
+        editor!!.putString(AppConstant.CHAT_TOKEN, token)
+        editor!!.commit()
+    }
+
+    fun getChatToken() : String? {
+        return pref?.getString(AppConstant.CHAT_TOKEN,"")
+    }
+
 
     fun getUserType():String?{
         return pref?.getString(AppConstant.USER,"")

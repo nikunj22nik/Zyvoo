@@ -1,6 +1,7 @@
 package com.business.zyvo.activity
 
 import android.os.Bundle
+import android.telephony.NetworkScan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,27 +10,35 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.databinding.ActivityGuesMainBinding
+import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.business.zyvo.viewmodel.GuestMainActivityModel
+import com.business.zyvo.viewmodel.LoggedScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class GuesMain : AppCompatActivity() ,OnClickListener {
+class GuesMain : AppCompatActivity(), OnClickListener {
 
-    lateinit var binding : ActivityGuesMainBinding
+    lateinit var binding: ActivityGuesMainBinding
+    lateinit var guestViewModel: GuestMainActivityModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-     //  enableEdgeToEdge()
+        //  enableEdgeToEdge()
         binding = ActivityGuesMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
-
+        guestViewModel = ViewModelProvider(this)[GuestMainActivityModel::class.java]
         binding.navigationDiscover.setOnClickListener(this)
         binding.navigationInbox.setOnClickListener(this)
         binding.navigationBookings.setOnClickListener(this)
@@ -50,7 +59,8 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
             )
             insets
         }
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView_main) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView_main) as NavHostFragment
         val navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -59,17 +69,60 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
             }
         }
         observeButtonState()
-}
+        callingGetUserToken()
+        var sessionManager = SessionManager(this)
+        sessionManager.setUserType(AppConstant.Guest)
+    }
+
+    private fun callingGetUserToken() {
+        var sessionManager = SessionManager(this)
+        var userId = sessionManager.getUserId()
+        userId?.let {
+            lifecycleScope.launch {
+                Log.d("TESTING_TOKEN", "HERE INSISE THE TOKEN")
+                guestViewModel.getChatToken(it, "guest").collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            Log.d("TESTING_TOKEN", "HERE SUCEESS THE TOKEN")
+
+                            it.data?.let { it1 ->
+                                {
+                                    Log.d(
+                                        "TESTING_TOKEN",
+                                        "HERE SUCEESS THE TOKEN" + it1.toString()
+                                    )
+
+                                    sessionManager.setChatToken(it1)
+                                }
+                            }
+                        }
+
+                        is NetworkResult.Error -> {
+                            Log.d("TESTING_TOKEN", "HERE ERROR THE TOKEN")
+
+                        }
+
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 
     override fun onResume() {
         super.onResume()
-        Log.d("TESTING_ZYVO","I am in the on resume")
-        if (intent!=null) {
-            var status:String= intent.getStringExtra("key_name").toString()
-            Log.d("TESTING_ZYVO12","I"+status)
-            if(status.equals("12345")) {
+
+
+        Log.d("TESTING_ZYVO", "I am in the on resume")
+        if (intent != null) {
+            var status: String = intent.getStringExtra("key_name").toString()
+            Log.d("TESTING_ZYVO12", "I" + status)
+            if (status.equals("12345")) {
                 bookingResume()
-      findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
             }
         }
     }
@@ -80,23 +133,21 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
     }
 
     private fun showBottomNavigation() {
-       binding.lay1.visibility = View.VISIBLE
+        binding.lay1.visibility = View.VISIBLE
     }
 
     private fun hideBottomNavigation() {
-       binding.lay1.visibility = View.GONE
+        binding.lay1.visibility = View.GONE
     }
 
 
-
-     fun inboxColor(){
+    fun inboxColor() {
 
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
         binding.imageInbox.setImageResource(R.drawable.ic_chat_selected)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
         binding.imageWishlist.setImageResource(R.drawable.ic_wishlist)
         binding.imageProfile.setImageResource(R.drawable.ic_profile)
-
 
 
         //text Color
@@ -109,7 +160,7 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
     }
 
 
-     fun wishlistColor(){
+    fun wishlistColor() {
 
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
@@ -125,7 +176,7 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
 
     }
 
-     fun profileColor(){
+    fun profileColor() {
 
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
@@ -141,9 +192,10 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
 
 
     }
-     fun bookingResume(){
 
-        Log.d("TESTING_ZYVOO","i AM HERE IN A BOOKING")
+    fun bookingResume() {
+
+        Log.d("TESTING_ZYVOO", "i AM HERE IN A BOOKING")
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1_unselected)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1_selected)
@@ -158,7 +210,8 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
 
     }
-     fun discoverResume(){
+
+    fun discoverResume() {
         //image color
 
 
@@ -178,26 +231,29 @@ class GuesMain : AppCompatActivity() ,OnClickListener {
     }
 
 
-
     override fun onClick(p0: View?) {
-        when(p0?.id){
-            R.id.navigationDiscover->{
+        when (p0?.id) {
+            R.id.navigationDiscover -> {
                 discoverResume()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.guest_fragment)
             }
-            R.id.navigationInbox->{
+
+            R.id.navigationInbox -> {
                 inboxColor()
-               findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
             }
-            R.id.navigationBookings->{
+
+            R.id.navigationBookings -> {
                 bookingResume()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
             }
-            R.id.navigationWishlist->{
+
+            R.id.navigationWishlist -> {
                 wishlistColor()
-               findNavController(R.id.fragmentContainerView_main).navigate(R.id.wishlistFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.wishlistFragment)
             }
-            R.id.icProfile->{
+
+            R.id.icProfile -> {
                 profileColor()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
             }

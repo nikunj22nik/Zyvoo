@@ -291,6 +291,7 @@
 
                             <!-- Image Placeholder -->
                             <ImageView
+                                android:id="@+id/img_profile_hotel"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:scaleType="centerCrop"
@@ -662,71 +663,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Image Grid -->
 
-                <!--                <androidx.constraintlayout.widget.ConstraintLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginHorizontal="@dimen/_10sdp"-->
-                <!--                    android:layout_marginTop="16dp"-->
-                <!--                    android:layout_marginBottom="16dp"-->
-                <!--                    android:background="@drawable/bg_type_manage_place"-->
-                <!--                    android:backgroundTint="@color/white">-->
-
-
-                <!--                    <com.google.android.material.imageview.ShapeableImageView-->
-                <!--                        android:id="@+id/imageView1"-->
-                <!--                        android:layout_width="0dp"-->
-                <!--                        android:layout_height="0dp"-->
-                <!--                        android:background="@drawable/right_radius_bg"-->
-                <!--                        android:scaleType="centerCrop"-->
-                <!--                        android:src="@drawable/ic_image_for_viewpager"-->
-                <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-
-                <!--                        app:layout_constraintEnd_toStartOf="@+id/imageView2"-->
-                <!--                        app:layout_constraintStart_toStartOf="parent"-->
-                <!--                        app:layout_constraintTop_toTopOf="parent"-->
-                <!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded1" />-->
-
-
-                <!--                    &lt;!&ndash; Large Image (Left) &ndash;&gt;-->
-
-
-                <!--                    &lt;!&ndash; Top Right Image &ndash;&gt;-->
-                <!--                    <com.google.android.material.imageview.ShapeableImageView-->
-                <!--                        android:id="@+id/imageView2"-->
-                <!--                        android:layout_width="0dp"-->
-                <!--                        android:layout_height="0dp"-->
-                <!--                        android:layout_marginStart="@dimen/_10sdp"-->
-                <!--                        android:layout_marginBottom="@dimen/_5sdp"-->
-                <!--                        android:scaleType="centerCrop"-->
-                <!--                        android:src="@drawable/ic_image_for_viewpager"-->
-                <!--                        app:layout_constraintBottom_toTopOf="@+id/imageView3"-->
-                <!--                        app:layout_constraintDimensionRatio="1:1"-->
-                <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                        app:layout_constraintStart_toEndOf="@id/imageView1"-->
-                <!--                        app:layout_constraintTop_toTopOf="parent"-->
-                <!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />-->
-
-                <!--                    &lt;!&ndash; Bottom Right Image &ndash;&gt;-->
-                <!--                    <com.google.android.material.imageview.ShapeableImageView-->
-                <!--                        android:id="@+id/imageView3"-->
-                <!--                        android:layout_width="0dp"-->
-                <!--                        android:layout_height="0dp"-->
-                <!--                        android:layout_marginStart="@dimen/_10sdp"-->
-                <!--                        android:layout_marginTop="@dimen/_5sdp"-->
-                <!--                        android:scaleType="centerCrop"-->
-                <!--                        android:src="@drawable/ic_image_for_viewpager"-->
-                <!--                        app:layout_constraintBottom_toBottomOf="parent"-->
-                <!--                        app:layout_constraintDimensionRatio="1:1"-->
-                <!--                        app:layout_constraintEnd_toEndOf="parent"-->
-                <!--                        app:layout_constraintStart_toEndOf="@id/imageView1"-->
-                <!--                        app:layout_constraintTop_toBottomOf="@id/imageView2"-->
-                <!--                        app:shapeAppearanceOverlay="@style/SpecificCornerRounded" />-->
-                <!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-
-                <!-- Divider -->
 
 
                 <LinearLayout
@@ -734,6 +671,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:weightSum="1"
+                    android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     >
@@ -770,6 +708,7 @@
                             android:background="@drawable/rounded_right_corners"
                             >
                             <ImageView
+                                android:id="@+id/img1"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/_72sdp"
                                 android:src="@drawable/ic_dummy_img_2"
@@ -787,6 +726,7 @@
                             android:layout_marginTop="@dimen/_4sdp"
                             >
                             <ImageView
+                                android:id="@+id/img2"
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/_75sdp"
                                 android:src="@drawable/ic_dummy_img_3"
@@ -799,6 +739,72 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_two_img_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="1"
+                    android:visibility="gone"
+                    android:layout_margin="@dimen/_10sdp"
+
+                    >
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.45"
+                        >
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/shapeableImageView_2_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_155sdp"
+                            android:src="@drawable/ic_dummy_img_1"
+                            android:scaleType="fitXY"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.05"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.45"
+
+                        >
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/shapeableImageView_2_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_155sdp"
+                            android:src="@drawable/ic_dummy_img_1"
+                            android:scaleType="fitXY"
+
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            app:shapeAppearanceOverlay="@style/RoundedCorners"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_single_img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    >
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/shapeableImageView_1_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_155sdp"
+                        android:src="@drawable/ic_dummy_img_1"
+                        android:scaleType="fitXY"
+                        />
+
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"

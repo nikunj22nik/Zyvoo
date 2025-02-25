@@ -485,6 +485,9 @@ interface ZyvoApi {
                  @Field("review_message") reviewMessage :String
      ) : Response<JsonObject>
 
+    @POST("chat_token")
+    @FormUrlEncoded
+    suspend fun getChatToken(@Field("user_id") user_Id:Int,@Field("role") role :String) : Response<JsonObject>
 
 
 }

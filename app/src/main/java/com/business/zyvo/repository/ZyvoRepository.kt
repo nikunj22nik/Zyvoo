@@ -370,6 +370,9 @@ interface ZyvoRepository {
 
     suspend fun logout(userId :String) : Flow<NetworkResult<String>>
 
+    suspend fun getChatToken(userId :Int,role :String) :Flow<NetworkResult<String>>
+
+
 }
 
 

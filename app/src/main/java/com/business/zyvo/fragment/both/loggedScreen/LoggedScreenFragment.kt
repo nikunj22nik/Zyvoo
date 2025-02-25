@@ -313,11 +313,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 countyCodePicker.selectedCountryCodeWithPlus
                             Log.d(TAG, countryCode)
                             submitLogin(
-                                countryCode,
-                                phoneNumber,
-                                dialog,
-                                textContinueButton,
-                                checkBox
+                                countryCode, phoneNumber, dialog, textContinueButton, checkBox
                             )
                         }
                     }
