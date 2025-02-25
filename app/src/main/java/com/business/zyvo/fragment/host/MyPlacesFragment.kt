@@ -23,7 +23,6 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
-import com.business.zyvo.activity.PlaceOpenActivity
 import com.business.zyvo.adapter.host.MyPlacesHostAdapter
 import com.business.zyvo.databinding.FragmentMyPlacesBinding
 import com.business.zyvo.locationManager.LocationHelper
@@ -34,7 +33,6 @@ import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.viewmodel.host.MyPlaceViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.util.jar.Manifest
 
 
 @AndroidEntryPoint
@@ -59,23 +57,55 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // Inflate the layout for this fragment
 
         binding = FragmentMyPlacesBinding.inflate(LayoutInflater.from(requireContext()))
         adapter = MyPlacesHostAdapter(requireContext(), mutableListOf())
         binding.recyclerMyPlaces.adapter = adapter
-        adapter.setOnItemClickListener(object :MyPlacesHostAdapter.onItemClickListener{
-            override fun onItemClick(position: HostMyPlacesModel,type: String) {
-                if(type.equals(AppConstant.DELETE)){
+        adapter.setOnItemClickListener(object : MyPlacesHostAdapter.onItemClickListener {
+            override fun onItemClick(position: HostMyPlacesModel, type: String) {
+                if (type.equals(AppConstant.DELETE)) {
 
-                     deleteProperty(position.property_id)
-                }else {
+                    deleteProperty(position.property_id)
+                } else if (type.equals(AppConstant.EDIT)) {
                     val bundle = Bundle()
                     val id = position.property_id
-                    Log.d("TESTING_ID",id.toString())
+                    Log.d("TESTING_ID", id.toString())
                     bundle.putInt(AppConstant.PROPERTY_ID, id)
-                    findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag, bundle)
+                    findNavController().navigate(
+                        R.id.host_fragment_property_to_host_manage_property_frag,
+                        bundle
+                    )
+                } else if (type.equals(AppConstant.placeOpenActivity)) {
+                    val property_images = position.property_images[0]
+                    val latitude = position.latitude
+                    val longitude = position.longitude
+                    val property_rating = position.property_rating
+                    val property_status = position.property_status
+                    val property_review_count = position.property_review_count
+                    val distance_miles = position.distance_miles
+                    val title = position.title
+
+                    val bundle = Bundle().apply {
+                        putString(AppConstant.PROPERTY_ID, position.property_id.toString())
+                        putString(AppConstant.property_images, property_images.toString())
+                        putString(AppConstant.latitude, latitude)
+                        putString(AppConstant.longitude, longitude)
+                        putString(AppConstant.property_rating, property_rating)
+                        putString(AppConstant.property_status, property_status)
+                        putString(AppConstant.property_review_count, property_review_count)
+                        putString(AppConstant.distance_miles, distance_miles)
+                        putString(AppConstant.title, title)
+
+                    }
+                    findNavController().navigate(R.id.placeOpenFragment, bundle)
+
+
                 }
             }
         })
@@ -84,8 +114,8 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         binding.recyclerMyPlaces.isNestedScrollingEnabled = false
 
         binding.floatingIcon.setOnClickListener {
-             findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag)
-         }
+            findNavController().navigate(R.id.host_fragment_property_to_host_manage_property_frag)
+        }
 
         binding.imgFilter.setOnClickListener(this)
         binding.rlAddNewPlace.setOnClickListener(this)
@@ -96,9 +126,9 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         initialization()
 
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    requireActivity().finishAffinity()
-                }
+            override fun handleOnBackPressed() {
+                requireActivity().finishAffinity()
+            }
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
@@ -107,28 +137,30 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
 
     private fun deleteProperty(propertyId: Int) {
         lifecycleScope.launch {
-            Log.d("TESTING_PROPERTY_ID",propertyId.toString())
-            LoadingUtils.showDialog(requireContext(),false)
-             myPlaceViewModel.deleteProperty(propertyId).collect{
-                 when (it) {
-                         is NetworkResult.Success ->{
-                             LoadingUtils.hideDialog()
-                             Log.d("TESTING_PROPERTY_ID",propertyId.toString())
-                             var pp =placesList.filter {
-                                 it.property_id != propertyId
-                             }
+            Log.d("TESTING_PROPERTY_ID", propertyId.toString())
+            LoadingUtils.showDialog(requireContext(), false)
+            myPlaceViewModel.deleteProperty(propertyId).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        LoadingUtils.hideDialog()
+                        Log.d("TESTING_PROPERTY_ID", propertyId.toString())
+                        var pp = placesList.filter {
+                            it.property_id != propertyId
+                        }
 
-                             adapter.updateData(pp.toMutableList())
-                         }
-                         is NetworkResult.Error ->{
-                             LoadingUtils.hideDialog()
-                             LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
-                         }
-                         else ->{
+                        adapter.updateData(pp.toMutableList())
+                    }
 
-                         }
-                     }
-             }
+                    is NetworkResult.Error -> {
+                        LoadingUtils.hideDialog()
+                        LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
+                    }
+
+                    else -> {
+
+                    }
+                }
+            }
         }
     }
 
@@ -151,7 +183,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     }
 
 
-    private fun locationTask(){
+    private fun locationTask() {
         locationHelper = LocationHelper(requireContext())
 
         // Check if location permission is granted
@@ -165,44 +197,45 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
 
                     sessionManager.setLatitude(latitude.toString())
                     sessionManager.setLongitude(longitude.toString())
-                    myPlaceApi(latitude,longitude)
+                    myPlaceApi(latitude, longitude)
                 } else {
-                   myPlaceApi(null,null)
+                    myPlaceApi(null, null)
                 }
             }
-        }
-        else {
+        } else {
             permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
             //  locationHelper.requestLocationPermission(requireActivity())
         }
     }
 
-    private fun myPlaceApi(latitude:Double?,longitude:Double?) {
+    private fun myPlaceApi(latitude: Double?, longitude: Double?) {
         var userId = SessionManager(requireContext()).getUserId()
-        LoadingUtils.showDialog(requireContext(),false)
+        LoadingUtils.showDialog(requireContext(), false)
         lifecycleScope.launch {
             if (userId != null) {
-                myPlaceViewModel.getMyPlaces(userId,latitude,longitude).collect{
-                    when(it){
-                        is NetworkResult.Success ->{
+                myPlaceViewModel.getMyPlaces(userId, latitude, longitude).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
                             it.data?.let { it1 ->
-                                placesList= it.data.first
-                               if(it1.first.size <3){
-                                   binding.floatingIcon.visibility =View.GONE
-                               }else{
-                                   binding.floatingIcon.visibility = View.VISIBLE
-                               }
+                                placesList = it.data.first
+                                if (it1.first.size < 3) {
+                                    binding.floatingIcon.visibility = View.GONE
+                                } else {
+                                    binding.floatingIcon.visibility = View.VISIBLE
+                                }
                                 binding.rlPrice.visibility = View.VISIBLE
                                 binding.tvTxt.setText(it1.second.toString())
                                 adapter.updateData(it1.first)
                                 LoadingUtils.hideDialog()
                             }
                         }
-                        is NetworkResult.Error ->{
+
+                        is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
-                            LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                            LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
                         }
-                        else ->{
+
+                        else -> {
                             LoadingUtils.hideDialog()
 
                         }
@@ -216,8 +249,12 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
 
     private fun loadImages(): MutableList<ViewpagerModel> {
         val images = mutableListOf<ViewpagerModel>(
-            ViewpagerModel(R.drawable.ic_image_for_viewpager), ViewpagerModel(R.drawable.ic_image_for_viewpager), ViewpagerModel(R.drawable.ic_image_for_viewpager),
-            ViewpagerModel(R.drawable.ic_image_for_viewpager), ViewpagerModel(R.drawable.image_hotel), ViewpagerModel(R.drawable.image_hotel),
+            ViewpagerModel(R.drawable.ic_image_for_viewpager),
+            ViewpagerModel(R.drawable.ic_image_for_viewpager),
+            ViewpagerModel(R.drawable.ic_image_for_viewpager),
+            ViewpagerModel(R.drawable.ic_image_for_viewpager),
+            ViewpagerModel(R.drawable.image_hotel),
+            ViewpagerModel(R.drawable.image_hotel),
             ViewpagerModel(R.drawable.image_hotel)
         )
         return images
@@ -245,15 +282,23 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                 }
             } else {
                 // Permission denied, show a message
-                Toast.makeText(requireContext(), "Location permission is required.", Toast.LENGTH_SHORT).show()
-                   myPlaceApi(null,null)
+                Toast.makeText(
+                    requireContext(),
+                    "Location permission is required.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                myPlaceApi(null, null)
             }
         }
 
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-         Log.d("TESTING","Inside ZYVOO Permission")
+        Log.d("TESTING", "Inside ZYVOO Permission")
         // Check if the permission is granted
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Permission granted, proceed with fetching the location
@@ -261,7 +306,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
 
             locationHelper.getLocationInBackground(lifecycle) { location ->
                 if (location != null) {
-                    Log.d("TESTING","Inside Location not null")
+                    Log.d("TESTING", "Inside Location not null")
                     val latitude = location.latitude
                     val longitude = location.longitude
                     // Call the API with the location
@@ -272,7 +317,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                     sessionManager.setLongitude(longitude.toString())
                     myPlaceApi(latitude, longitude)
                 } else {
-                    Log.d("TESTING","Inside Location  null")
+                    Log.d("TESTING", "Inside Location  null")
                     // Call the API with null values if location is null
                     myPlaceApi(null, null)
                 }
@@ -280,7 +325,8 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         } else {
             // Permission denied, handle accordingly
             // You can show a message to the user explaining that the permission is required
-            Toast.makeText(requireContext(), "Location permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Location permission denied", Toast.LENGTH_SHORT)
+                .show()
         }
 
 
@@ -301,7 +347,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         // Set click listeners for each menu item in the popup layout
 
         popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
-           totalEarningApi()
+            totalEarningApi()
             popupWindow.dismiss()
         }
 
@@ -357,49 +403,53 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     }
 
     private fun futureEarningApi() {
-       lifecycleScope.launch {
-           var sessionManager:SessionManager = SessionManager(requireContext())
-           var hostId = sessionManager.getUserId()
-           binding.rlPrice.visibility = View.VISIBLE
-           if (hostId != null) {
-               LoadingUtils.showDialog(requireContext(),false)
-               myPlaceViewModel.earning(hostId,"future").collect{
-                   when(it){
-                       is NetworkResult.Success ->{
-                           var data = it.data
-                           binding.tvTxt.setText(data)
-                           LoadingUtils.hideDialog()
-                       }
-                       is NetworkResult.Error ->{
-                               LoadingUtils.hideDialog()
-                       }
-                       else ->{
+        lifecycleScope.launch {
+            var sessionManager: SessionManager = SessionManager(requireContext())
+            var hostId = sessionManager.getUserId()
+            binding.rlPrice.visibility = View.VISIBLE
+            if (hostId != null) {
+                LoadingUtils.showDialog(requireContext(), false)
+                myPlaceViewModel.earning(hostId, "future").collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            var data = it.data
+                            binding.tvTxt.setText(data)
+                            LoadingUtils.hideDialog()
+                        }
 
-                       }
-                   }
-               }
-           }
-       }
+                        is NetworkResult.Error -> {
+                            LoadingUtils.hideDialog()
+                        }
+
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun totalEarningApi() {
         lifecycleScope.launch {
             binding.rlPrice.visibility = View.VISIBLE
-            val sessionManager:SessionManager = SessionManager(requireContext())
+            val sessionManager: SessionManager = SessionManager(requireContext())
             val hostId = sessionManager.getUserId()
             if (hostId != null) {
-                LoadingUtils.showDialog(requireContext(),false)
-                myPlaceViewModel.earning(hostId,"total").collect{
-                    when(it){
-                        is NetworkResult.Success ->{
+                LoadingUtils.showDialog(requireContext(), false)
+                myPlaceViewModel.earning(hostId, "total").collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
                             var data = it.data
                             binding.tvTxt.setText(data)
                             LoadingUtils.hideDialog()
                         }
-                        is NetworkResult.Error ->{
+
+                        is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
                         }
-                        else ->{
+
+                        else -> {
 
                         }
                     }
@@ -485,8 +535,8 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
             }
 
             R.id.tv_places -> {
-                var intent = Intent(requireContext(), PlaceOpenActivity::class.java)
-                startActivity(intent)
+//                var intent = Intent(requireContext(), PlaceOpenActivity::class.java)
+//                startActivity(intent)
             }
 
             R.id.rl_price -> {

@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/ic_dots_bg"
+        android:orientation="vertical"
+
+        tools:context=".fragment.host.placeOpen.PlaceOpenFragment">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/llHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent">
+
+
+                <ImageView
+                    android:id="@+id/imageBackButton"
+                    android:layout_width="@dimen/_27sdp"
+                    android:layout_height="@dimen/_27sdp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginVertical="@dimen/_15sdp"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:src="@drawable/ic_back_icon" />
+
+
+                <LinearLayout
+                    android:id="@+id/llDateRangeSelect"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_toStartOf="@+id/imageFilter"
+                    android:layout_toEndOf="@id/imageBackButton"
+                    android:background="@drawable/search_bar_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="@dimen/_6sdp">
+
+                    <ImageView
+                        android:layout_width="@dimen/_13sdp"
+                        android:layout_height="@dimen/_13sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:paddingVertical="@dimen/_3sdp"
+                        android:rotation="90"
+                        android:src="@drawable/drop_down_black"
+                        app:tint="@color/black" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_25sdp"
+                        android:layout_height="@dimen/_25sdp"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:paddingVertical="@dimen/_3sdp"
+                        android:src="@drawable/ic_date_calender_white"
+                        app:tint="@color/black" />
+
+                    <TextView
+                        android:id="@+id/tvDateRange"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_weight="1"
+                        android:text="Mar 11 - Mar 17 2023"
+                        android:textColor="#000"
+                        android:textSize="13sp" />
+
+                    <ImageView
+                        android:layout_width="@dimen/_13sdp"
+                        android:layout_height="@dimen/_13sdp"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:rotation="270"
+                        android:src="@drawable/drop_down_black" />
+
+                </LinearLayout>
+
+                <!-- Menu Icon -->
+                <ImageView
+                    android:id="@+id/imageFilter"
+                    android:layout_width="@dimen/_42sdp"
+                    android:layout_height="@dimen/_42sdp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="Menu"
+                    android:padding="@dimen/_6sdp"
+                    android:src="@drawable/ic_filter"
+                    android:visibility="invisible" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:background="#E5E5E5" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_four_side_grey_corner_white"
+                android:orientation="vertical"
+                android:padding="@dimen/_10sdp">
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="@dimen/_60sdp"
+                        android:layout_height="@dimen/_65sdp"
+                        app:cardCornerRadius="@dimen/_7sdp">
+                        <!-- Image Placeholder -->
+                        <ImageView
+                            android:id="@+id/imageProfile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/image_hotel" />
+                    </androidx.cardview.widget.CardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:text="Cabin in Peshastin"
+                            android:textColor="#000"
+                            android:textSize="@dimen/_12sdp"
+                            android:textStyle="normal" />
+
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_3sdp"
+                            android:orientation="horizontal">
+
+                            <!-- Star Rating Icon -->
+                            <ImageView
+                                android:id="@+id/imageStar"
+                                android:layout_width="@dimen/_13sdp"
+                                android:layout_height="@dimen/_13sdp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginTop="@dimen/_2sdp"
+                                android:src="@drawable/ic_star"
+                                app:tint="#FFBB00" />
+
+                            <TextView
+                                android:id="@+id/textRatingStar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_2sdp"
+                                android:layout_toEndOf="@+id/imageStar"
+                                android:fontFamily="@font/inter"
+                                android:text="5.0"
+                                android:textColor="#FFBB00"
+                                android:textSize="@dimen/_11ssp" />
+
+                            <TextView
+                                android:id="@+id/textK"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toEndOf="@+id/textRatingStar"
+                                android:fontFamily="@font/poppins"
+                                android:text=" (1k+)"
+                                android:textColor="#666"
+
+                                android:textSize="@dimen/_11ssp" />
+
+                            <ImageView
+                                android:id="@+id/imageMilesIcon"
+                                android:layout_width="@dimen/_16sdp"
+                                android:layout_height="@dimen/_16sdp"
+                                android:layout_below="@+id/textK"
+                                android:src="@drawable/ic_location_hotel"
+                                android:textColor="#666"
+                                android:textSize="@dimen/_13ssp" />
+
+                            <TextView
+                                android:id="@+id/textMiles"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/textK"
+                                android:layout_marginStart="@dimen/_2sdp"
+                                android:layout_marginTop="@dimen/_1sdp"
+                                android:layout_toEndOf="@+id/imageMilesIcon"
+                                android:fontFamily="@font/poppins"
+                                android:text="37 miles away"
+                                android:textColor="#A4A4A4"
+                                android:textSize="@dimen/_10ssp"
+                                app:layout_constraintEnd_toEndOf="parent" />
+                            <!-- Distance -->
+
+
+                        </RelativeLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="#E5E5E5" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:weightSum="1">
+
+                    <RelativeLayout
+                        android:id="@+id/rlPauseButton"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_weight="0.45"
+                        android:background="@drawable/bg_save_button">
+
+                        <TextView
+                            android:id="@+id/textPauseButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/poppins"
+                            android:text="Pause Bookings"
+                            android:textColor="@color/white" />
+
+                    </RelativeLayout>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1sp"
+                        android:layout_weight="0.05" />
+
+                    <RelativeLayout
+                        android:id="@+id/rlEditPlace"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_30sdp"
+                        android:layout_weight="0.45"
+                        android:background="@drawable/bg_four_corner_light_black_small_corner">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/poppins"
+                            android:text="Edit Place"
+                            android:textColor="@color/black" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!--            <HorizontalScrollView-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                >-->
+
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/_75sdp">
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+
+                    <ScrollView
+                        android:id="@+id/timeScrollView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:scrollbars="none"
+                        android:layout_alignParentStart="true">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_place_order"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/_13sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:nestedScrollingEnabled="true" />
+                        </LinearLayout>
+                    </ScrollView>
+
+                    <!-- Outer Scrollable Container -->
+                    <HorizontalScrollView
+                        android:id="@+id/horizontalScrollView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="none"
+                        android:fillViewport="true"
+                        android:layout_toEndOf="@id/timeScrollView">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <!-- Main Schedule Scroll (Scrollable in Both Directions) -->
+                            <ScrollView
+                                android:id="@+id/verticalScrollView"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:nestedScrollingEnabled="false"
+                                android:scrollbars="none">
+
+                                <HorizontalScrollView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:scrollbars="none">
+
+                                    <com.business.zyvo.ScheduleView
+                                        android:id="@+id/scheduleView"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="match_parent" />
+                                </HorizontalScrollView>
+                            </ScrollView>
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </RelativeLayout>
+
+            </androidx.core.widget.NestedScrollView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+

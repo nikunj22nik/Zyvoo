@@ -183,6 +183,17 @@ class AppConstant {
 
         val description = "Name is Description"
 
+        val placeOpenActivity = "placeOpenActivity"
+
+        val property_images = "property_images"
+        val latitude = "latitude"
+        val longitude = "longitude"
+        val property_rating = "property_rating"
+        val property_status = "property_status"
+        val property_review_count = "property_review_count"
+        val distance_miles = "distance_miles"
+        val title = "title"
+
     }
 
 

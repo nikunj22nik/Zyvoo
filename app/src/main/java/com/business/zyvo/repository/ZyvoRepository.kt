@@ -355,6 +355,22 @@ interface ZyvoRepository {
     suspend fun getUserCards(userId :String) : Flow<NetworkResult<JsonObject>>
 
     suspend fun logout(userId :String) : Flow<NetworkResult<String>>
+
+
+   suspend fun propertyBookingDetails(
+       property_id :String,
+       user_id :String,
+       start_date :String,
+       end_date :String,
+       latitude :String,
+       longitude :String
+   ): Flow<NetworkResult<JsonObject>>
+
+
+    suspend fun togglePropertyBooking(
+        property_id :String,
+        user_id :String
+    ): Flow<NetworkResult<JsonObject>>
 }
 
 
