@@ -15,10 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoggedScreenViewModel @Inject constructor(private val repository: ZyvoRepository,
-                                                val networkMonitor: NetworkMonitor
-):
-    ViewModel() {
+class LoggedScreenViewModel @Inject constructor(private val repository: ZyvoRepository, val networkMonitor: NetworkMonitor): ViewModel() {
     // MutableLiveData to store the list of images
     private val _imageList = MutableLiveData<MutableList<LogModel>>()
     val imageList: LiveData<MutableList<LogModel>> get() = _imageList
@@ -203,6 +200,21 @@ class LoggedScreenViewModel @Inject constructor(private val repository: ZyvoRepo
                 isLoading.value = false
             } else -> {
                 isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun getSocialAPI(fname: String, lname: String, email: String, social_id: String, fcm_token: String, device_type: String):
+            Flow<NetworkResult<JsonObject>> {
+        return repository.getSocialLogin(fname,lname,email,social_id,fcm_token,device_type).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.postValue(true)
+                } is NetworkResult.Success -> {
+                isLoading.postValue(false)
+            } else -> {
+                isLoading.postValue(false)
             }
             }
         }

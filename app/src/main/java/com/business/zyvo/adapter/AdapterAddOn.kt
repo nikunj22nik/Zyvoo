@@ -1,5 +1,6 @@
 package com.business.zyvo.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -24,10 +25,11 @@ class AdapterAddOn(var context: Context, var list : MutableList<String>) : Recyc
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
       var tvName = holder.itemView.findViewById<TextView>(R.id.tv_name)
-      tvName.setText(list.get(position))
+        tvName.text = list[position]
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateAdapter(list : MutableList<String>){
         this.list = list
         notifyDataSetChanged()

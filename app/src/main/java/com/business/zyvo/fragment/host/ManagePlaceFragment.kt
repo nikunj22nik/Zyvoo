@@ -61,14 +61,13 @@ import com.business.zyvo.adapter.host.AddOnItemAdapter
 import com.business.zyvo.adapter.host.GallaryAdapter
 import com.business.zyvo.adapter.host.RadioTextAdapter
 import com.business.zyvo.databinding.FragmentManagePlaceBinding
-import com.business.zyvo.locationManager.LocationManager
+import com.business.zyvo.locationManager.AppLocationManager
 import com.business.zyvo.model.ActivityModel
 import com.business.zyvo.model.host.AddOnModel
 import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.model.host.ItemRadio
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.session.SessionManager
-import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.viewmodel.host.CreatePropertyViewModel
 import com.google.android.libraries.places.api.Places
@@ -1269,7 +1268,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         lifecycleScope.launch {
             try {
                 val addressDetails = withContext(Dispatchers.IO) {
-                    LocationManager(requireContext()).getAddressFromCoordinates(latitude, longitude)
+                    AppLocationManager(requireContext()).getAddressFromCoordinates(latitude, longitude)
                 }
                 binding.etCity.setText(addressDetails.city)
                 binding.zipcode.setText(addressDetails.postalCode)

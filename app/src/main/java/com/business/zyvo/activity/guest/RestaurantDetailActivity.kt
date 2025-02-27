@@ -419,6 +419,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     fun disableScrollViewScrollForChildView(childView: View, scrollView: ScrollView) {
         childView.setOnTouchListener { _, event ->
             // Prevent ScrollView from intercepting touch events when interacting with this child view
@@ -448,7 +449,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
 
         binding.showMoreReview.setOnClickListener {
-            adapterReview.updateAdapter(7)
+//            adapterReview.updateAdapter()
         }
 
         binding.text1.setText("01:00 PM")

@@ -849,7 +849,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             profileViewModel.getPaymentMethodApi(session?.getUserId().toString()).collect { result ->
                                 when (result) {
                                     is NetworkResult.Success -> { result.data?.let {
-                                            Toast.makeText(requireContext(), "State added successfully", Toast.LENGTH_SHORT).show()
+                                        LoadingUtils.showSuccessDialog(requireContext(),"State added successfully")
+                                           // Toast.makeText(requireContext(), "State added successfully", Toast.LENGTH_SHORT).show()
                                         }
                                     }
 

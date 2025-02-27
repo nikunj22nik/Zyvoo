@@ -44,7 +44,7 @@
                     android:fontFamily="@font/poppins"
                     android:text="Emily James"
                     android:textColor="@color/black"
-
+                    android:id="@+id/txtName"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/ratingbar"
                     android:textSize="@dimen/_12sdp"
@@ -97,6 +97,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/txtReviews"
                     android:text="Host was very helpful. thank you so much"
                     android:textSize="@dimen/_12sdp"
                     android:fontFamily="@font/poppins"

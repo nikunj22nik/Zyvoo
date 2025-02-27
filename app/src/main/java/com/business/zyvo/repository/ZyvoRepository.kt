@@ -7,6 +7,8 @@ import com.business.zyvo.model.host.GetPropertyDetail
 
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.fragment.both.faq.model.FaqModel
+import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingDetailModel
+import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
 import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.host.PropertyDetailsSave
@@ -17,8 +19,6 @@ import com.google.gson.JsonArray
 
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Response
-import retrofit2.http.Field
 
 interface ZyvoRepository {
 
@@ -121,11 +121,20 @@ interface ZyvoRepository {
 
     suspend fun getPaymentMethods(userId: String) : Flow<NetworkResult<Pair<String,String>>>
 
-    suspend fun getFiltereHomeData(userId: String,latitude: String,longitude: String,place_type:String,minimum_price:String,
-                                   maximum_price:String,location:String,date:String,time:String,people_count:String,property_size:String,bedroom:String,
-                                   bathroom:String,instant_booking:String,self_check_in:String,allows_pets:String,activities:List<String>,amenities:List<String>,languages:List<String>) : Flow<NetworkResult<Pair<String,String>>>
+    suspend fun getFilteredHomeData(userId: Int?, latitude: Double?, longitude: Double?, place_type: String?, minimum_price: Double?,
+        maximum_price: Double?, location: String?, date: String?, time: Int?, people_count: Int?, property_size: Int?, bedroom: Int?,
+        bathroom: Int?, instant_booking: Int?, self_check_in: Int?, allows_pets: Int?, activities: List<String>?,
+        amenities: List<String>?, languages: List<String>?): Flow<NetworkResult<JsonObject>>
+
+    suspend fun getBookingList(userId: String) :  Flow<NetworkResult<MutableList<BookingModel>>>
+
+    suspend fun getBookingDetailsList(userId: String,booking_id: Int) :  Flow<NetworkResult<BookingDetailModel>>
+
+    suspend fun reviewPublish(userId: String,booking_id:Int,property_id: Int,response_rate: String,communication: String,on_time: String,review_message: String) : Flow<NetworkResult<JsonObject>>
 
     suspend fun verifyIdentity(userId: String,identity_verify: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun getSocialLogin(fname:String,lname:String,email:String,social_id:String,fcm_token:String,device_type:String) : Flow<NetworkResult<JsonObject>>
 
     suspend fun getPrivacyPolicy() : Flow<NetworkResult<String>>
 
