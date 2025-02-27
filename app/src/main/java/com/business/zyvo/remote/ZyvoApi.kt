@@ -417,9 +417,7 @@ interface ZyvoApi {
     @POST("host_report_violation")
     @FormUrlEncoded
     suspend fun hostReportViolation(
-        @Field("user_id") userId :Int,
-        @Field("booking_id") bookingId :Int,
-        @Field("property_id") propertyId :Int,
+        @Field("user_id") userId :Int, @Field("booking_id") bookingId :Int, @Field("property_id") propertyId :Int,
         @Field("report_reasons_id")reportReasonId :Int,
         @Field("additional_details") additionalDetails :String
     ) : Response<JsonObject>
@@ -427,18 +425,13 @@ interface ZyvoApi {
     @GET("list_report_reasons")
     suspend fun reportListReason() : Response<JsonObject>
 
-
-         @POST("get_article_list")
-         @FormUrlEncoded
-         suspend fun getArticleList(
-             @Field("search_term") search_term : String
-         ):Response<JsonObject>
+    @POST("get_article_list")
+    @FormUrlEncoded
+    suspend fun getArticleList(@Field("search_term") search_term : String):Response<JsonObject>
 
     @POST("get_guide_list")
     @FormUrlEncoded
-    suspend fun getGuideList(
-        @Field("search_term") search_term : String
-    ):Response<JsonObject>
+    suspend fun getGuideList(@Field("search_term") search_term : String):Response<JsonObject>
 
 
     @POST("host_report_violation")
@@ -500,11 +493,14 @@ interface ZyvoApi {
         @Field("longitude") longitude : String,
     ) :Response<JsonObject>
 
-
     @POST("toggle_property_booking")
     @FormUrlEncoded
     suspend fun togglePropertyBooking(
         @Field("property_id") property_id : String,
         @Field("user_id") user_id : String
     ) :Response<JsonObject>
+
+
+    
+
 }

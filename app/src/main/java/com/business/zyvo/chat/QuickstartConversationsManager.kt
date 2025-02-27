@@ -1,7 +1,9 @@
 package com.business.zyvo.chat
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
+import android.widget.TextView
 import com.google.gson.Gson
 import com.twilio.conversations.Attributes
 import com.twilio.conversations.CallbackListener
@@ -12,10 +14,14 @@ import com.twilio.conversations.ConversationsClientListener
 import com.twilio.conversations.ErrorInfo
 import com.twilio.conversations.Message
 import com.twilio.conversations.Participant
+import com.twilio.conversations.ProgressListener
 import com.twilio.conversations.StatusListener
 import com.twilio.conversations.User
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.io.IOException
 
 
@@ -50,14 +56,23 @@ class QuickstartConversationsManager {
     private var identity: String? = null
 
     private var userid: String? = null
+    private var tvOnline: TextView? = null
 
     private data class TokenResponse(val token: String)
 
 
-    fun initializeWithAccessToken(context: Context, token: String, DEFAULT_CONVERSATION_NAME:String, identity:String, userid:String) {
+    fun initializeWithAccessToken(
+        context: Context,
+        token: String,
+        DEFAULT_CONVERSATION_NAME: String,
+        identity: String,
+        userid: String,
+        tvOnline: TextView
+    ) {
         this.DEFAULT_CONVERSATION_NAME = DEFAULT_CONVERSATION_NAME
         this.identity = identity
         this.userid = userid
+        this.tvOnline = tvOnline
         Log.d(TAG,DEFAULT_CONVERSATION_NAME+"\n"+ identity+"\n"+ userid+"\n"+ token)
         val props = ConversationsClient.Properties.newBuilder().createProperties()
         ConversationsClient.create(context, token, props, mConversationsClientCallback)
@@ -94,22 +109,63 @@ class QuickstartConversationsManager {
         }
     }
 
+    @Throws(FileNotFoundException::class)
+    fun sendMessageImage(messageBody: String?, file: File) {
+        if (conversation != null) {
+            val options = Message.options().withMedia(FileInputStream(messageBody), "jpg/png")
+                .withMediaFileName(file.name)
+                .withMediaProgressListener(object : ProgressListener {
+                    override fun onStarted() {
+                    }
+
+                    override fun onProgress(bytes: Long) {
+                    }
+
+                    override fun onCompleted(mediaSid: String) {
+                    }
+                })
+            conversation!!.sendMessage(options) {
+                if (conversationsManagerListener != null) {
+                    conversationsManagerListener!!.messageSentCallback()
+                }
+            }
+        }
+    }
+
+    @Throws(FileNotFoundException::class)
+    fun sendMessagefile(messageBody: String?, file: File, ) {
+        if (conversation != null) {
+            val options =
+                Message.options().withMedia(FileInputStream(messageBody), "application/pdf")
+                    .withMediaFileName(file.name)
+                    .withMediaProgressListener(object : ProgressListener {
+                        override fun onStarted() {
+                        }
+
+                        override fun onProgress(bytes: Long) {
+                        }
+
+                        override fun onCompleted(mediaSid: String) {
+
+                        }
+                    })
+            conversation!!.sendMessage(options) {
+                if (conversationsManagerListener != null) {
+                    conversationsManagerListener!!.messageSentCallback()
+                }
+            }
+        }
+    }
+
     private fun loadChannels() {
         val client = conversationsClient ?: return
         client.getConversation(DEFAULT_CONVERSATION_NAME, object : CallbackListener<Conversation> {
             override fun onSuccess(conversation: Conversation) {
                 when (conversation.status) {
-                    Conversation.ConversationStatus.JOINED
-                        /*, Conversation.ConversationStatus.NOT_PARTICIPATING*/ -> {
+                    Conversation.ConversationStatus.JOINED/*, Conversation.ConversationStatus.NOT_PARTICIPATING*/ -> {
                         Log.d(TAG, "Already Exists in Conversation: $DEFAULT_CONVERSATION_NAME")
-//                        this@QuickstartConversationsManager.conversation = conversation
-//                        conversation.addListener(mDefaultConversationListener)
-//                        loadPreviousMessages(conversation)
-
                         this@QuickstartConversationsManager.conversation = conversation
-                        this@QuickstartConversationsManager.conversation!!.addListener(
-                            mDefaultConversationListener
-                        )
+                        this@QuickstartConversationsManager.conversation!!.addListener(mDefaultConversationListener)
                         this@QuickstartConversationsManager.loadPreviousMessages(conversation)
                     }
                     else -> {
@@ -133,18 +189,18 @@ class QuickstartConversationsManager {
                     Log.d(TAG, "Joining Conversation: $DEFAULT_CONVERSATION_NAME")
                     val attributes: Attributes = conversation.attributes
                     conversation.addParticipantByIdentity(identity,attributes,
-                       object :StatusListener {
-                           override fun onSuccess() {
-                               Log.d(TAG, "add")
-                               joinConversation(conversation)
-                           }
+                        object :StatusListener {
+                            override fun onSuccess() {
+                                Log.d(TAG, "add")
+                                joinConversation(conversation)
+                            }
 
-                           override fun onError(errorInfo: ErrorInfo?) {
-                               super.onError(errorInfo)
-                               joinConversation(conversation)
-                               Log.e(TAG, "error  .." + errorInfo?.message)
-                           }
-                       })
+                            override fun onError(errorInfo: ErrorInfo?) {
+                                super.onError(errorInfo)
+                                joinConversation(conversation)
+                                Log.e(TAG, "error  .." + errorInfo?.message)
+                            }
+                        })
                 }
 
                 override   fun onError(errorInfo: ErrorInfo) {
@@ -264,8 +320,13 @@ class QuickstartConversationsManager {
         override fun onMessageAdded(message: Message) {
             Log.d(TAG, "Message added")
             messages.add(message)
-            conversation!!.setAllMessagesRead { }
-            conversationsManagerListener?.receivedNewMessage()
+            if (message.author == userid) {
+                conversation!!.setAllMessagesRead { }
+            }
+            if (conversationsManagerListener != null) {
+                conversationsManagerListener!!.receivedNewMessage()
+
+            }
         }
 
         override fun onMessageUpdated(message: Message, updateReason: Message.UpdateReason) {
@@ -278,28 +339,33 @@ class QuickstartConversationsManager {
 
         override fun onParticipantAdded(participant: Participant) {
             Log.d(TAG, "Participant added: ${participant.identity}")
+            tvOnline!!.text = "Online"
         }
 
         override fun onParticipantUpdated(participant: Participant, updateReason: Participant.UpdateReason) {
             Log.d(TAG, "Participant updated: ${participant.identity} $updateReason")
+            tvOnline!!.text = "Online"
         }
 
         override fun onParticipantDeleted(participant: Participant) {
             Log.d(TAG, "Participant deleted: ${participant.identity}")
+
         }
 
         override fun onTypingStarted(conversation: Conversation, participant: Participant) {
             Log.d(TAG, "Started Typing: ${participant.identity}")
+            tvOnline!!.text = "Typing ..."
+
         }
 
         override fun onTypingEnded(conversation: Conversation, participant: Participant) {
             Log.d(TAG, "Ended Typing: ${participant.identity}")
+            tvOnline!!.text = ""
         }
 
         override fun onSynchronizationChanged(conversation: Conversation) {}
     }
 
-//     fun getMessages(): ArrayList<Message> = messages
 
     fun setListener(listener: QuickstartConversationsManagerListener) {
         this.conversationsManagerListener = listener

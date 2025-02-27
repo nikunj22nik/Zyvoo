@@ -2,11 +2,13 @@ package com.business.zyvo.fragment.guest
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.fragment.app.viewModels
@@ -19,6 +21,8 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 
 import com.business.zyvo.R
+import com.business.zyvo.activity.GuesMain
+import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.adapter.ChatDetailsAdapter
 import com.business.zyvo.chat.QuickstartConversationsManager
 import com.business.zyvo.chat.QuickstartConversationsManagerListener
@@ -47,7 +51,7 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener,
     var providertoken :String =""
     var groupName :String =""
     var friendprofileimage :String =""
-
+    private lateinit var linearLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,19 +63,16 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener,
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentChatDetailsBinding.inflate(
-            LayoutInflater.from(requireContext()),
-            container,
-            false
-        )
+        _binding = FragmentChatDetailsBinding.inflate(LayoutInflater.from(requireContext()), container, false)
         // requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
 
-        binding.viewModel = viewModel
+    //    binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
 
      //   var context: Context, var quickstartConversationsManager: QuickstartConversationsManager, var user_id: String, var profile_image:String, var friend_profile_image:String, var typelogin:String
 
         var session :SessionManager = SessionManager(requireContext())
+
         arguments?.let {
             profileImage = it.getString("user_img").toString()
             providertoken = session.getChatToken().toString()
@@ -85,30 +86,58 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener,
         //    chatDetailsAdapter!!.updateItem(it)
         })
 
+        var sessionManager = SessionManager(requireContext())
+        var userType = sessionManager.getUserId()
+        if(userType?.equals(AppConstant.Host) == true) {
+            val rootView = inflater.inflate(R.layout.activity_host_main, container, false)
+            linearLayout = rootView.findViewById(R.id.lay1)
+        }
+        else{
+            val rootView = inflater.inflate(R.layout.activity_gues_main, container, false)
+            linearLayout = rootView.findViewById(R.id.lay1)
+        }
 
         if (NetworkMonitorCheck._isConnected.value) {
             quickstartConversationsManager.setListener(this)
-            quickstartConversationsManager.initializeWithAccessToken(requireContext(), providertoken, groupName, friendId.toString(), userId.toString())
+          //  quickstartConversationsManager.initializeWithAccessToken(requireContext(), providertoken, groupName, friendId.toString(), userId.toString())
         }
+
         else{
             LoadingUtils.showErrorDialog(requireContext(), "Something Went Wrong!!")
         }
 
         binding.sendBtn.setOnClickListener{
-            if(binding.etMsg.text.toString().length >0){
-                if (NetworkMonitorCheck._isConnected.value) {
-                    quickstartConversationsManager.sendMessage(binding.etMsg.text.toString())
-                    binding.etMsg.text.clear()
-                }
-            }
-            else{
-                LoadingUtils.showErrorDialog(requireContext(),"Please Check Your Internet Connection")
-            }
+//            if(binding.etMsg.text.toString().length >0){
+//                if (NetworkMonitorCheck._isConnected.value) {
+//                    quickstartConversationsManager.sendMessage(binding.etMsg.text.toString())
+//                    binding.etMsg.text.clear()
+//                }
+//            }
+//            else{
+//                LoadingUtils.showErrorDialog(requireContext(),"Please Check Your Internet Connection")
+//            }
         }
 
         return binding.getRoot()
     }
 
+
+
+    override fun onStart() {
+        super.onStart()
+        var session = SessionManager(requireContext())
+    }
+
+    override fun onPause() {
+        super.onPause()
+        var session = SessionManager(requireContext())
+
+        if(session.getUserType().equals(AppConstant.Host)) {
+            (activity as? HostMainActivity)?.showView()
+        }else{
+            (activity as? GuesMain)?.showView()
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageThreeDots.setOnClickListener(this)
@@ -332,24 +361,30 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener,
     }
 
     override fun reloadMessages() {
-        requireActivity().runOnUiThread {
-            if (quickstartConversationsManager.messages.size!=0){
-                loadRecyclerview(quickstartConversationsManager)
+//        requireActivity().runOnUiThread {
+//            if (quickstartConversationsManager.messages.size!=0){
+//                loadRecyclerview(quickstartConversationsManager)
+//            }
+//        }
+        // Only run this if the fragment is attached to an activity
+
+         requireActivity().runOnUiThread {
+                if (quickstartConversationsManager.messages.isNotEmpty()) {
+                    loadRecyclerview(quickstartConversationsManager)
+                }
             }
-        }
+
     }
 
     override fun showError() {
-
     }
 
     private fun loadRecyclerview(quickstartConversationsManager: QuickstartConversationsManager) {
         var sessionManager =SessionManager(requireContext())
         var type=sessionManager.getUserType()
         chatDetailsAdapter = type?.let {
-            ChatDetailsAdapter(requireContext(), quickstartConversationsManager, userId.toString(),profileImage,friendprofileimage,
-                it
-            )
+
+            ChatDetailsAdapter(requireContext(), quickstartConversationsManager, userId.toString(),profileImage,friendprofileimage, it)
         }
         binding.rvChatting.layoutManager =LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
         binding.rvChatting.adapter = chatDetailsAdapter

@@ -70,6 +70,7 @@ import com.skydoves.powerspinner.PowerSpinnerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import android.widget.LinearLayout.LayoutParams
+import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.chat.QuickstartConversationsManagerListener
 import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
 
@@ -171,14 +172,20 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         binding.textMessageTheHostButton.setOnClickListener {
             val bundle = Bundle()
             val sessionManager = SessionManager(requireContext())
-//            sessionManager.getUserId()?.let { it1 -> bundle.putInt(AppConstant.USER_ID, it1) }
-            bundle.putString("user_img","").toString()
-            sessionManager.getUserId()?.let { it1 -> bundle.putInt(AppConstant.USER_ID, 1) }
-            bundle.putString(AppConstant.CHANNEL_NAME,channelName)
-            bundle.putInt(AppConstant.FRIEND_ID,2)
-            bundle.putString("friend_img",friendImage).toString()
 
-            findNavController().navigate(R.id.chatDetailsFragment,bundle)
+//           sessionManager.getUserId()?.let { it1 -> bundle.putInt(AppConstant.USER_ID, it1) }
+            val intent = Intent(requireContext(),ChatActivity::class.java)
+
+
+            intent.putExtra("user_img","").toString()
+            sessionManager.getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, 1) }
+            intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
+            intent.putExtra(AppConstant.FRIEND_ID,2)
+            intent.putExtra("friend_img",friendImage).toString()
+            intent.putExtra("friend_name","Love priya").toString()
+            startActivity(intent)
+
+
         }
 
         binding.imageShare.setOnClickListener {
@@ -193,7 +200,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         binding.rlParking.setOnClickListener {
             if (binding.tvParkingRule.visibility == View.VISIBLE) {
                 binding.tvParkingRule.visibility = View.GONE
-            } else {
+            }
+            else {
                 binding.tvParkingRule.visibility = View.VISIBLE
             }
         }

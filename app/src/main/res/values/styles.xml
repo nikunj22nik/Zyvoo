@@ -23,6 +23,10 @@
         <item name="cornerSizeTopLeft">0dp</item>
     </style>
 
+    <style name="roundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10%</item>
+    </style>
 
 
 </resources>

@@ -55,6 +55,15 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
 
     }
 
+    fun hideView() {
+        binding.lay1.visibility = View.GONE
+    }
+
+    // Function to show the view again when the fragment is destroyed or replaced
+    fun showView() {
+        binding.lay1.visibility = View.VISIBLE
+    }
+
 
     private fun callingGetUserToken() {
         var sessionManager = SessionManager(this)
