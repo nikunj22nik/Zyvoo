@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Paint
-import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -42,7 +41,6 @@ import com.business.zyvo.adapter.guest.AmenitiesAdapter
 import com.business.zyvo.databinding.ActivityFiltersBinding
 import com.business.zyvo.fragment.guest.FullScreenDialogFragment
 import com.business.zyvo.fragment.guest.home.viewModel.FilterViewModel
-import com.business.zyvo.locationManager.AppLocationManager
 
 import com.business.zyvo.model.ActivityModel
 import com.business.zyvo.model.FilterRequest
@@ -69,7 +67,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         ViewModelProvider(this)[FilterViewModel::class.java]
     }
     private lateinit var autocompleteTextView: AutoCompleteTextView
-    private lateinit var appLocationManager: AppLocationManager
+    private lateinit var locationManager: com.business.zyvo.locationManager.LocationManager
     private lateinit var activityList : MutableList<ActivityModel>
     private lateinit var amenitiesList :MutableList<Pair<String,Boolean>>
     private lateinit var adapterActivity :ActivitiesAdapter
@@ -128,9 +126,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         callingPriceRangeGraphSelection()
         setUpRecyclerView()
 
-        appLocationManager = AppLocationManager(this, this)
+        locationManager = com.business.zyvo.locationManager.LocationManager(this, this)
 
-        appLocationManager.autoCompleteLocationWork(binding.autocompleteLocation)
+        locationManager.autoCompleteLocationWork(binding.autocompleteLocation)
 //        val rLocationManager = AppLocationManager(this,this)
 //        rLocationManager.autoCompleteLocationWork(binding.autocompleteLocation)
 
@@ -138,7 +136,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             val selectedLocation = parent.getItemAtPosition(position) as String
 
             // Fetch location details
-            appLocationManager.fetchPlaceDetails(selectedLocation) { latitude, longitude ->
+            locationManager.fetchPlaceDetails(selectedLocation) { latitude, longitude ->
                 selectedLatitude = latitude
                 selectedLongitude = longitude
 

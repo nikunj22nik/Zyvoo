@@ -37,7 +37,7 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 
-class AppLocationManager(var applicationContext : Context, var applicationActivity : AppCompatActivity? =null) {
+class LocationManager(var applicationContext : Context, var applicationActivity : AppCompatActivity? =null) {
 
     private lateinit var autocompleteTextView: AutoCompleteTextView
     private var selectedLatitude: Double? = null
