@@ -54,7 +54,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         emit(NetworkResult.Loading())
         try {
             api.signUpPhoneNumber(
-                phoneNumber, code,
+ phoneNumber, code,
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
