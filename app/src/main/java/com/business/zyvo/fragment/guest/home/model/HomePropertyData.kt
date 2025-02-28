@@ -11,3 +11,4 @@ data class HomePropertyData( val images: List<String>,
                              val latitude: String,
                              val longitude: String,
                              val distance_miles: String)
+

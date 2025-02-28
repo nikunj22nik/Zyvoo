@@ -124,7 +124,7 @@ interface ZyvoRepository {
     suspend fun getFilteredHomeData(userId: Int?, latitude: Double?, longitude: Double?, place_type: String?, minimum_price: Double?,
         maximum_price: Double?, location: String?, date: String?, time: Int?, people_count: Int?, property_size: Int?, bedroom: Int?,
         bathroom: Int?, instant_booking: Int?, self_check_in: Int?, allows_pets: Int?, activities: List<String>?,
-        amenities: List<String>?, languages: List<String>?): Flow<NetworkResult<JsonObject>>
+        amenities: List<String>?, languages: List<String>?): Flow<NetworkResult<JsonArray>>
 
     suspend fun getBookingList(userId: String) :  Flow<NetworkResult<MutableList<BookingModel>>>
 

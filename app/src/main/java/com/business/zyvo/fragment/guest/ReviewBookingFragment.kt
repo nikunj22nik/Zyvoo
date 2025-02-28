@@ -29,6 +29,8 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -62,6 +64,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
     private val bookingViewModel: BookingViewModel by viewModels()
     var latitude = 0.0
     var longitude = 0.0
+    var propertyId = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -181,6 +184,18 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 binding.tvParkingContent.text = data?.parking ?: "N/A"
                                 binding.tvHostContent.text = data?.host_rule ?: "N/A"
                                 binding.tvLocationName.text = data?.location ?: "N/A"
+                                propertyId = data?.property_id ?: 0
+
+                                //image loading from glide
+                                Glide.with(requireContext())
+                                    .load(AppConstant.BASE_URL + data?.host_profile_image)
+                                    .error(R.drawable.ic_circular_img_user)
+                                    .into(binding.imageProfilePicture)
+
+                                Glide.with(requireContext())
+                                    .load(AppConstant.BASE_URL+data?.first_property_image)
+                                    .error(R.drawable.image_hotel)
+                                    .into(binding.firstimage)
 
                                 // Safe parsing of latitude & longitude
                                 latitude = data?.latitude?.toDoubleOrNull() ?: 0.0
@@ -218,7 +233,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         lifecycleScope.launch(Dispatchers.Main) {
             try {
                 bookingViewModel.getReviewPublishAPI(sessionManager.getUserId().toString(),
-                    bookingId, 56, responseRate.toString(), communication.toString(),
+                    bookingId, propertyId, responseRate.toString(), communication.toString(),
                     onTime.toString(), etMessage).collect {
                     when (it) {
                         is NetworkResult.Success -> {

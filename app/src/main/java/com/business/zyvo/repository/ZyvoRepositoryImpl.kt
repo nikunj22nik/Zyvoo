@@ -1146,7 +1146,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
         activities: List<String>?,
         amenities: List<String>?,
         languages: List<String>?
-    ): Flow<NetworkResult<JsonObject>> = flow {
+    ): Flow<NetworkResult<JsonArray>> = flow {
         try {
             api.getFilteredHomeData(userId,latitude,longitude,place_type,minimum_price,maximum_price,
                 location,date,time,people_count,property_size,bedroom,bathroom,instant_booking,self_check_in,allows_pets,activities,amenities,languages).apply {
@@ -1154,7 +1154,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api:ZyvoApi):ZyvoReposi
                     body()?.let { resp ->
                         if (resp.has("success")&&
                             resp.get("success").asBoolean) {
-                            emit(AuthTask.processData(resp))
+                            emit(AuthTask.processDataArray(resp))
                         }
                         else {
                             emit(NetworkResult.Error(resp.get("message").asString))

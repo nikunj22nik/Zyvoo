@@ -3,6 +3,7 @@ package com.business.zyvo.activity.guest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Paint
 import android.os.Build
 import android.os.Bundle
@@ -23,15 +24,16 @@ import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.github.mikephil.charting.data.BarEntry
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -39,15 +41,18 @@ import com.business.zyvo.R
 import com.business.zyvo.adapter.guest.ActivitiesAdapter
 import com.business.zyvo.adapter.guest.AmenitiesAdapter
 import com.business.zyvo.databinding.ActivityFiltersBinding
-import com.business.zyvo.fragment.guest.FullScreenDialogFragment
+import com.business.zyvo.fragment.guest.home.GuestDiscoverFragment
 import com.business.zyvo.fragment.guest.home.viewModel.FilterViewModel
-
 import com.business.zyvo.model.ActivityModel
+import com.business.zyvo.model.FilterDataRootModel
 import com.business.zyvo.model.FilterRequest
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
+import com.github.mikephil.charting.data.BarEntry
+import com.google.android.libraries.places.api.net.PlacesClient
+import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -67,7 +72,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         ViewModelProvider(this)[FilterViewModel::class.java]
     }
     private lateinit var autocompleteTextView: AutoCompleteTextView
-    private lateinit var locationManager: com.business.zyvo.locationManager.LocationManager
+    private lateinit var appLocationManager: com.business.zyvo.locationManager.LocationManager
     private lateinit var activityList : MutableList<ActivityModel>
     private lateinit var amenitiesList :MutableList<Pair<String,Boolean>>
     private lateinit var adapterActivity :ActivitiesAdapter
@@ -126,9 +131,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         callingPriceRangeGraphSelection()
         setUpRecyclerView()
 
-        locationManager = com.business.zyvo.locationManager.LocationManager(this, this)
+        appLocationManager = com.business.zyvo.locationManager.LocationManager(this, this)
 
-        locationManager.autoCompleteLocationWork(binding.autocompleteLocation)
+        appLocationManager.autoCompleteLocationWork(binding.autocompleteLocation)
 //        val rLocationManager = AppLocationManager(this,this)
 //        rLocationManager.autoCompleteLocationWork(binding.autocompleteLocation)
 
@@ -136,7 +141,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             val selectedLocation = parent.getItemAtPosition(position) as String
 
             // Fetch location details
-            locationManager.fetchPlaceDetails(selectedLocation) { latitude, longitude ->
+            appLocationManager.fetchPlaceDetails(selectedLocation) { latitude, longitude ->
                 selectedLatitude = latitude
                 selectedLongitude = longitude
 
@@ -603,17 +608,39 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             byDefaultSelect()
 
             imageFilter.setOnClickListener {
-                if (NetworkMonitorCheck._isConnected.value){
-                    filterClick()
-//                    val dialog = FullScreenDialogFragment()
-//                    dialog.show(supportFragmentManager, "FullScreenDialog")
-                }else{
-                    showErrorDialog(this@FiltersActivity,
-                        resources.getString(R.string.no_internet_dialog_msg)
+                if (NetworkMonitorCheck._isConnected.value) {
+                    val requestData = FilterRequest(
+                        user_id = 189,  // sessionManager.getUserId(),
+                        latitude = selectedLatitude,
+                        longitude = selectedLongitude,
+                        place_type = selectedOption?.takeUnless { it.isNullOrEmpty() },
+                        minimum_price = binding.tvMinimum.text.toString().toDoubleOrNull(),
+                        maximum_price = binding.tvMaximum.text.toString().toDoubleOrNull(),
+                        location = binding.autocompleteLocation.text.toString().takeUnless { it.isNullOrEmpty() },
+                        date = binding.tvDateSelect.text.toString().takeUnless { it.isNullOrEmpty() },
+                        time = binding.tvHour.text.toString().toIntOrNull(),
+                        people_count = availOption.toIntOrNull(),
+                        property_size = propertySize.toIntOrNull(),
+                        bedroom = bedroomCount.toIntOrNull(),
+                        bathroom = bathroomCount.toIntOrNull(),
+                        instant_booking = instantBookingCount,
+                        self_check_in = selfCheckIn,
+                        allows_pets = petCheckIn,
+                        activities = selectedActivityName.takeUnless { it.isNullOrEmpty() },
+                        amenities = selectedAmenities.takeUnless { it.isNullOrEmpty() },
+                        languages = selectedLanguages.takeUnless { it.isNullOrEmpty() }
                     )
-                }
+                    // 🟢 Use Fragment Transaction Instead of Intent
+                    val bundle = Bundle().apply {
+                        putParcelable("filter_data", requestData)
+                    }
+                    findNavController(R.id.fragmentContainerView_main).navigate(R.id.guest_fragment,bundle)
 
+                } else {
+                    showErrorDialog(this@FiltersActivity, getString(R.string.no_internet_dialog_msg))
+                }
             }
+
 
             clearAllBtn.setOnClickListener {
                 tvMinimum.text = ""
@@ -649,86 +676,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             }
 
 
-        }
-    }
-
-    private fun filterClick() {
-        lifecycleScope.launch {
-            filterViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConnected ->
-                    withContext(Dispatchers.Main) {
-                        if (!isConnected) {
-                            showErrorDialog(this@FiltersActivity, resources.getString(R.string.no_internet_dialog_msg))
-                            return@withContext
-                        }
-                        try {
-                            val requestData = FilterRequest(
-                                user_id = 189, //sessionManager.getUserId(),
-                                latitude = selectedLatitude,
-                                longitude = selectedLongitude,
-                                place_type = selectedOption?.takeIf { it.isNotEmpty() },
-                                minimum_price = binding.tvMinimum.text.toString().toDoubleOrNull(),
-                                maximum_price = binding.tvMaximum.text.toString().toDoubleOrNull(),
-                                location = binding.autocompleteLocation.text.toString().takeIf { it.isNotEmpty() },
-                                date = binding.tvDateSelect.text.toString().takeIf { it.isNotEmpty() },
-                                time = binding.tvHour.text.toString().toIntOrNull(),
-                                people_count = availOption.toIntOrNull(),
-                                property_size = propertySize.toIntOrNull(),
-                                bedroom = bedroomCount.toIntOrNull(),
-                                bathroom = bathroomCount.toIntOrNull(),
-                                instant_booking = instantBookingCount,
-                                self_check_in = selfCheckIn,
-                                allows_pets = petCheckIn ,
-                                activities = selectedActivityName.takeIf { it.isNotEmpty() },
-                                amenities = selectedAmenities.takeIf { it.isNotEmpty() },
-                                languages = selectedLanguages.takeIf { it.isNotEmpty() }
-                            )
-                            Log.d("RequestPrameter", requestData.toString())
-
-                            // ✅ API Call
-                            filterViewModel.getFilterHomeDataApi(
-                                requestData.user_id,
-                                requestData.latitude,
-                                requestData.longitude,
-                                requestData.place_type,
-                                requestData.minimum_price,
-                                requestData.maximum_price,
-                                requestData.location,
-                                requestData.date,
-                                requestData.time,
-                                requestData.people_count,
-                                requestData.property_size,
-                                requestData.bedroom,
-                                requestData.bathroom,
-                                requestData.instant_booking,
-                                requestData.self_check_in,
-                                requestData.allows_pets,
-                                requestData.activities,
-                                requestData.amenities,
-                                requestData.languages
-                            ).collect { result ->
-                                when (result) {
-                                    is NetworkResult.Success -> {
-                                        Toast.makeText(this@FiltersActivity, "Filters applied successfully", Toast.LENGTH_SHORT).show()
-                                        if (result.message == "false"){
-                                            val dialog = FullScreenDialogFragment()
-                                            dialog.show(supportFragmentManager, "FullScreenDialog")
-                                        }
-                                    }
-                                    is NetworkResult.Error -> {
-                                        showErrorDialog(this@FiltersActivity, result.message ?: "Unknown error")
-                                    }
-                                    else -> {
-                                        Log.v(ErrorDialog.TAG, "error::${result.message}")
-                                    }
-                                }
-                            }
-                        } catch (e: Exception) {
-                            showErrorDialog(this@FiltersActivity, "Error: ${e.message}")
-                        }
-                    }
-                }
         }
     }
 

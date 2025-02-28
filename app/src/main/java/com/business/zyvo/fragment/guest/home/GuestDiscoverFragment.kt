@@ -29,7 +29,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -40,7 +39,6 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -71,9 +69,9 @@ import com.business.zyvo.databinding.FragmentGuestDiscoverBinding
 import com.business.zyvo.fragment.guest.home.model.HomePropertyData
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
+import com.business.zyvo.model.FilterRequest
 import com.business.zyvo.model.Location
 import com.business.zyvo.utils.CommonAuthWorkUtils
-import com.business.zyvo.viewmodel.WishlistViewModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.showToast
@@ -118,9 +116,14 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
     private val guestDiscoverViewModel: GuestDiscoverViewModel by lazy {
         ViewModelProvider(this)[GuestDiscoverViewModel::class.java]
     }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
-            View? {
+            View {
 
         binding = FragmentGuestDiscoverBinding.inflate(LayoutInflater.from(requireContext()))
         val navController = findNavController()
@@ -177,6 +180,13 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
             getCurrentLocation()
         } else {
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 100)
+        }
+
+        val filterData = arguments?.getParcelable<FilterRequest>("filter_data")
+        filterData?.let {
+            Log.d("FilterData", "User ID: ${it.user_id}, Location: ${it.location}, Price: ${it.minimum_price} - ${it.maximum_price}")
+
+            filteredDataAPI(it)
         }
 
         return binding.root
@@ -654,6 +664,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
     }
 
 
+
+
     private fun getCurrentLocation() {
         // Initialize Location manager
         val locationManager =
@@ -732,6 +744,40 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
             lifecycleScope.launch(Dispatchers.Main) {
                 guestDiscoverViewModel.getHomeData(session?.getUserId().toString(),
                     latitude,longitude).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val listType = object : TypeToken<List<HomePropertyData>>() {}.type
+                                val properties: MutableList<HomePropertyData> = Gson().fromJson(resp, listType)
+                                homePropertyData = properties
+                                if (homePropertyData.isNotEmpty()) {
+                                    adapter.updateData(homePropertyData)
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    private fun filteredDataAPI(filterRequest: FilterRequest) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                guestDiscoverViewModel.getFilterHomeDataApi(filterRequest.user_id,filterRequest.latitude,filterRequest.longitude,
+                    filterRequest.place_type,filterRequest.minimum_price,filterRequest.maximum_price,filterRequest.location,filterRequest.date,
+                    filterRequest.time,filterRequest.people_count,filterRequest.property_size,filterRequest.bedroom,filterRequest.bathroom,filterRequest.instant_booking,
+                    filterRequest.self_check_in,filterRequest.allows_pets,filterRequest.activities,filterRequest.amenities,filterRequest.languages).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
