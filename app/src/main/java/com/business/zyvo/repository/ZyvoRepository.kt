@@ -1,6 +1,8 @@
 package com.business.zyvo.repository
 
 import com.business.zyvo.NetworkResult
+import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
+import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 
 import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.host.GetPropertyDetail
@@ -359,6 +361,32 @@ interface ZyvoRepository {
 
     suspend fun saveCardStripe(userId :String,
                                token_stripe :String) :  Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun setPreferredCard(userId :String,
+                                 card_id :String) :  Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun bookProperty(userId : String,
+                             property_id : String,
+                             booking_date : String,
+                             booking_start : String,
+                             booking_end : String,
+                             booking_amount : String,
+                             total_amount : String,
+                             customer_id : String,
+                             card_id : String,
+                             addons: Map<String, String> ) :   Flow<NetworkResult<JsonObject>>
+
+    suspend fun reportViolation(userId : String,
+                                booking_id : String,
+                                property_id : String,
+                                report_reasons_id : String,
+                                additional_details:String) :  Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun listReportReasons() : Flow<NetworkResult<JsonArray>>
+
+    suspend fun cancelBooking(userId : String,
+                                booking_id : String) :  Flow<NetworkResult<Pair<String,String>>>
 }
+
 
 

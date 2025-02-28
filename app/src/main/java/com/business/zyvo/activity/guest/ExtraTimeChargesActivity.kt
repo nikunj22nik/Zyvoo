@@ -21,14 +21,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.R
+import com.business.zyvo.activity.guest.extratime.ExtraTimeActivity
 import com.business.zyvo.adapter.AdapterAddPaymentCard
+import com.business.zyvo.adapter.SetPreferred
 import com.business.zyvo.databinding.ActivityExtraTimeChargesBinding
 import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.business.zyvo.viewmodel.PaymentViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.DialogListener {
+class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.DialogListener,
+    SetPreferred {
     lateinit var binding :ActivityExtraTimeChargesBinding
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
 
@@ -48,7 +51,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             insets
         }
         binding.myBooking.setOnClickListener {
-            startActivity(Intent(this,ExtraTimeActivity::class.java))
+            startActivity(Intent(this, ExtraTimeActivity::class.java))
         }
 
 
@@ -59,9 +62,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 binding.tvParkingRule.visibility = View.VISIBLE
             }
         }
-        addPaymentCardAdapter = AdapterAddPaymentCard(this, mutableListOf())
+        addPaymentCardAdapter = AdapterAddPaymentCard(this, mutableListOf(),this)
         paymentCardViewHolder.paymentCardList.observe(this, Observer { payment ->
-            addPaymentCardAdapter.updateItem(payment)
+        //    addPaymentCardAdapter.updateItem(payment)
         })
         binding.recyclerViewPaymentCardList.layoutManager = LinearLayoutManager(this@ExtraTimeChargesActivity,
             LinearLayoutManager.VERTICAL,false)
@@ -115,7 +118,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         binding.tvReadMoreLess.setCollapsedTextColor(com.business.zyvo.R.color.green_color_bar)
 
         binding.myBooking.setOnClickListener {
-           startActivity(Intent(this,ExtraTimeActivity::class.java))
+           startActivity(Intent(this, ExtraTimeActivity::class.java))
         }
 
 
@@ -191,6 +194,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
 
         }
 
+    }
+
+    override fun set(position: Int) {
     }
 
 }

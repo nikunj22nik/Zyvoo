@@ -34,7 +34,7 @@
             android:name="com.business.zyvo.activity.guest.ExtraTimeChargesActivity"
             android:exported="false" />
         <activity
-            android:name="com.business.zyvo.activity.guest.ExtraTimeActivity"
+            android:name="com.business.zyvo.activity.guest.extratime.ExtraTimeActivity"
             android:exported="false" />
         <activity
             android:name="com.business.zyvo.activity.guest.checkout.CheckOutPayActivity"

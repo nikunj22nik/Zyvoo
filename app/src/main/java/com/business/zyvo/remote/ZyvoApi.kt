@@ -1,5 +1,7 @@
 package com.business.zyvo.remote
 
+import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
+import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.google.android.gms.common.annotation.KeepForSdkWithMembers
 import com.google.gson.JsonObject
@@ -8,6 +10,7 @@ import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
+import retrofit2.http.FieldMap
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Multipart
@@ -478,6 +481,47 @@ interface ZyvoApi {
     suspend fun saveCardStripe(
         @Field("user_id") userId : String,
         @Field("token_stripe") token_stripe : String) :Response<JsonObject>
+
+
+    @POST("set_preferred_card")
+    @FormUrlEncoded
+    suspend fun setPreferredCard(
+        @Field("user_id") userId : String,
+        @Field("card_id") token_stripe : String) :Response<JsonObject>
+
+    @POST("book_property")
+    @FormUrlEncoded
+    suspend fun bookProperty(
+        @Field("user_id") userId : String,
+        @Field("property_id") property_id : String,
+        @Field("booking_date") booking_date : String,
+        @Field("booking_start") booking_start : String,
+        @Field("booking_end") booking_end : String,
+        @Field("booking_amount") booking_amount : String,
+        @Field("total_amount") total_amount : String,
+        @Field("customer_id") customer_id : String,
+        @Field("card_id") card_id : String,
+        @FieldMap addons: Map<String, String>) :Response<JsonObject>
+
+    @POST("report_violation")
+    @FormUrlEncoded
+    suspend fun reportViolation(
+        @Field("user_id") userId : String,
+        @Field("booking_id") booking_id : String,
+        @Field("property_id") property_id : String,
+        @Field("report_reasons_id") report_reasons_id : String,
+        @Field("additional_details") additional_details : String) :Response<JsonObject>
+
+
+    @GET("list_report_reasons")
+    suspend fun listReportReasons() :Response<JsonObject>
+
+    @POST("cancel_booking")
+    @FormUrlEncoded
+    suspend fun cancelBooking(
+        @Field("user_id") userId : String,
+        @Field("booking_id") booking_id : String) :Response<JsonObject>
+
 
 
 }
