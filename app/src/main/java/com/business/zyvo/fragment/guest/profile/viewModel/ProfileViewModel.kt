@@ -431,5 +431,19 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         }
     }
 
+    suspend fun logout(userId: String):
+            Flow<NetworkResult<String>> {
+        return repository.logout(userId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
 
 }

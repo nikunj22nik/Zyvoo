@@ -71,6 +71,7 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation(libs.places)
+    implementation(libs.androidx.paging.runtime.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -112,6 +113,9 @@ dependencies {
     implementation("com.github.colourmoon:readmore-textview:v1.0.2")
     //Spinner
     implementation("com.github.skydoves:powerspinner:1.2.7")
+// Paging library
+    implementation("androidx.paging:paging-runtime:3.1.0")
+
     //persona API
     implementation (libs.sdk2.inquiry)
     //firebase BOM
@@ -119,11 +123,20 @@ dependencies {
     implementation("com.google.firebase:firebase-messaging")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.android.gms:play-services-auth:21.1.1")
+    implementation("com.twilio:conversations-android:1.4.1")
+    implementation("com.getkeepsafe.relinker:relinker:1.4.4") // Explicitly include Relinker
+    implementation ("com.github.barteksc:pdfium-android:1.9.0")
+    //Pdf lib.
+    implementation ("com.github.barteksc:pdfium-android:1.9.0")
+
+
+    implementation("com.github.jaiselrahman:FilePicker:1.3.2")
 
     // Add the dependencies for the Crashlytics and Analytics libraries
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
+
 
 
 

@@ -34,12 +34,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 android:src="@drawable/ic_img_girl_dumm"
                 />
-
-
-
-
-
-        <ImageView
+      <ImageView
             android:id="@+id/imageThreeDots"
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_20sdp"
@@ -62,23 +57,61 @@
             android:maxLines="1"
             android:text="Katelyn Francy"
             android:textColor="@color/black"
-            android:textSize="@dimen/_13ssp"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/imagePicture"
             app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:id="@+id/llApproveAndDecline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imagePicture"
+            app:layout_constraintBottom_toTopOf="@+id/fl"
+            app:layout_constraintTop_toBottomOf="@id/textName"
+            android:visibility="gone"
 
+            android:layout_marginBottom="@dimen/_10sdp">
+
+
+            <TextView
+                android:id="@+id/textApporve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_two_side_corner_green_layout"
+                android:paddingHorizontal="@dimen/_7sdp"
+                android:paddingVertical="@dimen/_2sdp"
+                android:text="Apporve"
+                android:textColor="#00BF7B" />
+
+            <TextView
+                android:id="@+id/textDecline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp"
+                android:background="@drawable/bg_two_side_corner_red_layout"
+                android:paddingHorizontal="@dimen/_7sdp"
+                android:paddingVertical="@dimen/_2sdp"
+                android:text="Decline"
+                android:textColor="#FF1A00" />
+
+        </LinearLayout>
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/fl"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             app:alignItems="center"
             app:flexDirection="row"
             app:flexWrap="wrap"
+            android:layout_marginVertical="@dimen/_5sdp"
             app:justifyContent="flex_start"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/imagePicture"
-            app:layout_constraintTop_toBottomOf="@+id/textName">
+            app:layout_constraintTop_toBottomOf="@+id/llApproveAndDecline">
 
             <TextView
                 android:id="@+id/textStatus"
@@ -104,43 +137,11 @@
                 android:maxLines="1"
                 android:text="October 22, 2023"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp" />
+                android:textSize="@dimen/_11ssp" />
         </com.google.android.flexbox.FlexboxLayout>
 
 
-        <LinearLayout
-            android:id="@+id/llApproveAndDecline"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_10sdp"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imagePicture"
-            app:layout_constraintTop_toBottomOf="@+id/fl">
 
-
-            <TextView
-                android:id="@+id/textApporve"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_two_side_corner_green_layout"
-                android:paddingHorizontal="@dimen/_7sdp"
-                android:paddingVertical="@dimen/_2sdp"
-                android:text="Apporve"
-                android:textColor="#00BF7B" />
-
-            <TextView
-                android:id="@+id/textDecline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:background="@drawable/bg_two_side_corner_red_layout"
-                android:paddingHorizontal="@dimen/_7sdp"
-                android:paddingVertical="@dimen/_2sdp"
-                android:text="Decline"
-                android:textColor="#FF1A00" />
-
-        </LinearLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

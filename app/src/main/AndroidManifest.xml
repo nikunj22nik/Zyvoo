@@ -3,17 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.business.zyvo">
 
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
 
     <application
-        android:name="com.business.zyvo.MyApp"
+        android:name=".MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -24,40 +24,43 @@
         android:theme="@style/Theme.ZYVO"
         tools:targetApi="31">
         <activity
-            android:name="com.business.zyvo.activity.PlaceOpenActivity"
+            android:name=".activity.ChatActivity"
             android:exported="false" />
         <activity
-            android:name="com.business.zyvo.activity.HostMainActivity"
+            android:name=".activity.PlaceOpenActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.HostMainActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.business.zyvo.activity.guest.ExtraTimeChargesActivity"
+            android:name=".activity.guest.ExtraTimeChargesActivity"
             android:exported="false" />
         <activity
-            android:name="com.business.zyvo.activity.guest.ExtraTimeActivity"
+            android:name=".activity.guest.ExtraTimeActivity"
             android:exported="false" />
         <activity
-            android:name="com.business.zyvo.activity.CheckOutPayActivity"
+            android:name=".activity.guest.checkout.CheckOutPayActivity"
             android:exported="false" />
         <activity
-            android:name="com.business.zyvo.activity.guest.RestaurantDetailActivity"
+            android:name=".activity.guest.propertydetails.RestaurantDetailActivity"
             android:exported="false" /> <!-- <activity -->
         <!-- android:name=".activity.guest.RestaurentDeatilActivity" -->
         <!-- android:exported="false" -->
         <!-- android:theme="@style/Theme.ZYVO" /> -->
         <activity
-            android:name="com.business.zyvo.activity.guest.WhereTimeActivity"
+            android:name=".activity.guest.WhereTimeActivity"
             android:exported="false" />
         <activity
-            android:name="com.business.zyvo.activity.guest.FiltersActivity"
+            android:name=".activity.guest.FiltersActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.business.zyvo.activity.GuesMain"
+            android:name=".activity.GuesMain"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.business.zyvo.activity.AuthActivity"
+            android:name=".activity.AuthActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -68,7 +71,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.business.zyvo.activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="false" />
 
         <meta-data

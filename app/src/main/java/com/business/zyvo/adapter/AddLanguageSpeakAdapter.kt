@@ -1,5 +1,6 @@
 package com.business.zyvo.adapter
 
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -20,7 +21,7 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
     private  var textAddNew : TextView? = null
 
     inner class LanguageViewHolder(var binding: LayoutAddLanguageBinding) :
-            RecyclerView.ViewHolder(binding.root) {
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(languageItem: AddLanguageModel) {
             if (list.size >= 3) {
                 textAddNew?.visibility = View.GONE
@@ -52,13 +53,13 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-       return  if (viewType == uploadLanguageCode){
-           val binding = LayoutAddLanguageBinding.inflate(LayoutInflater.from(context),parent,false)
-       LanguageViewHolder(binding)
-       } else{
-           val  binding = LayoutAddTextBinding.inflate(LayoutInflater.from(context), parent, false)
-       LanguageViewHolderFixed(binding)
-       }
+        return  if (viewType == uploadLanguageCode){
+            val binding = LayoutAddLanguageBinding.inflate(LayoutInflater.from(context),parent,false)
+            LanguageViewHolder(binding)
+        } else{
+            val  binding = LayoutAddTextBinding.inflate(LayoutInflater.from(context), parent, false)
+            LanguageViewHolderFixed(binding)
+        }
     }
 
     override fun getItemCount() = list.size

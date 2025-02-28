@@ -61,10 +61,11 @@ import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.guest.ExtraTimeChargesActivity
 import com.business.zyvo.activity.guest.FiltersActivity
-import com.business.zyvo.activity.guest.RestaurantDetailActivity
+import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
 import com.business.zyvo.adapter.WishlistAdapter
 import com.business.zyvo.adapter.guest.HomeScreenAdapter
+import com.business.zyvo.adapter.guest.HomeScreenAdapter.onItemClickListener
 import com.business.zyvo.databinding.FragmentGuestDiscoverBinding
 import com.business.zyvo.fragment.guest.home.model.HomePropertyData
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
@@ -94,8 +95,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, OnMapReadyCallback,
-    OnClickListener1 {
+class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback,
+    OnClickListener1 , onItemClickListener {
 
     lateinit var binding :FragmentGuestDiscoverBinding
     private lateinit var startForResult: ActivityResultLauncher<Intent>
@@ -150,7 +151,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         session = SessionManager(requireActivity())
 
         adapter = HomeScreenAdapter(requireContext(), homePropertyData,
-            this)
+            this,this)
 
         setRetainInstance(true);
 
@@ -168,7 +169,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         binding.customProgressBar.setOnClickListener(this)
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-        adapterClickListnerTask()
 
         // This is use for LocationServices declaration
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
@@ -320,69 +320,22 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
         }
     }
 
-
-
-    private fun adapterClickListnerTask(){
-        Log.d(ErrorDialog.TAG,"I AM HERE IN AdapterClickListener Task")
-
-        adapter.setOnItemClickListener(object : HomeScreenAdapter.onItemClickListener{
-            override fun onItemClick(position: Int) {
-                Log.d(ErrorDialog.TAG,"I AM HERE IN DEVELOPMENT")
-                val intent = Intent(requireContext(),RestaurantDetailActivity::class.java)
-                startActivity(intent)
-            }
-
-        })
+    override fun onItemClick(position: Int) {
+        Log.d(ErrorDialog.TAG,"I AM HERE IN DEVELOPMENT")
+        val intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
+        intent.putExtra("propertyId",homePropertyData?.get(position)?.property_id.toString())
+        intent.putExtra("propertyMile",homePropertyData?.get(position)?.distance_miles.toString())
+        startActivity(intent)
     }
 
-    override fun itemClick(obj: Int) {}
 
     override fun onMapReady(mp: GoogleMap) {
         try {
             googleMap = mp
             // Add a marker in New York and move the camera
-
-          /*  // Example coordinates
-            val locations = listOf(
-                Location(37.7749, -122.4194, "$13 / h"),
-                Location(34.0522, -118.2437, "$15 / h"),
-                Location(40.7128, -74.0060, "$19 / h"),
-                Location(51.5074, -0.1278, "$23 / h"),
-                Location(48.8566, 2.3522, "$67 / h")
-            )
-
-            for (location in locations) {
-                val customMarkerBitmap = createCustomMarker(requireContext(), location.title)
-
-                val markerOptions = MarkerOptions()
-                    .position(LatLng(location.latitude, location.longitude))
-                    .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
-                    .title(location.title)
-
-                googleMap.addMarker(markerOptions)
-            }
-
-            // Move and zoom the camera to the first location
-            if (locations.isNotEmpty()) {
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                    LatLng(locations[0].latitude, locations[0].longitude), 10f))
-            }
-
-            // Apply custom style to the map
-            val success: Boolean = googleMap!!.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
-            )
-            if (!success) {
-                Log.e("MapsActivity", "Style parsing failed.")
-            }*/
         } catch (e: Resources.NotFoundException) {
             Log.e("MapsActivity", "Can't find style. Error: ", e)
         }
-
-
-
-
-
 
     }
 
@@ -985,4 +938,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnClickListener, O
 
         
     }
+
+
 }

@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_marginEnd="@dimen/_10sdp"
     android:paddingVertical="@dimen/_7sdp"
+    android:id="@+id/laypout"
     android:layout_marginBottom="@dimen/_15sdp"
     android:background="@drawable/bg_four_side_corner_grey_slight_more"
     >
@@ -34,7 +35,7 @@
             android:fontFamily="@font/poppins"
             />
         <TextView
-            android:id="@+id/tv_time"
+            android:id="@+id/tv_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"

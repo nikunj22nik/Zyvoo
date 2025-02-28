@@ -16,6 +16,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 import retrofit2.http.Part
+import java.nio.file.DirectoryStream.Filter
 
 
 interface ZyvoApi {
@@ -420,5 +421,115 @@ interface ZyvoApi {
         @Field("user_id") user_id : String,
         @Field("property_id") property_id : String,
         @Field("wishlist_id") wishlist_id : String) :Response<JsonObject>
+
+
+
+
+    @POST("filter_property_reviews")
+    @FormUrlEncoded
+    suspend fun propertyFilterReviews(
+        @Field("property_id") propertyId :Int,
+        @Field("filter") filter: String,
+        @Field("page") page :Int
+    ) : Response<JsonObject>
+
+    @POST("get_notification_host")
+    @FormUrlEncoded
+    suspend fun getNotificationHost(@Field("user_id") userId :Int) : Response<JsonObject>
+
+
+    @POST("mark_notification_read")
+    @FormUrlEncoded
+    suspend fun deleteNotificationHost(@Field("user_id") userId :Int,@Field("notification_id") notificationId:Int) : Response<JsonObject>
+
+
+    @POST("host_report_violation")
+    @FormUrlEncoded
+    suspend fun hostReportViolation(
+        @Field("user_id") userId :Int, @Field("booking_id") bookingId :Int, @Field("property_id") propertyId :Int,
+        @Field("report_reasons_id")reportReasonId :Int,
+        @Field("additional_details") additionalDetails :String
+    ) : Response<JsonObject>
+
+    @GET("list_report_reasons")
+    suspend fun reportListReason() : Response<JsonObject>
+
+    @POST("get_article_list")
+    @FormUrlEncoded
+    suspend fun getArticleList(@Field("search_term") search_term : String):Response<JsonObject>
+
+    @POST("get_guide_list")
+    @FormUrlEncoded
+    suspend fun getGuideList(@Field("search_term") search_term : String):Response<JsonObject>
+
+
+    @POST("host_report_violation")
+    @FormUrlEncoded
+    suspend fun hostReportViolationSend(@Field("user_id")userId :Int,
+                                    @Field("booking_id") bookingId :Int,
+                                    @Field("property_id") propertyId :Int,
+                                    @Field("report_reasons_id")reportReasonId :Int,
+                                    @Field("additional_details")additionalDetail :String) : Response<JsonObject>
+
+    @POST("get_home_property_details")
+    @FormUrlEncoded
+    suspend fun getHomePropertyDetails(
+        @Field("user_id") user_id : String,
+        @Field("property_id") property_id : String) :Response<JsonObject>
+
+    @POST("filter_property_reviews")
+    @FormUrlEncoded
+    suspend fun filterPropertyReviews(
+        @Field("property_id") property_id : String,
+        @Field("filter") filter : String,
+        @Field("page") page : String) :Response<JsonObject>
+
+    @POST("get_user_cards")
+    @FormUrlEncoded
+    suspend fun getUserCards(
+        @Field("userId") userId : String) :Response<JsonObject>
+
+    @POST("logout")
+    @FormUrlEncoded
+    suspend fun logout(
+        @Field("user_id") user_id : String) :Response<JsonObject>
+
+
+    @POST("review_guest")
+    @FormUrlEncoded
+    suspend fun reviewGuest(
+                 @Field("user_id") userId :Int,
+                 @Field("booking_id") bookingId :Int,
+                 @Field("property_id") propertyId :Int,
+                 @Field("response_rate") responseRate :Int,
+                 @Field("communication") communication :Int,
+                 @Field("on_time") onTime :Int,
+                 @Field("review_message") reviewMessage :String
+     ) : Response<JsonObject>
+
+    @POST("chat_token")
+    @FormUrlEncoded
+    suspend fun getChatToken(@Field("user_id") user_Id:Int,@Field("role") role :String) : Response<JsonObject>
+
+    @POST("property_booking_details")
+    @FormUrlEncoded
+    suspend fun propertyBookingDetails(
+        @Field("property_id") property_id : String,
+        @Field("user_id") user_id : String,
+        @Field("start_date") start_date : String,
+        @Field("end_date") end_date : String,
+        @Field("latitude") latitude : String,
+        @Field("longitude") longitude : String,
+    ) :Response<JsonObject>
+
+    @POST("toggle_property_booking")
+    @FormUrlEncoded
+    suspend fun togglePropertyBooking(
+        @Field("property_id") property_id : String,
+        @Field("user_id") user_id : String
+    ) :Response<JsonObject>
+
+
+    
 
 }

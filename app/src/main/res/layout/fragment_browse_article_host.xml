@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".fragment.host.BrowseArticleHostFragment">
+    tools:context=".fragment.both.browseArticleHost.BrowseArticleHostFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -39,6 +39,7 @@
             android:background="@drawable/bg_two_side_corner"
             >
             <EditText
+                android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/_35sdp"
@@ -50,6 +51,7 @@
                 android:textColor="@color/black"
                 />
             <ImageView
+                android:id="@+id/imageSearchButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_search_bar_icon"
@@ -65,6 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.15"
             android:src="@drawable/ic_filter"
+            android:visibility="invisible"
             android:layout_gravity="center_vertical"
             />
     </LinearLayout>

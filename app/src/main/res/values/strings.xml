@@ -126,5 +126,10 @@
     <string name="no_internet_dialog_msg">Check your internet connection and try again.</string>
     <string name="enter_your_email_here">Enter your Email here</string>
     <string name="api_key_location">AIzaSyAI8v81ijt2sXkMwcPWeVSEGqB2rxXFHiA</string>
-
+    <string name="see_more">See More</string>
+    <string name="cleaning_fee">Cleaning Fee</string>
+    <string name="zyvoo_service_fee">Zyvoo Service Fee</string>
+    <string name="taxes">Taxes</string>
+    <string name="add_on">Add-on</string>
+    <string name="discount">Discount</string>
 </resources>

@@ -23,7 +23,6 @@ import com.business.zyvo.fragment.guest.wishlists.viewModel.WishListsViewModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
-import com.business.zyvo.viewmodel.WishlistViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint

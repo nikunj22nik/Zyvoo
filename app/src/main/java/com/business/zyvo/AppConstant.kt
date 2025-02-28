@@ -6,6 +6,16 @@ import com.business.zyvo.model.CountryLanguage
 class AppConstant {
 
     companion object {
+        val FRIEND_ID: String? ="FRIENDiD"
+        val CHANNEL_NAME: String? ="Channel_Name"
+        val GUEST_ID: String? ="GUEST_ID"
+        val HOST_ID :String? = "HOST_ID"
+        val CHAT_TOKEN: String? ="chat_token"
+        val PENDING: String ="pending"
+        val WAITING_PAYMENT ="waiting_payment"
+        val CONFIRMED ="confirmed"
+        val CANCEL ="cancelled"
+        val FINISHED = "finished"
         val BOOKING_ID: String? ="Booking_id"
         val PROPERTY_ID: String? ="property_id"
         val DISCOUNT: String = "Discount"
@@ -168,11 +178,26 @@ class AppConstant {
         val aboutMe = "AboutMe is required"
         val details = "Details is required"
         val feedbackAbout = "Please select feedback about"
+        val hours = "Hours is required"
+        val price = "Price is required"
+        val stTime = "Start time is required"
+        val edTime = "End time is required"
 
       val message = "Message is required"
         val emailValid = "Please enter a valid email"
 
         val description = "Name is Description"
+
+        val placeOpenActivity = "placeOpenActivity"
+
+        val property_images = "property_images"
+        val latitude = "latitude"
+        val longitude = "longitude"
+        val property_rating = "property_rating"
+        val property_status = "property_status"
+        val property_review_count = "property_review_count"
+        val distance_miles = "distance_miles"
+        val title = "title"
 
     }
 

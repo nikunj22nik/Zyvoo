@@ -70,6 +70,7 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
         binding.textBrowseAllGuides.setOnClickListener(this)
         binding.textBrowseAllArticle.setOnClickListener(this)
 
+
         arguments?.let {
             Log.d("TESTING_ANDROID", "I AM ON CLICK OF HOST Arguments")
 
@@ -142,6 +143,11 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
                                 it.data,
                                 HelpCenterResponse::class.java
                             )
+
+                            if (model.data.user_fname != null){
+                                val name = model.data.user_fname
+                                binding.textTitle.setText("Hi $name, how can we help?")
+                            }
 
                             adapterAllGuides.updateItem(model.data.guides)
                             adapterAllArticles.updateItem(model.data.articles)

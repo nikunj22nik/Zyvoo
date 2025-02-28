@@ -40,29 +40,37 @@ import java.util.Locale
 class LocationManager(var applicationContext : Context, var applicationActivity : AppCompatActivity? =null) {
 
     private lateinit var autocompleteTextView: AutoCompleteTextView
+
     private var selectedLatitude: Double? = null
+
     private var selectedLongitude: Double? = null
 
     private var placesClient: PlacesClient
+
     private val geocoder by lazy { Geocoder(applicationContext, Locale.getDefault()) }
 
     init {
         Places.initialize(applicationContext, "AIzaSyC9NuN_f-wESHh3kihTvpbvdrmKlTQurxw")
         placesClient = Places.createClient(applicationContext)
-
     }
 
     @SuppressLint("ClickableViewAccessibility")
     fun autoCompleteLocationWork(autocompleteTextView :AutoCompleteTextView){
-            this.autocompleteTextView =autocompleteTextView
 
-            autocompleteTextView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-            val width: Int = autocompleteTextView.getMeasuredWidth()
-            Log.d("TESTING_WIDTH", width.toString())
-           // autocompleteTextView.dropDownWidth = width
-            autocompleteTextView.threshold = 1 // Start suggesting after 1 character
+        this.autocompleteTextView =autocompleteTextView
 
-            autocompleteTextView.addTextChangedListener(object : TextWatcher {
+        autocompleteTextView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+
+        val width: Int = autocompleteTextView.getMeasuredWidth()
+
+        Log.d("TESTING_WIDTH", width.toString())
+
+
+        // autocompleteTextView.dropDownWidth = width
+
+        autocompleteTextView.threshold = 1 // Start suggesting after 1 character
+
+        autocompleteTextView.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
                 }
@@ -71,12 +79,13 @@ class LocationManager(var applicationContext : Context, var applicationActivity 
                         if (it.isNotEmpty()) {
                             fetchAutocompleteSuggestions(it.toString(),applicationContext)
                             autocompleteTextView.showDropDown()
-                        }else{
+                        }
+                        else{
                             autocompleteTextView.dismissDropDown()
                         }
                     }
                 }
-                override fun afterTextChanged(s: Editable?) {}
+                override fun afterTextChanged(s: Editable?) {  }
             })
 
         autocompleteTextView.setOnItemClickListener { parent, _, position, _ ->
@@ -90,16 +99,15 @@ class LocationManager(var applicationContext : Context, var applicationActivity 
             }
         }
 
-
         autocompleteTextView.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     if (autocompleteTextView.text.isNotEmpty()) {
                         autocompleteTextView.showDropDown()
                     }
                 }
-            }
+        }
 
-            autocompleteTextView.setOnTouchListener { v, event ->
+        autocompleteTextView.setOnTouchListener { v, event ->
                 if (event.action == MotionEvent.ACTION_UP) {
                     v.performClick() // Ensure accessibility
                     if (autocompleteTextView.text.isNotEmpty()) {
@@ -112,11 +120,10 @@ class LocationManager(var applicationContext : Context, var applicationActivity 
         }
 
     private fun fetchAutocompleteSuggestions(query: String,context:Context) {
-            val request = FindAutocompletePredictionsRequest.builder()
-                .setQuery(query)
-                .build()
 
-            placesClient.findAutocompletePredictions(request).addOnSuccessListener { response ->
+            val request = FindAutocompletePredictionsRequest.builder().setQuery(query).build()
+
+           placesClient.findAutocompletePredictions(request).addOnSuccessListener { response ->
                 val suggestions = response.autocompletePredictions.map { it.getPrimaryText(null).toString() }
                 Log.d("TESTING_ZYVOO_LOCATION","Suggestions For Location :- "+suggestions.size.toString())
                 val adapter = ArrayAdapter(context, R.layout.simple_dropdown_item_1line, suggestions)
@@ -285,7 +292,4 @@ class LocationManager(var applicationContext : Context, var applicationActivity 
             null
         }
     }
-
-
-
-}
+  }

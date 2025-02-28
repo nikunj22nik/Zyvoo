@@ -74,23 +74,39 @@
 
 
                 <ImageView
+                    android:id="@+id/imageEditAboutIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_edit_icon"
-                    android:layout_toRightOf="@id/tv_edit"
+                    android:layout_toEndOf="@id/tv_edit"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    />
+                <ImageView
+                    android:id="@+id/imageSaveAboutIcon"
+                    android:layout_width="@dimen/_25sdp"
+                    android:layout_height="@dimen/_25sdp"
+                    android:visibility="gone"
+                    android:paddingVertical="@dimen/_4sdp"
+                    android:src="@drawable/ic_checked_icon"
+                    android:layout_toEndOf="@id/tv_edit"
+                    android:layout_marginEnd="@dimen/_2sdp"
                     android:layout_marginStart="@dimen/_10sdp"
                     />
             </RelativeLayout>
 
-            <TextView
+            <EditText
+                android:id="@+id/etAboutMeText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Lorem Ipsum is simply dummy text of the printin  and typesetting industry. Lorem Ipsum has been g "
+                android:background="@null"
+                android:hint="Lorem ddddddddddddddddIpsum is simply dummy text of the printin  and typesetting industry. Lorem Ipsum has been g "
                 android:textColor="@color/black"
+                android:text="@{user.about_me != null ? user.about_me : ``}"
                 android:fontFamily="@font/poppins"
+                android:enabled="false"
                 android:textSize="@dimen/_11ssp"
+                android:maxLines="3"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-
                 android:layout_marginTop="@dimen/_2sdp"
                 app:layout_constraintTop_toBottomOf="@id/rl_edit"
 
@@ -135,10 +151,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_25sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Hey James"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp"
                 android:textStyle="bold"
+                android:text="@{user.name != null ? user.name : ``}"
                 app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
                 app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
 
@@ -691,9 +707,10 @@
                 android:layout_marginEnd="@dimen/_25sdp"
                 android:background="@null"
                 android:fontFamily="@font/poppins"
-                android:hint="1555522333"
+                android:hint="XXXXXXXXXX"
                 android:inputType="numberDecimal"
                 android:maxLines="1"
+                android:maxLength="10"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textSize="@dimen/_12ssp"
@@ -755,6 +772,7 @@
                 android:background="@null"
                 android:fontFamily="@font/poppins"
                 android:hint="**********"
+                android:enabled="false"
                 android:inputType="textPassword"
                 android:maxLines="1"
                 android:textColor="@color/black"
@@ -813,15 +831,17 @@
             >
 
             <EditText
-                android:id="@+id/et_street"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:background="@null"
+                android:id="@+id/streetEditText"
                 android:fontFamily="@font/poppins"
                 android:hint="Street"
                 android:inputType="text"
+                android:enabled="false"
+                android:text="@{user.street != null ? user.street : ``}"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -838,6 +858,16 @@
                 android:src="@drawable/ic_edit_icon"
                 app:layout_constraintEnd_toEndOf="parent" />
 
+            <ImageView
+                android:id="@+id/imageStreetCheckedButton"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_margin="@dimen/_5sdp"
+                android:src="@drawable/ic_checked_icon"
+                android:visibility="gone"
+                android:layout_alignParentEnd="true"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
 
         </RelativeLayout>
 
@@ -852,15 +882,16 @@
             app:layout_constraintTop_toBottomOf="@+id/textMailingAddressTitle">
 
             <EditText
-                android:id="@+id/etcity"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:background="@null"
+                android:id="@+id/cityET"
                 android:fontFamily="@font/poppins"
                 android:hint="City"
-                android:inputType="text"
+                android:text="@{user.city != null ? user.city : ``}"
+                android:enabled="false"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -877,6 +908,17 @@
                 android:src="@drawable/ic_edit_icon"
                 app:layout_constraintEnd_toEndOf="parent" />
 
+            <ImageView
+                android:id="@+id/CityCheckedButton"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_margin="@dimen/_5sdp"
+                android:src="@drawable/ic_checked_icon"
+                android:visibility="gone"
+                android:layout_alignParentEnd="true"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+
 
         </RelativeLayout>
 
@@ -890,18 +932,20 @@
             android:background="@drawable/button_grey_line_bg"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rlMailingStreetTitle"
+
             >
 
             <EditText
-                android:id="@+id/et_state"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:background="@null"
+                android:id="@+id/stateEt"
                 android:fontFamily="@font/poppins"
                 android:hint="State"
-                android:inputType="text"
+                android:enabled="false"
+                android:text="@{user.state != null ? user.state : ``}"
                 android:maxLines="1"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -913,10 +957,21 @@
                 android:id="@+id/imageEditStateAddress"
                 android:layout_width="@dimen/_28sdp"
                 android:layout_height="@dimen/_28sdp"
+
                 android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/_5sdp"
                 android:src="@drawable/ic_edit_icon"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/stateCheckedButton"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_margin="@dimen/_5sdp"
+                android:src="@drawable/ic_checked_icon"
+                android:visibility="gone"
+                android:layout_alignParentEnd="true"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
         </RelativeLayout>
@@ -929,19 +984,21 @@
             android:layout_marginVertical="@dimen/_10ssp"
             android:background="@drawable/button_grey_line_bg"
             app:layout_constraintStart_toEndOf="@+id/rlMailingStreetTitle"
+
             app:layout_constraintTop_toBottomOf="@+id/rlMailingCityTitle">
 
             <EditText
-                android:id="@+id/et_zipcode"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/_10ssp"
                 android:layout_marginEnd="@dimen/_30sdp"
                 android:background="@null"
+                android:id="@+id/zipEt"
                 android:fontFamily="@font/poppins"
-                  android:inputType="text"
+                android:hint="Zip Code"
+                android:enabled="false"
+                android:text="@{user.zip_code != null ? user.zip_code : ``}"
                 android:maxLines="1"
-                android:hint="Zipcode"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textSize="@dimen/_12ssp"
@@ -957,6 +1014,16 @@
                 android:layout_margin="@dimen/_5sdp"
                 android:src="@drawable/ic_edit_icon"
                 app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/zipCodeCheckedButton"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_margin="@dimen/_5sdp"
+                android:src="@drawable/ic_checked_icon"
+                android:visibility="gone"
+                android:layout_alignParentEnd="true"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
         </RelativeLayout>

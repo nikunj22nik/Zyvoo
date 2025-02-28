@@ -17,17 +17,18 @@ class AddLocationAdapter(
     var context: Context,
     var list: MutableList<AddLocationModel>,
     var listener: OnClickListener1,
-    var listner2 : onItemClickData
+    var listner2: onItemClickData
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val uploadLocationCode = 1 // Represents normal location entries
     private val uploadLocationFixed = 0 // Represents the "Add New" button
-    private var count : Int = 0
-    private  var textAddNew : TextView? = null
+    private var count: Int = 0
+    private var textAddNew: TextView? = null
 
 
     // ViewHolder for Location Items
-    inner class LocationViewHolder(var binding: LayoutWhereILiveBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class LocationViewHolder(var binding: LayoutWhereILiveBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
 
         fun bind(location: AddLocationModel) {
@@ -35,7 +36,7 @@ class AddLocationAdapter(
             if (list.size >= 3) {
                 textAddNew?.visibility = View.GONE
             } else {
-                textAddNew?.visibility  = View.VISIBLE
+                textAddNew?.visibility = View.VISIBLE
             }
 
             binding.textLocationName.text = location.name // Bind location name to TextView
@@ -43,17 +44,21 @@ class AddLocationAdapter(
 
             binding.imageCross.setOnClickListener {
 
-                listener.itemClick(adapterPosition, "location") // Handle delete (or any other action) for this location
+                listener.itemClick(
+                    adapterPosition,
+                    "location"
+                ) // Handle delete (or any other action) for this location
             }
         }
     }
 
     // ViewHolder for "Add New" Button
-    inner class LocationViewHolderFixed(var binding: LayoutAddTextBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class LocationViewHolderFixed(var binding: LayoutAddTextBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         init {
 
             binding.root.setOnClickListener {
-               listner2.itemClick(position,"location","")// Handle "Add New" button click
+                listner2.itemClick(position, "location", "")// Handle "Add New" button click
             }
         }
 
@@ -69,7 +74,8 @@ class AddLocationAdapter(
     // Create the appropriate ViewHolder based on the view type
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return if (viewType == uploadLocationCode) {
-            val binding = LayoutWhereILiveBinding.inflate(LayoutInflater.from(context), parent, false)
+            val binding =
+                LayoutWhereILiveBinding.inflate(LayoutInflater.from(context), parent, false)
             LocationViewHolder(binding)
         } else {
             val binding = LayoutAddTextBinding.inflate(LayoutInflater.from(context), parent, false)
@@ -84,8 +90,7 @@ class AddLocationAdapter(
             holder.bind(locationItem) // Bind location data to the holder
 
 
-
-           // Toast.makeText(context,list.size.toString(),Toast.LENGTH_LONG).show()
+            // Toast.makeText(context,list.size.toString(),Toast.LENGTH_LONG).show()
         } else if (holder is LocationViewHolderFixed) {
             holder.bind() // Bind "Add New" button (if needed)
             textAddNew = holder.binding.textAddNew
@@ -96,8 +101,8 @@ class AddLocationAdapter(
 
 
     override fun getItemCount(): Int {
-return  list.size
-     }
+        return list.size
+    }
 
     // Determine the view type (whether it's a location or the "Add New" button)
     override fun getItemViewType(position: Int): Int {
@@ -109,13 +114,9 @@ return  list.size
     }
 
     // Update the list with new locations
-    fun updateLocations(newList: List<AddLocationModel>) {
-        if (list != newList) {
-            list.clear()
-            list.addAll(newList)
-            Log.d("ZYVOO_ADAPTER", "Updated list size: ${list.size}")
-            notifyDataSetChanged()
-        }
+    fun updateLocations(newList: MutableList<AddLocationModel>) {
+        this.list = newList
+        notifyDataSetChanged()
     }
 
 }

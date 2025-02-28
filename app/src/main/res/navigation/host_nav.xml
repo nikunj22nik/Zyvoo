@@ -20,6 +20,11 @@
         android:label="fragment_terms_services"
         tools:layout="@layout/fragment_terms_services" />
 
+    <fragment
+        android:id="@+id/chatDetailsFragment"
+        android:name="com.business.zyvo.fragment.guest.ChatDetailsFragment"
+        android:label="fragment_chat_details"
+        tools:layout="@layout/fragment_chat_details" />
 
     <fragment android:id="@+id/host_manage_property_frag"
         android:name="com.business.zyvo.fragment.host.ManagePlaceFragment"
@@ -90,7 +95,7 @@
 
     <fragment
         android:id="@+id/browse_article_host"
-        android:name="com.business.zyvo.fragment.host.BrowseArticleHostFragment"
+        android:name="com.business.zyvo.fragment.both.browseArticleHost.BrowseArticleHostFragment"
         android:label="BrowseArticleHost"
         />
 
@@ -108,5 +113,10 @@
         android:name="com.business.zyvo.fragment.host.PayoutFragment"
         android:label="fragment_payout"
         tools:layout="@layout/fragment_payout" />
+    <fragment
+        android:id="@+id/placeOpenFragment"
+        android:name="com.business.zyvo.fragment.host.placeOpen.PlaceOpenFragment"
+        android:label="fragment_place_open"
+        tools:layout="@layout/fragment_place_open" />
 
 </navigation>

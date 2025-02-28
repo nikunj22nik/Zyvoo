@@ -300,10 +300,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                  newGalleryList.add(it.first)
              }
          }
-         if(newGalleryList.size ==0){
-             LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images")
-             return
-         }
+
 
          val session : SessionManager = SessionManager(requireContext())
          requestBody.user_id = session.getUserId()!!
@@ -347,8 +344,13 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
          lifecycleScope.launch {
 
-             LoadingUtils.showDialog(requireContext(),false)
+
              if(propertyId ==-1) {
+                 if(newGalleryList.size ==0){
+                     LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images")
+                     return@launch
+                 }
+                 LoadingUtils.showDialog(requireContext(),false)
                  viewModel.addProperty(requestBody).collect {
                      when (it) {
                          is NetworkResult.Success -> {
@@ -375,6 +377,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
              else{
                  requestBody.property_id = propertyId
                  requestBody.delete_images = deleteImage
+
+                 if(newGalleryList.size ==0 && imageList.size ==0){
+                     LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images")
+                     return@launch
+                 }
                  LoadingUtils.showDialog(requireContext(),true)
                  viewModel.updateProperty(requestBody).collect{
                      when(it){
@@ -615,7 +622,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         if(!latitude.equals("00") && !longitude.equals("00")) {
             Log.d("TESTING_LATITUDE",latitude.toString() +" "+longitude.toString())
-
+            val location = LatLng(latitude.toDouble(), longitude.toDouble())
+            // Move the camera to the specified location
+            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+            // Add a marker at that location
+            mMap?.addMarker(MarkerOptions().position(location))
         }
 
         val resultList = mutableListOf<Uri>()

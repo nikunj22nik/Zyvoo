@@ -21,12 +21,13 @@ import dagger.hilt.android.AndroidEntryPoint
  @AndroidEntryPoint
 
 class HostChatDetailsFragment : Fragment(), View.OnClickListener {
-    private var _binding: FragmentChatDetailsBinding? = null
-    private val binding get() = _binding!!
-    private var chatDetailsAdapter: ChatDetailsAdapter? = null
-    private val viewModel: HostChatDetailsViewModel by viewModels()
 
-    lateinit var navController : NavController
+     private var _binding: FragmentChatDetailsBinding? = null
+     private val binding get() = _binding!!
+     private var chatDetailsAdapter: ChatDetailsAdapter? = null
+     private val viewModel: HostChatDetailsViewModel by viewModels()
+     lateinit var navController : NavController
+     var profileimage:String =""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +50,7 @@ class HostChatDetailsFragment : Fragment(), View.OnClickListener {
 
 
 
-        chatDetailsAdapter = ChatDetailsAdapter(requireContext(), mutableListOf())
+     //   chatDetailsAdapter = ChatDetailsAdapter(requireContext(), mutableListOf())
         binding.rvChatting.adapter = chatDetailsAdapter
         viewModel.list.observe(viewLifecycleOwner, Observer {
             chatDetailsAdapter!!.updateItem(it)

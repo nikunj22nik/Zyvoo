@@ -90,10 +90,11 @@
         android:layout_marginTop="@dimen/_10sdp"
         >
         <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageMain"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:shapeAppearance="@style/RoundedImageViewShape"
-            android:src="@drawable/ic_psychologist_img"
+
             android:scaleType="fitXY"
             />
 
@@ -116,7 +117,7 @@
                     android:id="@+id/textCategory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="RANKING"
+
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins"
                     />
@@ -195,8 +196,8 @@
         android:id="@+id/textDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy"
-        android:layout_marginStart="@dimen/_10sdp"
+
+         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_13sdp"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins"
@@ -285,10 +286,11 @@
                     />
 
                 <TextView
+                    android:id="@+id/textAuthorName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/img_author"
-                    android:text="Username"
+                    android:layout_toEndOf="@id/img_author"
+
                     android:layout_below="@id/tv_author"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:textColor="@color/black"

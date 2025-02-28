@@ -49,6 +49,16 @@ class AuthTask {
 
          }
 
+
+         fun processTwoData(apiResponse: JsonObject):NetworkResult<Pair<JsonObject, JsonObject>>{
+             val obj = apiResponse.get("data").asJsonObject
+             val obj2 = apiResponse.get("pagination").asJsonObject
+             val pair = Pair(obj,obj2)
+             return NetworkResult.Success(pair)
+
+         }
+
+
          fun processSingleData(apiResponse: JsonObject): NetworkResult<BookingDetailModel> {
              return try {
                  // Convert JsonObject into BookingModel
@@ -60,9 +70,18 @@ class AuthTask {
              }
          }
          
+
          fun processDataArray(apiResponse: JsonObject): NetworkResult<JsonArray> {
              val obj = apiResponse.get("data").asJsonArray
              return NetworkResult.Success(obj)
+
+         }
+
+         fun processDataArrayAndObject(apiResponse: JsonObject): NetworkResult<Pair<JsonArray, JsonObject>> {
+             val obj = apiResponse.get("data").asJsonArray
+             val obj2 = apiResponse.get("pagination").asJsonObject
+             val pair = Pair(obj,obj2)
+             return NetworkResult.Success(pair)
 
          }
 

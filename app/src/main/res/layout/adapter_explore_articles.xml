@@ -19,6 +19,7 @@
         android:contentDescription="Rectangular Image with Rounded Corners"/>
 
     <TextView
+        android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Articles Topic Title"
@@ -31,10 +32,11 @@
         />
 
     <TextView
+        android:id="@+id/textDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply and typesetting industry."
-        android:layout_marginHorizontal="@dimen/_10sdp"
+
+       android:layout_marginHorizontal="@dimen/_10sdp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
         />

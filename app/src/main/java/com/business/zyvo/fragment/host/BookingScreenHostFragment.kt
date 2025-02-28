@@ -1,6 +1,8 @@
 package com.business.zyvo.fragment.host
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
@@ -43,81 +45,98 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         arguments?.let {
         }
-
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentBookingScreenHostBinding.inflate(
-            LayoutInflater.from(requireContext()), container,
+            LayoutInflater.from(requireContext()),
+            container,
             false
         )
 
         viewModel = ViewModelProvider(this)[HostBookingsViewModel::class.java]
 
-        // Inflate the layout for this fragment
+
         adapterMyBookingsAdapter = HostBookingsAdapter(requireContext(), mutableListOf(), this)
-
         setUpAdapterMyBookings()
-
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
-
         viewModel.list.observe(viewLifecycleOwner, Observer { list1 ->
             adapterMyBookingsAdapter!!.updateItem(list1)
             list = list1
         })
 
+        binding.etSearchButton.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                adapterMyBookingsAdapter!!.filter.filter(p0.toString().trim())
+            }
+            override fun afterTextChanged(p0: Editable?) {
+
+            }
+
+        })
+
         return binding.root
     }
 
-    private fun setUpAdapterMyBookings(){
+    private fun setUpAdapterMyBookings() {
 
-            adapterMyBookingsAdapter?.setOnItemClickListener(object : HostBookingsAdapter.onItemClickListener{
-                override fun onItemClick(bookingId: Int, status: String, message: String, reason: String) {
-                    lifecycleScope.launch {
-                        LoadingUtils.showDialog(requireContext(),false)
-                     if(status.equals("-11")){
+        adapterMyBookingsAdapter?.setOnItemClickListener(object :
+            HostBookingsAdapter.onItemClickListener {
+            override fun onItemClick(
+                bookingId: Int,
+                status: String,
+                message: String,
+                reason: String
+            ) {
+                lifecycleScope.launch {
+                    LoadingUtils.showDialog(requireContext(), false)
+                    if (status.equals("-11")) {
+                        val bundle = Bundle()
+                        bundle.putInt(AppConstant.BOOKING_ID, bookingId)
+                        findNavController().navigate(R.id.reviewBookingHostFragment, bundle)
+                    } else {
+                        viewModel.approveDeclineBooking(bookingId, status, message, reason)
+                            .collect {
+                                when (it) {
+                                    is NetworkResult.Success -> {
+                                        LoadingUtils.hideDialog()
+                                        if (status.equals("decline")) {
+                                            list.removeAll { it.booking_id == bookingId }
+                                            adapterMyBookingsAdapter!!.updateItem(list)
+                                        }
+                                        LoadingUtils.showSuccessDialog(
+                                            requireContext(),
+                                            it.data.toString()
+                                        )
+                                    }
 
-                         val bundle = Bundle()
-                         bundle.putInt(AppConstant.BOOKING_ID,bookingId)
-                         findNavController().navigate(R.id.reviewBookingHostFragment,bundle)
+                                    is NetworkResult.Error -> {
+                                        LoadingUtils.hideDialog()
+                                        LoadingUtils.showErrorDialog(
+                                            requireContext(),
+                                            it.message.toString()
+                                        )
+                                    }
 
-                     }else {
-                         viewModel.approveDeclineBooking(bookingId, status, message, reason)
-                             .collect {
-                                 when (it) {
-                                     is NetworkResult.Success -> {
-                                         LoadingUtils.hideDialog()
-                                         if (status.equals("decline")) {
-                                             list.removeAll { it.booking_id == bookingId }
-                                             adapterMyBookingsAdapter!!.updateItem(list)
-                                         }
-                                         LoadingUtils.showSuccessDialog(
-                                             requireContext(),
-                                             it.data.toString()
-                                         )
-                                     }
+                                    else -> {
 
-                                     is NetworkResult.Error -> {
-                                         LoadingUtils.hideDialog()
-                                         LoadingUtils.showErrorDialog(
-                                             requireContext(),
-                                             it.message.toString()
-                                         )
-                                     }
-
-                                     else -> {
-
-                                     }
-                                 }
-                             }
-                     }
+                                    }
+                                }
+                            }
                     }
                 }
-            })
+            }
+        })
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -126,9 +145,9 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         callingBookingData()
     }
 
-    private fun callingBookingData(){
+    private fun callingBookingData() {
 
-        if(NetworkMonitorCheck._isConnected.value) {
+        if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch {
                 val session = SessionManager(requireContext())
                 val userId = session.getUserId()
@@ -139,7 +158,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                         when (it) {
                             is NetworkResult.Success -> {
                                 LoadingUtils.hideDialog()
-
+                                adapterMyBookingsAdapter?.updateItem(viewModel.finishedList)
                                 it.data?.let { it1 -> adapterMyBookingsAdapter?.updateItem(it1) }
                             }
 
@@ -154,9 +173,11 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                     }
                 }
             }
-        }else{
-            LoadingUtils.showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            LoadingUtils.showErrorDialog(
+                requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -175,26 +196,77 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener {
-
+            adapterMyBookingsAdapter?.updateItem(viewModel.finalList)
+            if(viewModel.finalList.size ==0){
+                  binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener {
+             adapterMyBookingsAdapter?.updateItem(viewModel.confirmedList)
+            if(viewModel.confirmedList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
 
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemBookingRequests).setOnClickListener {
+            adapterMyBookingsAdapter?.updateItem(viewModel.pendingList)
+            if(viewModel.pendingList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
 
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemWaitingPayment).setOnClickListener {
+            adapterMyBookingsAdapter?.updateItem(viewModel.waitingPaymentList)
+
+            if(viewModel.waitingPaymentList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
 
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener {
+            adapterMyBookingsAdapter?.updateItem(viewModel.finishedList)
+
+            if(viewModel.finishedList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
 
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener {
+            adapterMyBookingsAdapter?.updateItem(viewModel.cancelledList)
+
+            if(viewModel.cancelledList.size ==0){
+                binding.tvNoBooking.visibility = View.VISIBLE
+                binding.recyclerViewChat.visibility = View.GONE
+            }else{
+                binding.tvNoBooking.visibility = View.GONE
+                binding.recyclerViewChat.visibility = View.VISIBLE
+            }
+
 
             popupWindow.dismiss()
         }
@@ -254,7 +326,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
     override fun itemClick(obj: Int) {
 
-      //  Toast.makeText(requireContext(),obj.toString(),Toast.LENGTH_LONG).show()
+        //  Toast.makeText(requireContext(),obj.toString(),Toast.LENGTH_LONG).show()
 
 
     }
@@ -266,12 +338,11 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         (activity as? HostMainActivity)?.bookingResume()
     }
-
-
 
 
 }

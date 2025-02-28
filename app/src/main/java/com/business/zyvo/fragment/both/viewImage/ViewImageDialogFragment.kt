@@ -24,9 +24,7 @@ class ViewImageDialogFragment : DialogFragment(), OnClickListener {
     private var _binding: FragmentViewImageBinding? = null
     private val binding get() = _binding!!
     private var adapter: ViewPagerAdapter? = null
-    private val imagePopViewModel: ImagePopViewModel by lazy {
-        ViewModelProvider(this)[ImagePopViewModel::class.java]
-    }
+    private var imagelist:MutableList<String>?=null
 
     override fun onStart() {
         super.onStart()
@@ -34,7 +32,6 @@ class ViewImageDialogFragment : DialogFragment(), OnClickListener {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
-//        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.Transparent))
     }
 
 
@@ -54,15 +51,17 @@ class ViewImageDialogFragment : DialogFragment(), OnClickListener {
         binding.viewpager.adapter = adapter
         binding.viewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-        // Observe the data in ViewModel and update the adapter
-        imagePopViewModel.imageList.observe(viewLifecycleOwner, Observer { images ->
-           // adapter?.updateItem(images)
-        })
-
         // Set up the TabLayout mediator
         TabLayoutMediator(binding.tabLayoutForIndicator, binding.viewpager) { tab, position ->
             // Tab configuration if needed
         }.attach()
+
+        arguments.let {
+            imagelist= arguments?.getStringArrayList("image_list") // Returns List<String>
+            imagelist?.let {
+                adapter?.updateItem(it)
+            }
+        }
 
         // Handle back press within the fragment
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
