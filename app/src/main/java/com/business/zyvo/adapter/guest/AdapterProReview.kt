@@ -33,16 +33,16 @@ RecyclerView.Adapter<AdapterProReview.ViewHolder>() {
             Glide.with(context).load(AppConstant.BASE_URL + currentItem).into(holder.binding.circleImageView)
         }
         currentItem?.reviewer_name?.let {
-            holder.binding.tvReviewName.text = it
+            holder.binding.txtName.text = it
         }
         currentItem?.review_message?.let {
-            holder.binding.tvHostDetail.text = it
+            holder.binding.txtReviews.text = it
         }
         currentItem?.review_rating?.let {
-            holder.binding.reviewratingbar.rating = it.toFloat()
+            holder.binding.ratingbar.rating = it.toFloat()
         }
         currentItem?.review_date?.let {
-            holder.binding.tvReviewDate.text = it
+            holder.binding.tvDate.text = it
         }
     }
 

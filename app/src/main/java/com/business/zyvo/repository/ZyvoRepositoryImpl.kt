@@ -1336,14 +1336,6 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                 if (body != null && body.has("success") && body.get("success").asBoolean) {
                     emit(AuthTask.processedData(body))
                 } else {
-
-                    emit(
-                        NetworkResult.Error(
-                            "Solving these error"
-                            )
-                        )
-                    )
-
                     emit(NetworkResult.Error(body?.get("message")?.asString ?: AppConstant.unKnownError))
                 }
             } else {

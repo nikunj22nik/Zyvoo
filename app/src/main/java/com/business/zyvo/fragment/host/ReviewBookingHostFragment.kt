@@ -316,7 +316,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                     when (it) {
                         is NetworkResult.Success -> {
                             LoadingUtils.hideDialog()
-                            it.data?.let { it1 -> adapterReview.updateAdapter(it1.second) }
+                         //   it.data?.let { it1 -> adapterReview.updateAdapter(it1.second) }
                         }
 
                         is NetworkResult.Error -> {

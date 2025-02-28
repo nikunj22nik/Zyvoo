@@ -27,12 +27,12 @@ class HostReviewAdapter : PagingDataAdapter<HostReviewModel, HostReviewAdapter.H
         fun bind(item: HostReviewModel) {
             // Bind the HostReviewModel data to the view
             Glide.with(binding.root.context).load(AppConstant.BASE_URL+item.profile_image).into(binding.circleImageView)
-            binding.tvReviewName.setText(item.reviewer_name)
+            binding.txtName.setText(item.reviewer_name)
             item.review_rating?.let {
-                binding.reviewratingbar.rating = it.toFloat()
+                binding.ratingbar.rating = it.toFloat()
             }
-            binding.tvHostDetail.setText(item.review_message)
-            binding.tvReviewDate.setText(item.review_date)
+            binding.txtReviews.setText(item.review_message)
+            binding.tvDate.setText(item.review_date)
         }
 
     }
