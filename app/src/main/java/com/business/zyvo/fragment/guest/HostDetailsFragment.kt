@@ -124,7 +124,11 @@ class HostDetailsFragment : Fragment() , OnClickListener, OnItemClickListener {
 
 
         binding.showMoreReview.setOnClickListener {
+
          //   adapterReview.updateAdapter(7)
+
+//            adapterReview.updateAdapter(7)
+
         }
 
 

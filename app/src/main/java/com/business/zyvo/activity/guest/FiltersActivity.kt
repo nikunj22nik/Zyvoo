@@ -1,6 +1,7 @@
 package com.business.zyvo.activity.guest
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.Context
 import android.graphics.Paint
 import android.os.Build
@@ -40,8 +41,9 @@ import com.business.zyvo.adapter.guest.AmenitiesAdapter
 import com.business.zyvo.databinding.ActivityFiltersBinding
 import com.business.zyvo.fragment.guest.FullScreenDialogFragment
 import com.business.zyvo.fragment.guest.home.viewModel.FilterViewModel
-import com.business.zyvo.locationManager.LocationManager
+
 import com.business.zyvo.model.ActivityModel
+import com.business.zyvo.model.FilterRequest
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
@@ -51,6 +53,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Calendar
+
 @AndroidEntryPoint
 class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListener , View.OnClickListener {
 
@@ -63,7 +67,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         ViewModelProvider(this)[FilterViewModel::class.java]
     }
     private lateinit var autocompleteTextView: AutoCompleteTextView
-    private lateinit var locationManager: LocationManager
+    private lateinit var locationManager: com.business.zyvo.locationManager.LocationManager
     private lateinit var activityList : MutableList<ActivityModel>
     private lateinit var amenitiesList :MutableList<Pair<String,Boolean>>
     private lateinit var adapterActivity :ActivitiesAdapter
@@ -84,6 +88,10 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     private var selectedActivityName = listOf<String>()
     private var selectedLanguages = listOf<String>()
     private lateinit var sessionManager: SessionManager
+    private var selectedLatitude: Double = 0.0
+    private var selectedLongitude: Double = 0.0
+    private lateinit var min :Any
+    private lateinit var max : Any
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -118,9 +126,25 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         callingPriceRangeGraphSelection()
         setUpRecyclerView()
 
-        val locationManager = LocationManager(this,this)
-        locationManager.autoCompleteLocationWork(binding.autocompleteLocation)
+        locationManager = com.business.zyvo.locationManager.LocationManager(this, this)
 
+        locationManager.autoCompleteLocationWork(binding.autocompleteLocation)
+//        val rLocationManager = AppLocationManager(this,this)
+//        rLocationManager.autoCompleteLocationWork(binding.autocompleteLocation)
+
+        binding.autocompleteLocation.setOnItemClickListener { parent, _, position, _ ->
+            val selectedLocation = parent.getItemAtPosition(position) as String
+
+            // Fetch location details
+            locationManager.fetchPlaceDetails(selectedLocation) { latitude, longitude ->
+                selectedLatitude = latitude
+                selectedLongitude = longitude
+
+                Log.d("FilterActivity", "Selected Location: Lat=$latitude, Lng=$longitude")
+
+                // Yahan pe API call ya kisi aur jagah data pass kar sakte ho
+            }
+        }
 
         byDefaultSelectAvailability()
         settingBackgroundTaskToPeople()
@@ -133,65 +157,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         }
         showingMoreText()
         showingMoreAmText()
-
-    }
-
-    private fun showingMoreText() {
-        val text = "Show More"
-        val spannableString = SpannableString(text).apply {
-            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        binding.underlinedTextView.text = spannableString
-        binding.underlinedTextView.paint.flags = Paint.UNDERLINE_TEXT_FLAG
-        binding.underlinedTextView.paint.isAntiAlias = true
-        binding.underlinedTextView.setOnClickListener {
-            languageAdapter.updateAdapter(getNationalLanguages())
-           // binding.underlinedTextView.visibility =View.GONE
-            showingLessText()
-        }
-    }
-
-    private fun showingLessText() {
-        val text = "Show Less"
-        val spannableString = SpannableString(text).apply {
-            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        binding.underlinedTextView.text = spannableString
-        binding.underlinedTextView.paint.flags = Paint.UNDERLINE_TEXT_FLAG
-        binding.underlinedTextView.paint.isAntiAlias = true
-        binding.underlinedTextView.setOnClickListener {
-            languageAdapter.updateAdapter(getNationalLanguages().subList(0,6))
-            showingMoreText()
-        }
-    }
-
-    private fun showingMoreAmText() {
-        val text = "Show More"
-        val spannableString = SpannableString(text).apply {
-            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        binding.underlinedTextView1.text = spannableString
-        binding.underlinedTextView1.paint.flags = Paint.UNDERLINE_TEXT_FLAG
-        binding.underlinedTextView1.paint.isAntiAlias = true
-        binding.underlinedTextView1.setOnClickListener {
-            amenitiesAdapter.updateAdapter(amenitiesList)
-            // binding.underlinedTextView.visibility =View.GONE
-            showingLessAmText()
-        }
-    }
-
-    private fun showingLessAmText() {
-        val text = "Show Less"
-        val spannableString = SpannableString(text).apply {
-            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        binding.underlinedTextView1.text = spannableString
-        binding.underlinedTextView1.paint.flags = Paint.UNDERLINE_TEXT_FLAG
-        binding.underlinedTextView1.paint.isAntiAlias = true
-        binding.underlinedTextView1.setOnClickListener {
-            amenitiesAdapter.updateAdapter(amenitiesList.subList(0,6))
-            showingMoreAmText()
-        }
 
     }
 
@@ -473,7 +438,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         }
     }
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "DefaultLocale")
     @RequiresApi(Build.VERSION_CODES.O)
     fun setUpRecyclerView() {
         // Grid Layout Managers
@@ -561,8 +526,26 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
         // Date Selector Toggle
         binding.llDate.setOnClickListener {
-            binding.rlDateSelection.visibility =
-                if (binding.rlDateSelection.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+//            binding.rlDateSelection.visibility =
+//                if (binding.rlDateSelection.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
+            binding.llDate.setOnClickListener {
+                val calendar = Calendar.getInstance()
+                val year = calendar.get(Calendar.YEAR)
+                val month = calendar.get(Calendar.MONTH)
+                val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+                val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                    val formattedMonth = String.format("%02d", selectedMonth + 1) // 1-based month
+                    val formattedDay = String.format("%02d", selectedDay)
+                    val selectedDate = "$selectedYear-$formattedMonth-$formattedDay"
+
+                    binding.tvDateSelect.text = selectedDate // Set API format date
+                }, year, month, day)
+
+                datePickerDialog.show()
+            }
+
         }
         // Month Selector Dialog
         binding.rlMonth.setOnClickListener {
@@ -641,23 +624,23 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 tvEntireHome.performClick()
             }
 
-            instantBookingSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
-                instantBookingCount = if (isChecked) {
+            instantBookingSwitch.setOnCheckedChangeListener { _, isChecked ->
+                instantBookingCount = if (isChecked){
                     1
                 }else{
                     0
                 }
             }
 
-            selfCheckinToggle.setOnCheckedChangeListener { buttonView, isChecked ->
-                selfCheckIn = if (isChecked) {
+            selfCheckinToggle.setOnCheckedChangeListener { _, isChecked ->
+                selfCheckIn = if (isChecked){
                     1
                 }else{
                     0
                 }
             }
 
-            petToggle.setOnCheckedChangeListener { buttonView, isChecked ->
+            petToggle.setOnCheckedChangeListener { _, isChecked ->
                 petCheckIn = if (isChecked){
                     1
                 }else{
@@ -665,58 +648,147 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 }
             }
 
+
         }
     }
 
     private fun filterClick() {
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             filterViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
                 .collect { isConnected ->
                     withContext(Dispatchers.Main) {
                         if (!isConnected) {
                             showErrorDialog(this@FiltersActivity, resources.getString(R.string.no_internet_dialog_msg))
-                        } else {
-                            try {
-                                // Fetch location asynchronously
-                                val location = locationManager.getCurrentLocation()
-                                if (location != null) {
-                                    val lat = location.latitude.toString()
-                                    val lng = location.longitude.toString()
+                            return@withContext
+                        }
+                        try {
+                            val requestData = FilterRequest(
+                                user_id = 189, //sessionManager.getUserId(),
+                                latitude = selectedLatitude,
+                                longitude = selectedLongitude,
+                                place_type = selectedOption?.takeIf { it.isNotEmpty() },
+                                minimum_price = binding.tvMinimum.text.toString().toDoubleOrNull(),
+                                maximum_price = binding.tvMaximum.text.toString().toDoubleOrNull(),
+                                location = binding.autocompleteLocation.text.toString().takeIf { it.isNotEmpty() },
+                                date = binding.tvDateSelect.text.toString().takeIf { it.isNotEmpty() },
+                                time = binding.tvHour.text.toString().toIntOrNull(),
+                                people_count = availOption.toIntOrNull(),
+                                property_size = propertySize.toIntOrNull(),
+                                bedroom = bedroomCount.toIntOrNull(),
+                                bathroom = bathroomCount.toIntOrNull(),
+                                instant_booking = instantBookingCount,
+                                self_check_in = selfCheckIn,
+                                allows_pets = petCheckIn ,
+                                activities = selectedActivityName.takeIf { it.isNotEmpty() },
+                                amenities = selectedAmenities.takeIf { it.isNotEmpty() },
+                                languages = selectedLanguages.takeIf { it.isNotEmpty() }
+                            )
+                            Log.d("RequestPrameter", requestData.toString())
 
-                                    filterViewModel.getFilterHomeDataApi(
-                                        sessionManager.getUserId().toString(),
-                                        lat, lng, selectedOption!!, binding.tvMinimum.text.toString(),
-                                        binding.tvMaximum.text.toString(), binding.autocompleteLocation.text.toString(),
-                                        binding.tvDateSelect.text.toString(), binding.tvHour.text.toString(),
-                                        availOption, propertySize, bedroomCount, bathroomCount, instantBookingCount.toString(),
-                                        selfCheckIn.toString(), petCheckIn.toString(), selectedActivityName, selectedAmenities, selectedLanguages
-                                    ).collect { result ->
-                                        when (result) {
-                                            is NetworkResult.Success -> {
-                                                result.data?.let {
-                                                    Toast.makeText(this@FiltersActivity, "successfully", Toast.LENGTH_SHORT).show()
-                                                }
-                                            }
-
-                                            is NetworkResult.Error -> {
-                                                showErrorDialog(this@FiltersActivity, result.message ?: "Unknown error")
-                                            }
-                                            else -> {
-                                                Log.v(ErrorDialog.TAG, "error::${result.message}")
-                                            }
+                            // ✅ API Call
+                            filterViewModel.getFilterHomeDataApi(
+                                requestData.user_id,
+                                requestData.latitude,
+                                requestData.longitude,
+                                requestData.place_type,
+                                requestData.minimum_price,
+                                requestData.maximum_price,
+                                requestData.location,
+                                requestData.date,
+                                requestData.time,
+                                requestData.people_count,
+                                requestData.property_size,
+                                requestData.bedroom,
+                                requestData.bathroom,
+                                requestData.instant_booking,
+                                requestData.self_check_in,
+                                requestData.allows_pets,
+                                requestData.activities,
+                                requestData.amenities,
+                                requestData.languages
+                            ).collect { result ->
+                                when (result) {
+                                    is NetworkResult.Success -> {
+                                        Toast.makeText(this@FiltersActivity, "Filters applied successfully", Toast.LENGTH_SHORT).show()
+                                        if (result.message == "false"){
+                                            val dialog = FullScreenDialogFragment()
+                                            dialog.show(supportFragmentManager, "FullScreenDialog")
                                         }
                                     }
-                                } else {
-                                    showErrorDialog(this@FiltersActivity, "Unable to fetch location")
+                                    is NetworkResult.Error -> {
+                                        showErrorDialog(this@FiltersActivity, result.message ?: "Unknown error")
+                                    }
+                                    else -> {
+                                        Log.v(ErrorDialog.TAG, "error::${result.message}")
+                                    }
                                 }
-                            } catch (e: Exception) {
-                                showErrorDialog(this@FiltersActivity, "Error: ${e.message}")
                             }
+                        } catch (e: Exception) {
+                            showErrorDialog(this@FiltersActivity, "Error: ${e.message}")
                         }
                     }
                 }
         }
+    }
+
+    private fun showingMoreText() {
+        val text = "Show More"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.underlinedTextView.text = spannableString
+        binding.underlinedTextView.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.underlinedTextView.paint.isAntiAlias = true
+        binding.underlinedTextView.setOnClickListener {
+            languageAdapter.updateAdapter(getNationalLanguages())
+            // binding.underlinedTextView.visibility =View.GONE
+            showingLessText()
+        }
+    }
+
+    private fun showingLessText() {
+        val text = "Show Less"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.underlinedTextView.text = spannableString
+        binding.underlinedTextView.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.underlinedTextView.paint.isAntiAlias = true
+        binding.underlinedTextView.setOnClickListener {
+            languageAdapter.updateAdapter(getNationalLanguages().subList(0,6))
+            showingMoreText()
+        }
+    }
+
+    private fun showingMoreAmText() {
+        val text = "Show More"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.underlinedTextView1.text = spannableString
+        binding.underlinedTextView1.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.underlinedTextView1.paint.isAntiAlias = true
+        binding.underlinedTextView1.setOnClickListener {
+            amenitiesAdapter.updateAdapter(amenitiesList)
+            // binding.underlinedTextView.visibility =View.GONE
+            showingLessAmText()
+        }
+    }
+
+    private fun showingLessAmText() {
+        val text = "Show Less"
+        val spannableString = SpannableString(text).apply {
+            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.underlinedTextView1.text = spannableString
+        binding.underlinedTextView1.paint.flags = Paint.UNDERLINE_TEXT_FLAG
+        binding.underlinedTextView1.paint.isAntiAlias = true
+        binding.underlinedTextView1.setOnClickListener {
+            amenitiesAdapter.updateAdapter(amenitiesList.subList(0,6))
+            showingMoreAmText()
+        }
+
     }
 
 
@@ -766,8 +838,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
         // Create the PopupWindow
         popupWindow = PopupWindow(dropdownView,
-           250,
-           400,
+            250,
+            400,
             true)
 
         // Set up click listeners for each item in the dropdown
@@ -829,7 +901,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 //        // Show the PopupWindow at the bottom of the anchor view
 //        popupWindow.showAtLocation()
 
-     }
+    }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         // Prevent closing of suggestions when pressing the down arrow key
@@ -843,30 +915,29 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.tv_home_setup -> {
-               Log.d("TESTING_VOOPON","Here in the home setup")
+                selectedOption = "any_type"
+                Log.d("TESTING_VOOPON","Here in the home setup")
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
-                selectedOption = "any_type"
             }
             R.id.tv_room -> {
+                selectedOption = "room"
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                selectedOption = "room"
             }
 
             R.id.tv_entire_home -> {
+                selectedOption = "entire_home"
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_inner_manage_place)
-                selectedOption = "entire_home"
             }
         }
     }
 
-    fun settingDataToActivityModel(){
+    private fun settingDataToActivityModel(){
         activityList = mutableListOf<ActivityModel>()
         amenitiesList = PrepareData.getOnlyAmenitiesList()
 
@@ -958,9 +1029,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
     }
 
-        private fun getNationalLanguages(): MutableList<Pair<String,Boolean>> {
-            return PrepareData.getLanguagePairs()
-        }
+    private fun getNationalLanguages(): MutableList<Pair<String,Boolean>> {
+        return PrepareData.getLanguagePairs()
+    }
 
     private fun showPopupWindowForPets(anchorView: View) {
         // Inflate the popup layout

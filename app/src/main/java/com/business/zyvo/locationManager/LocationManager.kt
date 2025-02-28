@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
+import android.location.Location
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -23,6 +24,8 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -34,7 +37,7 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 
-class LocationManager(var applicationContext : Context,var applicationActivity : AppCompatActivity? =null) {
+class LocationManager(var applicationContext : Context, var applicationActivity : AppCompatActivity? =null) {
 
     private lateinit var autocompleteTextView: AutoCompleteTextView
 
@@ -150,7 +153,7 @@ class LocationManager(var applicationContext : Context,var applicationActivity :
         }
     }
 
-    private fun fetchPlaceDetails(placeName: String, callback: (Double, Double) -> Unit) {
+    fun fetchPlaceDetails(placeName: String, callback: (Double, Double) -> Unit) {
         val request = FindAutocompletePredictionsRequest.builder()
             .setQuery(placeName)
             .build()
@@ -178,6 +181,27 @@ class LocationManager(var applicationContext : Context,var applicationActivity :
                 Log.e("PredictionError", "Error fetching predictions: ${exception.message}")
             }
     }
+
+    fun getLatLngFromPlaceId(context: Context, placeId: String, callback: (Location?) -> Unit) {
+        val placesClient = Places.createClient(context)
+
+        val placeRequest = FetchPlaceRequest.newInstance(placeId, listOf(Place.Field.LAT_LNG))
+        placesClient.fetchPlace(placeRequest)
+            .addOnSuccessListener { response ->
+                val place = response.place
+                place.latLng?.let {
+                    callback(Location("").apply {
+                        latitude = it.latitude
+                        longitude = it.longitude
+                    })
+                } ?: callback(null)
+            }
+            .addOnFailureListener { exception ->
+                Log.e("LocationError", "Error fetching place details: ${exception.message}")
+                callback(null)
+            }
+    }
+
 
 
 

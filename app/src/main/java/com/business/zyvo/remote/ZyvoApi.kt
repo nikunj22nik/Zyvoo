@@ -182,25 +182,27 @@ interface ZyvoApi {
 
     @POST("get_home_data_filter")
     @FormUrlEncoded
-    suspend fun getFilteredHomeData(@Field("user_id")user_id :String,
-                                    @Field("lattitude")lattitude :String,
-                                    @Field("longitude")longitude :String,
-                                    @Field("place_type")place_type :String,
-                                    @Field("minimum_price")minimum_price :String,
-                                    @Field("maximum_price")maximum_price :String,
-                                    @Field("location")location :String,
-                                    @Field("date")date :String,
-                                    @Field("time")time :String,
-                                    @Field("people_count")people_count :String,
-                                    @Field("property_size")property_size :String,
-                                    @Field("bedroom")bedroom :String,
-                                    @Field("bathroom")bathroom :String,
-                                    @Field("instant_booking")instant_booking :String,
-                                    @Field("self_check_in")self_check_in :String,
-                                    @Field("allows_pets")allows_pets :String,
-                                    @Field("activities[]")activities :List<String>,
-                                    @Field("amenities[]")amenities :List<String>,
-                                    @Field("language[]")languages :List<String>) : Response<JsonObject>
+    suspend fun getFilteredHomeData(
+        @Field("user_id") user_id: Int?,
+        @Field("latitude") latitude: Double?,
+        @Field("longitude") longitude: Double?,
+        @Field("place_type") place_type: String?,
+        @Field("minimum_price") minimum_price: Double?,
+        @Field("maximum_price") maximum_price: Double?,
+        @Field("location") location: String?,
+        @Field("date") date: String?,
+        @Field("time") time: Int?,
+        @Field("people_count") people_count: Int?,
+        @Field("property_size") property_size: Int?,
+        @Field("bedroom") bedroom: Int?,
+        @Field("bathroom") bathroom: Int?,
+        @Field("instant_booking") instant_booking: Int?,
+        @Field("self_check_in") self_check_in: Int?,
+        @Field("allows_pets") allows_pets: Int?,
+        @Field("activities[]") activities: List<String>?,
+        @Field("amenities[]") amenities: List<String>?,
+        @Field("languages[]") languages: List<String>?): Response<JsonObject>
+
 
     @POST("update_password")
     @FormUrlEncoded
@@ -213,6 +215,33 @@ interface ZyvoApi {
     suspend fun  verifyIdentity(@Field("user_id")user_id :String,
                                 @Field("identity_verify")identity_verify :String) : Response<JsonObject>
 
+    @POST("social_login")
+    @FormUrlEncoded
+    suspend fun  getSocialLogin(@Field("fname")fname :String,
+                                @Field("lname")lname :String,
+                                @Field("email")email :String,
+                                @Field("social_id")social_id :String,
+                                @Field("fcm_token")fcm_token :String,
+                                @Field("device_type")device_type :String) : Response<JsonObject>
+
+    @POST("get_booking_list")
+    @FormUrlEncoded
+    suspend fun  bookingList(@Field("user_id")user_id :String) : Response<JsonObject>
+
+    @POST("get_booking_details_list")
+    @FormUrlEncoded
+    suspend fun  bookingDetailsList(@Field("user_id")user_id :String,
+                             @Field("booking_id")booking_id :Int) : Response<JsonObject>
+
+    @POST("review_host")
+    @FormUrlEncoded
+    suspend fun  getReviewPublish(@Field("user_id")user_id :String,
+                                @Field("booking_id")booking_id :Int,
+                                @Field("property_id")property_id :Int,
+                                @Field("response_rate")response_rate :String,
+                                @Field("communication")communication :String,
+                                @Field("on_time")on_time :String,
+                                  @Field("review_message")review_message:String) : Response<JsonObject>
 
 
     @POST("complete_profile")

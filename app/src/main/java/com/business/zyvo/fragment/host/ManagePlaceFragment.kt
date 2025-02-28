@@ -68,7 +68,6 @@ import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.model.host.ItemRadio
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.session.SessionManager
-import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.viewmodel.host.CreatePropertyViewModel
 import com.google.android.libraries.places.api.Places

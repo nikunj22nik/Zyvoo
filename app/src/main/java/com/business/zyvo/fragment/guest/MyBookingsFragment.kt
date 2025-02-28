@@ -1,73 +1,108 @@
 package com.business.zyvo.fragment.guest
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.business.zyvo.OnClickListener
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.NetworkResult
+import com.business.zyvo.OnItemAdapterClick
 import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.adapter.MyBookingsAdapter
 import com.business.zyvo.databinding.FragmentMyBookingsBinding
-import com.business.zyvo.model.MyBookingsModel
-import com.business.zyvo.viewmodel.MyBookingsViewModel
+import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.fragment.guest.bookingviewmodel.BookingViewModel
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.NetworkMonitorCheck
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MyBookingsFragment : Fragment(), OnClickListener, View.OnClickListener {
+class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener {
     private var _binding: FragmentMyBookingsBinding? = null
     private val binding get() = _binding!!
-    private var adapterMyBookingsAdapter: MyBookingsAdapter? = null
-    private val viewModel: MyBookingsViewModel by viewModels()
-    private var list: MutableList<MyBookingsModel> = mutableListOf()
+
+    private val bookingViewModel: BookingViewModel by viewModels()
+    private lateinit var sessionManager: SessionManager
+    private lateinit var adapterMyBookingsAdapter: MyBookingsAdapter
+    var bookingModel: BookingModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-
-        }
+        sessionManager = SessionManager(requireContext())
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentMyBookingsBinding.inflate(
-            LayoutInflater.from(requireContext()),
-            container,
-            false
-        )
-        // Inflate the layout for this fragment
+    ): View {
+        _binding = FragmentMyBookingsBinding.inflate(inflater, container, false)
+
+        // Initialize adapter
         adapterMyBookingsAdapter = MyBookingsAdapter(requireContext(), mutableListOf(), this)
+        binding.recyclerViewChat.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
 
-        viewModel.list.observe(viewLifecycleOwner, Observer { list ->
-            adapterMyBookingsAdapter!!.updateItem(list)
-        })
-
-
+        bookingListAPI()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageFilter.setOnClickListener(this)
-
     }
 
-    private fun showPopupWindow(anchorView: View, position: Int) {
-        // Inflate the custom layout for the popup menu
-        val popupView =
-            LayoutInflater.from(context).inflate(R.layout.popup_all_booking_filter, null)
+    private fun bookingListAPI() {
+        if (!NetworkMonitorCheck._isConnected.value) {
+            showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
+            return
+        }
 
-        // Create PopupWindow with the custom layout
+        lifecycleScope.launch(Dispatchers.Main) {
+            try {
+                bookingViewModel.getBookingList("189").collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            LoadingUtils.hideDialog()
+                           var list = it.data
+
+                            Log.d("API_RESPONSE", "Raw Response: $bookingModel")
+                            if (list != null) {
+                                adapterMyBookingsAdapter.updateItem(list)
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            Log.e("API_ERROR", "Server Error: ${it.message}")
+                            showErrorDialog(requireContext(), it.message ?: "Unknown error")
+                        }
+                        else -> {
+                            Log.v("API_ERROR", "Unexpected error: ${it.message ?: "Unknown error"}")
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("API_EXCEPTION", "Unexpected API error", e)
+                showErrorDialog(requireContext(), "Something went wrong. Please try again.")
+            }
+        }
+    }
+
+    @SuppressLint("InflateParams")
+    private fun showPopupWindow(anchorView: View) {
+        val popupView = LayoutInflater.from(context).inflate(R.layout.popup_all_booking_filter, null)
         val popupWindow = PopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -75,74 +110,26 @@ class MyBookingsFragment : Fragment(), OnClickListener, View.OnClickListener {
             true
         )
 
-        // Set click listeners for each menu item in the popup layout
-        popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener {
+        popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener { popupWindow.dismiss() }
+        popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener { popupWindow.dismiss() }
+        popupView.findViewById<TextView>(R.id.itemPending).setOnClickListener { popupWindow.dismiss() }
+        popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener { popupWindow.dismiss() }
+        popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener { popupWindow.dismiss() }
 
-            popupWindow.dismiss()
+        // Positioning logic
+        popupWindow.elevation = 8.0f
+        popupWindow.showAsDropDown(anchorView, 0, 0, Gravity.END)
+    }
+
+    override fun onClick(view: View?) {
+        when (view?.id) {
+            R.id.imageFilter -> showPopupWindow(binding.imageFilter)
         }
-        popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener {
+    }
 
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemPending).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-
-
-        // Get the location of the anchor view (three-dot icon)
-        val location = IntArray(2)
-        anchorView.getLocationOnScreen(location)
-
-        // Get the height of the PopupView after inflating it
-        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val popupHeight = popupView.measuredHeight
-        val popupWeight = popupView.measuredWidth
-        val screenWidht = context?.resources?.displayMetrics?.widthPixels
-        val anchorX = location[1]
-        val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
-
-        val xOffset = if (popupWeight > spaceEnd!!) {
-            // If there is not enough space below, show it above
-            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
-            -(popupWeight + 20)
-        }
-        // Calculate the Y offset to make the popup appear above the three-dot icon
-        val screenHeight = context?.resources?.displayMetrics?.heightPixels
-        val anchorY = location[1]
-
-        // Calculate the available space above the anchorView
-        val spaceAbove = anchorY
-        val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
-
-        // Determine the Y offset
-        val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
-        }
-
-        // Show the popup window anchored to the view (three-dot icon)
-        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(
-            anchorView,
-            xOffset,
-            yOffset,
-            Gravity.END
-        )  // Adjust the Y offset dynamically
+    override fun onResume() {
+        super.onResume()
+        (activity as? GuesMain)?.bookingResume()
     }
 
     override fun onDestroyView() {
@@ -150,21 +137,11 @@ class MyBookingsFragment : Fragment(), OnClickListener, View.OnClickListener {
         _binding = null
     }
 
-    override fun itemClick(obj: Int) {
-findNavController().navigate(R.id.reviewBookingFragment)
-    }
-
-    override fun onClick(p0: View?) {
-        when (p0?.id) {
-            R.id.imageFilter -> {
-                showPopupWindow(binding.imageFilter, 0)
-            }
+    override fun itemClickOn(obj: Int, bookingId: Int) {
+        val bundle = Bundle().apply {
+            putInt("BOOKING_ID", bookingId)
         }
+        findNavController().navigate(R.id.reviewBookingFragment, bundle)
     }
-    override fun onResume() {
-        super.onResume()
-        (activity as? GuesMain)?.bookingResume()
-    }
-
 
 }

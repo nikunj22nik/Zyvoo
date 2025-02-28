@@ -1,10 +1,12 @@
 package com.business.zyvo.fragment.both.loggedScreen
+
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
@@ -25,6 +27,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -44,6 +47,8 @@ import com.business.zyvo.activity.guest.FiltersActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
 import com.business.zyvo.adapter.LoggedScreenAdapter
 import com.business.zyvo.databinding.FragmentLoggedScreenBinding
+import com.business.zyvo.model.Data
+import com.business.zyvo.model.SocialLoginModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog.TAG
@@ -51,18 +56,19 @@ import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.ImagePopViewModel
 import com.business.zyvo.viewmodel.LoggedScreenViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.messaging.FirebaseMessaging
-
 import com.google.gson.Gson
 import com.hbb20.CountryCodePicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, OnClickListener1 {
@@ -77,8 +83,16 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private lateinit var adapter: LoggedScreenAdapter
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
     private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
-    private var showOneTapUI = true
-    private var Token = ""
+    private var personName: String? = ""
+    private var personGivenName: String? = ""
+    private var personFamilyName: String? = ""
+    private var personEmail: String? = ""
+    var username: String = ""
+    private var personId: String = ""
+    private var token: String = ""
+    private var personPhoto: Uri? = null
+    private var socialModel : SocialLoginModel? = null
+    private lateinit var sessionManager: SessionManager
 
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
@@ -102,13 +116,16 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         auth = FirebaseAuth.getInstance()
+        sessionManager = SessionManager(requireContext())
+        getFCMToken()
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id)) // Ensure it's correct
+            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
+        googleSignInClient.signOut()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -118,7 +135,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         binding.filterIcon.setOnClickListener(this)
         binding.textWishlists.setOnClickListener(this)
         binding.textDiscover.setOnClickListener(this)
-
 
         // Set up adapter with lifecycleOwner passed
         adapter = LoggedScreenAdapter(
@@ -150,53 +166,131 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
     override fun onStart() {
         super.onStart()
-
         getFCMToken()
-
-//        val currentUser = auth.currentUser
-//        updateUI(currentUser)
     }
 
-    private fun startGoogleSignIn() {
-        val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, REQ_ONE_TAP)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == REQ_ONE_TAP) {
+    private val googleSignInLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            val data: Intent? = result.data
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                Log.d("AUTH", "Google sign in successful: ${account.id}")
-                firebaseAuthWithGoogle(account.idToken!!)
+                val signInType = data?.getStringExtra("SIGN_IN_TYPE") ?: "login" // Default to "login"
+                firebaseAuthWithGoogle(account, signInType)
             } catch (e: ApiException) {
                 Log.w("AUTH", "Google sign-in failed", e)
             }
         }
+
+
+    private fun startGoogleSignIn(type: String) {
+        val signInIntent = googleSignInClient.signInIntent.putExtra("SIGN_IN_TYPE", type)
+        googleSignInLauncher.launch(signInIntent)
     }
 
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    Log.d("AUTH", "signInWithCredential:success")
-                    Toast.makeText(requireContext(), "Authentication successful", Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.w("AUTH", "signInWithCredential:failure", task.exception)
-                    Toast.makeText(requireContext(), "Authentication failed", Toast.LENGTH_SHORT).show()
+
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount, signInType: String) {
+        try {
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            auth.signInWithCredential(credential)
+                .addOnCompleteListener(requireActivity()) { task ->
+                    if (task.isSuccessful) {
+                        Log.d("AUTH", "signInWithCredential: success")
+                        // Extract user detail
+                        personName = account.displayName
+                        personGivenName = account.givenName
+                        personFamilyName = account.familyName
+                        personEmail = account.email
+                        personId = account.id ?: ""
+                        personPhoto = account.photoUrl
+
+                        val firstName = personGivenName ?: personName?.substringBefore(" ") ?: ""
+                        val lastName = personFamilyName ?: personName?.substringAfter(" ") ?: ""
+
+                        Log.d("GoogleUser", """
+                        ID: $personId
+                        Name: $personName
+                        First Name: $firstName
+                        Last Name: $lastName
+                        Email: $personEmail
+                        Photo: $personPhoto""".trimIndent())
+
+                        // Call your API with extracted information
+                        callSocialApi(firstName, lastName,signInType)
+                    } else {
+                        Log.w("AUTH", "signInWithCredential: failure", task.exception)
+                        showErrorDialog(requireContext(),"Authentication failed")
+                    }
+                }
+        } catch (e: ApiException) {
+            Log.e("GoogleAuthError", "Google sign-in failed: ${e.message}", e)
+            showErrorDialog(requireContext(),"Google sign-in failed: ${e.message}")
+        } catch (e: Exception) {
+            Log.e("Exception", "Unexpected error: ${e.message}", e)
+        }
+    }
+
+    private fun callSocialApi(firstName: String?, lastName: String?, signInType: String) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    loggedScreenViewModel.getSocialAPI(firstName ?: "", lastName ?: "", personEmail ?: "", personId, token, "Android").collect { result ->
+                        when (result) {
+                            is NetworkResult.Success -> {
+                                result.data?.let { resp ->
+                                    try {
+                                        val data: Data = Gson().fromJson(resp, Data::class.java)
+                                        sessionManager.setUserId(data.user_id)
+                                        sessionManager.setAuthToken(data.token)
+
+                                        val bundle = Bundle().apply {
+                                            putString("data", Gson().toJson(data))
+                                            putString("type", "google")
+                                            putString("email", personEmail)
+                                        }
+
+                                        if (signInType == "login") {
+                                            val intent = Intent(requireActivity(), GuesMain::class.java).apply {
+                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//                                                putExtras(bundle)
+                                            }
+                                            startActivity(intent)
+                                        } else if (signInType == "register") {
+                                            navController.navigate(R.id.completeProfileFragment, bundle)
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.e("SocialLogin", "Error parsing response: ${e.localizedMessage}", e)
+                                        showErrorDialog(requireContext(), "Parsing error occurred")
+                                    }
+                                }
+                            }
+
+                            is NetworkResult.Error -> {
+                                showErrorDialog(requireContext(), result.message ?: "Unknown error")
+                            }
+
+                            else -> {
+                                Log.v("ErrorDialog", "Unexpected result: ${result.message}")
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("SocialApiError", "Exception occurred: ${e.localizedMessage}", e)
+                    showErrorDialog(requireContext(), "Unexpected error occurred")
                 }
             }
+        } else {
+            showErrorDialog(requireContext(), getString(R.string.no_internet_dialog_msg))
+        }
     }
+
 
     private fun getFCMToken(){
         FirebaseMessaging.getInstance().token
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Token = task.result
-                    Log.d("FCM", "Device Token: $Token")
+                    token = task.result
+                    Log.d("FCM", "Device Token: $token")
                 } else {
                     Log.e("FCM", "Token retrieval failed", task.exception)
                 }
@@ -329,7 +423,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
             googleLoginBtn.setOnClickListener {
                 if (NetworkMonitorCheck._isConnected.value){
-                    startGoogleSignIn()
+                    startGoogleSignIn("login")
+                    dismiss()
                 }else{
                     showErrorDialog(requireContext(),
                         resources.getString(R.string.no_internet_dialog_msg)
@@ -381,6 +476,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
 
 
+    @SuppressLint("MissingInflatedId")
     private fun dialogRegister(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -396,6 +492,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
             val checkBox = findViewById<CheckBox>(R.id.checkBox)
+            val googleRegBtn = findViewById<ImageView>(R.id.googleRegLogin)
             val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
 
             val textLoginButton = findViewById<TextView>(R.id.textLoginButton)
@@ -432,11 +529,17 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 }
 
             }
-
-
             imageEmailSocial.setOnClickListener {
                 dialogRegisterEmail(context)
                 dismiss()
+            }
+            googleRegBtn.setOnClickListener {
+                if (NetworkMonitorCheck._isConnected.value){
+                    startGoogleSignIn("register")
+                    dismiss()
+                }else{
+                    showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
+                }
             }
 
             imageCross.setOnClickListener {
