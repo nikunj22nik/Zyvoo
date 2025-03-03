@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.business.zyvo" />
+                  <option name="mobileSdkAppId" value="1:81364080009:android:05b13223f99aa1a073bd58" />
+                  <option name="projectId" value="zyvo-1aea1" />
+                  <option name="projectNumber" value="81364080009" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
