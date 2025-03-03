@@ -185,6 +185,9 @@ class AppConstant {
         val cardYear = "Card year is required"
 
         val cardCVV = "Card Cvv is required"
+        val selectCard = "Please select Card"
+
+        val additional = "Additional Details is required"
 
     }
 

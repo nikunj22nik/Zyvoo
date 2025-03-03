@@ -64,6 +64,7 @@ import com.business.zyvo.adapter.AddLanguageSpeakAdapter
 import com.business.zyvo.adapter.AddLocationAdapter
 import com.business.zyvo.adapter.AddPetsAdapter
 import com.business.zyvo.adapter.AddWorkAdapter
+import com.business.zyvo.adapter.SetPreferred
 import com.business.zyvo.adapter.selectLanguage.LocaleAdapter
 import com.business.zyvo.databinding.FragmentProfileBinding
 import com.business.zyvo.fragment.both.completeProfile.HasName
@@ -101,7 +102,8 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener {
+class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener ,
+    SetPreferred {
     lateinit var binding: FragmentProfileBinding
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
@@ -231,10 +233,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         petsList.add(newPets)
 
 
-        addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf())
+        addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf(),this)
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
         profileViewModel.paymentCardList.observe(viewLifecycleOwner) { payment ->
-            addPaymentCardAdapter.updateItem(payment)
+          //  addPaymentCardAdapter.updateItem(payment)
         }
 
         session = SessionManager(requireActivity())
@@ -3082,6 +3084,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 }
             }
         }
+    }
+
+    override fun set(position: Int) {
+
     }
 
 
