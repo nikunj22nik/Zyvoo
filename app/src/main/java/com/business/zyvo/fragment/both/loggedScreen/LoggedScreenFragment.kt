@@ -1,14 +1,25 @@
 package com.business.zyvo.fragment.both.loggedScreen
 
+import android.Manifest
+
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender.SendIntentException
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+
+import android.location.LocationManager
+
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Looper
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
@@ -27,7 +38,12 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+
 import androidx.activity.result.contract.ActivityResultContracts
+
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -47,10 +63,15 @@ import com.business.zyvo.activity.guest.FiltersActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
 import com.business.zyvo.adapter.LoggedScreenAdapter
 import com.business.zyvo.databinding.FragmentLoggedScreenBinding
+
 import com.business.zyvo.model.Data
 import com.business.zyvo.model.SocialLoginModel
+
+import com.business.zyvo.fragment.guest.home.model.HomePropertyData
+
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.TAG
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.ImagePopViewModel
@@ -60,10 +81,22 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.GoogleApiClient
+import com.google.android.gms.common.api.PendingResult
+import com.google.android.gms.common.api.Status
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResult
+import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.hbb20.CountryCodePicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -83,6 +116,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private lateinit var adapter: LoggedScreenAdapter
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
     private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
+
     private var personName: String? = ""
     private var personGivenName: String? = ""
     private var personFamilyName: String? = ""
@@ -94,12 +128,18 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private var socialModel : SocialLoginModel? = null
     private lateinit var sessionManager: SessionManager
 
+    private var showOneTapUI = true
+    private var Token = ""
+    private var latitude: String = ""
+    private var longitude: String = ""
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
+    private var locationManager: LocationManager? = null
+    var session: SessionManager?=null
+    private var homePropertyData: MutableList<HomePropertyData> = mutableListOf()
+
+
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
-    }
-
-    private val imagePopViewModel: ImagePopViewModel by lazy {
-        ViewModelProvider(this)[ImagePopViewModel::class.java]
     }
 
     override fun onCreateView(
@@ -110,6 +150,18 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         navController = findNavController()
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(), navController)
         binding = FragmentLoggedScreenBinding.inflate(inflater, container, false)
+
+        session = SessionManager(requireActivity())
+        // This is use for LocationServices declaration
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        locationManager = requireActivity().getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
+
+        // This condition for check location run time permission
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            getCurrentLocation()
+        } else {
+            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 100)
+        }
         return binding.root
     }
 
@@ -139,17 +191,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         // Set up adapter with lifecycleOwner passed
         adapter = LoggedScreenAdapter(
             requireContext(),
-            mutableListOf(),
+            homePropertyData,
             this,
-            viewLifecycleOwner,
-            imagePopViewModel, this
-        )
+          this)
         binding.recyclerViewBooking.adapter = adapter
 
-        // Observe ViewModel data and update adapter
-        loggedScreenViewModel.imageList.observe(viewLifecycleOwner) { images ->
-            adapter.updateData(images)
-        }
         // Observe the isLoading state
         lifecycleScope.launch {
             loggedScreenViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -167,6 +213,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     override fun onStart() {
         super.onStart()
         getFCMToken()
+
     }
 
     private val googleSignInLauncher =
@@ -183,9 +230,23 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         }
 
 
+
     private fun startGoogleSignIn(type: String) {
         val signInIntent = googleSignInClient.signInIntent.putExtra("SIGN_IN_TYPE", type)
         googleSignInLauncher.launch(signInIntent)
+
+        if (requestCode == 100) {
+            if (Activity.RESULT_OK == resultCode) {
+                getCurrentLocation()
+            } else {
+                Toast.makeText(requireContext(), "Please turn on location", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+        if (requestCode == 200) {
+            getCurrentLocation()
+        }
+
     }
 
 
@@ -1930,6 +1991,272 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             } catch (e: Exception) {
                 Log.e(TAG, "exception toggleLoginButtonEnabled ${e.message}")
             }
+        }
+    }
+
+    private fun getCurrentLocation() {
+        // Initialize Location manager
+        val locationManager =
+            requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        // Check condition
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+                LocationManager.NETWORK_PROVIDER
+            )
+        ) {
+            // When location service is enabled
+            // Get last location
+            if (ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                // TODO: Consider calling
+                //    ActivityCompat#requestPermissions
+                // here to request the missing permissions, and then overriding
+                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                //                                          int[] grantResults)
+                // to handle the case where the user grants the permission. See the documentation
+                // for ActivityCompat#requestPermissions for more details.
+                return
+            }
+            mFusedLocationClient.lastLocation.addOnCompleteListener { task ->
+                // Initialize location
+                val location = task.result
+                // Check condition
+                if (location != null) {
+                    latitude = location.latitude.toString()
+                    longitude = location.longitude.toString()
+                    loadHomeApi()
+                } else {
+                    val locationRequest =
+                        LocationRequest().setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
+                            .setInterval(10000)
+                            .setFastestInterval(1000)
+                            .setNumUpdates(1)
+
+                    val locationCallback: LocationCallback = object : LocationCallback() {
+                        override fun onLocationResult(locationResult: LocationResult) {
+                            // Initialize
+                            val location1 = locationResult.lastLocation
+                            if (location1 != null) {
+                                latitude = location1.latitude.toString()
+                                longitude = location1.longitude.toString()
+                                loadHomeApi()
+                            }
+                        }
+                    }
+                    // Request location updates
+                    mFusedLocationClient.requestLocationUpdates(
+                        locationRequest,
+                        locationCallback,
+                        Looper.myLooper()!!
+                    )
+
+                }
+            }
+        } else {
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ), 100
+            )
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String?>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        // Check condition
+        if (requestCode == 100) {
+            if (requestCode == 100 && grantResults.isNotEmpty() && (grantResults[0] + grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                displayLocationSettingsRequest(requireActivity())
+            } else {
+                alertBoxLocation()
+            }
+        }
+
+        if (requestCode == 1000) {
+            if (requestCode == 1000 && grantResults.isNotEmpty() && (grantResults[0] + grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                displayLocationSettingsRequest11(requireActivity())
+            } else {
+                displayLocationSettingsRequest11(requireActivity())
+            }
+        }
+
+
+    }
+
+    private fun displayLocationSettingsRequest(context: Context) {
+        val googleApiClient = GoogleApiClient.Builder(context)
+            .addApi(LocationServices.API).build()
+        googleApiClient.connect()
+        val locationRequest: LocationRequest = LocationRequest.create()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.interval = 10000
+        locationRequest.fastestInterval = 1000
+        locationRequest.numUpdates = 1
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        builder.setAlwaysShow(true)
+        val result: PendingResult<LocationSettingsResult> =
+            LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
+        result.setResultCallback { result ->
+            val status: Status = result.status
+            when (status.statusCode) {
+                LocationSettingsStatusCodes.SUCCESS -> {
+                    Log.i(ErrorDialog.TAG, "All location settings are satisfied.")
+                    getCurrentLocation()
+                }
+                LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                    Log.i(
+                        ErrorDialog.TAG,
+                        "Location settings are not satisfied. Show the user a dialog to upgrade location settings "
+                    )
+                    try {
+                        // Show the dialog by calling startResolutionForResult(), and check the result
+                        // in onActivityResult().
+                        status.resolution?.let {
+                            startIntentSenderForResult(
+                                it.intentSender,
+                                100,
+                                null,
+                                0,
+                                0,
+                                0,
+                                null
+                            )
+                        }
+
+                    } catch (e: SendIntentException) {
+                        Log.i(ErrorDialog.TAG, "PendingIntent unable to execute request.")
+                    }
+                }
+                LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> Log.i(
+                    ErrorDialog.TAG,
+                    "Location settings are inadequate, and cannot be fixed here. Dialog not created."
+                )
+
+            }
+        }
+    }
+
+    private fun displayLocationSettingsRequest11(context: Context) {
+        val googleApiClient = GoogleApiClient.Builder(context)
+            .addApi(LocationServices.API).build()
+        googleApiClient.connect()
+        val locationRequest: LocationRequest = LocationRequest.create()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest.interval = 10000
+        locationRequest.fastestInterval = 1000
+        locationRequest.numUpdates = 1
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        builder.setAlwaysShow(true)
+        val result: PendingResult<LocationSettingsResult> =
+            LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
+        result.setResultCallback { result ->
+            val status: Status = result.status
+            when (status.statusCode) {
+                LocationSettingsStatusCodes.SUCCESS -> {
+                    Log.i(ErrorDialog.TAG, "All location settings are satisfied.")
+                    getCurrentLocation()
+                }
+                LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                    Log.i(
+                        ErrorDialog.TAG,
+                        "Location settings are not satisfied. Show the user a dialog to upgrade location settings "
+                    )
+                    try {
+                        // Show the dialog by calling startResolutionForResult(), and check the result
+                        // in onActivityResult().
+                        status.resolution?.let {
+                            startIntentSenderForResult(
+                                it.intentSender,
+                                1000,
+                                null,
+                                0,
+                                0,
+                                0,
+                                null
+                            )
+                        }
+
+                    } catch (e: SendIntentException) {
+                        Log.i(ErrorDialog.TAG, "PendingIntent unable to execute request.")
+                    }
+                }
+                LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> Log.i(
+                    ErrorDialog.TAG,
+                    "Location settings are inadequate, and cannot be fixed here. Dialog not created."
+                )
+
+            }
+        }
+    }
+
+    private fun alertBoxLocation() {
+        val builder = AlertDialog.Builder(requireContext())
+        //set title for alert dialog
+        builder.setTitle("Alert")
+        //set message for alert dialog
+        builder.setMessage(R.string.dialogMessage)
+        builder.setIcon(android.R.drawable.ic_dialog_alert)
+
+        //performing positive action
+        builder.setPositiveButton("Yes") { _, _ ->
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", requireContext().packageName, null)
+            intent.data = uri
+            startActivityForResult(intent, 200)
+        }
+        //performing cancel action
+        builder.setNeutralButton("Cancel") { _, _ ->
+
+        }
+
+        // Create the AlertDialog
+        val alertDialog: AlertDialog = builder.create()
+        // Set other dialog properties
+        alertDialog.setCancelable(false)
+        alertDialog.show()
+
+    }
+
+    private fun loadHomeApi() {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                loggedScreenViewModel.getHomeData("",
+                    latitude,longitude).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val listType = object : TypeToken<List<HomePropertyData>>() {}.type
+                                val properties: MutableList<HomePropertyData> = Gson().fromJson(resp, listType)
+                                homePropertyData = properties
+                                if (homePropertyData.isNotEmpty()) {
+                                    adapter.updateData(homePropertyData)
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 

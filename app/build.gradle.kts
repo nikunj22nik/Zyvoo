@@ -30,6 +30,9 @@ android{
             val MEDIA_URL = project.property("MEDIA_URL")
             buildConfigField("String", "MEDIA_URL", "${MEDIA_URL}")
 
+            val STRIPE_KEY = project.property("STRIPE_KEY")
+            buildConfigField("String", "STRIPE_KEY", "${STRIPE_KEY}")
+
         }
         release {
             isMinifyEnabled = false
@@ -40,6 +43,9 @@ android{
 
             val MEDIA_URL = project.property("MEDIA_URL")
             buildConfigField("String", "MEDIA_URL", "${MEDIA_URL}")
+
+            val STRIPE_KEY = project.property("STRIPE_KEY")
+            buildConfigField("String", "STRIPE_KEY", "${STRIPE_KEY}")
         }
     }
 
@@ -135,6 +141,10 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
+
+
+    //Stripe SDK
+    implementation ("com.stripe:stripe-android:16.3.0")
 
 
 

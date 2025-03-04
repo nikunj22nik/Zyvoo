@@ -37,11 +37,13 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name=".activity.guest.ExtraTimeChargesActivity"
+            android:name="com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivity"
             android:exported="false" />
         <activity
-            android:name=".activity.guest.ExtraTimeActivity"
+            android:name="com.business.zyvo.activity.guest.extratime.ExtraTimeActivity"
+
             android:exported="false" />
+
         <activity
             android:name=".activity.guest.checkout.CheckOutPayActivity"
             android:exported="false" />

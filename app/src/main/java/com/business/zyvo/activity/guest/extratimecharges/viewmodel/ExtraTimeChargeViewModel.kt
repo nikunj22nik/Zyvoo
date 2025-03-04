@@ -1,4 +1,4 @@
-package com.business.zyvo.activity.guest.checkout.viewmodel
+package com.business.zyvo.activity.guest.extratimecharges.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -15,34 +15,10 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class CheckOutPayViewModel  @Inject constructor(private val repository: ZyvoRepository) : ViewModel(){
+class ExtraTimeChargeViewModel  @Inject constructor(private val repository: ZyvoRepository) : ViewModel(){
     val isLoading = MutableLiveData<Boolean>()
-    private val _paymentCardList = MutableLiveData<MutableList<AddPaymentCardModel>>()
-    val paymentCardList : LiveData<MutableList<AddPaymentCardModel>> get() =  _paymentCardList
 
 
-    init {
-        loadPaymentDetail()
-    }
-
-
-    private fun loadPaymentDetail(){
-        val paymentList = mutableListOf<AddPaymentCardModel>(
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888")
-        )
-
-        _paymentCardList.value = paymentList
-
-    }
 
     suspend fun getUserCards( userId: String):
             Flow<NetworkResult<JsonObject>>{
@@ -104,27 +80,5 @@ class CheckOutPayViewModel  @Inject constructor(private val repository: ZyvoRepo
             }
         }
     }
-
-
-    suspend fun bookProperty(
-        userId : String, property_id : String, booking_date : String, booking_start : String, booking_end : String,
-        booking_amount : String, total_amount : String, customer_id : String, card_id : String, addons: Map<String, String>
-    ):  Flow<NetworkResult<JsonObject>>{
-        return repository.bookProperty(
-            userId, property_id, booking_date, booking_start, booking_end, booking_amount, total_amount,
-            customer_id, card_id, addons
-        ).onEach {
-            when(it){
-                is NetworkResult.Loading -> {
-                    isLoading.value = true
-                } is NetworkResult.Success -> {
-                isLoading.value = false
-            } else -> {
-                isLoading.value = false
-            }
-            }
-        }
-    }
-
 
 }

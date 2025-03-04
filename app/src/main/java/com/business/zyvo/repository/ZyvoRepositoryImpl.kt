@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.annotation.RequiresExtension
 import com.business.zyvo.AppConstant
 import com.business.zyvo.NetworkResult
+import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
+import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.backgroundTask.AuthTask
 import com.business.zyvo.backgroundTask.BookingDetails
 import com.business.zyvo.backgroundTask.HostDetailsTask
@@ -3335,7 +3337,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else if (code() == 400) {
-                    // emit(NetworkResult.Error("You have not added any payment method yet. Please add a card to proceed."))
+                     emit(NetworkResult.Error("You have not added any payment method yet. Please add a card to proceed."))
                 } else {
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
@@ -3653,6 +3655,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
     }
 
 
+
     override suspend fun reviewGuest(
         userId: Int, bookingId: Int, propertyId: Int, responseRate: Int, communication: Int,
         onTime: Int, reviewMessage: String
@@ -3664,11 +3667,101 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                         if (resp.has("success") && resp.get("success").asBoolean) {
                             var obj = resp.get("message").asString
                             emit(NetworkResult.Success<String>(obj))
+                        }
+                    }
+                }else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+        }
+
+    //Shrawan Call Api
+    override suspend fun sameAsMailingAddress(
+        userId: String
+    ): Flow<NetworkResult<JsonObject>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.sameAsMailingAddress(
+                userId
+            ).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(AuthTask.processData(resp))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                }else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(AppConstant.unKnownError))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun saveCardStripe(
+        userId: String,
+        token_stripe: String
+    ):  Flow<NetworkResult<Pair<String,String>>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.saveCardStripe(
+                userId,token_stripe
+            ).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+
                         } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
+
                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
                 }
             }
@@ -3687,11 +3780,50 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                             var obj = resp.get("data").asJsonObject
                             var token = obj.get("token").asString
                             emit(NetworkResult.Success<String>(token))
+                        }else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+                    }
+
+
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun setPreferredCard(
+        userId: String,
+        card_id: String
+    ): Flow<NetworkResult<Pair<String, String>>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.setPreferredCard(
+                userId,
+                card_id
+            ).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+
                         } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
+
                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
                 }
             }
@@ -3712,11 +3844,60 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                             val model: ChannelModel =
                                 Gson().fromJson(obj.toString(), ChannelModel::class.java)
                             emit(NetworkResult.Success<ChannelModel>(model))
+                        }
+                        else {
+                                emit(NetworkResult.Error(resp.get("message").asString))
+                            }
+                        } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                    } else {
+
+                        emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                    }
+                }
+            } catch (e: Exception) {
+                emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+            }
+    }
+
+
+
+    override suspend fun bookProperty(
+        userId : String,
+        property_id : String,
+        booking_date : String,
+        booking_start : String,
+        booking_end : String,
+        booking_amount : String,
+        total_amount : String,
+        customer_id : String,
+        card_id : String,
+        addons: Map<String, String>
+    ): Flow<NetworkResult<JsonObject>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.bookProperty(
+                userId,
+                property_id,
+                booking_date,
+                booking_start,
+                booking_end,
+                booking_amount,
+                total_amount,
+                customer_id,
+                card_id,
+                addons
+            ).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(AuthTask.processData(resp))
+
                         } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
+
                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
                 }
             }
@@ -3739,15 +3920,50 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                                 val model: ChannelListModel = Gson().fromJson(it.toString(), ChannelListModel::class.java)
                                 resultList.add(model)
                             }
-
                             emit(NetworkResult.Success<MutableList<ChannelListModel>>(resultList))
-
                         }
                         else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
+
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+
+    }
+
+
+    override suspend fun reportViolation(
+        userId : String,
+        booking_id : String,
+        property_id : String,
+        report_reasons_id : String,
+        additional_details:String): Flow<NetworkResult<Pair<String, String>>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.reportViolation(
+                userId,
+                booking_id,
+                property_id,
+                report_reasons_id,
+                additional_details
+            ).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
+
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+
                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
                 }
             }
@@ -3757,10 +3973,89 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
     }
 
 
+
+            override suspend fun listReportReasons(): Flow<NetworkResult<JsonArray>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.listReportReasons().apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(AuthTask.processDataArray(resp))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(e.message!!))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+
+    override suspend fun cancelBooking(
+        userId : String,
+        booking_id : String): Flow<NetworkResult<Pair<String, String>>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.cancelBooking(
+                userId,
+                booking_id).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(e.message!!))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+
+
 }
-
-
-
-
-
 

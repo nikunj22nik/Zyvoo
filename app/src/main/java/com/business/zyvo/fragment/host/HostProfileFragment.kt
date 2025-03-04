@@ -362,6 +362,7 @@ private val startAutocomplete =
         addWorkAdapter = AddWorkAdapter(requireContext(), workList, this, this)
         binding.recyclerViewWork.adapter = addWorkAdapter
         addWorkAdapter.updateWork(workList)
+
         addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this,this)
         binding.recyclerViewlanguages.adapter = addLanguageSpeakAdapter
         addLanguageSpeakAdapter.updateLanguage(languageList)

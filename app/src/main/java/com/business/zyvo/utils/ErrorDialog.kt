@@ -24,6 +24,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import java.util.Timer
@@ -174,6 +175,25 @@ object ErrorDialog {
 
         val date = LocalDate.parse(inputDate, inputFormatter)
         return date.format(outputFormatter)
+    }
+
+    fun convertDateFormatMMMMddyyyytoyyyyMMdd(dateStr: String): String {
+        val inputFormatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        } // Input format
+        val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // Output format
+        return LocalDate.parse(dateStr, inputFormatter).format(outputFormatter)
+    }
+
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertToTimeFormat(time: String): String {
+        val formatter = DateTimeFormatter.ofPattern("hh:mm a",Locale.ENGLISH) // Input format
+        val outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss") // Output format
+        return LocalTime.parse(time, formatter).format(outputFormatter)
     }
 
     fun calculatePercentage(value: Double?, percentage: Double?): Double  {

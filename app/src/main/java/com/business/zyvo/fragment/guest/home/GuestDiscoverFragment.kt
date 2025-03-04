@@ -59,7 +59,7 @@ import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
-import com.business.zyvo.activity.guest.ExtraTimeChargesActivity
+import com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivity
 import com.business.zyvo.activity.guest.FiltersActivity
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
@@ -299,7 +299,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
 
             R.id.customProgressBar ->{
-                val intent = Intent(requireContext(),ExtraTimeChargesActivity::class.java)
+                val intent = Intent(requireContext(), ExtraTimeChargesActivity::class.java)
                 intent.putExtra(AppConstant.TIME, AppConstant.TIME)
                 startActivity(intent)
             }

@@ -189,6 +189,7 @@ class AppConstant {
 
         val description = "Name is Description"
 
+
         val placeOpenActivity = "placeOpenActivity"
 
         val property_images = "property_images"
@@ -199,6 +200,18 @@ class AppConstant {
         val property_review_count = "property_review_count"
         val distance_miles = "distance_miles"
         val title = "title"
+
+        val cardName = "Card holder name is required"
+
+        val cardMonth = "Card month is required"
+
+        val cardYear = "Card year is required"
+
+        val cardCVV = "Card Cvv is required"
+        val selectCard = "Please select Card"
+
+        val additional = "Additional Details is required"
+
 
     }
 
