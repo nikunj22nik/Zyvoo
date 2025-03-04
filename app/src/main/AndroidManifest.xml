@@ -31,7 +31,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name="com.business.zyvo.activity.guest.ExtraTimeChargesActivity"
+            android:name="com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivity"
             android:exported="false" />
         <activity
             android:name="com.business.zyvo.activity.guest.extratime.ExtraTimeActivity"

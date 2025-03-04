@@ -76,7 +76,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 
 
 @AndroidEntryPoint
@@ -789,24 +791,33 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     fun selectTime() {
         binding.rlView1.setOnClickListener {
-           /* if (binding.textHr.text.toString().equals("1 hour")) {
-                DateManager(this).showHourSelectionDialog(this) { selectedHour ->
-                    binding.textHr.setText(selectedHour)
-                }
-            } else {*/
                 DateManager(this).showTimePickerDialog(this) { selectedTime ->
-                    binding.textstart.setText(selectedTime)
+                    try {
+                        binding.textstart.setText(selectedTime)
+                        // Define the time formatter (12-hour format with AM/PM)
+                        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            DateTimeFormatter.ofPattern("hh:mm a")
+                        } else {
+                            TODO("VERSION.SDK_INT < O")
+                        }
+                        Log.d(ErrorDialog.TAG,selectedTime)
+                        // Parse the start time string into a LocalTime object
+                        val startTime = LocalTime.parse(selectedTime.lowercase(), formatter)
+                        // Add 2 hours to get the end time
+                        val endTime = startTime.plusHours(binding.textHr.text.toString().replace(" hour","")
+                            .toLong())
+                        // Format the end time back to a string
+                        val formattedEndTime = endTime.format(formatter)
+                        binding.textend.text = formattedEndTime.uppercase()
+                    }catch (e:Exception){
+                        Log.d(ErrorDialog.TAG,e.message!!)
+                    }
                 }
-          //  }
         }
         binding.rlView2.setOnClickListener {
-          /*  if (binding.textPrice.text.toString().equals("$30")) {
-
-            } else {*/
                 DateManager(this).showTimePickerDialog(this) { selectedTime ->
                     binding.textend.setText(selectedTime)
                 }
-         //   }
         }
     }
 

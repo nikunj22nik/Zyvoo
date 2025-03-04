@@ -488,7 +488,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                   }
                     stTime?.let  { resp ->
                         edTime?.let {
-                           /* var intent = Intent(this@CheckOutPayActivity
+                            var intent = Intent(this@CheckOutPayActivity
                                 , ExtraTimeActivity::class.java)
                             intent.putExtra("price",binding.tvPrice.text.toString().replace("$", ""),)
                             intent.putExtra("stTime",stTime)
@@ -497,8 +497,8 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                             intent.putExtra("propertyMile",propertyMile)
                             intent.putExtra("date",date)
                             intent.putExtra("hour",binding.tvHours.text.toString().replace(" Hours",""))
-                            startActivity(intent)*/
-                            bookProperty(
+                            startActivity(intent)
+                            /*bookProperty(
                                 propertyData?.property_id.toString(),
                                 convertDateFormatMMMMddyyyytoyyyyMMdd(date!!),
                                 convertDateFormatMMMMddyyyytoyyyyMMdd(date!!)+ " "+ErrorDialog.convertToTimeFormat(stTime!!),
@@ -507,7 +507,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                                 binding.tvTotalPrice.text.toString().replace("$", ""),
                                 customerId,
                                 selectuserCard?.card_id!!,createAddonFields(addons)
-                            )
+                            )*/
                         }
                     }
                 }
@@ -626,7 +626,8 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     showToast(this@CheckOutPayActivity,AppConstant.cardYear)
                 }else if (etCardCvv.text.isEmpty()){
                     showToast(this@CheckOutPayActivity,AppConstant.cardCVV)
-                }else {
+                }else
+                {
                     LoadingUtils.showDialog(this@CheckOutPayActivity, false)
                     val stripe = Stripe(this@CheckOutPayActivity, BuildConfig.STRIPE_KEY)
                     var month: Int? = null

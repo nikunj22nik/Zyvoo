@@ -499,7 +499,7 @@
                             android:layout_height="match_parent"
                             android:layout_centerInParent="true"
                             app:cc_borderWidth="@dimen/_42sdp"
-                            app:cc_endHour="2"
+                            app:cc_endHour="3"
                             app:cc_endIconResource="@drawable/oval_white"
                             app:cc_fillColor="#4AEAB1"
                             app:cc_metricMode="clock"
@@ -604,7 +604,7 @@
                             android:layout_marginStart="@dimen/_6sdp"
                             android:layout_toEndOf="@id/cl1"
                             android:fontFamily="@font/poppins"
-                            android:hint="1:00 PM"
+                            android:hint="01:00 PM"
                             android:textColorHint="@color/black"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10ssp" />
@@ -648,7 +648,7 @@
                             android:layout_marginStart="@dimen/_6sdp"
                             android:layout_toEndOf="@id/cl2"
                             android:fontFamily="@font/poppins"
-                            android:hint="3:00 PM"
+                            android:hint="04:00 PM"
                             android:textColorHint="@color/black"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10ssp" />
@@ -699,7 +699,7 @@
                             android:layout_marginStart="@dimen/_6sdp"
                             android:layout_toEndOf="@id/cl3"
                             android:fontFamily="@font/poppins"
-                            android:text="2 hour"
+                            android:text="3 hour"
                             android:textColorHint="@color/black"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10ssp" />

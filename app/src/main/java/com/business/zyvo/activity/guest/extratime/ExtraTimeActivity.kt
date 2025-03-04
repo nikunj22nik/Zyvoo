@@ -13,7 +13,6 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -29,15 +28,13 @@ import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
+import com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivity
 import com.business.zyvo.activity.guest.extratime.model.ReportReason
 import com.business.zyvo.activity.guest.extratime.viewmodel.ExtraTimeViewModel
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.activity.guest.propertydetails.model.PropertyData
-import com.business.zyvo.activity.guest.propertydetails.model.Review
 import com.business.zyvo.databinding.ActivityExtraTimeBinding
-import com.business.zyvo.fragment.both.CustomSpinnerAdapterReportViolation
 import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
-import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
@@ -581,27 +578,42 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
         }
     }
 
-    override fun onSubmitClicked() {
-        openNewDialog()
+    override fun onSubmitClicked(hour:String) {
+        propertyData?.hourly_rate?.toDoubleOrNull()?.let { resp ->
+            hour?.let {
+                val hourlyTotal = (resp * it.toDouble())
+                openNewDialog(hourlyTotal,hour)
+            }
+        }
     }
 
-    fun openNewDialog(){
+    fun openNewDialog(hourlTotal:Double,hour: String){
         val dialog =  Dialog(this, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(true)
             setContentView(R.layout.dialog_price_amount)
-//            window?.attributes = WindowManager.LayoutParams().apply {
-//                copyFrom(window?.attributes)
-//                width = WindowManager.LayoutParams.MATCH_PARENT
-//                height = WindowManager.LayoutParams.MATCH_PARENT
-//            }
-
             val crossButton: ImageView = findViewById(R.id.imgCross)
             val submit :RelativeLayout = findViewById(R.id.yes_btn)
+            val tvNewAmount:TextView = findViewById<TextView>(R.id.tvNewAmount)
+            tvNewAmount.text = "Your new total amount is $$hourlTotal"
             val txtSubmit : RelativeLayout = findViewById(R.id.rl_cancel_btn)
-
+            txtSubmit.setOnClickListener {
+                dialog.dismiss()
+            }
             submit.setOnClickListener {
-               dialog.dismiss()
+                dialog.dismiss()
+                val intent = Intent(this@ExtraTimeActivity
+                    ,ExtraTimeChargesActivity::class.java)
+                intent.putExtra("price",hourlTotal)
+                intent.putExtra("stTime",stTime)
+                intent.putExtra("edTime",edTime)
+                intent.putExtra("propertyData",Gson().toJson(propertyData))
+                intent.putExtra("propertyMile",propertyMile)
+                intent.putExtra("date",date)
+                intent.putExtra("hour",hour)
+                intent.putExtra("type","Booking")
+                intent.putExtra("bookingId",bookingId)
+                startActivity(intent)
             }
 
             crossButton.setOnClickListener {
@@ -613,7 +625,6 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
             )
             window?.setBackgroundDrawableResource(android.R.color.transparent) // Optional
-
             show()
         }
     }
