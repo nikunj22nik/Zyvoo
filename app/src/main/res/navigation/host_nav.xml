@@ -85,7 +85,7 @@
 
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="com.business.zyvo.fragment.both.NotificationFragment"
+        android:name="com.business.zyvo.fragment.both.notificationfragment.NotificationFragment"
         android:label="NotificationFragment" />
 
     <fragment

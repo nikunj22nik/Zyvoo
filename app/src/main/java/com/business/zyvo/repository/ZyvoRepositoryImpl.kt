@@ -13,9 +13,16 @@ import com.business.zyvo.backgroundTask.HostDetailsTask
 import com.business.zyvo.backgroundTask.MyPlacesTask
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.fragment.both.faq.model.FaqModel
+
 import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingDetailModel
 import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
 import com.business.zyvo.model.ChannelListModel
+
+import com.business.zyvo.fragment.both.notificationfragment.NotificationRootModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingDetailModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.ReviewModel
+
 import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.MyBookingsModel
 
@@ -43,6 +50,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import org.json.JSONException
@@ -1285,7 +1293,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         activities: List<String>?,
         amenities: List<String>?,
         languages: List<String>?
-    ): Flow<NetworkResult<JsonObject>> = flow {
+    ): Flow<NetworkResult<JsonArray>> = flow {
         try {
             api.getFilteredHomeData(
                 userId,
@@ -1312,7 +1320,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                     body()?.let { resp ->
                         if (resp.has("success")&&
                             resp.get("success").asBoolean) {
-                            emit(AuthTask.processData(resp))
+                            emit(AuthTask.processDataArray(resp))
                         }
                         else {
 
@@ -1375,35 +1383,33 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
     }
 
     override suspend fun reviewPublish(
-        userId: String,
+        userId: Int,
         booking_id: Int,
         property_id: Int,
-        response_rate: String,
-        communication: String,
-        on_time: String,
+        response_rate: Int,
+        communication: Int,
+        on_time: Int,
         review_message: String
-    ): Flow<NetworkResult<JsonObject>> = flow{
+    ): Flow<NetworkResult<ReviewModel>> = flow {
         try {
-            api.getReviewPublish(userId,booking_id, property_id, response_rate, communication, on_time, review_message).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success")&&
-                            resp.get("success").asBoolean) {
-                            emit(AuthTask.processData(resp))
-                        }
-                        else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                }else {
-                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+            val response = api.getReviewPublish(userId,booking_id,property_id,response_rate,communication,on_time,review_message)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null && body.has("success") && body.get("success").asBoolean) {
+                    Log.d("value44444","List $body")
 
+                    emit(AuthTask.reviewData(body))
+                } else {
+                    emit(NetworkResult.Error(body?.get("message")?.asString ?: AppConstant.unKnownError))
                 }
+            } else {
+                emit(NetworkResult.Error(ErrorHandler.handleErrorBody(response.errorBody()?.string())))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
         }
     }
+
 
 
     override suspend fun verifyIdentity(
@@ -1431,6 +1437,71 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                         )
                     )
                 }
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+    override suspend fun getGuestNotification(userId: String): Flow<NetworkResult<MutableList<NotificationRootModel>>> = flow{
+        try {
+            val response = api.getGuestNotification(userId)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null && body.has("success") && body.get("success").asBoolean) {
+                    emit(AuthTask.notificationData(body))
+
+                } else {
+                    emit(NetworkResult.Error(body?.get("message")?.asString ?: AppConstant.unKnownError))
+                }
+            } else {
+                emit(NetworkResult.Error(ErrorHandler.handleErrorBody(response.errorBody()?.string())))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+    override suspend fun getMarkGuestNotification(
+        userId: String,
+        notification_id: Int
+    ): Flow<NetworkResult<NotificationRootModel>> =  flow {
+        try {
+            val response = api.getMarkGuestNotification(userId,notification_id)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null && body.has("success") && body.get("success").asBoolean) {
+                    Log.d("@@@@","$body")
+                    emit(AuthTask.markNotification(body))
+                    Log.d("@@@@@","$body")
+                } else {
+                    emit(NetworkResult.Error(body?.get("message")?.asString ?: AppConstant.unKnownError))
+                }
+            } else {
+                emit(NetworkResult.Error(ErrorHandler.handleErrorBody(response.errorBody()?.string())))
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+    override suspend fun getRemoveGuestNotification(
+        userId: String,
+        notification_id: Int
+    ): Flow<NetworkResult<NotificationRootModel>> = flow {
+        try {
+            val response = api.getRemoveGuestNotification(userId,notification_id)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null && body.has("success") && body.get("success").asBoolean) {
+                    Log.d("@@@@","$body")
+                    emit(AuthTask.markNotification(body))
+                    Log.d("@@@@@","$body")
+                } else {
+                    emit(NetworkResult.Error(body?.get("message")?.asString ?: AppConstant.unKnownError))
+                }
+            } else {
+                emit(NetworkResult.Error(ErrorHandler.handleErrorBody(response.errorBody()?.string())))
             }
         } catch (e: Exception) {
             emit(NetworkResult.Error(ErrorHandler.emitError(e)))

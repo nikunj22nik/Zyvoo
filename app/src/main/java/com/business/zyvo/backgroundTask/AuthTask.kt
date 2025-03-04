@@ -2,8 +2,10 @@ package com.business.zyvo.backgroundTask
 
 import android.util.Log
 import com.business.zyvo.NetworkResult
-import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingDetailModel
-import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.fragment.both.notificationfragment.NotificationRootModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingDetailModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.ReviewModel
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
@@ -47,6 +49,37 @@ class AuthTask {
              }
              return NetworkResult.Success(list)
 
+         }
+
+         fun notificationData(apiResponse: JsonObject): NetworkResult<MutableList<NotificationRootModel>> {
+             val obj = apiResponse.get("data").asJsonArray
+             var list = mutableListOf<NotificationRootModel>()
+             obj.forEach {
+                 if(it.isJsonObject){
+                     var currObj = it.asJsonObject
+                     list.add(Gson().fromJson(currObj, NotificationRootModel::class.java))
+                 }
+             }
+             return NetworkResult.Success(list)
+
+         }
+
+         fun markNotification(apiResponse: JsonObject): NetworkResult<NotificationRootModel> {
+             return try {
+                 val markModel = Gson().fromJson(apiResponse, NotificationRootModel::class.java)
+                 NetworkResult.Success(markModel)
+             } catch (e: Exception) {
+                 NetworkResult.Error("Error parsing JSON: ${e.message}") // Handle JSON parsing errors
+             }
+         }
+
+         fun reviewData(apiResponse: JsonObject): NetworkResult<ReviewModel> {
+             return try {
+                 val reviewModel = Gson().fromJson(apiResponse, ReviewModel::class.java)
+                 NetworkResult.Success(reviewModel)
+             } catch (e: Exception) {
+                 NetworkResult.Error("Error parsing JSON: ${e.message}") // Handle JSON parsing errors
+             }
          }
 
 

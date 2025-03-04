@@ -238,13 +238,27 @@ interface ZyvoApi {
 
     @POST("review_host")
     @FormUrlEncoded
-    suspend fun  getReviewPublish(@Field("user_id")user_id :String,
+    suspend fun  getReviewPublish(@Field("user_id")user_id :Int,
                                 @Field("booking_id")booking_id :Int,
                                 @Field("property_id")property_id :Int,
-                                @Field("response_rate")response_rate :String,
-                                @Field("communication")communication :String,
-                                @Field("on_time")on_time :String,
+                                @Field("response_rate")response_rate :Int,
+                                @Field("communication")communication :Int,
+                                @Field("on_time")on_time :Int,
                                   @Field("review_message")review_message:String) : Response<JsonObject>
+
+    @POST("get_notification_guest")
+    @FormUrlEncoded
+    suspend fun  getGuestNotification(@Field("user_id")user_id :String) : Response<JsonObject>
+
+    @POST("mark_notification_read")
+    @FormUrlEncoded
+    suspend fun  getMarkGuestNotification(@Field("user_id")user_id :String,
+                                          @Field("notification_id")notification_id :Int) : Response<JsonObject>
+
+    @POST("remove_notification")
+    @FormUrlEncoded
+    suspend fun  getRemoveGuestNotification(@Field("user_id")user_id :String,
+                                          @Field("notification_id")notification_id :Int) : Response<JsonObject>
 
 
     @POST("complete_profile")

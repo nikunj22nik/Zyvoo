@@ -26,6 +26,8 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
     val paymentCardList : LiveData<MutableList<AddPaymentCardModel>> get() =  _paymentCardList
 
 
+
+
     init {
         loadPaymentDetail()
     }
@@ -434,6 +436,21 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
     suspend fun logout(userId: String):
             Flow<NetworkResult<String>> {
         return repository.logout(userId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun getUserCards( userId: String):
+            Flow<NetworkResult<JsonObject>>{
+        return repository.getUserCards(userId).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true

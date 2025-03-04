@@ -1,10 +1,11 @@
-package com.business.zyvo.fragment.guest.bookingviewmodel
+package com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.business.zyvo.NetworkResult
-import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingDetailModel
-import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingDetailModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.ReviewModel
 import com.business.zyvo.repository.ZyvoRepository
 import com.business.zyvo.utils.NetworkMonitor
 import com.google.gson.JsonObject
@@ -38,8 +39,8 @@ class BookingViewModel @Inject constructor(private val repository: ZyvoRepositor
         }
     }
 
-    suspend fun getReviewPublishAPI(userId: String, booking_id: Int, property_id: Int, response_rate: String, communication: String, on_time: String, review_message: String):
-            Flow<NetworkResult<JsonObject>> {
+    suspend fun getReviewPublishAPI(userId: Int, booking_id: Int, property_id: Int, response_rate: Int, communication: Int, on_time: Int, review_message: String):
+            Flow<NetworkResult<ReviewModel>> {
         return repository.reviewPublish(userId,booking_id,property_id,response_rate,communication,on_time,review_message).onEach {
             when(it){
                 is NetworkResult.Loading -> {

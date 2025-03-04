@@ -39,6 +39,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -89,6 +90,7 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.hbb20.CountryCodePicker
 import com.withpersona.sdk2.inquiry.Environment
 import com.withpersona.sdk2.inquiry.Fields
@@ -139,6 +141,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     var session: SessionManager? = null
     var imageBytes: ByteArray = byteArrayOf()
     var userProfile: UserProfile? = null
+    var isPaymentDataLoaded = false
     private lateinit var getInquiryResult: ActivityResultLauncher<Inquiry>
 
     // For handling the result of the Autocomplete Activity
@@ -669,20 +672,26 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             // Change the drawable based on the state
             val drawableRes = if (isDropdownOpen) {
-                R.drawable.ic_dropdown_open // Replace with your open icon resource
-
+                R.drawable.ic_dropdown_open
             } else {
-                R.drawable.ic_dropdown_close // Replace with your close icon resource
+                R.drawable.ic_dropdown_close
             }
 
             if (isDropdownOpen) {
                 binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
                 binding.textAddNewPaymentCard.visibility = View.VISIBLE
-            } else if (!isDropdownOpen) {
+
+                // API Call only if not already loaded
+                if (!isPaymentDataLoaded) {
+//                    getPaymentDetails()
+                    isPaymentDataLoaded = true
+                }
+
+            } else {
                 binding.recyclerViewPaymentCardList.visibility = GONE
                 binding.textAddNewPaymentCard.visibility = GONE
-
             }
+
             binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
         }
     }
@@ -837,41 +846,43 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         }
     }
 
-    private fun getPaymentDetails(){
-        lifecycleScope.launch(Dispatchers.IO) {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConnected ->
-                    withContext(Dispatchers.Main) {
-                        if (!isConnected) {
-                            showErrorDialog(
-                                requireContext(),
-                                resources.getString(R.string.no_internet_dialog_msg)
-                            )
-                        } else {
-                            profileViewModel.getPaymentMethodApi(session?.getUserId().toString()).collect { result ->
-                                when (result) {
-                                    is NetworkResult.Success -> { result.data?.let {
-                                        LoadingUtils.showSuccessDialog(requireContext(),"State added successfully")
-                                           // Toast.makeText(requireContext(), "State added successfully", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-
-                                    is NetworkResult.Error -> {
-                                        showErrorDialog(requireContext(), result.message!!)
-                                    }
-
-                                    else -> {
-                                        Log.v(ErrorDialog.TAG, "error::${result.message}")
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-        }
-
-    }
+    @SuppressLint("SetTextI18n")
+//    private fun getUserCards() {
+//        if (NetworkMonitorCheck._isConnected.value) {
+//            lifecycleScope.launch(Dispatchers.Main) {
+//                profileViewModel.getUserCards(session?.getUserId().toString()).collect {
+//                    when (it) {
+//                        is NetworkResult.Success -> {
+//                            it.data?.let { resp ->
+//                                customerId = resp.get("stripe_customer_id").asString
+//                                val listType = object : TypeToken<List<UserCards>>() {}.type
+//                                userCardsList = Gson().fromJson(resp.getAsJsonArray("cards"), listType)
+//                                if (userCardsList.isNotEmpty()){
+//                                    addPaymentCardAdapter.updateItem(userCardsList)
+//                                    for (card in userCardsList){
+//                                        if (card.is_preferred){
+//                                            selectuserCard = card
+//                                            break
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                        is NetworkResult.Error -> {
+//                            showErrorDialog(requireContext(), it.message!!)
+//                        }
+//
+//                        else -> {
+//                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+//                        }
+//                    }
+//                }
+//            }
+//        }else{
+//            showErrorDialog(this,
+//                resources.getString(R.string.no_internet_dialog_msg))
+//        }
+//    }
 
     private fun updateAddStreetAddress(streetAddress: String) {
         lifecycleScope.launch {

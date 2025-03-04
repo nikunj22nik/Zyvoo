@@ -1,4 +1,4 @@
-package com.business.zyvo.fragment.guest.bookingviewmodel.dataclass
+package com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass
 
 data class BookingModel(
     val booking_date: String?,

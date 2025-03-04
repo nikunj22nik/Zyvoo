@@ -2,7 +2,7 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.guest.ReviewBookingFragment">
+    tools:context=".fragment.guest.bookingfragment.bookingviewmodel.ReviewBookingFragment">
 
     <data>
         <!--        <variable-->
@@ -398,17 +398,32 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
 
                             <TextView
                                 android:id="@+id/time"
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
                                 android:fontFamily="@font/poppins"
-                                android:text="2 Hours"
+                                android:text="2"
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_13ssp" />
+
+                            <TextView
+                                android:id="@+id/Htime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:fontFamily="@font/poppins"
+                                android:text="Hours"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_13ssp" />
+
+                            <View
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
 
                             <TextView
                                 android:id="@+id/money"
@@ -419,6 +434,7 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_13ssp" />
                         </LinearLayout>
+
 
                         <!-- Additional Fees -->
                         <LinearLayout
@@ -945,7 +961,7 @@
 
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_iclude_booking"
+                    android:id="@+id/recycler_include_booking"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_10sdp"
@@ -1168,7 +1184,7 @@
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_14sdp"
                     android:fontFamily="@font/poppins"
-                    android:text="Reviews (30)"
+                    android:text="Reviews"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />

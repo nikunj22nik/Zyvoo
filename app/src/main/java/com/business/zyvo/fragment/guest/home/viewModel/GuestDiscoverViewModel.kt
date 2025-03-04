@@ -110,6 +110,23 @@ class GuestDiscoverViewModel @Inject constructor(private val repository: ZyvoRep
         }
     }
 
+    suspend fun getFilterHomeDataApi( userId: Int?, latitude: Double?, longitude: Double?, place_type: String?, minimum_price: Double?, maximum_price: Double?,
+                                      location: String?, date: String?, time: Int?, people_count: Int?, property_size: Int?, bedroom: Int?, bathroom: Int?, instant_booking: Int?,
+                                      self_check_in: Int?, allows_pets: Int?, activities: List<String>?, amenities: List<String>?, languages: List<String>?): Flow<NetworkResult<JsonArray>> {
+        return repository.getFilteredHomeData(userId,latitude,longitude,place_type,minimum_price,maximum_price,
+            location,date,time,people_count,property_size,bedroom,bathroom,instant_booking,self_check_in,allows_pets,activities,amenities,languages).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
 
 
 }

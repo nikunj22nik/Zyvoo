@@ -9,9 +9,16 @@ import com.business.zyvo.model.host.GetPropertyDetail
 
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.fragment.both.faq.model.FaqModel
+
 import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingDetailModel
 import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
 import com.business.zyvo.model.ChannelListModel
+
+import com.business.zyvo.fragment.both.notificationfragment.NotificationRootModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingDetailModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.ReviewModel
+
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.NotificationScreenModel
 import com.business.zyvo.model.host.ChannelModel
@@ -254,15 +261,21 @@ interface ZyvoRepository {
     suspend fun getFilteredHomeData(userId: Int?, latitude: Double?, longitude: Double?, place_type: String?, minimum_price: Double?,
         maximum_price: Double?, location: String?, date: String?, time: Int?, people_count: Int?, property_size: Int?, bedroom: Int?,
         bathroom: Int?, instant_booking: Int?, self_check_in: Int?, allows_pets: Int?, activities: List<String>?,
-        amenities: List<String>?, languages: List<String>?): Flow<NetworkResult<JsonObject>>
+        amenities: List<String>?, languages: List<String>?): Flow<NetworkResult<JsonArray>>
 
     suspend fun getBookingList(userId: String) :  Flow<NetworkResult<MutableList<BookingModel>>>
 
     suspend fun getBookingDetailsList(userId: String,booking_id: Int) :  Flow<NetworkResult<BookingDetailModel>>
 
-    suspend fun reviewPublish(userId: String,booking_id:Int,property_id: Int,response_rate: String,communication: String,on_time: String,review_message: String) : Flow<NetworkResult<JsonObject>>
+    suspend fun reviewPublish(userId: Int,booking_id:Int,property_id: Int,response_rate: Int,communication:Int,on_time:Int,review_message: String) : Flow<NetworkResult<ReviewModel>>
 
     suspend fun verifyIdentity(userId: String,identity_verify: String) : Flow<NetworkResult<Pair<String,String>>>
+
+    suspend fun getGuestNotification(userId: String) : Flow<NetworkResult<MutableList<NotificationRootModel>>>
+
+    suspend fun getMarkGuestNotification(userId: String,notification_id: Int) : Flow<NetworkResult<NotificationRootModel>>
+
+    suspend fun getRemoveGuestNotification(userId: String,notification_id: Int) : Flow<NetworkResult<NotificationRootModel>>
 
 
 //    suspend fun getPrivacyPolicy() : Flow<NetworkResult<String>>

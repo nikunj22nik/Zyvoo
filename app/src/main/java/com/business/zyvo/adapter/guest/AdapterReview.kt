@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.databinding.AdapterReviewsBinding
-import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.Review
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.Review
 
 class AdapterReview(
     private val context: Context,
@@ -33,7 +33,7 @@ class AdapterReview(
         val review = list[position] // Get correct item
 
         holder.binding.txtName.text = review.name
-        holder.binding.txtReviews.text = review.comment
+        holder.binding.txtReviews.text = review.comment.toString()
         holder.binding.ratingbar.rating = review.rating?.toFloat() ?: 0f
         holder.binding.tvDate.text = review.date
 
@@ -48,7 +48,7 @@ class AdapterReview(
 
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateAdapter(newList: List<Review>) {
+    fun updateAdapter(newList: MutableList<Review>) {
         list.clear()
         list.addAll(newList)
         notifyDataSetChanged()

@@ -1,5 +1,9 @@
 package com.business.zyvo.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class FilterRequest(
     val user_id: Int?,
     val latitude: Double?,
@@ -20,5 +24,5 @@ data class FilterRequest(
     val activities: List<String>?,
     val amenities: List<String>?,
     val languages: List<String>?
-)
+):Parcelable
 
