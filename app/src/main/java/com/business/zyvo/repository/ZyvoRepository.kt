@@ -10,8 +10,7 @@ import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.fragment.both.faq.model.FaqModel
 
-import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingDetailModel
-import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
+
 import com.business.zyvo.model.ChannelListModel
 
 import com.business.zyvo.fragment.both.notificationfragment.NotificationRootModel
