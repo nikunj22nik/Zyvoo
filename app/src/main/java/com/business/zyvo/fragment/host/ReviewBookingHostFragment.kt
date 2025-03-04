@@ -123,8 +123,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         val gridLayoutManager =
             GridLayoutManager(requireContext(), PrepareData.numberOFColumn(requireActivity()))
 
-        binding.recyclerIcludeBooking.layoutManager = gridLayoutManager
-        binding.recyclerIcludeBooking.adapter = adapterIncludeInBooking
+        binding.recyclerIncludeBooking.layoutManager = gridLayoutManager
+        binding.recyclerIncludeBooking.adapter = adapterIncludeInBooking
 
 
         binding.textMessageTheHostButton.text = "Message the Guest"
@@ -395,7 +395,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             binding.tvBookingTotalTime.setText(it + " Hours")
         } ?: binding.tvBookingTotalTime.setText("")
 
-        binding.bookingFromTo.setText("From " + data.booking_start_time + " to " + data.booking_end_time)
+        binding.bookingFromTo.text = "From " + data.booking_start_time + " to " + data.booking_end_time
 
         data.reviews_total_count?.let {
             binding.tvReviewsCount.setText("Reviews (" + it + " )")
@@ -432,7 +432,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             }
 
             if (it.size >= 3) {
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(0))
+                Glide.with(requireContext()).load(AppConstant.BASE_URL + it[0])
                     .into(binding.imgProfileHotel)
                 binding.llHotelViews.visibility = View.VISIBLE
                 binding.llTwoImgView.visibility = View.GONE

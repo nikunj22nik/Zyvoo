@@ -1,4 +1,4 @@
-package com.business.zyvo.fragment.guest
+package com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -22,8 +22,7 @@ import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.adapter.MyBookingsAdapter
 import com.business.zyvo.databinding.FragmentMyBookingsBinding
-import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
-import com.business.zyvo.fragment.guest.bookingviewmodel.BookingViewModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.NetworkMonitorCheck
 import dagger.hilt.android.AndroidEntryPoint

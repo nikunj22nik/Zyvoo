@@ -10,7 +10,7 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.OnItemAdapterClick
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutAllBookingsBinding
-import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingModel
 
 
 class MyBookingsAdapter(

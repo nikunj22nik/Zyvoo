@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/ic_notification_bg"
-        tools:context=".fragment.both.NotificationFragment">
+        tools:context=".fragment.both.notificationfragment.NotificationFragment">
 
 
         <LinearLayout

@@ -15,7 +15,7 @@
         android:label="ProfileFragment" />
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="com.business.zyvo.fragment.both.NotificationFragment"
+        android:name="com.business.zyvo.fragment.both.notificationfragment.NotificationFragment"
         android:label="NotificationFragment" />
     <fragment
         android:id="@+id/helpCenterFragment"
@@ -47,12 +47,12 @@
         android:label="ChatFragment" />
     <fragment
         android:id="@+id/myBookingsFragment"
-        android:name="com.business.zyvo.fragment.guest.MyBookingsFragment"
+        android:name="com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.MyBookingsFragment"
         android:label="fragment_my_bookings"
         tools:layout="@layout/fragment_my_bookings" />
     <fragment
         android:id="@+id/reviewBookingFragment"
-        android:name="com.business.zyvo.fragment.guest.ReviewBookingFragment"
+        android:name="com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.ReviewBookingFragment"
         android:label="fragment_review_booking"
         tools:layout="@layout/fragment_review_booking" />
     <fragment
