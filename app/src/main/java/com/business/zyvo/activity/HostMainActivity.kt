@@ -13,8 +13,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.business.zyvo.AppConstant
+import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.chat.QuickstartConversationsManagerListener
 import com.business.zyvo.databinding.ActivityHostMainBinding
 import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
 import com.business.zyvo.session.SessionManager
@@ -23,10 +26,11 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
+class HostMainActivity : AppCompatActivity(), View.OnClickListener{
 
-    lateinit var binding : ActivityHostMainBinding
-    lateinit var guestViewModel : GuestMainActivityModel
+    lateinit var binding: ActivityHostMainBinding
+    lateinit var guestViewModel: GuestMainActivityModel
+    private lateinit var quickstartConversationsManager: QuickstartConversationsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +51,31 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         binding.navigationBookings.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
 
-        callingGetUserToken()
+//        try {
+//            quickstartConversationsManager = (application as MyApp).conversationsManager
+//            quickstartConversationsManager.setListener(this) // Ensure this is only called after full initialization
+//            loadChat()
+//        } catch (e: Exception) {
+//            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+//        }
+
+//        callingGetUserToken()
+
         var sessionManager = SessionManager(this)
         sessionManager.setUserType(AppConstant.Host)
+
+
+
+
 //        val currentDestination = findNavController().currentDestination
 //        Log.d("NAVIGATION_DEBUG", "Current Destination: $currentDestination")
 
+    }
+
+
+
+    private fun loadChat() {
+        quickstartConversationsManager.loadChannel()
     }
 
     fun hideView() {
@@ -65,20 +88,24 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
     }
 
 
-    private fun callingGetUserToken() {
+    /*private fun callingGetUserToken() {
         var sessionManager = SessionManager(this)
         var userId = sessionManager.getUserId()
         userId?.let {
             lifecycleScope.launch {
                 guestViewModel.getChatToken(it, "host").collect {
-                    when(it){
-                        is NetworkResult.Success ->{
-                            it.data?.let { it1 -> sessionManager.setChatToken(it1) }
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { it1 -> sessionManager.setChatToken(it1)
+                            reloadMessages()
+                            }
                         }
-                        is NetworkResult.Error ->{
+
+                        is NetworkResult.Error -> {
 
                         }
-                        else ->{
+
+                        else -> {
 
                         }
                     }
@@ -86,19 +113,18 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
             }
         }
 
-    }
+    }*/
 
 
-    fun inboxColor(){
+    fun inboxColor() {
 
         binding.imageProperties.setImageResource(R.drawable.ic_home_zyvoo)
         binding.imageInbox.setImageResource(R.drawable.ic_chat_selected)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
         binding.imageProfile.setImageResource(R.drawable.ic_profile)
 
-
-
         //text Color
+
         binding.tvProperties.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
@@ -107,9 +133,7 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
     }
 
 
-
-
-    fun profileColor(){
+    fun profileColor() {
 
         binding.imageProperties.setImageResource(R.drawable.ic_home_zyvoo)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
@@ -123,9 +147,10 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
 
 
     }
-    fun bookingResume(){
 
-        Log.d("TESTING_ZYVOO","i AM HERE IN A BOOKING")
+    fun bookingResume() {
+
+        Log.d("TESTING_ZYVOO", "i AM HERE IN A BOOKING")
         binding.imageProperties.setImageResource(R.drawable.ic_home_zyvoo)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1_selected)
@@ -136,7 +161,8 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
 
     }
-    fun homeResume(){
+
+    fun homeResume() {
         //image color
         binding.imageProperties.setImageResource(R.drawable.ic_select_home)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
@@ -149,27 +175,31 @@ class HostMainActivity : AppCompatActivity() ,View.OnClickListener{
     }
 
 
-
     override fun onClick(p0: View?) {
-        when(p0?.id){
-            R.id.navigationProperties->{
+        when (p0?.id) {
+            R.id.navigationProperties -> {
                 homeResume()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.host_fragment_properties)
             }
-            R.id.navigationInbox_1->{
+
+            R.id.navigationInbox_1 -> {
                 inboxColor()
 
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostChatFragment)
 
             }
-            R.id.navigationBookings->{
+
+            R.id.navigationBookings -> {
                 bookingResume()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.bookingScreenHostFragment)
             }
-            R.id.icProfile->{
+
+            R.id.icProfile -> {
                 profileColor()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostProfileFragment)
             }
         }
     }
+
+
 }

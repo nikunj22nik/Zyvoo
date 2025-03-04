@@ -10,32 +10,52 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.business.zyvo.AppConstant
+import com.business.zyvo.LoadingUtils
+import com.business.zyvo.MyApp
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
+import com.business.zyvo.TimeUtils
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.adapter.AdapterChatList
+import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.chat.QuickstartConversationsManagerListener
 import com.business.zyvo.databinding.FragmentChatBinding
+import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.model.ChatListModel
+import com.business.zyvo.session.SessionManager
 import com.business.zyvo.viewmodel.host.ChatListHostViewModel
+import com.google.firebase.crashlytics.internal.model.CrashlyticsReport.Session
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HostChatFragment : Fragment() , View.OnClickListener{
+class HostChatFragment : Fragment() , View.OnClickListener ,
+    QuickstartConversationsManagerListener {
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapterChatList: AdapterChatList
     private val viewModel: ChatListHostViewModel by viewModels()
     var objects: Int = 0
-    private var chatList: MutableList<ChatListModel> = mutableListOf()
-    private var filteredList: MutableList<ChatListModel> = chatList.toMutableList()
+    private var chatList :MutableList<ChannelListModel>  = mutableListOf()
+
+    private var filteredList: MutableList<ChannelListModel> = chatList.toMutableList()
+    private lateinit var quickstartConversationsManager : QuickstartConversationsManager
+    private var map:HashMap<String,ChannelListModel> = HashMap<String,ChannelListModel>()
+    private var loggedInUserId : Int =-1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         Log.d("TESTING_ZYVOO_Proj", "onCreate OF CHAT")
+        var sessionManager = SessionManager(requireContext())
+        loggedInUserId = sessionManager.getUserId()!!
 
     }
 
@@ -64,46 +84,93 @@ class HostChatFragment : Fragment() , View.OnClickListener{
         },null)
         binding.recyclerViewChat.adapter = adapterChatList
         viewModel.list.observe(viewLifecycleOwner, Observer { list ->
-            chatList = list
-            adapterChatList.updateItem(list)
+
+          //  adapterChatList.updateItem(list)
         })
 
         binding.etSearchButton.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-                // val searchText = p0.toString().trim()
-
+               // val searchText = p0.toString().trim()
             }
-
             override fun afterTextChanged(p0: Editable?) {
                 val query = p0.toString()
                 filter(query)
-
             }
         })
         // Add text change listener for search bar
 //        binding.etSearchButton.addTextChangedListener { text ->
 //           // Call filter function in adapter
 //        }
+        try {
+            quickstartConversationsManager = (activity?.application as MyApp).conversationsManager
+            quickstartConversationsManager.setListener(this) // Ensure this is only called after full initialization
 
+        }
+        catch (e: Exception) {
+            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+        }
+
+
+        callingGetChatUser()
+
+    }
+
+
+    private fun loadChat(){
+        quickstartConversationsManager.loadChannel()
     }
 
 
     fun filter(query: String) {
-        filteredList = if (query.isEmpty()) {
-            chatList.toMutableList()
-        } else {
-            chatList.filter {
-                it.textUserName.contains(query, ignoreCase = true) ||
-                        it.textDescription.contains(query, ignoreCase = true)
-            }.toMutableList()
-        }
-
-        adapterChatList.updateItem(filteredList)
+//        filteredList = if (query.isEmpty()) {
+//            chatList.toMutableList()
+//        } else {
+//            chatList.filter {
+//
+//            }
+//        }
+//
+//        adapterChatList.updateItem(filteredList)
 
     }
+
+    private fun callingGetChatUser() {
+        lifecycleScope.launch {
+            var sessionManager = SessionManager(requireContext())
+            LoadingUtils.showDialog(requireContext(),false)
+            var userId = sessionManager.getUserId()
+            if (userId != null) {
+                viewModel.getChatUserChannelList(userId,"host").collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            Log.d("TESTING","Inside the message success")
+                            it.data?.let {
+                                viewModel.chatChannel = it
+                                it.forEach {
+                                    map.put(it.group_name.toString(),it)
+                                }
+                                Log.d("TESTING",map.size.toString() +" Map Size is ")
+                                loadChat()
+//                                reloadMessages()
+                            }
+                        }
+
+                        is NetworkResult.Error -> {
+                             LoadingUtils.hideDialog()
+                            Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
+                        }
+
+                        else -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
 
     private fun showPopupWindow(anchorView: View, position: Int) {
@@ -191,6 +258,58 @@ class HostChatFragment : Fragment() , View.OnClickListener{
     override fun onResume() {
         super.onResume()
         (activity as? GuesMain)?.inboxColor()
+    }
+
+    override fun receivedNewMessage() {
+
+    }
+
+    override fun messageSentCallback() {
+
+    }
+
+    override fun reloadMessages() {
+        Log.d("TESTING", "Start executing reload message" )
+        LoadingUtils.hideDialog()
+        requireActivity().runOnUiThread {
+            try {
+                chatList.clear()
+                Log.d("TESTING", ""+quickstartConversationsManager.messages.size + " SIZE OF MESSAGE")
+                if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
+
+                    quickstartConversationsManager.messages.forEach {
+                        Log.d("quickstartConversationsManager","m 8888"+it.messageBody)
+                        Log.d("quickstartConversationsManager","u 88888"+it.conversation.uniqueName)
+                    }
+
+                    for (i in quickstartConversationsManager.messages) {
+                        try {
+
+                            if (map.containsKey(i.conversation.uniqueName)) {
+                                var obj = map.get(i.conversation.uniqueName)
+                                obj?.lastMessage = i.messageBody
+                                obj?.lastMessageTime = TimeUtils.updateLastMsgTime(i.dateCreated)
+                                obj?.isOnline = false
+
+                                if (obj != null) {
+                                    chatList.add(obj)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            Log.d("massage error", "data :-" + e.message)
+                        }
+
+                    }
+                }
+            }catch (e:Exception){
+                Log.d("******","msg :- "+e.message)
+            }
+            adapterChatList.updateItem(chatList)
+        }
+    }
+
+    override fun showError() {
+
     }
 
 }

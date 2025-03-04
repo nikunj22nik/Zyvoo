@@ -29,6 +29,7 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
 
         val binding = LayoutMessageChatingBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+
         return ChatViewHolder(binding)
     }
 
@@ -37,13 +38,17 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
 
         val message = quickstartConversationsManager.messages[position]
+
         Log.d("TESTING_CHAT",message.messageBody.toString())
+
         Log.d("author",message.author)
+
         val messagetype = String.format(message.type.toString())
 
         if (user_id.equals(message.author,true)){
             holder.binding.textUserName.text=friend_name
-        }else{
+        }
+        else{
             holder.binding.textUserName.text=""
         }
 
@@ -53,7 +58,8 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
             holder.binding.textDate.visibility=View.VISIBLE
             holder.binding.textMessage.visibility=View.VISIBLE
             holder.binding.imglayout.visibility=View.GONE
-        }else{
+        }
+        else{
             holder.binding.textMessage.visibility=View.GONE
             holder.binding.imglayout.visibility=View.VISIBLE
             if (message.mediaFileName.contains(".pdf")){

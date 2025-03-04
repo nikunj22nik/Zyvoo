@@ -7,7 +7,8 @@ class AppConstant {
 
     companion object {
         val FRIEND_ID: String? ="FRIENDiD"
-        val CHANNEL_NAME: String? ="Channel_Name"
+        val CHANNEL_NAME: String ="Channel_Name"
+        val CHANNEL_LIST :String ="channel_list"
         val GUEST_ID: String? ="GUEST_ID"
         val HOST_ID :String? = "HOST_ID"
         val CHAT_TOKEN: String? ="chat_token"

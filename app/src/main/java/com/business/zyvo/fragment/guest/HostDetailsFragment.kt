@@ -100,27 +100,21 @@ class HostDetailsFragment : Fragment() , OnClickListener, OnItemClickListener {
 
         hostListingViewModel.imageList.observe(viewLifecycleOwner, Observer {
                 images -> adapter.updateItem(images)
-        })
-
+          })
 
         binding.recyclerReviews.isNestedScrollingEnabled = false
-
         adapterReview = AdapterReview(requireContext(), mutableListOf())
-
         binding.recyclerReviews.adapter = adapterReview
 
         clickListeners()
     }
 
     override fun itemClick(obj: Int) {
-        TODO("Not yet implemented")
+
     }
 
 
-
-
     private fun clickListeners() {
-
 
 
         binding.showMoreReview.setOnClickListener {

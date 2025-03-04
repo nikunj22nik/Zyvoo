@@ -2,6 +2,7 @@ package com.business.zyvo.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.business.zyvo.NetworkResult
+import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.repository.ZyvoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -14,5 +15,11 @@ class GuestMainActivityModel @Inject constructor(private val repository: ZyvoRep
     suspend fun getChatToken(userId :Int,role:String) : Flow<NetworkResult<String>>{
         return repository.getChatToken(userId, role)
     }
+
+    suspend fun getChatUserChannelList(userId :Int,type :String) : Flow<NetworkResult<MutableList<ChannelListModel>>>{
+        return repository.getUserChannel(userId,type)
+    }
+
+
 
 }

@@ -32,9 +32,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener {
+
     private var _binding: FragmentMyBookingsBinding? = null
     private val binding get() = _binding!!
-
     private val bookingViewModel: BookingViewModel by viewModels()
     private lateinit var sessionManager: SessionManager
     private lateinit var adapterMyBookingsAdapter: MyBookingsAdapter
@@ -50,12 +50,10 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMyBookingsBinding.inflate(inflater, container, false)
-
         // Initialize adapter
         adapterMyBookingsAdapter = MyBookingsAdapter(requireContext(), mutableListOf(), this)
         binding.recyclerViewChat.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
-
         bookingListAPI()
         return binding.root
     }
@@ -70,10 +68,11 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
             showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
             return
         }
-
         lifecycleScope.launch(Dispatchers.Main) {
             try {
-                bookingViewModel.getBookingList("189").collect {
+                var sessionManager = SessionManager(requireContext())
+                var userId = sessionManager.getUserId()
+                bookingViewModel.getBookingList(userId.toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             LoadingUtils.hideDialog()

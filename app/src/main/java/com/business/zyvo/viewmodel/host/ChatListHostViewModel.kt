@@ -3,16 +3,21 @@ package com.business.zyvo.viewmodel.host
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.model.ChatListModel
 import com.business.zyvo.repository.ZyvoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
  @HiltViewModel
 class ChatListHostViewModel @Inject constructor(private val repository: ZyvoRepository): ViewModel(){
     private  val _list = MutableLiveData<MutableList<ChatListModel>>()
     val list : LiveData<MutableList<ChatListModel>> get() = _list
+     var chatChannel :MutableList<ChannelListModel> = mutableListOf()
 
     init {
         load()
@@ -43,4 +48,10 @@ class ChatListHostViewModel @Inject constructor(private val repository: ZyvoRepo
 
         }
     }
+
+     suspend fun getChatUserChannelList(userId :Int,type :String) : Flow<NetworkResult<MutableList<ChannelListModel>>> {
+         return repository.getUserChannel(userId,type).onEach {
+
+         }
+     }
 }

@@ -1211,7 +1211,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
                 for (i in 0 until count) {
                     val imageUri = data.clipData!!.getItemAt(i).uri
-                      var bitmapString = PrepareData.uriToBase64(imageUri,requireContext().contentResolver)
+                    val bitmapString = PrepareData.uriToBase64(imageUri,requireContext().contentResolver)
 
                     imageList.add(0, imageUri)
                     if (bitmapString != null) {

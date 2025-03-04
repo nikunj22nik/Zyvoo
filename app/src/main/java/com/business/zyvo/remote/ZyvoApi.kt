@@ -530,6 +530,21 @@ interface ZyvoApi {
     ) :Response<JsonObject>
 
 
+    @POST("join_channel")
+    @FormUrlEncoded
+    suspend fun joinChatChannel(
+        @Field("senderId") senderId :Int,
+        @Field("receiverId") receiverId :Int,
+        @Field("groupChannel") groupChannel :String,
+        @Field("userType") user_type: String
+    ) : Response<JsonObject>
     
+
+    @POST("get_user_channels")
+    @FormUrlEncoded
+    suspend fun getUserChannel(
+          @Field("user_id") userId :Int,
+          @Field("type") type:String
+    ) : Response<JsonObject>
 
 }

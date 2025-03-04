@@ -9,29 +9,54 @@ import android.view.ViewGroup
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutChatListBinding
+import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.model.ChatListModel
+import com.business.zyvo.session.SessionManager
 
 class AdapterChatList(
     var context: Context,
-    var list: MutableList<ChatListModel>,
+    var list: MutableList<ChannelListModel>,
     var listener: OnClickListener, var listener1: OnClickListener1?
 ) : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>() {
     // Track the selected position
+    private lateinit var  sessionManager: SessionManager
+
+
+    init {
+         sessionManager = SessionManager(context)
+
+    }
 
     private var selectedPosition = -1
 
     inner class ChatListViewHolder(var binding: LayoutChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(currentItem: ChatListModel) {
-            binding.imageProfilePicture.setImageResource(currentItem.image)
-            binding.textTime.setText(currentItem.textTime)
-            binding.textUserName.setText(currentItem.textUserName)
-            binding.textDescription.setText(currentItem.textDescription)
+        fun bind(currentItem: ChannelListModel) {
+
+
+          var userID = sessionManager.getUserId()
+            if(userID.toString().equals(currentItem.sender_id)){
+                Glide.with(context).
+                load(AppConstant.BASE_URL+currentItem.receiver_image).into(binding.imageProfilePicture)
+                binding.textTime.setText(currentItem.lastMessageTime)
+                binding.textUserName.setText(currentItem.receiver_name)
+                binding.textDescription.setText(currentItem.lastMessage)
+            }
+            else{
+                Glide.with(context).
+                load(AppConstant.BASE_URL+currentItem.sender_profile).into(binding.imageProfilePicture)
+
+                binding.textTime.setText(currentItem.lastMessageTime)
+                binding.textUserName.setText(currentItem.sender_name)
+                binding.textDescription.setText(currentItem.lastMessage)
+            }
 
             binding.imageProfilePicture.setOnClickListener {
                 listener1?.itemClick(position,"image")
@@ -194,7 +219,7 @@ class AdapterChatList(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateItem(list: MutableList<ChatListModel>) {
+    fun updateItem(list: MutableList<ChannelListModel>) {
         this.list = list
         selectedPosition = -1
         notifyDataSetChanged()

@@ -13,10 +13,12 @@ import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingDetailModel
 import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.NotificationScreenModel
+import com.business.zyvo.model.host.ChannelModel
 import com.business.zyvo.model.host.HostReviewModel
 import com.business.zyvo.model.host.PaginationModel
 
@@ -3502,6 +3504,8 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         }
     }
 
+
+
     override suspend fun getNotificationHost(userId: Int): Flow<NetworkResult<MutableList<NotificationScreenModel>>> =
         flow {
             try {
@@ -3696,6 +3700,61 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         }
     }
 
+    override suspend fun joinChatChannel(
+        senderId: Int, receiverId: Int, groupChannel: String, user_type: String
+    ) : Flow<NetworkResult<ChannelModel>> = flow {
+        try {
+            api.joinChatChannel(senderId, receiverId, groupChannel, user_type).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            var obj = resp.get("data").asJsonObject
+                            val model: ChannelModel =
+                                Gson().fromJson(obj.toString(), ChannelModel::class.java)
+                            emit(NetworkResult.Success<ChannelModel>(model))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+    override suspend fun getUserChannel(userId: Int ,type :String) : Flow<NetworkResult<MutableList<ChannelListModel>>> = flow {
+        try {
+            api.getUserChannel(userId , type).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            var obj = resp.get("data").asJsonArray
+
+                            var resultList = mutableListOf<ChannelListModel>()
+
+                            obj.forEach {
+                                val model: ChannelListModel = Gson().fromJson(it.toString(), ChannelListModel::class.java)
+                                resultList.add(model)
+                            }
+
+                            emit(NetworkResult.Success<MutableList<ChannelListModel>>(resultList))
+
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
 
 
 }

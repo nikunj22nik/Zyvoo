@@ -98,7 +98,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     var guestId :Int  =-1
     var friendImage :String =""
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -107,11 +106,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 
         _binding = DataBindingUtil.inflate(
@@ -136,26 +131,23 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         viewModel = ViewModelProvider(this)[HostBookingsViewModel::class.java]
 
-        if (bookingId != -1) {
+        if ( bookingId != -1 ) {
             Log.d("TESTING", "Booking Id is " + bookingId)
-            callingBookingDetailApi()
         }
+
+        callingBookingDetailApi()
 
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         super.onViewCreated(view, savedInstanceState)
 
         navController = Navigation.findNavController(view)
-
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
-
         initialization()
-
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
         }
@@ -174,18 +166,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             val sessionManager = SessionManager(requireContext())
 
 //           sessionManager.getUserId()?.let { it1 -> bundle.putInt(AppConstant.USER_ID, it1) }
-            val intent = Intent(requireContext(),ChatActivity::class.java)
 
-
-            intent.putExtra("user_img","").toString()
-            sessionManager.getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, 1) }
-            intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
-            intent.putExtra(AppConstant.FRIEND_ID,2)
-            intent.putExtra("friend_img",friendImage).toString()
-            intent.putExtra("friend_name","Love priya").toString()
-            startActivity(intent)
-
-
+            callingJoinChannelApi()
         }
 
         binding.imageShare.setOnClickListener {
@@ -218,6 +200,52 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         callingReportReason()
     }
 
+
+    private fun callingJoinChannelApi(){
+        lifecycleScope.launch {
+            var session= SessionManager(requireContext())
+            var userId = session.getUserId()
+            if (userId != null) {
+                LoadingUtils.showDialog(requireContext(),true)
+                Log.d("TESTING_GUEST_ID",guestId.toString() +"GuestId IN Channel")
+                Log.d("TESTING_GUEST_ID",channelName.toString()+" channel Name")
+                viewModel.joinChatChannel(userId,guestId,channelName,"host").collect{
+                   when(it){
+                       is NetworkResult.Success ->{
+                           LoadingUtils.hideDialog()
+
+                           var userImage :String = AppConstant.BASE_URL+ it.data?.sender_avatar.toString()
+
+                           var friendImage :String = AppConstant.BASE_URL+it.data?.receiver_avatar.toString()
+
+                           var friendName :String = ""
+
+                           if(it.data?.receiver_name != null){
+                               friendName = it.data.receiver_name
+                           }
+
+                           val intent = Intent(requireContext(),ChatActivity::class.java)
+                           intent.putExtra("user_img",userImage).toString()
+                           SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, 1) }
+                           Log.d("TESTING","REVIEW HOST"+channelName)
+                           intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
+                           intent.putExtra(AppConstant.FRIEND_ID,it.data?.receiver_id)
+                           intent.putExtra("friend_img",friendImage).toString()
+                           intent.putExtra("friend_name",friendName).toString()
+                           startActivity(intent)
+                       }
+                       is NetworkResult.Error ->{
+                           LoadingUtils.hideDialog()
+
+                       }
+                       else ->{
+                           LoadingUtils.hideDialog()
+                       }
+                   }
+                }
+            }
+        }
+    }
 
     private fun callingReportReason(loadingShowing: Boolean = false) {
         lifecycleScope.launch {
@@ -259,7 +287,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
     }
 
-
     private fun callingBookingDetailApi() {
         lifecycleScope.launch {
             var sessionManager = SessionManager(requireContext())
@@ -272,9 +299,11 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                         is NetworkResult.Success -> {
                             it.data?.second?.let { it1 ->
                                 {
+                                    guestId = it1.guest_id
+                                    Log.d("TESTING_GUEST_ID","GuestId IN Api")
+
                                     showingDataToUi(it1)
                                     propertyId = it1.property_id
-                                    guestId = it1.guest_id
 
                                 }
                             }
@@ -288,12 +317,17 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                         }
                     }
                 }
-            } else {
+            }
+            else {
                 viewModel.hostBookingDetails(bookingId, latitude, longitude).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             LoadingUtils.hideDialog()
-                            it.data?.let { it1 -> showingDataToUi(it1.second) }
+                            it.data?.let {
+                                it1 ->
+                                showingDataToUi(it1.second)
+                                guestId = it1.second.guest_id
+                            }
                             propertyId = it.data?.second?.property_id!!
                         }
                         is NetworkResult.Error -> {
@@ -310,6 +344,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun callingReviewData(propertyId: Int) {
+
         lifecycleScope.launch {
             viewModel.propertyFilterReviews(propertyId, viewModel.filter, viewModel.currentPage)
                 .collect {
@@ -322,15 +357,14 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
                         }
-
                         else -> {
                             LoadingUtils.hideDialog()
                         }
                     }
                 }
         }
-    }
 
+    }
 
     private fun showingDataToUi(data: HostDetailModel) {
         binding.tvNamePlace.setText(data.property_title)
@@ -345,7 +379,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         } else {
             channelName = "ZYVOO_" + data.host_id + "_" + data.guest_id
         }
-        channelName ="ZYVOO_"+ "1"+"_"+"2"
 
         data.cleaning_fee?.let {
             binding.tvCleaningFee.setText("$" + it)
@@ -458,7 +491,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                         .error(R.drawable.ic_img_not_found) // Error image
                 )
                     .transition(DrawableTransitionOptions.withCrossFade()).into(binding.img2)
-            } else if (it.size == 2) {
+            }
+            else if (it.size == 2) {
                 Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(0))
                     .into(binding.imgProfileHotel)
 
@@ -522,8 +556,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
 
     }
-
-
     private fun showingMoreText() {
         val text = "Show More"
         val spannableString = SpannableString(text).apply {
@@ -539,8 +571,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
 
     }
-
-
     private fun showingLessText() {
         val text = "Show Less"
         val spannableString = SpannableString(text).apply {
@@ -556,8 +586,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
 
     }
-
-
     private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
         val popupView =
@@ -633,8 +661,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             Gravity.END
         )  // Adjust the Y offset dynamically
     }
-
-
     private fun shareApp() {
         val appPackageName = requireActivity().packageName
         val sendIntent = Intent().apply {
@@ -647,8 +673,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
         startActivity(sendIntent)
     }
-
-
     @SuppressLint("MissingInflatedId")
     fun dialogReview() {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -744,7 +768,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             show()
         }
     }
-
     private fun dialogReportIssue() {
         var dateManager = DateManager(requireContext())
         val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
@@ -870,7 +893,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
 
     }
-
     private fun openDialogNotification() {
 
         val dialog = Dialog(requireContext(), com.business.zyvo.R.style.BottomSheetDialog)
@@ -904,8 +926,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             show()
         }
     }
-
-
     private fun openDialogSuccess() {
 
         val dialog = Dialog(requireContext(), com.business.zyvo.R.style.BottomSheetDialog)
@@ -938,7 +958,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             show()
         }
     }
-
     fun initialization() {
 
         adapterAddon = AdapterAddOn(requireContext(), getAddOnList().subList(0, 4))
@@ -965,13 +984,9 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         recyclerPagination()
 
     }
-
-
     private fun recyclerPagination() {
 
     }
-
-
     private fun getAddOnList(): MutableList<String> {
 
         var list = mutableListOf<String>()
@@ -991,7 +1006,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         return list
 
     }
-
     override fun onResume() {
         super.onResume()
         mapView.onResume()  // Important to call in onResume
@@ -1002,23 +1016,19 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         binding.textRatingStar1.visibility = View.VISIBLE
 
     }
-
     override fun onPause() {
         super.onPause()
         mapView.onPause()  // Important to call in onPause
     }
-
     override fun onDestroy() {
         super.onDestroy()
         mapView.onDestroy()  // Important to call in onDestroy
         _binding = null
     }
-
     override fun onLowMemory() {
         super.onLowMemory()
         mapView.onLowMemory()  // Important to call in onLowMemory
     }
-
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
         val newYork = LatLng(40.7128, -74.0060)
@@ -1030,8 +1040,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 //        location?.let { it1 -> MarkerOptions().position(it1).title("Marker in San Francisco") }
 //            ?.let { it2 -> mMap?.addMarker(it2) }
     }
-
-
     fun shapeTopBottomRightCorners(shapeableImageView: ShapeableImageView) {
         val shapeAppearanceModel = ShapeAppearanceModel.Builder()
             .setTopRightCorner(CornerFamily.ROUNDED, 20f) // Set top-right corner radius to 60dp
@@ -1045,7 +1053,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         shapeableImageView.setShapeAppearanceModel(shapeAppearanceModel)
     }
-
     fun shapeTopBottomRightLeftCorners(shapeableImageView: ShapeableImageView) {
 
         val shapeAppearanceModel = ShapeAppearanceModel.Builder()
@@ -1058,8 +1065,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         shapeableImageView.setShapeAppearanceModel(shapeAppearanceModel)
 
     }
-
-
     fun shapeTopBottomLeftCorner(shapeableImageView: ShapeableImageView) {
         val shapeAppearanceModel = ShapeAppearanceModel.Builder()
             .setTopRightCorner(CornerFamily.ROUNDED, 0f) // Set top-right corner radius to 60dp
@@ -1073,7 +1078,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         shapeableImageView.setShapeAppearanceModel(shapeAppearanceModel)
     }
-
     private fun openImageDialog(imageUrls: List<String>) {
 
         val dialogFragment = ViewImageDialogFragment()

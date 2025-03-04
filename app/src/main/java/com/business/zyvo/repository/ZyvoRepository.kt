@@ -9,8 +9,10 @@ import com.business.zyvo.fragment.both.completeProfile.model.CompleteProfileReq
 import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingDetailModel
 import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
+import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.NotificationScreenModel
+import com.business.zyvo.model.host.ChannelModel
 import com.business.zyvo.model.host.HostReviewModel
 import com.business.zyvo.model.host.PaginationModel
 
@@ -22,6 +24,7 @@ import com.google.gson.JsonArray
 
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
+import retrofit2.http.Field
 
 interface ZyvoRepository {
 
@@ -402,6 +405,19 @@ interface ZyvoRepository {
         user_id :String
     ): Flow<NetworkResult<JsonObject>>
 
+
+    suspend fun joinChatChannel(
+       senderId :Int,
+       receiverId :Int,
+       groupChannel :String,
+       user_type: String
+    ) : Flow<NetworkResult<ChannelModel>>
+
+
+    suspend fun getUserChannel(
+        @Field("user_id") userId :Int
+        ,getUserChannel: String
+    ) : Flow<NetworkResult<MutableList<ChannelListModel>>>
 
 
 }

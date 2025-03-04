@@ -124,7 +124,8 @@
                 android:layout_margin="@dimen/_7sdp"/>
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                >
                 <EditText
                     android:id="@+id/etmassage"
                     android:layout_width="match_parent"
@@ -133,14 +134,12 @@
                     android:layout_toLeftOf="@id/sendBtn"
                     android:hint="Type a message..."
                     android:textColorHint="#252849"
-                    android:backgroundTint="#F5F6F6"
                     android:background="@null" />
                 <ImageView
                     android:id="@+id/sendBtn"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_30sdp"
                     android:layout_alignParentEnd="true"
-
                     android:src="@drawable/ic_send_message_icon"
                     android:layout_margin="@dimen/_7sdp"/>
             </RelativeLayout>

@@ -4,6 +4,10 @@ import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
 import com.business.zyvo.AppConstant
+import com.business.zyvo.MyApp
+import com.business.zyvo.model.ChannelListModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class SessionManager(var context: Context) {
 
@@ -24,6 +28,9 @@ class SessionManager(var context: Context) {
     fun setChatToken(token :String){
         editor!!.putString(AppConstant.CHAT_TOKEN, token)
         editor!!.commit()
+
+        val baseApp = context.applicationContext as MyApp
+        baseApp.resetQuickConversationManager()
     }
 
     fun getChatToken() : String? {
@@ -102,6 +109,29 @@ class SessionManager(var context: Context) {
 
     fun getLongitude() : String{
         return pref?.getString(AppConstant.LONGITUDE,"")?:""
+    }
+
+    fun saveChannelListToPreferences(context: Context, key: String, channelList: MutableList<ChannelListModel>) {
+        // Convert MutableList<ChannelListModel> to JSON string
+        val gson = Gson()
+        val jsonString = gson.toJson(channelList)
+
+        // Save the JSON string to SharedPreferences
+        editor?.putString(key, jsonString)
+        editor?.apply()
+    }
+
+    fun getChannelListFromPreferences(context: Context, key: String): MutableList<ChannelListModel>? {
+        val jsonString = pref?.getString(key, null)
+
+        if (jsonString != null) {
+            // Convert JSON string back to MutableList<ChannelListModel>
+            val gson = Gson()
+            val type = object : TypeToken<MutableList<ChannelListModel>>() {}.type
+            return gson.fromJson(jsonString, type)
+        }
+
+        return null // Return null if no data found
     }
 
 

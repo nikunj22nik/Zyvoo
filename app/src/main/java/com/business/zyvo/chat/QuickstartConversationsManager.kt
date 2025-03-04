@@ -25,6 +25,7 @@ import java.io.FileNotFoundException
 import java.io.IOException
 
 
+
 interface QuickstartConversationsManagerListener {
     fun receivedNewMessage()
     fun messageSentCallback()
@@ -61,22 +62,111 @@ class QuickstartConversationsManager {
     private data class TokenResponse(val token: String)
 
 
-    fun initializeWithAccessToken(
-        context: Context,
-        token: String,
-        DEFAULT_CONVERSATION_NAME: String,
-        identity: String,
-        userid: String,
-        tvOnline: TextView
-    ) {
+    fun initializeWithAccessTokenBase(context: Context, token: String){
+        val props = ConversationsClient.Properties.newBuilder().createProperties()
+        ConversationsClient.create(context, token, props, mConversationsClientCallback)
+    }
+
+    /* fun initializeWithAccessToken(
+         context: Context,
+         token: String,
+         DEFAULT_CONVERSATION_NAME: String,
+         identity: String,
+         userid: String,
+         tvOnline: TextView
+     ) {
+         this.DEFAULT_CONVERSATION_NAME = DEFAULT_CONVERSATION_NAME
+         this.identity = identity
+         this.userid = userid
+         this.tvOnline = tvOnline
+         Log.d(TAG,DEFAULT_CONVERSATION_NAME+"\n"+ identity+"\n"+ userid+"\n"+ token)
+         val props = ConversationsClient.Properties.newBuilder().createProperties()
+         ConversationsClient.create(context, token, props, mConversationsClientCallback)
+     }*/
+
+    fun loadChatList(DEFAULT_CONVERSATION_NAME: String, identity: String, userid: String, tvOnline: TextView){
         this.DEFAULT_CONVERSATION_NAME = DEFAULT_CONVERSATION_NAME
         this.identity = identity
         this.userid = userid
         this.tvOnline = tvOnline
-        Log.d(TAG,DEFAULT_CONVERSATION_NAME+"\n"+ identity+"\n"+ userid+"\n"+ token)
-        val props = ConversationsClient.Properties.newBuilder().createProperties()
-        ConversationsClient.create(context, token, props, mConversationsClientCallback)
+        Log.d(TAG,DEFAULT_CONVERSATION_NAME+"\n"+ identity+"\n"+ userid)
+        loadChannels()
     }
+
+    fun loadConversationById(groupId: String,identity:String,userid:String) {
+        this.identity = identity
+        this.userid = userid
+        this.DEFAULT_CONVERSATION_NAME = groupId
+        if (conversationsClient==null){
+            Log.d(TAG, "Loaded conversation: $DEFAULT_CONVERSATION_NAME")
+        }else{
+            val client = conversationsClient ?: return
+            client.getConversation(DEFAULT_CONVERSATION_NAME, object : CallbackListener<Conversation> {
+                override fun onSuccess(conversation: Conversation) {
+                    Log.d(TAG, "Loaded conversation: $DEFAULT_CONVERSATION_NAME")
+                    handleConversation(conversation)
+                }
+                override fun onError(errorInfo: ErrorInfo) {
+                    Log.e(TAG, "Error retrieving conversation: ${errorInfo.message}")
+                    createConversation()
+                }
+            })
+        }
+
+    }
+
+    private fun handleConversation(conversation: Conversation) {
+        if (conversation.status == Conversation.ConversationStatus.JOINED) {
+            this.conversation = conversation
+            conversation.addListener(mDefaultConversationListener)
+            loadPreviousMessages(conversation)
+        } else {
+            conversation.join(object : StatusListener {
+                override fun onSuccess() {
+                    Log.d(TAG, "Joined conversation: ${conversation.uniqueName}")
+                    this@QuickstartConversationsManager.conversation = conversation
+                    conversation.addListener(mDefaultConversationListener)
+                    loadPreviousMessages(conversation)
+                }
+
+                override fun onError(errorInfo: ErrorInfo) {
+                    Log.e(TAG, "Error joining conversation: ${errorInfo.message}")
+                }
+            })
+        }
+    }
+
+    fun loadChannel(){
+        Log.d("TESTING","Load Channel Started")
+
+       // loadChannels()
+        if (conversationsClient == null || conversationsClient!!.getMyConversations() == null) {
+            return;
+        }
+        Log.d("TESTING","Load Channel in middle")
+
+        loadAllChannel(conversationsClient!!)
+
+        Log.d("TESTING","Load Channel in last")
+//        loadAllChannelNames(conversationsClient!!)
+    }
+
+
+
+    private fun loadAllChannelNames(conversationsClient: ConversationsClient): List<String> {
+        val channelNames = mutableListOf<String>()
+
+        for (conversation in conversationsClient.myConversations) {
+            conversation.uniqueName?.let { channelName ->
+                Log.d("Channel Name", channelName)
+                channelNames.add(channelName)
+            }
+        }
+
+        return channelNames
+    }
+
+
 
     private fun retrieveToken(listener: AccessTokenListener) {
         val client = OkHttpClient()
@@ -156,6 +246,32 @@ class QuickstartConversationsManager {
             }
         }
     }
+
+    fun loadAllChannel(conversationsClient: ConversationsClient): List<Conversation> {
+        messages.clear()
+        for (data in conversationsClient.myConversations) {
+            Log.d("channel name :-", "list" + data.uniqueName.toString())
+
+            try {
+                data.getLastMessages(0, object : CallbackListener<List<Message>> {
+                    override fun onSuccess(result: List<Message>) {
+                        messages.addAll(result)
+                        messages.forEach {
+                            Log.d("messageBody","8888"+it.messageBody)
+                            Log.d("uniqueName","88888"+it.conversation.uniqueName)
+                        }
+                        conversationsManagerListener?.reloadMessages()
+                    }
+                })
+            } catch (e: Exception) {
+                Log.d("error", "msg" + e.message.toString())
+            }
+        }
+
+        return conversationsClient.myConversations
+    }
+
+
 
     private fun loadChannels() {
         val client = conversationsClient ?: return
@@ -240,6 +356,7 @@ class QuickstartConversationsManager {
         if (conversation.lastMessageIndex != null) {
             conversation.getLastMessages(conversation.lastMessageIndex.toInt() + 1
             ) { result ->
+                messages.clear()
                 messages.addAll(result)
                 Log.d("*******", "${messages.size}")
                 conversation.setAllMessagesRead {
@@ -339,12 +456,12 @@ class QuickstartConversationsManager {
 
         override fun onParticipantAdded(participant: Participant) {
             Log.d(TAG, "Participant added: ${participant.identity}")
-            tvOnline!!.text = "Online"
+//            tvOnline!!.text = "Online"
         }
 
         override fun onParticipantUpdated(participant: Participant, updateReason: Participant.UpdateReason) {
             Log.d(TAG, "Participant updated: ${participant.identity} $updateReason")
-            tvOnline!!.text = "Online"
+//            tvOnline!!.text = "Online"
         }
 
         override fun onParticipantDeleted(participant: Participant) {
@@ -354,13 +471,13 @@ class QuickstartConversationsManager {
 
         override fun onTypingStarted(conversation: Conversation, participant: Participant) {
             Log.d(TAG, "Started Typing: ${participant.identity}")
-            tvOnline!!.text = "Typing ..."
+//            tvOnline!!.text = "Typing ..."
 
         }
 
         override fun onTypingEnded(conversation: Conversation, participant: Participant) {
             Log.d(TAG, "Ended Typing: ${participant.identity}")
-            tvOnline!!.text = ""
+//            tvOnline!!.text = ""
         }
 
         override fun onSynchronizationChanged(conversation: Conversation) {}
@@ -380,3 +497,5 @@ class QuickstartConversationsManager {
 
 
 }
+
+

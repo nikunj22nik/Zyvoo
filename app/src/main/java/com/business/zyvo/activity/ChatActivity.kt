@@ -1,3 +1,5 @@
+
+
 package com.business.zyvo.activity
 
 
@@ -12,13 +14,19 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
+import com.business.zyvo.MyApp
+import com.business.zyvo.R
 import com.business.zyvo.adapter.ChatDetailsAdapter
 import com.business.zyvo.chat.QuickstartConversationsManager
 import com.business.zyvo.chat.QuickstartConversationsManagerListener
+import com.business.zyvo.databinding.ActivityChatBinding
 import com.business.zyvo.databinding.FragmentChatDetailsBinding
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CompressImage
@@ -37,10 +45,9 @@ import java.io.FileNotFoundException
 
 class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener {
 
-    lateinit var binding: FragmentChatDetailsBinding
+    lateinit var binding: ActivityChatBinding
     lateinit var adapter: ChatDetailsAdapter
-
-    private var quickstartConversationsManager = QuickstartConversationsManager()
+    private lateinit var quickstartConversationsManager : QuickstartConversationsManager
     lateinit var sessionManagement: SessionManager
     private lateinit var viewModel: ChatDetailsViewModel
     var profileImage :String =""
@@ -51,41 +58,53 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
     var friendId :Int =-1
     var friend_name :String =""
     private var file: File? = null
-    var PERMISSIONS: Array<String> = arrayOf(
-        permission.CAMERA,
-        permission.READ_EXTERNAL_STORAGE,
-        permission.WRITE_EXTERNAL_STORAGE,
-    )
-
+    var PERMISSIONS: Array<String> = arrayOf(permission.CAMERA, permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE,)
     private val REQUEST_IMAGE_CODE_ASK_PERMISSIONS = 123
-
     private val mediaFiles: ArrayList<MediaFile?> = ArrayList<MediaFile?>()
     private val REQUEST_Folder = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = FragmentChatDetailsBinding.inflate(LayoutInflater.from(this))
+        binding = ActivityChatBinding.inflate(LayoutInflater.from(this))
         sessionManagement = SessionManager(this)
 
         if (intent.extras != null) {
+
             profileImage = intent?.extras?.getString("user_img").toString()
             providertoken = sessionManagement.getChatToken().toString()
             userId = intent?.extras?.getInt(AppConstant.USER_ID)?.toInt() ?: 0
             groupName = intent?.extras?.getString(AppConstant.CHANNEL_NAME).toString()
+            Log.d("TESTING_Group_NAME",groupName)
             friendId = intent?.extras?.getInt(AppConstant.FRIEND_ID)?.toInt() ?: 0
             friendprofileimage = intent?.extras?.getString("friend_img").toString()
             friend_name = intent?.extras?.getString("friend_name").toString()
+            binding.tvStatus.setText(friend_name)
+            Glide.with(this).load(AppConstant.BASE_URL+"/"+ friendprofileimage).error(R.drawable.ic_img_not_found).into(binding.imageProfilePicture)
         }
 
+        binding.etmassage.setOnClickListener {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.etmassage, InputMethodManager.SHOW_IMPLICIT)
+        }
+        // Ensure EditText gets focus
+        try {
+            quickstartConversationsManager = (application as MyApp).conversationsManager
+            quickstartConversationsManager.setListener(this) // Ensure this is only called after full initialization
+
+        }
+        catch (e: Exception) {
+            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+        }
+
+
         initialize()
+
         setContentView(binding.root)
-
-
     }
 
     private fun initialize() {
-
         loadChat()
+
 
         binding.imgBack.setOnClickListener {
             finish()
@@ -110,6 +129,22 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
             quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
         }
 
+
+    }
+
+    private fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
+            for (permission in permissions) {
+                if (ActivityCompat.checkSelfPermission(
+                        context,
+                        permission!!
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return false
+                }
+            }
+        }
+        return true
     }
 
     private fun browsePicture() {
@@ -187,15 +222,30 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
     }
 
     private fun loadChat(){
-        if (NetworkMonitorCheck._isConnected.value) {
-            LoadingUtils.showDialog(this,false)
-            quickstartConversationsManager.setListener(this@ChatActivity)
-            quickstartConversationsManager.initializeWithAccessToken(this, providertoken, groupName, friendId.toString(), userId.toString(),binding.tvStatus)
+//        if (NetworkMonitorCheck._isConnected.value) {
+//            LoadingUtils.showDialog(this,false)
+////            quickstartConversationsManager.setListener(this@ChatActivity)
+////            quickstartConversationsManager.initializeWithAccessToken(this, providertoken, groupName, friendId.toString(), userId.toString(),binding.tvStatus)
+////            quickstartConversationsManager.loadChatList( groupName,friendId.toString(),userId.toString(),binding.tvStatus)
+//            quickstartConversationsManager.loadConversationById(groupName)
+//        } else{
+//            LoadingUtils.showErrorDialog(this, "Please Check Your Internet Connection")
+//        }
+        try {
+            if (NetworkMonitorCheck._isConnected.value) {
+                LoadingUtils.showDialog(this, false)
+                Log.d("ChatActivity", "Loading chat for group: $groupName")
+                quickstartConversationsManager.loadConversationById(groupName,"3",userId.toString())
+            } else {
+                LoadingUtils.showErrorDialog(this, "Please Check Your Internet Connection")
+                Log.e("ChatActivity", "No internet connection detected")
+            }
         }
-        else{
-            LoadingUtils.showErrorDialog(this, "Please Check Your Internet Connection")
+        catch (e: Exception) {
+            Log.e("ChatActivity", "Error in loadChat: ${e.message}", e)
         }
     }
+
 
     override fun receivedNewMessage() {
         LoadingUtils.hideDialog()
@@ -237,7 +287,6 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
         TODO("Not yet implemented")
     }
 
-    @Deprecated("This method has been deprecated in favor of using the Activity Result API\n  which brings increased type safety via an {@link ActivityResultContract} and the prebuilt\n      contracts for common intents available in\n      {@link androidx.activity.result.contract.ActivityResultContracts}, provides hooks for\n      testing, and allow receiving results in separate, testable classes independent from your\n      activity. Use\n      {@link #registerForActivityResult(ActivityResultContract, ActivityResultCallback)}\n      with the appropriate {@link ActivityResultContract} and handling the result in the\n      {@link ActivityResultCallback#onActivityResult(Object) callback}.")
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == ImagePicker.REQUEST_CODE) {
@@ -262,8 +311,8 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
                 val selectedImage = data.data
                 val files = data.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)
                 Log.v("pdf", files!![0].uri.toString())
-                Log.v("pdf", files[0].name.toString())
-                val file = CompressImage.from(this, files[0].uri)
+                Log.v("pdf", files!![0].name.toString())
+                val file = CompressImage.from(this, files!![0].uri)
                 val path = file!!.absolutePath
                 LoadingUtils.showDialog(this,false)
                 quickstartConversationsManager.sendMessagefile(path, file)
@@ -277,14 +326,10 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
     private fun onCaptureImageResult(data: Intent) {
         if (data.data != null) {
             val uri = data.data
-            val file = PrepareData.getPath(this@ChatActivity, uri!!)?.let { File(it) }
+            val file = File(PrepareData.getPath(this@ChatActivity, uri!!))
             LoadingUtils.showDialog(this,false)
-            if (file != null) {
-                quickstartConversationsManager.sendMessageImage(uri.path, file)
-            }
+            quickstartConversationsManager.sendMessageImage(uri.path, file)
         }
     }
 
 }
-
-

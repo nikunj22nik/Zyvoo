@@ -11,6 +11,7 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.model.MyBookingsModel
+import com.business.zyvo.model.host.ChannelModel
 import com.business.zyvo.model.host.HostReviewModel
 import com.business.zyvo.model.host.PaginationModel
 import com.business.zyvo.model.host.hostdetail.HostDetailModel
@@ -59,8 +60,6 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
                         finalList = it
                         _list.value = it
                     }
-
-
                     data?.forEach {
                         when(it.booking_status) {
 
@@ -161,6 +160,13 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
         }
     }
 
+    suspend fun joinChatChannel(
+        senderId :Int, receiverId :Int, groupChannel :String, user_type: String
+    ) : Flow<NetworkResult<ChannelModel>>{
+        return repository.joinChatChannel(senderId, receiverId, groupChannel, user_type).onEach {
+
+        }
+    }
 
 
 }

@@ -19,6 +19,7 @@ import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.adapter.AdapterChatList
 import com.business.zyvo.databinding.FragmentChatBinding
+import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.model.ChatListModel
 import com.business.zyvo.viewmodel.ChatListViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,18 +27,28 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ChatFragment : Fragment() ,View.OnClickListener{
+
     private var _binding: FragmentChatBinding? = null
+
     private val binding get() = _binding!!
+
     private lateinit var adapterChatList: AdapterChatList
+
     private val viewModel: ChatListViewModel by viewModels()
+
     var objects: Int = 0
-    private var chatList: MutableList<ChatListModel> = mutableListOf()
-    private var filteredList: MutableList<ChatListModel> = chatList.toMutableList()
+
+    private var chatList: MutableList<ChannelListModel> = mutableListOf()
+
+    private var filteredList: MutableList<ChannelListModel> = chatList.toMutableList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         arguments?.let {
 
         }
+
     }
 
     override fun onCreateView(
@@ -72,8 +83,8 @@ class ChatFragment : Fragment() ,View.OnClickListener{
         })
         binding.recyclerViewChat.adapter = adapterChatList
         viewModel.list.observe(viewLifecycleOwner, Observer { list ->
-            chatList = list
-            adapterChatList.updateItem(list)
+           // chatList = list
+         //   adapterChatList.updateItem(list)
         })
 
         binding.etSearchButton.addTextChangedListener(object : TextWatcher {
@@ -100,14 +111,14 @@ class ChatFragment : Fragment() ,View.OnClickListener{
 
 
     fun filter(query: String) {
-        filteredList = if (query.isEmpty()) {
-            chatList.toMutableList()
-        } else {
-            chatList.filter {
-                it.textUserName.contains(query, ignoreCase = true) ||
-                        it.textDescription.contains(query, ignoreCase = true)
-            }.toMutableList()
-        }
+//        filteredList = if (query.isEmpty()) {
+//            chatList.toMutableList()
+//        } else {
+//            chatList.filter {
+//                it.textUserName.contains(query, ignoreCase = true) ||
+//                        it.textDescription.contains(query, ignoreCase = true)
+//            }.toMutableList()
+//        }
 
         adapterChatList.updateItem(filteredList)
 

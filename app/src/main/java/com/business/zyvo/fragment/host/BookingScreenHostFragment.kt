@@ -19,11 +19,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
+import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 
 import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.adapter.host.HostBookingsAdapter
+import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.chat.QuickstartConversationsManagerListener
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.NetworkMonitor
@@ -34,7 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListener {
+class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListener{
 
     private var _binding: FragmentBookingScreenHostBinding? = null
     private val binding get() = _binding!!
@@ -42,6 +45,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     private lateinit var viewModel: HostBookingsViewModel
     private var list: MutableList<MyBookingsModel> = mutableListOf()
     private val LOCATION_PERMISSION_REQUEST_CODE = 1000
+    private lateinit var quickstartConversationsManager : QuickstartConversationsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,11 +53,8 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?)
+    : View? {
         _binding = FragmentBookingScreenHostBinding.inflate(
             LayoutInflater.from(requireContext()),
             container,
@@ -64,8 +65,11 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
 
         adapterMyBookingsAdapter = HostBookingsAdapter(requireContext(), mutableListOf(), this)
+
         setUpAdapterMyBookings()
+
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
+
         viewModel.list.observe(viewLifecycleOwner, Observer { list1 ->
             adapterMyBookingsAdapter!!.updateItem(list1)
             list = list1
@@ -81,21 +85,22 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
             override fun afterTextChanged(p0: Editable?) {
 
             }
-
         })
+
+
 
         return binding.root
     }
 
-    private fun setUpAdapterMyBookings() {
 
+
+
+
+    private fun setUpAdapterMyBookings() {
         adapterMyBookingsAdapter?.setOnItemClickListener(object :
             HostBookingsAdapter.onItemClickListener {
             override fun onItemClick(
-                bookingId: Int,
-                status: String,
-                message: String,
-                reason: String
+                bookingId: Int, status: String, message: String, reason: String
             ) {
                 lifecycleScope.launch {
                     LoadingUtils.showDialog(requireContext(), false)
@@ -118,15 +123,10 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                                             it.data.toString()
                                         )
                                     }
-
                                     is NetworkResult.Error -> {
                                         LoadingUtils.hideDialog()
-                                        LoadingUtils.showErrorDialog(
-                                            requireContext(),
-                                            it.message.toString()
-                                        )
+                                        LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
                                     }
-
                                     else -> {
 
                                     }
@@ -174,10 +174,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                 }
             }
         } else {
-            LoadingUtils.showErrorDialog(
-                requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg)
-            )
+            LoadingUtils.showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 
@@ -343,6 +340,8 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         super.onResume()
         (activity as? HostMainActivity)?.bookingResume()
     }
+
+
 
 
 }

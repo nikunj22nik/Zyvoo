@@ -14,9 +14,7 @@ import com.business.zyvo.fragment.guest.bookingviewmodel.dataclass.BookingModel
 
 
 class MyBookingsAdapter(
-    private val context: Context,
-    private var list: MutableList<BookingModel>,
-    private val listener: OnItemAdapterClick
+    private val context: Context, private var list: MutableList<BookingModel>, private val listener: OnItemAdapterClick
 ) : RecyclerView.Adapter<MyBookingsAdapter.MyBookingsViewHolder>() {
 
     inner class MyBookingsViewHolder(private val binding: LayoutAllBookingsBinding) :
@@ -24,11 +22,8 @@ class MyBookingsAdapter(
 
         fun bind(currentItem: BookingModel) {
 
-            Glide.with(context)
-                .load(AppConstant.BASE_URL+currentItem.property_image)
-                .placeholder(R.drawable.image_hotel)
-                .error(R.drawable.image_hotel)
-                .into(binding.imagePicture)
+            Glide.with(context).load(AppConstant.BASE_URL+currentItem.property_image).placeholder(R.drawable.image_hotel).
+            error(R.drawable.image_hotel).into(binding.imagePicture)
 
             binding.textName.text = currentItem.property_name
             binding.textDate.text = currentItem.booking_date
