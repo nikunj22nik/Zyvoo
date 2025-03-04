@@ -235,17 +235,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         val signInIntent = googleSignInClient.signInIntent.putExtra("SIGN_IN_TYPE", type)
         googleSignInLauncher.launch(signInIntent)
 
-        if (requestCode == 100) {
-            if (Activity.RESULT_OK == resultCode) {
-                getCurrentLocation()
-            } else {
-                Toast.makeText(requireContext(), "Please turn on location", Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-        if (requestCode == 200) {
-            getCurrentLocation()
-        }
+
 
     }
 
@@ -2257,6 +2247,21 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         }else{
             showErrorDialog(requireContext(),
                 resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 100) {
+            if (Activity.RESULT_OK == resultCode) {
+                getCurrentLocation()
+            } else {
+                Toast.makeText(requireContext(), "Please turn on location", Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+        if (requestCode == 200) {
+            getCurrentLocation()
         }
     }
 
