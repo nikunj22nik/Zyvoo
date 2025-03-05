@@ -114,12 +114,10 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         adapterIncludeInBooking = AdapterIncludeInBooking(mutableListOf(), requireContext())
 
-        val gridLayoutManager =
-            GridLayoutManager(requireContext(), PrepareData.numberOFColumn(requireActivity()))
+        val gridLayoutManager = GridLayoutManager(requireContext(), PrepareData.numberOFColumn(requireActivity()))
 
         binding.recyclerIncludeBooking.layoutManager = gridLayoutManager
         binding.recyclerIncludeBooking.adapter = adapterIncludeInBooking
-
 
         binding.textMessageTheHostButton.text = "Message the Guest"
         binding.rlNeedHelp.visibility = View.GONE
@@ -211,25 +209,28 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                    when(it){
                        is NetworkResult.Success ->{
                            LoadingUtils.hideDialog()
-
-                           var userImage :String = AppConstant.BASE_URL+ it.data?.sender_avatar.toString()
-
-                           var friendImage :String = AppConstant.BASE_URL+it.data?.receiver_avatar.toString()
-
+                           var userImage :String =  it.data?.sender_avatar.toString()
+                           Log.d("TESTING_PROFILE_HOST",userImage)
+                           var friendImage :String = it.data?.receiver_avatar.toString()
+                           Log.d("TESTING_PROFILE_HOST",friendImage)
                            var friendName :String = ""
 
                            if(it.data?.receiver_name != null){
                                friendName = it.data.receiver_name
                            }
+                           var userName = ""
+                           userName = it.data?.sender_name.toString()
 
                            val intent = Intent(requireContext(),ChatActivity::class.java)
+
                            intent.putExtra("user_img",userImage).toString()
-                           SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
+                           SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
                            Log.d("TESTING","REVIEW HOST"+channelName)
                            intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
-                           intent.putExtra(AppConstant.FRIEND_ID,guestId)
+                           intent.putExtra(AppConstant.FRIEND_ID,guestId.toString())
                            intent.putExtra("friend_img",friendImage).toString()
                            intent.putExtra("friend_name",friendName).toString()
+                           intent.putExtra("user_name",userName)
                            startActivity(intent)
                        }
                        is NetworkResult.Error ->{

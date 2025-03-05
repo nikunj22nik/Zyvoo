@@ -54,7 +54,7 @@ class AdapterChatList(
                 Glide.with(context).
                 load(AppConstant.BASE_URL+"/"+currentItem.receiver_image).into(binding.imageProfilePicture)
                 binding.textTime.setText(currentItem.lastMessageTime)
-                binding.textUserName.setText(currentItem.receiver_name + "( "+currentItem.property_title+" )")
+                binding.textUserName.setText(currentItem.receiver_name +"\n"+ "( "+currentItem.property_title+" )")
                 binding.textDescription.setText(currentItem.lastMessage)
                 Log.d("TESTING_PROFILE",AppConstant.BASE_URL+"/"+currentItem.receiver_image)
             }
@@ -63,7 +63,7 @@ class AdapterChatList(
                 load(AppConstant.BASE_URL+"/"+currentItem.sender_profile).into(binding.imageProfilePicture)
                Log.d("TESTING_PROFILE",AppConstant.BASE_URL+currentItem.sender_profile)
                 binding.textTime.setText(currentItem.lastMessageTime)
-                binding.textUserName.setText(currentItem.sender_name +  "( "+currentItem.property_title+" )")
+                binding.textUserName.setText(currentItem.sender_name + "\n"+ "( "+currentItem.property_title+" )")
                 binding.textDescription.setText(currentItem.lastMessage)
             }
 

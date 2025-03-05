@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -53,10 +54,11 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
     var providertoken :String =""
     var groupName :String =""
     var friendprofileimage :String =""
-    var userId :Int =-1
-    var friendId :Int =-1
+    var userId :String=""
+    var friendId :String=""
     var friend_name :String =""
     private var file: File? = null
+    var userName :String = ""
     var PERMISSIONS: Array<String> = arrayOf(permission.CAMERA, permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE,)
     private val REQUEST_IMAGE_CODE_ASK_PERMISSIONS = 123
     private val mediaFiles: ArrayList<MediaFile?> = ArrayList<MediaFile?>()
@@ -67,17 +69,27 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
         binding = ActivityChatBinding.inflate(LayoutInflater.from(this))
         sessionManagement = SessionManager(this)
 
+        binding.etmassage.setOnClickListener {
+            binding.etmassage.requestFocus() // Request focus explicitly
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(binding.etmassage, InputMethodManager.SHOW_IMPLICIT)
+        }
+
+
+
         if (intent.extras != null) {
             profileImage = intent?.extras?.getString("user_img").toString()
             providertoken = sessionManagement.getChatToken().toString()
-            userId = intent?.extras?.getInt(AppConstant.USER_ID)?.toInt() ?: 0
+            userId = intent?.extras?.getString(AppConstant.USER_ID).toString()
             groupName = intent?.extras?.getString(AppConstant.CHANNEL_NAME).toString()
             Log.d("TESTING_Group_NAME",groupName)
-            friendId = intent?.extras?.getInt(AppConstant.FRIEND_ID)?.toInt() ?: 0
+            friendId = intent?.extras?.getString(AppConstant.FRIEND_ID).toString()
             friendprofileimage = intent?.extras?.getString("friend_img").toString()
             friend_name = intent?.extras?.getString("friend_name").toString()
+            userName = intent?.extras?.getString("user_name").toString()
             binding.tvStatus.setText(friend_name)
-            Glide.with(this).load(AppConstant.BASE_URL+"/"+ friendprofileimage).error(R.drawable.ic_img_not_found).into(binding.imageProfilePicture)
+
+            Glide.with(this).load(AppConstant.BASE_URL+ friendprofileimage).error(R.drawable.ic_img_not_found).into(binding.imageProfilePicture)
         }
 
         binding.etmassage.setOnClickListener {
@@ -225,33 +237,6 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
         startActivityForResult(intent, REQUEST_Folder)
     }
 
-    private fun loadChat(){
-
-//        if (NetworkMonitorCheck._isConnected.value) {
-//            LoadingUtils.showDialog(this,false)
-////            quickstartConversationsManager.setListener(this@ChatActivity)
-////            quickstartConversationsManager.initializeWithAccessToken(this, providertoken, groupName, friendId.toString(), userId.toString(),binding.tvStatus)
-////            quickstartConversationsManager.loadChatList( groupName,friendId.toString(),userId.toString(),binding.tvStatus)
-//            quickstartConversationsManager.loadConversationById(groupName)
-//        } else{
-//            LoadingUtils.showErrorDialog(this, "Please Check Your Internet Connection")
-//        }
-        /*try {
-            if (NetworkMonitorCheck._isConnected.value) {
-                LoadingUtils.showDialog(this, false)
-                Log.d("ChatActivity", "Loading chat for group: $groupName")
-                Log.d("ChatActivity11","Group_Name "+groupName +" Friend Id"+ friendId +" "+userId +" "+userId)
-                quickstartConversationsManager.loadConversationById(groupName,friendId.toString(),userId.toString())
-            } else {
-                LoadingUtils.showErrorDialog(this, "Please Check Your Internet Connection")
-                Log.e("ChatActivity", "No internet connection detected")
-            }
-        }
-        catch (e: Exception) {
-            Log.e("ChatActivity", "Error in loadChat: ${e.message}", e)
-        }*/
-    }
-
 
     override fun receivedNewMessage() {
         LoadingUtils.hideDialog()
@@ -268,7 +253,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
     }
 
     private fun loadRecyclerview(quickstartConversationsManager: QuickstartConversationsManager) {
-        adapter = ChatDetailsAdapter(this, quickstartConversationsManager, userId.toString(),profileImage,friendprofileimage,friend_name)
+        adapter = ChatDetailsAdapter(this, quickstartConversationsManager, userId.toString(),profileImage,friendprofileimage,friend_name,userName)
         binding.rvChatting.adapter = adapter
         binding.rvChatting.scrollToPosition(quickstartConversationsManager.messages.size - 1)
         binding.rvChatting.visibility = View.VISIBLE

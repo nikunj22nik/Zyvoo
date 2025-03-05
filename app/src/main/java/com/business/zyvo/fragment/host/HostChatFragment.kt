@@ -53,7 +53,6 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
         Log.d("TESTING_ZYVOO_Proj", "onCreate OF CHAT")
         var sessionManager = SessionManager(requireContext())
         loggedInUserId = sessionManager.getUserId()!!
-
     }
 
     override fun onCreateView(
@@ -63,14 +62,11 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
         // Inflate the layout for this fragment
 
         Log.d("TESTING_ZYVOO_Proj", "onCreateView OF CHAT")
-        _binding =
-            FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
-
+        _binding = FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
         quickstartConversationsManager.setListener(this)
 
-            var sessionManager = SessionManager(requireContext())
-
+        var sessionManager = SessionManager(requireContext())
         sessionManager.getUserId().let {
              if (it != null) {
                  userId = it
@@ -139,6 +135,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                         intent.putExtra(AppConstant.FRIEND_ID, data.sender_id)
                         intent.putExtra("friend_img", data.sender_profile).toString()
                         intent.putExtra("friend_name", data.sender_name).toString()
+                        intent.putExtra("user_name",data.receiver_name)
                     } else {
                         intent.putExtra("user_img",data.sender_profile).toString()
                         SessionManager(requireContext()).getUserId()
@@ -148,6 +145,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                         intent.putExtra(AppConstant.FRIEND_ID, data.receiver_id)
                         intent.putExtra("friend_img", data.receiver_image).toString()
                         intent.putExtra("friend_name", data.receiver_name).toString()
+                        intent.putExtra("user_name",data.sender_name)
                     }
 
                     startActivity(intent)
@@ -183,29 +181,34 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
             LoadingUtils.showDialog(requireContext(),false)
             var userId = sessionManager.getUserId()
             if (userId != null) {
-                viewModel.getChatUserChannelList(userId,"host").collect {
-                    when (it) {
-                        is NetworkResult.Success -> {
-                            Log.d("TESTING","Inside the message success")
-                            it.data?.let {
-                                viewModel.chatChannel = it
-                                it.forEach {
-                                    map.put(it.group_name.toString(),it)
+                var sessionManager = SessionManager(requireContext())
+                var userType = sessionManager.getUserType()
+                if (userType != null) {
+                    viewModel.getChatUserChannelList(userId,userType).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                Log.d("TESTING","Inside the message success")
+                                it.data?.let {
+                                    viewModel.chatChannel = it
+                                    it.forEach {
+                                        map.put(it.group_name.toString(),it)
+                                    }
+                                    Log.d("TESTING",map.size.toString() +" Map Size is ")
+                                    Log.d("TESTING_TOKEN","Chat token is "+sessionManager.getChatToken())
+                                    quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", sessionManager.getUserId().toString())
+
+            //                                reloadMessages()
                                 }
-                                Log.d("TESTING",map.size.toString() +" Map Size is ")
-                                quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", sessionManager.getUserId().toString())
-
-//                                reloadMessages()
                             }
-                        }
 
-                        is NetworkResult.Error -> {
-                             LoadingUtils.hideDialog()
-                            Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
-                        }
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
+                            }
 
-                        else -> {
+                            else -> {
 
+                            }
                         }
                     }
                 }

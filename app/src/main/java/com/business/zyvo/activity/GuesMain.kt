@@ -247,7 +247,7 @@ class GuesMain : AppCompatActivity(), OnClickListener {
 
             R.id.navigationInbox -> {
                 inboxColor()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostChatFragment)
             }
 
             R.id.navigationBookings -> {
