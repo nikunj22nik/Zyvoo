@@ -199,16 +199,7 @@ private val startAutocomplete =
             false
         )
         session = SessionManager(requireActivity())
-        // Observe the isLoading state
-        lifecycleScope.launch {
-            profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-                if (isLoading) {
-                    LoadingUtils.showDialog(requireContext(), false)
-                } else {
-                    LoadingUtils.hideDialog()
-                }
-            }
-        }
+
         dateManager = DateManager(requireContext())
         // Inflate the layout for this fragment
         val newLocation = AddLocationModel("Unknown Location")
@@ -266,7 +257,17 @@ private val startAutocomplete =
         }
 
         binding.textAddNewPaymentMethod.setOnClickListener {
-            findNavController().navigate(R.id.payoutFragment)
+            findNavController().navigate(R.id.hostPayoutFragment)
+        }
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(requireContext(), false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
         }
         getUserProfile()
 
@@ -394,12 +395,11 @@ private val startAutocomplete =
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 LoadingUtils.showDialog(requireContext(), false)
-                var session = SessionManager(requireContext())
+                val session = SessionManager(requireContext())
                 profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             var name = ""
-                            LoadingUtils.hideDialog()
                             it.data?.let { resp ->
                                 Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ," + resp.toString())
                                 userProfile = Gson().fromJson(resp, UserProfile::class.java)
@@ -517,12 +517,12 @@ private val startAutocomplete =
                         }
 
                         is NetworkResult.Error -> {
-                            LoadingUtils.hideDialog()
+
                             showErrorDialog(requireContext(), it.message!!)
                         }
 
                         else -> {
-                            LoadingUtils.hideDialog()
+
                             Log.v(ErrorDialog.TAG, "error::" + it.message)
                         }
 
@@ -530,7 +530,7 @@ private val startAutocomplete =
                 }
             }
         } else {
-            LoadingUtils.hideDialog()
+
             LoadingUtils.showErrorDialog(
                 requireContext(),
                 resources.getString(R.string.no_internet_dialog_msg)

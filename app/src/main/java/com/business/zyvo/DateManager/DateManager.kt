@@ -1,6 +1,7 @@
 package com.business.zyvo.DateManager
 
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Build
@@ -378,5 +379,28 @@ fun getRangeSelectedDateWithYear(
     }
 
      */
+
+    fun selectDateManager(onDateSelected: (String) -> Unit) {
+        val c = Calendar.getInstance()
+
+        val year = c.get(Calendar.YEAR)
+        val month = c.get(Calendar.MONTH)
+        val day = c.get(Calendar.DAY_OF_MONTH)
+
+        // Create DatePickerDialog
+        val datePickerDialog = DatePickerDialog(
+            context,
+            { _, selectedYear, selectedMonth, selectedDay ->
+                // Format the selected date with leading zeros for month and day
+                val formattedDate = String.format("%02d-%02d-%04d",  selectedMonth + 1, selectedDay,selectedYear)
+                onDateSelected(formattedDate) // Pass the selected date to the callback
+            },
+            month,
+            day,
+            year
+        )
+
+        datePickerDialog.show() // Show the dialog
+    }
 
 }
