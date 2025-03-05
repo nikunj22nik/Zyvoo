@@ -30,7 +30,7 @@ class SessionManager(var context: Context) {
         editor!!.commit()
 
         val baseApp = context.applicationContext as MyApp
-        baseApp.resetQuickConversationManager()
+
     }
 
     fun getChatToken() : String? {

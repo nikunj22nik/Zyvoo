@@ -24,8 +24,7 @@ import com.business.zyvo.LoadingUtils
 import com.business.zyvo.MyApp
 import com.business.zyvo.R
 import com.business.zyvo.adapter.ChatDetailsAdapter
-import com.business.zyvo.chat.QuickstartConversationsManager
-import com.business.zyvo.chat.QuickstartConversationsManagerListener
+
 import com.business.zyvo.databinding.ActivityChatBinding
 import com.business.zyvo.databinding.FragmentChatDetailsBinding
 import com.business.zyvo.session.SessionManager
@@ -43,11 +42,11 @@ import java.io.FileNotFoundException
 
 
 
-class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener {
+class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener {
 
     lateinit var binding: ActivityChatBinding
     lateinit var adapter: ChatDetailsAdapter
-    private lateinit var quickstartConversationsManager : QuickstartConversationsManager
+    private var quickstartConversationsManager = QuickstartConversationsManager()
     lateinit var sessionManagement: SessionManager
     private lateinit var viewModel: ChatDetailsViewModel
     var profileImage :String =""
@@ -69,7 +68,6 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
         sessionManagement = SessionManager(this)
 
         if (intent.extras != null) {
-
             profileImage = intent?.extras?.getString("user_img").toString()
             providertoken = sessionManagement.getChatToken().toString()
             userId = intent?.extras?.getInt(AppConstant.USER_ID)?.toInt() ?: 0
@@ -86,14 +84,14 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(binding.etmassage, InputMethodManager.SHOW_IMPLICIT)
         }
-        // Ensure EditText gets focus
-        try {
-            quickstartConversationsManager = (application as MyApp).conversationsManager
-            quickstartConversationsManager.setListener(this) // Ensure this is only called after full initialization
 
-        }
-        catch (e: Exception) {
-            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+
+        if (NetworkMonitorCheck._isConnected.value) {
+            LoadingUtils.showDialog(this,false)
+            quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"Host")
+            quickstartConversationsManager.setListener(this)
+        }else{
+            LoadingUtils.showSuccessDialog(this,"Please check your internet connection")
         }
 
 
@@ -103,7 +101,11 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
     }
 
     private fun initialize() {
-        loadChat()
+
+
+
+
+//        loadChat()
 
 
         binding.imgBack.setOnClickListener {
@@ -120,13 +122,15 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
         }
 
         binding.sendBtn.setOnClickListener {
-            /*if(binding.etmassage.text.toString().trim().isNotEmpty()){
-                quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
+            if(NetworkMonitorCheck._isConnected.value) {
+                if (binding.etmassage.text.toString().trim().isNotEmpty()) {
+                    quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
+                } else {
+                    LoadingUtils.showErrorDialog(this, "Message can't be empty")
+                }
+            }else{
+                LoadingUtils.showSuccessDialog(this,"Please check your internet connection")
             }
-            else{
-                LoadingUtils.showErrorDialog(this,"Please Check Your Internet Connection")
-            }*/
-            quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
         }
 
 
@@ -222,6 +226,7 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
     }
 
     private fun loadChat(){
+
 //        if (NetworkMonitorCheck._isConnected.value) {
 //            LoadingUtils.showDialog(this,false)
 ////            quickstartConversationsManager.setListener(this@ChatActivity)
@@ -231,11 +236,12 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
 //        } else{
 //            LoadingUtils.showErrorDialog(this, "Please Check Your Internet Connection")
 //        }
-        try {
+        /*try {
             if (NetworkMonitorCheck._isConnected.value) {
                 LoadingUtils.showDialog(this, false)
                 Log.d("ChatActivity", "Loading chat for group: $groupName")
-                quickstartConversationsManager.loadConversationById(groupName,"3",userId.toString())
+                Log.d("ChatActivity11","Group_Name "+groupName +" Friend Id"+ friendId +" "+userId +" "+userId)
+                quickstartConversationsManager.loadConversationById(groupName,friendId.toString(),userId.toString())
             } else {
                 LoadingUtils.showErrorDialog(this, "Please Check Your Internet Connection")
                 Log.e("ChatActivity", "No internet connection detected")
@@ -243,7 +249,7 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
         }
         catch (e: Exception) {
             Log.e("ChatActivity", "Error in loadChat: ${e.message}", e)
-        }
+        }*/
     }
 
 
@@ -283,9 +289,7 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
         }
     }
 
-    override fun showError() {
-        TODO("Not yet implemented")
-    }
+
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -331,5 +335,9 @@ class ChatActivity : AppCompatActivity(), QuickstartConversationsManagerListener
             quickstartConversationsManager.sendMessageImage(uri.path, file)
         }
     }
+
+
+
+
 
 }

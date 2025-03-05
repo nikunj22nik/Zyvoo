@@ -14,7 +14,8 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.business.zyvo.R
-import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.activity.QuickstartConversationsManager
+
 import com.business.zyvo.databinding.LayoutMessageChatingBinding
 import com.business.zyvo.model.ChatMessageModel
 import com.business.zyvo.utils.PrepareData

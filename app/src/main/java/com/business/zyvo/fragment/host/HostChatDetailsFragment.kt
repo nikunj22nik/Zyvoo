@@ -53,7 +53,7 @@ class HostChatDetailsFragment : Fragment(), View.OnClickListener {
      //   chatDetailsAdapter = ChatDetailsAdapter(requireContext(), mutableListOf())
         binding.rvChatting.adapter = chatDetailsAdapter
         viewModel.list.observe(viewLifecycleOwner, Observer {
-            chatDetailsAdapter!!.updateItem(it)
+         //   chatDetailsAdapter!!.updateItem(it)
         })
         return binding.getRoot()
     }

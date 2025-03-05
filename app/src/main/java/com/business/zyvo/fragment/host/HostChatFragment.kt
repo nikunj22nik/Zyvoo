@@ -1,5 +1,6 @@
 package com.business.zyvo.fragment.host
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.MyApp
@@ -23,31 +23,28 @@ import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
 import com.business.zyvo.TimeUtils
+import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.adapter.AdapterChatList
-import com.business.zyvo.chat.QuickstartConversationsManager
-import com.business.zyvo.chat.QuickstartConversationsManagerListener
 import com.business.zyvo.databinding.FragmentChatBinding
 import com.business.zyvo.model.ChannelListModel
-import com.business.zyvo.model.ChatListModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.viewmodel.host.ChatListHostViewModel
-import com.google.firebase.crashlytics.internal.model.CrashlyticsReport.Session
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HostChatFragment : Fragment() , View.OnClickListener ,
-    QuickstartConversationsManagerListener {
+class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversationsManagerListener {
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapterChatList: AdapterChatList
     private val viewModel: ChatListHostViewModel by viewModels()
     var objects: Int = 0
     private var chatList :MutableList<ChannelListModel>  = mutableListOf()
+    private  var userId :Int =-1
 
     private var filteredList: MutableList<ChannelListModel> = chatList.toMutableList()
-    private lateinit var quickstartConversationsManager : QuickstartConversationsManager
+    private var quickstartConversationsManager = QuickstartConversationsManager()
     private var map:HashMap<String,ChannelListModel> = HashMap<String,ChannelListModel>()
     private var loggedInUserId : Int =-1
 
@@ -70,6 +67,16 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
             FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
 
+        quickstartConversationsManager.setListener(this)
+
+            var sessionManager = SessionManager(requireContext())
+
+        sessionManager.getUserId().let {
+             if (it != null) {
+                 userId = it
+             }
+         }
+
         return binding.root
     }
 
@@ -78,10 +85,13 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
         binding.imageFilter.setOnClickListener(this)
         adapterChatList = AdapterChatList(requireContext(), chatList,object : OnClickListener {
             override fun itemClick(obj: Int) {
-                findNavController().navigate(R.id.hostChatDetailsFragment)
+             //   findNavController().navigate(R.id.hostChatDetailsFragment)
             }
 
         },null)
+
+        adapterChatListClick()
+
         binding.recyclerViewChat.adapter = adapterChatList
         viewModel.list.observe(viewLifecycleOwner, Observer { list ->
 
@@ -99,18 +109,8 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
                 filter(query)
             }
         })
-        // Add text change listener for search bar
-//        binding.etSearchButton.addTextChangedListener { text ->
-//           // Call filter function in adapter
-//        }
-        try {
-            quickstartConversationsManager = (activity?.application as MyApp).conversationsManager
-            quickstartConversationsManager.setListener(this) // Ensure this is only called after full initialization
 
-        }
-        catch (e: Exception) {
-            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
-        }
+
 
 
         callingGetChatUser()
@@ -118,9 +118,50 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
     }
 
 
-    private fun loadChat(){
-        quickstartConversationsManager.loadChannel()
+    private fun adapterChatListClick(){
+        adapterChatList.setOnItemClickListener(object : AdapterChatList.onItemClickListener{
+            override fun onItemClick(data: ChannelListModel, index: Int) {
+                try {
+                    val intent = Intent(requireContext(), ChatActivity::class.java)
+                    var channelName: String = data.group_name.toString()
+
+//                    if (Integer.parseInt(data.receiver_id) < Integer.parseInt(data.sender_id)) {
+//                        channelName = "ZYVOO_" + data.receiver_id + "_" + data.sender_id
+//                    } else {
+//                        channelName = "ZYVOO_" + data.sender_id + "_" + data.receiver_id
+//                    }
+                    if (data.receiver_id.equals(userId.toString())) {
+                        intent.putExtra("user_img",data.receiver_image).toString()
+                        SessionManager(requireContext()).getUserId()
+                            ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
+                        Log.d("TESTING", "REVIEW HOST" + channelName)
+                        intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
+                        intent.putExtra(AppConstant.FRIEND_ID, data.sender_id)
+                        intent.putExtra("friend_img", data.sender_profile).toString()
+                        intent.putExtra("friend_name", data.sender_name).toString()
+                    } else {
+                        intent.putExtra("user_img",data.sender_profile).toString()
+                        SessionManager(requireContext()).getUserId()
+                            ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
+                        Log.d("TESTING", "REVIEW HOST" + channelName)
+                        intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
+                        intent.putExtra(AppConstant.FRIEND_ID, data.receiver_id)
+                        intent.putExtra("friend_img", data.receiver_image).toString()
+                        intent.putExtra("friend_name", data.receiver_name).toString()
+                    }
+
+                    startActivity(intent)
+                }catch(e:Exception){
+                    Log.d("TESTING","INSIDE THE CATCH BLOCK")
+                }
+
+            }
+
+        })
     }
+
+
+
 
 
     fun filter(query: String) {
@@ -152,7 +193,8 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
                                     map.put(it.group_name.toString(),it)
                                 }
                                 Log.d("TESTING",map.size.toString() +" Map Size is ")
-                                loadChat()
+                                quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", sessionManager.getUserId().toString())
+
 //                                reloadMessages()
                             }
                         }
@@ -279,6 +321,7 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
 
                     quickstartConversationsManager.messages.forEach {
                         Log.d("quickstartConversationsManager","m 8888"+it.messageBody)
+                        Log.d("quickstartConversationsManager","j 8888"+it.participant.conversation.state)
                         Log.d("quickstartConversationsManager","u 88888"+it.conversation.uniqueName)
                     }
 
@@ -308,8 +351,6 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
         }
     }
 
-    override fun showError() {
 
-    }
 
 }

@@ -24,8 +24,7 @@ import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.adapter.ChatDetailsAdapter
-import com.business.zyvo.chat.QuickstartConversationsManager
-import com.business.zyvo.chat.QuickstartConversationsManagerListener
+
 import com.business.zyvo.databinding.FragmentChatDetailsBinding
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.NetworkMonitorCheck
@@ -34,11 +33,10 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 
-class ChatDetailsFragment : Fragment(), View.OnClickListener,
-    QuickstartConversationsManagerListener {
+class ChatDetailsFragment : Fragment(), View.OnClickListener{
 
     private var _binding: FragmentChatDetailsBinding? = null
-    private var quickstartConversationsManager = QuickstartConversationsManager()
+
 
     private val binding get() = _binding!!
     private var chatDetailsAdapter: ChatDetailsAdapter? = null
@@ -98,7 +96,7 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener,
         }
 
         if (NetworkMonitorCheck._isConnected.value) {
-            quickstartConversationsManager.setListener(this)
+
           //  quickstartConversationsManager.initializeWithAccessToken(requireContext(), providertoken, groupName, friendId.toString(), userId.toString())
         }
 
@@ -343,54 +341,8 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener,
 
     }
 
-    override fun receivedNewMessage() {
-        requireActivity().runOnUiThread {
-            if (quickstartConversationsManager.messages.size==1){
-                loadRecyclerview(quickstartConversationsManager)
-            }else{
-                chatDetailsAdapter!!.notifyItemRangeChanged(quickstartConversationsManager.messages.size, 1)
-                binding.rvChatting.scrollToPosition(quickstartConversationsManager.messages.size - 1)
-                binding.rvChatting.visibility=View.VISIBLE
 
-            }
-        }
-    }
 
-    override fun messageSentCallback() {
 
-    }
-
-    override fun reloadMessages() {
-//        requireActivity().runOnUiThread {
-//            if (quickstartConversationsManager.messages.size!=0){
-//                loadRecyclerview(quickstartConversationsManager)
-//            }
-//        }
-        // Only run this if the fragment is attached to an activity
-
-         requireActivity().runOnUiThread {
-                if (quickstartConversationsManager.messages.isNotEmpty()) {
-                    loadRecyclerview(quickstartConversationsManager)
-                }
-            }
-
-    }
-
-    override fun showError() {
-    }
-
-    private fun loadRecyclerview(quickstartConversationsManager: QuickstartConversationsManager) {
-        var sessionManager =SessionManager(requireContext())
-        var type=sessionManager.getUserType()
-        chatDetailsAdapter = type?.let {
-
-            ChatDetailsAdapter(requireContext(), quickstartConversationsManager, userId.toString(),profileImage,friendprofileimage, it)
-        }
-        binding.rvChatting.layoutManager =LinearLayoutManager(requireContext(),LinearLayoutManager.VERTICAL,false)
-        binding.rvChatting.adapter = chatDetailsAdapter
-        binding.rvChatting.scrollToPosition(quickstartConversationsManager.messages.size - 1)
-//        binding.rcyData.visibility=View.VISIBLE
-//        binding.tvNodata.visibility=View.GONE
-    }
 
 }

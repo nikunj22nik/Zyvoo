@@ -2,6 +2,7 @@ package com.business.zyvo.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -14,23 +15,31 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
+import com.business.zyvo.adapter.host.MyPlacesHostAdapter
 import com.business.zyvo.databinding.LayoutChatListBinding
 import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.model.ChatListModel
+import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.session.SessionManager
 
 class AdapterChatList(
-    var context: Context,
-    var list: MutableList<ChannelListModel>,
-    var listener: OnClickListener, var listener1: OnClickListener1?
-) : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>() {
+    var context: Context, var list: MutableList<ChannelListModel>, var listener: OnClickListener,
+    var listener1: OnClickListener1?) : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>() {
     // Track the selected position
     private lateinit var  sessionManager: SessionManager
+    private lateinit var mListener: onItemClickListener
+
+    interface onItemClickListener {
+        fun onItemClick(data:ChannelListModel , index:Int)
+    }
+
+    fun setOnItemClickListener(listener: AdapterChatList.onItemClickListener) {
+        mListener = listener
+    }
 
 
     init {
          sessionManager = SessionManager(context)
-
     }
 
     private var selectedPosition = -1
@@ -39,22 +48,22 @@ class AdapterChatList(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(currentItem: ChannelListModel) {
+            var userID = sessionManager.getUserId()
 
-
-          var userID = sessionManager.getUserId()
             if(userID.toString().equals(currentItem.sender_id)){
                 Glide.with(context).
-                load(AppConstant.BASE_URL+currentItem.receiver_image).into(binding.imageProfilePicture)
+                load(AppConstant.BASE_URL+"/"+currentItem.receiver_image).into(binding.imageProfilePicture)
                 binding.textTime.setText(currentItem.lastMessageTime)
-                binding.textUserName.setText(currentItem.receiver_name)
+                binding.textUserName.setText(currentItem.receiver_name + "( "+currentItem.property_title+" )")
                 binding.textDescription.setText(currentItem.lastMessage)
+                Log.d("TESTING_PROFILE",AppConstant.BASE_URL+"/"+currentItem.receiver_image)
             }
             else{
                 Glide.with(context).
-                load(AppConstant.BASE_URL+currentItem.sender_profile).into(binding.imageProfilePicture)
-
+                load(AppConstant.BASE_URL+"/"+currentItem.sender_profile).into(binding.imageProfilePicture)
+               Log.d("TESTING_PROFILE",AppConstant.BASE_URL+currentItem.sender_profile)
                 binding.textTime.setText(currentItem.lastMessageTime)
-                binding.textUserName.setText(currentItem.sender_name)
+                binding.textUserName.setText(currentItem.sender_name +  "( "+currentItem.property_title+" )")
                 binding.textDescription.setText(currentItem.lastMessage)
             }
 
@@ -74,15 +83,8 @@ class AdapterChatList(
             // Set click listener to change selected position
             binding.root.setOnClickListener {
                 // Update selected position
-                val previousPosition = selectedPosition
-                selectedPosition = position
-
-                // Notify adapter to update both old and new selected items
-                notifyItemChanged(previousPosition) // Reset old selection
-                notifyItemChanged(selectedPosition) // Highlight new selection
-
-                // Optional: Trigger any listener action
-                listener.itemClick(position)
+ // Optional: Trigger any listener action
+                mListener.onItemClick(currentItem,position)
             }
         }
 
@@ -106,7 +108,7 @@ class AdapterChatList(
 
         }
         holder.binding.clMain.setOnClickListener{
-
+              mListener.onItemClick(currentItem,position)
         }
 
         holder.bind(currentItem)

@@ -71,7 +71,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import android.widget.LinearLayout.LayoutParams
 import com.business.zyvo.activity.ChatActivity
-import com.business.zyvo.chat.QuickstartConversationsManagerListener
 import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
 
 
@@ -196,15 +195,14 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             }
         }
 
-
         callingReportReason()
     }
 
-
     private fun callingJoinChannelApi(){
         lifecycleScope.launch {
-            var session= SessionManager(requireContext())
-            var userId = session.getUserId()
+            val session= SessionManager(requireContext())
+            val userId = session.getUserId()
+
             if (userId != null) {
                 LoadingUtils.showDialog(requireContext(),true)
                 Log.d("TESTING_GUEST_ID",guestId.toString() +"GuestId IN Channel")
@@ -226,10 +224,10 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
                            val intent = Intent(requireContext(),ChatActivity::class.java)
                            intent.putExtra("user_img",userImage).toString()
-                           SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, 1) }
+                           SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
                            Log.d("TESTING","REVIEW HOST"+channelName)
                            intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
-                           intent.putExtra(AppConstant.FRIEND_ID,it.data?.receiver_id)
+                           intent.putExtra(AppConstant.FRIEND_ID,guestId)
                            intent.putExtra("friend_img",friendImage).toString()
                            intent.putExtra("friend_name",friendName).toString()
                            startActivity(intent)
@@ -301,10 +299,10 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                                 {
                                     guestId = it1.guest_id
                                     Log.d("TESTING_GUEST_ID","GuestId IN Api")
-
-                                    showingDataToUi(it1)
                                     propertyId = it1.property_id
+                                    showingDataToUi(it1)
 
+                                    Log.d("TESTING_GUEST_ID","Property Id in first"+ propertyId)
                                 }
                             }
                         }
@@ -325,10 +323,13 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                             LoadingUtils.hideDialog()
                             it.data?.let {
                                 it1 ->
+                                propertyId = it.data?.second?.property_id!!
                                 showingDataToUi(it1.second)
                                 guestId = it1.second.guest_id
                             }
-                            propertyId = it.data?.second?.property_id!!
+
+                            Log.d("TESTING_GUEST_ID","Property Id in Second"+ propertyId)
+
                         }
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
@@ -375,9 +376,9 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         binding.money.setText("$ " + data.booking_amount)
         adapterIncludeInBooking.updateAdapter(data.amenities)
         if (data.guest_id < data.host_id) {
-            channelName = "ZYVOO_" + data.guest_id + "_" + data.host_id
+            channelName = "ZYVOO_" + data.guest_id + "_" + data.host_id +"_"+propertyId
         } else {
-            channelName = "ZYVOO_" + data.host_id + "_" + data.guest_id
+            channelName = "ZYVOO_" + data.host_id + "_" + data.guest_id +"_"+propertyId
         }
 
         data.cleaning_fee?.let {
@@ -391,8 +392,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         data.guest_avatar?.let {
         friendImage = AppConstant.BASE_URL+it
-            Glide.with(requireContext()).load(friendImage)
-                .into(binding.imageProfilePicture)
+            Glide.with(requireContext()).load(friendImage).into(binding.imageProfilePicture)
         }
 
         data.tax?.let {

@@ -20,7 +20,7 @@ open class LoadingUtils {
             if (context != null) {
                 try {
                     jarvisLoader = JarvisLoader(context)
-                    jarvisLoader?.let { jarvisLoader->
+                    jarvisLoader?.let { jarvisLoader ->
                         jarvisLoader.setCanceledOnTouchOutside(true)
                         jarvisLoader.setCancelable(isCancelable)
                         jarvisLoader.show()
@@ -30,8 +30,9 @@ open class LoadingUtils {
                 }
             }
         }
+
         fun hideDialog() {
-            if (jarvisLoader!=null && jarvisLoader?.isShowing!!) {
+            if (jarvisLoader != null && jarvisLoader?.isShowing!!) {
                 jarvisLoader = try {
                     jarvisLoader?.dismiss()
                     null
@@ -40,6 +41,7 @@ open class LoadingUtils {
                 }
             }
         }
+
         fun showErrorDialog(context: Context?, text: String) {
             if (context == null) return
 
@@ -69,7 +71,7 @@ open class LoadingUtils {
 
             cancelBtn.setOnClickListener {
                 dialog.dismiss()
-                }
+            }
 
             // Set button click listener
             okButton.setOnClickListener {
@@ -80,40 +82,37 @@ open class LoadingUtils {
             dialog.show()
         }
 
+        fun showSuccessDialog(context: Context?, text: String) {
+            if (context == null) return
 
+            // Inflate the custom layout
+            val inflater = LayoutInflater.from(context)
+            val dialogView = inflater.inflate(R.layout.dialog_success, null)
 
-    fun showSuccessDialog(context: Context?, text: String) {
-        if (context == null) return
+            // Find views
+            val errorMessage = dialogView.findViewById<TextView>(R.id.text)
 
-        // Inflate the custom layout
-        val inflater = LayoutInflater.from(context)
-        val dialogView = inflater.inflate(R.layout.dialog_success, null)
+            val okButton = dialogView.findViewById<TextView>(R.id.textOkayButton)
+            val cancelBtn = dialogView.findViewById<ImageView>(R.id.imageCross)
+            // cancelBtn.visibility = View.GONE
+            // Set the error message
+            errorMessage.text = text
 
-        // Find views
-        val errorMessage = dialogView.findViewById<TextView>(R.id.text)
+            // Create the dialog
+            val dialog = AlertDialog.Builder(context)
+                .setView(dialogView)
+                .setCancelable(false)
+                .create()
 
-        val okButton = dialogView.findViewById<TextView>(R.id.textOkayButton)
-        val cancelBtn = dialogView.findViewById<ImageView>(R.id.imageCross)
-       // cancelBtn.visibility = View.GONE
-        // Set the error message
-        errorMessage.text = text
+            // Set button click listener
+            okButton.setOnClickListener {
+                dialog.dismiss()
+            }
 
-        // Create the dialog
-        val dialog = AlertDialog.Builder(context)
-            .setView(dialogView)
-            .setCancelable(false)
-            .create()
-
-        // Set button click listener
-        okButton.setOnClickListener {
-            dialog.dismiss()
+            // Show the dialog
+            dialog.show()
         }
 
-        // Show the dialog
-        dialog.show()
     }
-
-}
-
 
 }
