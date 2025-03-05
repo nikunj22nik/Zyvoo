@@ -530,6 +530,32 @@ interface ZyvoApi {
     ) :Response<JsonObject>
 
 
-    
+    @Multipart
+    @POST("add_payout_bank")
+    suspend fun addPayoutBank(
+        @Part("user_id") user_id: RequestBody,
+        @Part("first_name") first_name: RequestBody,
+        @Part("last_name") last_name: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part("phone_number") phone_number: RequestBody,
+        @Part dobList: List<MultipartBody.Part>,
+        @Part("id_type") id_type: RequestBody,
+        @Part("ssn_last_4") ssn_last_4: RequestBody,
+        @Part("id_number") id_number: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("country") country: RequestBody,
+        @Part("state") state: RequestBody,
+        @Part("city") city: RequestBody,
+        @Part("postal_code") postal_code: RequestBody,
+        @Part("bank_name") bank_name: RequestBody,
+        @Part("account_holder_name") account_holder_name: RequestBody,
+        @Part("account_number") account_number: RequestBody,
+        @Part("account_number_confirmation") account_number_confirmation: RequestBody,
+        @Part("routing_number") routing_number: RequestBody,
+        @Part bank_proof_document: MultipartBody.Part?,
+        @Part verification_document_front: MultipartBody.Part?,
+        @Part verification_document_back: MultipartBody.Part?
+    ): Response<JsonObject>
+
 
 }

@@ -183,7 +183,7 @@ class AppConstant {
         val stTime = "Start time is required"
         val edTime = "End time is required"
 
-      val message = "Message is required"
+        val message = "Message is required"
         val emailValid = "Please enter a valid email"
 
         val description = "Name is Description"
@@ -198,6 +198,39 @@ class AppConstant {
         val property_review_count = "property_review_count"
         val distance_miles = "distance_miles"
         val title = "title"
+
+        const val firstNameError: String ="First name can't be empty."
+        const val lastNameError: String ="Last name can't be empty."
+        const val emailPhoneError="Email/phone can't be empty."
+        const val emailError="Email can't be empty."
+        const val phoneError="phone can't be empty."
+        const val validEmailPhone:String="Please Enter Valid Email or Phone Number"
+        const val selectReasonEmpty:String="Please select reason"
+        const val dobError:String="Please select DOB"
+        const val selectIdTypeError:String="Select id type"
+        const val pINError:String="Personal identification number can't be empty."
+        const val SNNError:String="SSN can't be empty."
+        const val SNNValidError:String="Enter Valid SSN."
+        const val addressError:String="Address can't be empty."
+        const val countryError:String="Select country."
+        const val stateError:String="Select State."
+        const val cityError:String="Select City."
+        const val postalCodeError:String="Postal code can't be empty."
+        const val bankNameError:String="Bank Name can't be empty."
+        const val cardholderError="Card Holder Name can't be empty."
+        const val accountNumberError="Account number can't be empty."
+        const val cAccountNumberError="Confirm account number can't be empty."
+        const val routingNumberError="Routing number can't be empty."
+        const val proofofbanError="Please upload proof of bank account."
+        const val frontimageError="Please upload front image."
+        const val backimageError="Please upload back image."
+        const val cardNumberError="Card Number can't be empty."
+        const val cvvError="CVV can't be empty."
+        const val cvvValidError="Please Enter Valid CVV."
+
+        const val validEmail:String="Please Enter Valid Email Address"
+        const val validPhoneNumber:String="Please Enter Valid Phone Number"
+
 
     }
 

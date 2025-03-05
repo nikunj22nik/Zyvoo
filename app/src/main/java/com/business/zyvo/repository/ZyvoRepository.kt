@@ -22,6 +22,9 @@ import com.google.gson.JsonArray
 
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.http.Part
 
 interface ZyvoRepository {
 
@@ -403,6 +406,30 @@ interface ZyvoRepository {
     ): Flow<NetworkResult<JsonObject>>
 
 
+    suspend fun addPayOut(
+        @Part("user_id") userId : RequestBody,
+        @Part("first_name") firstName : RequestBody,
+        @Part("last_name") lastName : RequestBody,
+        @Part("email") email : RequestBody,
+        @Part("phone_number") phoneNumber: RequestBody,
+        @Part dobList:List<MultipartBody.Part>,
+        @Part("id_type") idType: RequestBody,
+        @Part("ssn_last_4")ssnLast4 : RequestBody,
+        @Part("id_number") idNumber : RequestBody,
+        @Part("address") address : RequestBody,
+        @Part("country") country: RequestBody,
+        @Part("state") state : RequestBody,
+        @Part("city") city : RequestBody,
+        @Part("postal_code") postalCode : RequestBody,
+        @Part("bank_name") bankName : RequestBody,
+        @Part("account_holder_name") accountHolderName : RequestBody,
+        @Part("account_number") accountNumber : RequestBody,
+        @Part("account_number_confirmation") accountNumberConfirmation : RequestBody,
+        @Part("routing_number") routingProperty : RequestBody,
+        @Part bank_proof_document: MultipartBody.Part?,
+        @Part verification_document_front : MultipartBody.Part?,
+        @Part verification_document_back : MultipartBody.Part?
+    ): Flow<NetworkResult<String>>
 
 }
 

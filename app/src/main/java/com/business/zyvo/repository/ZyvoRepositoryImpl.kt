@@ -3698,6 +3698,48 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
 
 
 
+    override suspend fun addPayOut(
+        userId: RequestBody, firstName: RequestBody, lastName: RequestBody, email: RequestBody, phoneNumber: RequestBody,
+        dobList: List<MultipartBody.Part>, idType: RequestBody, ssnLast4: RequestBody, idNumber: RequestBody,
+        address: RequestBody, country: RequestBody, state: RequestBody, city: RequestBody, postalCode: RequestBody,
+        bankName: RequestBody, accountHolderName: RequestBody, accountNumber: RequestBody, accountNumberConfirmation: RequestBody,
+        routingProperty: RequestBody, bank_proof_document: MultipartBody.Part?, verification_document_front: MultipartBody.Part?,
+        verification_document_back: MultipartBody.Part?
+    ) : Flow<NetworkResult<String>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.addPayoutBank(userId, firstName, lastName, email, phoneNumber, dobList, idType, ssnLast4, idNumber, address, country, state, city, postalCode, bankName, accountHolderName, accountNumber, accountNumberConfirmation, routingProperty, bank_proof_document, verification_document_front, verification_document_back).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success")&& resp.get("success").asBoolean) {
+                            emit(NetworkResult.Success(resp.get("message").asString))
+                        }
+                        else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(NetworkResult.Error(jsonObj?.getString("message") ?: AppConstant.unKnownError))
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(e.message!!))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG,"http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG,"io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG,"exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+
+    }
 }
 
 

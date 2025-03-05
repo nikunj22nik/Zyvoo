@@ -118,5 +118,10 @@
         android:name="com.business.zyvo.fragment.host.placeOpen.PlaceOpenFragment"
         android:label="fragment_place_open"
         tools:layout="@layout/fragment_place_open" />
+    <fragment
+        android:id="@+id/hostPayoutFragment"
+        android:name="com.business.zyvo.fragment.host.hostPayout.HostPayoutFragment"
+        android:label="fragment_host_payout"
+        tools:layout="@layout/fragment_host_payout" />
 
 </navigation>
