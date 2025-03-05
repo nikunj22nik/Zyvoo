@@ -250,12 +250,24 @@ public class QuickstartConversationsManager {
             return;
         }
 
+
+
+
         conversationsClient.getConversation(DEFAULT_CONVERSATION_NAME, new CallbackListener<Conversation>() {
             @Override
             public void onSuccess(Conversation conversation) {
+
+                 conversation.destroy(new StatusListener() {
+                     @Override
+                     public void onSuccess() {
+                         Log.d("Twilio", "Conversation deleted successfully");
+                     }
+                 });
+
+
                 if (conversation != null) {
                     if (conversation.getStatus() == Conversation.ConversationStatus.JOINED
-                         /*|| conversation.getStatus() == Conversation.ConversationStatus.NOT_PARTICIPATING*/) {
+                         || conversation.getStatus() == Conversation.ConversationStatus.NOT_PARTICIPATING) {
                         Log.d(TAG, "Already Exists in Conversation: " + DEFAULT_CONVERSATION_NAME);
                         QuickstartConversationsManager.this.conversation = conversation;
                         QuickstartConversationsManager.this.conversation.addListener(mDefaultConversationListener);
@@ -294,13 +306,14 @@ public class QuickstartConversationsManager {
 
     private void createConversation() {
         Log.d(TAG, "Creating Conversation: " + DEFAULT_CONVERSATION_NAME);
+
         conversationsClient.conversationBuilder().withUniqueName(DEFAULT_CONVERSATION_NAME).build(new CallbackListener<Conversation>() {
             @Override
             public void onSuccess(Conversation result) {
                 if (result != null) {
                     Log.d(TAG, "Joining Conversation: " + DEFAULT_CONVERSATION_NAME);
                     Attributes attributes = result.getAttributes();
-                    result.addParticipantByIdentity(typeApiValue+identity, attributes, new StatusListener() {
+                    result.addParticipantByIdentity(identity, attributes, new StatusListener() {
                         @Override
                         public void onSuccess() {
                             Log.d("join add :-","add");
@@ -309,9 +322,9 @@ public class QuickstartConversationsManager {
 
                         @Override
                         public void onError(ErrorInfo errorInfo) {
+                            Log.d("join error :-","error  .."+errorInfo.getMessage());
                             joinConversation(result);
-                           Log.d("join error :-","error  .."+errorInfo.getMessage());
-                        }
+                         }
                     });
                 }
             }
@@ -320,7 +333,7 @@ public class QuickstartConversationsManager {
 
     private void joinConversation(final Conversation conversation) {
         Log.d(TAG, "Joining Conversation: " + conversation.getUniqueName());
-        if (conversation.getStatus() == Conversation.ConversationStatus.JOINED) {
+        if (conversation.getStatus() == Conversation.ConversationStatus.JOINED || conversation.getStatus() == Conversation.ConversationStatus.NOT_PARTICIPATING) {
             QuickstartConversationsManager.this.conversation = conversation;
             Log.d(TAG, "Already joined default conversation");
             QuickstartConversationsManager.this.conversation.addListener(mDefaultConversationListener);

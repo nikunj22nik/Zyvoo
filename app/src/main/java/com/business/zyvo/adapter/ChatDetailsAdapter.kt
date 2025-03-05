@@ -52,21 +52,17 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
         Log.d("TESTING_CHAT",message.messageBody.toString())
 
         Log.d("author",message.author)
+        Log.d("userId",userId.toString())
 
         if(message.author.equals(userId,true)){
           Glide.with(context).load(AppConstant.BASE_URL+ profile_image).into(holder.binding.imageProfilePicture)
-        }
-        else{
+            holder.binding.textUserName.text=userName
+         } else{
             Glide.with(context).load(AppConstant.BASE_URL+ friend_profile_image).into(holder.binding.imageProfilePicture)
+            holder.binding.textUserName.text=friend_name
         }
 
         val messagetype = String.format(message.type.toString())
-        if (userId.equals(message.author,true)){
-            holder.binding.textUserName.text=userName
-        }
-        else{
-            holder.binding.textUserName.text=friend_name
-        }
 
         holder.binding.textMessage.text = message.messageBody
         holder.binding.textDate.text = PrepareData.getMyPrettyDate(message.dateCreated)

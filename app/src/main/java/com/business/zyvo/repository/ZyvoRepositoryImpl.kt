@@ -3940,6 +3940,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                             if (resp.has("success") && resp.get("success").asBoolean) {
                                 var obj = resp.get("data").asJsonObject
                                 var token = obj.get("token").asString
+                                Log.d("TESTING_TOKEN","Token inside api "+token)
                                 emit(NetworkResult.Success<String>(token))
                             } else {
                                 emit(NetworkResult.Error(resp.get("message").asString))

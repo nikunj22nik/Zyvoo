@@ -484,6 +484,35 @@ public class QuickstartConversationsManager {
             }
         });
     }
+      public  void deleteConversation(String channelName, String userId){
+                  conversationsClient.getConversation(channelName, new CallbackListener<Conversation>() {
+            @Override
+            public void onSuccess(Conversation conversation) {
+//              conversation.removeParticipantByIdentity(userId, new StatusListener() {
+//                  @Override
+//                  public void onSuccess() {
+//                     Log.d("TESTING","Delete Chat here");
+//                  }
+//              });
+
+
+              conversation.destroy(new StatusListener() {
+                  @Override
+                  public void onSuccess() {
+                      Log.d("TESTING","Delete Chat here");
+                  }
+              });
+
+
+
+            }
+
+            @Override
+            public void onError(ErrorInfo errorInfo) {
+                Log.e(TAG, "Error retrieving conversation: " + errorInfo.getMessage());
+            }
+        });
+      }
 
 
 }

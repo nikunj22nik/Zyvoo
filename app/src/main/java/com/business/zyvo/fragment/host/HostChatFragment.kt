@@ -116,39 +116,39 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
 
     private fun adapterChatListClick(){
         adapterChatList.setOnItemClickListener(object : AdapterChatList.onItemClickListener{
-            override fun onItemClick(data: ChannelListModel, index: Int) {
+            override fun onItemClick(data: ChannelListModel, index: Int,type:String) {
                 try {
-                    val intent = Intent(requireContext(), ChatActivity::class.java)
-                    var channelName: String = data.group_name.toString()
+                    if(type.equals(AppConstant.DELETE)){
+                        Log.d("TESTING", data.group_name.toString())
 
-//                    if (Integer.parseInt(data.receiver_id) < Integer.parseInt(data.sender_id)) {
-//                        channelName = "ZYVOO_" + data.receiver_id + "_" + data.sender_id
-//                    } else {
-//                        channelName = "ZYVOO_" + data.sender_id + "_" + data.receiver_id
-//                    }
-                    if (data.receiver_id.equals(userId.toString())) {
-                        intent.putExtra("user_img",data.receiver_image).toString()
-                        SessionManager(requireContext()).getUserId()
-                            ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
-                        Log.d("TESTING", "REVIEW HOST" + channelName)
-                        intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
-                        intent.putExtra(AppConstant.FRIEND_ID, data.sender_id)
-                        intent.putExtra("friend_img", data.sender_profile).toString()
-                        intent.putExtra("friend_name", data.sender_name).toString()
-                        intent.putExtra("user_name",data.receiver_name)
-                    } else {
-                        intent.putExtra("user_img",data.sender_profile).toString()
-                        SessionManager(requireContext()).getUserId()
-                            ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
-                        Log.d("TESTING", "REVIEW HOST" + channelName)
-                        intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
-                        intent.putExtra(AppConstant.FRIEND_ID, data.receiver_id)
-                        intent.putExtra("friend_img", data.receiver_image).toString()
-                        intent.putExtra("friend_name", data.receiver_name).toString()
-                        intent.putExtra("user_name",data.sender_name)
+                       quickstartConversationsManager.deleteConversation(data.group_name,SessionManager(requireContext()).getUserId().toString())
+                    }else {
+                        val intent = Intent(requireContext(), ChatActivity::class.java)
+                        var channelName: String = data.group_name.toString()
+                        if (data.receiver_id.equals(userId.toString())) {
+                            intent.putExtra("user_img", data.receiver_image).toString()
+                            SessionManager(requireContext()).getUserId()
+                                ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
+                            Log.d("TESTING", "REVIEW HOST" + channelName)
+                            intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
+                            intent.putExtra(AppConstant.FRIEND_ID, data.sender_id)
+                            intent.putExtra("friend_img", data.sender_profile).toString()
+                            intent.putExtra("friend_name", data.sender_name).toString()
+                            intent.putExtra("user_name", data.receiver_name)
+                        } else {
+                            intent.putExtra("user_img", data.sender_profile).toString()
+                            SessionManager(requireContext()).getUserId()
+                                ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
+                            Log.d("TESTING", "REVIEW HOST" + channelName)
+                            intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
+                            intent.putExtra(AppConstant.FRIEND_ID, data.receiver_id)
+                            intent.putExtra("friend_img", data.receiver_image).toString()
+                            intent.putExtra("friend_name", data.receiver_name).toString()
+                            intent.putExtra("user_name", data.sender_name)
+                        }
+
+                        startActivity(intent)
                     }
-
-                    startActivity(intent)
                 }catch(e:Exception){
                     Log.d("TESTING","INSIDE THE CATCH BLOCK")
                 }
@@ -306,7 +306,17 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
     }
 
     override fun receivedNewMessage() {
+        requireActivity().runOnUiThread {
+            try {
+                quickstartConversationsManager.messages.forEach {
+                    Log.d("message ","*******"+it.messageBody  +" auther "+ it.conversation.uniqueName)
 
+                }
+
+            }catch (e:Exception){
+
+            }
+        }
     }
 
     override fun messageSentCallback() {
