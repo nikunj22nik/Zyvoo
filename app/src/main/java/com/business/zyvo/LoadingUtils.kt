@@ -108,6 +108,9 @@ open class LoadingUtils {
             okButton.setOnClickListener {
                 dialog.dismiss()
             }
+            cancelBtn.setOnClickListener {
+                dialog.dismiss()
+            }
 
             // Show the dialog
             dialog.show()
