@@ -93,9 +93,11 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener{
                 guestViewModel.getChatToken(it, "host").collect {
                     when (it) {
                         is NetworkResult.Success -> {
-                            it.data?.let { it1 -> sessionManager.setChatToken(it1)
-
-                            }
+                            Log.d("TESTING_TOKEN",it.data.toString()+" Token inside success")
+                            sessionManager.setChatToken(it.data.toString())
+//    it.data?.let { it1 -> sessionManager.setChatToken(it1)
+//
+//                            }
                         }
 
                         is NetworkResult.Error -> {

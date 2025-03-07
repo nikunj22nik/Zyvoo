@@ -100,7 +100,8 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
 
         if (NetworkMonitorCheck._isConnected.value) {
             LoadingUtils.showDialog(this,false)
-            quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"Host")
+
+            quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
             quickstartConversationsManager.setListener(this)
         }else{
             LoadingUtils.showSuccessDialog(this,"Please check your internet connection")
@@ -114,28 +115,22 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
 
     private fun initialize() {
 
-
-
-
-//        loadChat()
-
-
         binding.imgBack.setOnClickListener {
             finish()
         }
 
         binding.imgFile.setOnClickListener {
-            /*if (hasPermissions(this@ChatActivity, *PERMISSIONS)) {
+            if (hasPermissions(this@ChatActivity, *PERMISSIONS)) {
                 browsePicture()
             } else {
                 ActivityCompat.requestPermissions(this@ChatActivity, PERMISSIONS, REQUEST_IMAGE_CODE_ASK_PERMISSIONS)
-            }*/
-            browsePicture()
+            }
         }
 
         binding.sendBtn.setOnClickListener {
             if(NetworkMonitorCheck._isConnected.value) {
                 if (binding.etmassage.text.toString().trim().isNotEmpty()) {
+                    Log.d("TESTING","I am here in sending message")
                     quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
                 } else {
                     LoadingUtils.showErrorDialog(this, "Message can't be empty")
@@ -243,8 +238,10 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
         binding.etmassage.text.clear()
         runOnUiThread {
             if (quickstartConversationsManager.messages.size == 1) {
+                Log.d("TESTING","RECEIVE NEW MESSAGE 1")
                 loadRecyclerview(quickstartConversationsManager)
             } else {
+                Log.d("TESTING","RECEIVE NEW MESSAGE 2")
                 adapter.notifyItemRangeChanged(quickstartConversationsManager.messages.size, 1)
                 binding.rvChatting.scrollToPosition(quickstartConversationsManager.messages.size - 1)
                 binding.rvChatting.visibility = View.VISIBLE
@@ -320,9 +317,5 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             quickstartConversationsManager.sendMessageImage(uri.path, file)
         }
     }
-
-
-
-
 
 }

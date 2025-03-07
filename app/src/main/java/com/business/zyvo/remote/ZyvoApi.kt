@@ -7,6 +7,7 @@ import com.google.android.gms.common.annotation.KeepForSdkWithMembers
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -19,6 +20,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 import retrofit2.http.Part
+import retrofit2.http.Path
 import java.nio.file.DirectoryStream.Filter
 
 
@@ -646,5 +648,15 @@ interface ZyvoApi {
           @Field("user_id") userId :Int,
           @Field("type") type:String
     ) : Response<JsonObject>
+
+    @GET("get_countries")
+    suspend fun getCountries() : Response<JsonObject>
+
+    @GET("get_states/{value}")
+    suspend fun getValue(@Path("value") value: String): Response<JsonObject>
+
+    @GET("get_cities/{value}/{value1}")
+    suspend fun getCityName(@Path("value") country:String, @Path("value1") state :String) : Response<JsonObject>
+
 
 }

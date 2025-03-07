@@ -20,7 +20,9 @@ import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.datacla
 
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.NotificationScreenModel
+import com.business.zyvo.model.StateModel
 import com.business.zyvo.model.host.ChannelModel
+import com.business.zyvo.model.host.CountryModel
 import com.business.zyvo.model.host.HostReviewModel
 import com.business.zyvo.model.host.PaginationModel
 
@@ -37,7 +39,9 @@ import retrofit2.http.Field
 
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Response
 import retrofit2.http.Part
+import retrofit2.http.Path
 
 
 interface ZyvoRepository {
@@ -496,9 +500,18 @@ interface ZyvoRepository {
         @Part("routing_number") routingProperty : RequestBody,
         @Part bank_proof_document: MultipartBody.Part?,
         @Part verification_document_front : MultipartBody.Part?,
-        @Part verification_document_back : MultipartBody.Part?
+        @Part verification_document_back : MultipartBody.Part?,
+        @Part("bank_proof_type") bankProofType : RequestBody
     ): Flow<NetworkResult<String>>
 
+
+    suspend fun getCountries() : Flow<NetworkResult<MutableList<CountryModel>>>
+
+
+    suspend fun getState(@Path("value") value: String) : Flow<NetworkResult<MutableList<StateModel>>>
+
+
+    suspend fun getCityName( country:String,  state :String)  :Flow<NetworkResult<MutableList<String>>>
 
 }
 

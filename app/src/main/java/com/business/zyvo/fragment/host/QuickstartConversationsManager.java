@@ -91,6 +91,7 @@ public class QuickstartConversationsManager {
                 });
             }
         }).start();
+
     }
 
     void initializeWithAccessToken(final Context context, final String token, String DEFAULT_CONVERSATION_NAME, String userid) {
@@ -238,6 +239,10 @@ public class QuickstartConversationsManager {
                             }
                         }
                     });
+                }else {
+                    if (conversationsManagerListener != null) {
+                        conversationsManagerListener.reloadMessages();
+                    }
                 }
 
             } catch (Exception e) {
@@ -370,6 +375,7 @@ public class QuickstartConversationsManager {
             QuickstartConversationsManager.this.conversationsClient = conversationsClient;
             conversationsClient.addListener(QuickstartConversationsManager.this.mConversationsClientListener);
             Log.d(TAG, "Success creating Twilio Conversations Client");
+//            loadAllChannel(conversationsClient);
         }
 
         @Override
@@ -502,8 +508,6 @@ public class QuickstartConversationsManager {
                       Log.d("TESTING","Delete Chat here");
                   }
               });
-
-
 
             }
 

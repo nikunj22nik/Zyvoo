@@ -198,39 +198,59 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
     private fun callingJoinChannelApi(){
         lifecycleScope.launch {
+
             val session= SessionManager(requireContext())
+
             val userId = session.getUserId()
 
-            if (userId != null) {
+            if(userId != null) {
+
                 LoadingUtils.showDialog(requireContext(),true)
+
                 Log.d("TESTING_GUEST_ID",guestId.toString() +"GuestId IN Channel")
+
                 Log.d("TESTING_GUEST_ID",channelName.toString()+" channel Name")
+
                 viewModel.joinChatChannel(userId,guestId,channelName,"host").collect{
                    when(it){
                        is NetworkResult.Success ->{
                            LoadingUtils.hideDialog()
+
                            var userImage :String =  it.data?.sender_avatar.toString()
+
                            Log.d("TESTING_PROFILE_HOST",userImage)
+
                            var friendImage :String = it.data?.receiver_avatar.toString()
+
                            Log.d("TESTING_PROFILE_HOST",friendImage)
+
                            var friendName :String = ""
 
                            if(it.data?.receiver_name != null){
                                friendName = it.data.receiver_name
                            }
                            var userName = ""
+
                            userName = it.data?.sender_name.toString()
 
                            val intent = Intent(requireContext(),ChatActivity::class.java)
 
                            intent.putExtra("user_img",userImage).toString()
+
                            SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
+
                            Log.d("TESTING","REVIEW HOST"+channelName)
+
                            intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
+
                            intent.putExtra(AppConstant.FRIEND_ID,guestId.toString())
+
                            intent.putExtra("friend_img",friendImage).toString()
+
                            intent.putExtra("friend_name",friendName).toString()
+
                            intent.putExtra("user_name",userName)
+
                            startActivity(intent)
                        }
                        is NetworkResult.Error ->{
@@ -377,9 +397,10 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         binding.money.setText("$ " + data.booking_amount)
         adapterIncludeInBooking.updateAdapter(data.amenities)
         if (data.guest_id < data.host_id) {
-            channelName = "ZYVOO_" + data.guest_id + "_" + data.host_id +"_"+propertyId
-        } else {
-            channelName = "ZYVOO_" + data.host_id + "_" + data.guest_id +"_"+propertyId
+            channelName = "ZYVOOPRO_" + data.guest_id + "_" + data.host_id +"_"+propertyId
+        }
+        else {
+            channelName = "ZYVOOPRO_" + data.host_id + "_" + data.guest_id +"_"+propertyId
         }
 
         data.cleaning_fee?.let {

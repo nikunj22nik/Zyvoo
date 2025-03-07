@@ -760,9 +760,7 @@ private val startAutocomplete =
             }
 
             R.id.imageEditPhoneNumber -> {
-
                 dialogNumberVerification(requireContext())
-
             }
 
             R.id.textVisitHelpCenter -> {
@@ -789,8 +787,6 @@ private val startAutocomplete =
 
             R.id.textConfirmNow -> {
                 dialogEmailVerification(requireContext())
-
-
                 binding.textConfirmNow.visibility = View.GONE
                 binding.textVerified.visibility = View.VISIBLE
             }

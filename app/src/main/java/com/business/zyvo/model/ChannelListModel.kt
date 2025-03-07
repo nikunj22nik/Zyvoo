@@ -11,5 +11,6 @@ data class ChannelListModel(
     var lastMessage :String ="",
     var lastMessageTime :String ="",
     var isOnline :Boolean = false,
-    var property_title :String =""
+    var property_title :String ="",
+    var date :String =""
 )

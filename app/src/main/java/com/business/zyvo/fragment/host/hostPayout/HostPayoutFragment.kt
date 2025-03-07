@@ -1,11 +1,11 @@
 package com.business.zyvo.fragment.host.hostPayout
 
 import android.Manifest
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -13,11 +13,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -30,16 +30,14 @@ import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
-import com.business.zyvo.ScheduleEvent
 import com.business.zyvo.databinding.FragmentHostPayoutBinding
 import com.business.zyvo.fragment.host.hostPayout.viewmodel.HostPayoutViewModel
-import com.business.zyvo.fragment.host.placeOpen.model.PropertyResponse
-import com.business.zyvo.fragment.host.placeOpen.viewModel.PlaceOpenViewModel
+import com.business.zyvo.model.StateModel
+import com.business.zyvo.model.host.CountryModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CompressImage
 import com.business.zyvo.utils.MultipartUtils
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.gson.Gson
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
 import com.jaiselrahman.filepicker.model.MediaFile
@@ -51,9 +49,6 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 @AndroidEntryPoint
 class HostPayoutFragment : Fragment() {
@@ -98,6 +93,15 @@ class HostPayoutFragment : Fragment() {
     private var filefront: File? = null
     private var fileback: File? = null
     private var bankuploadfile: File? = null
+    private lateinit var bankuploadMultipart :MultipartBody.Part
+    private var countriesList :MutableList<CountryModel> = mutableListOf()
+    private var countriesListStr :MutableList<String> = mutableListOf()
+    private var countryCode:String =""
+    private var statetCode :String =""
+    private var cityCode :String =""
+    private var stateList :MutableList<StateModel> = mutableListOf()
+    private var stateListStr :MutableList<String> = mutableListOf()
+    private var cityListStr : MutableList<String> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +115,7 @@ class HostPayoutFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         binding = FragmentHostPayoutBinding.inflate(LayoutInflater.from(requireContext()),container,false)
         dateManager = DateManager(requireContext())
         session = SessionManager(requireActivity())
@@ -124,8 +128,33 @@ class HostPayoutFragment : Fragment() {
                     LoadingUtils.hideDialog()
                 }
             }
+
+            callingGetCountryApi()
+
         }
         return binding.root
+    }
+
+    private fun callingGetCountryApi(){
+        lifecycleScope.launch {
+            LoadingUtils.showDialog(requireContext(),false)
+            viewModel.getCountries().collect {
+               when(it){
+                   is NetworkResult.Success ->{
+                       countriesList = it.data!!
+                       countriesListStr= viewModel.getCountriesList(countriesList)
+                       binding.spinnerSelectCountry.setItems(countriesListStr)
+                       LoadingUtils.hideDialog()
+                   }
+                   is NetworkResult.Error ->{
+                       LoadingUtils.hideDialog()
+                   }
+                   else ->{
+
+                   }
+               }
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -143,57 +172,59 @@ class HostPayoutFragment : Fragment() {
 
     private fun setUpUi() {
         binding.imguploaddocument.setOnClickListener {
+//            if (hasPermissions(requireContext(), *permissions())) {
+//                val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
+//                dialog.setContentView(R.layout.alert_box_gallery_pdf)
+//                val layoutParams = WindowManager.LayoutParams()
+//                layoutParams.copyFrom(dialog.window!!.attributes)
+//                layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+//                layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+//                dialog.window!!.attributes = layoutParams
+//                val laygallery: LinearLayout = dialog.findViewById(R.id.lay_gallery)
+//                val laycamera: LinearLayout = dialog.findViewById(R.id.lay_camera)
+//                val view1: View = dialog.findViewById(R.id.view1)
+//                val laypdf: LinearLayout = dialog.findViewById(R.id.lay_pdf)
+//                view1.visibility = View.VISIBLE
+//                laycamera.visibility = View.VISIBLE
+//                laycamera.setOnClickListener {
+//                    dialog.dismiss()
+//                    imgtype = "camera"
+//                    ImagePicker.with(this)
+//                        .cameraOnly()
+//                        .crop()
+//                        .compress(1024)
+//                        .maxResultSize(1080, 1080)
+//                        .start()
+//                }
+//
+//                laygallery.setOnClickListener {
+//                    dialog.dismiss()
+//                    imgtype = "Gallery"
+//                    ImagePicker.with(this)
+//                        .galleryOnly()
+//                        .crop()
+//                        .compress(1024)
+//                        .maxResultSize(1080, 1080)
+//                        .start()
+//                }
+//
+//                laypdf.setOnClickListener {
+//                    imgtype = "pdffile"
+//                    dialog.dismiss()
+//                    //fileIntentMulti()
+//                      onUploadPdfClick()
+//                }
+//
+//                dialog.show()
+//            } else {
+//                Toast.makeText(
+//                    requireContext(),
+//                    "Please go to setting Enable Permission",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
 
-            if (hasPermissions(requireContext(), *permissions())) {
-                val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
-                dialog.setContentView(R.layout.alert_box_gallery_pdf)
-                val layoutParams = WindowManager.LayoutParams()
-                layoutParams.copyFrom(dialog.window!!.attributes)
-                layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-                layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-                dialog.window!!.attributes = layoutParams
-                val laygallery: LinearLayout = dialog.findViewById(R.id.lay_gallery)
-                val laycamera: LinearLayout = dialog.findViewById(R.id.lay_camera)
-                val view1: View = dialog.findViewById(R.id.view1)
-                val laypdf: LinearLayout = dialog.findViewById(R.id.lay_pdf)
-                view1.visibility = View.VISIBLE
-                laycamera.visibility = View.VISIBLE
-                laycamera.setOnClickListener {
-                    dialog.dismiss()
-                    imgtype = "camera"
-                    ImagePicker.with(this)
-                        .cameraOnly()
-                        .crop()
-                        .compress(1024)
-                        .maxResultSize(1080, 1080)
-                        .start()
-                }
-
-                laygallery.setOnClickListener {
-                    dialog.dismiss()
-                    imgtype = "Gallery"
-                    ImagePicker.with(this)
-                        .galleryOnly()
-                        .crop()
-                        .compress(1024)
-                        .maxResultSize(1080, 1080)
-                        .start()
-                }
-
-                laypdf.setOnClickListener {
-                    imgtype = "pdffile"
-                    dialog.dismiss()
-                    fileIntentMulti()
-                }
-
-                dialog.show()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Please go to setting Enable Permission",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            onUploadPdfClick()
         }
 
 
@@ -220,6 +251,8 @@ class HostPayoutFragment : Fragment() {
             }
         }
     }
+
+
     private fun fileIntentMulti() {
         val intent = Intent(requireContext(), FilePickerActivity::class.java)
         intent.putExtra(
@@ -248,13 +281,10 @@ class HostPayoutFragment : Fragment() {
             if (data?.data != null) {
                 if (imgtype.equals("front", true)) {
                     val uri = data.data!!
-
                     val paramName = "event_image[]"
-
                     filefront =  BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
                     filefrontid = "Yes"
                     binding.textChooseVerificationDocument.text = filefront.toString()
-
                 }
                 if (imgtype.equals("back", true)) {
                     val uri = data.data!!
@@ -262,16 +292,14 @@ class HostPayoutFragment : Fragment() {
                     fileback = BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
                     filebackid = "Yes"
                     binding.textChooseVerificationDocumentBack.text = fileback.toString()
-
                 }
-
                 if (imgtype.equals("camera", true)) {
                     val uri = data.data!!
                     bankuploadfile = BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
                     binding.textChooseBankProof.text = bankuploadfile.toString()
                     filebankid = "Yes"
-
                 }
+
                 if (imgtype.equals("Gallery", true)) {
                     val uri = data.data!!
                     bankuploadfile = BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
@@ -279,6 +307,7 @@ class HostPayoutFragment : Fragment() {
                     binding.textChooseBankProof.text = bankuploadfile.toString()
 
                 }
+
             }
         }
         if (requestCode == REQUEST_Folder) {
@@ -311,14 +340,90 @@ class HostPayoutFragment : Fragment() {
         }
         return p
     }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                openFilePicker() // Permission granted, open file picker
+            } else {
+                showPermissionDeniedMessage() // Handle permission denial
+            }
+        }
+
+    // Register for file picker result
+    private val pickPdfLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            if (uri != null) {
+                handleFileSelection(uri) // File selected, handle the URI
+            } else {
+                showFileSelectionCancelledMessage() // Handle file selection cancellation
+            }
+        }
+
+
+    fun onUploadPdfClick() {
+        // Check for permission to read external storage
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            // Request permission if not granted (only for Android 6.0 and above)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+            } else {
+                openFilePicker() // No need to request permission for versions below Android 6.0
+            }
+        } else {
+            openFilePicker() // Permission already granted, open the file picker
+        }
+    }
+
+    // Handle the file URI (upload it, display it, etc.)
+    private fun handleFileSelection(uri: Uri) {
+        // Handle file URI (e.g., upload or display the PDF)
+        Toast.makeText(requireContext(), "Selected PDF: $uri", Toast.LENGTH_LONG).show()
+
+       var bankResult  = MultipartUtils.uriToMultipartBodyPart(requireContext(),uri,"bank_proof_document")
+
+        if(bankResult != null){
+            bankuploadMultipart = bankResult
+            filebankid ="YES"
+            Log.d("TESTING_UPLOAD"," "+filebankid.toString())
+        }else{
+            Toast.makeText(requireContext(),"Error in converting result",Toast.LENGTH_SHORT).show()
+
+        }
+
+    }
+
+    // Handle the case when the user cancels the file selection
+    private fun showFileSelectionCancelledMessage() {
+        Toast.makeText(requireContext(), "File selection was cancelled.", Toast.LENGTH_SHORT).show()
+    }
+
+    // Handle the case when the user denies the permission
+    private fun showPermissionDeniedMessage() {
+        Toast.makeText(requireContext(), "Permission Denied. Cannot access files.", Toast.LENGTH_LONG).show()
+    }
+
+    // Open the file picker (using Storage Access Framework for all versions)
+    private fun openFilePicker() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // For Android 10 and above (Scoped Storage), use the Storage Access Framework (SAF)
+            pickPdfLauncher.launch("application/pdf")
+        } else {
+            // For Android versions below Android 10, use ACTION_GET_CONTENT
+            pickPdfLauncher.launch("application/pdf")
+        }
+    }
+
+
+
+
     private fun hasPermissions(context: Context, vararg permissions: String): Boolean =
         permissions.all {
             ActivityCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
 
     private fun toggleBankAccountAndDebitCard(){
-
-
         binding.textBankAccountToggle.setOnClickListener {
             binding.textDebitCardToggle.setBackgroundColor(Color.TRANSPARENT)
             binding.textBankAccountToggle.setBackgroundResource(R.drawable.selected_green_toogle_bg)
@@ -326,8 +431,6 @@ class HostPayoutFragment : Fragment() {
             binding.textDebitCardToggle.setTextColor(Color.parseColor("#06C169"))
             binding.cvBankAccount2.visibility = View.VISIBLE
             binding.cvDebitCard3.visibility = View.GONE
-
-
         }
 
         binding.textDebitCardToggle.setOnClickListener {
@@ -338,7 +441,6 @@ class HostPayoutFragment : Fragment() {
             binding.cvBankAccount2.visibility = View.GONE
             binding.cvDebitCard3.visibility = View.VISIBLE
         }
-
 
     }
 
@@ -371,11 +473,7 @@ class HostPayoutFragment : Fragment() {
 
             dateManager.showMonthSelectorDialog { selectedMonth ->
                 binding.etMonth.text = selectedMonth
-
-
             }
-
-
         }
 
         binding.etYear.setOnClickListener {
@@ -383,13 +481,9 @@ class HostPayoutFragment : Fragment() {
                 binding.etYear.text = selectedYear.toString()
             }
         }
-
-
     }
 
     fun spinners(){
-
-
         binding.spinnerSelectIDType.setItems(
             listOf("Driver license", "passport")
         )
@@ -419,9 +513,7 @@ class HostPayoutFragment : Fragment() {
         }
 
 
-        binding.spinnerSelectCountry.setItems(
-            listOf("USA", "UK","INDIA", "BRAZIL", "RUSSIA","CHINA")
-        )
+
 
 
         binding.spinnerSelectCountry.setOnFocusChangeListener { _, b ->
@@ -444,7 +536,8 @@ class HostPayoutFragment : Fragment() {
         binding.spinnerSelectCountry.setIsFocusable(true)
 
         binding.spinnerSelectCountry.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-
+            countryCode = countriesList.get(newIndex).iso2
+             selectState(countryCode)
         }
 
         binding.spinnerSelectState.setItems(
@@ -472,14 +565,11 @@ class HostPayoutFragment : Fragment() {
         binding.spinnerSelectState.setIsFocusable(true)
 
         binding.spinnerSelectState.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-
+            statetCode = stateList.get(newIndex).iso2
+            callingCityApi()
         }
-        binding.spinnerSelectCity.setItems(
-            listOf("NEW DELHI", "MUMBAI","KANPUR", "NOIDA")
-        )
 
-
-        binding.spinnerSelectCity.setOnFocusChangeListener { _, b ->
+       binding.spinnerSelectCity.setOnFocusChangeListener { _, b ->
             closeSelectCity = if (b) {
                 1
             } else {
@@ -529,7 +619,34 @@ class HostPayoutFragment : Fragment() {
 
         }
 
+    }
 
+    private fun selectState(code :String){
+        lifecycleScope.launch {
+            LoadingUtils.showDialog(requireContext(),false)
+            viewModel.getState(code).collect{
+                when(it){
+                    is NetworkResult.Success ->{
+                        stateList = it.data!!
+                        stateListStr = viewModel.getStateList(stateList)
+                        binding.spinnerSelectState.setItems(
+                            stateListStr
+                        )
+
+                        LoadingUtils.hideDialog()
+                    }
+                    is NetworkResult.Error ->{
+                        LoadingUtils.hideDialog()
+
+                    }
+                    else ->{
+                        LoadingUtils.hideDialog()
+
+                    }
+
+                }
+            }
+        }
     }
 
     private fun setUpBankEvent() {
@@ -588,18 +705,19 @@ class HostPayoutFragment : Fragment() {
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val addressBody = binding.etAddress.text.toString()
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val countryBody = binding.spinnerSelectCountry.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val shortStateNameBody = binding.spinnerSelectState.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val cityBody = binding.spinnerSelectCity.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val countryBody = countryCode.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+            val shortStateNameBody = statetCode.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+            val cityBody = cityCode.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
             val postalCodeBody = binding.etPostalCode.text.toString()
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
             val bankDocumentTypeBody = when (binding.spinnerSelectOption.getText().toString()) {
-                "Bank account statement" -> "statement".toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                "Voided cheque" -> "cheque".toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                else -> "letterhead".toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                "Bank account statement" -> "bank_statement".toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                "Voided cheque" -> "voided_check".toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                else -> "bank_letterhead".toRequestBody("multipart/form-data".toMediaTypeOrNull())
             }
             val deviceTypeBody = "Android".toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val tokenTypeBody =
@@ -636,40 +754,21 @@ class HostPayoutFragment : Fragment() {
                 null
             }
 
-            viewModel.addPayOut(
-                userIdPart,
-                firstNameBody,
-                lastNameBody,
-                emailBody,
-                phoneBody,
-                dobList,
-                idTypeBody,
-                ssnBody,
-                personalIdentificationNobody,
-                addressBody,
-                countryBody,
-                shortStateNameBody,
-                cityBody,
-                postalCodeBody,
-                bankNameBody,
-                accountHolderNameBody,
-                accountNumberBody,
-                accountNumberConfirmationBody,
-                routingPropertyBody,
-                filePart,
-                filePartFront,
-                filePartBack).collect{
+            viewModel.addPayOut(userIdPart, firstNameBody, lastNameBody, emailBody, phoneBody,
+                dobList, idTypeBody, ssnBody, personalIdentificationNobody, addressBody,
+                countryBody, shortStateNameBody, cityBody, postalCodeBody, bankNameBody,
+                accountHolderNameBody, accountNumberBody, accountNumberConfirmationBody,
+                routingPropertyBody, bankuploadMultipart, filePartFront,
+                filePartBack, bankDocumentTypeBody
+            ).collect{
                 when (it) {
-
                     is NetworkResult.Success -> {
                         showSuccessDialog(requireContext(), it.data!!)
-                    }
 
+                    }
                     is NetworkResult.Error -> {
                         showErrorDialog(requireContext(), it.message!!)
-
                     }
-
                     else -> {
 
                     }
@@ -681,7 +780,6 @@ class HostPayoutFragment : Fragment() {
 
 
     fun spinnersDebitCard(){
-
 
         binding.spinnerSelectIDTypeDebitCard.setItems(
             listOf("Driver license", "Passport")
@@ -740,11 +838,6 @@ class HostPayoutFragment : Fragment() {
 
         }
 
-        binding.spinnerSelectStateDebitCard.setItems(
-            listOf("UP", "MP","HARYANA", "PUNJAB", "ODISHA")
-        )
-
-
         binding.spinnerSelectStateDebitCard.setOnFocusChangeListener { _, b ->
             closeSelectStateCard = if (b) {
                 1
@@ -764,8 +857,9 @@ class HostPayoutFragment : Fragment() {
 
         binding.spinnerSelectStateDebitCard.setIsFocusable(true)
 
-        binding.spinnerSelectStateDebitCard.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-
+        binding.spinnerSelectState.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
+            statetCode = stateList.get(newIndex).iso2
+            callingCityApi()
         }
         binding.spinnerSelectCityDebitCard.setItems(
             listOf("NEW DELHI", "MUMBAI","KANPUR", "NOIDA")
@@ -792,6 +886,7 @@ class HostPayoutFragment : Fragment() {
         binding.spinnerSelectCity.setIsFocusable(true)
 
         binding.spinnerSelectCity.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
+            cityCode = cityListStr.get(newIndex)
 
         }
         binding.spinnerSelectOption.setItems(
@@ -823,6 +918,29 @@ class HostPayoutFragment : Fragment() {
         }
 
 
+    }
+
+    private fun callingCityApi(){
+        lifecycleScope.launch {
+            LoadingUtils.showDialog(requireContext(),false)
+            Log.d("TESTING_CODE","CountryCode is "+ countryCode+" State Code is"+ statetCode)
+            viewModel.getCityName(countryCode,statetCode).collect{
+                when(it){
+                    is NetworkResult.Success ->{
+                        LoadingUtils.hideDialog()
+                        cityListStr   = it.data!!
+                        binding.spinnerSelectCity.setItems(cityListStr)
+                    }
+                    is NetworkResult.Error ->{
+                        LoadingUtils.hideDialog()
+                        Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_SHORT).show()
+                    }
+                    else ->{
+                        LoadingUtils.hideDialog()
+                    }
+                }
+            }
+        }
     }
 
     private fun isValidation(): Boolean {

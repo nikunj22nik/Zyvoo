@@ -26,7 +26,9 @@ import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.MyBookingsModel
 
 import com.business.zyvo.model.NotificationScreenModel
+import com.business.zyvo.model.StateModel
 import com.business.zyvo.model.host.ChannelModel
+import com.business.zyvo.model.host.CountryModel
 import com.business.zyvo.model.host.HostReviewModel
 import com.business.zyvo.model.host.PaginationModel
 
@@ -55,6 +57,8 @@ import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
+import retrofit2.Response
+import retrofit2.http.Path
 import java.io.IOException
 import javax.inject.Inject
 
@@ -4269,7 +4273,8 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         routingProperty: RequestBody,
         bank_proof_document: MultipartBody.Part?,
         verification_document_front: MultipartBody.Part?,
-        verification_document_back: MultipartBody.Part?
+        verification_document_back: MultipartBody.Part?,
+        bankProofType : RequestBody
     ): Flow<NetworkResult<String>> = flow {
         emit(NetworkResult.Loading())
         try {
@@ -4301,6 +4306,144 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                     body()?.let { resp ->
                         if (resp.has("success") && resp.get("success").asBoolean) {
                             emit(NetworkResult.Success(resp.get("message").asString))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(e.message!!))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun getCountries(): Flow<NetworkResult<MutableList<CountryModel>>> = flow {
+        try {
+            api.getCountries().apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            var list = resp.get("data").asJsonArray
+                            var result = mutableListOf<CountryModel>()
+
+                            list.forEach {
+                                val model: CountryModel =
+                                    Gson().fromJson(it.toString(), CountryModel::class.java)
+                                result.add(model)
+                            }
+
+                            emit(NetworkResult.Success(result))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(e.message!!))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+    }
+
+    override suspend fun getState( value: String) : Flow<NetworkResult<MutableList<StateModel>>> = flow {
+        try {
+            api.getValue(value).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            var list = resp.get("data").asJsonArray
+                            var result = mutableListOf<StateModel>()
+
+                            list.forEach {
+                                val model: StateModel = Gson().fromJson(it.toString(), StateModel::class.java)
+                                result.add(model)
+                            }
+
+                            emit(NetworkResult.Success(result))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+                    try {
+                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                        emit(
+                            NetworkResult.Error(
+                                jsonObj?.getString("message") ?: AppConstant.unKnownError
+                            )
+                        )
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                        emit(NetworkResult.Error(e.message!!))
+                    }
+                }
+            }
+        } catch (e: HttpException) {
+            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: IOException) {
+            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+            emit(NetworkResult.Error(e.message!!))
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+            emit(NetworkResult.Error(e.message!!))
+        }
+
+    }
+
+    override suspend fun getCityName(country:String, state :String)  :Flow<NetworkResult<MutableList<String>>> = flow{
+        try {
+            api.getCityName(country,state).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            var list = resp.get("data").asJsonArray
+                            var result = mutableListOf<String>()
+
+                            list.forEach {
+                                var obj = it.asJsonObject
+                                result.add(obj.get("name").asString)
+                            }
+                            Log.d("TESTING_REPO","Size of city list "+result.size.toString())
+
+                            emit(NetworkResult.Success(result))
                         } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }

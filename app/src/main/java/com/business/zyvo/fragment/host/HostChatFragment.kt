@@ -35,18 +35,29 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversationsManagerListener {
+
     private var _binding: FragmentChatBinding? = null
+
     private val binding get() = _binding!!
+
     private lateinit var adapterChatList: AdapterChatList
+
     private val viewModel: ChatListHostViewModel by viewModels()
+
     var objects: Int = 0
+
     private var chatList :MutableList<ChannelListModel>  = mutableListOf()
+
     private  var userId :Int =-1
 
     private var filteredList: MutableList<ChannelListModel> = chatList.toMutableList()
+
     private var quickstartConversationsManager = QuickstartConversationsManager()
+
     private var map:HashMap<String,ChannelListModel> = HashMap<String,ChannelListModel>()
+
     private var loggedInUserId : Int =-1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,9 +117,6 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
             }
         })
 
-
-
-
         callingGetChatUser()
 
     }
@@ -158,10 +166,6 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
         })
     }
 
-
-
-
-
     fun filter(query: String) {
 //        filteredList = if (query.isEmpty()) {
 //            chatList.toMutableList()
@@ -195,7 +199,9 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                                     }
                                     Log.d("TESTING",map.size.toString() +" Map Size is ")
                                     Log.d("TESTING_TOKEN","Chat token is "+sessionManager.getChatToken())
-                                    quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", sessionManager.getUserId().toString())
+                                    var currentUserId = ""+SessionManager(requireContext()).getUserId()+"_"+SessionManager(requireContext()).getUserType()
+
+                                    quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", SessionManager(requireContext()).getUserId().toString())
 
             //                                reloadMessages()
                                 }
@@ -215,8 +221,6 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
             }
         }
     }
-
-
 
     private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
@@ -300,23 +304,50 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         (activity as? GuesMain)?.inboxColor()
     }
 
     override fun receivedNewMessage() {
-        requireActivity().runOnUiThread {
-            try {
-                quickstartConversationsManager.messages.forEach {
-                    Log.d("message ","*******"+it.messageBody  +" auther "+ it.conversation.uniqueName)
+        try {
+            requireActivity().runOnUiThread {
+                try {
+                    var position =0
+                    quickstartConversationsManager.messages.forEach {
+                        Log.d("message ","*******"+it.messageBody  +" auther "+ it.conversation.uniqueName)
+                        for(i in 0..chatList.size -1){
+                            position =i;
+                            if(it.conversation.uniqueName.equals(chatList.get(i).group_name)){
+                                var obj = map.get(it.conversation.uniqueName)
+                                obj?.lastMessage = it.messageBody
+                                obj?.lastMessageTime = TimeUtils.updateLastMsgTime(it.dateCreated)
+                                obj?.isOnline = false
+                                obj?.date=it.dateCreated
+                                Log.d("TESTING_DATE",it.dateCreated.toString())
+                                if (obj != null) {
+                                    chatList.set(position,obj)
+                                    map.put(it.conversation.uniqueName,obj)
+                                }
+                            }
+                        }
+                    }
 
+                    chatList.sortWith { o1, o2 ->
+                        if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+                    }
+
+                    adapterChatList.updateItem(chatList)
+
+                }catch (e:Exception){
+                    Log.d("******","msg :- "+e.message)
                 }
-
-            }catch (e:Exception){
-
             }
+        }catch (e:Exception){
+            Log.d("******","msg :- "+e.message)
         }
+
     }
 
     override fun messageSentCallback() {
@@ -346,9 +377,12 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                                 obj?.lastMessage = i.messageBody
                                 obj?.lastMessageTime = TimeUtils.updateLastMsgTime(i.dateCreated)
                                 obj?.isOnline = false
+                                obj?.date=i.dateCreated
+
 
                                 if (obj != null) {
                                     chatList.add(obj)
+                                    map.put(i.conversation.uniqueName,obj)
                                 }
                             }
                         } catch (e: Exception) {
@@ -360,10 +394,18 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
             }catch (e:Exception){
                 Log.d("******","msg :- "+e.message)
             }
+
+//            chatList.sortWith { o1, o2 ->
+//                if (o1?.da == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+//            }
+
+            chatList.sortWith { o1, o2 ->
+                if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+            }
+
             adapterChatList.updateItem(chatList)
         }
     }
-
 
 
 }
