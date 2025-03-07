@@ -79,6 +79,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -115,6 +116,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         intent.extras?.let {
             propertyId = intent.extras?.getString("propertyId")!!
             propertyMile = intent.extras?.getString("propertyMile")!!
+          //  var status: String = intent.getStringExtra("key_name").toString()
+           // Log.d(ErrorDialog.TAG, status)
         }
         Log.d(ErrorDialog.TAG, "I am in Restaurent Details")
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
@@ -212,9 +215,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.proTotalrating.text = it
                 }
                 propertyData?.reviews_total_count?.let {
-                    //"($it reviews)"
                     binding.proreviewCount.text = "("+ formatConvertCount(it) +" reviews)"
-                    binding.proTotalReview.text = "Reviews "+"("+formatConvertCount(it) +")"//"Reviews ($it)"
+                    binding.proTotalReview.text = "Reviews "+"("+formatConvertCount(it) +")"
                 }
                 propertyData?.min_booking_hours?.let {
                     binding.proBookingMin.text = convertHoursToHrMin(it.toDouble())
@@ -368,26 +370,17 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         popupView.findViewById<TextView>(R.id.itemHighestReview).setOnClickListener {
 
             binding.textReviewClick?.text ="Sort by: Highest Review"
-            filter = "highest_review"
-            pagination?.let {
-                    loadMoreReview(filter,(it.current_page).toString())
-            }
+            sortReviewsBy("Highest")
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemLowestReview).setOnClickListener {
             binding.textReviewClick?.text ="Sort by: Lowest Review"
-            filter = "lowest_review"
-            pagination?.let {
-                loadMoreReview(filter,(it.current_page).toString())
-            }
+            sortReviewsBy("Lowest")
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemRecentReview).setOnClickListener {
             binding.textReviewClick?.text ="Sort by: Recent Review"
-            filter = "recent_review"
-            pagination?.let {
-                loadMoreReview(filter,(it.current_page).toString())
-            }
+            sortReviewsBy("Recent")
             popupWindow.dismiss()
         }
 
@@ -444,6 +437,15 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             type = "text/plain"
         }
         startActivity(sendIntent)
+    }
+
+    private fun sortReviewsBy(option: String) {
+        when (option) {
+            "Highest" -> reviewList.sortByDescending { it.review_rating }
+            "Lowest" -> reviewList.sortBy { it.review_rating }
+            "Recent" -> reviewList.sortByDescending { it.review_date }
+        }
+        adapterReview.updateAdapter(reviewList)
     }
 
     private fun showPopupWindowForPets(anchorView: View) {
@@ -796,13 +798,13 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         binding.textstart.setText(selectedTime)
                         // Define the time formatter (12-hour format with AM/PM)
                         val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            DateTimeFormatter.ofPattern("hh:mm a")
+                            DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
                         } else {
                             TODO("VERSION.SDK_INT < O")
                         }
                         Log.d(ErrorDialog.TAG,selectedTime)
                         // Parse the start time string into a LocalTime object
-                        val startTime = LocalTime.parse(selectedTime.lowercase(), formatter)
+                        val startTime = LocalTime.parse(selectedTime, formatter)
                         // Add 2 hours to get the end time
                         val endTime = startTime.plusHours(binding.textHr.text.toString().replace(" hour","")
                             .toLong())
@@ -893,12 +895,15 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 val listType = object : TypeToken<List<Review>>() {}.type
-                                reviewList = Gson().fromJson(resp.first, listType)
+                                val localreviewList:MutableList<Review> = Gson().fromJson(resp.first, listType)
                                 pagination = Gson().fromJson(resp.second,
                                     Pagination::class.java)
+                                reviewList.addAll(localreviewList)
                                 reviewList?.let {
                                     if (it.isNotEmpty()){
                                         adapterReview.updateAdapter(it)
+                                        binding.proreviewCount.text = "("+ formatConvertCount(reviewList.size.toString()) +" reviews)"
+                                        binding.proTotalReview.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
                                     }
                                 }
 

@@ -191,9 +191,13 @@ object ErrorDialog {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun convertToTimeFormat(time: String): String {
-        val formatter = DateTimeFormatter.ofPattern("hh:mm a",Locale.ENGLISH) // Input format
-        val outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss") // Output format
-        return LocalTime.parse(time, formatter).format(outputFormatter)
+        var value  = ""
+        if (!time.equals("")) {
+            val formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH) // Input format
+            val outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss") // Output format
+            value =  LocalTime.parse(time, formatter).format(outputFormatter)
+        }
+        return value
     }
 
     fun calculatePercentage(value: Double?, percentage: Double?): Double  {

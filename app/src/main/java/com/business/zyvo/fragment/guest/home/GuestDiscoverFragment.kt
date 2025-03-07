@@ -16,6 +16,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Looper
@@ -34,6 +35,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
@@ -52,6 +54,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
+import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -63,6 +67,7 @@ import com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivit
 import com.business.zyvo.activity.guest.FiltersActivity
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
+import com.business.zyvo.activity.guest.sorryresult.SorryActivity
 import com.business.zyvo.adapter.WishlistAdapter
 import com.business.zyvo.adapter.guest.HomeScreenAdapter
 import com.business.zyvo.adapter.guest.HomeScreenAdapter.onItemClickListener
@@ -72,9 +77,11 @@ import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
 import com.business.zyvo.model.FilterRequest
 import com.business.zyvo.model.Location
+import com.business.zyvo.model.SearchFilterRequest
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.google.android.gms.common.api.GoogleApiClient
@@ -88,11 +95,17 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResult
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.stripe.android.ApiResultCallback
+import com.stripe.android.Stripe
+import com.stripe.android.model.CardParams
+import com.stripe.android.model.Token
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Objects
 
 @AndroidEntryPoint
 class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback,
@@ -100,6 +113,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
     lateinit var binding :FragmentGuestDiscoverBinding
     private lateinit var startForResult: ActivityResultLauncher<Intent>
+    private lateinit var startSearchForResult: ActivityResultLauncher<Intent>
     private val totalDuration = 20000L
     private lateinit var adapter: HomeScreenAdapter
     private lateinit var mapView: MapView
@@ -123,6 +137,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):
             View {
 
@@ -143,7 +158,41 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 val data = result.data
-                // Handle the result
+                // Handle the resultl
+                if (data!=null) {
+                    if (data?.extras?.getString("type").equals("filter")) {
+                        val value: FilterRequest = Gson().fromJson(
+                            data?.extras?.getString("requestData"), FilterRequest::class.java
+                        )
+                        value?.let {
+                            Log.d(ErrorDialog.TAG, Gson().toJson(value))
+                            filteredDataAPI(it)
+                        }
+                    }else{
+                        loadHomeApi()
+                    }
+                }
+            }
+        }
+
+        startSearchForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data = result.data
+                // Handle the resultl
+                if (data!=null) {
+                    if (data?.extras?.getString("type").equals("filter")) {
+                        val value: SearchFilterRequest = Gson().fromJson(
+                            data?.extras?.getString("SearchrequestData"),
+                            SearchFilterRequest::class.java
+                        )
+                        value?.let {
+                            Log.d(ErrorDialog.TAG, Gson().toJson(value))
+                            getHomeDataSearchFilter(it)
+                        }
+                    }else{
+                        loadHomeApi()
+                    }
+                }
             }
         }
         mapView = binding.map
@@ -159,6 +208,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
         binding.filterIcon.setOnClickListener {
             val intent = Intent(requireContext(),FiltersActivity::class.java)
+           // startActivity(intent)
             startForResult.launch(intent)
         }
 
@@ -182,12 +232,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 100)
         }
 
-        val filterData = arguments?.getParcelable<FilterRequest>("filter_data")
+     /*   val filterData = arguments?.getParcelable<FilterRequest>("filter_data")
         filterData?.let {
             Log.d("FilterData", "User ID: ${it.user_id}, Location: ${it.location}, Price: ${it.minimum_price} - ${it.maximum_price}")
 
             filteredDataAPI(it)
-        }
+        }*/
 
         return binding.root
     }
@@ -240,17 +290,17 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             R.id.textWhere ->{
                 val intent = Intent(requireContext(),WhereTimeActivity::class.java)
                 intent.putExtra(AppConstant.WHERE, AppConstant.WHERE)
-                startActivity(intent)
+                startSearchForResult.launch(intent)
             }
             R.id.textTime ->{
                 val intent = Intent(requireContext(),WhereTimeActivity::class.java)
                 intent.putExtra(AppConstant.TIME, AppConstant.TIME)
-                startActivity(intent)
+                startSearchForResult.launch(intent)
             }
             R.id.textActivity ->{
                 val intent = Intent(requireContext(),WhereTimeActivity::class.java)
                 intent.putExtra(AppConstant.ACTIVITY, AppConstant.ACTIVITY)
-                startActivity(intent)
+                startSearchForResult.launch(intent)
             }
             R.id.rl_show_map ->{
                 if(binding.recyclerViewBooking.visibility == View.VISIBLE){
@@ -294,6 +344,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     }
                 }
                 else{
+                    binding.clSearch.visibility = View.VISIBLE
                     binding.tvMapContent.setText("Show Map")
                     binding.rlMapView.visibility = View.GONE
                     binding.recyclerViewBooking.visibility = View.VISIBLE
@@ -317,6 +368,21 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 startActivity(intent)
             }
 
+        }
+    }
+
+    private fun dialogfullScreen() {
+        val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_full_screen)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
         }
     }
 
@@ -388,8 +454,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
             val dialogAdapter = WishlistAdapter(requireContext(),true, wishlistItem,object: OnClickListener{
                 override fun itemClick(obj: Int) {
-                    saveItemInWishlist(property_id, pos,wishlistItem?.get(pos)?.wishlist_id.toString(),
-                        dialog)
+                    try {
+                        saveItemInWishlist(property_id, pos,wishlistItem?.get(obj)?.wishlist_id.toString(),
+                            dialog)
+                    }catch (e:Exception){
+                        e.message
+                    }
                 }
 
             })
@@ -620,6 +690,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
 
     private fun getCurrentLocation() {
+        val sessionManager = SessionManager(requireContext())
         // Initialize Location manager
         val locationManager =
             requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -654,6 +725,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 if (location != null) {
                     latitude = location.latitude.toString()
                     longitude = location.longitude.toString()
+                    sessionManager.setGustLatitude(latitude)
+                    sessionManager.setGustLongitude(longitude)
                     loadHomeApi()
                 } else {
                     val locationRequest =
@@ -669,6 +742,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                             if (location1 != null) {
                                 latitude = location1.latitude.toString()
                                 longitude = location1.longitude.toString()
+                                sessionManager.setGustLatitude(latitude)
+                                sessionManager.setGustLongitude(longitude)
                                 loadHomeApi()
                             }
                         }
@@ -700,6 +775,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
+                                session?.setFilterRequest("")
+                                session?.setSearchFilterRequest("")
                                 val listType = object : TypeToken<List<HomePropertyData>>() {}.type
                                 val properties: MutableList<HomePropertyData> = Gson().fromJson(resp, listType)
                                 homePropertyData = properties
@@ -724,13 +801,68 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getHomeDataSearchFilter(filterRequest: SearchFilterRequest) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                guestDiscoverViewModel.getHomeDataSearchFilter(filterRequest.user_id,
+                    filterRequest.latitude,filterRequest.longitude,
+                    filterRequest.date,
+                    filterRequest.hour,
+                    filterRequest.date + " "+ErrorDialog.convertToTimeFormat(filterRequest.start_time),
+                    filterRequest.date +" "+ErrorDialog.convertToTimeFormat(filterRequest.end_time),
+                   /* filterRequest.start_time,
+                    filterRequest.end_time,*/
+                    filterRequest.activity,).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                session?.setFilterRequest("")
+                                session?.setSearchFilterRequest("")
+                                val listType = object : TypeToken<List<HomePropertyData>>() {}.type
+                                val properties: MutableList<HomePropertyData> = Gson().fromJson(resp, listType)
+                                homePropertyData = properties
+                                if (homePropertyData.isNotEmpty()) {
+                                    adapter.updateData(homePropertyData)
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                           // showErrorDialog(requireContext(), it.message!!)
+                            requireActivity().startActivity(Intent(requireActivity(),SorryActivity::class.java))
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
     private fun filteredDataAPI(filterRequest: FilterRequest) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                guestDiscoverViewModel.getFilterHomeDataApi(filterRequest.user_id,filterRequest.latitude,filterRequest.longitude,
-                    filterRequest.place_type,filterRequest.minimum_price,filterRequest.maximum_price,filterRequest.location,filterRequest.date,
-                    filterRequest.time,filterRequest.people_count,filterRequest.property_size,filterRequest.bedroom,filterRequest.bathroom,filterRequest.instant_booking,
-                    filterRequest.self_check_in,filterRequest.allows_pets,filterRequest.activities,filterRequest.amenities,filterRequest.languages).collect {
+                guestDiscoverViewModel.getFilterHomeDataApi(filterRequest.user_id,
+                    filterRequest.latitude,filterRequest.longitude,
+                    filterRequest.place_type,
+                    filterRequest.minimum_price,
+                    filterRequest.maximum_price,
+                    filterRequest.location,filterRequest.date,
+                    filterRequest.time,
+                    filterRequest.people_count,
+                    filterRequest.property_size,
+                    filterRequest.bedroom,
+                    filterRequest.bathroom,
+                    filterRequest.instant_booking,
+                    filterRequest.self_check_in,
+                    filterRequest.allows_pets,
+                    filterRequest.activities,
+                    filterRequest.amenities,filterRequest.languages).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
@@ -743,7 +875,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                             }
                         }
                         is NetworkResult.Error -> {
-                            showErrorDialog(requireContext(), it.message!!)
+                            requireActivity().startActivity(Intent(requireActivity(),SorryActivity::class.java))
+                           // showErrorDialog(requireContext(), it.message!!)
                         }
 
                         else -> {

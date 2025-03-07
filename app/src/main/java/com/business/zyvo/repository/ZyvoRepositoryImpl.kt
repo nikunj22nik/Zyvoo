@@ -55,6 +55,7 @@ import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
+import retrofit2.http.Field
 import java.io.IOException
 import javax.inject.Inject
 
@@ -1273,26 +1274,27 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         }
 
     override suspend fun getFilteredHomeData(
-        userId: Int?,
-        latitude: Double?,
-        longitude: Double?,
+        userId: String?,
+        latitude: String?,
+        longitude: String?,
         place_type: String?,
-        minimum_price: Double?,
-        maximum_price: Double?,
+        minimum_price: String?,
+        maximum_price: String?,
         location: String?,
         date: String?,
-        time: Int?,
-        people_count: Int?,
-        property_size: Int?,
-        bedroom: Int?,
-        bathroom: Int?,
-        instant_booking: Int?,
-        self_check_in: Int?,
-        allows_pets: Int?,
+        time: String?,
+        people_count: String?,
+        property_size: String?,
+        bedroom: String?,
+        bathroom: String?,
+        instant_booking: String?,
+        self_check_in: String?,
+        allows_pets: String?,
         activities: List<String>?,
         amenities: List<String>?,
         languages: List<String>?
     ): Flow<NetworkResult<JsonArray>> = flow {
+        emit(NetworkResult.Loading())
         try {
             api.getFilteredHomeData(
                 userId,
@@ -1322,7 +1324,6 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                             emit(AuthTask.processDataArray(resp))
                         }
                         else {
-
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
@@ -1340,6 +1341,7 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
     override suspend fun getBookingList(
         userId: String
     ): Flow<NetworkResult<MutableList<BookingModel>>> = flow {
+        emit(NetworkResult.Loading())
         try {
             val response = api.bookingList(userId)
             if (response.isSuccessful) {
@@ -1360,16 +1362,28 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
 
     override suspend fun getBookingDetailsList(
         userId: String,
-        booking_id: Int
-    ): Flow<NetworkResult<BookingDetailModel>> = flow {
+        booking_id: Int, latitude:String,longitude:String
+    ): Flow<NetworkResult<Pair<BookingDetailModel,JsonObject>>> = flow {
+        emit(NetworkResult.Loading())
         try {
-            val response = api.bookingDetailsList(userId,booking_id)
+            val response = api.bookingDetailsList(userId,booking_id,
+                latitude, longitude)
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null && body.has("success") && body.get("success").asBoolean) {
-                    Log.d("value44444","List $body")
-
-                    emit(AuthTask.processSingleData(body))
+                    val data:JsonObject = body.getAsJsonObject("data")
+                    val propertyId = data.get("property_id").asString
+                    val response =
+                        api.filterPropertyReviews(propertyId, "highest_review", "1")
+                    if (response.isSuccessful) {
+                        response.body()?.let { reviewResp ->
+                            // ✅ Emit both responses as Pair
+                            emit(NetworkResult.Success(Pair(AuthTask.processSingleDataChange(body)!!, reviewResp)))
+                        } ?: emit(NetworkResult.Error("Reviews response is empty"))
+                    } else {
+                        emit(NetworkResult.Error("Failed to load reviews"))
+                    }
+                   // emit(AuthTask.processSingleData(body))
                 } else {
                     emit(NetworkResult.Error(body?.get("message")?.asString ?: AppConstant.unKnownError))
                 }
@@ -1382,14 +1396,15 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
     }
 
     override suspend fun reviewPublish(
-        userId: Int,
-        booking_id: Int,
-        property_id: Int,
-        response_rate: Int,
-        communication: Int,
-        on_time: Int,
+        userId: String,
+        booking_id: String,
+        property_id: String,
+        response_rate: String,
+        communication: String,
+        on_time: String,
         review_message: String
     ): Flow<NetworkResult<ReviewModel>> = flow {
+        emit(NetworkResult.Loading())
         try {
             val response = api.getReviewPublish(userId,booking_id,property_id,response_rate,communication,on_time,review_message)
             if (response.isSuccessful) {
@@ -3941,7 +3956,10 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         total_amount : String,
         customer_id : String,
         card_id : String,
-        addons: Map<String, String>
+        addons: Map<String, String>,
+        service_fee : String,
+        tax : String,
+        discount_amount : String
     ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
@@ -3955,13 +3973,15 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
                 total_amount,
                 customer_id,
                 card_id,
-                addons
+                addons,
+                service_fee,
+                tax,
+                discount_amount
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success") && resp.get("success").asBoolean) {
                             emit(AuthTask.processData(resp))
-
                         } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
@@ -4125,7 +4145,89 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         }
     }
 
+    override suspend fun getBookingExtensionTimeAmount(
+        userId : String,
+        booking_id : String,
+        extension_time : String,
+        service_fee : String,
+        tax : String,
+        cleaning_fee:String,
+        extension_total_amount : String,
+        extension_booking_amount : String,
+        discount_amount : String
+    ): Flow<NetworkResult<JsonObject>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.getBookingExtensionTimeAmount(
+                userId,
+                booking_id,
+                extension_time,
+                service_fee,
+                tax,
+                cleaning_fee,
+                extension_total_amount,
+                extension_booking_amount,
+                discount_amount
+            ).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") && resp.get("success").asBoolean) {
+                            emit(AuthTask.processData(resp))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
 
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+
+    override suspend fun getHomeDataSearchFilter(
+        user_id : String,
+        latitude : String,
+        longitude : String,
+        date : String,
+        hour : String,
+        start_time : String,
+        end_time : String,
+        activity : String
+    ): Flow<NetworkResult<JsonArray>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.getHomeDataSearchFilter(
+                user_id, latitude, longitude,date,hour,start_time, end_time, activity
+            ).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(AuthTask.processDataArray(resp))
+                        } else {
+                            emit(NetworkResult.Error(resp.get("message").asString))
+                        }
+                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                } else {
+
+                    emit(
+                        NetworkResult.Error(
+                            ErrorHandler.handleErrorBody(
+                                this.errorBody()?.string()
+                            )
+                        )
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
 
 }
 

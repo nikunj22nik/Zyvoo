@@ -301,8 +301,8 @@ fun getRangeSelectedDateWithYear(
     }
 
     fun showHourSelectionDialog(context: Context, onHourSelected: (String) -> Unit) {
-        val timeOptions = mutableListOf("1 hour").apply {
-            addAll((2..24).map { "$it hour${if (it > 2) "s" else ""}" })
+        val timeOptions = mutableListOf("1 hours").apply {
+            addAll((2..24).map { "$it hour${if (it >= 2) "s" else ""}" })
         }.toTypedArray()
 
         val numberPicker = NumberPicker(context).apply {

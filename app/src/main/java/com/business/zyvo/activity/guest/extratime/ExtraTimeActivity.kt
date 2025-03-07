@@ -343,9 +343,12 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 binding.tvCleaningFee.text = "$$it"
                 totalPrice += it
             }
-            propertyData?.service_fee?.toDoubleOrNull()?.let {
-                binding.tvZyvoServiceFee.text = "$$it"
-                totalPrice += it
+            propertyData?.service_fee?.toDoubleOrNull()?.let {resp ->
+                hourlyTotal?.let {
+                    val taxAmount = calculatePercentage(it,resp)
+                    binding.tvZyvoServiceFee.text = "$$taxAmount"
+                    totalPrice += taxAmount
+                }
             }
             propertyData?.tax?.toDoubleOrNull()?.let {resp ->
                 hourlyTotal?.let {
@@ -368,7 +371,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 hour?.let { cHr->
                     propertyData?.bulk_discount_rate?.let {
                         if (cHr.toInt() > h) {
-                            discountAmount = (totalPrice * it.toDouble()) / 100
+                            discountAmount = (hourlyTotal * it.toDouble()) / 100
                             totalPrice -= discountAmount
                         }
                     }

@@ -3124,8 +3124,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
                     is NetworkResult.Success -> {
                         showErrorDialog(requireContext(),it.data!!)
-
                         val sessionManager = SessionManager(requireContext())
+                        sessionManager.logOut()
                         sessionManager.setUserId(-1)
                         val intent = Intent(requireContext(), AuthActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

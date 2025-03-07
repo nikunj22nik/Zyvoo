@@ -41,6 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_15sdp"
+                    android:id="@+id/clearAllBtn"
                     android:src="@drawable/ic_clear_all" />
 
                 <ImageView
@@ -79,7 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
-                        android:text="Where"
+                        android:hint="Where"
                         android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />
 
@@ -104,11 +105,22 @@
                     android:layout_marginVertical="@dimen/_7sdp"
                     android:visibility="gone">
 
-                    <EditText
+                    <AutoCompleteTextView
+                        android:id="@+id/et_search_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_7sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@null"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+
+                  <!--  <EditText
                         android:id="@+id/et_search_location"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@null" />
+                        android:background="@null" />-->
 
                 </RelativeLayout>
 

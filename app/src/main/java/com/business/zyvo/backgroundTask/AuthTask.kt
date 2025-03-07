@@ -102,6 +102,17 @@ class AuthTask {
                  NetworkResult.Error("Error parsing JSON: ${e.message}") // Handle JSON parsing errors
              }
          }
+         fun processSingleDataChange(apiResponse: JsonObject): BookingDetailModel?{
+             return try {
+                 // Convert JsonObject into BookingModel
+                 val bookingModel = Gson().fromJson(apiResponse, BookingDetailModel::class.java)
+                 Log.d("value4448789844","List $bookingModel")
+                 bookingModel
+             } catch (e: Exception) {
+                 Log.e("processSingleData", "Error parsing JSON: ${e.message}", e)
+                 null // Return null in case of an error
+             }
+         }
          
 
          fun processDataArray(apiResponse: JsonObject): NetworkResult<JsonArray> {
