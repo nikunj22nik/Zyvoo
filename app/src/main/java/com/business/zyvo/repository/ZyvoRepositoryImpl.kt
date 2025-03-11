@@ -4627,6 +4627,185 @@ import javax.inject.Inject
              }
          }
 
+     override suspend fun addPayCard(
+         userId: RequestBody,
+         token: RequestBody,
+         firstName: RequestBody,
+         lastName: RequestBody,
+         email: RequestBody,
+         dobList: List<MultipartBody.Part>,
+         ssnLast4: RequestBody,
+         phoneNumber: RequestBody,
+         address: RequestBody,
+         city: RequestBody,
+         state: RequestBody,
+         country: RequestBody,
+         postalCode: RequestBody,
+         idType: RequestBody,
+         idNumber: RequestBody,
+         verification_document_front: MultipartBody.Part?,
+         verification_document_back: MultipartBody.Part?
+     ): Flow<NetworkResult<String>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.addPayoutCard(
+                 userId,
+                 token,
+                 firstName,
+                 lastName,
+                 email,
+                 dobList,
+                 ssnLast4,
+                 phoneNumber,
+                 address,
+                 city,
+                 state,
+                 country,
+                 postalCode,
+                 idType,
+                 idNumber,
+                 verification_document_front,
+                 verification_document_back
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             emit(NetworkResult.Success(resp.get("message").asString))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+                     try {
+                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                         emit(
+                             NetworkResult.Error(
+                                 jsonObj?.getString("message") ?: AppConstant.unKnownError
+                             )
+                         )
+                     } catch (e: JSONException) {
+                         e.printStackTrace()
+                         emit(NetworkResult.Error(e.message!!))
+                     }
+                 }
+             }
+         } catch (e: HttpException) {
+             Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: IOException) {
+             Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: Exception) {
+             Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+             emit(NetworkResult.Error(e.message!!))
+         }
+     }
+
+     override suspend fun getPayoutMethods(userId: String): Flow<NetworkResult<JsonObject>>
+             = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.getPayoutMethods(
+                 userId
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             emit(NetworkResult.Success(resp))
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+     override suspend fun setPrimaryPayoutMethod(
+         userId: String,
+         payoutMethodId: String
+     ): Flow<NetworkResult<String>>
+             = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.setPrimaryPayoutMethod(
+                 userId,payoutMethodId
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             if (resp.has("message") &&  !resp.get("message").isJsonNull){
+                                 emit(NetworkResult.Success(resp.get("message").asString))
+                             }
+
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+     override suspend fun deletePayoutMethod(
+         userId: String,
+         payoutMethodId: String
+     ): Flow<NetworkResult<String>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.deletePayoutMethod(
+                 userId,payoutMethodId
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             if (resp.has("message") &&     !resp.get("message").isJsonNull)
+                                 emit(NetworkResult.Success(resp.get("message").asString))
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
 
 
 
