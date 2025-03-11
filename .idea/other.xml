@@ -70,6 +70,7 @@
           <option name="screenY" value="2340" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
+<<<<<<< Updated upstream
           <option name="api" value="34" />
           <option name="brand" value="samsung" />
           <option name="codename" value="a35x" />
@@ -81,6 +82,8 @@
           <option name="screenY" value="2340" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
+=======
+>>>>>>> Stashed changes
           <option name="api" value="31" />
           <option name="brand" value="samsung" />
           <option name="codename" value="a51" />
@@ -114,6 +117,7 @@
           <option name="screenY" value="1272" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
+<<<<<<< Updated upstream
           <option name="api" value="33" />
           <option name="brand" value="motorola" />
           <option name="codename" value="austin" />
@@ -125,6 +129,8 @@
           <option name="screenY" value="1600" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
+=======
+>>>>>>> Stashed changes
           <option name="api" value="33" />
           <option name="brand" value="samsung" />
           <option name="codename" value="b0q" />
@@ -290,6 +296,7 @@
           <option name="screenY" value="2340" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
+<<<<<<< Updated upstream
           <option name="api" value="34" />
           <option name="brand" value="samsung" />
           <option name="codename" value="gts7xllite" />
@@ -301,6 +308,8 @@
           <option name="screenY" value="2560" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
+=======
+>>>>>>> Stashed changes
           <option name="api" value="33" />
           <option name="brand" value="samsung" />
           <option name="codename" value="gts8uwifi" />
@@ -389,6 +398,7 @@
           <option name="screenY" value="1600" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
+<<<<<<< Updated upstream
           <option name="api" value="34" />
           <option name="brand" value="samsung" />
           <option name="codename" value="o1q" />
@@ -400,6 +410,8 @@
           <option name="screenY" value="2400" />
         </PersistentDeviceSelectionData>
         <PersistentDeviceSelectionData>
+=======
+>>>>>>> Stashed changes
           <option name="api" value="31" />
           <option name="brand" value="google" />
           <option name="codename" value="oriole" />

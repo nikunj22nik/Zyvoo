@@ -143,9 +143,9 @@ dependencies {
     implementation("com.google.firebase:firebase-crashlytics")
     implementation("com.google.firebase:firebase-analytics")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-
     //Stripe SDK
-    implementation ("com.stripe:stripe-android:16.3.0")
+    implementation("com.stripe:stripe-android:16.3.0")
+
 
 
 

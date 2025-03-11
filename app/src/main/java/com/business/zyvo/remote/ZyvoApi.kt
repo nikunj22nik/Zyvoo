@@ -635,6 +635,7 @@ interface ZyvoApi {
         @Part("account_number") account_number: RequestBody,
         @Part("account_number_confirmation") account_number_confirmation: RequestBody,
         @Part("routing_number") routing_number: RequestBody,
+        @Part("bank_proof_type") bankProofType : RequestBody,
         @Part bank_proof_document: MultipartBody.Part?,
         @Part verification_document_front: MultipartBody.Part?,
         @Part verification_document_back: MultipartBody.Part?
@@ -658,5 +659,48 @@ interface ZyvoApi {
     @GET("get_cities/{value}/{value1}")
     suspend fun getCityName(@Path("value") country:String, @Path("value1") state :String) : Response<JsonObject>
 
+
+    @Multipart
+    @POST("add_payout_card")
+    suspend fun addPayoutCard(
+        @Part("user_id") user_id: RequestBody,
+        @Part("token") token: RequestBody,
+        @Part("first_name") first_name: RequestBody,
+        @Part("last_name") last_name: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part dobList: List<MultipartBody.Part>,
+        @Part("ssn_last_4") ssn_last_4: RequestBody,
+        @Part("phone_number") phone_number: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("city") city: RequestBody,
+        @Part("state") state: RequestBody,
+        @Part("country") country: RequestBody,
+        @Part("postal_code") postal_code: RequestBody,
+        @Part("id_type") id_type: RequestBody,
+        @Part("id_number") id_number: RequestBody,
+        @Part verification_document_front: MultipartBody.Part?,
+        @Part verification_document_back: MultipartBody.Part?
+    ): Response<JsonObject>
+
+
+    @POST("get_payout_methods")
+    @FormUrlEncoded
+    suspend fun getPayoutMethods(
+        @Field("user_id") userId :String
+    ) : Response<JsonObject>
+
+    @POST("set_primary_payout_method")
+    @FormUrlEncoded
+    suspend fun setPrimaryPayoutMethod(
+        @Field("user_id") userId :String,
+        @Field("payout_method_id") payoutMethodId :String
+    ) : Response<JsonObject>
+
+    @POST("delete_payout_method")
+    @FormUrlEncoded
+    suspend fun deletePayoutMethod(
+        @Field("user_id") userId :String,
+        @Field("payout_method_id") payoutMethodId :String
+    ) : Response<JsonObject>
 
 }

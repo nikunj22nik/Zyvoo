@@ -463,4 +463,50 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         }
     }
 
+
+    suspend fun getPayoutMethods( userId: String):
+            Flow<NetworkResult<JsonObject>>{
+        return repository.getPayoutMethods(userId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun setPrimaryPayoutMethod( userId: String, payoutMethodId: String):
+            Flow<NetworkResult<String>>{
+        return repository.setPrimaryPayoutMethod(userId,payoutMethodId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun deletePayoutMethod( userId: String, payoutMethodId: String):
+            Flow<NetworkResult<String>>{
+        return repository.deletePayoutMethod(userId,payoutMethodId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
 }

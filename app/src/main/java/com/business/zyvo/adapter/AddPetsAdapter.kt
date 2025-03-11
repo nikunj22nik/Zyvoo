@@ -16,7 +16,8 @@ import com.business.zyvo.model.AddHobbiesModel
 import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.onItemClickData
 
-class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>, var listner : OnClickListener1,var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>, var listner : OnClickListener1,var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>()
+{
 
     private val uploadPetsCode = 1 // Represents normal location entries
     private val uploadPetsFixed = 0

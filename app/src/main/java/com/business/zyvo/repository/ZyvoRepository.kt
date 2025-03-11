@@ -479,29 +479,30 @@ interface ZyvoRepository {
                                 booking_id : String) :  Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun addPayOut(
-        @Part("user_id") userId : RequestBody,
-        @Part("first_name") firstName : RequestBody,
-        @Part("last_name") lastName : RequestBody,
-        @Part("email") email : RequestBody,
-        @Part("phone_number") phoneNumber: RequestBody,
-        @Part dobList:List<MultipartBody.Part>,
-        @Part("id_type") idType: RequestBody,
-        @Part("ssn_last_4")ssnLast4 : RequestBody,
-        @Part("id_number") idNumber : RequestBody,
-        @Part("address") address : RequestBody,
-        @Part("country") country: RequestBody,
-        @Part("state") state : RequestBody,
-        @Part("city") city : RequestBody,
-        @Part("postal_code") postalCode : RequestBody,
-        @Part("bank_name") bankName : RequestBody,
-        @Part("account_holder_name") accountHolderName : RequestBody,
-        @Part("account_number") accountNumber : RequestBody,
-        @Part("account_number_confirmation") accountNumberConfirmation : RequestBody,
-        @Part("routing_number") routingProperty : RequestBody,
-        @Part bank_proof_document: MultipartBody.Part?,
-        @Part verification_document_front : MultipartBody.Part?,
-        @Part verification_document_back : MultipartBody.Part?,
-        @Part("bank_proof_type") bankProofType : RequestBody
+        userId: RequestBody,
+        firstName: RequestBody,
+        lastName: RequestBody,
+        email: RequestBody,
+        phoneNumber: RequestBody,
+        dobList: List<MultipartBody.Part>,
+        idType: RequestBody,
+        ssnLast4: RequestBody,
+        idNumber: RequestBody,
+        address: RequestBody,
+        country: RequestBody,
+        state: RequestBody,
+        city: RequestBody,
+        postalCode: RequestBody,
+        bankName: RequestBody,
+        accountHolderName: RequestBody,
+        accountNumber: RequestBody,
+        accountNumberConfirmation: RequestBody,
+        routingProperty: RequestBody,
+        bankProofType : RequestBody,
+        bank_proof_document: MultipartBody.Part?,
+        verification_document_front: MultipartBody.Part?,
+        verification_document_back: MultipartBody.Part?
+
     ): Flow<NetworkResult<String>>
 
 
@@ -512,6 +513,41 @@ interface ZyvoRepository {
 
 
     suspend fun getCityName( country:String,  state :String)  :Flow<NetworkResult<MutableList<String>>>
+
+    suspend fun addPayCard(
+        userId: RequestBody,
+        token: RequestBody,
+        firstName: RequestBody,
+        lastName: RequestBody,
+        email: RequestBody,
+        dobList: List<MultipartBody.Part>,
+        ssnLast4: RequestBody,
+        phoneNumber: RequestBody,
+        address: RequestBody,
+        city: RequestBody,
+        state: RequestBody,
+        country: RequestBody,
+        postalCode: RequestBody,
+        idType: RequestBody,
+        idNumber: RequestBody,
+        verification_document_front: MultipartBody.Part?,
+        verification_document_back: MultipartBody.Part?
+    ): Flow<NetworkResult<String>>
+
+
+    suspend fun getPayoutMethods(
+        userId :String
+    ) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun setPrimaryPayoutMethod(
+    userId :String,
+    payoutMethodId :String,
+    ) : Flow<NetworkResult<String>>
+
+    suspend fun deletePayoutMethod(
+    userId :String,
+    payoutMethodId :String,
+    ) : Flow<NetworkResult<String>>
 
 }
 

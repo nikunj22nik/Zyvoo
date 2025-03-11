@@ -125,7 +125,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
-
                         android:padding="@dimen/_10sdp">
 
                         <TextView
@@ -258,6 +257,7 @@
                                 android:background="@drawable/edittext_bg"
                                 android:hint="Enter email"
                                 android:maxLines="1"
+                                android:inputType="textEmailAddress"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
@@ -1293,6 +1293,7 @@
                                 android:layout_toEndOf="@+id/imagePersonIconDebitCard"
                                 android:background="@drawable/edittext_bg"
                                 android:hint="Enter first name"
+                               android:singleLine="true"
                                 android:maxLines="1"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
@@ -1336,6 +1337,7 @@
                                 android:layout_toEndOf="@+id/imagePersonIconLastNameDebitCard"
                                 android:background="@drawable/edittext_bg"
                                 android:hint="Enter last name"
+                                android:singleLine="true"
                                 android:maxLines="1"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
@@ -1379,6 +1381,7 @@
                                 android:layout_toEndOf="@+id/imageEmailIconDebitCard"
                                 android:background="@drawable/edittext_bg"
                                 android:hint="Enter email"
+                                android:singleLine="true"
                                 android:maxLines="1"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
@@ -1422,7 +1425,10 @@
                                 android:layout_toEndOf="@+id/imagePhoneNumberIconDebitCard"
                                 android:background="@drawable/edittext_bg"
                                 android:hint="Enter phone"
+                                android:singleLine="true"
+                                android:inputType="number"
                                 android:maxLines="1"
+                                android:maxLength="15"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
@@ -1464,6 +1470,7 @@
                                 android:layout_toEndOf="@+id/imageDOBIconDebitCard"
                                 android:background="@drawable/edittext_bg"
                                 android:maxLines="1"
+                                android:singleLine="true"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_8sdp"
                                 android:text="MM/DD/YYYY"
@@ -1583,6 +1590,8 @@
                                 android:background="@drawable/edittext_bg"
                                 android:hint="Enter Identification Number"
                                 android:maxLines="1"
+                                android:inputType="number"
+                                android:singleLine="true"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
@@ -1624,6 +1633,9 @@
                                 android:layout_toEndOf="@+id/imageSSNIconDebitCard"
                                 android:background="@drawable/edittext_bg"
                                 android:hint="SSN"
+                                android:singleLine="true"
+                                android:maxLength="4"
+                                android:inputType="number"
                                 android:maxLines="1"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
@@ -1667,6 +1679,7 @@
                                 android:background="@drawable/edittext_bg"
                                 android:hint="Enter address"
                                 android:maxLines="1"
+                                android:singleLine="true"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
@@ -1711,13 +1724,14 @@
                                 android:padding="8dp"
                                 android:layout_below="@+id/textCountryDebitCard"
                                 android:layout_toEndOf="@+id/imageCountryIconDebitCard"
+
                                 android:paddingStart="@dimen/_20sdp"
-                                android:textColor="#3C4541"
                                 android:fontFamily="@font/poppins"
                                 android:textColorHint="#3C4541"
                                 android:textSize="@dimen/_10ssp"
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_arrow_padding="5dp"
+                                app:spinner_popup_max_height="@dimen/_180sdp"
                                 app:spinner_arrow_show="true"
                                 app:spinner_arrow_tint="#3A4B4C"
                                 app:spinner_divider_show="false"
@@ -1762,6 +1776,7 @@
                                 android:foreground="?attr/selectableItemBackground"
                                 android:hint="Select State"
                                 android:padding="8dp"
+                                app:spinner_popup_max_height="@dimen/_180sdp"
                                 android:layout_below="@+id/textStateDebitCard"
                                 android:layout_toEndOf="@+id/imageStateIconDebitCard"
                                 android:paddingStart="@dimen/_20sdp"
@@ -1815,6 +1830,7 @@
                                 android:foreground="?attr/selectableItemBackground"
                                 android:hint="Select City"
                                 android:padding="8dp"
+                                app:spinner_popup_max_height="@dimen/_180sdp"
                                 android:layout_below="@+id/textCityDebitCard"
                                 android:layout_toEndOf="@+id/imageCityIconDebitCard"
                                 android:paddingStart="@dimen/_20sdp"
@@ -1868,6 +1884,9 @@
                                 android:layout_toEndOf="@+id/imagePostalCodeIconDebitCard"
                                 android:background="@drawable/edittext_bg"
                                 android:hint="Postal Code"
+                                android:singleLine="true"
+                                android:inputType="number"
+                                android:maxLength="9"
                                 android:maxLines="1"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
@@ -1909,8 +1928,9 @@
                                 android:layout_marginStart="@dimen/_7sdp"
                                 android:layout_toEndOf="@+id/imageCardNumber"
                                 android:background="@drawable/edittext_bg"
-
+                                android:singleLine="true"
                                 android:maxLines="1"
+                                android:maxLength="19"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
@@ -1951,7 +1971,8 @@
                                 android:layout_marginStart="@dimen/_7sdp"
                                 android:layout_toEndOf="@+id/imageCVVNumber"
                                 android:background="@drawable/edittext_bg"
-
+                                android:singleLine="true"
+                                android:maxLength="4"
                                 android:maxLines="1"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
@@ -2147,7 +2168,7 @@
                                 android:background="@drawable/plain_edittext_bg">
 
                                 <TextView
-                                    android:id="@+id/textChooseVerificationDocumentDebitCardDebitCard"
+                                    android:id="@+id/textChooseVerificationDocumentDebitCard"
                                     android:layout_width="@dimen/_100sdp"
                                     android:layout_height="wrap_content"
                                     android:text="Choose a file"
@@ -2158,6 +2179,7 @@
                                     android:textColor="#8B8B8B"/>
 
                                 <TextView
+                                    android:id="@+id/layFrontCard"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Upload"
@@ -2198,6 +2220,7 @@
                                     android:textColor="#8B8B8B"/>
 
                                 <TextView
+                                    android:id="@+id/layBackCard"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Upload"

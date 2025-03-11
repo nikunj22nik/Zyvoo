@@ -46,13 +46,14 @@ import javax.inject.Inject
             accountNumber: RequestBody,
             accountNumberConfirmation: RequestBody,
             routingProperty: RequestBody,
+            bankDocumentTypeBody: RequestBody,
             bank_proof_document: MultipartBody.Part?,
             verification_document_front: MultipartBody.Part?,
-            verification_document_back: MultipartBody.Part?,
-            bankDocumentTypeBody: RequestBody
+            verification_document_back: MultipartBody.Part?
+
         ):
                 Flow<NetworkResult<String>> {
-            return repository.addPayOut(userId, firstName, lastName, email, phoneNumber, dobList, idType, ssnLast4, idNumber, address, country, state, city, postalCode, bankName, accountHolderName, accountNumber, accountNumberConfirmation, routingProperty, bank_proof_document, verification_document_front, verification_document_back, bankDocumentTypeBody).onEach {
+            return repository.addPayOut(userId, firstName, lastName, email, phoneNumber, dobList, idType, ssnLast4, idNumber, address, country, state, city, postalCode, bankName, accountHolderName, accountNumber, accountNumberConfirmation, routingProperty,bankDocumentTypeBody, bank_proof_document, verification_document_front, verification_document_back).onEach {
                 when (it) {
                     is NetworkResult.Loading -> {
                         isLoading.value = true
@@ -128,5 +129,54 @@ import javax.inject.Inject
 
 
 
+    suspend fun addPayOutCard(
+        userId: RequestBody,
+        token: RequestBody,
+        firstName: RequestBody,
+        lastName: RequestBody,
+        email: RequestBody,
+        dobList: List<MultipartBody.Part>,
+        ssnLast4: RequestBody,
+        phoneNumber: RequestBody,
+        address: RequestBody,
+        city: RequestBody,
+        state: RequestBody,
+        country: RequestBody,
+        postalCode: RequestBody,
+        idType: RequestBody,
+        idNumber: RequestBody,
+        verification_document_front: MultipartBody.Part?,
+        verification_document_back: MultipartBody.Part?
+    ): Flow<NetworkResult<String>> {
+        return repository.addPayCard( userId,
+            token,
+            firstName,
+            lastName,
+            email,
+            dobList,
+            ssnLast4,
+            phoneNumber,
+            address,
+            city,
+            state,
+            country,
+            postalCode,
+            idType,
+            idNumber,
+            verification_document_front,
+            verification_document_back).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                }
+                is NetworkResult.Success -> {
+                    isLoading.value = false
+                }
+                else -> {
+                    isLoading.value = false
+                }
+            }
+        }
+    }
 
 }

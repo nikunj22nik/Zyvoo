@@ -61,6 +61,7 @@ import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.OnLocalListener
@@ -73,10 +74,16 @@ import com.business.zyvo.adapter.AddLocationAdapter
 import com.business.zyvo.adapter.AddPetsAdapter
 import com.business.zyvo.adapter.AddWorkAdapter
 import com.business.zyvo.adapter.host.BankNameAdapter
+import com.business.zyvo.adapter.host.BankNameAdapterPayout
 import com.business.zyvo.adapter.host.CardNumberAdapter
+import com.business.zyvo.adapter.host.CardNumberAdapterPayout
 import com.business.zyvo.adapter.selectLanguage.LocaleAdapter
 import com.business.zyvo.databinding.FragmentHostProfileBinding
+import com.business.zyvo.fragment.both.browseArticleHost.model.BrowseArticleModel
 import com.business.zyvo.fragment.both.completeProfile.HasName
+import com.business.zyvo.fragment.guest.profile.model.BankAccountPayout
+import com.business.zyvo.fragment.guest.profile.model.CardPayout
+import com.business.zyvo.fragment.guest.profile.model.GetPayoutResponse
 import com.business.zyvo.fragment.guest.profile.model.UserProfile
 import com.business.zyvo.fragment.guest.profile.viewModel.ProfileViewModel
 import com.business.zyvo.model.AddHobbiesModel
@@ -115,6 +122,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private lateinit var dateManager: DateManager
     private lateinit var bankNameAdapter: BankNameAdapter
     private lateinit var cardNumberAdapter: CardNumberAdapter
+    private lateinit var bankNameAdapterPayout: BankNameAdapterPayout
+    private lateinit var cardNumberAdapterPayout: CardNumberAdapterPayout
     private lateinit var addPetsAdapter: AddPetsAdapter
     var userProfile: UserProfile? = null
     var imageBytes: ByteArray = byteArrayOf()
@@ -143,6 +152,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private var imageStatus = ""
     private var place = ""
     private var isDropdownOpen = false
+    private var isDropdownOpenpayout = false
     lateinit var navController: NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
@@ -154,6 +164,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
     private val list1 = mutableListOf<CountryLanguage>()
     private val list2 = mutableListOf<CountryLanguage>()
+
+    private val bankListPayout = mutableListOf<BankAccountPayout>()
+    private val cardListPayout = mutableListOf<CardPayout>()
 
 
 
@@ -243,6 +256,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         binding.textTermServices.setOnClickListener(this)
         adapterInitialize()
         paymentOpenCloseDropDown()
+        payoutOpenCloseDropDown()
+        getPayoutMethods()
         // Initialize Places API if not already initialized
         if (!Places.isInitialized()) {
             Places.initialize(requireActivity(), apiKey)
@@ -391,6 +406,19 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }
         bankNameAdapter.addItems(initialList1)
         cardNumberAdapter.addItems(initialList2)
+
+
+
+
+        bankNameAdapterPayout = BankNameAdapterPayout(requireContext(), list = bankListPayout,this)
+        cardNumberAdapterPayout = CardNumberAdapterPayout(requireContext(), list = cardListPayout ,this)
+        binding.recyclerViewPaymentCardListPayOut.adapter = bankNameAdapterPayout
+        binding.recyclerViewCardNumberListPayOut.adapter = cardNumberAdapterPayout
+
+        bankNameAdapterPayout.addItems(bankListPayout)
+        cardNumberAdapterPayout.addItems(cardListPayout)
+
+
         addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this, this)
     }
 
@@ -676,6 +704,35 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     }
 
 
+    private fun payoutOpenCloseDropDown() {
+        // Set initial drawable
+        binding.textPayOutMethod.setCompoundDrawablesWithIntrinsicBounds(
+            0,
+            0,
+            R.drawable.ic_dropdown_close,
+            0
+        )
+        binding.textPayOutMethod.setOnClickListener {
+            // Toggle the state
+            isDropdownOpenpayout = !isDropdownOpenpayout
+
+            val drawableRes = if (isDropdownOpenpayout) {
+                R.drawable.ic_dropdown_open
+            } else {
+                R.drawable.ic_dropdown_close
+            }
+            if (isDropdownOpenpayout) {
+
+                binding.rlBankNameAndCardNamePayOut.visibility = View.VISIBLE
+
+            } else if (!isDropdownOpenpayout) {
+                binding.rlBankNameAndCardNamePayOut.visibility = View.GONE
+            }
+            binding.textPayOutMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
+        }
+    }
+
+
 
     override fun itemClick(obj: Int, text: String, enteredText: String) {
         when (text) {
@@ -719,6 +776,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     }
 
                 }
+            }
+            "setPrimary" -> {
+                setPrimaryPayoutMethods(enteredText)
+            }
+
+            "delete" -> {
+                deletePayoutMethods(enteredText)
             }
         }
     }
@@ -2363,6 +2427,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 //                    addPetsAdapter.updatePets(petsList)
                 }
             }
+
+
         }
     }
 
@@ -3005,6 +3071,168 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
         }
     }
+
+    private fun getPayoutMethods(){
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        LoadingUtils.showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        getPayoutApi()
+                    }
+
+                }
+        }
+    }
+
+
+    private fun getPayoutApi(){
+        lifecycleScope.launch {
+            profileViewModel.getPayoutMethods(session?.getUserId().toString()).collect {
+                when (it) {
+
+                    is NetworkResult.Success -> {
+                        val model = Gson().fromJson(it.data, GetPayoutResponse::class.java)
+
+                        Log.d("API_RESPONSE_Payout", it.data.toString())
+
+                        // Ensure data is not null before accessing its properties
+                        model.data?.let { payoutData ->
+                            payoutData.bankAccounts?.let { bankList ->
+                                if (bankList.isNotEmpty()) {
+                                    bankNameAdapterPayout.addItems(bankList)
+                                }
+                            }
+
+                            payoutData.cards?.let { cardList ->
+                                if (cardList.isNotEmpty()) {
+                                    cardNumberAdapterPayout.addItems(cardList)
+                                }
+                            }
+                        } ?: run {
+                            // Handle case where `data` is null
+                            showErrorDialog(requireContext(), "Payout data is unavailable")
+                        }
+
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
+
+
+    private fun setPrimaryPayoutMethods(id: String){
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        LoadingUtils.showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        setPrimaryPayoutApi(id)
+                    }
+
+                }
+        }
+    }
+
+
+    private fun setPrimaryPayoutApi(id: String){
+        Log.d("idType",id)
+        lifecycleScope.launch {
+            profileViewModel.setPrimaryPayoutMethod(session?.getUserId().toString(),id).collect {
+                when (it) {
+
+                    is NetworkResult.Success -> {
+                        it.data?.let { it1 -> showSuccessDialog(requireContext(), it1) }
+                        getPayoutApi()
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
+
+    private fun deletePayoutMethods(id: String){
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        LoadingUtils.showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        deletePayoutApi(id)
+                    }
+
+                }
+        }
+    }
+
+
+    private fun deletePayoutApi(id: String){
+        Log.d("idType",id)
+        lifecycleScope.launch {
+            profileViewModel.deletePayoutMethod(session?.getUserId().toString(),id).collect {
+                when (it) {
+
+                    is NetworkResult.Success -> {
+                        it.data?.let { it1 -> showSuccessDialog(requireContext(), it1) }
+                        getPayoutApi()
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
+
 
 }
 
