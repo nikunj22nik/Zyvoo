@@ -11,6 +11,7 @@ import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddLanguageBinding
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.model.AddLanguageModel
+import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.onItemClickData
 
 class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLanguageModel>,var listner : OnClickListener1,var listner2 : onItemClickData)
@@ -23,11 +24,7 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
     inner class LanguageViewHolder(var binding: LayoutAddLanguageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(languageItem: AddLanguageModel) {
-            if (list.size >= 3) {
-                textAddNew?.visibility = View.GONE
-            } else {
-                textAddNew?.visibility  = View.VISIBLE
-            }
+
 
             binding.textMyWorkName.text = languageItem.name
             binding.imageCross.setOnClickListener {
@@ -48,6 +45,12 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
 //            binding.root.setOnClickListener {
 //                listner.itemClick(adapterPosition, "work") // Handle "Add New" button click
 //            }
+
+            if (list.size >= 3) {
+                binding.textAddNew.visibility = View.GONE
+            } else {
+                binding.textAddNew.visibility = View.VISIBLE
+            }
         }
 
     }
@@ -88,6 +91,10 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
     fun updateLanguage(newList: MutableList<AddLanguageModel>) {
 
         this.list = newList
+
+        if (list.isEmpty()) {
+            list.add(AddLanguageModel("Add New")) // Placeholder for "Add New"
+        }
         notifyDataSetChanged()
     }
 

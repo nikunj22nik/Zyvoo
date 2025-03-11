@@ -75,26 +75,16 @@ class GuesMain : AppCompatActivity(), OnClickListener {
     }
 
     private fun callingGetUserToken() {
-        var sessionManager = SessionManager(this)
-        var userId = sessionManager.getUserId()
+        val sessionManager = SessionManager(this)
+        val userId = sessionManager.getUserId()
         userId?.let {
             lifecycleScope.launch {
                 Log.d("TESTING_TOKEN", "HERE INSISE THE TOKEN")
-                guestViewModel.getChatToken(it, "guest").collect {
+                guestViewModel.getChatToken1(it, "guest").collect {
                     when (it) {
                         is NetworkResult.Success -> {
-                            Log.d("TESTING_TOKEN", "HERE SUCEESS THE TOKEN")
-
-                            it.data?.let { it1 ->
-                                {
-                                    Log.d(
-                                        "TESTING_TOKEN",
-                                        "HERE SUCEESS THE TOKEN" + it1.toString()
-                                    )
-
-                                    sessionManager.setChatToken(it1)
-                                }
-                            }
+                            Log.d("TESTING_TOKEN", "HERE SUCEESS THE TOKEN" +it.data)
+                            sessionManager.setChatToken(it.data.toString())
                         }
 
                         is NetworkResult.Error -> {
@@ -247,7 +237,7 @@ class GuesMain : AppCompatActivity(), OnClickListener {
 
             R.id.navigationInbox -> {
                 inboxColor()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.chatFragment)
+                findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostChatFragment)
             }
 
             R.id.navigationBookings -> {

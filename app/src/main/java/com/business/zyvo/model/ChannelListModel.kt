@@ -10,5 +10,7 @@ data class ChannelListModel(
     val sender_profile: String?,
     var lastMessage :String ="",
     var lastMessageTime :String ="",
-    var isOnline :Boolean = false
+    var isOnline :Boolean = false,
+    var property_title :String ="",
+    var date :String =""
 )

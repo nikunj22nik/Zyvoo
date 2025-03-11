@@ -7,6 +7,7 @@ import com.google.android.gms.common.annotation.KeepForSdkWithMembers
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -19,6 +20,7 @@ import retrofit2.http.POST
 import retrofit2.http.PUT
 
 import retrofit2.http.Part
+import retrofit2.http.Path
 import java.nio.file.DirectoryStream.Filter
 
 
@@ -32,22 +34,22 @@ interface ZyvoApi {
     @POST("login_phone_number")
     @FormUrlEncoded
     suspend fun loginPhoneNumber(@Field("phone_number")phoneNumber :String,
-                                  @Field("country_code")countryCode : String) : Response<JsonObject>
+                                 @Field("country_code")countryCode : String) : Response<JsonObject>
 
     @POST("otp_verify_login_phone")
     @FormUrlEncoded
     suspend fun otpVerifyLoginPhone(@Field("user_id")user_id :String,
-                                 @Field("otp")otp : String) : Response<JsonObject>
+                                    @Field("otp")otp : String) : Response<JsonObject>
 
     @POST("otp_verify_signup_phone")
     @FormUrlEncoded
     suspend fun otpVerifySignupPhone(@Field("temp_id")temp_id :String,
-                                    @Field("otp")otp : String) : Response<JsonObject>
+                                     @Field("otp")otp : String) : Response<JsonObject>
 
     @POST("login_email")
     @FormUrlEncoded
     suspend fun loginEmail(@Field("email")email :String,
-                                    @Field("password")password : String) : Response<JsonObject>
+                           @Field("password")password : String) : Response<JsonObject>
 
 
     @POST("signup_email")
@@ -74,7 +76,7 @@ interface ZyvoApi {
     @POST("reset_password")
     @FormUrlEncoded
     suspend fun resetPassword(@Field("user_id")user_id :String,
-                                        @Field("password")password :String,
+                              @Field("password")password :String,
                               @Field("password_confirmation")password_confirmation :String) : Response<JsonObject>
 
     @POST("get_user_profile")
@@ -124,6 +126,7 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun addMyWork(@Field("user_id")user_id :String,
                           @Field("work_name")work_name :String) : Response<JsonObject>
+
     @POST("delete_my_work")
     @FormUrlEncoded
     suspend fun deleteMyWork(@Field("user_id")user_id :String,
@@ -142,7 +145,8 @@ interface ZyvoApi {
     @POST("add_hobby")
     @FormUrlEncoded
     suspend fun addHobbies(@Field("user_id")user_id :String,
-                           @Field("hobby_name")hobbies_name :String) : Response<JsonObject>
+                           @Field("hobby_name")hobbies_name :String
+    ) : Response<JsonObject>
 
     @POST("delete_hobby")
     @FormUrlEncoded
@@ -600,6 +604,7 @@ interface ZyvoApi {
     ) :Response<JsonObject>
 
 
+
     @POST("join_channel")
     @FormUrlEncoded
     suspend fun joinChatChannel(
@@ -610,11 +615,57 @@ interface ZyvoApi {
     ) : Response<JsonObject>
     
 
+    @Multipart
+    @POST("add_payout_bank")
+    suspend fun addPayoutBank(
+        @Part("user_id") user_id: RequestBody,
+        @Part("first_name") first_name: RequestBody,
+        @Part("last_name") last_name: RequestBody,
+        @Part("email") email: RequestBody,
+        @Part("phone_number") phone_number: RequestBody,
+        @Part dobList: List<MultipartBody.Part>,
+        @Part("id_type") id_type: RequestBody,
+        @Part("ssn_last_4") ssn_last_4: RequestBody,
+        @Part("id_number") id_number: RequestBody,
+        @Part("address") address: RequestBody,
+        @Part("country") country: RequestBody,
+        @Part("state") state: RequestBody,
+        @Part("city") city: RequestBody,
+        @Part("postal_code") postal_code: RequestBody,
+        @Part("bank_name") bank_name: RequestBody,
+        @Part("account_holder_name") account_holder_name: RequestBody,
+        @Part("account_number") account_number: RequestBody,
+        @Part("account_number_confirmation") account_number_confirmation: RequestBody,
+        @Part("routing_number") routing_number: RequestBody,
+        @Part bank_proof_document: MultipartBody.Part?,
+        @Part verification_document_front: MultipartBody.Part?,
+        @Part verification_document_back: MultipartBody.Part?
+    ): Response<JsonObject>
+
+
+
     @POST("get_user_channels")
     @FormUrlEncoded
     suspend fun getUserChannel(
           @Field("user_id") userId :Int,
           @Field("type") type:String
+    ) : Response<JsonObject>
+
+    @GET("get_countries")
+    suspend fun getCountries() : Response<JsonObject>
+
+    @GET("get_states/{value}")
+    suspend fun getValue(@Path("value") value: String): Response<JsonObject>
+
+    @GET("get_cities/{value}/{value1}")
+    suspend fun getCityName(@Path("value") country:String, @Path("value1") state :String) : Response<JsonObject>
+
+    @POST("filter_property_reviews")
+    @FormUrlEncoded
+    suspend fun filterPropertyReviewsHost(
+        @Field("property_id") propertyId :Int,
+        @Field("filter") filter :String,
+        @Field("page") page :Int
     ) : Response<JsonObject>
 
 }

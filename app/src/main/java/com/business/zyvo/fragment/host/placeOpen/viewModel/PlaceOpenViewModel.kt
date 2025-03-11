@@ -15,7 +15,8 @@ import javax.inject.Inject
 class PlaceOpenViewModel @Inject constructor(
     private val repository: ZyvoRepository,
     val networkMonitor: NetworkMonitor
-) : ViewModel() {
+) : ViewModel()
+{
 
     val isLoading = MutableLiveData<Boolean>()
 
