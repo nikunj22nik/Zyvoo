@@ -716,9 +716,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
 
 
     @SuppressLint("SetTextI18n")
-    private fun saveCardStripe(dialog: Dialog,
-                               tokenId:String,
-                               saveasMail:Boolean) {
+    private fun saveCardStripe(dialog: Dialog, tokenId:String, saveasMail:Boolean) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 checkOutPayViewModel.saveCardStripe(session?.getUserId().toString(),

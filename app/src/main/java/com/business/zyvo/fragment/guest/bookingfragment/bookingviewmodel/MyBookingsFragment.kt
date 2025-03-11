@@ -37,7 +37,9 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
     private val bookingViewModel: BookingViewModel by viewModels()
     private lateinit var sessionManager: SessionManager
     private lateinit var adapterMyBookingsAdapter: MyBookingsAdapter
-    var bookingModel: BookingModel? = null
+    private var bookingModel: BookingModel? = null
+    private var fullBookingList: MutableList<BookingModel> = mutableListOf()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,17 +71,15 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
         }
         lifecycleScope.launch(Dispatchers.Main) {
             try {
-                var sessionManager = SessionManager(requireContext())
-                var userId = sessionManager.getUserId()
-                bookingViewModel.getBookingList(userId.toString()).collect {
+                bookingViewModel.getBookingList(sessionManager.getUserId().toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             LoadingUtils.hideDialog()
-                           var list = it.data
-
+                           val list = it.data
                             Log.d("API_RESPONSE", "Raw Response: $bookingModel")
                             if (list != null) {
-                                adapterMyBookingsAdapter.updateItem(list)
+                                fullBookingList = list.toMutableList()
+                                adapterMyBookingsAdapter.updateItem(fullBookingList)
                             }
                         }
                         is NetworkResult.Error -> {
@@ -108,15 +108,40 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
             true
         )
 
-        popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener { popupWindow.dismiss() }
-        popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener { popupWindow.dismiss() }
-        popupView.findViewById<TextView>(R.id.itemPending).setOnClickListener { popupWindow.dismiss() }
-        popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener { popupWindow.dismiss() }
-        popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener { popupWindow.dismiss() }
+        popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener {
+            adapterMyBookingsAdapter.updateItem(fullBookingList)
+            popupWindow.dismiss()
+        }
 
-        // Positioning logic
+        popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener {
+            filterBookingsByStatus("confirmed")
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.itemPending).setOnClickListener {
+            filterBookingsByStatus("pending")
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener {
+            filterBookingsByStatus("finished")
+            popupWindow.dismiss()
+        }
+
+        popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener {
+            filterBookingsByStatus("cancelled")
+            popupWindow.dismiss()
+        }
+
         popupWindow.elevation = 8.0f
         popupWindow.showAsDropDown(anchorView, 0, 0, Gravity.END)
+    }
+
+    private fun filterBookingsByStatus(status: String) {
+        val filteredList = fullBookingList.filter {
+            it.booking_status?.equals(status, ignoreCase = true) == true
+        }
+        adapterMyBookingsAdapter.updateItem(filteredList.toMutableList())
     }
 
     override fun onClick(view: View?) {

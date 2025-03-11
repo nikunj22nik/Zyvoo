@@ -33,11 +33,11 @@ class AddLocationAdapter(
 
         fun bind(location: AddLocationModel) {
 
-            if (list.size >= 3) {
-                textAddNew?.visibility = View.GONE
-            } else {
-                textAddNew?.visibility = View.VISIBLE
-            }
+//            if (list.size >= 3) {
+//                textAddNew?.visibility = View.GONE
+//            } else {
+//                textAddNew?.visibility = View.VISIBLE
+//            }
 
             binding.textLocationName.text = location.name // Bind location name to TextView
 
@@ -63,6 +63,12 @@ class AddLocationAdapter(
         }
 
         fun bind() {
+
+            if (list.size >= 3) {
+                binding.textAddNew?.visibility = View.GONE
+            } else {
+                binding.textAddNew?.visibility = View.VISIBLE
+            }
 
             // Logic for hiding/showing "Add New" button based on count
 
