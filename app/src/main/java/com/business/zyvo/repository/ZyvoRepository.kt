@@ -47,10 +47,8 @@ import retrofit2.http.Path
 interface ZyvoRepository {
 
 
-    suspend fun signUpPhoneNumber(
-        phoneNumber: String,
-        code: String
-    ): Flow<NetworkResult<Pair<String, String>>>
+    suspend fun signUpPhoneNumber(phoneNumber: String, code: String)
+    : Flow<NetworkResult<Pair<String, String>>>
 
     suspend fun loginPhoneNumber(
         phoneNumber: String,
@@ -380,8 +378,6 @@ interface ZyvoRepository {
                                        reportReasonId :Int,
                                        additionalDetail :String) : Flow<NetworkResult<String>>
 
-
-
     suspend fun getHomePropertyDetails(userId :String,
                                        propertyId :String) : Flow<NetworkResult<Pair<JsonObject, JsonObject>>>
 
@@ -512,6 +508,13 @@ interface ZyvoRepository {
 
 
     suspend fun getCityName( country:String,  state :String)  :Flow<NetworkResult<MutableList<String>>>
+
+
+    suspend fun filterPropertyReviewsHost(
+        propertyId :Int, filter :String, page :Int
+    ) : Flow<NetworkResult<Pair<JsonArray, JsonObject>>>
+
+
 
 }
 

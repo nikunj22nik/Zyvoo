@@ -34,22 +34,22 @@ interface ZyvoApi {
     @POST("login_phone_number")
     @FormUrlEncoded
     suspend fun loginPhoneNumber(@Field("phone_number")phoneNumber :String,
-                                  @Field("country_code")countryCode : String) : Response<JsonObject>
+                                 @Field("country_code")countryCode : String) : Response<JsonObject>
 
     @POST("otp_verify_login_phone")
     @FormUrlEncoded
     suspend fun otpVerifyLoginPhone(@Field("user_id")user_id :String,
-                                 @Field("otp")otp : String) : Response<JsonObject>
+                                    @Field("otp")otp : String) : Response<JsonObject>
 
     @POST("otp_verify_signup_phone")
     @FormUrlEncoded
     suspend fun otpVerifySignupPhone(@Field("temp_id")temp_id :String,
-                                    @Field("otp")otp : String) : Response<JsonObject>
+                                     @Field("otp")otp : String) : Response<JsonObject>
 
     @POST("login_email")
     @FormUrlEncoded
     suspend fun loginEmail(@Field("email")email :String,
-                                    @Field("password")password : String) : Response<JsonObject>
+                           @Field("password")password : String) : Response<JsonObject>
 
 
     @POST("signup_email")
@@ -76,7 +76,7 @@ interface ZyvoApi {
     @POST("reset_password")
     @FormUrlEncoded
     suspend fun resetPassword(@Field("user_id")user_id :String,
-                                        @Field("password")password :String,
+                              @Field("password")password :String,
                               @Field("password_confirmation")password_confirmation :String) : Response<JsonObject>
 
     @POST("get_user_profile")
@@ -126,6 +126,7 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun addMyWork(@Field("user_id")user_id :String,
                           @Field("work_name")work_name :String) : Response<JsonObject>
+
     @POST("delete_my_work")
     @FormUrlEncoded
     suspend fun deleteMyWork(@Field("user_id")user_id :String,
@@ -144,7 +145,8 @@ interface ZyvoApi {
     @POST("add_hobby")
     @FormUrlEncoded
     suspend fun addHobbies(@Field("user_id")user_id :String,
-                           @Field("hobby_name")hobbies_name :String) : Response<JsonObject>
+                           @Field("hobby_name")hobbies_name :String
+    ) : Response<JsonObject>
 
     @POST("delete_hobby")
     @FormUrlEncoded
@@ -658,5 +660,12 @@ interface ZyvoApi {
     @GET("get_cities/{value}/{value1}")
     suspend fun getCityName(@Path("value") country:String, @Path("value1") state :String) : Response<JsonObject>
 
+    @POST("filter_property_reviews")
+    @FormUrlEncoded
+    suspend fun filterPropertyReviewsHost(
+        @Field("property_id") propertyId :Int,
+        @Field("filter") filter :String,
+        @Field("page") page :Int
+    ) : Response<JsonObject>
 
 }

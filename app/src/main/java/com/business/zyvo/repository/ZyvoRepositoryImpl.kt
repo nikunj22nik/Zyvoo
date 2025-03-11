@@ -62,7 +62,7 @@ import retrofit2.http.Path
 import java.io.IOException
 import javax.inject.Inject
 
-class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRepository {
+ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRepository {
 
     override suspend fun signUpPhoneNumber(
         phoneNumber: String,
@@ -4474,6 +4474,51 @@ class ZyvoRepositoryImpl @Inject constructor(private val api: ZyvoApi) : ZyvoRep
         }
     }
 
+
+     override suspend fun filterPropertyReviewsHost(
+         propertyId :Int, filter :String, page :Int
+     ) : Flow<NetworkResult<Pair<JsonArray, JsonObject>>> = flow{
+         try {
+             api.filterPropertyReviewsHost(propertyId, filter, page).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             var list = resp.get("data").asJsonArray
+                             var obj = resp.get("pagination").asJsonObject
+                             var p = Pair<JsonArray, JsonObject>(list,obj)
+
+                             emit(NetworkResult.Success(p))
+
+                           //  emit(NetworkResult.Success(result))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+                     try {
+                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                         emit(
+                             NetworkResult.Error(
+                                 jsonObj?.getString("message") ?: AppConstant.unKnownError
+                             )
+                         )
+                     } catch (e: JSONException) {
+                         e.printStackTrace()
+                         emit(NetworkResult.Error(e.message!!))
+                     }
+                 }
+             }
+         } catch (e: HttpException) {
+             Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: IOException) {
+             Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: Exception) {
+             Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+             emit(NetworkResult.Error(e.message!!))
+         }
+     }
 
 }
 
