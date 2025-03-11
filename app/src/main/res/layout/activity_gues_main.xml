@@ -12,7 +12,6 @@
         android:id="@+id/fragmentContainerView_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         app:layout_constraintBottom_toTopOf="@id/lay1"
         app:navGraph="@navigation/guest_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"

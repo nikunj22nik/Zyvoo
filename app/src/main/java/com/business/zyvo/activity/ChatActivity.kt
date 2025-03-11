@@ -75,8 +75,6 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             imm.showSoftInput(binding.etmassage, InputMethodManager.SHOW_IMPLICIT)
         }
 
-
-
         if (intent.extras != null) {
             profileImage = intent?.extras?.getString("user_img").toString()
             providertoken = sessionManagement.getChatToken().toString()
@@ -90,6 +88,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             binding.tvStatus.setText(friend_name)
 
             Glide.with(this).load(AppConstant.BASE_URL+ friendprofileimage).error(R.drawable.ic_img_not_found).into(binding.imageProfilePicture)
+
         }
 
         binding.etmassage.setOnClickListener {
@@ -102,6 +101,8 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             LoadingUtils.showDialog(this,false)
 
             quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
+
+
             quickstartConversationsManager.setListener(this)
         }else{
             LoadingUtils.showSuccessDialog(this,"Please check your internet connection")
@@ -140,7 +141,6 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             }
         }
 
-
     }
 
     private fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
@@ -158,6 +158,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
         return true
     }
 
+
     private fun browsePicture() {
         val items = arrayOf<CharSequence>("Choose from gallery", "Take a photo", "File", "Cancel")
         val builder = AlertDialog.Builder(this@ChatActivity)
@@ -172,13 +173,15 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             } else if (items[item] == "Take a photo") {
                 try {
                     cameraIntent()
-                } catch (e: Exception) {
+                }
+                catch (e: Exception) {
                     Log.v("Exception", e.message!!)
                 }
             } else if (items[item] == "File") {
                 try {
                     fileIntent()
-                } catch (e: Exception) {
+                }
+                catch (e: Exception) {
                     Log.v("Exception", e.message!!)
                 }
             } else if (items[item] == "Cancel") {
@@ -187,6 +190,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
         }
         builder.show()
     }
+
 
     private fun cameraIntent() {
         ImagePicker.with(this)
@@ -200,6 +204,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             .start()
     }
 
+
     private fun galleryIntent() {
         ImagePicker.with(this)
             .crop()
@@ -211,6 +216,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             ) //Final image resolution will be less than 1080 x 1080(Optional)
             .start()
     }
+
 
     private fun fileIntent(){
         val intent = Intent(this@ChatActivity, FilePickerActivity::class.java)
@@ -249,6 +255,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
         }
     }
 
+
     private fun loadRecyclerview(quickstartConversationsManager: QuickstartConversationsManager) {
         adapter = ChatDetailsAdapter(this, quickstartConversationsManager, userId.toString(),profileImage,friendprofileimage,friend_name,userName)
         binding.rvChatting.adapter = adapter
@@ -256,8 +263,10 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
         binding.rvChatting.visibility = View.VISIBLE
     }
 
+
     override fun messageSentCallback() {
     }
+
 
     override fun reloadMessages() {
         LoadingUtils.hideDialog()
@@ -270,7 +279,6 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             }
         }
     }
-
 
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -290,6 +298,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             }
         }
     }
+
 
     private fun onSelectFromFolderResult(data: Intent?) {
         if (data != null) {
@@ -317,5 +326,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
             quickstartConversationsManager.sendMessageImage(uri.path, file)
         }
     }
+
+
 
 }

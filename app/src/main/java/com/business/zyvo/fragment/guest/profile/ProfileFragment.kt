@@ -61,6 +61,8 @@ import com.business.zyvo.R
 import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.HostMainActivity
+import com.business.zyvo.activity.guest.checkout.model.MailingAddress
+import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.adapter.AdapterAddPaymentCard
 import com.business.zyvo.adapter.AddHobbiesAdapter
 import com.business.zyvo.adapter.AddLanguageSpeakAdapter
@@ -82,6 +84,7 @@ import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -90,9 +93,14 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.hbb20.CountryCodePicker
+import com.stripe.android.ApiResultCallback
+import com.stripe.android.Stripe
+import com.stripe.android.model.CardParams
+import com.stripe.android.model.Token
 import com.withpersona.sdk2.inquiry.Environment
 import com.withpersona.sdk2.inquiry.Fields
 import com.withpersona.sdk2.inquiry.Inquiry
@@ -104,6 +112,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
+import java.util.Objects
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener ,
@@ -127,14 +136,16 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     private var locationList: MutableList<AddLocationModel> = mutableListOf()
     private var workList: MutableList<AddWorkModel> = mutableListOf()
     private var languageList: MutableList<AddLanguageModel> = mutableListOf()
+    var userCardsList: MutableList<UserCards> = mutableListOf()
     private lateinit var apiKey: String
     private lateinit var localeAdapter: LocaleAdapter
     private var locales: List<Locale> = listOf()
     private var etSearch: TextView? = null
     private var bottomSheetDialog: BottomSheetDialog? = null
     private var imageStatus = ""
-    private var place = ""
+    var customerId = ""
     private var isDropdownOpen = false
+    var selectuserCard:UserCards?=null
     lateinit var navController: NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
@@ -160,7 +171,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
                     // Update the list and notify adapter in one step
                     locationList.add(locationList.size-1, newLocation)
-                   // addLocationAdapter.notifyItemInserted(0)
+                    // addLocationAdapter.notifyItemInserted(0)
                     addLocationAdapter.updateLocations(locationList)
 
                     Log.i(ErrorDialog.TAG, "Place: $placeName, ${place.id}")
@@ -178,27 +189,27 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         commonAuthWorkUtils = CommonAuthWorkUtils(requireContext(), navController)
         apiKey = getString(R.string.api_key)
 
-            getInquiryResult = registerForActivityResult(Inquiry.Contract()) { result ->
-                when (result) {
-                    is InquiryResponse.Complete -> {
-                        // User identity verification completed successfully
-                        verifyIdentityApi()
-                    }
-                    is InquiryResponse.Cancel -> {
-                        // User abandoned the verification process
-                        binding.textConfirmNow2.visibility = View.VISIBLE
-                        binding.textVerified2.visibility = GONE
-                        Toast.makeText(requireContext(),"Request Cancelled",Toast.LENGTH_LONG).show()
-                    }
-                    is InquiryResponse.Error -> {
-                        // Error occurred during identity verification
-                        binding.textConfirmNow2.visibility = View.VISIBLE
-                        binding.textVerified2.visibility = GONE
-                        Toast.makeText(requireContext(),"Error Occurred, Try Again",Toast.LENGTH_LONG).show()
+        getInquiryResult = registerForActivityResult(Inquiry.Contract()) { result ->
+            when (result) {
+                is InquiryResponse.Complete -> {
+                    // User identity verification completed successfully
+                    verifyIdentityApi()
+                }
+                is InquiryResponse.Cancel -> {
+                    // User abandoned the verification process
+                    binding.textConfirmNow2.visibility = View.VISIBLE
+                    binding.textVerified2.visibility = GONE
+                    Toast.makeText(requireContext(),"Request Cancelled",Toast.LENGTH_LONG).show()
+                }
+                is InquiryResponse.Error -> {
+                    // Error occurred during identity verification
+                    binding.textConfirmNow2.visibility = View.VISIBLE
+                    binding.textVerified2.visibility = GONE
+                    Toast.makeText(requireContext(),"Error Occurred, Try Again",Toast.LENGTH_LONG).show()
 
-                    }
                 }
             }
+        }
 
     }
 
@@ -213,7 +224,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         // Inflate the layout for this fragment
         binding =
             FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
-      //  val newLocation = AddLocationModel(AppConstant.unknownLocation)
+
+       // val newLocation = AddLocationModel(AppConstant.unknownLocation)
+
+        //  val newLocation = AddLocationModel(AppConstant.unknownLocation)
+
 
 
         binding.switchHost.setOnClickListener {
@@ -226,6 +241,19 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             startActivity(intent)
         }
+
+       // locationList.add(newLocation)
+        val newWork = AddWorkModel(AppConstant.unknownLocation)
+        workList.add(newWork)
+        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
+        languageList.add(newLanguage)
+        val newHobbies = AddHobbiesModel(AppConstant.unknownLocation)
+
+        hobbiesList.add(newHobbies)
+        val newPets = AddPetsModel(AppConstant.unknownLocation)
+
+        petsList.add(newPets)
+
 //        locationList.add(newLocation)
 //       val newWork = AddWorkModel(AppConstant.unknownLocation)
 //        workList.add(newWork)
@@ -239,10 +267,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 //        petsList.add(newPets)
 
 
+
         addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf(),this)
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
         profileViewModel.paymentCardList.observe(viewLifecycleOwner) { payment ->
-          //  addPaymentCardAdapter.updateItem(payment)
+            //  addPaymentCardAdapter.updateItem(payment)
         }
 
         session = SessionManager(requireActivity())
@@ -668,7 +697,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     }
 
     private fun paymentOpenCloseDropDown() {
-
         // Set initial drawable
         binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(
             0,
@@ -680,29 +708,24 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         binding.textPaymentMethod.setOnClickListener {
             // Toggle the state
             isDropdownOpen = !isDropdownOpen
-
             // Change the drawable based on the state
             val drawableRes = if (isDropdownOpen) {
                 R.drawable.ic_dropdown_open
             } else {
                 R.drawable.ic_dropdown_close
             }
-
             if (isDropdownOpen) {
                 binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
                 binding.textAddNewPaymentCard.visibility = View.VISIBLE
-
                 // API Call only if not already loaded
                 if (!isPaymentDataLoaded) {
-//                    getPaymentDetails()
+                    getUserCards()
                     isPaymentDataLoaded = true
                 }
-
             } else {
                 binding.recyclerViewPaymentCardList.visibility = GONE
                 binding.textAddNewPaymentCard.visibility = GONE
             }
-
             binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
         }
     }
@@ -761,15 +784,12 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 findNavController().navigate(R.id.privacyPolicyFragment, bundle)
             }
 
-
             R.id.textFaq -> {
-
                 findNavController().navigate(R.id.frequentlyAskedQuestionsFragment)
             }
 
             R.id.rlPasswordTitle -> {
                 var text = "Your password has been changed successfully"
-
                 dialogNewPassword(requireContext(), text)
             }
 
@@ -812,28 +832,19 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
 
             R.id.textConfirmNow -> {
-
-
                 dialogEmailVerification(requireContext())
-
-                binding.textConfirmNow.visibility = GONE
-                binding.textVerified.visibility = View.VISIBLE
             }
 
             R.id.textConfirmNow1 -> {
                 dialogNumberVerification(requireContext())
-                binding.textConfirmNow1.visibility = GONE
-                binding.textVerified1.visibility = View.VISIBLE
             }
 
             R.id.imageEditEmail -> {
-
                 dialogEmailVerification(requireContext())
             }
 
             R.id.imageEditPhoneNumber -> {
                 dialogNumberVerification(requireContext())
-
             }
 
 
@@ -858,42 +869,42 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     }
 
     @SuppressLint("SetTextI18n")
-//    private fun getUserCards() {
-//        if (NetworkMonitorCheck._isConnected.value) {
-//            lifecycleScope.launch(Dispatchers.Main) {
-//                profileViewModel.getUserCards(session?.getUserId().toString()).collect {
-//                    when (it) {
-//                        is NetworkResult.Success -> {
-//                            it.data?.let { resp ->
-//                                customerId = resp.get("stripe_customer_id").asString
-//                                val listType = object : TypeToken<List<UserCards>>() {}.type
-//                                userCardsList = Gson().fromJson(resp.getAsJsonArray("cards"), listType)
-//                                if (userCardsList.isNotEmpty()){
-//                                    addPaymentCardAdapter.updateItem(userCardsList)
-//                                    for (card in userCardsList){
-//                                        if (card.is_preferred){
-//                                            selectuserCard = card
-//                                            break
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                        }
-//                        is NetworkResult.Error -> {
-//                            showErrorDialog(requireContext(), it.message!!)
-//                        }
-//
-//                        else -> {
-//                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-//                        }
-//                    }
-//                }
-//            }
-//        }else{
-//            showErrorDialog(this,
-//                resources.getString(R.string.no_internet_dialog_msg))
-//        }
-//    }
+    private fun getUserCards() {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                profileViewModel.getUserCards(session?.getUserId().toString()).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                customerId = resp.get("stripe_customer_id").asString
+                                val listType = object : TypeToken<List<UserCards>>() {}.type
+                                userCardsList = Gson().fromJson(resp.getAsJsonArray("cards"), listType)
+                                if (userCardsList.isNotEmpty()){
+                                    addPaymentCardAdapter.updateItem(userCardsList)
+                                    for (card in userCardsList){
+                                        if (card.is_preferred){
+                                            selectuserCard = card
+                                            break
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
 
     private fun updateAddStreetAddress(streetAddress: String) {
         lifecycleScope.launch {
@@ -1733,8 +1744,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
     private fun dialogAddCard() {
-        val dialog = requireActivity()?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
+        var dateManager = DateManager(requireContext())
+        val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog.apply {
             setCancelable(true)
             setContentView(R.layout.dialog_add_card_details)
             window?.attributes = WindowManager.LayoutParams().apply {
@@ -1742,28 +1754,151 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-
-            val month: TextView = findViewById(R.id.textMonth)
-            val year: TextView = findViewById(R.id.textYear)
+            val textMonth: TextView = findViewById(R.id.textMonth)
+            val textYear: TextView = findViewById(R.id.textYear)
+            val etCardNumber: EditText = findViewById(R.id.etCardNumber)
+            val etCardHolderName: EditText = findViewById(R.id.etCardHolderName)
             val submitButton: TextView = findViewById(R.id.textSubmitButton)
-            month.setOnClickListener {
+            val etStreet: EditText = findViewById(R.id.etStreet)
+            val etCity: EditText = findViewById(R.id.etCity)
+            val etState: EditText = findViewById(R.id.etState)
+            val etZipCode: EditText = findViewById(R.id.etZipCode)
+            val etCardCvv: EditText = findViewById(R.id.etCardCvv)
+            val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+            textMonth.setOnClickListener {
                 dateManager.showMonthSelectorDialog { selectedMonth ->
-                    month.text = selectedMonth
+                    textMonth.text = selectedMonth
                 }
-
-                year.setOnClickListener {
+                textYear.setOnClickListener {
                     dateManager.showYearPickerDialog { selectedYear ->
-                        year.text = selectedYear.toString()
+                        textYear.text = selectedYear.toString()
                     }
                 }
             }
-
             submitButton.setOnClickListener {
-                dismiss()
-            }
+                if (etCardHolderName.text.isEmpty()){
+                    showToast(requireContext(),AppConstant.cardName)
+                }else if (textMonth.text.isEmpty()){
+                    showToast(requireContext(),AppConstant.cardMonth)
+                }else if (textYear.text.isEmpty()){
+                    showToast(requireContext(),AppConstant.cardYear)
+                }else if (etCardCvv.text.isEmpty()){
+                    showToast(requireContext(),AppConstant.cardCVV)
+                }else
+                {
+                    LoadingUtils.showDialog(requireContext(), false)
+                    val stripe = Stripe(requireContext(), BuildConfig.STRIPE_KEY)
+                    var month: Int? = null
+                    var year: Int? = null
+                    val cardNumber: String =
+                        Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
+                    val cvvNumber: String =
+                        Objects.requireNonNull(etCardCvv.text.toString().trim()).toString()
+                    val name: String = etCardHolderName.text.toString().trim()
+                    month = dateManager.getMonthNumber(textMonth.text.toString())
+                    year = textYear.text.toString().toInt()
+                    val card = CardParams(
+                        cardNumber,
+                        month!!,
+                        Integer.valueOf(year!!),
+                        cvvNumber,
+                        name)
+                    stripe?.createCardToken(card, null, null,
+                        object : ApiResultCallback<Token> {
+                            override fun onError(e: Exception) {
+                                Log.d("******  Token Error :-", "${e.message}")
+                                showErrorDialog(requireContext(), e.message.toString())
+                                LoadingUtils.hideDialog()
+                            }
 
+                            override fun onSuccess(result: Token) {
+                                val id = result.id
+                                Log.d("******  Token payment :-", "data $id")
+                                LoadingUtils.hideDialog()
+                                saveCardStripe(dialog,id,checkBox.isChecked)
+
+                            }
+                        })
+                }
+            }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
+            sameAsMailingAddress(etStreet,etCity,etState,etZipCode)
+
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun sameAsMailingAddress(etStreet:EditText,
+                                     etCity:EditText,
+                                     etState:EditText,
+                                     etZipCode:EditText) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                profileViewModel.sameAsMailingAddress(session?.getUserId().toString()).collect { it ->
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val mailingAddress: MailingAddress = Gson().fromJson(resp,
+                                    MailingAddress::class.java)
+                                mailingAddress.let { it ->
+                                    it.street_address?.let {
+                                        etStreet.setText(it)
+                                    }
+                                    it.city?.let {
+                                        etCity.setText(it)
+                                    }
+                                    it.state?.let {
+                                        etState.setText(it)
+                                    }
+                                    it.zip_code?.let {
+                                        etZipCode.setText(it)
+                                    }
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun saveCardStripe(dialog: Dialog, tokenId:String, saveasMail:Boolean) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                profileViewModel.saveCardStripe(session?.getUserId().toString(),
+                    tokenId).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                dialog.dismiss()
+                                getUserCards()
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 
@@ -1957,8 +2092,36 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         }
     }
 
+    override fun set(position: Int) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                profileViewModel.setPreferredCard(session?.getUserId().toString(),
+                    userCardsList[position].card_id
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                getUserCards()
+                                showToast(requireContext(),resp.first)
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
 
-    fun dialogRegister(context: Context?) {
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+
+    private fun dialogRegister(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -3120,10 +3283,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 }
             }
         }
-    }
-
-    override fun set(position: Int) {
-
     }
 
 

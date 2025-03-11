@@ -48,9 +48,8 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/_8sdp"
-
             android:isIndicator="false"
-            android:rating="4"
+            android:rating="0"
             android:stepSize="1" />
 
     </RelativeLayout>
@@ -76,12 +75,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/_8sdp"
-
             android:isIndicator="false"
-            android:rating="4"
+            android:rating="0"
             android:stepSize="1" />
 
     </RelativeLayout>
@@ -110,9 +107,8 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/_8sdp"
-
             android:isIndicator="false"
-            android:rating="4"
+            android:rating="0"
             android:stepSize="1" />
 
     </RelativeLayout>

@@ -20,6 +20,7 @@ import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.databinding.ActivityGuesMainBinding
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.GuestMainActivityModel
 import com.business.zyvo.viewmodel.LoggedScreenViewModel
@@ -111,22 +112,16 @@ class GuesMain : AppCompatActivity(), OnClickListener {
     }
     override fun onResume() {
         super.onResume()
-
-
         Log.d("TESTING_ZYVO", "I am in the on resume")
         if (intent != null) {
-            var status: String = intent.getStringExtra("key_name").toString()
+            val status: String = intent.getStringExtra("key_name").toString()
             Log.d("TESTING_ZYVO12", "I" + status)
             if (status.equals("12345")) {
+                intent.removeExtra("key_name")
                 bookingResume()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
             }
         }
-    }
-
-    override fun onPostResume() {
-        super.onPostResume()
-
     }
 
     private fun showBottomNavigation() {
@@ -229,6 +224,7 @@ class GuesMain : AppCompatActivity(), OnClickListener {
 
 
     override fun onClick(p0: View?) {
+       SessionManager(this).setFilterRequest("")
         when (p0?.id) {
             R.id.navigationDiscover -> {
                 discoverResume()

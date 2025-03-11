@@ -46,7 +46,8 @@ class SplashFragment : Fragment() {
         handler.postDelayed({
             val session =SessionManager(requireContext())
             Log.d("TESTING","Session "+session.getUserId().toString())
-            if(session.getUserId() !=-1 && session.getUserSession() !! && !session.getAuthToken().equals("")){
+            if(session.getUserId() !=-1 && session.getUserSession()
+                !! && !session.getAuthToken().equals("")){
                 if(session.getCurrentPanel().equals(AppConstant.Host)){
                     val intent = Intent(requireContext(), HostMainActivity::class.java)
                     startActivity(intent)

@@ -7,7 +7,7 @@ data class Data(
     val booking_detail: BookingDetail? = null,
     val booking_id: Int? = 0,
     val charges: Charges? = null,
-    val distance_miles: Any? = null,
+    val distance_miles: String? = null,
     val first_property_image: String? = "",
     val host_id: Int? = 0,
     val host_name: String? = "",

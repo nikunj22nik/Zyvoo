@@ -14,8 +14,11 @@ import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.host.ChannelModel
 import com.business.zyvo.model.host.HostReviewModel
 import com.business.zyvo.model.host.PaginationModel
+import com.business.zyvo.model.host.ReviewerProfileModel
 import com.business.zyvo.model.host.hostdetail.HostDetailModel
 import com.business.zyvo.repository.ZyvoRepository
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -31,6 +34,9 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     var _list = MutableLiveData<MutableList<MyBookingsModel>>()
     var reviewlist :MutableList<Pair<Int,String>> = mutableListOf()
     var currentPage =1
+    var totalPage = Integer.MAX_VALUE
+    var reviewerProfileList = mutableListOf<ReviewerProfileModel>()
+    var hashMapPageNumber = HashMap<Int,Boolean>()
     var filter = "recent_review"
   //  pending,waiting_payment,confirmed,cancelled,finished
    var reviewListLiveData = MutableLiveData<MutableList<Pair<Int,String>>>()
@@ -41,7 +47,18 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     var finishedList = mutableListOf<MyBookingsModel>()
     var finalList = mutableListOf<MyBookingsModel>()
 
+
     val list: LiveData<MutableList<MyBookingsModel>> get() = _list
+
+
+    suspend fun filterPropertyReviewsHost(
+        propertyId :Int, filter :String, page :Int
+    ) : Flow<NetworkResult<Pair<JsonArray, JsonObject>>> {
+        return  repository.filterPropertyReviewsHost(propertyId, filter, page).onEach {
+
+        }
+
+    }
 
 
     suspend fun load(userid: Int): Flow<NetworkResult<MutableList<MyBookingsModel>>> {

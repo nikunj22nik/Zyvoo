@@ -30,6 +30,7 @@ import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.guest.checkout.model.MailingAddress
 import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.activity.guest.extratime.ExtraTimeActivity
@@ -43,6 +44,7 @@ import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
+import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.showToast
@@ -121,6 +123,20 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             }
         }
         binding.myBooking.setOnClickListener {
+            if (selectuserCard==null){
+                showToast(this,AppConstant.selectCard)
+            }else {
+                getBookingExtensionTimeAmount(
+                    bookingId!!,
+                    hour!!,
+                    binding.tvZyvoServiceFee.text.toString().replace("$",""),
+                    binding.tvTaxesPrice.text.toString().replace("$",""),
+                    binding.tvCleaningFee.text.toString().replace("$",""),
+                    binding.tvTotalPrice.text.toString().replace("$", ""),
+                    binding.tvPrice.text.toString().replace("$", ""),
+                    binding.tvDiscount.text.toString().replace("$","")
+                )
+            }
          //   startActivity(Intent(this, ExtraTimeActivity::class.java))
         }
 
@@ -186,9 +202,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         binding.tvReadMoreLess.setCollapsedText("show more")
         binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
 
-        binding.myBooking.setOnClickListener {
+       /* binding.myBooking.setOnClickListener {
            startActivity(Intent(this, ExtraTimeActivity::class.java))
-        }
+        }*/
 
         setPropertyData()
         getUserCards()
@@ -279,9 +295,12 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 binding.tvCleaningFee.text = "$$it"
                 totalPrice += it
             }
-            propertyData?.service_fee?.toDoubleOrNull()?.let {
-                binding.tvZyvoServiceFee.text = "$$it"
-                totalPrice += it
+            propertyData?.service_fee?.toDoubleOrNull()?.let {resp ->
+                hourlyTotal?.let {
+                    val taxAmount = calculatePercentage(it,resp)
+                    binding.tvZyvoServiceFee.text = "$$taxAmount"
+                    totalPrice += taxAmount
+                }
             }
             propertyData?.tax?.toDoubleOrNull()?.let {resp ->
                 hourlyTotal?.let {
@@ -304,7 +323,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 hour?.let { cHr->
                     propertyData?.bulk_discount_rate?.let {
                         if (cHr.toInt() > h) {
-                            discountAmount = (totalPrice * it.toDouble()) / 100
+                            discountAmount = (hourlyTotal * it.toDouble()) / 100
                             totalPrice -= discountAmount
                         }
                     }
@@ -327,6 +346,52 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
     fun calculateTotalPrice(addOnList: List<AddOn>): Double {
         return addOnList.filter { it.checked }
             .sumOf { it.price.toDoubleOrNull() ?: 0.0 }
+    }
+
+    private fun getBookingExtensionTimeAmount(booking_id : String,
+                                               extension_time : String,
+                                               service_fee : String,
+                                               tax : String,
+                                               cleaning_fee:String,
+                                               extension_total_amount : String,
+                                               extension_booking_amount : String,
+                                               discount_amount : String) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                extraTimeChargeViewModel.getBookingExtensionTimeAmount(
+                    session?.getUserId().toString(),
+                    booking_id,
+                    extension_time,
+                    service_fee,
+                    tax,
+                    cleaning_fee,
+                    extension_total_amount,
+                    extension_booking_amount,
+                    discount_amount).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val intent = Intent(this@ExtraTimeChargesActivity, GuesMain::class.java)
+                                intent.putExtra("key_name","12345")
+                                startActivity(intent)
+                                finish()
+                                showToast(this@ExtraTimeChargesActivity,"Booking Extend successfully.")
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(this@ExtraTimeChargesActivity, it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
     }
 
 
@@ -415,6 +480,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             show()
         }
     }
+
 
     @SuppressLint("SetTextI18n")
     private fun sameAsMailingAddress(etStreet: EditText,

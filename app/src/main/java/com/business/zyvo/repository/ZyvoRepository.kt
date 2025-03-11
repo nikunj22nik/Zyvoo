@@ -47,10 +47,8 @@ import retrofit2.http.Path
 interface ZyvoRepository {
 
 
-    suspend fun signUpPhoneNumber(
-        phoneNumber: String,
-        code: String
-    ): Flow<NetworkResult<Pair<String, String>>>
+    suspend fun signUpPhoneNumber(phoneNumber: String, code: String)
+    : Flow<NetworkResult<Pair<String, String>>>
 
     suspend fun loginPhoneNumber(
         phoneNumber: String,
@@ -267,16 +265,19 @@ interface ZyvoRepository {
 
     suspend fun getPaymentMethods(userId: String) : Flow<NetworkResult<Pair<String,String>>>
 
-    suspend fun getFilteredHomeData(userId: Int?, latitude: Double?, longitude: Double?, place_type: String?, minimum_price: Double?,
-        maximum_price: Double?, location: String?, date: String?, time: Int?, people_count: Int?, property_size: Int?, bedroom: Int?,
-        bathroom: Int?, instant_booking: Int?, self_check_in: Int?, allows_pets: Int?, activities: List<String>?,
+    suspend fun getFilteredHomeData(userId: String?, latitude: String?, longitude: String?,
+                                    place_type: String?, minimum_price: String?,
+        maximum_price: String?, location: String?, date: String?, time: String?,
+                                    people_count: String?, property_size: String?, bedroom: String?,
+        bathroom: String?, instant_booking: String?, self_check_in: String?,
+                                    allows_pets: String?, activities: List<String>?,
         amenities: List<String>?, languages: List<String>?): Flow<NetworkResult<JsonArray>>
 
     suspend fun getBookingList(userId: String) :  Flow<NetworkResult<MutableList<BookingModel>>>
+    suspend fun getBookingDetailsList(userId: String,booking_id: Int,latitude:String,longitude:String) : Flow<NetworkResult<Pair<BookingDetailModel,JsonObject>>>
 
-    suspend fun getBookingDetailsList(userId: String,booking_id: Int) :  Flow<NetworkResult<BookingDetailModel>>
-
-    suspend fun reviewPublish(userId: Int,booking_id:Int,property_id: Int,response_rate: Int,communication:Int,on_time:Int,review_message: String) : Flow<NetworkResult<ReviewModel>>
+    suspend fun reviewPublish(userId: String,booking_id:String,
+                              property_id: String,response_rate: String,communication:String,on_time:String,review_message: String) : Flow<NetworkResult<ReviewModel>>
 
     suspend fun verifyIdentity(userId: String,identity_verify: String) : Flow<NetworkResult<Pair<String,String>>>
 
@@ -380,8 +381,6 @@ interface ZyvoRepository {
                                        reportReasonId :Int,
                                        additionalDetail :String) : Flow<NetworkResult<String>>
 
-
-
     suspend fun getHomePropertyDetails(userId :String,
                                        propertyId :String) : Flow<NetworkResult<Pair<JsonObject, JsonObject>>>
 
@@ -465,7 +464,10 @@ interface ZyvoRepository {
                              total_amount : String,
                              customer_id : String,
                              card_id : String,
-                             addons: Map<String, String> ) :   Flow<NetworkResult<JsonObject>>
+                             addons: Map<String, String>,
+                             service_fee : String,
+                             tax : String,
+                             discount_amount : String) :   Flow<NetworkResult<JsonObject>>
 
     suspend fun reportViolation(userId : String,
                                 booking_id : String,
@@ -477,6 +479,7 @@ interface ZyvoRepository {
 
     suspend fun cancelBooking(userId : String,
                                 booking_id : String) :  Flow<NetworkResult<Pair<String,String>>>
+
 
     suspend fun addPayOut(
         userId: RequestBody,
@@ -514,6 +517,7 @@ interface ZyvoRepository {
 
     suspend fun getCityName( country:String,  state :String)  :Flow<NetworkResult<MutableList<String>>>
 
+
     suspend fun addPayCard(
         userId: RequestBody,
         token: RequestBody,
@@ -548,6 +552,43 @@ interface ZyvoRepository {
     userId :String,
     payoutMethodId :String,
     ) : Flow<NetworkResult<String>>
+
+
+    suspend fun filterPropertyReviewsHost(
+        propertyId :Int, filter :String, page :Int
+    ) : Flow<NetworkResult<Pair<JsonArray, JsonObject>>>
+
+
+
+    suspend fun getBookingExtensionTimeAmount(userId : String,
+                                              booking_id : String,
+                                              extension_time : String,
+                                              service_fee : String,
+                                              tax : String,
+                                              cleaning_fee:String,
+                                              extension_total_amount : String,
+                                              extension_booking_amount : String,
+                                              discount_amount : String) :   Flow<NetworkResult<JsonObject>>
+
+
+    suspend fun getHomeDataSearchFilter(
+        user_id : String,
+        latitude : String,
+        longitude : String,
+        date : String,
+        hour : String,
+        start_time : String,
+        end_time : String,
+        activity : String
+    ): Flow<NetworkResult<JsonArray>>
+
+    suspend fun getUserBookings(
+        user_id : String,
+        booking_date : String,
+        booking_start : String
+    ): Flow<NetworkResult<JsonObject>>
+
+
 
 }
 

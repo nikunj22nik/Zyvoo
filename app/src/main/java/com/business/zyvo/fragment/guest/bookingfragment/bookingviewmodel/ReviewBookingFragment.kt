@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -40,13 +41,24 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.R
+import com.business.zyvo.activity.guest.propertydetails.model.Pagination
+import com.business.zyvo.activity.guest.propertydetails.model.Review
 import com.business.zyvo.adapter.AdapterAddOn
 import com.business.zyvo.adapter.BookingIncludeAdapter
-import com.business.zyvo.adapter.guest.AdapterReview
-import com.business.zyvo.databinding.FragmentReviewBookingBinding
-import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.Review
+import com.business.zyvo.adapter.guest.AdapterProReview
+import com.business.zyvo.adapter.guest.PropertyIncludedAdapter
+import com.business.zyvo.databinding.FragmentReviewGustBookingBinding
+import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.ShapeAppearanceModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,21 +66,23 @@ import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
-    private var _binding : FragmentReviewBookingBinding? = null
+    private var _binding : FragmentReviewGustBookingBinding? = null
     private  val binding get() = _binding!!
     private var bookingId = 0
     private lateinit var adapterAddon: AdapterAddOn
-    private lateinit var adapterReview: AdapterReview
+    private lateinit var adapterReview: AdapterProReview
     private lateinit var adapterInclude: BookingIncludeAdapter
     private lateinit var mapView: MapView
     private var mMap: GoogleMap? = null
     lateinit var  navController: NavController
     private lateinit var sessionManager: SessionManager
-    private var reviewList : MutableList<Review> = mutableListOf()
     private val bookingViewModel: BookingViewModel by viewModels()
     var latitude = 0.0
     var longitude = 0.0
     var propertyId = 0
+    var reviewList: MutableList<Review> = mutableListOf()
+    var pagination:Pagination?=null
+    var filter = "highest_review"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,13 +99,31 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_review_booking,container,false)
+        _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_review_gust_booking,container,false)
 
         binding.textReportIssueButton.visibility = View.GONE
         binding.textUserName.visibility = View.VISIBLE
         binding.rlNeedHelp.visibility = View.VISIBLE
         binding.imageStar1.visibility = View.GONE
         binding.textRatingStar1.visibility = View.GONE
+
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            bookingViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(requireContext(), false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
+        }
+
+        binding.rlNeedHelp.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("type", "Guest")
+            }
+            findNavController().navigate(R.id.helpCenterFragment_host,bundle)
+        }
 
         getBookingDetailsListAPI()
 
@@ -153,8 +185,17 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                 binding.tvHostRule.visibility = View.VISIBLE
             }
         }
+
+        binding.showMoreReview.setOnClickListener {
+            pagination?.let {
+                if (it.current_page!=it.total_pages && it.current_page<it.total_pages) {
+                    loadMoreReview(filter,(it.current_page+1).toString())
+                }
+            }
+        }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun getBookingDetailsListAPI() {
         if (!NetworkMonitorCheck._isConnected.value) {
             showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
@@ -163,27 +204,28 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
         lifecycleScope.launch(Dispatchers.Main) {
             try {
-                bookingViewModel.getBookingDetailsList(sessionManager.getUserId().toString(), bookingId).collect {
+                bookingViewModel.getBookingDetailsList(sessionManager.getUserId().toString(),
+                    bookingId,sessionManager.getGustLatitude(),sessionManager.getGustLongitude()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
-                            val list = it.data
+                            val list = it.data?.first
                             Log.d("DATACHECK","list : $list")
-
                             if (list!=null) { // Check if list is not null or empty
                                 val data = list.data
-
                                 binding.textUserName.text = data.host_name ?: "N/A"
                                 binding.tvNamePlace.text = data.property_name ?: "N/A"
                                 binding.tvStatus.text = data.status
-                                binding.textMiles.text = (data.distance_miles ?: "N/A").toString()
-                                binding.textRatingStar.text = data.total_rating ?: "0"
+                                binding.textMiles.text = (data.distance_miles ?: "N/A").toString()+" miles away"
+                                binding.textRatingStar.text = "$${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
                                 binding.time.text = data.charges?.booking_hours.toString()
-                                binding.money.text = data.charges?.hourly_rate ?: "0.00"
-                                binding.tvCleaningFee.text = data.charges?.cleaning_fee ?: "0.00"
-                                binding.tvServiceFee.text = data.charges?.zyvo_service_fee ?: "0.00"
-                                binding.tvTaxes.text = data.charges?.taxes ?: "0.00"
-                                binding.tvAddOn.text = data.charges?.add_on?.toString() ?: "N/A"
-                                binding.tvTotalPrice.text = data.charges?.total ?: "0.00"
+                                binding.money.text = "$${truncateToTwoDecimalPlaces(data.charges?.booking_amount ?: "0.00")}"
+                                binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(data.charges?.cleaning_fee ?: "0.00")}"
+                                binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(data.charges?.cleaning_fee ?: "0.00")}"
+                                binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(data.charges?.cleaning_fee ?: "0.00")}"
+                                binding.tvServiceFee.text = "$${truncateToTwoDecimalPlaces(data.charges?.zyvo_service_fee ?: "0.00")}"
+                                binding.tvTaxes.text = "$${truncateToTwoDecimalPlaces(data.charges?.taxes ?: "0.00")}"
+                                binding.tvAddOn.text = "$${truncateToTwoDecimalPlaces(data.charges?.add_on?.toString() ?: "0.00")}"
+                                binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(data.charges?.total ?: "0.00")}"
                                 binding.tvBookingDate.text = data.booking_detail?.date ?: "N/A"
                                 binding.bookingFromTo.text = data.booking_detail?.start_end_time ?: "N/A"
                                 binding.tvBookingTotalTime.text = data.booking_detail?.time ?: "N/A"
@@ -191,6 +233,9 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 binding.tvHostContent.text = (data.host_rules ?: "N/A").toString()
                                 binding.tvLocationName.text = data.location ?: "N/A"
                                 propertyId = data.property_id ?: 0
+                                data?.total_rating?.let {
+                                    binding.endRatingTv.text = it
+                                }
 
                                 //image loading from glide
                                 Glide.with(requireContext())
@@ -198,25 +243,91 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                     .error(R.drawable.ic_circular_img_user)
                                     .into(binding.imageProfilePicture)
 
-                                Glide.with(requireContext())
-                                    .load(AppConstant.BASE_URL+ data.first_property_image)
-                                    .error(R.drawable.image_hotel)
-                                    .into(binding.imgProfileHotel)
+                                data?.first_property_image?.let {
+                                    //image loading from glide
+                                    Glide.with(requireContext())
+                                        .load(AppConstant.BASE_URL + it)
+                                        .error(R.drawable.ic_circular_img_user)
+                                        .into(binding.imgProfileHotel)
+                                }
 
-                                Glide.with(requireContext())
-                                    .load(AppConstant.BASE_URL+ data.property_images)
-                                    .error(R.drawable.ic_dummy_img_1)
-                                    .into(binding.shapeableImageView11)
+                                data.property_images?.let {
+                                    binding.llHotelViews.setOnClickListener {
+                                        openImageDialog(data.property_images)
+                                    }
 
+                                    binding.proImageMore.setOnClickListener {
+                                        openImageDialog(data.property_images)
+                                    }
+                                    data.property_images?.let {
+                                        if (it.isNotEmpty()){
+                                            if (it.size==1){
+                                                binding.cvTwoAndThreeImage.visibility = View.GONE
+                                                binding.cvOneImage.visibility = View.VISIBLE
+                                                binding.llThreeImage.visibility = View.GONE
+                                                binding.llTwoImage.visibility = View.GONE
+                                                binding.proImageMore.visibility = View.GONE
+                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewOne)
+                                            }
+                                            if (it.size==2){
+                                                binding.cvTwoAndThreeImage.visibility = View.VISIBLE
+                                                binding.cvOneImage.visibility = View.GONE
+                                                binding.llThreeImage.visibility = View.GONE
+                                                binding.llTwoImage.visibility = View.VISIBLE
+                                                binding.proImageMore.visibility = View.GONE
+                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
+                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(1)).into(binding.proImageTwo)
+                                            }
+                                            if (it.size==3){
+                                                binding.cvTwoAndThreeImage.visibility = View.VISIBLE
+                                                binding.cvOneImage.visibility = View.GONE
+                                                binding.llThreeImage.visibility = View.VISIBLE
+                                                binding.llTwoImage.visibility = View.GONE
+                                                binding.proImageMore.visibility = View.GONE
+                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
+                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(1)).into(binding.prImageTwo)
+                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(2)).into(binding.prImageThree)
+                                            }
+                                            if (it.size==4){
+                                                binding.cvTwoAndThreeImage.visibility = View.VISIBLE
+                                                binding.cvOneImage.visibility = View.GONE
+                                                binding.llThreeImage.visibility = View.VISIBLE
+                                                binding.llTwoImage.visibility = View.GONE
+                                                binding.proImageMore.visibility = View.VISIBLE
+                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
+                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(1)).into(binding.prImageTwo)
+                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(2)).into(binding.prImageThree)
+                                            }
+                                        }
+                                    }
+                                }
                                 // Safe parsing of latitude & longitude
                                 latitude = data.latitude?.toDoubleOrNull() ?: 0.0
                                 longitude = data.longitude.toDoubleOrNull() ?: 0.0
 
+                                pagination = Gson().fromJson(it.data.second.getAsJsonObject("pagination"),
+                                    Pagination::class.java)
+                                val listType = object : TypeToken<List<Review>>() {}.type
+                                val localreviewList:MutableList<Review> = Gson().fromJson(it.data.second.getAsJsonArray("data"), listType)
+                                reviewList.addAll(localreviewList)
                                 // Update reviews dynamically
-                                adapterReview.updateAdapter(data.reviews ?: mutableListOf())
-                                data.activities?.let { it1 -> adapterInclude.updateItems(it1) }
-                                data.amenities?.let { it1 -> adapterAddon.updateAdapter(it1) }
-                                reviewList = data.reviews!!
+                                reviewList?.let {
+                                    if (it.isNotEmpty()){
+                                        adapterReview.updateAdapter(it)
+                                        binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +")"
+                                        binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
+                                    }
+                                }
+                                data?.amenities?.let {
+                                    if (it.isNotEmpty()) {
+                                        val propertyIncludedAdapter = PropertyIncludedAdapter(requireContext(),
+                                            it)
+                                        binding.recyclerIncludeBooking.adapter = propertyIncludedAdapter
+
+                                    }
+                                }
+                               // data.activities?.let { it1 -> adapterInclude.updateItems(it1) }
+                               // data.amenities?.let { it1 -> adapterAddon.updateAdapter(it1) }
                             } else {
                                 Log.e("API_ERROR", "Empty or null data received")
                                 showErrorDialog(requireContext(), "No booking details found.")
@@ -238,23 +349,25 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         }
     }
 
-    private fun reviewPublishAPI(responseRate: Float, communication: Float, onTime: Float, etMessage: String) {
+
+    private fun reviewPublishAPI(responseRate: Int, communication: Int, onTime: Int, etMessage: String,
+                                 dialog: Dialog) {
         if (!NetworkMonitorCheck._isConnected.value) {
             showErrorDialog(requireContext(), getString(R.string.no_internet_dialog_msg))
             return
         }
-
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch(Dispatchers.Main) {
             try {
                 bookingViewModel.getReviewPublishAPI(
-                    sessionManager.getUserId()!!,
-                    bookingId, propertyId,responseRate.toInt(),
-                    communication.toInt(), onTime.toInt(),
+                    sessionManager.getUserId().toString(),
+                    bookingId.toString(), propertyId.toString(),responseRate.toString(),
+                    communication.toString(), onTime.toString(),
                     etMessage
                 ).collect { result ->
                     withContext(Dispatchers.Main) {
                         when (result) {
                             is NetworkResult.Success -> {
+                                dialog.dismiss()
                                 Log.d("TAG", "reviewPublishAPI: ${result.data} ")
                                 Toast.makeText(requireContext(), "Thanks for your review", Toast.LENGTH_SHORT).show()
                             }
@@ -381,6 +494,15 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
 
+    private fun sortReviewsBy(option: String) {
+        when (option) {
+            "Highest" -> reviewList.sortByDescending { it.review_rating }
+            "Lowest" -> reviewList.sortBy { it.review_rating }
+            "Recent" -> reviewList.sortByDescending { it.review_date }
+        }
+        adapterReview.updateAdapter(reviewList)
+    }
+
     private fun shareApp() {
         val appPackageName = requireActivity().packageName
         val sendIntent = Intent().apply {
@@ -393,14 +515,46 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         }
         startActivity(sendIntent)
     }
+    private fun loadMoreReview(filter :String,
+                               page :String) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                bookingViewModel.filterPropertyReviews(propertyId.toString(),
+                    filter,page).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val listType = object : TypeToken<List<Review>>() {}.type
+                                val localreviewList:MutableList<Review> = Gson().fromJson(resp.first, listType)
+                                reviewList.addAll(localreviewList)
+                                pagination = Gson().fromJson(resp.second,
+                                    Pagination::class.java)
+                                reviewList?.let {
+                                    if (it.isNotEmpty()){
+                                        adapterReview.updateAdapter(it)
+                                        binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +" )"
+                                        binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
+                                    }
+                                }
 
-    private fun sortReviewsBy(option: String) {
-        when (option) {
-            "Highest" -> reviewList.sortByDescending { it.rating }
-            "Lowest" -> reviewList.sortBy { it.rating }
-            "Recent" -> reviewList.sortByDescending { it.date }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
-        adapterReview.updateAdapter(reviewList)
+
+
     }
 
 
@@ -408,22 +562,23 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
     fun dialogReview(){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
-            setCancelable(false)
+            setCancelable(true)
             setContentView(R.layout.dialog_review)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var responseRate =  findViewById<RatingBar>(R.id.ratingbar)
-            var communication =  findViewById<RatingBar>(R.id.ratingbar2)
-            var onTime =  findViewById<RatingBar>(R.id.ratingbar3)
-            var textPublishReview =  findViewById<TextView>(R.id.textPublishReview)
-            var etMessage =  findViewById<TextView>(R.id.etMessage)
-
+            val responseRate =  findViewById<RatingBar>(R.id.ratingbar)
+            val communication =  findViewById<RatingBar>(R.id.ratingbar2)
+            val onTime =  findViewById<RatingBar>(R.id.ratingbar3)
+            val textPublishReview =  findViewById<TextView>(R.id.textPublishReview)
+            val etMessage =  findViewById<TextView>(R.id.etMessage)
             textPublishReview.setOnClickListener{
-                reviewPublishAPI(responseRate.rating,communication.rating,onTime.rating,etMessage.text.toString())
-                dismiss()
+                reviewPublishAPI(responseRate.rating.toInt(),
+                    communication.rating.toInt(),
+                    onTime.rating.toInt(),
+                    etMessage.text.toString(),dialog)
             }
 
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -434,15 +589,15 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
         adapterAddon = AdapterAddOn(requireContext(), getAddOnList().subList(0, 4))
 
-        adapterReview = AdapterReview(requireContext(), mutableListOf())
+        adapterReview = AdapterProReview(requireContext(), reviewList)
 
         binding.recyclerAddOn.adapter = adapterAddon
         binding.recyclerAddOn.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerAddOn.isNestedScrollingEnabled = false
 
         adapterInclude = BookingIncludeAdapter(mutableListOf())
-        binding.recyclerIncludeBooking.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        binding.recyclerIncludeBooking.adapter = adapterInclude
+     //   binding.recyclerIncludeBooking.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+    //    binding.recyclerIncludeBooking.adapter = adapterInclude
 
         binding.recyclerReviews.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerReviews.isNestedScrollingEnabled = false
@@ -503,11 +658,63 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
         mMap?.setOnMapLoadedCallback {
             val place = LatLng(latitude, longitude)
+            Log.d(ErrorDialog.TAG,""+latitude+" "+longitude)
             mMap?.addMarker(MarkerOptions().position(place).title("Marker in place"))
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(place, 10f))
+        }
+    }
+
+    fun shapeTopBottomRightCorners(shapeableImageView: ShapeableImageView) {
+        val shapeAppearanceModel = ShapeAppearanceModel.Builder()
+            .setTopRightCorner(CornerFamily.ROUNDED, 20f) // Set top-right corner radius to 60dp
+            .setBottomRightCorner(
+                CornerFamily.ROUNDED,
+                20f
+            ) // Set bottom-right corner radius to 60dp
+            .setTopLeftCorner(CornerFamily.CUT, 0f) // Keep top-left corner sharp
+            .setBottomLeftCorner(CornerFamily.CUT, 0f) // Keep bottom-left corner sharp
+            .build()
+
+        shapeableImageView.setShapeAppearanceModel(shapeAppearanceModel)
+    }
+    fun shapeTopBottomRightLeftCorners(shapeableImageView: ShapeableImageView) {
+
+        val shapeAppearanceModel = ShapeAppearanceModel.Builder()
+            .setTopRightCorner(CornerFamily.ROUNDED, 20f)
+            .setBottomRightCorner(CornerFamily.ROUNDED, 20f)
+            .setTopLeftCorner(CornerFamily.CUT, 20f)
+            .setBottomLeftCorner(CornerFamily.CUT, 20f)
+            .build()
+
+        shapeableImageView.setShapeAppearanceModel(shapeAppearanceModel)
+
+    }
+
+    fun shapeTopBottomLeftCorner(shapeableImageView: ShapeableImageView) {
+        val shapeAppearanceModel = ShapeAppearanceModel.Builder()
+            .setTopRightCorner(CornerFamily.ROUNDED, 0f) // Set top-right corner radius to 60dp
+            .setBottomRightCorner(
+                CornerFamily.ROUNDED,
+                0f
+            ) // Set bottom-right corner radius to 60dp
+            .setTopLeftCorner(CornerFamily.CUT, 20f) // Keep top-left corner sharp
+            .setBottomLeftCorner(CornerFamily.CUT, 20f) // Keep bottom-left corner sharp
+            .build()
+
+        shapeableImageView.setShapeAppearanceModel(shapeAppearanceModel)
+    }
+
+    private fun openImageDialog(imageUrls: List<String>) {
+
+        val dialogFragment = ViewImageDialogFragment()
+        imageUrls.let {
+            val bundle = Bundle().apply {
+                putStringArrayList("image_list", java.util.ArrayList(it))
+            }
+            dialogFragment.arguments = bundle
+            dialogFragment.show(requireActivity().supportFragmentManager, "exampleDialog")
         }
     }
 

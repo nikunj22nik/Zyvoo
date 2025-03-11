@@ -29,6 +29,10 @@
             android:windowSoftInputMode="adjustResize"
 
             />
+        <activity android:name=".activity.guest.sorryresult.SorryActivity"
+            android:exported="false">
+
+        </activity>
         <activity
             android:name=".activity.PlaceOpenActivity"
             android:exported="false" />

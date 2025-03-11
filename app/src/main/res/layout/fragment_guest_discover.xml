@@ -190,6 +190,7 @@
         android:layout_height="190dp"
         android:layout_marginBottom="@dimen/_40sdp"
         android:gravity="center"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent">
 
 
@@ -252,6 +253,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_bold"
                     android:text="00"
+                    android:id="@+id/tvHour"
                     android:textAlignment="center"
                     android:textColor="#373B63"
                     android:textSize="@dimen/_9ssp"
@@ -285,6 +287,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_bold"
                     android:text="00"
+                    android:id="@+id/tvmin"
                     android:textAlignment="center"
                     android:textColor="#373B63"
                     android:textSize="@dimen/_9ssp"
@@ -317,7 +320,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_bold"
-                    android:text="20"
+                    android:text="00"
                     android:textAlignment="center"
                     android:textColor="#373B63"
                     android:textSize="@dimen/_9ssp"

@@ -34,22 +34,22 @@ interface ZyvoApi {
     @POST("login_phone_number")
     @FormUrlEncoded
     suspend fun loginPhoneNumber(@Field("phone_number")phoneNumber :String,
-                                  @Field("country_code")countryCode : String) : Response<JsonObject>
+                                 @Field("country_code")countryCode : String) : Response<JsonObject>
 
     @POST("otp_verify_login_phone")
     @FormUrlEncoded
     suspend fun otpVerifyLoginPhone(@Field("user_id")user_id :String,
-                                 @Field("otp")otp : String) : Response<JsonObject>
+                                    @Field("otp")otp : String) : Response<JsonObject>
 
     @POST("otp_verify_signup_phone")
     @FormUrlEncoded
     suspend fun otpVerifySignupPhone(@Field("temp_id")temp_id :String,
-                                    @Field("otp")otp : String) : Response<JsonObject>
+                                     @Field("otp")otp : String) : Response<JsonObject>
 
     @POST("login_email")
     @FormUrlEncoded
     suspend fun loginEmail(@Field("email")email :String,
-                                    @Field("password")password : String) : Response<JsonObject>
+                           @Field("password")password : String) : Response<JsonObject>
 
 
     @POST("signup_email")
@@ -76,7 +76,7 @@ interface ZyvoApi {
     @POST("reset_password")
     @FormUrlEncoded
     suspend fun resetPassword(@Field("user_id")user_id :String,
-                                        @Field("password")password :String,
+                              @Field("password")password :String,
                               @Field("password_confirmation")password_confirmation :String) : Response<JsonObject>
 
     @POST("get_user_profile")
@@ -126,6 +126,7 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun addMyWork(@Field("user_id")user_id :String,
                           @Field("work_name")work_name :String) : Response<JsonObject>
+
     @POST("delete_my_work")
     @FormUrlEncoded
     suspend fun deleteMyWork(@Field("user_id")user_id :String,
@@ -144,7 +145,8 @@ interface ZyvoApi {
     @POST("add_hobby")
     @FormUrlEncoded
     suspend fun addHobbies(@Field("user_id")user_id :String,
-                           @Field("hobby_name")hobbies_name :String) : Response<JsonObject>
+                           @Field("hobby_name")hobbies_name :String
+    ) : Response<JsonObject>
 
     @POST("delete_hobby")
     @FormUrlEncoded
@@ -188,22 +190,22 @@ interface ZyvoApi {
     @POST("get_home_data_filter")
     @FormUrlEncoded
     suspend fun getFilteredHomeData(
-        @Field("user_id") user_id: Int?,
-        @Field("latitude") latitude: Double?,
-        @Field("longitude") longitude: Double?,
+        @Field("user_id") user_id: String?,
+        @Field("latitude") latitude: String?,
+        @Field("longitude") longitude: String?,
         @Field("place_type") place_type: String?,
-        @Field("minimum_price") minimum_price: Double?,
-        @Field("maximum_price") maximum_price: Double?,
+        @Field("minimum_price") minimum_price: String?,
+        @Field("maximum_price") maximum_price: String?,
         @Field("location") location: String?,
         @Field("date") date: String?,
-        @Field("time") time: Int?,
-        @Field("people_count") people_count: Int?,
-        @Field("property_size") property_size: Int?,
-        @Field("bedroom") bedroom: Int?,
-        @Field("bathroom") bathroom: Int?,
-        @Field("instant_booking") instant_booking: Int?,
-        @Field("self_check_in") self_check_in: Int?,
-        @Field("allows_pets") allows_pets: Int?,
+        @Field("time") time: String?,
+        @Field("people_count") people_count: String?,
+        @Field("property_size") property_size: String?,
+        @Field("bedroom") bedroom: String?,
+        @Field("bathroom") bathroom: String?,
+        @Field("instant_booking") instant_booking: String?,
+        @Field("self_check_in") self_check_in: String?,
+        @Field("allows_pets") allows_pets: String?,
         @Field("activities[]") activities: List<String>?,
         @Field("amenities[]") amenities: List<String>?,
         @Field("languages[]") languages: List<String>?): Response<JsonObject>
@@ -236,16 +238,18 @@ interface ZyvoApi {
     @POST("get_booking_details_list")
     @FormUrlEncoded
     suspend fun  bookingDetailsList(@Field("user_id")user_id :String,
-                             @Field("booking_id")booking_id :Int) : Response<JsonObject>
+                             @Field("booking_id")booking_id :Int,
+                                    @Field("latitude")latitude :String,
+                                    @Field("longitude") longitude :String) : Response<JsonObject>
 
     @POST("review_host")
     @FormUrlEncoded
-    suspend fun  getReviewPublish(@Field("user_id")user_id :Int,
-                                @Field("booking_id")booking_id :Int,
-                                @Field("property_id")property_id :Int,
-                                @Field("response_rate")response_rate :Int,
-                                @Field("communication")communication :Int,
-                                @Field("on_time")on_time :Int,
+    suspend fun  getReviewPublish(@Field("user_id")user_id :String,
+                                @Field("booking_id")booking_id :String,
+                                @Field("property_id")property_id :String,
+                                @Field("response_rate")response_rate :String,
+                                @Field("communication")communication :String,
+                                  @Field("on_time")on_time :String,
                                   @Field("review_message")review_message:String) : Response<JsonObject>
 
     @POST("get_notification_guest")
@@ -539,7 +543,10 @@ interface ZyvoApi {
         @Field("total_amount") total_amount : String,
         @Field("customer_id") customer_id : String,
         @Field("card_id") card_id : String,
-        @FieldMap addons: Map<String, String>) :Response<JsonObject>
+        @FieldMap addons: Map<String, String>,
+        @Field("service_fee") service_fee : String,
+        @Field("tax") tax : String,
+        @Field("discount_amount") discount_amount : String) :Response<JsonObject>
 
     @POST("report_violation")
     @FormUrlEncoded
@@ -650,6 +657,7 @@ interface ZyvoApi {
           @Field("type") type:String
     ) : Response<JsonObject>
 
+
     @GET("get_countries")
     suspend fun getCountries() : Response<JsonObject>
 
@@ -658,6 +666,50 @@ interface ZyvoApi {
 
     @GET("get_cities/{value}/{value1}")
     suspend fun getCityName(@Path("value") country:String, @Path("value1") state :String) : Response<JsonObject>
+
+    @POST("filter_property_reviews")
+    @FormUrlEncoded
+    suspend fun filterPropertyReviewsHost(
+        @Field("property_id") propertyId :Int,
+        @Field("filter") filter :String,
+        @Field("page") page :Int
+    ) : Response<JsonObject>
+
+
+    @POST("get_booking_extension_time_amount")
+    @FormUrlEncoded
+    suspend fun getBookingExtensionTimeAmount(
+        @Field("user_id") userId :String,
+        @Field("booking_id") booking_id:String,
+        @Field("extension_time") extension_time:String,
+        @Field("service_fee") service_fee:String,
+        @Field("tax") tax:String,
+        @Field("cleaning_fee") cleaning_fee:String,
+        @Field("extension_total_amount") extension_total_amount:String,
+        @Field("extension_booking_amount") extension_booking_amount:String,
+        @Field("discount_amount") discount_amount:String
+    ) : Response<JsonObject>
+
+    @POST("get_home_data")
+    @FormUrlEncoded
+    suspend fun getHomeDataSearchFilter(
+        @Field("user_id") user_id : String,
+        @Field("latitude") latitude : String,
+        @Field("longitude") longitude : String,
+        @Field("date") date : String,
+        @Field("hour") hour : String,
+        @Field("start_time") start_time : String,
+        @Field("end_time") end_time : String,
+        @Field("activity") activity : String
+    ) :Response<JsonObject>
+
+    @POST("get_user_bookings")
+    @FormUrlEncoded
+    suspend fun getUserBookings(
+        @Field("user_id") user_id : String,
+        @Field("booking_date") booking_date : String,
+        @Field("booking_start") booking_start : String
+    ) :Response<JsonObject>
 
 
     @Multipart

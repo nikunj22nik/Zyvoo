@@ -103,6 +103,17 @@ class SessionManager(var context: Context) {
     }
 
 
+    fun setGustLatitude(latitude :String){
+        editor!!.putString(AppConstant.LATITUDEGUST,latitude)
+        editor!!.commit()
+    }
+
+    fun setGustLongitude(longitude :String){
+        editor!!.putString(AppConstant.LONGITUDEGUST,longitude)
+        editor!!.commit()
+    }
+
+
     fun getLatitude(): String{
         return pref?.getString(AppConstant.LATITUDE,"")?:""
     }
@@ -110,6 +121,35 @@ class SessionManager(var context: Context) {
     fun getLongitude() : String{
         return pref?.getString(AppConstant.LONGITUDE,"")?:""
     }
+
+    fun getGustLatitude(): String{
+        return pref?.getString(AppConstant.LATITUDEGUST,"")?:""
+    }
+
+    fun getGustLongitude() : String{
+        return pref?.getString(AppConstant.LONGITUDEGUST,"")?:""
+    }
+
+
+
+    fun setFilterRequest(filterRequest :String){
+        editor!!.putString(AppConstant.FILTERREQUEST,filterRequest)
+        editor!!.commit()
+    }
+
+    fun getFilterRequest(): String{
+        return pref?.getString(AppConstant.FILTERREQUEST,"")?:""
+    }
+
+    fun setSearchFilterRequest(filterRequest :String){
+        editor!!.putString(AppConstant.SEARCHFILTERREQUEST,filterRequest)
+        editor!!.commit()
+    }
+
+    fun getSearchFilterRequest(): String{
+        return pref?.getString(AppConstant.SEARCHFILTERREQUEST,"")?:""
+    }
+
 
     fun saveChannelListToPreferences(context: Context, key: String, channelList: MutableList<ChannelListModel>) {
         // Convert MutableList<ChannelListModel> to JSON string

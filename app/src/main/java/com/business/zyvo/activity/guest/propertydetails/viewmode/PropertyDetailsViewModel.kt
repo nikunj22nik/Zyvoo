@@ -42,16 +42,15 @@ class PropertyDetailsViewModel @Inject constructor(private var repository: ZyvoR
                                       filter :String,
                                       page :String):
             Flow<NetworkResult<Pair<JsonArray, JsonObject>>> {
-        return repository.filterPropertyReviews(propertyId,
-            filter,page).onEach {
+        return repository.filterPropertyReviews(propertyId, filter, page).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
                 } is NetworkResult.Success -> {
-                isLoading.value = false
-            } else -> {
-                isLoading.value = false
-            }
+                    isLoading.value = false
+                 } else -> {
+                    isLoading.value = false
+              }
             }
         }
     }

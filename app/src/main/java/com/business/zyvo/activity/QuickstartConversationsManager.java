@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,9 @@ import okhttp3.Response;
 
 interface QuickstartConversationsManagerListener {
     void receivedNewMessage();
+
     void messageSentCallback();
+
     void reloadMessages();
 }
 
@@ -53,14 +56,15 @@ interface AccessTokenListenerOne {
 
 public class QuickstartConversationsManager {
 
-//    private final static String DEFAULT_CONVERSATION_NAME = "anotherchanz_43_70";
+    //    private final static String DEFAULT_CONVERSATION_NAME = "anotherchanz_43_70";
     private String DEFAULT_CONVERSATION_NAME = "general";
     public final static String TAG = "TwilioConversations";
     private String identity;
 
     private String userid;
     private String typeApiValue;
-    private String status="0";
+    private String status = "0";
+    String conversationSid = "";
 
     final private ArrayList<Message> messages = new ArrayList<>();
 
@@ -68,7 +72,6 @@ public class QuickstartConversationsManager {
 
     private Conversation conversation;
     private QuickstartConversationsManagerListener conversationsManagerListener;
-
 
 
     private String tokenURL = "";
@@ -122,7 +125,7 @@ public class QuickstartConversationsManager {
         }).start();
     }
 
-    void initializeWithAccessToken(final Context context, final String token, String DEFAULT_CONVERSATION_NAME, String identity,String userid,String typeApiValue) {
+    void initializeWithAccessToken(final Context context, final String token, String DEFAULT_CONVERSATION_NAME, String identity, String userid, String typeApiValue) {
         this.DEFAULT_CONVERSATION_NAME = DEFAULT_CONVERSATION_NAME;
         this.identity = identity;
         this.userid = userid;
@@ -159,6 +162,7 @@ public class QuickstartConversationsManager {
             Message.Options options = Message.options().withBody(messageBody);
             options.withAttributes(conversation.getAttributes());
 //            Log.d(ChatActivity.TAG,"Message created");
+
             conversation.sendMessage(options, new CallbackListener<Message>() {
                 @Override
                 public void onSuccess(Message message) {
@@ -169,7 +173,6 @@ public class QuickstartConversationsManager {
             });
         }
     }
-
 
 
     void sendMessageImage(String messageBody, File file) throws FileNotFoundException {
@@ -201,8 +204,6 @@ public class QuickstartConversationsManager {
                 }
             });
         }
-
-
 
 
     }
@@ -239,8 +240,6 @@ public class QuickstartConversationsManager {
         }
 
 
-
-
     }
 
 
@@ -255,7 +254,7 @@ public class QuickstartConversationsManager {
             public void onSuccess(Conversation conversation) {
                 if (conversation != null) {
                     if (conversation.getStatus() == Conversation.ConversationStatus.JOINED
-                         /*|| conversation.getStatus() == Conversation.ConversationStatus.NOT_PARTICIPATING*/) {
+                        /*|| conversation.getStatus() == Conversation.ConversationStatus.NOT_PARTICIPATING*/) {
                         Log.d(TAG, "Already Exists in Conversation: " + DEFAULT_CONVERSATION_NAME);
                         QuickstartConversationsManager.this.conversation = conversation;
                         QuickstartConversationsManager.this.conversation.addListener(mDefaultConversationListener);
@@ -275,7 +274,7 @@ public class QuickstartConversationsManager {
         });
     }
 
-    private void join(final Conversation conversation){
+    private void join(final Conversation conversation) {
         conversation.join(new StatusListener() {
             @Override
             public void onSuccess() {
@@ -299,19 +298,22 @@ public class QuickstartConversationsManager {
             public void onSuccess(Conversation result) {
                 if (result != null) {
                     Log.d(TAG, "Joining Conversation: " + DEFAULT_CONVERSATION_NAME);
+                    String conversationSid = result.getSid();
+
+
                     Attributes attributes = result.getAttributes();
                     result.addParticipantByIdentity(identity, attributes, new StatusListener() {
                         @Override
                         public void onSuccess() {
-                            Log.d("join add :-","add");
+                            Log.d("join add :-", "add");
                             joinConversation(result);
                         }
 
                         @Override
                         public void onError(ErrorInfo errorInfo) {
-                            Log.d("join error :-","error  .."+errorInfo.getMessage());
+                            Log.d("join error :-", "error  .." + errorInfo.getMessage());
                             joinConversation(result);
-                         }
+                        }
                     });
                 }
             }
@@ -336,6 +338,7 @@ public class QuickstartConversationsManager {
                 QuickstartConversationsManager.this.loadPreviousMessages(conversation);
 
             }
+
             @Override
             public void onError(ErrorInfo errorInfo) {
                 Log.e(TAG, "Error joining conversation: " + errorInfo.getMessage());
@@ -346,7 +349,7 @@ public class QuickstartConversationsManager {
     }
 
     private void loadPreviousMessages(final Conversation conversation) {
-        if (conversation.getLastMessageIndex()!=null) {
+        if (conversation.getLastMessageIndex() != null) {
             conversation.getLastMessages(conversation.getLastMessageIndex().intValue(), new CallbackListener<List<Message>>() {
                 @Override
                 public void onSuccess(List<Message> result) {
@@ -361,7 +364,7 @@ public class QuickstartConversationsManager {
                     });
                 }
             });
-        }else {
+        } else {
             if (conversationsManagerListener != null) {
                 conversationsManagerListener.reloadMessages();
             }
@@ -474,6 +477,7 @@ public class QuickstartConversationsManager {
         @Override
         public void onSuccess(ConversationsClient conversationsClient) {
             QuickstartConversationsManager.this.conversationsClient = conversationsClient;
+
             conversationsClient.addListener(QuickstartConversationsManager.this.mConversationsClientListener);
             Log.d(TAG, "Success creating Twilio Conversations Client");
         }
@@ -485,10 +489,8 @@ public class QuickstartConversationsManager {
     };
 
 
-
-
-    public void UpdateStatus(){
-        if (conversation!=null){
+    public void UpdateStatus() {
+        if (conversation != null) {
             conversation.typing();
         }
     }
@@ -498,7 +500,7 @@ public class QuickstartConversationsManager {
         public void onMessageAdded(final Message message) {
             Log.d(TAG, "Message added");
             messages.add(message);
-            if (message.getAuthor().equals("muairspaprovider_"+userid)){
+            if (message.getAuthor().equals("muairspaprovider_" + userid)) {
                 conversation.setAllMessagesRead(new CallbackListener<Long>() {
                     @Override
                     public void onSuccess(Long result) {
@@ -568,20 +570,26 @@ public class QuickstartConversationsManager {
         this.conversationsManagerListener = listener;
     }
 
-    public Conversation CheckLastMassageRead(){
+    public Conversation CheckLastMassageRead() {
         return conversation;
     }
 
-    public void readConversastion(){
-        if (conversation!=null){
-            conversation.setAllMessagesRead(new CallbackListener<Long>() {
-                @Override
-                public void onSuccess(Long result) {
+    public void deleteConversation() {
+        if (conversation != null) {
 
-                }
-            });
+
         }
     }
 
 }
+
+
+//    conversation.getParticipantByIdentity("").getSid()
+//            conversation.setAllMessagesRead(new CallbackListener<Long>() {
+//                @Override
+//                public void onSuccess(Long result) {
+//
+//                }
+//            });
+
 

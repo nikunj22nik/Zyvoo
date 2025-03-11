@@ -23,9 +23,18 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.SimpleDateFormat
+import java.time.Duration
+import java.time.Instant
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
@@ -191,9 +200,13 @@ object ErrorDialog {
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun convertToTimeFormat(time: String): String {
-        val formatter = DateTimeFormatter.ofPattern("hh:mm a",Locale.ENGLISH) // Input format
-        val outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss") // Output format
-        return LocalTime.parse(time, formatter).format(outputFormatter)
+        var value  = ""
+        if (!time.equals("")) {
+            val formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH) // Input format
+            val outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss") // Output format
+            value =  LocalTime.parse(time, formatter).format(outputFormatter)
+        }
+        return value
     }
 
     fun calculatePercentage(value: Double?, percentage: Double?): Double  {
@@ -204,7 +217,87 @@ object ErrorDialog {
         }
     }
 
+    fun getCurrentDate(): String {
+        var date = ""
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val currentDate = LocalDateTime.now()
+            date = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 
+        } else {
+            val calendar = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            date = dateFormat.format(calendar.time)
+        }
+        return date
+    }
+
+    fun getCurrentDateTime(): String {
+        var date = ""
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val currentDate = LocalDateTime.now()
+            date = currentDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
+
+        } else {
+            val calendar = Calendar.getInstance()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            date = dateFormat.format(calendar.time)
+        }
+        return date
+    }
+
+
+    fun calculateDifferenceInSeconds(startTime: String, endTime: String): Long {
+       /* val startInstant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Instant.parse(startTime)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }  // Parse ISO 8601 timestamp
+        val endInstant = Instant.parse(endTime)      // Parse ISO 8601 timestamp
+
+        return Duration.between(startInstant, endInstant).toMinutes()  // Get difference in seconds*/
+
+        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                .withZone(ZoneOffset.UTC)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+
+        val startInstant = LocalDateTime.parse(startTime, formatter).toInstant(ZoneOffset.UTC)
+        val endInstant = LocalDateTime.parse(endTime, formatter).toInstant(ZoneOffset.UTC)
+
+        return Duration.between(startInstant, endInstant).toMinutes() // Get difference in seconds
+    }
+
+
+    fun getMinutesPassed(targetTime: String): Long {
+        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+
+        // Parse the target time and convert to Instant
+        val targetInstant = LocalDateTime.parse(targetTime, formatter)
+            .atZone(ZoneId.systemDefault()) // Convert to system default timezone
+            .toInstant()
+        // Get the current time as Instant
+        val currentInstant = Instant.now()
+
+        // Calculate the difference in minutes
+        return Duration.between(targetInstant, currentInstant).toMinutes()
+    }
+
+
+    fun truncateToTwoDecimalPlaces(value: String): String {
+        return try {
+            BigDecimal(value)
+                .setScale(2, RoundingMode.DOWN) // Truncate without rounding
+                .toPlainString() // Ensures no scientific notation
+        } catch (e: NumberFormatException) {
+            "0.00" // Default value if input is invalid
+        }
+    }
 
 
 

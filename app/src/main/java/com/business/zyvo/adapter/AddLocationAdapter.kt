@@ -13,6 +13,7 @@ import com.business.zyvo.databinding.LayoutWhereILiveBinding
 import com.business.zyvo.model.AddLocationModel
 import com.business.zyvo.onItemClickData
 
+
 class AddLocationAdapter(
     var context: Context,
     var list: MutableList<AddLocationModel>,
@@ -65,10 +66,12 @@ class AddLocationAdapter(
         fun bind() {
 
             if (list.size >= 3) {
-                binding.textAddNew.visibility = View.GONE
+
+                binding.textAddNew?.visibility = View.GONE
             } else {
-                binding.textAddNew.visibility = View.VISIBLE
+                binding.textAddNew?.visibility = View.VISIBLE
             }
+
 
             // Logic for hiding/showing "Add New" button based on count
 
@@ -97,7 +100,7 @@ class AddLocationAdapter(
             // Toast.makeText(context,list.size.toString(),Toast.LENGTH_LONG).show()
         } else if (holder is LocationViewHolderFixed) {
             holder.bind() // Bind "Add New" button (if needed)
-          //  textAddNew = holder.binding.textAddNew
+            //  textAddNew = holder.binding.textAddNew
 
         }
     }

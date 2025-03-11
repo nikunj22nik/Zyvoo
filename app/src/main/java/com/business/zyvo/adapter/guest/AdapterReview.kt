@@ -49,7 +49,7 @@ class AdapterReview(
 
     @SuppressLint("NotifyDataSetChanged")
     fun updateAdapter(newList: MutableList<Review>) {
-        list.clear()
+
         list.addAll(newList)
         notifyDataSetChanged()
     }

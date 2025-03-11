@@ -108,11 +108,12 @@ class CheckOutPayViewModel  @Inject constructor(private val repository: ZyvoRepo
 
     suspend fun bookProperty(
         userId : String, property_id : String, booking_date : String, booking_start : String, booking_end : String,
-        booking_amount : String, total_amount : String, customer_id : String, card_id : String, addons: Map<String, String>
+        booking_amount : String, total_amount : String, customer_id : String, card_id : String,
+        addons: Map<String, String>, service_fee : String, tax : String, discount_amount : String
     ):  Flow<NetworkResult<JsonObject>>{
         return repository.bookProperty(
             userId, property_id, booking_date, booking_start, booking_end, booking_amount, total_amount,
-            customer_id, card_id, addons
+            customer_id, card_id, addons,service_fee,tax,discount_amount
         ).onEach {
             when(it){
                 is NetworkResult.Loading -> {
