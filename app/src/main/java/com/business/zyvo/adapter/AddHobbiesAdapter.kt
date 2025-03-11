@@ -31,11 +31,6 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
 
         fun bind(hobbiesItem: AddHobbiesModel) {
 
-            if (list.size >= 3) {
-                textAddNew?.visibility = View.GONE
-            } else {
-                textAddNew?.visibility  = View.VISIBLE
-            }
 
             binding.textMyWorkName.text = hobbiesItem.name
             binding.imageCross.setOnClickListener {
@@ -55,6 +50,12 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
 
         fun bind() {
 
+            if (list.size >= 3) {
+                binding.textAddNew.visibility = View.GONE
+            } else {
+                binding.textAddNew.visibility = View.VISIBLE
+            }
+
             binding.imageIcon.setImageResource(R.drawable.ic_add_hobbies_icon)
             // Handle click on "Add New"
             binding.textAddNew.setOnClickListener {
@@ -70,7 +71,7 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
 
                     listner2.itemClick(adapterPosition,"Hobbies",enteredText)
                     // Add the new work item to the list
-                    list.add(0, AddHobbiesModel(enteredText))
+                    list.add(list.size -1 , AddHobbiesModel(enteredText))
                     notifyDataSetChanged() // Notify adapter to update RecyclerView
 
                     // Reset the UI: Hide the input field and show "Add New" button again
@@ -118,6 +119,10 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
     fun updateHobbies(newList: MutableList<AddHobbiesModel>) {
 
         this.list = newList
+
+        if (list.isEmpty()) {
+            list.add(AddHobbiesModel("Add New")) // Placeholder for "Add New"
+        }
         notifyDataSetChanged()
     }
 }

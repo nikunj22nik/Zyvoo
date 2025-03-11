@@ -53,6 +53,7 @@ import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.OnLocalListener
@@ -158,8 +159,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     addLivePlace(place_name = placeName)
 
                     // Update the list and notify adapter in one step
-                    locationList.add(0, newLocation)
-                    addLocationAdapter.notifyItemInserted(0)
+                    locationList.add(locationList.size-1, newLocation)
+                    // addLocationAdapter.notifyItemInserted(0)
+                    addLocationAdapter.updateLocations(locationList)
 
                     Log.i(ErrorDialog.TAG, "Place: $placeName, ${place.id}")
                 }
@@ -176,27 +178,27 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         commonAuthWorkUtils = CommonAuthWorkUtils(requireContext(), navController)
         apiKey = getString(R.string.api_key)
 
-            getInquiryResult = registerForActivityResult(Inquiry.Contract()) { result ->
-                when (result) {
-                    is InquiryResponse.Complete -> {
-                        // User identity verification completed successfully
-                        verifyIdentityApi()
-                    }
-                    is InquiryResponse.Cancel -> {
-                        // User abandoned the verification process
-                        binding.textConfirmNow2.visibility = View.VISIBLE
-                        binding.textVerified2.visibility = GONE
-                        Toast.makeText(requireContext(),"Request Cancelled",Toast.LENGTH_LONG).show()
-                    }
-                    is InquiryResponse.Error -> {
-                        // Error occurred during identity verification
-                        binding.textConfirmNow2.visibility = View.VISIBLE
-                        binding.textVerified2.visibility = GONE
-                        Toast.makeText(requireContext(),"Error Occurred, Try Again",Toast.LENGTH_LONG).show()
+        getInquiryResult = registerForActivityResult(Inquiry.Contract()) { result ->
+            when (result) {
+                is InquiryResponse.Complete -> {
+                    // User identity verification completed successfully
+                    verifyIdentityApi()
+                }
+                is InquiryResponse.Cancel -> {
+                    // User abandoned the verification process
+                    binding.textConfirmNow2.visibility = View.VISIBLE
+                    binding.textVerified2.visibility = GONE
+                    Toast.makeText(requireContext(),"Request Cancelled",Toast.LENGTH_LONG).show()
+                }
+                is InquiryResponse.Error -> {
+                    // Error occurred during identity verification
+                    binding.textConfirmNow2.visibility = View.VISIBLE
+                    binding.textVerified2.visibility = GONE
+                    Toast.makeText(requireContext(),"Error Occurred, Try Again",Toast.LENGTH_LONG).show()
 
-                    }
                 }
             }
+        }
 
     }
 
@@ -211,7 +213,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         // Inflate the layout for this fragment
         binding =
             FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
-        val newLocation = AddLocationModel(AppConstant.unknownLocation)
+        //  val newLocation = AddLocationModel(AppConstant.unknownLocation)
 
 
         binding.switchHost.setOnClickListener {
@@ -224,23 +226,23 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             startActivity(intent)
         }
-        locationList.add(newLocation)
-        val newWork = AddWorkModel(AppConstant.unknownLocation)
-        workList.add(newWork)
-        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
-        languageList.add(newLanguage)
-        val newHobbies = AddHobbiesModel(AppConstant.unknownLocation)
-
-        hobbiesList.add(newHobbies)
-        val newPets = AddPetsModel(AppConstant.unknownLocation)
-
-        petsList.add(newPets)
+//        locationList.add(newLocation)
+//       val newWork = AddWorkModel(AppConstant.unknownLocation)
+//        workList.add(newWork)
+//        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
+//        languageList.add(newLanguage)
+//        val newHobbies = AddHobbiesModel(AppConstant.unknownLocation)
+//
+//        hobbiesList.add(newHobbies)
+//        val newPets = AddPetsModel(AppConstant.unknownLocation)
+//
+//        petsList.add(newPets)
 
 
         addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf(),this)
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
         profileViewModel.paymentCardList.observe(viewLifecycleOwner) { payment ->
-          //  addPaymentCardAdapter.updateItem(payment)
+            //  addPaymentCardAdapter.updateItem(payment)
         }
 
         session = SessionManager(requireActivity())
@@ -431,9 +433,16 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         locationList = getObjectsFromNames(it.where_live) { name ->
                                             AddLocationModel(name)  // Using the constructor of MyObject to create instances
                                         }
+                                        Log.d("ProfileCheck","getObjectsFromNames")
                                         val newLanguage =
                                             AddLocationModel(AppConstant.unknownLocation)
                                         locationList.add(newLanguage)
+
+
+                                        locationList.forEach {
+                                            Log.d("ProifleDataLoc",it.toString())
+                                        }
+                                        Log.d("ProifleDataLoc",locationList.size.toString())
                                         addLocationAdapter.updateLocations(locationList)
                                     }
                                     if (it?.my_work != null && it.my_work.isNotEmpty()) {
@@ -614,8 +623,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     val newLanguage = AddLanguageModel(local)
                     addLanguageApi(newLanguage.name)
                     // Add the new language to the list
-                    languageList.add(0, newLanguage)
-                    addLanguageSpeakAdapter.notifyItemInserted(0)
+                    Log.d("laguageListSize",languageList.size.toString())
+                    languageList.add(languageList.size - 1, newLanguage)
+                    addLanguageSpeakAdapter.updateLanguage(languageList)
+                    //addLanguageSpeakAdapter.notifyItemInserted(0)
 
                     // Delay dismissing the dialog slightly to prevent UI issues
                     Handler(Looper.getMainLooper()).postDelayed({
@@ -1155,7 +1166,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
-                                    showErrorDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
                                 }
                             }
 
@@ -1194,7 +1205,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
-                                    showErrorDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.name = first_name + " " + last_name
                                     binding.user = userProfile
                                 }
@@ -1238,7 +1249,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     binding.etAboutMe.isEnabled = false
                                     binding.imageEditAbout.visibility = View.VISIBLE
                                     binding.imageAboutCheckedButton.visibility = GONE
-                                    showErrorDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.about_me = about_me
                                     binding.user = userProfile
                                 }
@@ -1274,7 +1285,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     when (result) {
                         is NetworkResult.Success -> {
                             result.data?.let { resp ->
-                                showErrorDialog(requireContext(), resp.first)
+                                showSuccessDialog(requireContext(), resp.first)
 
                                 // Prevent duplicates before adding
                                 if (!locationList.any { it.name == place_name }) {
@@ -3123,9 +3134,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 when(it){
 
                     is NetworkResult.Success -> {
-                        showErrorDialog(requireContext(),it.data!!)
+                        showSuccessDialog(requireContext(),it.data!!)
+
                         val sessionManager = SessionManager(requireContext())
-                        sessionManager.logOut()
                         sessionManager.setUserId(-1)
                         val intent = Intent(requireContext(), AuthActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

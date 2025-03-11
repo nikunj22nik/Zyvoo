@@ -22,7 +22,7 @@ class AddWorkAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val uploadWorkCode = 1
     private val uploadWorkFixed = 0
-     private  var textAddNew : TextView? = null
+    private  var textAddNew : TextView? = null
 
 
     inner class WorkViewHolder(var binding: LayoutMyWorkBinding) :
@@ -34,11 +34,7 @@ class AddWorkAdapter(
         }
 
         fun bind(workItem: AddWorkModel) {
-            if (list.size >= 3) {
-                textAddNew?.visibility = View.GONE
-            } else {
-                textAddNew?.visibility  = View.VISIBLE
-            }
+
 
             binding.textMyWorkName.text = workItem.name
             binding.imageCross.setOnClickListener {
@@ -71,6 +67,13 @@ class AddWorkAdapter(
 
         @SuppressLint("NotifyDataSetChanged")
         fun bind() {
+
+
+            if (list.size >= 3) {
+                binding.textAddNew.visibility = View.GONE
+            } else {
+                binding.textAddNew.visibility = View.VISIBLE
+            }
             // Handle click on "Add New"
             binding.textAddNew.setOnClickListener {
                 binding.textAddNew.visibility = View.GONE
@@ -83,7 +86,7 @@ class AddWorkAdapter(
                 if (enteredText.isNotEmpty()) {
                     listner2.itemClick(position,"work",enteredText)
                     // Add the new work item to the list
-                    list.add(0, AddWorkModel(enteredText))
+                    list.add(list.size -1 , AddWorkModel(enteredText))
                     notifyDataSetChanged() // Notify adapter to update RecyclerView
 
                     // Reset the UI: Hide the input field and show "Add New" button again
@@ -134,6 +137,11 @@ class AddWorkAdapter(
     fun updateWork(newList: MutableList<AddWorkModel>) {
 
         this.list = newList
+
+
+        if (list.isEmpty()) {
+            list.add(AddWorkModel("Add New")) // Placeholder for "Add New"
+        }
         notifyDataSetChanged()
     }
 

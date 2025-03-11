@@ -649,4 +649,12 @@ interface ZyvoApi {
         @Field("activity") activity : String
     ) :Response<JsonObject>
 
+    @POST("get_user_bookings")
+    @FormUrlEncoded
+    suspend fun getUserBookings(
+        @Field("user_id") user_id : String,
+        @Field("booking_date") booking_date : String,
+        @Field("booking_start") booking_start : String
+    ) :Response<JsonObject>
+
 }

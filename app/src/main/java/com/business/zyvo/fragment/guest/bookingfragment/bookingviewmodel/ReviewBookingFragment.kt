@@ -52,6 +52,7 @@ import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
@@ -115,6 +116,13 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                     LoadingUtils.hideDialog()
                 }
             }
+        }
+
+        binding.rlNeedHelp.setOnClickListener {
+            val bundle = Bundle().apply {
+                putString("type", "Guest")
+            }
+            findNavController().navigate(R.id.helpCenterFragment_host,bundle)
         }
 
         getBookingDetailsListAPI()
@@ -208,14 +216,16 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 binding.tvNamePlace.text = data.property_name ?: "N/A"
                                 binding.tvStatus.text = data.status
                                 binding.textMiles.text = (data.distance_miles ?: "N/A").toString()+" miles away"
-                                binding.textRatingStar.text = "$${data.total_rating ?: "0"}"
+                                binding.textRatingStar.text = "$${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
                                 binding.time.text = data.charges?.booking_hours.toString()
-                                binding.money.text = "$${data.charges?.booking_amount ?: "0.00"}"
-                                binding.tvCleaningFee.text = "$${data.charges?.cleaning_fee ?: "0.00"}"
-                                binding.tvServiceFee.text = "$${data.charges?.zyvo_service_fee ?: "0.00"}"
-                                binding.tvTaxes.text = "$${data.charges?.taxes ?: "0.00"}"
-                                binding.tvAddOn.text = "$${data.charges?.add_on?.toString() ?: "N/A"}"
-                                binding.tvTotalPrice.text = "$${data.charges?.total ?: "0.00"}"
+                                binding.money.text = "$${truncateToTwoDecimalPlaces(data.charges?.booking_amount ?: "0.00")}"
+                                binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(data.charges?.cleaning_fee ?: "0.00")}"
+                                binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(data.charges?.cleaning_fee ?: "0.00")}"
+                                binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(data.charges?.cleaning_fee ?: "0.00")}"
+                                binding.tvServiceFee.text = "$${truncateToTwoDecimalPlaces(data.charges?.zyvo_service_fee ?: "0.00")}"
+                                binding.tvTaxes.text = "$${truncateToTwoDecimalPlaces(data.charges?.taxes ?: "0.00")}"
+                                binding.tvAddOn.text = "$${truncateToTwoDecimalPlaces(data.charges?.add_on?.toString() ?: "0.00")}"
+                                binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(data.charges?.total ?: "0.00")}"
                                 binding.tvBookingDate.text = data.booking_detail?.date ?: "N/A"
                                 binding.bookingFromTo.text = data.booking_detail?.start_end_time ?: "N/A"
                                 binding.tvBookingTotalTime.text = data.booking_detail?.time ?: "N/A"

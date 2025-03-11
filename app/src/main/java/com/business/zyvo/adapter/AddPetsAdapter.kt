@@ -15,7 +15,9 @@ import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.onItemClickData
 
-class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>, var listner : OnClickListener1,var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>, var listner : OnClickListener1,var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>()
+{
 
     private val uploadPetsCode = 1 // Represents normal location entries
     private val uploadPetsFixed = 0
@@ -32,11 +34,7 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
         }
 
         fun bind(petsItem: AddPetsModel) {
-            if (list.size >= 3) {
-                textAddNew?.visibility = View.GONE
-            } else {
-                textAddNew?.visibility  = View.VISIBLE
-            }
+
             binding.textMyWorkName.text = petsItem.name
             binding.imageCross.setOnClickListener {
                 listner.itemClick(
@@ -55,7 +53,11 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
 
         @SuppressLint("NotifyDataSetChanged")
         fun bind() {
-
+            if (list.size >= 3) {
+                binding.textAddNew.visibility = View.GONE
+            } else {
+                binding.textAddNew.visibility = View.VISIBLE
+            }
             binding.imageIcon.setImageResource(R.drawable.ic_add_pets_icon)
             // Handle click on "Add New"
             binding.textAddNew.setOnClickListener {
@@ -70,7 +72,7 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
                 if (enteredText.isNotEmpty()) {
                     listner2.itemClick(adapterPosition,"Pets",enteredText)
                     // Add the new work item to the list
-                    list.add(0, AddPetsModel(enteredText))
+                    list.add(list.size -1 , AddPetsModel(enteredText))
                     notifyDataSetChanged() // Notify adapter to update RecyclerView
 
                     // Reset the UI: Hide the input field and show "Add New" button again
@@ -119,6 +121,9 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
     fun updatePets(newList: MutableList<AddPetsModel>) {
 
         this.list = newList
+        if (list.isEmpty()) {
+            list.add(AddPetsModel("Add New")) // Placeholder for "Add New"
+        }
         notifyDataSetChanged()
     }
 }

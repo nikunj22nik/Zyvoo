@@ -19,6 +19,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.text.Editable
@@ -81,7 +82,10 @@ import com.business.zyvo.model.SearchFilterRequest
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.calculateDifferenceInSeconds
 import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
+import com.business.zyvo.utils.ErrorDialog.getCurrentDateTime
+import com.business.zyvo.utils.ErrorDialog.getMinutesPassed
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.google.android.gms.common.api.GoogleApiClient
@@ -97,6 +101,7 @@ import com.google.android.gms.location.LocationSettingsResult
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.stripe.android.ApiResultCallback
 import com.stripe.android.Stripe
@@ -114,7 +119,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     lateinit var binding :FragmentGuestDiscoverBinding
     private lateinit var startForResult: ActivityResultLauncher<Intent>
     private lateinit var startSearchForResult: ActivityResultLauncher<Intent>
-    private val totalDuration = 20000L
+    private var totalDuration = 20000L
     private lateinit var adapter: HomeScreenAdapter
     private lateinit var mapView: MapView
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
@@ -126,6 +131,10 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     var session: SessionManager?=null
     private var homePropertyData: MutableList<HomePropertyData> = mutableListOf()
     private var wishlistItem: MutableList<WishlistItem> = mutableListOf()
+    private val handler = Handler(Looper.getMainLooper())
+    private var runnable: Runnable? = null
+    private var initialstartTime: Long = 0
+
 
 
     private val guestDiscoverViewModel: GuestDiscoverViewModel by lazy {
@@ -156,43 +165,51 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         }
 
         startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                // Handle the resultl
-                if (data!=null) {
-                    if (data?.extras?.getString("type").equals("filter")) {
-                        val value: FilterRequest = Gson().fromJson(
-                            data?.extras?.getString("requestData"), FilterRequest::class.java
-                        )
-                        value?.let {
-                            Log.d(ErrorDialog.TAG, Gson().toJson(value))
-                            filteredDataAPI(it)
+            try {
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val data = result.data
+                    // Handle the resultl
+                    if (data!=null) {
+                        if (data?.extras?.getString("type").equals("filter")) {
+                            val value: FilterRequest = Gson().fromJson(
+                                data?.extras?.getString("requestData"), FilterRequest::class.java
+                            )
+                            value?.let {
+                                Log.d(ErrorDialog.TAG, Gson().toJson(value))
+                                filteredDataAPI(it)
+                            }
+                        }else{
+                            loadHomeApi()
                         }
-                    }else{
-                        loadHomeApi()
                     }
                 }
+            }catch (e:Exception){
+                Log.e(ErrorDialog.TAG,e.message!!)
             }
         }
 
         startSearchForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val data = result.data
-                // Handle the resultl
-                if (data!=null) {
-                    if (data?.extras?.getString("type").equals("filter")) {
-                        val value: SearchFilterRequest = Gson().fromJson(
-                            data?.extras?.getString("SearchrequestData"),
-                            SearchFilterRequest::class.java
-                        )
-                        value?.let {
-                            Log.d(ErrorDialog.TAG, Gson().toJson(value))
-                            getHomeDataSearchFilter(it)
+            try {
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val data = result.data
+                    // Handle the resultl
+                    if (data!=null) {
+                        if (data?.extras?.getString("type").equals("filter")) {
+                            val value: SearchFilterRequest = Gson().fromJson(
+                                data?.extras?.getString("SearchrequestData"),
+                                SearchFilterRequest::class.java
+                            )
+                            value?.let {
+                                Log.d(ErrorDialog.TAG, Gson().toJson(value))
+                                getHomeDataSearchFilter(it)
+                            }
+                        }else{
+                            loadHomeApi()
                         }
-                    }else{
-                        loadHomeApi()
                     }
                 }
+            }catch (e:Exception){
+                Log.e(ErrorDialog.TAG,e.message!!)
             }
         }
         mapView = binding.map
@@ -239,6 +256,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             filteredDataAPI(it)
         }*/
 
+        getUserBookings()
+
+
         return binding.root
     }
 
@@ -263,26 +283,38 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
 
-        binding.customProgressBar.setProgressWidth(15f)
+     //   binding.customProgressBar.setProgressWidth(15f)
        // binding.customProgressBar.setMax(100.0) // Set max progress as 100%
-        binding.customProgressBar.setMax(100.0)
+     //   binding.customProgressBar.setMax(1000.0)
 
         // Start the countdown timer
-        startCountdown()
+     //   startCountdown()
     }
-    private fun startCountdown() {
+    private fun startCountdown(remaning:String) {
         // Countdown timer for 20 seconds with 1-second intervals
-        object : CountDownTimer(totalDuration, 1000) {
+        object : CountDownTimer(remaning.toLong()*(1000*60), 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = (millisUntilFinished / 1000).toInt()
-                val progress = ((totalDuration - millisUntilFinished).toDouble() / totalDuration) * 100
-                binding.customProgressBar.setProgress(progress)
+                formatTime(secondsRemaining)
+                Log.e(ErrorDialog.TAG,"$secondsRemaining")
             }
-
             override fun onFinish() {
-                binding.customProgressBar.setProgress(100.0)
+
             }
         }.start()
+    }
+
+    fun formatTime(seconds: Int) {
+        try {
+            val hours = seconds / 3600
+            val minutes = (seconds % 3600) / 60
+            val secs = seconds % 60
+            binding.tvHour.text = "$hours"
+            binding.tvmin.text = "$minutes"
+            binding.textSecs.text = "$secs"
+        }catch (e:Exception){
+            Log.e(ErrorDialog.TAG,e.message!!)
+        }
     }
     @SuppressLint("SetTextI18n")
     override fun onClick(p0: View?) {
@@ -437,6 +469,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     override fun onDestroyView() {
         super.onDestroyView()
         mapView.onDestroy()
+        stopHandler()
     }
 
 
@@ -801,6 +834,61 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         }
     }
 
+    private fun getUserBookings() {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                guestDiscoverViewModel.getUserBookings(session?.getUserId().toString()
+                ,ErrorDialog.getCurrentDate(),getCurrentDateTime()).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                session?.setFilterRequest("")
+                                session?.setSearchFilterRequest("")
+                                binding.clTimeLeftProgressBar.visibility = View.VISIBLE
+                                val booking:JsonObject = resp.
+                                getAsJsonArray("bookings").get(0).asJsonObject
+                                if (booking.has("booking_start") &&
+                                    booking.has("booking_end")){
+                                    val booking_start = booking.get("booking_start").asString
+                                    val booking_end = booking.get("booking_end").asString
+                                    try {
+                                        val differenceIntoMinutes  = calculateDifferenceInSeconds(
+                                            "2025-03-11 14:00:00"/*booking_start*/,"2025-03-11 17:00:00"/*booking_end*/
+                                        )
+                                        initialstartTime = getMinutesPassed("2025-03-11 14:00:00"/*booking_start*/)
+                                        Log.e(ErrorDialog.TAG,"passway"+initialstartTime.toString())
+                                        Log.e(ErrorDialog.TAG,"differenceIntoMinutes"+differenceIntoMinutes)
+                                        totalDuration = differenceIntoMinutes//20L//differenceInSeconds
+                                        initialstartTime =initialstartTime //10
+                                        //startProgressUpdate()
+                                        startProgressUpdateMinute()
+                                        // Start the countdown timer
+                                        val remain = totalDuration.toInt()-initialstartTime.toInt()
+                                        Log.e(ErrorDialog.TAG,"remain"+remain)
+                                        startCountdown(remain.toString())
+                                    }catch (e:Exception){
+                                        Log.e(ErrorDialog.TAG,e.message!!)
+                                    }
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            binding.clTimeLeftProgressBar.visibility = View.GONE
+                       //     showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getHomeDataSearchFilter(filterRequest: SearchFilterRequest) {
         if (NetworkMonitorCheck._isConnected.value) {
@@ -1067,10 +1155,76 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         alertDialog.setCancelable(false)
         alertDialog.show()
 
-
-
         
     }
 
+    private fun startProgressUpdate() {
+        try {
+            val startTime = System.currentTimeMillis() - (initialstartTime * 1000)
+            val elapsedMinutes = ((System.currentTimeMillis() - startTime) /1000).toDouble() // Convert ms to minutes
+            binding.customProgressBar.setMax(totalDuration.toDouble()) // Set max progress as 10,800
+            binding.customProgressBar.setProgress(elapsedMinutes) // ✅ Show actual progress done
+            Log.e(ErrorDialog.TAG,"$startTime")
+
+            runnable = object : Runnable {
+                override fun run() {
+                    val elapsedTime = ((System.currentTimeMillis() - startTime) / (1000)).toInt()
+                    val remainingNow = (totalDuration - elapsedTime).coerceAtLeast(0)
+                    if (remainingNow>0/*elapsedTime <= totalDuration*/) {
+                        binding.customProgressBar.setProgress(elapsedTime.toDouble()) // Update progress
+                        handler.postDelayed(this, 1000) // Update every second
+                        Log.e(ErrorDialog.TAG,"Update $elapsedTime")
+                    }else {
+                        handler.removeCallbacks(this) // Stop updating when progress is complete
+                        Log.d(ErrorDialog.TAG,"Progress completed, handler stopped.")
+                    }
+                }
+            }
+            handler.post(runnable!!)
+        }catch (e:Exception){
+            Log.e(ErrorDialog.TAG,e.message!!)
+        }
+    }
+
+
+    private fun startProgressUpdateMinute() {
+        try {
+            val startTime = System.currentTimeMillis() - (initialstartTime * 60000) // Adjusting for initial offset
+            val elapsedMinutes = ((System.currentTimeMillis() - startTime) / 60000.0) // Convert ms to minutes
+
+            binding.customProgressBar.setMax(totalDuration.toDouble()) // Set max progress in minutes
+            binding.customProgressBar.setProgress(elapsedMinutes) // ✅ Show actual progress in minutes
+            Log.e(ErrorDialog.TAG, "Start Time: $startTime, Elapsed: $elapsedMinutes min")
+            runnable = object : Runnable {
+                override fun run() {
+                    val elapsedTimeMinutes = ((System.currentTimeMillis() - startTime) / 60000.0) // Convert to minutes
+                    val remainingNow = (totalDuration - elapsedTimeMinutes).coerceAtLeast(0.0)
+
+                    if (remainingNow > 0) {
+                        binding.customProgressBar.setProgress(elapsedTimeMinutes) // Update progress
+                        handler.postDelayed(this, 1000*60) // Update every minute
+                        Log.e(ErrorDialog.TAG, "Update: $elapsedTimeMinutes min")
+                        if (remainingNow<=30){
+
+                        }
+                    } else {
+                        handler.removeCallbacks(this) // Stop updating when progress is complete
+                        Log.d(ErrorDialog.TAG, "Progress completed, handler stopped.")
+                    }
+                }
+            }
+            handler.post(runnable!!)
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, e.message ?: "Error occurred")
+        }
+    }
+
+
+    private fun stopHandler() {
+        runnable?.let {
+            handler.removeCallbacks(it)
+            Log.e(ErrorDialog.TAG,"stopHandler")
+        }
+    }
 
 }

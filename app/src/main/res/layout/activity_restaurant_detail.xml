@@ -499,7 +499,7 @@
                             android:layout_height="match_parent"
                             android:layout_centerInParent="true"
                             app:cc_borderWidth="@dimen/_42sdp"
-                            app:cc_endHour="3"
+                            app:cc_endHour="2"
                             app:cc_endIconResource="@drawable/oval_white"
                             app:cc_fillColor="#4AEAB1"
                             app:cc_metricMode="clock"

@@ -154,4 +154,24 @@ class GuestDiscoverViewModel @Inject constructor(private val repository: ZyvoRep
 
 
 
+    suspend fun getUserBookings(
+        user_id : String,
+        booking_date : String,
+        booking_start : String):
+            Flow<NetworkResult<JsonObject>> {
+        return repository.getUserBookings(user_id,booking_date, booking_start).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+
+
 }
