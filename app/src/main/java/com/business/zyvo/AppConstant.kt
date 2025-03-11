@@ -84,9 +84,11 @@ class AppConstant {
         val Id: String?="ID"
         val session: String?="UserSession"
         val LATITUDE:String ="latitude"
+        val LATITUDEGUST:String ="latitudegust"
         val ADDRESS_ID :String ="Address_id"
         val ADDRESS:String = "Address"
         val LONGITUDE :String ="longitude"
+        val LONGITUDEGUST :String ="longitudegust"
         val OTP: String? ="OTP"
         val DEVICE_TYPE: String? = "Delete"
         val FCM_TOKEN: String? = "fcm_token"
@@ -115,6 +117,9 @@ class AppConstant {
         val BASE_URL ="https://zyvo.tgastaging.com"
         val currentYear = Calendar.getInstance().get(Calendar.YEAR)
         val years = (1900..currentYear).toList()
+
+        val FILTERREQUEST:String ="filterRequest"
+        val SEARCHFILTERREQUEST:String ="searchfilterRequest"
 
         val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September",
             "October", "November", "December")

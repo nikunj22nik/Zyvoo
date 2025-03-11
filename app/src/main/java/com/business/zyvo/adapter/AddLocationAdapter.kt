@@ -13,6 +13,7 @@ import com.business.zyvo.databinding.LayoutWhereILiveBinding
 import com.business.zyvo.model.AddLocationModel
 import com.business.zyvo.onItemClickData
 
+
 class AddLocationAdapter(
     var context: Context,
     var list: MutableList<AddLocationModel>,
@@ -65,10 +66,12 @@ class AddLocationAdapter(
         fun bind() {
 
             if (list.size >= 3) {
+
                 binding.textAddNew?.visibility = View.GONE
             } else {
                 binding.textAddNew?.visibility = View.VISIBLE
             }
+
 
             // Logic for hiding/showing "Add New" button based on count
 
@@ -94,13 +97,10 @@ class AddLocationAdapter(
         if (holder is LocationViewHolder) {
             val locationItem = list[position]
             holder.bind(locationItem) // Bind location data to the holder
-
-
             // Toast.makeText(context,list.size.toString(),Toast.LENGTH_LONG).show()
         } else if (holder is LocationViewHolderFixed) {
             holder.bind() // Bind "Add New" button (if needed)
-            textAddNew = holder.binding.textAddNew
-
+            //  textAddNew = holder.binding.textAddNew
 
         }
     }
@@ -112,7 +112,13 @@ class AddLocationAdapter(
 
     // Determine the view type (whether it's a location or the "Add New" button)
     override fun getItemViewType(position: Int): Int {
-        return if (list.size - 1 != position) {
+//        return if (list.size - 1 != position) {
+//            uploadLocationCode // Normal location entries
+//        } else {
+//            uploadLocationFixed // "Add New" button
+//        }
+
+        return if (list.isEmpty() || position < list.size - 1) {
             uploadLocationCode // Normal location entries
         } else {
             uploadLocationFixed // "Add New" button
@@ -122,6 +128,11 @@ class AddLocationAdapter(
     // Update the list with new locations
     fun updateLocations(newList: MutableList<AddLocationModel>) {
         this.list = newList
+
+        // Ensure "Add New" button is always present if the list is empty
+        if (list.isEmpty()) {
+            list.add(AddLocationModel("Add New")) // Placeholder for "Add New"
+        }
         notifyDataSetChanged()
     }
 

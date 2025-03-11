@@ -488,7 +488,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                   }
                     stTime?.let  { resp ->
                         edTime?.let {
-                            var intent = Intent(this@CheckOutPayActivity
+                           /* var intent = Intent(this@CheckOutPayActivity
                                 , ExtraTimeActivity::class.java)
                             intent.putExtra("price",binding.tvPrice.text.toString().replace("$", ""),)
                             intent.putExtra("stTime",stTime)
@@ -497,8 +497,8 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                             intent.putExtra("propertyMile",propertyMile)
                             intent.putExtra("date",date)
                             intent.putExtra("hour",binding.tvHours.text.toString().replace(" Hours",""))
-                            startActivity(intent)
-                            /*bookProperty(
+                            startActivity(intent)*/
+                            bookProperty(
                                 propertyData?.property_id.toString(),
                                 convertDateFormatMMMMddyyyytoyyyyMMdd(date!!),
                                 convertDateFormatMMMMddyyyytoyyyyMMdd(date!!)+ " "+ErrorDialog.convertToTimeFormat(stTime!!),
@@ -506,8 +506,11 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                                 binding.tvPrice.text.toString().replace("$", ""),
                                 binding.tvTotalPrice.text.toString().replace("$", ""),
                                 customerId,
-                                selectuserCard?.card_id!!,createAddonFields(addons)
-                            )*/
+                                selectuserCard?.card_id!!,createAddonFields(addons),
+                                binding.tvZyvoServiceFee.text.toString().replace("$",""),
+                                binding.tvTaxesPrice.text.toString().replace("$",""),
+                                binding.tvDiscount.text.toString().replace("$","")
+                            )
                         }
                     }
                 }
@@ -830,9 +833,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                 binding.tvCleaningFee.text = "$$it"
                 totalPrice += it
             }
-            propertyData?.service_fee?.toDoubleOrNull()?.let {
-                binding.tvZyvoServiceFee.text = "$$it"
-                totalPrice += it
+            propertyData?.service_fee?.toDoubleOrNull()?.let {resp ->
+                hourlyTotal?.let {
+                    val taxAmount = calculatePercentage(it,resp)
+                    binding.tvZyvoServiceFee.text = "$$taxAmount"
+                    totalPrice += taxAmount
+                }
             }
             propertyData?.tax?.toDoubleOrNull()?.let {resp ->
                 hourlyTotal?.let {
@@ -855,7 +861,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                 hour?.let { cHr->
                     propertyData?.bulk_discount_rate?.let {
                         if (cHr.toInt() > h) {
-                            discountAmount = (totalPrice * it.toDouble()) / 100
+                            discountAmount = (hourlyTotal * it.toDouble()) / 100
                             totalPrice -= discountAmount
                         }
                     }
@@ -910,18 +916,20 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
 
      private fun bookProperty(property_id : String, booking_date : String, booking_start : String,
                               booking_end : String, booking_amount : String, total_amount : String,
-                              customer_id : String, card_id : String, addons: Map<String, String>) {
+                              customer_id : String, card_id : String, addons: Map<String, String>,
+                              service_fee : String, tax : String, discount_amount : String) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 checkOutPayViewModel.bookProperty(session?.getUserId().toString(),
                     property_id, booking_date, booking_start, booking_end, booking_amount, total_amount,
-                    customer_id, card_id, addons).collect {
+                    customer_id, card_id, addons,
+                    service_fee,tax,discount_amount).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 var intent = Intent(this@CheckOutPayActivity
                                     , ExtraTimeActivity::class.java)
-                                intent.putExtra("price",binding.tvPrice.text.toString().replace("$", ""),)
+                                intent.putExtra("price",binding.tvPrice.text.toString().replace("$", ""))
                                 intent.putExtra("stTime",stTime)
                                 intent.putExtra("edTime",edTime)
                                 intent.putExtra("propertyData",Gson().toJson(propertyData))

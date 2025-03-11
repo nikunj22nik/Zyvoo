@@ -81,4 +81,35 @@ class ExtraTimeChargeViewModel  @Inject constructor(private val repository: Zyvo
         }
     }
 
+    suspend fun getBookingExtensionTimeAmount( userId : String,
+                              booking_id : String,
+                              extension_time : String,
+                              service_fee : String,
+                              tax : String, cleaning_fee:String,
+                              extension_total_amount : String,
+                              extension_booking_amount : String,
+                              discount_amount : String):  Flow<NetworkResult<JsonObject>>{
+        return repository.getBookingExtensionTimeAmount(
+            userId,
+            booking_id,
+            extension_time,
+            service_fee,
+            tax,
+            cleaning_fee,
+            extension_total_amount,
+            extension_booking_amount,
+            discount_amount
+        ).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
 }

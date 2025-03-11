@@ -23,7 +23,7 @@ class AddWorkAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private val uploadWorkCode = 1
     private val uploadWorkFixed = 0
-     private  var textAddNew : TextView? = null
+    private  var textAddNew : TextView? = null
 
 
     inner class WorkViewHolder(var binding: LayoutMyWorkBinding) :

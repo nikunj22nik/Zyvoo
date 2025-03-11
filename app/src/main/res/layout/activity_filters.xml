@@ -321,7 +321,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_7sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
-                        android:text="Date"
+                        android:hint="Date"
+                        android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
 
@@ -441,7 +442,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_7sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
-                        android:text="Time"
+                        android:hint="Time"
+                        android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
 
@@ -899,6 +901,7 @@
                         android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@null"
+                        android:id="@+id/etParking"
                         android:hint="Type.."
                         android:textColor="#3F3D56" />
 

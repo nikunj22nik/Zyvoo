@@ -24,6 +24,7 @@ import com.business.zyvo.adapter.MyBookingsAdapter
 import com.business.zyvo.databinding.FragmentMyBookingsBinding
 import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -37,9 +38,7 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
     private val bookingViewModel: BookingViewModel by viewModels()
     private lateinit var sessionManager: SessionManager
     private lateinit var adapterMyBookingsAdapter: MyBookingsAdapter
-    private var bookingModel: BookingModel? = null
-    private var fullBookingList: MutableList<BookingModel> = mutableListOf()
-
+    var bookingListModel: MutableList<BookingModel> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +50,18 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMyBookingsBinding.inflate(inflater, container, false)
+
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            bookingViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(requireContext(), false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
+        }
+
         // Initialize adapter
         adapterMyBookingsAdapter = MyBookingsAdapter(requireContext(), mutableListOf(), this)
         binding.recyclerViewChat.layoutManager = LinearLayoutManager(requireContext())
@@ -71,28 +82,28 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
         }
         lifecycleScope.launch(Dispatchers.Main) {
             try {
-                bookingViewModel.getBookingList(sessionManager.getUserId().toString()).collect {
+                val sessionManager = SessionManager(requireContext())
+                val userId = sessionManager.getUserId()
+                bookingViewModel.getBookingList(userId.toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
-                            LoadingUtils.hideDialog()
-                           val list = it.data
-                            Log.d("API_RESPONSE", "Raw Response: $bookingModel")
+                            var list = it.data
                             if (list != null) {
-                                fullBookingList = list.toMutableList()
-                                adapterMyBookingsAdapter.updateItem(fullBookingList)
+                                bookingListModel = list.toMutableList()
+                                adapterMyBookingsAdapter.updateItem(list)
                             }
                         }
                         is NetworkResult.Error -> {
-                            Log.e("API_ERROR", "Server Error: ${it.message}")
+                            Log.e(ErrorDialog.TAG, "Server Error: ${it.message}")
                             showErrorDialog(requireContext(), it.message ?: "Unknown error")
                         }
                         else -> {
-                            Log.v("API_ERROR", "Unexpected error: ${it.message ?: "Unknown error"}")
+                            Log.v(ErrorDialog.TAG, "Unexpected error: ${it.message ?: "Unknown error"}")
                         }
                     }
                 }
             } catch (e: Exception) {
-                Log.e("API_EXCEPTION", "Unexpected API error", e)
+                Log.e(ErrorDialog.TAG, "Unexpected API error", e)
                 showErrorDialog(requireContext(), "Something went wrong. Please try again.")
             }
         }
@@ -109,39 +120,45 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
         )
 
         popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener {
-            adapterMyBookingsAdapter.updateItem(fullBookingList)
+            sortBookingBy(popupView.findViewById<TextView>(R.id.itemAllBookings).text.toString())
             popupWindow.dismiss()
         }
-
         popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener {
-            filterBookingsByStatus("confirmed")
+            sortBookingBy(popupView.findViewById<TextView>(R.id.itemConfirmed).text.toString())
             popupWindow.dismiss()
         }
-
         popupView.findViewById<TextView>(R.id.itemPending).setOnClickListener {
-            filterBookingsByStatus("pending")
+            sortBookingBy(popupView.findViewById<TextView>(R.id.itemPending).text.toString())
             popupWindow.dismiss()
         }
-
         popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener {
-            filterBookingsByStatus("finished")
+            sortBookingBy(popupView.findViewById<TextView>(R.id.itemFinished).text.toString())
             popupWindow.dismiss()
         }
-
         popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener {
-            filterBookingsByStatus("cancelled")
+            sortBookingBy(popupView.findViewById<TextView>(R.id.itemCancelled).text.toString())
             popupWindow.dismiss()
         }
 
+        // Positioning logic
         popupWindow.elevation = 8.0f
         popupWindow.showAsDropDown(anchorView, 0, 0, Gravity.END)
     }
 
-    private fun filterBookingsByStatus(status: String) {
-        val filteredList = fullBookingList.filter {
-            it.booking_status?.equals(status, ignoreCase = true) == true
+    private fun sortBookingBy(option: String) {
+        var filterBooking:MutableList<BookingModel> = mutableListOf()
+        when (option) {
+            "All Bookings" ->  bookingListModel.sortByDescending { it.booking_status }
+            "Confirmed" -> filterBooking =
+                bookingListModel.filter { it.booking_status == "confirmed" }.toMutableList()
+            "Pending" -> filterBooking =
+                bookingListModel.filter { it.booking_status == "pending" }.toMutableList()
+            "Finished" -> filterBooking =
+                bookingListModel.filter { it.booking_status == "finished" }.toMutableList()
+            "Cancelled" -> filterBooking =
+                bookingListModel.filter { it.booking_status == "cancelled" }.toMutableList()
         }
-        adapterMyBookingsAdapter.updateItem(filteredList.toMutableList())
+        adapterMyBookingsAdapter.updateItem(filterBooking)
     }
 
     override fun onClick(view: View?) {
@@ -166,5 +183,4 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
         }
         findNavController().navigate(R.id.reviewBookingFragment, bundle)
     }
-
 }

@@ -110,11 +110,56 @@ class GuestDiscoverViewModel @Inject constructor(private val repository: ZyvoRep
         }
     }
 
-    suspend fun getFilterHomeDataApi( userId: Int?, latitude: Double?, longitude: Double?, place_type: String?, minimum_price: Double?, maximum_price: Double?,
-                                      location: String?, date: String?, time: Int?, people_count: Int?, property_size: Int?, bedroom: Int?, bathroom: Int?, instant_booking: Int?,
-                                      self_check_in: Int?, allows_pets: Int?, activities: List<String>?, amenities: List<String>?, languages: List<String>?): Flow<NetworkResult<JsonArray>> {
+    suspend fun getFilterHomeDataApi( userId: String?, latitude: String?, longitude: String?, place_type: String?, minimum_price: String?, maximum_price: String?,
+                                      location: String?, date: String?, time: String?, people_count: String?, property_size: String?, bedroom: String?, bathroom: String?, instant_booking: String?,
+                                      self_check_in: String?, allows_pets: String?, activities: List<String>?, amenities: List<String>?, languages: List<String>?): Flow<NetworkResult<JsonArray>> {
         return repository.getFilteredHomeData(userId,latitude,longitude,place_type,minimum_price,maximum_price,
             location,date,time,people_count,property_size,bedroom,bathroom,instant_booking,self_check_in,allows_pets,activities,amenities,languages).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+
+    suspend fun getHomeDataSearchFilter(
+        user_id : String,
+        latitude : String,
+        longitude : String,
+        date : String,
+        hour : String,
+        start_time : String,
+        end_time : String,
+        activity : String):
+            Flow<NetworkResult<JsonArray>> {
+        return repository.getHomeDataSearchFilter(user_id, latitude, longitude,date,
+            hour,start_time, end_time, activity).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+
+
+    suspend fun getUserBookings(
+        user_id : String,
+        booking_date : String,
+        booking_start : String):
+            Flow<NetworkResult<JsonObject>> {
+        return repository.getUserBookings(user_id,booking_date, booking_start).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true

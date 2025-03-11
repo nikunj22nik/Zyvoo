@@ -57,8 +57,12 @@ import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import retrofit2.HttpException
+
 import retrofit2.Response
 import retrofit2.http.Path
+
+import retrofit2.http.Field
+
 import java.io.IOException
 import javax.inject.Inject
 
@@ -1276,79 +1280,76 @@ import javax.inject.Inject
             }
         }
 
-    override suspend fun getFilteredHomeData(
-        userId: Int?,
-        latitude: Double?,
-        longitude: Double?,
-        place_type: String?,
-        minimum_price: Double?,
-        maximum_price: Double?,
-        location: String?,
-        date: String?,
-        time: Int?,
-        people_count: Int?,
-        property_size: Int?,
-        bedroom: Int?,
-        bathroom: Int?,
-        instant_booking: Int?,
-        self_check_in: Int?,
-        allows_pets: Int?,
-        activities: List<String>?,
-        amenities: List<String>?,
-        languages: List<String>?
-    ): Flow<NetworkResult<JsonArray>> = flow {
-        try {
-            api.getFilteredHomeData(
-                userId,
-                latitude,
-                longitude,
-                place_type,
-                minimum_price,
-                maximum_price,
-                location,
-                date,
-                time,
-                people_count,
-                property_size,
-                bedroom,
-                bathroom,
-                instant_booking,
-                self_check_in,
-                allows_pets,
-                activities,
-                amenities,
-                languages
-            ).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success") &&
-                            resp.get("success").asBoolean
-                        ) {
-                            emit(AuthTask.processDataArray(resp))
-                        } else {
 
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    emit(
-                        NetworkResult.Error(
-                            ErrorHandler.handleErrorBody(
-                                this.errorBody()?.string()
-                            )
-                        )
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
-        }
-    }
+     override suspend fun getFilteredHomeData(
+         userId: String?,
+         latitude: String?,
+         longitude: String?,
+         place_type: String?,
+         minimum_price: String?,
+         maximum_price: String?,
+         location: String?,
+         date: String?,
+         time: String?,
+         people_count: String?,
+         property_size: String?,
+         bedroom: String?,
+         bathroom: String?,
+         instant_booking: String?,
+         self_check_in: String?,
+         allows_pets: String?,
+         activities: List<String>?,
+         amenities: List<String>?,
+         languages: List<String>?
+     ): Flow<NetworkResult<JsonArray>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.getFilteredHomeData(
+                 userId,
+                 latitude,
+                 longitude,
+                 place_type,
+                 minimum_price,
+                 maximum_price,
+                 location,
+                 date,
+                 time,
+                 people_count,
+                 property_size,
+                 bedroom,
+                 bathroom,
+                 instant_booking,
+                 self_check_in,
+                 allows_pets,
+                 activities,
+                 amenities,
+                 languages
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success")&&
+                             resp.get("success").asBoolean) {
+                             emit(AuthTask.processDataArray(resp))
+                         }
+                         else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 }else {
+                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                 }
+             }
+         }
+         catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
 
 
     override suspend fun getBookingList(
         userId: String
     ): Flow<NetworkResult<MutableList<BookingModel>>> = flow {
+        emit(NetworkResult.Loading())
         try {
             val response = api.bookingList(userId)
             if (response.isSuccessful) {
@@ -1376,49 +1377,54 @@ import javax.inject.Inject
         }
     }
 
+     override suspend fun getBookingDetailsList(
+         userId: String,
+         booking_id: Int, latitude:String,longitude:String
+     ): Flow<NetworkResult<Pair<BookingDetailModel,JsonObject>>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             val response = api.bookingDetailsList(userId,booking_id,
+                 latitude, longitude)
+             if (response.isSuccessful) {
+                 val body = response.body()
+                 if (body != null && body.has("success") && body.get("success").asBoolean) {
+                     val data:JsonObject = body.getAsJsonObject("data")
+                     val propertyId = data.get("property_id").asString
+                     val response =
+                         api.filterPropertyReviews(propertyId, "highest_review", "1")
+                     if (response.isSuccessful) {
+                         response.body()?.let { reviewResp ->
+                             // ✅ Emit both responses as Pair
+                             emit(NetworkResult.Success(Pair(AuthTask.processSingleDataChange(body)!!, reviewResp)))
+                         } ?: emit(NetworkResult.Error("Reviews response is empty"))
+                     } else {
+                         emit(NetworkResult.Error("Failed to load reviews"))
+                     }
+                     // emit(AuthTask.processSingleData(body))
+                 } else {
+                     emit(NetworkResult.Error(body?.get("message")?.asString ?: AppConstant.unKnownError))
+                 }
+             } else {
+                 emit(NetworkResult.Error(ErrorHandler.handleErrorBody(response.errorBody()?.string())))
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
 
-    override suspend fun getBookingDetailsList(
-        userId: String,
-        booking_id: Int
-    ): Flow<NetworkResult<BookingDetailModel>> = flow {
-        try {
-            val response = api.bookingDetailsList(userId, booking_id)
-            if (response.isSuccessful) {
-                val body = response.body()
-                if (body != null && body.has("success") && body.get("success").asBoolean) {
-                    Log.d("value44444", "List $body")
 
-                    emit(AuthTask.processSingleData(body))
-                } else {
-                    emit(
-                        NetworkResult.Error(
-                            body?.get("message")?.asString ?: AppConstant.unKnownError
-                        )
-                    )
-                }
-            } else {
-                emit(
-                    NetworkResult.Error(
-                        ErrorHandler.handleErrorBody(
-                            response.errorBody()?.string()
-                        )
-                    )
-                )
-            }
-        } catch (e: Exception) {
-            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
-        }
-    }
+
 
     override suspend fun reviewPublish(
-        userId: Int,
-        booking_id: Int,
-        property_id: Int,
-        response_rate: Int,
-        communication: Int,
-        on_time: Int,
+        userId: String,
+        booking_id: String,
+        property_id: String,
+        response_rate: String,
+        communication: String,
+        on_time: String,
         review_message: String
     ): Flow<NetworkResult<ReviewModel>> = flow {
+        emit(NetworkResult.Loading())
         try {
             val response = api.getReviewPublish(
                 userId,
@@ -4043,56 +4049,55 @@ import javax.inject.Inject
     }
 
 
-    override suspend fun bookProperty(
-        userId: String,
-        property_id: String,
-        booking_date: String,
-        booking_start: String,
-        booking_end: String,
-        booking_amount: String,
-        total_amount: String,
-        customer_id: String,
-        card_id: String,
-        addons: Map<String, String>
-    ): Flow<NetworkResult<JsonObject>> = flow {
-        emit(NetworkResult.Loading())
-        try {
-            api.bookProperty(
-                userId,
-                property_id,
-                booking_date,
-                booking_start,
-                booking_end,
-                booking_amount,
-                total_amount,
-                customer_id,
-                card_id,
-                addons
-            ).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success") && resp.get("success").asBoolean) {
-                            emit(AuthTask.processData(resp))
+     override suspend fun bookProperty(
+         userId : String,
+         property_id : String,
+         booking_date : String,
+         booking_start : String,
+         booking_end : String,
+         booking_amount : String,
+         total_amount : String,
+         customer_id : String,
+         card_id : String,
+         addons: Map<String, String>,
+         service_fee : String,
+         tax : String,
+         discount_amount : String
+     ): Flow<NetworkResult<JsonObject>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.bookProperty(
+                 userId,
+                 property_id,
+                 booking_date,
+                 booking_start,
+                 booking_end,
+                 booking_amount,
+                 total_amount,
+                 customer_id,
+                 card_id,
+                 addons,
+                 service_fee,
+                 tax,
+                 discount_amount
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             emit(AuthTask.processData(resp))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
 
-                        } else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-
-                    emit(
-                        NetworkResult.Error(
-                            ErrorHandler.handleErrorBody(
-                                this.errorBody()?.string()
-                            )
-                        )
-                    )
-                }
-            }
-        } catch (e: Exception) {
-            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
-        }
-    }
+                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
 
     override suspend fun getUserChannel(
         userId: Int,
@@ -4251,90 +4256,178 @@ import javax.inject.Inject
         }
     }
 
-    override suspend fun addPayOut(
-        userId: RequestBody,
-        firstName: RequestBody,
-        lastName: RequestBody,
-        email: RequestBody,
-        phoneNumber: RequestBody,
-        dobList: List<MultipartBody.Part>,
-        idType: RequestBody,
-        ssnLast4: RequestBody,
-        idNumber: RequestBody,
-        address: RequestBody,
-        country: RequestBody,
-        state: RequestBody,
-        city: RequestBody,
-        postalCode: RequestBody,
-        bankName: RequestBody,
-        accountHolderName: RequestBody,
-        accountNumber: RequestBody,
-        accountNumberConfirmation: RequestBody,
-        routingProperty: RequestBody,
-        bank_proof_document: MultipartBody.Part?,
-        verification_document_front: MultipartBody.Part?,
-        verification_document_back: MultipartBody.Part?,
-        bankProofType : RequestBody
-    ): Flow<NetworkResult<String>> = flow {
-        emit(NetworkResult.Loading())
-        try {
-            api.addPayoutBank(
-                userId,
-                firstName,
-                lastName,
-                email,
-                phoneNumber,
-                dobList,
-                idType,
-                ssnLast4,
-                idNumber,
-                address,
-                country,
-                state,
-                city,
-                postalCode,
-                bankName,
-                accountHolderName,
-                accountNumber,
-                accountNumberConfirmation,
-                routingProperty,
-                bank_proof_document,
-                verification_document_front,
-                verification_document_back
-            ).apply {
-                if (isSuccessful) {
-                    body()?.let { resp ->
-                        if (resp.has("success") && resp.get("success").asBoolean) {
-                            emit(NetworkResult.Success(resp.get("message").asString))
-                        } else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
-                        }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(
-                            NetworkResult.Error(
-                                jsonObj?.getString("message") ?: AppConstant.unKnownError
-                            )
-                        )
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(e.message!!))
-                    }
-                }
-            }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
-        }
-    }
+     override suspend fun addPayOut(
+         userId: RequestBody,
+         firstName: RequestBody,
+         lastName: RequestBody,
+         email: RequestBody,
+         phoneNumber: RequestBody,
+         dobList: List<MultipartBody.Part>,
+         idType: RequestBody,
+         ssnLast4: RequestBody,
+         idNumber: RequestBody,
+         address: RequestBody,
+         country: RequestBody,
+         state: RequestBody,
+         city: RequestBody,
+         postalCode: RequestBody,
+         bankName: RequestBody,
+         accountHolderName: RequestBody,
+         accountNumber: RequestBody,
+         accountNumberConfirmation: RequestBody,
+         routingProperty: RequestBody,
+         bankProofType: RequestBody,
+         bank_proof_document: MultipartBody.Part?,
+         verification_document_front: MultipartBody.Part?,
+         verification_document_back: MultipartBody.Part?
+
+     ): Flow<NetworkResult<String>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.addPayoutBank(
+                 userId,
+                 firstName,
+                 lastName,
+                 email,
+                 phoneNumber,
+                 dobList,
+                 idType,
+                 ssnLast4,
+                 idNumber,
+                 address,
+                 country,
+                 state,
+                 city,
+                 postalCode,
+                 bankName,
+                 accountHolderName,
+                 accountNumber,
+                 accountNumberConfirmation,
+                 routingProperty,
+                 bankProofType,
+                 bank_proof_document,
+                 verification_document_front,
+                 verification_document_back
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             emit(NetworkResult.Success(resp.get("message").asString))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+                     try {
+                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                         emit(
+                             NetworkResult.Error(
+                                 jsonObj?.getString("message") ?: AppConstant.unKnownError
+                             )
+                         )
+                     } catch (e: JSONException) {
+                         e.printStackTrace()
+                         emit(NetworkResult.Error(e.message!!))
+                     }
+                 }
+             }
+         } catch (e: HttpException) {
+             Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: IOException) {
+             Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: Exception) {
+             Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+             emit(NetworkResult.Error(e.message!!))
+         }
+     }
+
+
+     override suspend fun getBookingExtensionTimeAmount(
+         userId : String,
+         booking_id : String,
+         extension_time : String,
+         service_fee : String,
+         tax : String,
+         cleaning_fee:String,
+         extension_total_amount : String,
+         extension_booking_amount : String,
+         discount_amount : String
+     ): Flow<NetworkResult<JsonObject>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.getBookingExtensionTimeAmount(
+                 userId,
+                 booking_id,
+                 extension_time,
+                 service_fee,
+                 tax,
+                 cleaning_fee,
+                 extension_total_amount,
+                 extension_booking_amount,
+                 discount_amount
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             emit(AuthTask.processData(resp))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+     override suspend fun getHomeDataSearchFilter(
+         user_id : String,
+         latitude : String,
+         longitude : String,
+         date : String,
+         hour : String,
+         start_time : String,
+         end_time : String,
+         activity : String
+     ): Flow<NetworkResult<JsonArray>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.getHomeDataSearchFilter(
+                 user_id, latitude, longitude,date,hour,start_time, end_time, activity
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") &&
+                             resp.get("success").asBoolean
+                         ) {
+                             emit(AuthTask.processDataArray(resp))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+
 
     override suspend fun getCountries(): Flow<NetworkResult<MutableList<CountryModel>>> = flow {
         try {
@@ -4352,35 +4445,19 @@ import javax.inject.Inject
                             }
 
                             emit(NetworkResult.Success(result))
-                        } else {
-                            emit(NetworkResult.Error(resp.get("message").asString))
                         }
-                    } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
-                } else {
-                    try {
-                        val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
-                        emit(
-                            NetworkResult.Error(
-                                jsonObj?.getString("message") ?: AppConstant.unKnownError
-                            )
-                        )
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                        emit(NetworkResult.Error(e.message!!))
-                    }
+                    }?:emit(NetworkResult.Error(AppConstant.unKnownError))
+                }else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
                 }
             }
-        } catch (e: HttpException) {
-            Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
-            emit(NetworkResult.Error(e.message!!))
-        } catch (e: IOException) {
-            Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
-            emit(NetworkResult.Error(e.message!!))
         } catch (e: Exception) {
-            Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
-            emit(NetworkResult.Error(e.message!!))
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
         }
     }
+
+
+
 
     override suspend fun getState( value: String) : Flow<NetworkResult<MutableList<StateModel>>> = flow {
         try {
@@ -4397,11 +4474,41 @@ import javax.inject.Inject
                             }
 
                             emit(NetworkResult.Success(result))
+
+                        }
+                    }?:emit(NetworkResult.Error(AppConstant.unKnownError))
+                }else {
+                    emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                }
+            }
+        } catch (e: Exception) {
+            emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+        }
+    }
+
+
+    override suspend fun getUserBookings(
+        user_id : String,
+        booking_date : String,
+        booking_start : String
+    ): Flow<NetworkResult<JsonObject>> = flow {
+        emit(NetworkResult.Loading())
+        try {
+            api.getUserBookings(
+                user_id,booking_date, booking_start).apply {
+                if (isSuccessful) {
+                    body()?.let { resp ->
+                        if (resp.has("success") &&
+                            resp.get("success").asBoolean
+                        ) {
+                            emit(AuthTask.processData(resp))
+
                         } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }
                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                 } else {
+
                     try {
                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
                         emit(
@@ -4485,11 +4592,9 @@ import javax.inject.Inject
                          if (resp.has("success") && resp.get("success").asBoolean) {
                              var list = resp.get("data").asJsonArray
                              var obj = resp.get("pagination").asJsonObject
-                             var p = Pair<JsonArray, JsonObject>(list,obj)
-
+                             var p = Pair<JsonArray, JsonObject>(list, obj)
                              emit(NetworkResult.Success(p))
-
-                           //  emit(NetworkResult.Success(result))
+                         //  emit(NetworkResult.Success(result))
                          } else {
                              emit(NetworkResult.Error(resp.get("message").asString))
                          }
@@ -4507,18 +4612,25 @@ import javax.inject.Inject
                          emit(NetworkResult.Error(e.message!!))
                      }
                  }
+
              }
-         } catch (e: HttpException) {
-             Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
-             emit(NetworkResult.Error(e.message!!))
-         } catch (e: IOException) {
-             Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
-             emit(NetworkResult.Error(e.message!!))
-         } catch (e: Exception) {
-             Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
-             emit(NetworkResult.Error(e.message!!))
          }
-     }
+             catch (e: HttpException) {
+                 Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: IOException) {
+                 Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: Exception) {
+                 Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+         }
+
+
+
+
+
 
 }
 

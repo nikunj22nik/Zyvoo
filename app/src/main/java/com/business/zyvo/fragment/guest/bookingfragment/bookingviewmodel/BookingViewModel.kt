@@ -8,6 +8,7 @@ import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.datacla
 import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.ReviewModel
 import com.business.zyvo.repository.ZyvoRepository
 import com.business.zyvo.utils.NetworkMonitor
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -22,26 +23,55 @@ class BookingViewModel @Inject constructor(private val repository: ZyvoRepositor
     suspend fun getBookingList(userid: String) : Flow<NetworkResult<MutableList<BookingModel>>>  {
         return repository.getBookingList(userid).onEach {
             when (it) {
-                is NetworkResult.Success -> { }
-                is NetworkResult.Error -> { }
-                else -> { }
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
             }
         }
     }
 
-    suspend fun getBookingDetailsList(userid: String,booking_id:Int) : Flow<NetworkResult<BookingDetailModel>>  {
-        return repository.getBookingDetailsList(userid,booking_id).onEach {
+    suspend fun getBookingDetailsList(userid: String,booking_id:Int,
+        latitude:String,longitude:String) : Flow<NetworkResult<Pair<BookingDetailModel,JsonObject>>>  {
+        return repository.getBookingDetailsList(userid,booking_id,latitude,longitude).onEach {
             when (it) {
-                is NetworkResult.Success -> { }
-                is NetworkResult.Error -> { }
-                else -> { }
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
             }
         }
     }
 
-    suspend fun getReviewPublishAPI(userId: Int, booking_id: Int, property_id: Int, response_rate: Int, communication: Int, on_time: Int, review_message: String):
+    suspend fun getReviewPublishAPI(userId: String, booking_id: String, property_id: String,
+                                    response_rate: String, communication: String,
+                                    on_time: String, review_message: String):
             Flow<NetworkResult<ReviewModel>> {
         return repository.reviewPublish(userId,booking_id,property_id,response_rate,communication,on_time,review_message).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun filterPropertyReviews(propertyId :String,
+                                      filter :String,
+                                      page :String):
+            Flow<NetworkResult<Pair<JsonArray, JsonObject>>> {
+        return repository.filterPropertyReviews(propertyId,
+            filter,page).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
