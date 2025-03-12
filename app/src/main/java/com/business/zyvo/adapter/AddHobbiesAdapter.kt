@@ -11,6 +11,7 @@ import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutAddHobbiesBinding
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.model.AddHobbiesModel
+import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.onItemClickData
 
 

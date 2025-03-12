@@ -1,5 +1,6 @@
 package com.business.zyvo.fragment.host
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.MyApp
@@ -23,40 +23,47 @@ import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
 import com.business.zyvo.TimeUtils
+import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.adapter.AdapterChatList
-import com.business.zyvo.chat.QuickstartConversationsManager
-import com.business.zyvo.chat.QuickstartConversationsManagerListener
 import com.business.zyvo.databinding.FragmentChatBinding
 import com.business.zyvo.model.ChannelListModel
-import com.business.zyvo.model.ChatListModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.viewmodel.host.ChatListHostViewModel
-import com.google.firebase.crashlytics.internal.model.CrashlyticsReport.Session
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HostChatFragment : Fragment() , View.OnClickListener ,
-    QuickstartConversationsManagerListener {
+class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversationsManagerListener {
+
     private var _binding: FragmentChatBinding? = null
+
     private val binding get() = _binding!!
+
     private lateinit var adapterChatList: AdapterChatList
+
     private val viewModel: ChatListHostViewModel by viewModels()
+
     var objects: Int = 0
+
     private var chatList :MutableList<ChannelListModel>  = mutableListOf()
 
+    private  var userId :Int =-1
+
     private var filteredList: MutableList<ChannelListModel> = chatList.toMutableList()
-    private lateinit var quickstartConversationsManager : QuickstartConversationsManager
+
+    private var quickstartConversationsManager = QuickstartConversationsManager()
+
     private var map:HashMap<String,ChannelListModel> = HashMap<String,ChannelListModel>()
+
     private var loggedInUserId : Int =-1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("TESTING_ZYVOO_Proj", "onCreate OF CHAT")
         var sessionManager = SessionManager(requireContext())
         loggedInUserId = sessionManager.getUserId()!!
-
     }
 
     override fun onCreateView(
@@ -66,9 +73,16 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
         // Inflate the layout for this fragment
 
         Log.d("TESTING_ZYVOO_Proj", "onCreateView OF CHAT")
-        _binding =
-            FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
+        _binding = FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
+        quickstartConversationsManager.setListener(this)
+
+        var sessionManager = SessionManager(requireContext())
+        sessionManager.getUserId().let {
+             if (it != null) {
+                 userId = it
+             }
+         }
 
         return binding.root
     }
@@ -78,10 +92,13 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
         binding.imageFilter.setOnClickListener(this)
         adapterChatList = AdapterChatList(requireContext(), chatList,object : OnClickListener {
             override fun itemClick(obj: Int) {
-                findNavController().navigate(R.id.hostChatDetailsFragment)
+             //   findNavController().navigate(R.id.hostChatDetailsFragment)
             }
 
         },null)
+
+        adapterChatListClick()
+
         binding.recyclerViewChat.adapter = adapterChatList
         viewModel.list.observe(viewLifecycleOwner, Observer { list ->
 
@@ -99,29 +116,55 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
                 filter(query)
             }
         })
-        // Add text change listener for search bar
-//        binding.etSearchButton.addTextChangedListener { text ->
-//           // Call filter function in adapter
-//        }
-        try {
-            quickstartConversationsManager = (activity?.application as MyApp).conversationsManager
-            quickstartConversationsManager.setListener(this) // Ensure this is only called after full initialization
-
-        }
-        catch (e: Exception) {
-            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
-        }
-
 
         callingGetChatUser()
 
     }
 
 
-    private fun loadChat(){
-        quickstartConversationsManager.loadChannel()
-    }
+    private fun adapterChatListClick(){
+        adapterChatList.setOnItemClickListener(object : AdapterChatList.onItemClickListener{
+            override fun onItemClick(data: ChannelListModel, index: Int,type:String) {
+                try {
+                    if(type.equals(AppConstant.DELETE)){
+                        Log.d("TESTING", data.group_name.toString())
 
+                       quickstartConversationsManager.deleteConversation(data.group_name,SessionManager(requireContext()).getUserId().toString())
+                    }else {
+                        val intent = Intent(requireContext(), ChatActivity::class.java)
+                        var channelName: String = data.group_name.toString()
+                        if (data.receiver_id.equals(userId.toString())) {
+                            intent.putExtra("user_img", data.receiver_image).toString()
+                            SessionManager(requireContext()).getUserId()
+                                ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
+                            Log.d("TESTING", "REVIEW HOST" + channelName)
+                            intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
+                            intent.putExtra(AppConstant.FRIEND_ID, data.sender_id)
+                            intent.putExtra("friend_img", data.sender_profile).toString()
+                            intent.putExtra("friend_name", data.sender_name).toString()
+                            intent.putExtra("user_name", data.receiver_name)
+                        } else {
+                            intent.putExtra("user_img", data.sender_profile).toString()
+                            SessionManager(requireContext()).getUserId()
+                                ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
+                            Log.d("TESTING", "REVIEW HOST" + channelName)
+                            intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
+                            intent.putExtra(AppConstant.FRIEND_ID, data.receiver_id)
+                            intent.putExtra("friend_img", data.receiver_image).toString()
+                            intent.putExtra("friend_name", data.receiver_name).toString()
+                            intent.putExtra("user_name", data.sender_name)
+                        }
+
+                        startActivity(intent)
+                    }
+                }catch(e:Exception){
+                    Log.d("TESTING","INSIDE THE CATCH BLOCK")
+                }
+
+            }
+
+        })
+    }
 
     fun filter(query: String) {
 //        filteredList = if (query.isEmpty()) {
@@ -142,36 +185,42 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
             LoadingUtils.showDialog(requireContext(),false)
             var userId = sessionManager.getUserId()
             if (userId != null) {
-                viewModel.getChatUserChannelList(userId,"host").collect {
-                    when (it) {
-                        is NetworkResult.Success -> {
-                            Log.d("TESTING","Inside the message success")
-                            it.data?.let {
-                                viewModel.chatChannel = it
-                                it.forEach {
-                                    map.put(it.group_name.toString(),it)
+                var sessionManager = SessionManager(requireContext())
+                var userType = sessionManager.getUserType()
+                if (userType != null) {
+                    viewModel.getChatUserChannelList(userId,userType).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                Log.d("TESTING","Inside the message success")
+                                it.data?.let {
+                                    viewModel.chatChannel = it
+                                    it.forEach {
+                                        map.put(it.group_name.toString(),it)
+                                    }
+                                    Log.d("TESTING",map.size.toString() +" Map Size is ")
+                                    Log.d("TESTING_TOKEN","Chat token is "+sessionManager.getChatToken())
+                                    var currentUserId = ""+SessionManager(requireContext()).getUserId()+"_"+SessionManager(requireContext()).getUserType()
+
+                                    quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", SessionManager(requireContext()).getUserId().toString())
+
+            //                                reloadMessages()
                                 }
-                                Log.d("TESTING",map.size.toString() +" Map Size is ")
-                                loadChat()
-//                                reloadMessages()
                             }
-                        }
 
-                        is NetworkResult.Error -> {
-                             LoadingUtils.hideDialog()
-                            Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
-                        }
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
+                            }
 
-                        else -> {
+                            else -> {
 
+                            }
                         }
                     }
                 }
             }
         }
     }
-
-
 
     private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
@@ -255,12 +304,49 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         (activity as? GuesMain)?.inboxColor()
     }
 
     override fun receivedNewMessage() {
+        try {
+            requireActivity().runOnUiThread {
+                try {
+                    var position =0
+                    quickstartConversationsManager.messages.forEach {
+                        Log.d("message ","*******"+it.messageBody  +" auther "+ it.conversation.uniqueName)
+                        for(i in 0..chatList.size -1){
+                            position =i;
+                            if(it.conversation.uniqueName.equals(chatList.get(i).group_name)){
+                                var obj = map.get(it.conversation.uniqueName)
+                                obj?.lastMessage = it.messageBody
+                                obj?.lastMessageTime = TimeUtils.updateLastMsgTime(it.dateCreated)
+                                obj?.isOnline = false
+                                obj?.date=it.dateCreated
+                                Log.d("TESTING_DATE",it.dateCreated.toString())
+                                if (obj != null) {
+                                    chatList.set(position,obj)
+                                    map.put(it.conversation.uniqueName,obj)
+                                }
+                            }
+                        }
+                    }
+
+                    chatList.sortWith { o1, o2 ->
+                        if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+                    }
+
+                    adapterChatList.updateItem(chatList)
+
+                }catch (e:Exception){
+                    Log.d("******","msg :- "+e.message)
+                }
+            }
+        }catch (e:Exception){
+            Log.d("******","msg :- "+e.message)
+        }
 
     }
 
@@ -279,6 +365,7 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
 
                     quickstartConversationsManager.messages.forEach {
                         Log.d("quickstartConversationsManager","m 8888"+it.messageBody)
+                        Log.d("quickstartConversationsManager","j 8888"+it.participant.conversation.state)
                         Log.d("quickstartConversationsManager","u 88888"+it.conversation.uniqueName)
                     }
 
@@ -290,9 +377,12 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
                                 obj?.lastMessage = i.messageBody
                                 obj?.lastMessageTime = TimeUtils.updateLastMsgTime(i.dateCreated)
                                 obj?.isOnline = false
+                                obj?.date=i.dateCreated
+
 
                                 if (obj != null) {
                                     chatList.add(obj)
+                                    map.put(i.conversation.uniqueName,obj)
                                 }
                             }
                         } catch (e: Exception) {
@@ -304,12 +394,18 @@ class HostChatFragment : Fragment() , View.OnClickListener ,
             }catch (e:Exception){
                 Log.d("******","msg :- "+e.message)
             }
+
+//            chatList.sortWith { o1, o2 ->
+//                if (o1?.da == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+//            }
+
+            chatList.sortWith { o1, o2 ->
+                if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+            }
+
             adapterChatList.updateItem(chatList)
         }
     }
 
-    override fun showError() {
-
-    }
 
 }

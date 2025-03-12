@@ -13,14 +13,24 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.business.zyvo.AppConstant
 import com.business.zyvo.R
-import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.activity.QuickstartConversationsManager
+
 import com.business.zyvo.databinding.LayoutMessageChatingBinding
 import com.business.zyvo.model.ChatMessageModel
+import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.PrepareData
 
 
-class ChatDetailsAdapter(var context: Context, var quickstartConversationsManager: QuickstartConversationsManager, var user_id: String, var profile_image:String, var friend_profile_image:String, var friend_name:String): RecyclerView.Adapter<ChatDetailsAdapter.ChatViewHolder>() {
+class ChatDetailsAdapter(var context: Context, var quickstartConversationsManager: QuickstartConversationsManager, var user_id: String, var profile_image:String, var friend_profile_image:String, var friend_name:String,var userName :String =""): RecyclerView.Adapter<ChatDetailsAdapter.ChatViewHolder>() {
+
+    var userId :String =""
+    init {
+        var sessionManager = SessionManager(context)
+        userId = sessionManager.getUserId().toString()
+    }
+
 
     inner  class  ChatViewHolder(var binding: LayoutMessageChatingBinding): RecyclerView.ViewHolder(binding.root){
 
@@ -42,15 +52,17 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
         Log.d("TESTING_CHAT",message.messageBody.toString())
 
         Log.d("author",message.author)
+        Log.d("userId",userId.toString())
 
-        val messagetype = String.format(message.type.toString())
-
-        if (user_id.equals(message.author,true)){
+        if(message.author.equals(userId,true)){
+          Glide.with(context).load(AppConstant.BASE_URL+ profile_image).into(holder.binding.imageProfilePicture)
+            holder.binding.textUserName.text=userName
+         } else{
+            Glide.with(context).load(AppConstant.BASE_URL+ friend_profile_image).into(holder.binding.imageProfilePicture)
             holder.binding.textUserName.text=friend_name
         }
-        else{
-            holder.binding.textUserName.text=""
-        }
+
+        val messagetype = String.format(message.type.toString())
 
         holder.binding.textMessage.text = message.messageBody
         holder.binding.textDate.text = PrepareData.getMyPrettyDate(message.dateCreated)

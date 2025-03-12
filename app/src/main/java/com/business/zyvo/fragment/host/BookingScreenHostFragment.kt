@@ -25,14 +25,13 @@ import com.business.zyvo.OnClickListener
 
 import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.adapter.host.HostBookingsAdapter
-import com.business.zyvo.chat.QuickstartConversationsManager
-import com.business.zyvo.chat.QuickstartConversationsManagerListener
+
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.session.SessionManager
-import com.business.zyvo.utils.NetworkMonitor
+
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.host.HostBookingsViewModel
-import com.google.android.datatransport.cct.internal.NetworkConnectionInfo
+
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 

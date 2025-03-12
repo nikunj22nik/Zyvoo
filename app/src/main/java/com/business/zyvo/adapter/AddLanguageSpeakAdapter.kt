@@ -11,6 +11,7 @@ import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddLanguageBinding
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.model.AddLanguageModel
+import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.onItemClickData
 
 class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLanguageModel>,var listner : OnClickListener1,var listner2 : onItemClickData)

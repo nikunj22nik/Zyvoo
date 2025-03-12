@@ -1,0 +1,2364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            tools:context=".fragment.host.hostPayout.HostPayoutFragment">
+
+            <LinearLayout
+                android:id="@+id/llHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/stroke1"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/imageBackIcon"
+                    android:layout_width="@dimen/_42sdp"
+                    android:layout_height="@dimen/_42sdp"
+                    android:layout_gravity="center_vertical"
+                    android:contentDescription="back icon"
+                    android:padding="@dimen/_6sdp"
+                    android:src="@drawable/ic_back_icon" />
+
+            </LinearLayout>
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefreshLayout"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_below="@+id/llHeader"
+                android:layout_height="match_parent">
+
+
+                <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+
+            <LinearLayout
+                android:id="@+id/llBankAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/payment_method_bg"
+                android:orientation="vertical"
+                android:visibility="visible"
+                android:layout_marginBottom="@dimen/_70sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rlHeader">
+
+
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Select payment method"
+                    android:textColor="@color/black" />
+
+
+                <LinearLayout
+                    android:id="@+id/llToggleSelectBankOrDebit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/green_storke_toggle_bg"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/textBankAccountToggle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/selected_green_toogle_bg"
+                        android:fontFamily="@font/poppins"
+                        android:paddingVertical="@dimen/_6sdp"
+                        android:text="Bank Account"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/textDebitCardToggle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
+                        android:paddingVertical="@dimen/_6sdp"
+                        android:text="Debit Card"
+                        android:textAlignment="center"
+                        android:textColor="#06C169"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvBankAccount2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:visibility="visible"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    app:cardCornerRadius="@dimen/_10sdp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="@dimen/_10sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:text="Bank Account"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlFirstName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textFirstName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imagePersonIcon"
+                                android:text="First Name" />
+
+                            <ImageView
+                                android:id="@+id/imagePersonIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textFirstName"
+                                android:src="@drawable/ic_person_orange_icon" />
+
+                            <EditText
+                                android:id="@+id/etFirstName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textFirstName"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePersonIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter first name"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlLastName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textLastName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imagePersonIconLastName"
+                                android:text="Last Name" />
+
+                            <ImageView
+                                android:id="@+id/imagePersonIconLastName"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textLastName"
+                                android:src="@drawable/ic_person_orange_icon" />
+
+                            <EditText
+                                android:id="@+id/etLastName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textLastName"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePersonIconLastName"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter last name"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textEmail"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageEmailIcon"
+                                android:text="Email" />
+
+                            <ImageView
+                                android:id="@+id/imageEmailIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textEmail"
+                                android:src="@drawable/ic_orange_email_icon" />
+
+                            <EditText
+                                android:id="@+id/etEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textEmail"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageEmailIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter email"
+                                android:maxLines="1"
+                                android:inputType="textEmailAddress"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlPhoneNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textPhoneNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imagePhoneNumberIcon"
+                                android:text="Phone Number" />
+
+                            <ImageView
+                                android:id="@+id/imagePhoneNumberIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textPhoneNumber"
+                                android:src="@drawable/ic_orange_phone_icon" />
+
+                            <EditText
+                                android:id="@+id/etPhoneNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textPhoneNumber"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePhoneNumberIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter phone"
+                                android:maxLines="1"
+                                android:inputType="phone"
+                                android:maxLength="11"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlDOB"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textDOB"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageDOBIcon"
+                                android:text="D.O.B" />
+
+                            <ImageView
+                                android:id="@+id/imageDOBIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textDOB"
+                                android:src="@drawable/ic_dob_icon" />
+
+                            <TextView
+                                android:id="@+id/etDOB"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textDOB"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageDOBIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_8sdp"
+                                android:text="MM/DD/YYYY"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlIDType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textIDType"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageIDTypeIcon"
+                                android:text="ID Type" />
+
+                            <ImageView
+                                android:id="@+id/imageIDTypeIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textIDType"
+                                android:src="@drawable/ic_id_type_icon" />
+
+                            <com.skydoves.powerspinner.PowerSpinnerView
+                                android:id="@+id/spinnerSelectIDType"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:background="@drawable/edittext_bg"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:hint="Select ID type"
+                                android:padding="8dp"
+                                android:layout_below="@+id/textIDType"
+                                android:layout_toEndOf="@+id/imageIDTypeIcon"
+                                android:paddingStart="@dimen/_20sdp"
+                                android:textColor="#3C4541"
+                                android:fontFamily="@font/poppins"
+                                android:textColorHint="#3C4541"
+                                android:textSize="@dimen/_10ssp"
+                                app:spinner_arrow_gravity="end"
+                                app:spinner_arrow_padding="5dp"
+                                app:spinner_arrow_show="true"
+                                app:spinner_arrow_tint="#3A4B4C"
+                                app:spinner_divider_show="false"
+                                app:spinner_item_height="34dp"
+                                app:spinner_popup_animation="fade"
+                                app:spinner_popup_background="@color/white"
+                                app:spinner_popup_elevation="14dp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <!--                        <com.google.android.material.textfield.TextInputLayout-->
+                            <!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+                            <!--                            android:layout_width="match_parent"-->
+                            <!--                            android:layout_height="@dimen/_30sdp"-->
+                            <!--                            android:layout_marginStart="@dimen/_6sdp"-->
+                            <!--                            android:layout_marginEnd="@dimen/_6sdp"-->
+                            <!--                           -->
+                            <!--                            android:background="@drawable/edittext_bg"-->
+                            <!--                            app:boxStrokeColor="@color/white"-->
+                            <!--                            app:boxStrokeWidth="0dp"-->
+                            <!--                            app:endIconDrawable="@drawable/ic_arrow_dropdown">-->
+
+                            <!--                            <com.google.android.material.textfield.MaterialAutoCompleteTextView-->
+                            <!--                                android:id="@+id/tvIdType"-->
+                            <!--                                android:layout_width="match_parent"-->
+                            <!--                                android:layout_height="wrap_content"-->
+                            <!--                                android:inputType="none"-->
+                            <!--                                android:paddingHorizontal="@dimen/_10sdp"-->
+                            <!--                                android:text="Passport"-->
+                            <!--                                android:textSize="@dimen/_10ssp" />-->
+                            <!--                        </com.google.android.material.textfield.TextInputLayout>-->
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlPersonalIdentificationNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textPersonalIdentificationNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imagePersonalIdentificationNumberIcon"
+                                android:text="Personal Identification Number" />
+
+                            <ImageView
+                                android:id="@+id/imagePersonalIdentificationNumberIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textPersonalIdentificationNumber"
+                                android:src="@drawable/ic_personal_identification_number_icon" />
+
+                            <EditText
+                                android:id="@+id/etPersonalIdentificationNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textPersonalIdentificationNumber"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePersonalIdentificationNumberIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter Identification Number"
+                                android:maxLines="1"
+                                android:maxLength="18"
+                                android:inputType="number"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlSSN"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textSSN"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageSSNIcon"
+                                android:text="SSN (Last 4 Number)" />
+
+                            <ImageView
+                                android:id="@+id/imageSSNIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textSSN"
+                                android:src="@drawable/ic_ssn_icon" />
+
+                            <EditText
+                                android:id="@+id/etSSN"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textSSN"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageSSNIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="SSN"
+                                android:inputType="number"
+                                android:maxLines="1"
+                                android:maxLength="4"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textAddress"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageAddressIcon"
+                                android:text="Address" />
+
+                            <ImageView
+                                android:id="@+id/imageAddressIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textAddress"
+                                android:src="@drawable/ic_address_orange_icon" />
+
+                            <EditText
+                                android:id="@+id/etAddress"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textAddress"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageAddressIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter address"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlCountry"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textCountry"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageCountryIcon"
+                                android:text="Country" />
+
+                            <ImageView
+                                android:id="@+id/imageCountryIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textCountry"
+                                android:src="@drawable/ic_orange_country_icon" />
+
+                            <com.skydoves.powerspinner.PowerSpinnerView
+                                android:id="@+id/spinnerSelectCountry"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:background="@drawable/edittext_bg"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:hint="Select Country"
+                                android:padding="8dp"
+                                android:layout_below="@+id/textCountry"
+                                android:layout_toEndOf="@+id/imageCountryIcon"
+                                android:paddingStart="@dimen/_20sdp"
+                                android:textColor="#3C4541"
+                                android:fontFamily="@font/poppins"
+                                android:textColorHint="#3C4541"
+                                android:textSize="@dimen/_10ssp"
+                                app:spinner_arrow_gravity="end"
+                                app:spinner_arrow_padding="5dp"
+                                app:spinner_popup_max_height="@dimen/_180sdp"
+                                app:spinner_arrow_show="true"
+                                app:spinner_arrow_tint="#3A4B4C"
+                                app:spinner_divider_show="false"
+                                app:spinner_item_height="34dp"
+                                app:spinner_popup_animation="fade"
+                                app:spinner_popup_background="@color/white"
+                                app:spinner_popup_elevation="14dp"
+                                tools:ignore="RtlSymmetry" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlState"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textState"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageStateIcon"
+                                android:text="State" />
+
+                            <ImageView
+                                android:id="@+id/imageStateIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textState"
+                                android:src="@drawable/ic_state_icon" />
+
+                            <com.skydoves.powerspinner.PowerSpinnerView
+                                android:id="@+id/spinnerSelectState"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:background="@drawable/edittext_bg"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:hint="Select State"
+                                android:padding="8dp"
+                                android:layout_below="@+id/textState"
+                                android:layout_toEndOf="@+id/imageStateIcon"
+                                android:paddingStart="@dimen/_20sdp"
+                                android:textColor="#3C4541"
+                                android:fontFamily="@font/poppins"
+                                android:textColorHint="#3C4541"
+                                android:textSize="@dimen/_10ssp"
+                                app:spinner_arrow_gravity="end"
+                                app:spinner_popup_max_height="@dimen/_180sdp"
+                                app:spinner_arrow_padding="5dp"
+                                app:spinner_arrow_show="true"
+                                app:spinner_arrow_tint="#3A4B4C"
+                                app:spinner_divider_show="false"
+                                app:spinner_item_height="34dp"
+                                app:spinner_popup_animation="fade"
+                                app:spinner_popup_background="@color/white"
+                                app:spinner_popup_elevation="14dp"
+                                tools:ignore="RtlSymmetry" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlCity"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textCity"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageCityIcon"
+                                android:textColor="@color/black"
+                                android:text="City" />
+
+                            <ImageView
+                                android:id="@+id/imageCityIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textCity"
+                                android:src="@drawable/ic_orange_city_icon" />
+
+                            <com.skydoves.powerspinner.PowerSpinnerView
+                                android:id="@+id/spinnerSelectCity"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:background="@drawable/edittext_bg"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:hint="Select City"
+                                android:padding="8dp"
+                                android:layout_below="@+id/textCity"
+                                android:layout_toEndOf="@+id/imageCityIcon"
+                                android:paddingStart="@dimen/_20sdp"
+                                android:textColor="#3C4541"
+                                android:fontFamily="@font/poppins"
+                                app:spinner_popup_max_height="@dimen/_180sdp"
+                                android:textColorHint="#3C4541"
+                                android:textSize="@dimen/_10ssp"
+                                app:spinner_arrow_gravity="end"
+                                app:spinner_arrow_padding="5dp"
+                                app:spinner_arrow_show="true"
+                                app:spinner_arrow_tint="#3A4B4C"
+                                app:spinner_divider_show="false"
+                                app:spinner_item_height="34dp"
+                                app:spinner_popup_animation="fade"
+                                app:spinner_popup_background="@color/white"
+                                app:spinner_popup_elevation="14dp"
+                                tools:ignore="RtlSymmetry" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlPostalCode"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textPostalCode"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imagePostalCodeIcon"
+                                android:text="Postal Code" />
+
+                            <ImageView
+                                android:id="@+id/imagePostalCodeIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textPostalCode"
+                                android:src="@drawable/ic_orange_postal_icon" />
+
+                            <EditText
+                                android:id="@+id/etPostalCode"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textPostalCode"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePostalCodeIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Postal Code"
+                                android:maxLines="1"
+                                android:inputType="number"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlBankName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textBankName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageBankNameIcon"
+                                android:text="Bank Name" />
+
+                            <ImageView
+                                android:id="@+id/imageBankNameIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textBankName"
+                                android:src="@drawable/ic_bank_orange_icon" />
+
+                            <EditText
+                                android:id="@+id/etBankName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textBankName"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageBankNameIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter Bank Name"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlAccountHolderName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textAccountHolderName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageAccountHolderNameIcon"
+                                android:text="Account Holder Name" />
+
+                            <ImageView
+                                android:id="@+id/imageAccountHolderNameIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textAccountHolderName"
+                                android:src="@drawable/ic_account_holder_name_icon" />
+
+                            <EditText
+                                android:id="@+id/etAccountHolderName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textAccountHolderName"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageAccountHolderNameIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter Account Holder Name"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlBankAccountNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textBankAccountNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageBankAccountNumberIcon"
+                                android:text="Bank Account Number" />
+
+                            <ImageView
+                                android:id="@+id/imageBankAccountNumberIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textBankAccountNumber"
+                                android:src="@drawable/ic_bank_account_number_icon" />
+
+                            <EditText
+                                android:id="@+id/etBankAccountNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textBankAccountNumber"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageBankAccountNumberIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter Account Number"
+                                android:maxLines="1"
+                                android:maxLength="18"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlConfirmAccountNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textConfirmAccountNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageConfirmAccountNumberIcon"
+                                android:text="Confirm Account Number" />
+
+                            <ImageView
+                                android:id="@+id/imageConfirmAccountNumberIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textConfirmAccountNumber"
+                                android:src="@drawable/ic_bank_account_number_icon" />
+
+                            <EditText
+                                android:id="@+id/etConfirmAccountNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textConfirmAccountNumber"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageConfirmAccountNumberIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Confirm Account Number"
+                                android:maxLines="1"
+                                android:maxLength="18"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlRoutingNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textRoutingNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageRoutingNumberIcon"
+                                android:text="Routing Number" />
+
+                            <ImageView
+                                android:id="@+id/imageRoutingNumberIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textRoutingNumber"
+                                android:src="@drawable/ic_routing_number_orange_icon" />
+
+                            <EditText
+                                android:id="@+id/etRoutingNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textRoutingNumber"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageRoutingNumberIcon"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter Routing Number"
+                                android:maxLines="1"
+                                android:maxLength="18"
+                                android:inputType="number"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlSelectBankProofType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textSelectBankProofType"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageSelectBankProofTypeIcon"
+                                android:text="SelectBankProofType" />
+
+                            <ImageView
+                                android:id="@+id/imageSelectBankProofTypeIcon"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textSelectBankProofType"
+                                android:src="@drawable/ic_bank_orange_icon" />
+
+                            <com.skydoves.powerspinner.PowerSpinnerView
+                                android:id="@+id/spinnerSelectOption"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:background="@drawable/edittext_bg"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:hint="Select an Option"
+                                android:padding="8dp"
+                                android:layout_below="@+id/textSelectBankProofType"
+                                android:layout_toEndOf="@+id/imageSelectBankProofTypeIcon"
+                                android:paddingStart="@dimen/_20sdp"
+                                android:textColor="#3C4541"
+                                android:fontFamily="@font/poppins"
+                                android:textColorHint="#3C4541"
+                                android:textSize="@dimen/_10ssp"
+                                app:spinner_arrow_gravity="end"
+                                app:spinner_arrow_padding="5dp"
+                                app:spinner_arrow_show="true"
+                                app:spinner_arrow_tint="#3A4B4C"
+                                app:spinner_divider_show="false"
+                                app:spinner_item_height="34dp"
+                                app:spinner_popup_animation="fade"
+                                app:spinner_popup_background="@color/white"
+                                app:spinner_popup_elevation="14dp"
+                                tools:ignore="RtlSymmetry" />
+
+
+                        </RelativeLayout>
+
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textBankProof"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:text="Bank Proof" />
+
+
+
+
+
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textBankProof"
+                                android:layout_marginHorizontal="@dimen/_5sdp"
+                                android:background="@drawable/plain_edittext_bg">
+
+                                <TextView
+                                    android:id="@+id/textChooseBankProof"
+                                    android:layout_width="@dimen/_100sdp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Choose a file"
+                                    android:singleLine="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginStart="@dimen/_10sdp"
+                                    android:fontFamily="@font/poppins"
+                                    android:textColor="#8B8B8B"/>
+
+                                <TextView
+                                    android:id="@+id/imguploaddocument"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Upload"
+                                    android:drawableEnd="@drawable/ic_upload_icon"
+                                    android:textColor="@color/white"
+                                    android:fontFamily="@font/poppins"
+                                    android:background="@drawable/plain_edittext_bg"
+                                    android:backgroundTint="#4AEAB1"
+                                    android:layout_alignParentEnd="true"
+                                    android:textSize="@dimen/_10ssp"
+                                    android:drawablePadding="@dimen/_10sdp"
+                                    android:paddingHorizontal="@dimen/_15sdp"
+                                    android:layout_margin="@dimen/_2sdp"
+                                    android:paddingVertical="@dimen/_7sdp"/>
+
+
+
+                            </RelativeLayout>
+
+
+
+
+                        </RelativeLayout>
+
+
+
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textVerificationDocument"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+
+                                android:text="Verification Document (front &amp; back)" />
+
+
+
+
+
+
+                            <RelativeLayout
+                                android:id="@+id/rlVerificationDocumentFront"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textVerificationDocument"
+                                android:layout_marginHorizontal="@dimen/_5sdp"
+                                android:background="@drawable/plain_edittext_bg">
+
+                                <TextView
+                                    android:id="@+id/textChooseVerificationDocument"
+                                    android:layout_width="@dimen/_100sdp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Choose a file"
+                                    android:singleLine="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginStart="@dimen/_10sdp"
+                                    android:fontFamily="@font/poppins"
+                                    android:textColor="#8B8B8B"/>
+
+                                <TextView
+                                    android:id="@+id/layFront"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Upload"
+                                    android:drawableEnd="@drawable/ic_upload_icon"
+                                    android:textColor="@color/white"
+                                    android:fontFamily="@font/poppins"
+                                    android:background="@drawable/plain_edittext_bg"
+                                    android:backgroundTint="#4AEAB1"
+                                    android:layout_alignParentEnd="true"
+                                    android:textSize="@dimen/_10ssp"
+                                    android:drawablePadding="@dimen/_10sdp"
+                                    android:paddingHorizontal="@dimen/_15sdp"
+                                    android:layout_margin="@dimen/_2sdp"
+                                    android:paddingVertical="@dimen/_7sdp"/>
+
+
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/rlVerificationDocumentBack"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/rlVerificationDocumentFront"
+                                android:layout_marginHorizontal="@dimen/_5sdp"
+                                android:layout_marginTop="@dimen/_5sdp"
+                                android:background="@drawable/plain_edittext_bg">
+
+                                <TextView
+                                    android:id="@+id/textChooseVerificationDocumentBack"
+                                    android:layout_width="@dimen/_100sdp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Choose a file"
+                                    android:singleLine="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginStart="@dimen/_10sdp"
+                                    android:fontFamily="@font/poppins"
+                                    android:textColor="#8B8B8B"/>
+
+                                <TextView
+                                    android:id="@+id/layBack"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Upload"
+                                    android:textColor="@color/white"
+                                    android:fontFamily="@font/poppins"
+                                    android:background="@drawable/plain_edittext_bg"
+                                    android:backgroundTint="#4AEAB1"
+                                    android:layout_alignParentEnd="true"
+                                    android:textSize="@dimen/_10ssp"
+                                    android:drawablePadding="@dimen/_10sdp"
+                                    android:paddingHorizontal="@dimen/_15sdp"
+                                    android:layout_margin="@dimen/_2sdp"
+                                    android:paddingVertical="@dimen/_7sdp"
+                                    app:drawableEndCompat="@drawable/ic_upload_icon" />
+
+
+
+                            </RelativeLayout>
+
+
+
+
+                        </RelativeLayout>
+
+
+
+                        <TextView
+                            android:id="@+id/textAddBank"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Add Bank"
+                            android:textAlignment="center"
+                            android:fontFamily="@font/poppins"
+
+                            android:textColor="@color/white"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:background="@drawable/button_bg"
+                            android:paddingVertical="@dimen/_7sdp"
+                            android:layout_marginBottom="@dimen/_20sdp"
+                            android:layout_marginHorizontal="@dimen/_10sdp"/>
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvDebitCard3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:visibility="gone"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    app:cardCornerRadius="@dimen/_10sdp">
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+
+                        android:padding="@dimen/_10sdp">
+
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:fontFamily="@font/montserrat_medium"
+                            android:text="Debit Card"
+                            android:textColor="@color/black"
+                            android:textStyle="bold" />
+
+                        <RelativeLayout
+                            android:id="@+id/rlFirstNameDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textFirstNameDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imagePersonIconDebitCard"
+                                android:text="First Name" />
+
+                            <ImageView
+                                android:id="@+id/imagePersonIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textFirstNameDebitCard"
+                                android:src="@drawable/ic_person_orange_icon" />
+
+                            <EditText
+                                android:id="@+id/etFirstNameDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textFirstNameDebitCard"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePersonIconDebitCard"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter first name"
+                               android:singleLine="true"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlLastNameDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textLastNameDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imagePersonIconLastNameDebitCard"
+                                android:text="Last Name" />
+
+                            <ImageView
+                                android:id="@+id/imagePersonIconLastNameDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textLastNameDebitCard"
+                                android:src="@drawable/ic_person_orange_icon" />
+
+                            <EditText
+                                android:id="@+id/etLastNameDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textLastNameDebitCard"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePersonIconLastNameDebitCard"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter last name"
+                                android:singleLine="true"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlEmailDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textEmailDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageEmailIconDebitCard"
+                                android:text="Email" />
+
+                            <ImageView
+                                android:id="@+id/imageEmailIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textEmailDebitCard"
+                                android:src="@drawable/ic_orange_email_icon" />
+
+                            <EditText
+                                android:id="@+id/etEmailDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textEmailDebitCard"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageEmailIconDebitCard"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter email"
+                                android:singleLine="true"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlPhoneNumberDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textPhoneNumberDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imagePhoneNumberIconDebitCard"
+                                android:text="Phone Number" />
+
+                            <ImageView
+                                android:id="@+id/imagePhoneNumberIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textPhoneNumberDebitCard"
+                                android:src="@drawable/ic_orange_phone_icon" />
+
+                            <EditText
+                                android:id="@+id/etPhoneNumberDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textPhoneNumberDebitCard"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePhoneNumberIconDebitCard"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter phone"
+                                android:singleLine="true"
+                                android:inputType="number"
+                                android:maxLines="1"
+                                android:maxLength="15"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlDOBDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textDOBDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageDOBIconDebitCard"
+                                android:text="D.O.B" />
+
+                            <ImageView
+                                android:id="@+id/imageDOBIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textDOBDebitCard"
+                                android:src="@drawable/ic_dob_icon" />
+
+                            <TextView
+                                android:id="@+id/etDOBDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textDOBDebitCard"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageDOBIconDebitCard"
+                                android:background="@drawable/edittext_bg"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_8sdp"
+                                android:text="MM/DD/YYYY"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlIDTypeDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textIDTypeDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/black"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageIDTypeIconDebitCard"
+                                android:text="ID Type" />
+
+                            <ImageView
+                                android:id="@+id/imageIDTypeIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textIDTypeDebitCard"
+                                android:src="@drawable/ic_id_type_icon" />
+
+                            <com.skydoves.powerspinner.PowerSpinnerView
+                                android:id="@+id/spinnerSelectIDTypeDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:background="@drawable/edittext_bg"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:hint="Select ID type"
+                                android:padding="8dp"
+                                android:layout_below="@+id/textIDTypeDebitCard"
+                                android:layout_toEndOf="@+id/imageIDTypeIconDebitCard"
+                                android:paddingStart="@dimen/_20sdp"
+                                android:textColor="#3C4541"
+                                android:fontFamily="@font/poppins"
+                                android:textColorHint="#3C4541"
+                                android:textSize="@dimen/_10ssp"
+                                app:spinner_arrow_gravity="end"
+                                app:spinner_arrow_padding="5dp"
+                                app:spinner_arrow_show="true"
+                                app:spinner_arrow_tint="#3A4B4C"
+                                app:spinner_divider_show="false"
+                                app:spinner_item_height="34dp"
+                                app:spinner_popup_animation="fade"
+                                app:spinner_popup_background="@color/white"
+                                app:spinner_popup_elevation="14dp"
+                                tools:ignore="RtlSymmetry" />
+
+                            <!--                        <com.google.android.material.textfield.TextInputLayout-->
+                            <!--                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
+                            <!--                            android:layout_width="match_parent"-->
+                            <!--                            android:layout_height="@dimen/_30sdp"-->
+                            <!--                            android:layout_marginStart="@dimen/_6sdp"-->
+                            <!--                            android:layout_marginEnd="@dimen/_6sdp"-->
+                            <!--                           -->
+                            <!--                            android:background="@drawable/edittext_bg"-->
+                            <!--                            app:boxStrokeColor="@color/white"-->
+                            <!--                            app:boxStrokeWidth="0dp"-->
+                            <!--                            app:endIconDrawable="@drawable/ic_arrow_dropdown">-->
+
+                            <!--                            <com.google.android.material.textfield.MaterialAutoCompleteTextView-->
+                            <!--                                android:id="@+id/tvIdType"-->
+                            <!--                                android:layout_width="match_parent"-->
+                            <!--                                android:layout_height="wrap_content"-->
+                            <!--                                android:inputType="none"-->
+                            <!--                                android:paddingHorizontal="@dimen/_10sdp"-->
+                            <!--                                android:text="Passport"-->
+                            <!--                                android:textSize="@dimen/_10ssp" />-->
+                            <!--                        </com.google.android.material.textfield.TextInputLayout>-->
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlPersonalIdentificationNumberDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textPersonalIdentificationNumberDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imagePersonalIdentificationNumberIconDebitCard"
+                                android:text="Personal Identification Number" />
+
+                            <ImageView
+                                android:id="@+id/imagePersonalIdentificationNumberIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textPersonalIdentificationNumberDebitCard"
+                                android:src="@drawable/ic_personal_identification_number_icon" />
+
+                            <EditText
+                                android:id="@+id/etPersonalIdentificationNumberDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textPersonalIdentificationNumberDebitCard"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePersonalIdentificationNumberIconDebitCard"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter Identification Number"
+                                android:maxLines="1"
+                                android:inputType="number"
+                                android:singleLine="true"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlSSNDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textSSNDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageSSNIconDebitCard"
+                                android:text="SSN (Last 4 Number)" />
+
+                            <ImageView
+                                android:id="@+id/imageSSNIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textSSNDebitCard"
+                                android:src="@drawable/ic_ssn_icon" />
+
+                            <EditText
+                                android:id="@+id/etSSNDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textSSNDebitCard"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageSSNIconDebitCard"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="SSN"
+                                android:singleLine="true"
+                                android:maxLength="4"
+                                android:inputType="number"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlAddressDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textAddressDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageAddressIconDebitCard"
+                                android:text="Address" />
+
+                            <ImageView
+                                android:id="@+id/imageAddressIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textAddressDebitCard"
+                                android:src="@drawable/ic_address_orange_icon" />
+
+                            <EditText
+                                android:id="@+id/etAddressDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textAddressDebitCard"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imageAddressIconDebitCard"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Enter address"
+                                android:maxLines="1"
+                                android:singleLine="true"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+
+                        <RelativeLayout
+                            android:id="@+id/rlCountryDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textCountryDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageCountryIconDebitCard"
+                                android:text="Country" />
+
+                            <ImageView
+                                android:id="@+id/imageCountryIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textCountryDebitCard"
+                                android:src="@drawable/ic_orange_country_icon" />
+
+                            <com.skydoves.powerspinner.PowerSpinnerView
+                                android:id="@+id/spinnerSelectCountryDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:background="@drawable/edittext_bg"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:hint="Select Country"
+                                android:padding="8dp"
+                                android:layout_below="@+id/textCountryDebitCard"
+                                android:layout_toEndOf="@+id/imageCountryIconDebitCard"
+
+                                android:paddingStart="@dimen/_20sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textColorHint="#3C4541"
+                                android:textSize="@dimen/_10ssp"
+                                app:spinner_arrow_gravity="end"
+                                app:spinner_arrow_padding="5dp"
+                                app:spinner_popup_max_height="@dimen/_180sdp"
+                                app:spinner_arrow_show="true"
+                                app:spinner_arrow_tint="#3A4B4C"
+                                app:spinner_divider_show="false"
+                                app:spinner_item_height="34dp"
+                                app:spinner_popup_animation="fade"
+                                app:spinner_popup_background="@color/white"
+                                app:spinner_popup_elevation="14dp"
+                                tools:ignore="RtlSymmetry" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlStateDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textStateDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageStateIconDebitCard"
+                                android:text="State" />
+
+                            <ImageView
+                                android:id="@+id/imageStateIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textStateDebitCard"
+                                android:src="@drawable/ic_state_icon" />
+
+                            <com.skydoves.powerspinner.PowerSpinnerView
+                                android:id="@+id/spinnerSelectStateDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:background="@drawable/edittext_bg"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:hint="Select State"
+                                android:padding="8dp"
+                                app:spinner_popup_max_height="@dimen/_180sdp"
+                                android:layout_below="@+id/textStateDebitCard"
+                                android:layout_toEndOf="@+id/imageStateIconDebitCard"
+                                android:paddingStart="@dimen/_20sdp"
+                                android:textColor="#3C4541"
+                                android:fontFamily="@font/poppins"
+                                android:textColorHint="#3C4541"
+                                android:textSize="@dimen/_10ssp"
+                                app:spinner_arrow_gravity="end"
+                                app:spinner_arrow_padding="5dp"
+                                app:spinner_arrow_show="true"
+                                app:spinner_arrow_tint="#3A4B4C"
+                                app:spinner_divider_show="false"
+                                app:spinner_item_height="34dp"
+                                app:spinner_popup_animation="fade"
+                                app:spinner_popup_background="@color/white"
+                                app:spinner_popup_elevation="14dp"
+                                tools:ignore="RtlSymmetry" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlCityDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textCityDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageCityIconDebitCard"
+                                android:textColor="@color/black"
+                                android:text="City" />
+
+                            <ImageView
+                                android:id="@+id/imageCityIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textCityDebitCard"
+                                android:src="@drawable/ic_orange_city_icon" />
+
+                            <com.skydoves.powerspinner.PowerSpinnerView
+                                android:id="@+id/spinnerSelectCityDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:background="@drawable/edittext_bg"
+                                android:foreground="?attr/selectableItemBackground"
+                                android:hint="Select City"
+                                android:padding="8dp"
+                                app:spinner_popup_max_height="@dimen/_180sdp"
+                                android:layout_below="@+id/textCityDebitCard"
+                                android:layout_toEndOf="@+id/imageCityIconDebitCard"
+                                android:paddingStart="@dimen/_20sdp"
+                                android:textColor="#3C4541"
+                                android:fontFamily="@font/poppins"
+                                android:textColorHint="#3C4541"
+                                android:textSize="@dimen/_10ssp"
+                                app:spinner_arrow_gravity="end"
+                                app:spinner_arrow_padding="5dp"
+                                app:spinner_arrow_show="true"
+                                app:spinner_arrow_tint="#3A4B4C"
+                                app:spinner_divider_show="false"
+                                app:spinner_item_height="34dp"
+                                app:spinner_popup_animation="fade"
+                                app:spinner_popup_background="@color/white"
+                                app:spinner_popup_elevation="14dp"
+                                tools:ignore="RtlSymmetry" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlPostalCodeDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textPostalCodeDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:textColor="@color/black"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imagePostalCodeIconDebitCard"
+                                android:text="Postal Code" />
+
+                            <ImageView
+                                android:id="@+id/imagePostalCodeIconDebitCard"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textPostalCodeDebitCard"
+                                android:src="@drawable/ic_orange_postal_icon" />
+
+                            <EditText
+                                android:id="@+id/etPostalCodeDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textPostalCodeDebitCard"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_toEndOf="@+id/imagePostalCodeIconDebitCard"
+                                android:background="@drawable/edittext_bg"
+                                android:hint="Postal Code"
+                                android:singleLine="true"
+                                android:inputType="number"
+                                android:maxLength="9"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlCardNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textCardNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageCardNumber"
+                                android:text="Card Number" />
+
+                            <ImageView
+                                android:id="@+id/imageCardNumber"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textCardNumber"
+                                android:src="@drawable/ic_card_number_icon" />
+
+                            <EditText
+                                android:id="@+id/etCardNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textCardNumber"
+                                android:layout_marginStart="@dimen/_7sdp"
+                                android:layout_toEndOf="@+id/imageCardNumber"
+                                android:background="@drawable/edittext_bg"
+                                android:singleLine="true"
+                                android:maxLines="1"
+                                android:maxLength="19"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlCVVNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textCVVNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+                                android:layout_toEndOf="@+id/imageCVVNumber"
+                                android:text="CVV Number" />
+
+                            <ImageView
+                                android:id="@+id/imageCVVNumber"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/textCVVNumber"
+                                android:src="@drawable/ic_cvv_number" />
+
+                            <EditText
+                                android:id="@+id/etCVVNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textCVVNumber"
+                                android:layout_marginStart="@dimen/_7sdp"
+                                android:layout_toEndOf="@+id/imageCVVNumber"
+                                android:background="@drawable/edittext_bg"
+                                android:singleLine="true"
+                                android:maxLength="4"
+                                android:maxLines="1"
+                                android:paddingHorizontal="@dimen/_10sdp"
+                                android:paddingVertical="@dimen/_9sdp"
+                                android:textColor="#8B8B8B"
+                                android:textColorHint="#8B8B8B"
+                                android:textSize="@dimen/_10ssp" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rlMonth"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+
+
+                            <LinearLayout
+                                android:id="@+id/llMonthAndYear"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginStart="@dimen/_6sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:layout_toEndOf="@+id/imageMonth"
+                                android:weightSum="2">
+                                <TextView
+                                    android:id="@+id/textMonth"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:layout_weight="1"
+                                    android:text="Month" />
+
+                                <TextView
+                                    android:id="@+id/textYear"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/black"
+                                    android:layout_weight="1"
+                                    android:text="Year" />
+                            </LinearLayout>
+
+
+
+                            <ImageView
+                                android:id="@+id/imageMonth"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_below="@+id/llMonthAndYear"
+                                android:src="@drawable/ic_orange_calender" />
+
+
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_toEndOf="@+id/imageMonth"
+                                android:layout_marginStart="@dimen/_7sdp"
+                                android:layout_below="@+id/llMonthAndYear"
+                                android:weightSum="2">
+
+
+
+                                <!--                            <com.skydoves.powerspinner.PowerSpinnerView-->
+                                <!--                                android:id="@+id/spinnerMonth"-->
+                                <!--                                android:layout_width="0dp"-->
+
+                                <!--                                android:layout_weight="1"-->
+                                <!--                                android:layout_height="wrap_content"-->
+                                <!--                                android:layout_marginStart="@dimen/_6sdp"-->
+                                <!--                                android:background="@drawable/edittext_bg"-->
+                                <!--                                android:foreground="?attr/selectableItemBackground"-->
+                                <!--                                android:hint="Month"-->
+                                <!--                                android:padding="8dp"-->
+
+                                <!--                                android:paddingStart="@dimen/_20sdp"-->
+                                <!--                                android:textColor="#3C4541"-->
+                                <!--                                android:fontFamily="@font/poppins"-->
+                                <!--                                android:textColorHint="#3C4541"-->
+                                <!--                                android:textSize="@dimen/_10ssp"-->
+                                <!--                                app:spinner_arrow_gravity="end"-->
+                                <!--                                app:spinner_arrow_padding="5dp"-->
+                                <!--                                app:spinner_arrow_show="true"-->
+                                <!--                                app:spinner_arrow_tint="#3A4B4C"-->
+                                <!--                                app:spinner_divider_show="false"-->
+                                <!--                                app:spinner_item_height="34dp"-->
+                                <!--                                app:spinner_popup_animation="fade"-->
+                                <!--                                app:spinner_popup_background="@color/white"-->
+                                <!--                                app:spinner_popup_elevation="14dp"-->
+                                <!--                                tools:ignore="RtlSymmetry" />-->
+
+
+                                <!--                            <com.skydoves.powerspinner.PowerSpinnerView-->
+                                <!--                                android:id="@+id/spinnerYear"-->
+                                <!--                                android:layout_width="0dp"-->
+
+                                <!--                                android:layout_weight="1"-->
+                                <!--                                android:layout_height="wrap_content"-->
+                                <!--                                android:layout_marginStart="@dimen/_6sdp"-->
+                                <!--                                android:background="@drawable/edittext_bg"-->
+                                <!--                                android:foreground="?attr/selectableItemBackground"-->
+                                <!--                                android:hint="Year"-->
+                                <!--                                android:padding="8dp"-->
+
+                                <!--                                android:paddingStart="@dimen/_20sdp"-->
+                                <!--                                android:textColor="#3C4541"-->
+                                <!--                                android:fontFamily="@font/poppins"-->
+                                <!--                                android:textColorHint="#3C4541"-->
+                                <!--                                android:textSize="@dimen/_10ssp"-->
+                                <!--                                app:spinner_arrow_gravity="end"-->
+                                <!--                                app:spinner_arrow_padding="5dp"-->
+                                <!--                                app:spinner_arrow_show="true"-->
+                                <!--                                app:spinner_arrow_tint="#3A4B4C"-->
+                                <!--                                app:spinner_divider_show="false"-->
+                                <!--                                app:spinner_item_height="34dp"-->
+                                <!--                                app:spinner_popup_animation="fade"-->
+                                <!--                                app:spinner_popup_background="@color/white"-->
+                                <!--                                app:spinner_popup_elevation="14dp"-->
+                                <!--                                tools:ignore="RtlSymmetry" />-->
+                                <!--                            -->
+
+                                <TextView
+                                    android:id="@+id/etMonth"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/_5sdp"
+                                    android:layout_weight="1"
+                                    android:text="Month"
+                                    android:drawableEnd="@drawable/ic_drop_down"
+
+                                    android:background="@drawable/edittext_bg"
+
+                                    android:maxLines="1"
+                                    android:paddingHorizontal="@dimen/_10sdp"
+                                    android:paddingVertical="@dimen/_9sdp"
+                                    android:textColor="#8B8B8B"
+                                    android:textColorHint="#8B8B8B"
+                                    android:textSize="@dimen/_10ssp" />
+
+
+                                <TextView
+                                    android:id="@+id/etYear"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/_5sdp"
+                                    android:layout_weight="1"
+                                    android:drawableEnd="@drawable/ic_drop_down"
+                                    android:background="@drawable/edittext_bg"
+                                    android:text="Year"
+                                    android:maxLines="1"
+                                    android:paddingHorizontal="@dimen/_10sdp"
+                                    android:paddingVertical="@dimen/_9sdp"
+                                    android:textColor="#8B8B8B"
+                                    android:textColorHint="#8B8B8B"
+                                    android:textSize="@dimen/_10ssp" />
+                            </LinearLayout>
+
+
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp">
+
+                            <TextView
+                                android:id="@+id/textVerificationDocumentDebitCard"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_marginBottom="@dimen/_5sdp"
+                                android:textColor="@color/black"
+
+                                android:text="Verification Document (front &amp; back)" />
+
+
+
+
+
+
+                            <RelativeLayout
+                                android:id="@+id/rlVerificationDocumentFrontDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/textVerificationDocumentDebitCard"
+                                android:layout_marginHorizontal="@dimen/_5sdp"
+                                android:background="@drawable/plain_edittext_bg">
+
+                                <TextView
+                                    android:id="@+id/textChooseVerificationDocumentDebitCard"
+                                    android:layout_width="@dimen/_100sdp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Choose a file"
+                                    android:singleLine="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginStart="@dimen/_10sdp"
+                                    android:fontFamily="@font/poppins"
+                                    android:textColor="#8B8B8B"/>
+
+                                <TextView
+                                    android:id="@+id/layFrontCard"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Upload"
+                                    android:drawableEnd="@drawable/ic_upload_icon"
+                                    android:textColor="@color/white"
+                                    android:fontFamily="@font/poppins"
+                                    android:background="@drawable/plain_edittext_bg"
+                                    android:backgroundTint="#4AEAB1"
+                                    android:layout_alignParentEnd="true"
+                                    android:textSize="@dimen/_10ssp"
+                                    android:drawablePadding="@dimen/_10sdp"
+                                    android:paddingHorizontal="@dimen/_15sdp"
+                                    android:layout_margin="@dimen/_2sdp"
+                                    android:paddingVertical="@dimen/_7sdp"/>
+
+
+
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/rlVerificationDocumentBackDebitCard"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/rlVerificationDocumentFrontDebitCard"
+                                android:layout_marginHorizontal="@dimen/_5sdp"
+                                android:layout_marginTop="@dimen/_5sdp"
+                                android:background="@drawable/plain_edittext_bg">
+
+                                <TextView
+                                    android:id="@+id/textChooseVerificationDocumentBackDebitCard"
+                                    android:layout_width="@dimen/_100sdp"
+                                    android:layout_height="wrap_content"
+                                    android:text="Choose a file"
+                                    android:singleLine="true"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginStart="@dimen/_10sdp"
+                                    android:fontFamily="@font/poppins"
+                                    android:textColor="#8B8B8B"/>
+
+                                <TextView
+                                    android:id="@+id/layBackCard"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Upload"
+                                    android:textColor="@color/white"
+                                    android:fontFamily="@font/poppins"
+                                    android:background="@drawable/plain_edittext_bg"
+                                    android:backgroundTint="#4AEAB1"
+                                    android:layout_alignParentEnd="true"
+                                    android:textSize="@dimen/_10ssp"
+                                    android:drawablePadding="@dimen/_10sdp"
+                                    android:paddingHorizontal="@dimen/_15sdp"
+                                    android:layout_margin="@dimen/_2sdp"
+                                    android:paddingVertical="@dimen/_7sdp"
+                                    app:drawableEndCompat="@drawable/ic_upload_icon" />
+
+
+
+                            </RelativeLayout>
+
+
+
+
+                        </RelativeLayout>
+
+                        <TextView
+                            android:id="@+id/textAddCardDebitCard"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Add Card "
+                            android:textAlignment="center"
+                            android:fontFamily="@font/poppins"
+                            android:textColor="@color/white"
+                            android:layout_marginTop="@dimen/_50sdp"
+                            android:background="@drawable/button_bg"
+                            android:paddingVertical="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_20sdp"
+                            android:layout_marginHorizontal="@dimen/_5sdp"/>
+                    </LinearLayout>
+
+                </androidx.cardview.widget.CardView>
+
+
+
+
+
+
+            </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/llSavedBankAccountDetails4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_15sdp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_30sdp"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/_10ssp"
+                                android:background="@drawable/payment_method_bg"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/_15sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:text="Bank Accounts"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
+
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rcvBankAccounts"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/_20sdp"
+                                    android:orientation="vertical"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+
+                            </LinearLayout>
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/_10ssp"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:background="@drawable/payment_method_bg"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="@dimen/_15sdp"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:text="Saved Cards"
+                                    android:textColor="@color/black"
+                                    android:textStyle="bold" />
+
+
+                                <androidx.recyclerview.widget.RecyclerView
+                                    android:id="@+id/rcvCardNumber"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="@dimen/_20sdp"
+                                    android:orientation="vertical"
+                                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+
+                            </LinearLayout>
+
+
+                            <TextView
+                                android:id="@+id/textAddCardNumber"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginHorizontal="@dimen/_20sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:layout_marginBottom="@dimen/_20sdp"
+                                android:background="@drawable/button_bg"
+                                android:fontFamily="@font/poppins"
+                                android:paddingVertical="@dimen/_10sdp"
+                                android:text="Add Card"
+                                android:textAlignment="center"
+                                android:textColor="@color/white" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </ScrollView>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        </RelativeLayout>
+

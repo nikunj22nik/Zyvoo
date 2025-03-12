@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -114,7 +115,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                 textStatus = binding.textStatus
 
                 Glide.with(context).load(AppConstant.BASE_URL+currentItem.guest_avatar).into( binding.imagePicture)
-
+               Log.d("TESTING_URL",AppConstant.BASE_URL+currentItem.guest_avatar )
                 if(currentItem.booking_status.equals("pending")){
                     binding.llApproveAndDecline.visibility = View.VISIBLE
                     binding.textStatus.visibility = View.GONE

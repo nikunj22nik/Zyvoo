@@ -16,8 +16,7 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
-import com.business.zyvo.chat.QuickstartConversationsManager
-import com.business.zyvo.chat.QuickstartConversationsManagerListener
+
 import com.business.zyvo.databinding.ActivityHostMainBinding
 import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
 import com.business.zyvo.session.SessionManager
@@ -69,14 +68,12 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener{
 
 //        val currentDestination = findNavController().currentDestination
 //        Log.d("NAVIGATION_DEBUG", "Current Destination: $currentDestination")
-
+        callingGetUserToken()
     }
 
 
 
-    private fun loadChat() {
-        quickstartConversationsManager.loadChannel()
-    }
+
 
     fun hideView() {
         binding.lay1.visibility = View.GONE
@@ -88,7 +85,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener{
     }
 
 
-    /*private fun callingGetUserToken() {
+    private fun callingGetUserToken() {
         var sessionManager = SessionManager(this)
         var userId = sessionManager.getUserId()
         userId?.let {
@@ -96,9 +93,11 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener{
                 guestViewModel.getChatToken(it, "host").collect {
                     when (it) {
                         is NetworkResult.Success -> {
-                            it.data?.let { it1 -> sessionManager.setChatToken(it1)
-                            reloadMessages()
-                            }
+                            Log.d("TESTING_TOKEN",it.data.toString()+" Token inside success")
+                            sessionManager.setChatToken(it.data.toString())
+//    it.data?.let { it1 -> sessionManager.setChatToken(it1)
+//
+//                            }
                         }
 
                         is NetworkResult.Error -> {
@@ -113,7 +112,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener{
             }
         }
 
-    }*/
+    }
 
 
     fun inboxColor() {

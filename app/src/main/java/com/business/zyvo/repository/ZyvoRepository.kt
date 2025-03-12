@@ -20,7 +20,9 @@ import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.datacla
 
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.NotificationScreenModel
+import com.business.zyvo.model.StateModel
 import com.business.zyvo.model.host.ChannelModel
+import com.business.zyvo.model.host.CountryModel
 import com.business.zyvo.model.host.HostReviewModel
 import com.business.zyvo.model.host.PaginationModel
 
@@ -32,15 +34,21 @@ import com.google.gson.JsonArray
 
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
+
 import retrofit2.http.Field
+
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import retrofit2.Response
+import retrofit2.http.Part
+import retrofit2.http.Path
+
 
 interface ZyvoRepository {
 
 
-    suspend fun signUpPhoneNumber(
-        phoneNumber: String,
-        code: String
-    ): Flow<NetworkResult<Pair<String, String>>>
+    suspend fun signUpPhoneNumber(phoneNumber: String, code: String)
+    : Flow<NetworkResult<Pair<String, String>>>
 
     suspend fun loginPhoneNumber(
         phoneNumber: String,
@@ -373,8 +381,6 @@ interface ZyvoRepository {
                                        reportReasonId :Int,
                                        additionalDetail :String) : Flow<NetworkResult<String>>
 
-
-
     suspend fun getHomePropertyDetails(userId :String,
                                        propertyId :String) : Flow<NetworkResult<Pair<JsonObject, JsonObject>>>
 
@@ -422,6 +428,7 @@ interface ZyvoRepository {
         property_id :String,
         user_id :String
     ): Flow<NetworkResult<JsonObject>>
+
 
 
     suspend fun joinChatChannel(
@@ -473,6 +480,86 @@ interface ZyvoRepository {
     suspend fun cancelBooking(userId : String,
                                 booking_id : String) :  Flow<NetworkResult<Pair<String,String>>>
 
+
+    suspend fun addPayOut(
+        userId: RequestBody,
+        firstName: RequestBody,
+        lastName: RequestBody,
+        email: RequestBody,
+        phoneNumber: RequestBody,
+        dobList: List<MultipartBody.Part>,
+        idType: RequestBody,
+        ssnLast4: RequestBody,
+        idNumber: RequestBody,
+        address: RequestBody,
+        country: RequestBody,
+        state: RequestBody,
+        city: RequestBody,
+        postalCode: RequestBody,
+        bankName: RequestBody,
+        accountHolderName: RequestBody,
+        accountNumber: RequestBody,
+        accountNumberConfirmation: RequestBody,
+        routingProperty: RequestBody,
+        bankProofType : RequestBody,
+        bank_proof_document: MultipartBody.Part?,
+        verification_document_front: MultipartBody.Part?,
+        verification_document_back: MultipartBody.Part?
+
+    ): Flow<NetworkResult<String>>
+
+
+    suspend fun getCountries() : Flow<NetworkResult<MutableList<CountryModel>>>
+
+
+    suspend fun getState(@Path("value") value: String) : Flow<NetworkResult<MutableList<StateModel>>>
+
+
+    suspend fun getCityName( country:String,  state :String)  :Flow<NetworkResult<MutableList<String>>>
+
+
+    suspend fun addPayCard(
+        userId: RequestBody,
+        token: RequestBody,
+        firstName: RequestBody,
+        lastName: RequestBody,
+        email: RequestBody,
+        dobList: List<MultipartBody.Part>,
+        ssnLast4: RequestBody,
+        phoneNumber: RequestBody,
+        address: RequestBody,
+        city: RequestBody,
+        state: RequestBody,
+        country: RequestBody,
+        postalCode: RequestBody,
+        idType: RequestBody,
+        idNumber: RequestBody,
+        verification_document_front: MultipartBody.Part?,
+        verification_document_back: MultipartBody.Part?
+    ): Flow<NetworkResult<String>>
+
+
+    suspend fun getPayoutMethods(
+        userId :String
+    ) : Flow<NetworkResult<JsonObject>>
+
+    suspend fun setPrimaryPayoutMethod(
+    userId :String,
+    payoutMethodId :String,
+    ) : Flow<NetworkResult<String>>
+
+    suspend fun deletePayoutMethod(
+    userId :String,
+    payoutMethodId :String,
+    ) : Flow<NetworkResult<String>>
+
+
+    suspend fun filterPropertyReviewsHost(
+        propertyId :Int, filter :String, page :Int
+    ) : Flow<NetworkResult<Pair<JsonArray, JsonObject>>>
+
+
+
     suspend fun getBookingExtensionTimeAmount(userId : String,
                                               booking_id : String,
                                               extension_time : String,
@@ -500,6 +587,8 @@ interface ZyvoRepository {
         booking_date : String,
         booking_start : String
     ): Flow<NetworkResult<JsonObject>>
+
+
 
 }
 

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.databinding.LayoutMyWorkBinding
+import com.business.zyvo.model.AddLocationModel
 import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.onItemClickData
 

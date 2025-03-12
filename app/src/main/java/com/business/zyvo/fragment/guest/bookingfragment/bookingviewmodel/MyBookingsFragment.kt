@@ -87,7 +87,7 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
                 bookingViewModel.getBookingList(userId.toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
-                           var list = it.data
+                            var list = it.data
                             if (list != null) {
                                 bookingListModel = list.toMutableList()
                                 adapterMyBookingsAdapter.updateItem(list)
@@ -183,5 +183,4 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
         }
         findNavController().navigate(R.id.reviewBookingFragment, bundle)
     }
-
 }

@@ -21,6 +21,18 @@
         android:id="@+id/helpCenterFragment"
         android:name="com.business.zyvo.fragment.guest.helpCenter.HelpCenterFragment"
         android:label="HelpCenterFragment" />
+
+    <fragment
+        android:id="@+id/hostChatFragment"
+        android:name="com.business.zyvo.fragment.host.HostChatFragment"
+        android:label="HostChatFragment" >
+
+        <action android:id="@+id/host_profile_frag_to_host_payment_frag"
+            app:destination="@id/hostPaymentFragment"
+            />
+    </fragment>
+
+
     <fragment
         android:id="@+id/browseAllGuidesAndArticlesFragment"
         android:name="com.business.zyvo.fragment.both.browseAllGuidesAndArticles.BrowseAllGuidesAndArticlesFragment"

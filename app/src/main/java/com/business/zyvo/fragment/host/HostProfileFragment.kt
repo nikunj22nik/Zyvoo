@@ -10,8 +10,11 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
@@ -58,6 +61,7 @@ import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.OnLocalListener
@@ -70,10 +74,16 @@ import com.business.zyvo.adapter.AddLocationAdapter
 import com.business.zyvo.adapter.AddPetsAdapter
 import com.business.zyvo.adapter.AddWorkAdapter
 import com.business.zyvo.adapter.host.BankNameAdapter
+import com.business.zyvo.adapter.host.BankNameAdapterPayout
 import com.business.zyvo.adapter.host.CardNumberAdapter
+import com.business.zyvo.adapter.host.CardNumberAdapterPayout
 import com.business.zyvo.adapter.selectLanguage.LocaleAdapter
 import com.business.zyvo.databinding.FragmentHostProfileBinding
+import com.business.zyvo.fragment.both.browseArticleHost.model.BrowseArticleModel
 import com.business.zyvo.fragment.both.completeProfile.HasName
+import com.business.zyvo.fragment.guest.profile.model.BankAccountPayout
+import com.business.zyvo.fragment.guest.profile.model.CardPayout
+import com.business.zyvo.fragment.guest.profile.model.GetPayoutResponse
 import com.business.zyvo.fragment.guest.profile.model.UserProfile
 import com.business.zyvo.fragment.guest.profile.viewModel.ProfileViewModel
 import com.business.zyvo.model.AddHobbiesModel
@@ -112,6 +122,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private lateinit var dateManager: DateManager
     private lateinit var bankNameAdapter: BankNameAdapter
     private lateinit var cardNumberAdapter: CardNumberAdapter
+    private lateinit var bankNameAdapterPayout: BankNameAdapterPayout
+    private lateinit var cardNumberAdapterPayout: CardNumberAdapterPayout
     private lateinit var addPetsAdapter: AddPetsAdapter
     var userProfile: UserProfile? = null
     var imageBytes: ByteArray = byteArrayOf()
@@ -140,6 +152,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private var imageStatus = ""
     private var place = ""
     private var isDropdownOpen = false
+    private var isDropdownOpenpayout = false
     lateinit var navController: NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
@@ -152,33 +165,37 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private val list1 = mutableListOf<CountryLanguage>()
     private val list2 = mutableListOf<CountryLanguage>()
 
+    private val bankListPayout = mutableListOf<BankAccountPayout>()
+    private val cardListPayout = mutableListOf<CardPayout>()
 
 
 
 
-private val startAutocomplete =
-    registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let { intent ->
-                val place = Autocomplete.getPlaceFromIntent(intent)
-                val placeName = place.name ?: AppConstant.unknownLocation
 
-                Log.d("@@@@@", "Location: $placeName")
+    // For handling the result of the Autocomplete Activity
+    private val startAutocomplete =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.let { intent ->
+                    val place = Autocomplete.getPlaceFromIntent(intent)
+                    val placeName = place.name ?: AppConstant.unknownLocation
 
-                val newLocation = AddLocationModel(placeName)
-                addLivePlace(place_name = placeName)
+                    Log.d("@@@@@", "Location: $placeName")
 
-                // Update the list and notify adapter in one step
-                locationList.add(0, newLocation)
-                addLocationAdapter.notifyItemInserted(0)
+                    val newLocation = AddLocationModel(placeName)
+                    addLivePlace(place_name = placeName)
 
-                Log.i(ErrorDialog.TAG, "Place: $placeName, ${place.id}")
+                    // Update the list and notify adapter in one step
+                    locationList.add(locationList.size-1, newLocation)
+                    // addLocationAdapter.notifyItemInserted(0)
+                    addLocationAdapter.updateLocations(locationList)
+
+                    Log.i(ErrorDialog.TAG, "Place: $placeName, ${place.id}")
+                }
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                Log.i(ErrorDialog.TAG, "User canceled autocomplete")
             }
-        } else if (result.resultCode == Activity.RESULT_CANCELED) {
-            Log.i(ErrorDialog.TAG, "User canceled autocomplete")
         }
-    }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -199,28 +216,19 @@ private val startAutocomplete =
             false
         )
         session = SessionManager(requireActivity())
-        // Observe the isLoading state
-        lifecycleScope.launch {
-            profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-                if (isLoading) {
-                    LoadingUtils.showDialog(requireContext(), false)
-                } else {
-                    LoadingUtils.hideDialog()
-                }
-            }
-        }
+
         dateManager = DateManager(requireContext())
         // Inflate the layout for this fragment
-        val newLocation = AddLocationModel("Unknown Location")
-        locationList.add(newLocation)
-        val newWork = AddWorkModel("Unknown Location")
-        workList.add(newWork)
-        val newLanguage = AddLanguageModel("Unknown Location")
-        languageList.add(newLanguage)
-        val newHobbies = AddHobbiesModel("Unknown Location")
-        hobbiesList.add(newHobbies)
-        val newPets = AddPetsModel("Unknown Location")
-        petsList.add(newPets)
+//        val newLocation = AddLocationModel("Unknown Location")
+//        locationList.add(newLocation)
+//        val newWork = AddWorkModel("Unknown Location")
+//        workList.add(newWork)
+//        val newLanguage = AddLanguageModel("Unknown Location")
+//        languageList.add(newLanguage)
+//        val newHobbies = AddHobbiesModel("Unknown Location")
+//        hobbiesList.add(newHobbies)
+//        val newPets = AddPetsModel("Unknown Location")
+//        petsList.add(newPets)
         return binding.root
     }
 
@@ -248,6 +256,8 @@ private val startAutocomplete =
         binding.textTermServices.setOnClickListener(this)
         adapterInitialize()
         paymentOpenCloseDropDown()
+        payoutOpenCloseDropDown()
+        getPayoutMethods()
         // Initialize Places API if not already initialized
         if (!Places.isInitialized()) {
             Places.initialize(requireActivity(), apiKey)
@@ -266,7 +276,17 @@ private val startAutocomplete =
         }
 
         binding.textAddNewPaymentMethod.setOnClickListener {
-            findNavController().navigate(R.id.payoutFragment)
+            findNavController().navigate(R.id.hostPayoutFragment)
+        }
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(requireContext(), false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
         }
         getUserProfile()
 
@@ -386,6 +406,19 @@ private val startAutocomplete =
         }
         bankNameAdapter.addItems(initialList1)
         cardNumberAdapter.addItems(initialList2)
+
+
+
+
+        bankNameAdapterPayout = BankNameAdapterPayout(requireContext(), list = bankListPayout,this)
+        cardNumberAdapterPayout = CardNumberAdapterPayout(requireContext(), list = cardListPayout ,this)
+        binding.recyclerViewPaymentCardListPayOut.adapter = bankNameAdapterPayout
+        binding.recyclerViewCardNumberListPayOut.adapter = cardNumberAdapterPayout
+
+        bankNameAdapterPayout.addItems(bankListPayout)
+        cardNumberAdapterPayout.addItems(cardListPayout)
+
+
         addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this, this)
     }
 
@@ -394,12 +427,11 @@ private val startAutocomplete =
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 LoadingUtils.showDialog(requireContext(), false)
-                var session = SessionManager(requireContext())
+                val session = SessionManager(requireContext())
                 profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             var name = ""
-                            LoadingUtils.hideDialog()
                             it.data?.let { resp ->
                                 Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ," + resp.toString())
                                 userProfile = Gson().fromJson(resp, UserProfile::class.java)
@@ -517,12 +549,12 @@ private val startAutocomplete =
                         }
 
                         is NetworkResult.Error -> {
-                            LoadingUtils.hideDialog()
+
                             showErrorDialog(requireContext(), it.message!!)
                         }
 
                         else -> {
-                            LoadingUtils.hideDialog()
+
                             Log.v(ErrorDialog.TAG, "error::" + it.message)
                         }
 
@@ -530,7 +562,7 @@ private val startAutocomplete =
                 }
             }
         } else {
-            LoadingUtils.hideDialog()
+
             LoadingUtils.showErrorDialog(
                 requireContext(),
                 resources.getString(R.string.no_internet_dialog_msg)
@@ -560,52 +592,62 @@ private val startAutocomplete =
         startAutocomplete.launch(intent)
     }
 
+    // Display a dialog to select a language
     @SuppressLint("ObsoleteSdkInt")
     private fun dialogSelectLanguage() {
-        context?.let { ctx ->
-            val dialog = Dialog(ctx, R.style.BottomSheetDialog).apply {
-                setCancelable(false)
-                setContentView(R.layout.dialog_select_language)
-
-                window?.apply {
-                    setLayout(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                    setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                }
-
-                val imageCross = findViewById<ImageView>(R.id.imageCross)
-                val recyclerViewLanguages = findViewById<RecyclerView>(R.id.recyclerViewLanguages)
-
-                // Get unique and valid locales
-                val locales = Locale.getAvailableLocales()
-                    .filter { it.country.isNotEmpty() }
-                    .distinctBy { it.language }  // Ensure unique languages
-
-                // Set RecyclerView Adapter
-                val localeAdapter = LocaleAdapter(locales, object : OnLocalListener {
-                    override fun onItemClick(local: String) {
-                        val languageName = Locale(local).getDisplayLanguage(Locale.ENGLISH)
-                        Log.d("language", "Selected Language: $languageName") // Debugging log
-
-                        addLanguageApi(languageName) // API call
-
-                        val newLanguage = AddLanguageModel(local)
-                        languageList.add(0, newLanguage)
-                        addLanguageSpeakAdapter.notifyItemInserted(0)
-
-                        dismiss()
-                    }
-                })
-                recyclerViewLanguages?.adapter = localeAdapter
-
-                imageCross?.setOnClickListener { dismiss() }
-
-                show()
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_select_language)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
             }
+
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            val recyclerViewLanguages = findViewById<RecyclerView>(R.id.recyclerViewLanguages)
+
+            // Fetch all available locales
+            locales = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Locale.getAvailableLocales().toList()
+            } else {
+                Locale.getAvailableLocales().toList() // Same function for older Android versions
+            }
+
+            // Filter locales where the region is not empty
+            locales = locales.filter { locale ->
+                val regionCode = locale.country
+                regionCode.isNotEmpty() // Ensures that locales with no country/region are filtered out
+            }
+
+            // Set the adapter for RecyclerView
+            localeAdapter = LocaleAdapter(locales, object : OnLocalListener {
+                override fun onItemClick(local: String) {
+                    val newLanguage = AddLanguageModel(local)
+                    addLanguageApi(newLanguage.name)
+                    // Add the new language to the list
+                    Log.d("laguageListSize",languageList.size.toString())
+                    languageList.add(languageList.size - 1, newLanguage)
+                    addLanguageSpeakAdapter.updateLanguage(languageList)
+                    //addLanguageSpeakAdapter.notifyItemInserted(0)
+
+                    // Delay dismissing the dialog slightly to prevent UI issues
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        dialog.dismiss()
+                    }, 200) // 200ms delay ensures smooth UI transition
+                }
+            })
+
+            recyclerViewLanguages?.adapter = localeAdapter
+
+            imageCross?.setOnClickListener { dismiss() }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            show()
         }
     }
+
 
     private fun bottomSheetUploadImage() {
         bottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog1)
@@ -662,6 +704,35 @@ private val startAutocomplete =
     }
 
 
+    private fun payoutOpenCloseDropDown() {
+        // Set initial drawable
+        binding.textPayOutMethod.setCompoundDrawablesWithIntrinsicBounds(
+            0,
+            0,
+            R.drawable.ic_dropdown_close,
+            0
+        )
+        binding.textPayOutMethod.setOnClickListener {
+            // Toggle the state
+            isDropdownOpenpayout = !isDropdownOpenpayout
+
+            val drawableRes = if (isDropdownOpenpayout) {
+                R.drawable.ic_dropdown_open
+            } else {
+                R.drawable.ic_dropdown_close
+            }
+            if (isDropdownOpenpayout) {
+
+                binding.rlBankNameAndCardNamePayOut.visibility = View.VISIBLE
+
+            } else if (!isDropdownOpenpayout) {
+                binding.rlBankNameAndCardNamePayOut.visibility = View.GONE
+            }
+            binding.textPayOutMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
+        }
+    }
+
+
 
     override fun itemClick(obj: Int, text: String, enteredText: String) {
         when (text) {
@@ -705,6 +776,13 @@ private val startAutocomplete =
                     }
 
                 }
+            }
+            "setPrimary" -> {
+                setPrimaryPayoutMethods(enteredText)
+            }
+
+            "delete" -> {
+                deletePayoutMethods(enteredText)
             }
         }
     }
@@ -760,9 +838,7 @@ private val startAutocomplete =
             }
 
             R.id.imageEditPhoneNumber -> {
-
                 dialogNumberVerification(requireContext())
-
             }
 
             R.id.textVisitHelpCenter -> {
@@ -789,8 +865,6 @@ private val startAutocomplete =
 
             R.id.textConfirmNow -> {
                 dialogEmailVerification(requireContext())
-
-
                 binding.textConfirmNow.visibility = View.GONE
                 binding.textVerified.visibility = View.VISIBLE
             }
@@ -2353,6 +2427,8 @@ private val startAutocomplete =
 //                    addPetsAdapter.updatePets(petsList)
                 }
             }
+
+
         }
     }
 
@@ -2995,6 +3071,168 @@ private val startAutocomplete =
 
         }
     }
+
+    private fun getPayoutMethods(){
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        LoadingUtils.showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        getPayoutApi()
+                    }
+
+                }
+        }
+    }
+
+
+    private fun getPayoutApi(){
+        lifecycleScope.launch {
+            profileViewModel.getPayoutMethods(session?.getUserId().toString()).collect {
+                when (it) {
+
+                    is NetworkResult.Success -> {
+                        val model = Gson().fromJson(it.data, GetPayoutResponse::class.java)
+
+                        Log.d("API_RESPONSE_Payout", it.data.toString())
+
+                        // Ensure data is not null before accessing its properties
+                        model.data?.let { payoutData ->
+                            payoutData.bankAccounts?.let { bankList ->
+                                if (bankList.isNotEmpty()) {
+                                    bankNameAdapterPayout.addItems(bankList)
+                                }
+                            }
+
+                            payoutData.cards?.let { cardList ->
+                                if (cardList.isNotEmpty()) {
+                                    cardNumberAdapterPayout.addItems(cardList)
+                                }
+                            }
+                        } ?: run {
+                            // Handle case where `data` is null
+                            showErrorDialog(requireContext(), "Payout data is unavailable")
+                        }
+
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
+
+
+    private fun setPrimaryPayoutMethods(id: String){
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        LoadingUtils.showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        setPrimaryPayoutApi(id)
+                    }
+
+                }
+        }
+    }
+
+
+    private fun setPrimaryPayoutApi(id: String){
+        Log.d("idType",id)
+        lifecycleScope.launch {
+            profileViewModel.setPrimaryPayoutMethod(session?.getUserId().toString(),id).collect {
+                when (it) {
+
+                    is NetworkResult.Success -> {
+                        it.data?.let { it1 -> showSuccessDialog(requireContext(), it1) }
+                        getPayoutApi()
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
+
+    private fun deletePayoutMethods(id: String){
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        LoadingUtils.showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        deletePayoutApi(id)
+                    }
+
+                }
+        }
+    }
+
+
+    private fun deletePayoutApi(id: String){
+        Log.d("idType",id)
+        lifecycleScope.launch {
+            profileViewModel.deletePayoutMethod(session?.getUserId().toString(),id).collect {
+                when (it) {
+
+                    is NetworkResult.Success -> {
+                        it.data?.let { it1 -> showSuccessDialog(requireContext(), it1) }
+                        getPayoutApi()
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
+
 
 }
 

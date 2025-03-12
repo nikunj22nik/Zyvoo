@@ -66,10 +66,12 @@ class AddLocationAdapter(
         fun bind() {
 
             if (list.size >= 3) {
-                binding.textAddNew.visibility = View.GONE
+
+                binding.textAddNew?.visibility = View.GONE
             } else {
-                binding.textAddNew.visibility = View.VISIBLE
+                binding.textAddNew?.visibility = View.VISIBLE
             }
+
 
             // Logic for hiding/showing "Add New" button based on count
 
