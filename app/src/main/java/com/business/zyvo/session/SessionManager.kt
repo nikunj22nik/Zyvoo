@@ -61,6 +61,15 @@ class SessionManager(var context: Context) {
         return pref?.getInt(AppConstant.Id,-1)
     }
 
+    fun setNeedMore(id:Boolean){
+        editor!!.putBoolean(AppConstant.NEEDMORE,id)
+        editor!!.commit()
+    }
+
+    fun getNeedMore():Boolean?{
+        return pref?.getBoolean(AppConstant.NEEDMORE,false)
+    }
+
     fun setUserSession(session:Boolean){
         editor!!.putBoolean(AppConstant.session,session)
         editor!!.commit()
