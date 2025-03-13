@@ -315,7 +315,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                     }
                                 }
                             }
-
                             is NetworkResult.Error -> {
                                 showErrorDialog(requireContext(), result.message ?: "Unknown error")
                             }
@@ -341,6 +340,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     token = task.result
+
                     Log.d("FCM", "Device Token: $token")
                 } else {
                     Log.e("FCM", "Token retrieval failed", task.exception)

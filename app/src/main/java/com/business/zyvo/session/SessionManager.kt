@@ -25,6 +25,18 @@ class SessionManager(var context: Context) {
         editor!!.commit()
     }
 
+
+    fun setNotificationOnOffStatus(value :Boolean){
+
+        editor!!.putBoolean(AppConstant.NOTIFICATION, value)
+        editor!!.commit()
+
+    }
+
+    fun getNotificationStatus() : Boolean {
+        return pref?.getBoolean(AppConstant.NOTIFICATION,false)?:false
+    }
+
     fun setChatToken(token :String){
         editor!!.putString(AppConstant.CHAT_TOKEN, token)
         editor!!.commit()

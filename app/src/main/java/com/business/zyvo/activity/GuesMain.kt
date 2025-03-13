@@ -1,11 +1,15 @@
 package com.business.zyvo.activity
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.telephony.NetworkScan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -14,7 +18,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BookingRemoveListener
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
@@ -60,8 +66,7 @@ class GuesMain : AppCompatActivity(), OnClickListener {
             )
             insets
         }
-        val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.fragmentContainerView_main) as NavHostFragment
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fragmentContainerView_main) as NavHostFragment
         val navController = navHostFragment.navController
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
@@ -73,6 +78,9 @@ class GuesMain : AppCompatActivity(), OnClickListener {
         callingGetUserToken()
         var sessionManager = SessionManager(this)
         sessionManager.setUserType(AppConstant.Guest)
+        askNotificationPermission()
+
+
     }
 
     private fun callingGetUserToken() {
@@ -265,5 +273,36 @@ class GuesMain : AppCompatActivity(), OnClickListener {
             }
         }
     }
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                var sessionManager = SessionManager(this)
+                sessionManager.setNotificationOnOffStatus(true)
+            }
+            else {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }else{
+            var sessionManager = SessionManager(this)
+            sessionManager.setNotificationOnOffStatus(true)
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            var sessionManager = SessionManager(this)
+            sessionManager.setNotificationOnOffStatus(true)
+        }else{
+            var sessionManager = SessionManager(this)
+            sessionManager.setNotificationOnOffStatus(false)
+        }
+    }
+
+
+
 
 }

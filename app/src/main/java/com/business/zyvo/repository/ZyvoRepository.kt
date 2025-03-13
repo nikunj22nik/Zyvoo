@@ -588,7 +588,13 @@ interface ZyvoRepository {
         booking_start : String
     ): Flow<NetworkResult<JsonObject>>
 
+    suspend fun getHostUnreadBookings(
+        @Field("user_id") userId :Int
+    ) : Flow<NetworkResult<Int>>
 
+    suspend fun markHostBooking(
+        @Field("user_id") userId :Int
+    ) : Flow<NetworkResult<String>>
 
 }
 

@@ -755,4 +755,17 @@ interface ZyvoApi {
         @Field("payout_method_id") payoutMethodId :String
     ) : Response<JsonObject>
 
+    @POST("host_unread_bookings")
+    @FormUrlEncoded
+    suspend fun getHostUnreadBookings(
+        @Field("user_id") userId :Int
+    ) : Response<JsonObject>
+
+
+    @POST("mark_host_bookings")
+    @FormUrlEncoded
+    suspend fun markHostBooking(
+        @Field("user_id") userId :Int
+    ) : Response<JsonObject>
+
 }

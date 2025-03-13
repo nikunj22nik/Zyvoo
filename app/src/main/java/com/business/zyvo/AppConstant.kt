@@ -6,6 +6,7 @@ import com.business.zyvo.model.CountryLanguage
 class AppConstant {
 
     companion object {
+        val NOTIFICATION: String ="Notification"
         val FRIEND_ID: String? ="FRIENDiD"
         val CHANNEL_NAME: String ="Channel_Name"
         val CHANNEL_LIST :String ="channel_list"

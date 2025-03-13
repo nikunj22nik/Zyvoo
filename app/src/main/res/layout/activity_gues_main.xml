@@ -95,13 +95,16 @@ android:textStyle="bold"
                    />
 
                 <RelativeLayout
+                    android:id="@+id/rl_chat_number"
                     android:layout_width="@dimen/_14sdp"
                     android:layout_height="@dimen/_14sdp"
                     android:background="@drawable/circular_green"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/_15sdp"
+                    android:visibility="gone"
                     >
                     <TextView
+                        android:id="@+id/tv_chat_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="3"
@@ -160,8 +163,10 @@ android:textStyle="bold"
                     android:background="@drawable/circular_green"
                     android:layout_toRightOf="@id/imageBooking"
                     android:layout_marginStart="-15dp"
+                    android:visibility="gone"
                     >
                     <TextView
+                        android:id="@+id/tv_booking_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2"
