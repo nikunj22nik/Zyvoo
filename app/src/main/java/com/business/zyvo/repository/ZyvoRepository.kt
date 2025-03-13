@@ -592,10 +592,29 @@ interface ZyvoRepository {
         @Field("user_id") userId :Int
     ) : Flow<NetworkResult<Int>>
 
+
     suspend fun markHostBooking(
         @Field("user_id") userId :Int
     ) : Flow<NetworkResult<String>>
 
+    suspend fun paymentWithdrawalList(
+        userId : String,
+        startDate : String,
+        endDate : String,
+        filterStatus : String,
+    ): Flow<NetworkResult<JsonObject>>
+
+
+    suspend fun payoutBalance(
+        userId : String
+    ): Flow<NetworkResult<Pair<String, String>>>
+
+
+    suspend fun requestWithdrawal(
+        userId : String,
+        amount : String,
+        withdrawalType : String,
+    ): Flow<NetworkResult<JsonObject>>
 }
 
 

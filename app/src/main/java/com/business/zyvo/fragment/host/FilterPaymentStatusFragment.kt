@@ -1,10 +1,13 @@
 package com.business.zyvo.fragment.host
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.setFragmentResult
+import com.business.zyvo.CallUpdateListener
 import com.business.zyvo.R
 import com.business.zyvo.databinding.FragmentFilterPaymentStatusBinding
 
@@ -12,12 +15,11 @@ import com.business.zyvo.databinding.FragmentFilterPaymentStatusBinding
 class FilterPaymentStatusFragment : DialogFragment() {
   lateinit var  binding: FragmentFilterPaymentStatusBinding
 
-    private var param1: String? = null
-    private var param2: String? = null
-
+    private var filter: String = "finished"
+    private var updateListener: CallUpdateListener? = null
 
     interface DialogListener {
-        fun onSubmitClicked() // Callback when the submit button is clicked
+        fun onSubmitClicked()
     }
 
     private var listener: DialogListener? = null
@@ -27,11 +29,17 @@ class FilterPaymentStatusFragment : DialogFragment() {
     }
 
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (parentFragment is CallUpdateListener) {
+            updateListener = parentFragment as CallUpdateListener
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-           // param1 = it.getString(ARG_PARAM1)
-           // param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
@@ -51,18 +59,24 @@ class FilterPaymentStatusFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.imageClearAll.setOnClickListener{
-          //  listener?.onSubmitClicked() // Notify parent
-            dismiss() // Close the dialog
+
+            val bundle = Bundle()
+            bundle.putString("dialogFragment", "")
+            setFragmentResult("FilterPaymentStatus", bundle)
+            dismiss()
         }
 
         binding.imgSearch.setOnClickListener {
-          //  listener?.onSubmitClicked() // Notify parent
-            dismiss() // Close the dialog
+
+            val bundle = Bundle()
+            bundle.putString("dialogFragment",filter)
+            setFragmentResult("FilterPaymentStatus", bundle)
+            dismiss()
         }
 
         binding.imageCross.setOnClickListener {
-            //  listener?.onSubmitClicked() // Notify parent
-            dismiss() // Close the dialog
+
+            dismiss()
         }
 
     }
@@ -87,14 +101,14 @@ class FilterPaymentStatusFragment : DialogFragment() {
 
     private fun selectingClickListener(){
         binding.tvCompleted.setOnClickListener {
-
+            filter = "finished"
             binding.tvCompleted.setBackgroundResource(R.drawable.bg_inner_manage_place)
             binding.tvPending.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvCancelled.setBackgroundResource(R.drawable.bg_outer_manage_place)
 
         }
         binding.tvPending.setOnClickListener {
-
+            filter = "pending"
             binding.tvCompleted.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvPending.setBackgroundResource(R.drawable.bg_inner_manage_place)
             binding.tvCancelled.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -102,7 +116,7 @@ class FilterPaymentStatusFragment : DialogFragment() {
 
         }
         binding.tvCancelled.setOnClickListener {
-
+            filter = "cancelled"
             binding.tvCompleted.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvPending.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvCancelled.setBackgroundResource(R.drawable.bg_inner_manage_place)
