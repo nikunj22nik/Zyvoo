@@ -700,7 +700,7 @@ class HostPayoutFragment : Fragment() {
         binding.spinnerSelectCity.setIsFocusable(true)
 
         binding.spinnerSelectCity.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-
+            cityCode = cityListStr.get(newIndex)
         }
         binding.spinnerSelectOption.setItems(
             listOf("Bank account statement", "Voided cheque", "Bank letterhead")
@@ -791,129 +791,134 @@ class HostPayoutFragment : Fragment() {
     }
 
     private fun addBankApi() {
-        lifecycleScope.launch {
-            val userIdPart = userId
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val firstNameBody = binding.etFirstName.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val lastNameBody = binding.etLastName.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val emailBody = binding.etEmail.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val phoneBody = binding.etPhoneNumber.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-            val dobText = binding.etDOBDebitCard.text.toString() // e.g., "01-21-1998"
-            val dobParts = dobText.split("-") // Splitting into [month, day, year]
-
-            val dobList = listOf(
-                MultipartBody.Part.createFormData("dob[]", dobParts[0].toInt().toString()), // Month
-                MultipartBody.Part.createFormData("dob[]", dobParts[1].toInt().toString()), // Day
-                MultipartBody.Part.createFormData("dob[]", dobParts[2].toInt().toString())  // Year
-            )
-            val idTypeBody = binding.spinnerSelectIDType.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val personalIdentificationNobody =
-                binding.etPersonalIdentificationNumber.text.toString().trim()
+        try {
+            lifecycleScope.launch {
+                val userIdPart = userId
                     .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val ssnBody = binding.etSSN.text.toString().trim()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val addressBody = binding.etAddress.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val countryBody = countryCode.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val firstNameBody = binding.etFirstName.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val lastNameBody = binding.etLastName.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val emailBody = binding.etEmail.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val phoneBody = binding.etPhoneNumber.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-            val shortStateNameBody =
-                statetCode.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val dobText = binding.etDOB.text.toString() // e.g., "01-21-1998"
+                val dobParts = dobText.split("-") // Splitting into [month, day, year]
 
-            val cityBody = cityCode.toRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-            val postalCodeBody = binding.etPostalCode.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-            val bankDocumentTypeBody = when (binding.spinnerSelectOption.text.toString()) {
-                "Bank account statement" -> "bank_statement".toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                "Voided cheque" -> "voided_check".toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                else -> "bank_letterhead".toRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-            }
-
-
-            val bankNameBody = binding.etBankName.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val accountHolderNameBody = binding.etAccountHolderName.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val accountNumberBody = binding.etBankAccountNumber.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val accountNumberConfirmationBody = binding.etConfirmAccountNumber.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-            val routingPropertyBody = binding.etRoutingNumber.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-
-
-            val filePartFront: MultipartBody.Part? = if (filefront != null) {
-                val requestBody =
-                    filefront?.asRequestBody(filefront!!.extension.toMediaTypeOrNull())
-                MultipartBody.Part.createFormData(
-                    "verification_document_front",
-                    filefront?.name,
-                    requestBody!!
+                val dobList = listOf(
+                    MultipartBody.Part.createFormData("dob[]", dobParts[0].toInt().toString()), // Month
+                    MultipartBody.Part.createFormData("dob[]", dobParts[1].toInt().toString()), // Day
+                    MultipartBody.Part.createFormData("dob[]", dobParts[2].toInt().toString())  // Year
                 )
-            } else {
-                null
-            }
-            val filePartBack: MultipartBody.Part? = if (fileback != null) {
-                val requestBody = fileback?.asRequestBody(fileback!!.extension.toMediaTypeOrNull())
-                MultipartBody.Part.createFormData(
-                    "verification_document_back",
-                    fileback?.name,
-                    requestBody!!
-                )
-            } else {
-                null
-            }
+                val idTypeBody = binding.spinnerSelectIDType.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val personalIdentificationNobody =
+                    binding.etPersonalIdentificationNumber.text.toString().trim()
+                        .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val ssnBody = binding.etSSN.text.toString().trim()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val addressBody = binding.etAddress.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val countryBody = countryCode.toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-            val filePart: MultipartBody.Part? = if (bankuploadfile != null) {
-                val requestBody =
-                    bankuploadfile?.asRequestBody(bankuploadfile!!.extension.toMediaTypeOrNull())
-                MultipartBody.Part.createFormData(
-                    "bank_proof_document",
-                    bankuploadfile?.name,
-                    requestBody!!
-                )
-            } else {
-                null
-            }
+                val shortStateNameBody =
+                    statetCode.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+                val cityBody = cityCode.toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+                val postalCodeBody = binding.etPostalCode.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+                val bankDocumentTypeBody = when (binding.spinnerSelectOption.text.toString()) {
+                    "Bank account statement" -> "bank_statement".toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    "Voided cheque" -> "voided_check".toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                    else -> "bank_letterhead".toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+                }
+
+
+                val bankNameBody = binding.etBankName.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val accountHolderNameBody = binding.etAccountHolderName.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val accountNumberBody = binding.etBankAccountNumber.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val accountNumberConfirmationBody = binding.etConfirmAccountNumber.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                val routingPropertyBody = binding.etRoutingNumber.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+
+                val filePartFront: MultipartBody.Part? = if (filefront != null) {
+                    val requestBody =
+                        filefront?.asRequestBody(filefront!!.extension.toMediaTypeOrNull())
+                    MultipartBody.Part.createFormData(
+                        "verification_document_front",
+                        filefront?.name,
+                        requestBody!!
+                    )
+                } else {
+                    null
+                }
+                val filePartBack: MultipartBody.Part? = if (fileback != null) {
+                    val requestBody = fileback?.asRequestBody(fileback!!.extension.toMediaTypeOrNull())
+                    MultipartBody.Part.createFormData(
+                        "verification_document_back",
+                        fileback?.name,
+                        requestBody!!
+                    )
+                } else {
+                    null
+                }
+
+                val filePart: MultipartBody.Part? = if (bankuploadfile != null) {
+                    val requestBody =
+                        bankuploadfile?.asRequestBody(bankuploadfile!!.extension.toMediaTypeOrNull())
+                    MultipartBody.Part.createFormData(
+                        "bank_proof_document",
+                        bankuploadfile?.name,
+                        requestBody!!
+                    )
+                } else {
+                    null
+                }
 
 //            val filePart: MultipartBody.Part = bankuploadfile.let {
 //                val requestFile = bankuploadfile!!.asRequestBody("application/pdf".toMediaTypeOrNull())
 //                MultipartBody.Part.createFormData("bank_proof_document", bankuploadfile!!.path, requestFile)
 //            }
 
-            viewModel.addPayOut(
-                userIdPart, firstNameBody, lastNameBody, emailBody, phoneBody,
-                dobList, idTypeBody, ssnBody, personalIdentificationNobody, addressBody,
-                countryBody, shortStateNameBody, cityBody, postalCodeBody, bankNameBody,
-                accountHolderNameBody, accountNumberBody, accountNumberConfirmationBody,
-                routingPropertyBody, bankDocumentTypeBody, filePart, filePartFront,
-                filePartBack
-            ).collect {
-                when (it) {
-                    is NetworkResult.Success -> {
-                        showSuccessDialog(requireContext(), it.data!!)
-                        navController.navigateUp()
+                viewModel.addPayOut(
+                    userIdPart, firstNameBody, lastNameBody, emailBody, phoneBody,
+                    dobList, idTypeBody, ssnBody, personalIdentificationNobody, addressBody,
+                    countryBody, shortStateNameBody, cityBody, postalCodeBody, bankNameBody,
+                    accountHolderNameBody, accountNumberBody, accountNumberConfirmationBody,
+                    routingPropertyBody, bankDocumentTypeBody, filePart, filePartFront,
+                    filePartBack
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            showSuccessDialog(requireContext(), it.data!!)
+                            navController.navigateUp()
+                        }
+
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+
+                        }
+
                     }
-
-                    is NetworkResult.Error -> {
-                        showErrorDialog(requireContext(), it.message!!)
-                    }
-
-                    else -> {
-
-                    }
-
                 }
             }
+        }catch (e:Exception){
+            e.printStackTrace()
         }
+
     }
 
 
