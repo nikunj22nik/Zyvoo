@@ -2,19 +2,19 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".fragment.host.PaymentsFragment">
+    tools:context=".fragment.host.payments.PaymentsFragment">
 
     <data>
 
         <variable
             name="viewmodel"
-            type="com.business.zyvo.viewmodel.host.PaymentViewModel" />
+            type="com.business.zyvo.fragment.host.payments.viewModel.PaymentsViewModel" />
     </data>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical">-->
 
 
         <androidx.core.widget.NestedScrollView
@@ -22,13 +22,13 @@
             android:layout_height="wrap_content">
 
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
 
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="#F5F5F5"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="5dp">
 
                 <!-- Date Filter Header -->
 
@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     app:layout_constraintTop_toTopOf="parent">
 
 
@@ -107,28 +108,41 @@
                 </RelativeLayout>
 
                 <View
+                    android:id="@+id/viewTop"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
                     android:layout_marginTop="@dimen/_5sdp"
+                    app:layout_constraintTop_toBottomOf="@+id/llHeader"
                     android:background="#E5E5E5" />
 
-                <HorizontalScrollView
+                <LinearLayout
+                    android:id="@+id/llTransaction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fillViewport="true"
-                    android:maxHeight="@dimen/_250sdp">
+                   android:gravity="center"
+                    android:orientation="vertical"
+                    android:minHeight="@dimen/_220sdp"
+                    android:maxHeight="@dimen/_250sdp"
+                    app:layout_constraintBottom_toTopOf="@+id/clBottom"
+                    app:layout_constraintTop_toBottomOf="@+id/viewTop">
+
+
+                <HorizontalScrollView
+                    android:id="@+id/horizontalScrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible"
+                    android:fillViewport="true">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
+                        android:layout_height="match_parent"
                         android:orientation="vertical">
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvTransactions"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
+                            android:layout_height="match_parent"
                             app:layout_constraintHeight_max="@dimen/_250sdp"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -140,12 +154,27 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </HorizontalScrollView>
 
+                    <TextView
+                        android:id="@+id/tvNoDataFound"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="No Data Found"
+                        android:visibility="gone"
+                        android:gravity="center"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_18sdp"/>
+
+                </LinearLayout>
+
 
                 <!-- Bottom Section -->
                 <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clBottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     android:paddingTop="16dp">
 
                     <!-- Next Payout Section -->
@@ -201,7 +230,7 @@
                             android:layout_marginTop="4dp"
                             android:layout_toEndOf="@+id/imageDollar"
                             android:fontFamily="@font/open_sans_bold"
-                            android:text="$2350.00"
+                            android:text=""
                             android:textColor="#000"
                             android:textSize="15sp"
                             android:textStyle="bold" />
@@ -214,7 +243,7 @@
                            android:layout_marginStart="@dimen/_10ssp"
                             android:layout_marginTop="4dp"
                             android:fontFamily="@font/inter"
-                            android:text="On May 15, 2023"
+                            android:text=""
 
                             android:textColor="#000"
                             android:textSize="14sp" />
@@ -266,12 +295,12 @@
                         android:layout_marginBottom="@dimen/_65sdp"
                         tools:listitem="@layout/layout_payment_details"
                         app:layout_constraintBottom_toBottomOf="parent"/>
-                    <!-- Card List Section -->
+
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 </layout>

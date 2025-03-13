@@ -755,4 +755,27 @@ interface ZyvoApi {
         @Field("payout_method_id") payoutMethodId :String
     ) : Response<JsonObject>
 
+
+    @POST("payment_withdrawal_list")
+    @FormUrlEncoded
+    suspend fun paymentWithdrawalList(
+        @Field("user_id") userId :String,
+        @Field("start_date") start_date :String,
+        @Field("end_date") end_date :String,
+        @Field("filter_status") filter_status :String,
+    ) : Response<JsonObject>
+
+    @POST("payout_balance")
+    @FormUrlEncoded
+    suspend fun payoutBalance(
+        @Field("user_id") userId :String
+    ) : Response<JsonObject>
+
+    @POST("request_withdrawal")
+    @FormUrlEncoded
+    suspend fun requestWithdrawal(
+        @Field("user_id") userId :String,
+        @Field("amount") amount :String,
+        @Field("withdrawal_type") withdrawalType :String,
+    ) : Response<JsonObject>
 }
