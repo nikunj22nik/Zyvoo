@@ -63,7 +63,7 @@
     </fragment>
 
     <fragment android:id="@+id/hostPaymentFragment"
-        android:name="com.business.zyvo.fragment.host.PaymentsFragment"
+        android:name="com.business.zyvo.fragment.host.payments.PaymentsFragment"
         android:label="host_payment"
         />
 
@@ -123,5 +123,10 @@
         android:name="com.business.zyvo.fragment.host.hostPayout.HostPayoutFragment"
         android:label="fragment_host_payout"
         tools:layout="@layout/fragment_host_payout" />
+    <fragment
+        android:id="@+id/filterPaymentStatusFragment"
+        android:name="com.business.zyvo.fragment.host.FilterPaymentStatusFragment"
+        android:label="fragment_filter_payment_status"
+        tools:layout="@layout/fragment_filter_payment_status" />
 
 </navigation>

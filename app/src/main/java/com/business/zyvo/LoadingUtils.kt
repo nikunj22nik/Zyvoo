@@ -42,8 +42,12 @@ open class LoadingUtils {
             }
         }
 
+
         fun showErrorDialog(context: Context?, text: String) {
+
+
             if (context == null) return
+
 
             // Inflate the custom layout
             val inflater = LayoutInflater.from(context)

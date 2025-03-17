@@ -98,7 +98,7 @@
         tools:layout="@layout/fragment_recently_viewed" />
     <fragment
         android:id="@+id/paymentsFragment"
-        android:name="com.business.zyvo.fragment.host.PaymentsFragment"
+        android:name="com.business.zyvo.fragment.host.payments.PaymentsFragment"
         android:label="fragment_payments"
         tools:layout="@layout/fragment_payments" />
 

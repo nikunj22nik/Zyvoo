@@ -463,8 +463,6 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         }
     }
 
-
-
     suspend fun getPayoutMethods( userId: String):
             Flow<NetworkResult<JsonObject>>{
         return repository.getPayoutMethods(userId).onEach {
@@ -512,7 +510,6 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         }
     }
 
-
     suspend fun setPrimaryPayoutMethod( userId: String, payoutMethodId: String):
             Flow<NetworkResult<String>>{
         return repository.setPrimaryPayoutMethod(userId,payoutMethodId).onEach {
@@ -559,5 +556,6 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
             }
         }
     }
+
 
 }

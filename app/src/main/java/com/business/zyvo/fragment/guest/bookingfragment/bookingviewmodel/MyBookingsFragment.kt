@@ -148,7 +148,7 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
     private fun sortBookingBy(option: String) {
         var filterBooking:MutableList<BookingModel> = mutableListOf()
         when (option) {
-            "All Bookings" ->  bookingListModel.sortByDescending { it.booking_status }
+            "All Bookings" -> filterBooking = bookingListModel/* bookingListModel.sortByDescending { it.booking_status }*/
             "Confirmed" -> filterBooking =
                 bookingListModel.filter { it.booking_status == "confirmed" }.toMutableList()
             "Pending" -> filterBooking =

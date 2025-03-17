@@ -8,6 +8,7 @@ import com.business.zyvo.repository.ZyvoRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
+import retrofit2.http.Field
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +48,16 @@ class GuestMainActivityModel @Inject constructor(private val repository: ZyvoRep
     }
 
     suspend fun getChatUserChannelList(userId :Int,type :String) : Flow<NetworkResult<MutableList<ChannelListModel>>>{
-        return repository.getUserChannel(userId,type)
+        return repository.getUserChannel(userId,type).onEach {
+
+        }
+    }
+
+    suspend fun getHostUnreadBookings(@Field("user_id") userId :Int) : Flow<NetworkResult<Int>>{
+        return repository.getHostUnreadBookings(userId).onEach {
+
+        }
+
     }
 
 

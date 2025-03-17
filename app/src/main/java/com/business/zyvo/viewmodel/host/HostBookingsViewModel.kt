@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.onEach
+import retrofit2.http.Field
 import java.io.IOException
 import javax.inject.Inject
 
@@ -181,6 +182,11 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
         senderId :Int, receiverId :Int, groupChannel :String, user_type: String
     ) : Flow<NetworkResult<ChannelModel>>{
         return repository.joinChatChannel(senderId, receiverId, groupChannel, user_type).onEach {
+
+        }
+    }
+    suspend fun markHostBooking( userId :Int) : Flow<NetworkResult<String>>{
+        return repository.markHostBooking(userId).onEach {
 
         }
     }

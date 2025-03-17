@@ -38,7 +38,7 @@
         tools:layout="@layout/fragment_complete_profile" />
     <fragment
         android:id="@+id/paymentsFragment2"
-        android:name="com.business.zyvo.fragment.host.PaymentsFragment"
+        android:name="com.business.zyvo.fragment.host.payments.PaymentsFragment"
         android:label="fragment_payments"
         tools:layout="@layout/fragment_payments" />
 </navigation>
