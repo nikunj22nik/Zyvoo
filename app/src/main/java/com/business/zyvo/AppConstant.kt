@@ -83,6 +83,7 @@ class AppConstant {
         val article :String= "article"
         val VOOPON_ID :String? = "VOOPOM_ID"
         val Id: String?="ID"
+        val NEEDMORE: String?="needmore"
         val session: String?="UserSession"
         val LATITUDE:String ="latitude"
         val LATITUDEGUST:String ="latitudegust"

@@ -31,6 +31,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -68,12 +69,15 @@ import com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivit
 import com.business.zyvo.activity.guest.FiltersActivity
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
+import com.business.zyvo.activity.guest.propertydetails.model.PropertyData
 import com.business.zyvo.activity.guest.sorryresult.SorryActivity
 import com.business.zyvo.adapter.WishlistAdapter
 import com.business.zyvo.adapter.guest.HomeScreenAdapter
 import com.business.zyvo.adapter.guest.HomeScreenAdapter.onItemClickListener
 import com.business.zyvo.databinding.FragmentGuestDiscoverBinding
+import com.business.zyvo.fragment.guest.home.model.Bookings
 import com.business.zyvo.fragment.guest.home.model.HomePropertyData
+import com.business.zyvo.fragment.guest.home.model.Property
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
 import com.business.zyvo.model.FilterRequest
@@ -134,6 +138,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     private val handler = Handler(Looper.getMainLooper())
     private var runnable: Runnable? = null
     private var initialstartTime: Long = 0
+    private var bookings:Bookings? = null
+    private var property:PropertyData?=null
 
 
 
@@ -152,6 +158,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
         binding = FragmentGuestDiscoverBinding.inflate(LayoutInflater.from(requireContext()))
         val navController = findNavController()
+
 
         // Observe the isLoading state
         lifecycleScope.launch {
@@ -215,6 +222,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         mapView = binding.map
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(),navController)
         session = SessionManager(requireActivity())
+
 
         adapter = HomeScreenAdapter(requireContext(), homePropertyData,
             this,this)
@@ -296,7 +304,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = (millisUntilFinished / 1000).toInt()
                 formatTime(secondsRemaining)
-                Log.e(ErrorDialog.TAG,"$secondsRemaining")
             }
             override fun onFinish() {
 
@@ -380,7 +387,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     binding.tvMapContent.setText("Show Map")
                     binding.rlMapView.visibility = View.GONE
                     binding.recyclerViewBooking.visibility = View.VISIBLE
-                    binding.clTimeLeftProgressBar.visibility = View.VISIBLE
+                  //  binding.clTimeLeftProgressBar.visibility = View.VISIBLE
                     try {
                         val params = binding.rlShowMap.layoutParams as ConstraintLayout.LayoutParams
                         params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 50) // 50px bottom margin
@@ -395,26 +402,25 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
 
             R.id.customProgressBar ->{
-                val intent = Intent(requireContext(), ExtraTimeChargesActivity::class.java)
-                intent.putExtra(AppConstant.TIME, AppConstant.TIME)
-                startActivity(intent)
+                bookings?.let { bookings: Bookings ->
+                    property?.let {
+                     /*   val intent = Intent(requireContext(), ExtraTimeChargesActivity::class.java)
+                        //  intent.putExtra(AppConstant.TIME, AppConstant.TIME)
+                        intent.putExtra("price",bookings.booking_amount)
+                        intent.putExtra("stTime",bookings.booking_start)
+                        intent.putExtra("edTime",bookings.booking_end)
+                        intent.putExtra("propertyData",Gson().toJson(it))
+                        intent.putExtra("propertyMile","")
+                        intent.putExtra("date",bookings.booking_date)
+                        intent.putExtra("hour",bookings.booking_hours)
+                        intent.putExtra("type","Booking")
+                        intent.putExtra("bookingId",bookings.booking_id)
+                        startActivity(intent)*/
+                    }
+                }
+
             }
 
-        }
-    }
-
-    private fun dialogfullScreen() {
-        val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
-        dialog.apply {
-            setCancelable(true)
-            setContentView(R.layout.dialog_full_screen)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
         }
     }
 
@@ -845,29 +851,42 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                                 session?.setFilterRequest("")
                                 session?.setSearchFilterRequest("")
                                 binding.clTimeLeftProgressBar.visibility = View.VISIBLE
-                                val booking:JsonObject = resp.
-                                getAsJsonArray("bookings").get(0).asJsonObject
-                                if (booking.has("booking_start") &&
-                                    booking.has("booking_end")){
-                                    val booking_start = booking.get("booking_start").asString
-                                    val booking_end = booking.get("booking_end").asString
-                                    try {
-                                        val differenceIntoMinutes  = calculateDifferenceInSeconds(
-                                            "2025-03-11 14:00:00"/*booking_start*/,"2025-03-11 17:00:00"/*booking_end*/
-                                        )
-                                        initialstartTime = getMinutesPassed("2025-03-11 14:00:00"/*booking_start*/)
-                                        Log.e(ErrorDialog.TAG,"passway"+initialstartTime.toString())
-                                        Log.e(ErrorDialog.TAG,"differenceIntoMinutes"+differenceIntoMinutes)
-                                        totalDuration = differenceIntoMinutes//20L//differenceInSeconds
-                                        initialstartTime =initialstartTime //10
-                                        //startProgressUpdate()
-                                        startProgressUpdateMinute()
-                                        // Start the countdown timer
-                                        val remain = totalDuration.toInt()-initialstartTime.toInt()
-                                        Log.e(ErrorDialog.TAG,"remain"+remain)
-                                        startCountdown(remain.toString())
-                                    }catch (e:Exception){
-                                        Log.e(ErrorDialog.TAG,e.message!!)
+                                if (resp.has("bookings")) {
+                                    val booking: JsonObject = resp
+                                        .getAsJsonArray("bookings").get(0).asJsonObject
+                                    bookings = Gson().fromJson(booking,Bookings::class.java)
+                                }
+                                if (resp.has("properties")){
+                                    val reqpro: JsonObject = resp
+                                        .getAsJsonArray("properties").get(0).asJsonObject
+                                    property = Gson().fromJson(reqpro,PropertyData::class.java)
+                                }
+
+                                bookings?.let { bookings: Bookings ->
+                                    property?.let {
+                                        if (bookings.booking_start!=null && !bookings.booking_start.equals("") &&
+                                            bookings.booking_end!=null && !bookings.booking_end.equals("")){
+                                            val booking_start = bookings.booking_start
+                                            val booking_end = bookings.booking_end
+                                            try {
+                                                val differenceIntoMinutes  = calculateDifferenceInSeconds(
+                                                   /* "2025-03-12 15:00:00"*/booking_start,/*"2025-03-12 17:30:00"*/booking_end
+                                                )
+                                                initialstartTime = getMinutesPassed(/*"2025-03-12 15:00:00"*/booking_start)
+                                                Log.e(ErrorDialog.TAG,"passway"+initialstartTime.toString())
+                                                Log.e(ErrorDialog.TAG,"differenceIntoMinutes"+differenceIntoMinutes)
+                                                totalDuration = differenceIntoMinutes//20L//differenceInSeconds
+                                                initialstartTime =initialstartTime //10
+                                                //startProgressUpdate()
+                                                startProgressUpdateMinute()
+                                                // Start the countdown timer
+                                                val remain = totalDuration.toInt()-initialstartTime.toInt()
+                                                Log.e(ErrorDialog.TAG,"remain"+remain)
+                                                startCountdown(remain.toString())
+                                            }catch (e:Exception){
+                                                Log.e(ErrorDialog.TAG,e.message!!)
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -1205,7 +1224,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                         handler.postDelayed(this, 1000*60) // Update every minute
                         Log.e(ErrorDialog.TAG, "Update: $elapsedTimeMinutes min")
                         if (remainingNow<=30){
-
+                            if (!session?.getNeedMore()!!){
+                                dialogNeedMore()
+                            }
                         }
                     } else {
                         handler.removeCallbacks(this) // Stop updating when progress is complete
@@ -1216,6 +1237,51 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             handler.post(runnable!!)
         } catch (e: Exception) {
             Log.e(ErrorDialog.TAG, e.message ?: "Error occurred")
+        }
+    }
+
+    private fun dialogNeedMore() {
+        val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_need_more_time)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            val ivclose:ImageView = dialog.findViewById(R.id.ivclose)
+            ivclose.setOnClickListener {
+                session?.setNeedMore(true)
+                dismiss()
+            }
+            val rl_yes:RelativeLayout = dialog.findViewById(R.id.rl_yes)
+            rl_yes.setOnClickListener {
+                bookings?.let { bookings: Bookings ->
+                    property?.let {
+                       /* val intent = Intent(requireContext(), ExtraTimeChargesActivity::class.java)
+                        intent.putExtra("price",bookings.booking_amount)
+                        intent.putExtra("stTime",bookings.booking_start)
+                        intent.putExtra("edTime",bookings.booking_end)
+                        intent.putExtra("propertyData",Gson().toJson(it))
+                        intent.putExtra("propertyMile","")
+                        intent.putExtra("date",bookings.booking_date)
+                        intent.putExtra("hour",bookings.booking_hours)
+                        intent.putExtra("type","Booking")
+                        intent.putExtra("bookingId",bookings.booking_id)
+                        startActivity(intent)*/
+                    }
+                }
+                session?.setNeedMore(true)
+                dismiss()
+            }
+            val rl_cancel:RelativeLayout = dialog.findViewById(R.id.rl_cancel)
+            rl_cancel.setOnClickListener {
+                session?.setNeedMore(true)
+                dismiss()
+            }
+            show()
         }
     }
 
