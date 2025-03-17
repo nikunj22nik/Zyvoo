@@ -287,22 +287,29 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
     }
 
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+
         if (isGranted) {
             var sessionManager = SessionManager(this)
             sessionManager.setNotificationOnOffStatus(true)
-        }else{
+        }
+        else {
             var sessionManager = SessionManager(this)
             sessionManager.setNotificationOnOffStatus(false)
         }
+
     }
 
     override fun resetToZeroListener() {
-        binding.tvBookingCount.setText(0)
+
     }
 
     inner class MyReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            val message = intent.getStringExtra("message")
+//            // Do something with the message (e.g., show it in a Toast)
 
+            var TVcOUNT = binding.tvBookingCount
+            TVcOUNT.setText(message)
         }
     }
 

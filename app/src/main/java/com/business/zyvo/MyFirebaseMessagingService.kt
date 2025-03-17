@@ -10,7 +10,9 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.business.zyvo.utils.AppContextProvider
 import com.google.firebase.crashlytics.internal.common.CommonUtils
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -28,7 +30,19 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.d("CIRCLEIT_TOEK","HERE IN A NOTIFICATION")
 
 
-        remoteMessage.data.containsKey("")
+        if(remoteMessage.data.containsKey("unread_booking_count")){
+                var str =  remoteMessage.data.get("unread_booking_count")
+            val intent = Intent("com.example.broadcast.ACTION_SEND_MESSAGE")
+            intent.putExtra("message", str)
+
+            // Send the broadcast using LocalBroadcastManager
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent)
+        }
+        else{
+
+            Log.d("TESTING","Inside of else")
+
+        }
 
 //        if(commonUtils.getNotificationStatus()){
             remoteMessage.notification?.let {
@@ -36,6 +50,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 Log.d("CIRCLEIT_TOEK",it.title.toString() +" "+it.body.toString())
                 sendNotification(it.title.toString(), it.body.toString())
             }
+
         }
 
 

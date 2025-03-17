@@ -630,11 +630,7 @@ class HostPayoutFragment : Fragment() {
 
         }
         binding.spinnerSelectCountry.setOnFocusChangeListener { _, b ->
-            closeSelectCountry = if (b) {
-                1
-            } else {
-                0
-            }
+            closeSelectCountry = if (b) { 1 } else { 0 }
         }
 
         when (closeSelectCountry) {
@@ -699,9 +695,10 @@ class HostPayoutFragment : Fragment() {
 
         binding.spinnerSelectCity.setIsFocusable(true)
 
-        binding.spinnerSelectCity.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-
+        binding.spinnerSelectCity.setOnSpinnerItemSelectedListener<String>{ oldIndex, oldItem, newIndex, newItem ->
+            cityCode = cityListStr.get(newIndex)
         }
+
         binding.spinnerSelectOption.setItems(
             listOf("Bank account statement", "Voided cheque", "Bank letterhead")
         )
@@ -803,7 +800,7 @@ class HostPayoutFragment : Fragment() {
             val phoneBody = binding.etPhoneNumber.text.toString()
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-            val dobText = binding.etDOBDebitCard.text.toString() // e.g., "01-21-1998"
+            val dobText = binding.etDOB.text.toString() // e.g., "01-21-1998"
             val dobParts = dobText.split("-") // Splitting into [month, day, year]
 
             val dobList = listOf(
