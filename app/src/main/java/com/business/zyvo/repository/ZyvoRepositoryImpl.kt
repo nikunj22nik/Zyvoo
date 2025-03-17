@@ -4535,7 +4535,9 @@ import javax.inject.Inject
 
     }
 
-    override suspend fun getCityName(country:String, state :String)  :Flow<NetworkResult<MutableList<String>>> = flow{
+
+
+     override suspend fun getCityName(country:String, state :String)  :Flow<NetworkResult<MutableList<String>>> = flow{
         try {
             api.getCityName(country,state).apply {
                 if (isSuccessful) {
@@ -4783,8 +4785,9 @@ import javax.inject.Inject
                  if (isSuccessful) {
                      body()?.let { resp ->
                          if (resp.has("success") && resp.get("success").asBoolean) {
-                             if (resp.has("message") &&     !resp.get("message").isJsonNull)
+                             if (resp.has("message") &&     !resp.get("message").isJsonNull) {
                                  emit(NetworkResult.Success(resp.get("message").asString))
+                             }
 
                          } else {
                              emit(NetworkResult.Error(resp.get("message").asString))
@@ -4807,9 +4810,129 @@ import javax.inject.Inject
      }
 
 
+     override suspend fun paymentWithdrawalList(
+         userId: String,
+         startDate: String,
+         endDate: String,
+         filterStatus: String
+     ): Flow<NetworkResult<JsonObject>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.paymentWithdrawalList(
+                 userId,startDate,endDate,filterStatus
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+
+                                 emit(NetworkResult.Success(resp))
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+     override suspend fun payoutBalance(userId: String): Flow<NetworkResult<Pair<String, String>>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.payoutBalance(
+                 userId
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+
+                             if (resp.has("data") && !resp.get("data").isJsonNull) {
+                                 val data = resp.getAsJsonObject("data")
+
+                                 val next_payout = if (data.has("next_payout") && !data.get("next_payout").isJsonNull) {
+                                     data.get("next_payout").asString
+                                 } else {
+                                     ""
+                                 }
+
+                                 val next_payout_date = if (data.has("next_payout_date") && !data.get("next_payout_date").isJsonNull) {
+                                     data.get("next_payout_date").asString
+                                 } else {
+                                     ""
+                                 }
+
+                                 emit(NetworkResult.Success(Pair(next_payout,next_payout_date)))
+                             }
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+     override suspend fun requestWithdrawal(
+         userId: String,
+         amount: String,
+         withdrawalType: String
+     ): Flow<NetworkResult<JsonObject>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.requestWithdrawal(
+                 userId,
+                 amount,
+                 withdrawalType
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+
+                             emit(NetworkResult.Success(resp))
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
 
 
-
-
-}
+ }
 
