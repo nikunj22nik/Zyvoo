@@ -756,6 +756,21 @@ interface ZyvoApi {
     ) : Response<JsonObject>
 
 
+    @POST("host_unread_bookings")
+    @FormUrlEncoded
+    suspend fun getHostUnreadBookings(
+        @Field("user_id") userId :Int
+    ) : Response<JsonObject>
+
+
+    @POST("mark_host_bookings")
+    @FormUrlEncoded
+    suspend fun markHostBooking(
+        @Field("user_id") userId :Int
+    ) : Response<JsonObject>
+
+
+
     @POST("payment_withdrawal_list")
     @FormUrlEncoded
     suspend fun paymentWithdrawalList(
@@ -778,4 +793,5 @@ interface ZyvoApi {
         @Field("amount") amount :String,
         @Field("withdrawal_type") withdrawalType :String,
     ) : Response<JsonObject>
+
 }

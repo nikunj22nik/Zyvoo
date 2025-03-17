@@ -630,11 +630,7 @@ class HostPayoutFragment : Fragment() {
 
         }
         binding.spinnerSelectCountry.setOnFocusChangeListener { _, b ->
-            closeSelectCountry = if (b) {
-                1
-            } else {
-                0
-            }
+            closeSelectCountry = if (b) { 1 } else { 0 }
         }
 
         when (closeSelectCountry) {
@@ -699,9 +695,11 @@ class HostPayoutFragment : Fragment() {
 
         binding.spinnerSelectCity.setIsFocusable(true)
 
-        binding.spinnerSelectCity.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
+
+        binding.spinnerSelectCity.setOnSpinnerItemSelectedListener<String>{ oldIndex, oldItem, newIndex, newItem ->
             cityCode = cityListStr.get(newIndex)
         }
+
         binding.spinnerSelectOption.setItems(
             listOf("Bank account statement", "Voided cheque", "Bank letterhead")
         )
@@ -791,18 +789,22 @@ class HostPayoutFragment : Fragment() {
     }
 
     private fun addBankApi() {
+
         try {
-            lifecycleScope.launch {
-                val userIdPart = userId
-                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                val firstNameBody = binding.etFirstName.text.toString()
-                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                val lastNameBody = binding.etLastName.text.toString()
-                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                val emailBody = binding.etEmail.text.toString()
-                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
-                val phoneBody = binding.etPhoneNumber.text.toString()
-                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+        lifecycleScope.launch {
+            val userIdPart = userId
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val firstNameBody = binding.etFirstName.text.toString()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val lastNameBody = binding.etLastName.text.toString()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val emailBody = binding.etEmail.text.toString()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+            val phoneBody = binding.etPhoneNumber.text.toString()
+                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+
+
 
                 val dobText = binding.etDOB.text.toString() // e.g., "01-21-1998"
                 val dobParts = dobText.split("-") // Splitting into [month, day, year]

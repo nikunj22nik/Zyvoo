@@ -68,11 +68,15 @@ import com.business.zyvo.OnLocalListener
 import com.business.zyvo.R
 import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
+import com.business.zyvo.activity.guest.checkout.model.MailingAddress
+import com.business.zyvo.activity.guest.checkout.model.UserCards
+import com.business.zyvo.adapter.AdapterAddPaymentCard
 import com.business.zyvo.adapter.AddHobbiesAdapter
 import com.business.zyvo.adapter.AddLanguageSpeakAdapter
 import com.business.zyvo.adapter.AddLocationAdapter
 import com.business.zyvo.adapter.AddPetsAdapter
 import com.business.zyvo.adapter.AddWorkAdapter
+import com.business.zyvo.adapter.SetPreferred
 import com.business.zyvo.adapter.host.BankNameAdapter
 import com.business.zyvo.adapter.host.BankNameAdapterPayout
 import com.business.zyvo.adapter.host.CardNumberAdapter
@@ -97,37 +101,50 @@ import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.PaymentViewModel
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.hbb20.CountryCodePicker
+import com.stripe.android.ApiResultCallback
+import com.stripe.android.Stripe
+import com.stripe.android.model.CardParams
+import com.stripe.android.model.Token
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.util.Locale
+import java.util.Objects
 
 
 @AndroidEntryPoint
-class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener {
+class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener, SetPreferred {
     lateinit var binding: FragmentHostProfileBinding
-
+    var userCardsList: MutableList<UserCards> = mutableListOf()
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
     private lateinit var addWorkAdapter: AddWorkAdapter
     private lateinit var addLanguageSpeakAdapter: AddLanguageSpeakAdapter
     private lateinit var addHobbiesAdapter: AddHobbiesAdapter
+    var selectuserCard:UserCards?=null
     private lateinit var dateManager: DateManager
     private lateinit var bankNameAdapter: BankNameAdapter
     private lateinit var cardNumberAdapter: CardNumberAdapter
     private lateinit var bankNameAdapterPayout: BankNameAdapterPayout
     private lateinit var cardNumberAdapterPayout: CardNumberAdapterPayout
     private lateinit var addPetsAdapter: AddPetsAdapter
+    private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
+    var firstTime:Boolean = true
     var userProfile: UserProfile? = null
     var imageBytes: ByteArray = byteArrayOf()
     var session: SessionManager? = null
+
+    var customerId = ""
 
     // private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
     private val paymentCardViewHolder: PaymentViewModel by lazy {
@@ -205,30 +222,20 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         apiKey = getString(R.string.api_key)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentHostProfileBinding.inflate(
-            LayoutInflater.from(requireContext()),
-            container,
-            false
-        )
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        binding = FragmentHostProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
+
         session = SessionManager(requireActivity())
 
+        binding.textAddNew.setOnClickListener {
+           dialogAddCardGuest()
+        }
+
+        addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf(),this)
+        binding.recyclerViewPaymentCardList1.adapter = addPaymentCardAdapter
         dateManager = DateManager(requireContext())
-        // Inflate the layout for this fragment
-//        val newLocation = AddLocationModel("Unknown Location")
-//        locationList.add(newLocation)
-//        val newWork = AddWorkModel("Unknown Location")
-//        workList.add(newWork)
-//        val newLanguage = AddLanguageModel("Unknown Location")
-//        languageList.add(newLanguage)
-//        val newHobbies = AddHobbiesModel("Unknown Location")
-//        hobbiesList.add(newHobbies)
-//        val newPets = AddPetsModel("Unknown Location")
-//        petsList.add(newPets)
+
         return binding.root
     }
 
@@ -265,15 +272,14 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         binding.switchHost.setOnClickListener {
             val session = SessionManager(requireContext())
             session.setCurrentPanel(AppConstant.Guest)
-
             val intent = Intent(requireContext(), GuesMain::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
             requireActivity().finish()
         }
-        binding.textAddNew.setOnClickListener {
-            findNavController().navigate(R.id.payoutFragment)
-        }
+//        binding.textAddNew.setOnClickListener {
+//          //  findNavController().navigate(R.id.payoutFragment)
+//        }
 
         binding.textAddNewPaymentMethod.setOnClickListener {
             findNavController().navigate(R.id.hostPayoutFragment)
@@ -691,11 +697,14 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
 
             if (isDropdownOpen) {
+                if(firstTime) {
+                    getUserCards()
+                }
 
-                binding.rlBankNameAndCardName.visibility = View.VISIBLE
+                binding.recyclerViewPaymentCardList1.visibility = View.VISIBLE
 
             } else if (!isDropdownOpen) {
-                binding.rlBankNameAndCardName.visibility = View.GONE
+                binding.recyclerViewPaymentCardList1.visibility = View.GONE
 
 
             }
@@ -3230,6 +3239,232 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
 
 
+        }
+    }
+
+    private fun saveCardStripe(dialog: Dialog, tokenId:String, saveasMail:Boolean) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                profileViewModel.saveCardStripe(session?.getUserId().toString(),
+                    tokenId).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                dialog.dismiss()
+                                getUserCards()
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+
+    private fun dialogAddCardGuest() {
+        var dateManager = DateManager(requireContext())
+        val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_add_card_details)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            val textMonth: TextView = findViewById(R.id.textMonth)
+            val textYear: TextView = findViewById(R.id.textYear)
+            val etCardNumber: EditText = findViewById(R.id.etCardNumber)
+            val etCardHolderName: EditText = findViewById(R.id.etCardHolderName)
+            val submitButton: TextView = findViewById(R.id.textSubmitButton)
+            val etStreet: EditText = findViewById(R.id.etStreet)
+            val etCity: EditText = findViewById(R.id.etCity)
+            val etState: EditText = findViewById(R.id.etState)
+            val etZipCode: EditText = findViewById(R.id.etZipCode)
+            val etCardCvv: EditText = findViewById(R.id.etCardCvv)
+            val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+            textMonth.setOnClickListener {
+                dateManager.showMonthSelectorDialog { selectedMonth ->
+                    textMonth.text = selectedMonth
+                }
+                textYear.setOnClickListener {
+                    dateManager.showYearPickerDialog { selectedYear ->
+                        textYear.text = selectedYear.toString()
+                    }
+                }
+            }
+            submitButton.setOnClickListener {
+                if (etCardHolderName.text.isEmpty()){
+                    showToast(requireContext(),AppConstant.cardName)
+                }else if (textMonth.text.isEmpty()){
+                    showToast(requireContext(),AppConstant.cardMonth)
+                }else if (textYear.text.isEmpty()){
+                    showToast(requireContext(),AppConstant.cardYear)
+                }else if (etCardCvv.text.isEmpty()){
+                    showToast(requireContext(),AppConstant.cardCVV)
+                }else
+                {
+                    LoadingUtils.showDialog(requireContext(), false)
+                    val stripe = Stripe(requireContext(), BuildConfig.STRIPE_KEY)
+                    var month: Int? = null
+                    var year: Int? = null
+                    val cardNumber: String =
+                        Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
+                    val cvvNumber: String =
+                        Objects.requireNonNull(etCardCvv.text.toString().trim()).toString()
+                    val name: String = etCardHolderName.text.toString().trim()
+                    month = dateManager.getMonthNumber(textMonth.text.toString())
+                    year = textYear.text.toString().toInt()
+                    val card = CardParams(
+                        cardNumber,
+                        month!!,
+                        Integer.valueOf(year!!),
+                        cvvNumber,
+                        name)
+                    stripe?.createCardToken(card, null, null,
+                        object : ApiResultCallback<Token> {
+                            override fun onError(e: Exception) {
+                                Log.d("******  Token Error :-", "${e.message}")
+                                showErrorDialog(requireContext(), e.message.toString())
+                                LoadingUtils.hideDialog()
+                            }
+
+                            override fun onSuccess(result: Token) {
+                                val id = result.id
+                                Log.d("******  Token payment :-", "data $id")
+
+                                saveCardStripe(dialog,id,checkBox.isChecked)
+
+                            }
+                        })
+                }
+            }
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+            sameAsMailingAddress(etStreet,etCity,etState,etZipCode)
+
+        }
+    }
+
+
+    private fun sameAsMailingAddress(etStreet:EditText,
+                                     etCity:EditText,
+                                     etState:EditText,
+                                     etZipCode:EditText) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                profileViewModel.sameAsMailingAddress(session?.getUserId().toString()).collect { it ->
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val mailingAddress: MailingAddress = Gson().fromJson(resp,
+                                    MailingAddress::class.java)
+                                mailingAddress.let { it ->
+                                    it.street_address?.let {
+                                        etStreet.setText(it)
+                                    }
+                                    it.city?.let {
+                                        etCity.setText(it)
+                                    }
+                                    it.state?.let {
+                                        etState.setText(it)
+                                    }
+                                    it.zip_code?.let {
+                                        etZipCode.setText(it)
+                                    }
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    private fun getUserCards() {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                profileViewModel.getUserCards(session?.getUserId().toString()).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                customerId = resp.get("stripe_customer_id").asString
+                                firstTime = false
+                                val listType = object : TypeToken<List<UserCards>>() {}.type
+                                userCardsList = Gson().fromJson(resp.getAsJsonArray("cards"), listType)
+
+                                if (userCardsList.isNotEmpty()){
+                                    addPaymentCardAdapter.updateItem(userCardsList)
+                                    for (card in userCardsList){
+                                        if (card.is_preferred){
+                                            selectuserCard = card
+                                            break
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }
+        else{
+            showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    override fun set(position: Int) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                profileViewModel.setPreferredCard(session?.getUserId().toString(),
+                    userCardsList[position].card_id
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                getUserCards()
+                                showToast(requireContext(),resp.first)
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            LoadingUtils.showSuccessDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 

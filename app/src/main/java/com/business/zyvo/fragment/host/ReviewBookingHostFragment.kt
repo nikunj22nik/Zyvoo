@@ -380,27 +380,29 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun showingDataToUi(data: HostDetailModel) {
+
         binding.tvNamePlace.setText(data.property_title)
         binding.textRatingStar.setText(data.guest_rating)
         binding.textK.setText(" ( " + data.reviews_total_rating + " )")
         binding.textMiles.setText(data.distance_miles + " miles away")
         binding.time.setText(data.booking_hour + " Hours")
         binding.money.setText("$ " + data.booking_amount)
+
         adapterIncludeInBooking.updateAdapter(data.amenities)
+
         if (data.guest_id < data.host_id) {
-            channelName = "ZYVOOPRO_" + data.guest_id + "_" + data.host_id +"_"+propertyId
+            channelName = "ZYVOOPROJ_" + data.guest_id + "_" + data.host_id +"_"+propertyId
         }
+
         else {
-            channelName = "ZYVOOPRO_" + data.host_id + "_" + data.guest_id +"_"+propertyId
+            channelName = "ZYVOOPROJ_" + data.host_id + "_" + data.guest_id +"_"+propertyId
         }
 
         data.cleaning_fee?.let {
             binding.tvCleaningFee.setText("$" + it)
         } ?: binding.tvCleaningFee.setText("$ 0")
 
-        data.service_fee?.let {
-            binding.tvServiceFee.setText("$" + it)
-        } ?: binding.tvServiceFee.setText("$ 0")
+        data.service_fee?.let { binding.tvServiceFee.setText("$" + it) } ?: binding.tvServiceFee.setText("$ 0")
 
 
         data.guest_avatar?.let {

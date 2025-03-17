@@ -2106,7 +2106,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             }
                         }
                         is NetworkResult.Error -> {
-                            showErrorDialog(requireContext(), it.message!!)
+                            LoadingUtils.showSuccessDialog(requireContext(), it.message!!)
                         }
 
                         else -> {
@@ -3008,9 +3008,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     }
 
                     is NetworkResult.Error -> {
-                        showErrorDialog(
-                            requireContext(), it.message!!
-                        )
+                        showErrorDialog(requireContext(), it.message!!)
                         toggleLoginButtonEnabled(true, text)
                     }
 

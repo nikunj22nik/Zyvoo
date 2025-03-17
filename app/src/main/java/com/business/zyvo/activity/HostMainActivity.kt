@@ -1,18 +1,31 @@
 package com.business.zyvo.activity
 
+import android.Manifest
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BookingRemoveListener
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
@@ -20,28 +33,39 @@ import com.business.zyvo.R
 import com.business.zyvo.databinding.ActivityHostMainBinding
 import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.GuestMainActivityModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HostMainActivity : AppCompatActivity(), View.OnClickListener{
+class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemoveListener{
 
     lateinit var binding: ActivityHostMainBinding
     lateinit var guestViewModel: GuestMainActivityModel
+    private lateinit var myReceiver: MyReceiver
     private lateinit var quickstartConversationsManager: QuickstartConversationsManager
+    lateinit var tvCOUNT :TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
         binding = ActivityHostMainBinding.inflate(LayoutInflater.from(this))
+
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
         guestViewModel = ViewModelProvider(this)[GuestMainActivityModel::class.java]
+
+        tvCOUNT = binding.tvBookingCount
+
+        Log.d("TESTING_OBJ","TVCOUNT IS INITIALIZED")
 
         binding.imageProperties.setImageResource(R.drawable.ic_select_home)
         binding.tvProperties.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
@@ -49,6 +73,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener{
         binding.navigationInbox1.setOnClickListener(this)
         binding.navigationBookings.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
+
 
 //        try {
 //            quickstartConversationsManager = (application as MyApp).conversationsManager
@@ -63,14 +88,54 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener{
         var sessionManager = SessionManager(this)
         sessionManager.setUserType(AppConstant.Host)
 
+        myReceiver = MyReceiver()
+
+        // Register the receiver with an IntentFilter
+        val filter = IntentFilter("com.example.broadcast.ACTION_SEND_MESSAGE")
+        LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, filter)
+
 
 
 
 //        val currentDestination = findNavController().currentDestination
 //        Log.d("NAVIGATION_DEBUG", "Current Destination: $currentDestination")
         callingGetUserToken()
+        askNotificationPermission()
+
+        callingBookingNumberApi()
     }
 
+
+    private fun callingBookingNumberApi(){
+        lifecycleScope.launch {
+            var userId = SessionManager(this@HostMainActivity).getUserId()
+            if (userId != null) {
+                guestViewModel.getHostUnreadBookings(userId).collect{
+                   when(it){
+                       is NetworkResult.Success ->{
+                           var number = it.data
+
+                           binding.rlBookingCount.visibility = View.VISIBLE
+                           binding.tvBookingCount.setText(number.toString())
+
+                           Log.d("TESTING_DATA","Booking Count is "+number.toString())
+                       }
+                       is NetworkResult.Error ->{
+
+                       }
+                       else ->{
+
+                       }
+                   }
+                }
+            }
+
+        }
+    }
+
+    fun resetBookingCountToZero(){
+
+    }
 
 
 
@@ -189,8 +254,13 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener{
             }
 
             R.id.navigationBookings -> {
-                bookingResume()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.bookingScreenHostFragment)
+                if(NetworkMonitorCheck._isConnected.value) {
+                    binding.rlBookingCount.visibility = View.GONE
+                    bookingResume()
+                    findNavController(R.id.fragmentContainerView_main).navigate(R.id.bookingScreenHostFragment)
+                }else{
+                    LoadingUtils.showErrorDialog(this@HostMainActivity,"Please Check Your Internet Connection")
+                }
             }
 
             R.id.icProfile -> {
@@ -200,5 +270,53 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener{
         }
     }
 
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                var sessionManager = SessionManager(this)
+                sessionManager.setNotificationOnOffStatus(true)
+            }
+            else {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+        }else{
+            var sessionManager = SessionManager(this)
+            sessionManager.setNotificationOnOffStatus(true)
+        }
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+
+        if (isGranted) {
+            var sessionManager = SessionManager(this)
+            sessionManager.setNotificationOnOffStatus(true)
+        }
+        else {
+            var sessionManager = SessionManager(this)
+            sessionManager.setNotificationOnOffStatus(false)
+        }
+
+    }
+
+    override fun resetToZeroListener() {
+
+    }
+
+    inner class MyReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val message = intent.getStringExtra("message")
+//            // Do something with the message (e.g., show it in a Toast)
+
+            var TVcOUNT = binding.tvBookingCount
+            TVcOUNT.setText(message)
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Unregister the receiver to avoid memory leaks
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver)
+    }
 
 }

@@ -5,8 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresExtension
 import com.business.zyvo.AppConstant
 import com.business.zyvo.NetworkResult
-import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
-import com.business.zyvo.activity.guest.propertydetails.model.AddOn
+
 import com.business.zyvo.backgroundTask.AuthTask
 import com.business.zyvo.backgroundTask.BookingDetails
 import com.business.zyvo.backgroundTask.HostDetailsTask
@@ -4809,6 +4808,60 @@ import javax.inject.Inject
          }
      }
 
+     override suspend fun getHostUnreadBookings(
+         @Field("user_id") userId :Int
+     ) : Flow<NetworkResult<Int>> = flow{
+         try {
+             api.getHostUnreadBookings(userId).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             var obj = resp.get("data").asJsonObject
+
+                             if(obj.has("unread_booking_count")){
+                               emit(NetworkResult.Success(obj.get("unread_booking_count").asInt))
+                             }
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+     override suspend fun markHostBooking(@Field("user_id") userId :Int) : Flow<NetworkResult<String>>  = flow {
+         try {
+             api.markHostBooking(userId).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             emit(NetworkResult.Success(resp.get("message").asString))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 }
+                 else {
+                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+
+     }
 
      override suspend fun paymentWithdrawalList(
          userId: String,
@@ -4932,6 +4985,10 @@ import javax.inject.Inject
              emit(NetworkResult.Error(ErrorHandler.emitError(e)))
          }
      }
+
+
+
+
 
 
  }
