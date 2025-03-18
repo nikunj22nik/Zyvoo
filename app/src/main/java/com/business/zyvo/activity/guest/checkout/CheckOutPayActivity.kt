@@ -36,6 +36,7 @@ import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.guest.extratime.ExtraTimeActivity
 import com.business.zyvo.activity.guest.checkout.model.MailingAddress
 import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
@@ -136,8 +137,80 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         setPropertyData()
         getUserCards()
 
+        binding.rlMsgHost.setOnClickListener {
+            propertyData?.let {
+                var propertyid = it.property_id
+                var hostId = it.host_id
+                var userId = SessionManager(this).getUserId()
+               var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                callingJoinChannel(propertyid,hostId,userId,channelName)
+
+            }
+        }
+    }
+
+
+    private fun callingJoinChannel(property_id: Int,hostId:Int,userId:Int,channel:String){
+
+        lifecycleScope.launch {
+            LoadingUtils.showDialog(this@CheckOutPayActivity,false)
+            checkOutPayViewModel.joinChatChannel(userId, hostId, channel, "guest").collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        LoadingUtils.hideDialog()
+
+                        var userImage: String = it.data?.sender_avatar.toString()
+
+                        Log.d("TESTING_PROFILE_HOST", userImage)
+
+                        var friendImage: String = it.data?.receiver_avatar.toString()
+
+                        Log.d("TESTING_PROFILE_HOST", friendImage)
+
+                        var friendName: String = ""
+
+                        if (it.data?.receiver_name != null) {
+                            friendName = it.data.receiver_name
+                        }
+                        var userName = ""
+
+                        userName = it.data?.sender_name.toString()
+
+                        val intent = Intent(this@CheckOutPayActivity, ChatActivity::class.java)
+
+                        intent.putExtra("user_img", userImage).toString()
+
+                     intent.putExtra(AppConstant.USER_ID, userId)
+
+
+
+                        intent.putExtra(AppConstant.CHANNEL_NAME, channel)
+
+                        intent.putExtra(AppConstant.FRIEND_ID, hostId)
+
+                        intent.putExtra("friend_img", friendImage).toString()
+
+                        intent.putExtra("friend_name", friendName).toString()
+
+                        intent.putExtra("user_name", userName)
+
+                        startActivity(intent)
+                    }
+
+                    is NetworkResult.Error -> {
+                        LoadingUtils.hideDialog()
+
+                    }
+
+                    else -> {
+                        LoadingUtils.hideDialog()
+                    }
+                }
+            }
+        }
 
     }
+
 
     @SuppressLint("SetTextI18n")
     private fun setPropertyData() {
