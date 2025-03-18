@@ -187,15 +187,13 @@ object ErrorDialog {
     }
 
     fun convertDateFormatMMMMddyyyytoyyyyMMdd(dateStr: String): String {
-        val fixedDateStr = dateStr.replace(",", ", ") // Ensure space after comma
-
         val inputFormatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH)
         } else {
             TODO("VERSION.SDK_INT < O")
         } // Input format
         val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // Output format
-        return LocalDate.parse(fixedDateStr, inputFormatter).format(outputFormatter)
+        return LocalDate.parse(dateStr, inputFormatter).format(outputFormatter)
     }
 
 

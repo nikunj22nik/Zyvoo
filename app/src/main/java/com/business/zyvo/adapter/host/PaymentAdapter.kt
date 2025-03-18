@@ -5,7 +5,6 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -51,24 +50,13 @@ class PaymentAdapter(
 //            binding.textEndNumber.text = currentItem.cardEndNumber
 
             if (currentItem.isBankAccount) {
-                textCardHolderName.visibility = View.VISIBLE  // Hide cardholder name for bank accounts
+                textCardHolderName.visibility = View.GONE  // Hide cardholder name for bank accounts
                 textBankAccount.visibility = View.VISIBLE
                 textBankAccount.text = currentItem.bankName
                 if (currentItem.defaultForCurrency){
                     imagePrimaryIcon.visibility = View.VISIBLE
                 }else{
                     imagePrimaryIcon.visibility = View.INVISIBLE
-                }
-                textStartNumber.text = currentItem.cardFirstNumber
-                textEndNumber.text = currentItem.cardEndNumber
-                textCardHolderName.text = currentItem.accountHolderName
-
-                Log.d("textStartNumber1",currentItem.cardFirstNumber.toString())
-                Log.d("textStartNumber2",textStartNumber.text.toString())
-                if (textStartNumber.text.toString().trim().isEmpty()){
-                    imageFirstFourDots.visibility = View.VISIBLE
-                }else{
-                    imageFirstFourDots.visibility = View.GONE
                 }
             } else {
                 textCardHolderName.visibility = View.VISIBLE
@@ -79,16 +67,8 @@ class PaymentAdapter(
                 }else{
                     imagePrimaryIcon.visibility = View.INVISIBLE
                 }
-                textStartNumber.text = currentItem.cardFirstNumber
-                textEndNumber.text = currentItem.cardEndNumber
             }
-            Log.d("textStartNumber3",currentItem.cardFirstNumber.toString())
-            Log.d("textStartNumber4",textStartNumber.text.toString())
-            if (textStartNumber.text.toString().trim().isEmpty()){
-                imageFirstFourDots.visibility = View.VISIBLE
-            }else{
-                imageFirstFourDots.visibility = View.GONE
-            }
+
             imageThreeDots.setOnClickListener {
                 currentItem.id?.let { it1 -> showPopupWindow(holder.binding.imageThreeDots,position, it1) }
 

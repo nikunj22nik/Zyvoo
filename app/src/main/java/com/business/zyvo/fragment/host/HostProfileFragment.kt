@@ -113,10 +113,6 @@ import com.stripe.android.ApiResultCallback
 import com.stripe.android.Stripe
 import com.stripe.android.model.CardParams
 import com.stripe.android.model.Token
-import com.withpersona.sdk2.inquiry.Environment
-import com.withpersona.sdk2.inquiry.Fields
-import com.withpersona.sdk2.inquiry.Inquiry
-import com.withpersona.sdk2.inquiry.InquiryResponse
 import dagger.hilt.android.AndroidEntryPoint
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
@@ -189,7 +185,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private val bankListPayout = mutableListOf<BankAccountPayout>()
     private val cardListPayout = mutableListOf<CardPayout>()
 
-    private lateinit var getInquiryResult: ActivityResultLauncher<Inquiry>
+
 
 
 
@@ -224,27 +220,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         val navController = findNavController()
         commonAuthWorkUtils = CommonAuthWorkUtils(requireContext(), navController)
         apiKey = getString(R.string.api_key)
-        getInquiryResult = registerForActivityResult(Inquiry.Contract()) { result ->
-            when (result) {
-                is InquiryResponse.Complete -> {
-                    // User identity verification completed successfully
-                    verifyIdentityApi()
-                }
-                is InquiryResponse.Cancel -> {
-                    // User abandoned the verification process
-                    binding.textConfirmNow2.visibility = View.VISIBLE
-                    binding.textVerified2.visibility = GONE
-                    Toast.makeText(requireContext(),"Request Cancelled",Toast.LENGTH_LONG).show()
-                }
-                is InquiryResponse.Error -> {
-                    // Error occurred during identity verification
-                    binding.textConfirmNow2.visibility = View.VISIBLE
-                    binding.textVerified2.visibility = GONE
-                    Toast.makeText(requireContext(),"Error Occurred, Try Again",Toast.LENGTH_LONG).show()
-
-                }
-            }
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -402,15 +377,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
         }
 
-        binding.textConfirmNow2.setOnClickListener {
-            if (NetworkMonitorCheck._isConnected.value) {
-                launchVerifyIdentity()
-            } else {
-                showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
-            }
-        }
-
-
     }
 
 
@@ -455,24 +421,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         binding.recyclerViewPaymentCardListPayOut.adapter = bankNameAdapterPayout
         binding.recyclerViewCardNumberListPayOut.adapter = cardNumberAdapterPayout
 
-        if (bankListPayout.isNotEmpty()) {
-            bankNameAdapterPayout.addItems(bankListPayout)
-            binding.recyclerViewPaymentCardListPayOut.visibility = View.VISIBLE
-            binding.textBankNoDataFound.visibility = View.GONE
-        }else{
-            binding.recyclerViewPaymentCardListPayOut.visibility = View.GONE
-            binding.textBankNoDataFound.visibility = View.VISIBLE
-        }
-
-        if (cardListPayout.isNotEmpty()){
-            cardNumberAdapterPayout.addItems(cardListPayout)
-            binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
-            binding.textCardNoDataFound.visibility = View.GONE
-        }else{
-            binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
-            binding.textCardNoDataFound.visibility = View.VISIBLE
-        }
-
+        bankNameAdapterPayout.addItems(bankListPayout)
+        cardNumberAdapterPayout.addItems(cardListPayout)
 
 
         addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this, this)
@@ -3175,7 +3125,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             }
                         } ?: run {
                             // Handle case where `data` is null
-                           // showErrorDialog(requireContext(), "Payout data is unavailable")
+                            showErrorDialog(requireContext(), "Payout data is unavailable")
                         }
 
 
@@ -3517,64 +3467,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
         }
     }
-    private fun launchVerifyIdentity(){
-        val TEMPLATE_ID = "itmpl_yEu1QvFA5fJ1zZ9RbUo1yroGahx2"
 
-        val inquiry = Inquiry.fromTemplate(TEMPLATE_ID)
-            .environment(Environment.SANDBOX) // Use Environment.PRODUCTION for live verification
-            .referenceId(session?.getUserId().toString()) // Link the inquiry to a specific user
-            .fields(
-                Fields.Builder()
-                    .build()
-            )
-            .locale(Locale.getDefault().language) // Set the locale for the verification process
-            .build()
 
-        getInquiryResult.launch(inquiry)
-
-    }
-    private fun verifyIdentityApi(){
-        lifecycleScope.launch {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConn ->
-                    if (!isConn) {
-                        showErrorDialog(
-                            requireContext(),
-                            resources.getString(R.string.no_internet_dialog_msg)
-                        )
-                    } else {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            lifecycleScope.launch {
-                                profileViewModel.getVerifyIdentityApi(
-                                    session?.getUserId().toString(),
-                                    identity_verify = 1.toString()
-                                ).collect {
-                                    when (it) {
-                                        is NetworkResult.Success -> {
-                                            it.data?.let { resp ->
-                                                binding.textConfirmNow2.visibility = GONE
-                                                binding.textVerified2.visibility = View.VISIBLE
-                                                session?.setUserVerified(true)
-                                                Toast.makeText(requireContext(), "Verified Successfully!", Toast.LENGTH_SHORT).show()
-                                            }
-                                        }
-
-                                        is NetworkResult.Error -> {
-                                            showErrorDialog(requireContext(), it.message!!)
-                                        }
-
-                                        else -> {
-                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-        }
-    }
 }
 
 

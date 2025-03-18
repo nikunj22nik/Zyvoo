@@ -33,7 +33,6 @@ import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -48,7 +47,6 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
-import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.libraries.places.api.Places
@@ -150,7 +148,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     locationList.add(0, newLocation)
 
                  //   Toast.makeText(requireContext(),"count${locationList.size}",Toast.LENGTH_LONG).show()
-                    // Check if we need to hide the "Add New" button
+
+//                    // Check if we need to hide the "Add New" button
 
                     //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
                     addLocationAdapter.notifyItemInserted(0)
@@ -278,14 +277,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         // Set listeners
         setCheckVerified()
 
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true /* enabled by default */) {
-                override fun handleOnBackPressed() {
-                    // Handle back press logic here
-                    requireActivity().finishAffinity()
-                }
-            }
-        requireActivity().onBackPressedDispatcher.addCallback(requireActivity(), callback)
+
     }
 
     private fun launchVerifyIdentity(){
@@ -306,12 +298,10 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     }
     private fun setCheckVerified() {
         if ("mobile".equals(type)){
-
             binding.textConfirmNow1.visibility = View.GONE
             binding.textVerified1.visibility = View.VISIBLE
         }
         if ("email".equals(type)){
-
             binding.textConfirmNow.visibility = View.GONE
             binding.textVerified.visibility = View.VISIBLE
         }
@@ -325,7 +315,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         // Update the adapter with the initial location list (if any)
         addLocationAdapter.updateLocations(locationList)
 
-        
+
+
         addWorkAdapter = AddWorkAdapter(requireContext(), workList, this,this)
 
         binding.recyclerViewWork.adapter = addWorkAdapter
@@ -551,19 +542,16 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
            }
 
            R.id.skip_now ->{
-               if (binding.textName.text.toString().isNotEmpty()) {
-                   val intent = Intent(requireContext(), GuesMain::class.java)
-                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                   startActivity(intent)
-                   requireActivity().finish()
-               }else{
-                   LoadingUtils.showErrorDialog(requireContext(),"Enter your name to proceed to the next screen.")
-               }
+               var intent = Intent(requireContext(),GuesMain::class.java)
+               intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+               startActivity(intent)
+               requireActivity().finish()
            }
        }
     }
 
     private fun completeProfile(completeProfileReq: CompleteProfileReq, textSaveButton: TextView) {
+
         lifecycleScope.launch {
             completeProfileViewModel.completeProfile(completeProfileReq).collect {
                 when (it) {
@@ -708,7 +696,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             show()
         }}
 
-/*
+
     @SuppressLint("SetTextI18n")
     private fun dialogChangeName(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -747,47 +735,6 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }}
-
- */
-
-private fun dialogChangeName(context: Context?) {
-    val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-    dialog?.apply {
-        setCancelable(true)
-        setContentView(R.layout.dialog_change_names)
-        window?.attributes = WindowManager.LayoutParams().apply {
-            copyFrom(window?.attributes)
-            width = WindowManager.LayoutParams.MATCH_PARENT
-            height = WindowManager.LayoutParams.MATCH_PARENT
-        }
-        val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
-        if (imageBytes.isNotEmpty()) {
-            MediaUtils.setImageFromByteArray(imageBytes, imageProfilePicture)
-        }
-
-
-        val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
-        val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
-        val editTextLastName = findViewById<EditText>(R.id.editTextLastName)
-        textSaveChangesButton.setOnClickListener {
-            if (editTextFirstName.text.isEmpty()) {
-                showErrorDialog(requireContext(), AppConstant.firstName)
-            } else if (editTextLastName.text.isEmpty()) {
-                showErrorDialog(requireContext(), AppConstant.lastName)
-            } else {
-                toggleLoginButtonEnabled(false, textSaveChangesButton)
-                updateName(
-                    editTextFirstName.text.toString(),
-                    editTextLastName.text.toString(),
-                    dialog, textSaveChangesButton
-                )
-            }
-        }
-
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        show()
-    }
-}
 
 
     private fun dialogEmailVerification(context: Context?){
@@ -1113,7 +1060,6 @@ private fun dialogChangeName(context: Context?) {
                 when (it) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
-
                             binding.textConfirmNow.visibility = View.GONE
                             binding.textVerified.visibility = View.VISIBLE
                             dialog.dismiss()
@@ -1308,49 +1254,5 @@ private fun dialogChangeName(context: Context?) {
 
         }
     }
-    private fun updateName(
-        first_name: String,
-        last_name: String,
-        dialog: Dialog, textSaveChangesButton: TextView
-    ) {
-        if (NetworkMonitorCheck._isConnected.value) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                lifecycleScope.launch {
-                    completeProfileViewModel.addUpdateName(
-                        session?.getUserId().toString(),
-                        first_name,
-                        last_name
-                    ).collect {
-                        when (it) {
-                            is NetworkResult.Success -> {
-                                it.data?.let { resp ->
-                                    showSuccessDialog(requireContext(), resp.first)
-//                                    userProfile?.name = first_name + " " + last_name
-//                                    binding.user = userProfile
-                                    binding.textName.text = first_name + " " + last_name
-                                }
-                                toggleLoginButtonEnabled(true, textSaveChangesButton)
-                                dialog.dismiss()
-                            }
 
-                            is NetworkResult.Error -> {
-                                showErrorDialog(requireContext(), it.message!!)
-                                toggleLoginButtonEnabled(true, textSaveChangesButton)
-                            }
-
-                            else -> {
-                                Log.v(ErrorDialog.TAG, "error::" + it.message)
-                                toggleLoginButtonEnabled(true, textSaveChangesButton)
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            showErrorDialog(
-                requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg)
-            )
-        }
-    }
 }

@@ -137,7 +137,9 @@ class HostPayoutFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
+
         }
+
     }
 
     override fun onCreateView(
@@ -921,6 +923,7 @@ class HostPayoutFragment : Fragment() {
 
     }
 
+
     fun spinnersDebitCard() {
 
         binding.spinnerSelectIDTypeDebitCard.setItems(
@@ -1599,7 +1602,7 @@ class HostPayoutFragment : Fragment() {
         return isLuhnValid(cardNumber)
     }
 
-
+    // Luhn Algorithm to validate credit/debit card number
     private fun isLuhnValid(cardNumber: String): Boolean {
         var sum = 0
         var alternate = false

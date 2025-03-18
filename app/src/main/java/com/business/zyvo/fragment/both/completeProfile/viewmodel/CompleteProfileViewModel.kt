@@ -95,20 +95,4 @@ class CompleteProfileViewModel @Inject constructor(private val repository: ZyvoR
         }
     }
 
-    suspend fun addUpdateName(userId: String,first_name: String, last_name: String):
-            Flow<NetworkResult<Pair<String,String>>> {
-        return repository.addUpdateName(userId,first_name, last_name).onEach {
-            when(it){
-                is NetworkResult.Loading -> {
-                    isLoading.value = true
-                } is NetworkResult.Success -> {
-                isLoading.value = false
-            } else -> {
-                isLoading.value = false
-            }
-            }
-        }
-    }
-
-
 }

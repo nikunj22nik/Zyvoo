@@ -38,19 +38,6 @@
         android:textSize="@dimen/_9ssp" />
 
 
-    <ImageView
-        android:id="@+id/imageFirstFourDots"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/first_four_dots"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="@dimen/_5sdp"
-        android:layout_marginTop="@dimen/_5sdp"
-
-        />
-
-
     <TextView
         android:id="@+id/textStartNumber"
         android:layout_width="wrap_content"
@@ -58,7 +45,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/_5sdp"
         android:maxWidth="@dimen/_35sdp"
-        android:text=""
+        android:text="1234"
         android:textColor="#FFF" />
 
     <TextView
@@ -69,7 +56,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/_8sdp"
         android:maxWidth="@dimen/_35sdp"
-
+        android:text="1234"
         android:textColor="#FFF" />
 
     <TextView
@@ -83,8 +70,7 @@
         android:layout_marginEnd="@dimen/_8sdp"
         android:fontFamily="@font/poppins"
        android:layout_marginTop="@dimen/_8sdp"
-        android:text=""
-        android:singleLine="true"
+        android:text="Vipin"
         android:textColor="#FFF"
         android:textSize="@dimen/_11ssp"
         android:textStyle="bold" />

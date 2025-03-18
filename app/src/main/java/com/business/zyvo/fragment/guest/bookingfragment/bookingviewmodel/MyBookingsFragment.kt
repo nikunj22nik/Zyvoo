@@ -16,7 +16,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
-import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnItemAdapterClick
 import com.business.zyvo.R
@@ -96,12 +95,7 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
                         }
                         is NetworkResult.Error -> {
                             Log.e(ErrorDialog.TAG, "Server Error: ${it.message}")
-                            if (it.message == "No bookings found."){
-                                showSuccessDialog(requireContext(), it.message)
-                            }else{
-                                showErrorDialog(requireContext(), it.message ?: "Unknown error")
-                            }
-
+                            showErrorDialog(requireContext(), it.message ?: "Unknown error")
                         }
                         else -> {
                             Log.v(ErrorDialog.TAG, "Unexpected error: ${it.message ?: "Unknown error"}")

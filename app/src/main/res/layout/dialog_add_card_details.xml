@@ -122,7 +122,6 @@
         android:hint="Card Cvv"
         android:inputType="number"
         android:maxLines="1"
-        android:maxLength="4"
         android:paddingHorizontal="@dimen/_10ssp"
         android:paddingVertical="@dimen/_4sdp"
         android:textColor="#000"
