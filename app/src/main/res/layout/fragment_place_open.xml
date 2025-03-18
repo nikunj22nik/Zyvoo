@@ -71,7 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:layout_weight="1"
-                        android:text="Mar 11 - Mar 17 2023"
+                        android:text=""
                         android:textColor="#000"
                         android:textSize="13sp" />
 
@@ -145,7 +145,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins"
-                            android:text="Cabin in Peshastin"
+                            android:text=""
                             android:textColor="#000"
                             android:textSize="@dimen/_12sdp"
                             android:textStyle="normal" />
@@ -173,7 +173,7 @@
                                 android:layout_marginStart="@dimen/_2sdp"
                                 android:layout_toEndOf="@+id/imageStar"
                                 android:fontFamily="@font/inter"
-                                android:text="5.0"
+                                android:text=""
                                 android:textColor="#FFBB00"
                                 android:textSize="@dimen/_11ssp" />
 
@@ -183,7 +183,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_toEndOf="@+id/textRatingStar"
                                 android:fontFamily="@font/poppins"
-                                android:text=" (1k+)"
+                                android:text=""
                                 android:textColor="#666"
 
                                 android:textSize="@dimen/_11ssp" />
@@ -206,7 +206,7 @@
                                 android:layout_marginTop="@dimen/_1sdp"
                                 android:layout_toEndOf="@+id/imageMilesIcon"
                                 android:fontFamily="@font/poppins"
-                                android:text="37 miles away"
+                                android:text=""
                                 android:textColor="#A4A4A4"
                                 android:textSize="@dimen/_10ssp"
                                 app:layout_constraintEnd_toEndOf="parent" />

@@ -620,6 +620,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
                                     PaymentCardModel(
                                         id = bank.id,
                                         bankName = bank.bankName,
+                                        accountHolderName = bank.accountHolderName,
                                         cardEndNumber = bank.lastFourDigits,
                                         isBankAccount = true,
                                         defaultForCurrency = bank.defaultForCurrency

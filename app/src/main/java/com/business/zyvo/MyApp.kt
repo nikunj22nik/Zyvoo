@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.AppContextProvider
 import com.business.zyvo.utils.NetworkMonitor
 import com.business.zyvo.utils.NetworkMonitorCheck
 import dagger.hilt.android.HiltAndroidApp
@@ -21,6 +22,7 @@ class MyApp :Application() {
         // Initialize global state here
         NetworkMonitorCheck.observeNetworkStatus(networkMonitor)
         var sessionManager = SessionManager(this)
+        AppContextProvider.initialize(this)
         val token =SessionManager(this).getChatToken()
 //        val token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTS2E3MzYxYjQwZjhkOWE5MTZiYTFkMTE0Y2Q1N2ZkMjQ2LTE3NDEwODI5NDciLCJpc3MiOiJTS2E3MzYxYjQwZjhkOWE5MTZiYTFkMTE0Y2Q1N2ZkMjQ2Iiwic3ViIjoiQUM5NTYxZDk4ZjM4YWQyYmFkYzllOWJmZGFmMjdhMzE5NyIsImV4cCI6MTc0MTA4NjU0NywiZ3JhbnRzIjp7ImlkZW50aXR5IjoiNzgiLCJjaGF0Ijp7InNlcnZpY2Vfc2lkIjoiSVMyZmVkZWQyZGI3NDQ0OWIzYjNjOTg3OTdhODMwYmVlOSJ9fX0.F-ojY82GfYc6UkdlalRKLMjWv3ylnH9jVwdIFIeYY0o"
 

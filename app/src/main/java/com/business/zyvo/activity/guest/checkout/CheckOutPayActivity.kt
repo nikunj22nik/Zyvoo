@@ -256,10 +256,15 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
     }
 
     fun callingSelectionOfTime(){
-        val hoursArray = Array(24) { i -> (i + 1).toString() }
+//        val hoursArray = Array(24) { i -> (i + 1).toString() }
+//        val hoursList: List<String> = hoursArray.toList()
+//        val minutesArray = Array(60) { i -> (i + 1).toString() }
+//        val minutesList :List<String> = minutesArray.toList()
+        val hoursArray = Array(24) { i -> String.format("%02d", i + 1) } // Ensures "01, 02, 03..."
         val hoursList: List<String> = hoursArray.toList()
-        val minutesArray = Array(60) { i -> (i + 1).toString() }
-        val minutesList :List<String> = minutesArray.toList()
+
+        val minutesArray = Array(60) { i -> String.format("%02d", i) } // Ensures "00, 01, 02..."
+        val minutesList: List<String> = minutesArray.toList()
         val amPmList = listOf<String>("AM","PM")
 
         binding.endHour.layoutDirection = View.LAYOUT_DIRECTION_LTR

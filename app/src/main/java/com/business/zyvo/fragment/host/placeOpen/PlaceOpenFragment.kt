@@ -31,10 +31,13 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
+import java.util.Calendar
+import java.util.Date
 import java.util.Locale
 import kotlin.random.Random
 
@@ -57,6 +60,8 @@ class PlaceOpenFragment : Fragment() {
     var property_review_count = ""
     var distanceMiles = ""
     var title = ""
+    var startDate: String? = null
+    var endDate: String? = null
 
     private val daysOfWeek = listOf(
         "10 - Mon", "11 - Tue", "12 - Wed", "13 - Thu",
@@ -81,6 +86,9 @@ class PlaceOpenFragment : Fragment() {
             property_review_count = it.getString(AppConstant.property_review_count).toString()
             distanceMiles = it.getString(AppConstant.distance_miles).toString()
             title = it.getString(AppConstant.title).toString()
+
+
+
 
         }
     }
@@ -178,7 +186,17 @@ class PlaceOpenFragment : Fragment() {
                     }
             }
         }
-
+        if (startDate == null && endDate == null) {
+            val currentDate = Date()
+            val dateFormat = SimpleDateFormat("MMM dd", Locale.getDefault())
+            val dateFormat1 = SimpleDateFormat("MMM dd yyyy", Locale.getDefault())
+            val currentDateStr = dateFormat.format(currentDate)
+            val calendar = Calendar.getInstance()
+            calendar.time = currentDate
+            calendar.add(Calendar.DAY_OF_MONTH, 6)
+            val futureDateStr = dateFormat1.format(calendar.time)
+            binding.tvDateRange.text = "$currentDateStr - $futureDateStr"
+        }
         binding.llDateRangeSelect.setOnClickListener {
             DateManager(requireContext()).getRangeSelectedDateWithYear(
                 fragmentManager = parentFragmentManager
@@ -186,8 +204,10 @@ class PlaceOpenFragment : Fragment() {
                 selectedData?.let {
 
                     val (dateRange, year) = it
-                    val (startDate, endDate) = dateRange
-                    binding.tvDateRange.text = "$startDate - $endDate $year"
+                    val (startDate1, endDate1) = dateRange
+                    startDate = startDate1 + year
+                    endDate = endDate1 + year
+                    binding.tvDateRange.text = "$startDate1 - $endDate1 $year"
 //                    Toast.makeText(
 //                        this,
 //                        "Range: $startDate to $endDate, Year: $year",

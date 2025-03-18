@@ -53,6 +53,7 @@ class TransactionAdapter(
 
                 binding.tvAmount.text = "Amount"
                 binding.tvStatus.text = "Status"
+                binding.tvStatus.setBackgroundResource(android.R.color.transparent)
                 binding.tvGuestName.text = "Guest Name"
                 binding.tvDate.text = "Date"
             }
@@ -107,6 +108,13 @@ class TransactionAdapter(
                     "canceled" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
                     "finished" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
                     "confirmed" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
+                    "Status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                    "status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                    else -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                }
+            }else{
+                when (modal.status) {
+                    "Status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
                     "status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
                     else -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
                 }

@@ -80,7 +80,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
                             android:layout_weight="1"
-                            android:text="Mar 11 - Mar 17 2023"
+                            android:text=""
                             android:textColor="#000"
                             android:textSize="13sp" />
 

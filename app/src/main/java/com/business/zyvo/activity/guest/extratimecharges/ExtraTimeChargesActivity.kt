@@ -171,6 +171,25 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 binding.llMsgHost.visibility = View.VISIBLE
             }
         }
+
+        binding.doubt.setOnClickListener {
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+        }
+
+        binding.tvAvailableDay.setOnClickListener {
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+        }
+
+        binding.tvOtherReason.setOnClickListener {
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+        }
+
         binding.imgBack.setOnClickListener {
             onBackPressed()
         }
