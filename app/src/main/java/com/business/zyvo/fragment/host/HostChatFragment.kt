@@ -221,6 +221,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                     viewModel.getChatUserChannelList(userId,userType).collect {
                         when (it) {
                             is NetworkResult.Success -> {
+                                LoadingUtils.hideDialog()
                                 Log.d("TESTING","Inside the message success")
                                 it.data?.let {
                                     viewModel.chatChannel = it
