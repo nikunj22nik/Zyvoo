@@ -48,6 +48,7 @@ import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.showToast
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.PaymentViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -287,25 +288,25 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             propertyData?.hourly_rate?.toDoubleOrNull()?.let { resp ->
                 hour?.let {
                     hourlyTotal = (resp * it.toDouble())
-                    binding.tvPrice.text = "$$hourlyTotal"
+                    binding.tvPrice.text = "$${truncateToTwoDecimalPlaces(hourlyTotal.toString())}"
                     totalPrice += hourlyTotal
                 }
             }
             propertyData?.cleaning_fee?.toDoubleOrNull()?.let {
-                binding.tvCleaningFee.text = "$$it"
+                binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(it.toString())}"
                 totalPrice += it
             }
             propertyData?.service_fee?.toDoubleOrNull()?.let {resp ->
                 hourlyTotal?.let {
                     val taxAmount = calculatePercentage(it,resp)
-                    binding.tvZyvoServiceFee.text = "$$taxAmount"
+                    binding.tvZyvoServiceFee.text = "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
                     totalPrice += taxAmount
                 }
             }
             propertyData?.tax?.toDoubleOrNull()?.let {resp ->
                 hourlyTotal?.let {
                     val taxAmount = calculatePercentage(it,resp)
-                    binding.tvTaxesPrice.text = "$$taxAmount"
+                    binding.tvTaxesPrice.text = "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
                     totalPrice += taxAmount
 
                 }
@@ -313,7 +314,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             addOnList?.let {
                 if (it.isNotEmpty()){
                     val total = calculateTotalPrice(addOnList)
-                    binding.tvAddOnPrice.text = "$$total"
+                    binding.tvAddOnPrice.text = "$${truncateToTwoDecimalPlaces(total.toString())}"
                     totalPrice += total
                 }
             }
@@ -331,13 +332,13 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             }
             // Display Discount if Applied
             if (discountAmount > 0) {
-                binding.tvDiscount.text = "-$$discountAmount"
+                binding.tvDiscount.text = "-$${truncateToTwoDecimalPlaces(discountAmount.toString())}"
                 binding.llDiscountLabel.visibility = View.VISIBLE
             } else {
                 binding.llDiscountLabel.visibility = View.GONE
             }
             // Final Total Price Display
-            binding.tvTotalPrice.text = "$$totalPrice"
+            binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(totalPrice.toString())}"
         }catch (e:Exception){
             Log.d(ErrorDialog.TAG,"calculatePrice ${e.message}")
         }
