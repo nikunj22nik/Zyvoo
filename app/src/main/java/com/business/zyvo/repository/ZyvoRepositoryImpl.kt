@@ -4547,7 +4547,9 @@ import javax.inject.Inject
 
     }
 
-    override suspend fun getCityName(country:String, state :String)  :Flow<NetworkResult<MutableList<String>>> = flow{
+
+
+     override suspend fun getCityName(country:String, state :String)  :Flow<NetworkResult<MutableList<String>>> = flow{
         try {
             api.getCityName(country,state).apply {
                 if (isSuccessful) {
@@ -4795,8 +4797,9 @@ import javax.inject.Inject
                  if (isSuccessful) {
                      body()?.let { resp ->
                          if (resp.has("success") && resp.get("success").asBoolean) {
-                             if (resp.has("message") &&     !resp.get("message").isJsonNull)
+                             if (resp.has("message") &&     !resp.get("message").isJsonNull) {
                                  emit(NetworkResult.Success(resp.get("message").asString))
+                             }
 
                          } else {
                              emit(NetworkResult.Error(resp.get("message").asString))
@@ -4873,8 +4876,6 @@ import javax.inject.Inject
 
      }
 
-
-
      override suspend fun paymentWithdrawalList(
          userId: String,
          startDate: String,
@@ -4890,7 +4891,7 @@ import javax.inject.Inject
                      body()?.let { resp ->
                          if (resp.has("success") && resp.get("success").asBoolean) {
 
-                             emit(NetworkResult.Success(resp))
+                                 emit(NetworkResult.Success(resp))
 
                          } else {
                              emit(NetworkResult.Error(resp.get("message").asString))
@@ -4997,6 +4998,11 @@ import javax.inject.Inject
              emit(NetworkResult.Error(ErrorHandler.emitError(e)))
          }
      }
+
+
+
+
+
 
  }
 
