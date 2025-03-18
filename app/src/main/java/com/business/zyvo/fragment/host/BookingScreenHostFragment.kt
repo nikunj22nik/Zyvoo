@@ -171,12 +171,14 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
 
     private fun sendMessageToActivity() {
+
         // Create an Intent to send the message
         val intent = Intent("com.example.broadcast.ACTION_SEND_MESSAGE")
         intent.putExtra("message", "Hello from Fragment")
 
         // Send the broadcast using LocalBroadcastManager
         LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
+
     }
 
     private fun callingBookingData() {

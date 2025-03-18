@@ -52,21 +52,25 @@ interface ZyvoRepository {
 
     suspend fun loginPhoneNumber(
         phoneNumber: String,
-        code: String
+        code: String,
+        fcmToken :String
     ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun otpVerifyLoginPhone(userId: String, otp: String): Flow<NetworkResult<JsonObject>>
+    suspend fun otpVerifyLoginPhone(userId: String,
+                                    otp: String,
+                                    fcmToken:String): Flow<NetworkResult<JsonObject>>
 
-    suspend fun otpVerifySignupPhone(tempId: String, otp: String): Flow<NetworkResult<JsonObject>>
+    suspend fun otpVerifySignupPhone(tempId: String, otp: String,
+                                     fcmToken :String): Flow<NetworkResult<JsonObject>>
 
-    suspend fun loginEmail(email: String, password: String): Flow<NetworkResult<JsonObject>>
+    suspend fun loginEmail(email: String, password: String,fcmToken :String): Flow<NetworkResult<JsonObject>>
 
     suspend fun signupEmail(
         email: String,
         password: String
     ): Flow<NetworkResult<Pair<String, String>>>
 
-    suspend fun otpVerifySignupEmail(temp_id: String, otp: String): Flow<NetworkResult<JsonObject>>
+    suspend fun otpVerifySignupEmail(temp_id: String, otp: String,fcmToken:String): Flow<NetworkResult<JsonObject>>
 
     suspend fun forgotPassword(email: String): Flow<NetworkResult<Pair<String, String>>>
 

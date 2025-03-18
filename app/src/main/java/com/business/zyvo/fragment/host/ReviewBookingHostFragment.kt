@@ -221,7 +221,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
                 Log.d("TESTING_GUEST_ID",channelName.toString()+" channel Name")
 
-                viewModel.joinChatChannel(userId,guestId,channelName,"host").collect{
+                viewModel.joinChatChannel(guestId,userId,channelName,"host").collect{
                    when(it){
                        is NetworkResult.Success ->{
                            LoadingUtils.hideDialog()

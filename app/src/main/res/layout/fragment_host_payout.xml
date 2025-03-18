@@ -346,7 +346,7 @@
                                 android:maxLines="1"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_8sdp"
-                                android:text="MM/DD/YYYY"
+                                android:text="MM-DD-YYYY"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
                                 android:textSize="@dimen/_10ssp" />

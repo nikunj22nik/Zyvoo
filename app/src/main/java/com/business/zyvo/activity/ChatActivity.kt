@@ -121,11 +121,13 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
         }
 
         binding.imgFile.setOnClickListener {
-            if (hasPermissions(this@ChatActivity, *PERMISSIONS)) {
+//            if (hasPermissions(this@ChatActivity, *PERMISSIONS)) {
+//                Log.d("TESTING_PERMISSION","PERMISSION GRANTED")
                 browsePicture()
-            } else {
-                ActivityCompat.requestPermissions(this@ChatActivity, PERMISSIONS, REQUEST_IMAGE_CODE_ASK_PERMISSIONS)
-            }
+//            } else {
+//                ActivityCompat.requestPermissions(this@ChatActivity, PERMISSIONS, REQUEST_IMAGE_CODE_ASK_PERMISSIONS)
+//                Log.d("TESTING_PERMISSION","PERMISSION NOT GRANTED")
+//            }
         }
 
         binding.sendBtn.setOnClickListener {
@@ -160,7 +162,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
 
 
     private fun browsePicture() {
-        val items = arrayOf<CharSequence>("Choose from gallery", "Take a photo", "File", "Cancel")
+        val items = arrayOf<CharSequence>("Choose from gallery", "Take a photo", "Cancel")
         val builder = AlertDialog.Builder(this@ChatActivity)
         builder.setTitle("Select Image")
         builder.setItems(items) { dialog: DialogInterface, item: Int ->

@@ -31,9 +31,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
         if(remoteMessage.data.containsKey("unread_booking_count")){
-                var str =  remoteMessage.data.get("unread_booking_count")
+            var str =  remoteMessage.data.get("unread_booking_count")
             val intent = Intent("com.example.broadcast.ACTION_SEND_MESSAGE")
-            intent.putExtra("message", str)
+            intent.putExtra("message", str.toString())
+            Log.d("BOOKING_COUNT",str.toString()+" Booking count is")
 
             // Send the broadcast using LocalBroadcastManager
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent)

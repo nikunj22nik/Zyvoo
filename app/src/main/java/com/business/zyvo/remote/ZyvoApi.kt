@@ -34,22 +34,30 @@ interface ZyvoApi {
     @POST("login_phone_number")
     @FormUrlEncoded
     suspend fun loginPhoneNumber(@Field("phone_number")phoneNumber :String,
-                                 @Field("country_code")countryCode : String) : Response<JsonObject>
+                                 @Field("country_code")countryCode : String,
+                                 @Field("fcm_token")fcmToken:String,
+                                 @Field("device_type")deviceType:String) : Response<JsonObject>
 
     @POST("otp_verify_login_phone")
     @FormUrlEncoded
     suspend fun otpVerifyLoginPhone(@Field("user_id")user_id :String,
-                                    @Field("otp")otp : String) : Response<JsonObject>
+                                    @Field("otp")otp : String,
+                                    @Field("fcm_token")fcmToken :String?,
+                                    @Field("device_type") deviceType:String) : Response<JsonObject>
 
     @POST("otp_verify_signup_phone")
     @FormUrlEncoded
     suspend fun otpVerifySignupPhone(@Field("temp_id")temp_id :String,
-                                     @Field("otp")otp : String) : Response<JsonObject>
+                                     @Field("otp")otp : String,
+                                     @Field("fcm_token")fcmToken :String,
+                                     @Field("device_type") deviceType:String) : Response<JsonObject>
 
     @POST("login_email")
     @FormUrlEncoded
     suspend fun loginEmail(@Field("email")email :String,
-                           @Field("password")password : String) : Response<JsonObject>
+                           @Field("password")password : String,
+                           @Field("fcm_token")fcmToken :String,
+                           @Field("device_type")deviceType: String) : Response<JsonObject>
 
 
     @POST("signup_email")
@@ -60,7 +68,9 @@ interface ZyvoApi {
     @POST("otp_verify_signup_email")
     @FormUrlEncoded
     suspend fun otpVerifySignupEmail(@Field("temp_id")temp_id :String,
-                                     @Field("otp")otp : String) : Response<JsonObject>
+                                     @Field("otp")otp : String,
+                                     @Field("fcm_token")fcmToken :String,
+                                     @Field("device_type") deviceType:String) : Response<JsonObject>
 
 
     @POST("forgot_password")
@@ -238,17 +248,17 @@ interface ZyvoApi {
     @POST("get_booking_details_list")
     @FormUrlEncoded
     suspend fun  bookingDetailsList(@Field("user_id")user_id :String,
-                             @Field("booking_id")booking_id :Int,
+                                    @Field("booking_id")booking_id :Int,
                                     @Field("latitude")latitude :String,
                                     @Field("longitude") longitude :String) : Response<JsonObject>
 
     @POST("review_host")
     @FormUrlEncoded
     suspend fun  getReviewPublish(@Field("user_id")user_id :String,
-                                @Field("booking_id")booking_id :String,
-                                @Field("property_id")property_id :String,
-                                @Field("response_rate")response_rate :String,
-                                @Field("communication")communication :String,
+                                  @Field("booking_id")booking_id :String,
+                                  @Field("property_id")property_id :String,
+                                  @Field("response_rate")response_rate :String,
+                                  @Field("communication")communication :String,
                                   @Field("on_time")on_time :String,
                                   @Field("review_message")review_message:String) : Response<JsonObject>
 

@@ -112,13 +112,14 @@ import javax.inject.Inject
 
     override suspend fun loginPhoneNumber(
         phoneNumber: String,
-        code: String
+        code: String,
+        fcmToken :String
     ): Flow<NetworkResult<Pair<String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.loginPhoneNumber(
                 phoneNumber,
-                code,
+                code,fcmToken,"android"
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
@@ -160,13 +161,16 @@ import javax.inject.Inject
 
     override suspend fun otpVerifyLoginPhone(
         userId: String,
-        otp: String
+        otp: String,
+        fcmToken :String
     ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
+            Log.d("TESTING","FCM Token in VerifyLogin is :- "+fcmToken)
             api.otpVerifyLoginPhone(
                 userId,
                 otp,
+                fcmToken, "android"
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
@@ -206,13 +210,16 @@ import javax.inject.Inject
 
     override suspend fun otpVerifySignupPhone(
         tempId: String,
-        otp: String
+        otp: String,
+        fcmToken :String
     ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.otpVerifySignupPhone(
                 tempId,
                 otp,
+                fcmToken,
+                "android"
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
@@ -252,13 +259,16 @@ import javax.inject.Inject
 
     override suspend fun loginEmail(
         email: String,
-        password: String
+        password: String,
+        fcmToken :String
     ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.loginEmail(
                 email,
                 password,
+                fcmToken,
+                "android"
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
@@ -339,13 +349,16 @@ import javax.inject.Inject
 
     override suspend fun otpVerifySignupEmail(
         tempId: String,
-        otp: String
+        otp: String,
+        fcmToken :String
     ): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.otpVerifySignupEmail(
                 tempId,
                 otp,
+                fcmToken,
+                "android"
             ).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
@@ -4534,7 +4547,9 @@ import javax.inject.Inject
 
     }
 
-    override suspend fun getCityName(country:String, state :String)  :Flow<NetworkResult<MutableList<String>>> = flow{
+
+
+     override suspend fun getCityName(country:String, state :String)  :Flow<NetworkResult<MutableList<String>>> = flow{
         try {
             api.getCityName(country,state).apply {
                 if (isSuccessful) {
@@ -4782,8 +4797,9 @@ import javax.inject.Inject
                  if (isSuccessful) {
                      body()?.let { resp ->
                          if (resp.has("success") && resp.get("success").asBoolean) {
-                             if (resp.has("message") &&     !resp.get("message").isJsonNull)
+                             if (resp.has("message") &&     !resp.get("message").isJsonNull) {
                                  emit(NetworkResult.Success(resp.get("message").asString))
+                             }
 
                          } else {
                              emit(NetworkResult.Error(resp.get("message").asString))
@@ -4860,8 +4876,6 @@ import javax.inject.Inject
 
      }
 
-
-
      override suspend fun paymentWithdrawalList(
          userId: String,
          startDate: String,
@@ -4877,7 +4891,7 @@ import javax.inject.Inject
                      body()?.let { resp ->
                          if (resp.has("success") && resp.get("success").asBoolean) {
 
-                             emit(NetworkResult.Success(resp))
+                                 emit(NetworkResult.Success(resp))
 
                          } else {
                              emit(NetworkResult.Error(resp.get("message").asString))
@@ -4984,6 +4998,11 @@ import javax.inject.Inject
              emit(NetworkResult.Error(ErrorHandler.emitError(e)))
          }
      }
+
+
+
+
+
 
  }
 
