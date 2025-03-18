@@ -492,7 +492,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         lifecycleScope.launch {
             loggedScreenViewModel.loginPhoneNumber(
                 code,
-                number
+                number,token
             ).collect {
                 when (it) {
                     is NetworkResult.Success -> {
@@ -748,7 +748,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         lifecycleScope.launch {
             loggedScreenViewModel.loginEmail(
                 email,
-                password
+                password,
+                token
             ).collect {
                 when (it) {
                     is NetworkResult.Success -> {
@@ -1391,6 +1392,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             loggedScreenViewModel.otpVerifySignupEmail(
                 tempId,
                 otp,
+                token
             ).collect {
                 when (it) {
                     is NetworkResult.Success -> {
@@ -1464,6 +1466,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             loggedScreenViewModel.otpVerifyLoginPhone(
                 userId,
                 otp,
+                token
             ).collect {
                 when (it) {
                     is NetworkResult.Success -> {
@@ -1559,6 +1562,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             loggedScreenViewModel.otpVerifySignupPhone(
                 tempId,
                 otp,
+                token
             ).collect {
                 when (it) {
                     is NetworkResult.Success -> {
@@ -1602,7 +1606,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         lifecycleScope.launch {
             loggedScreenViewModel.loginPhoneNumber(
                 code,
-                number
+                number,
+                fcmToken = token
             ).collect {
                 when (it) {
                     is NetworkResult.Success -> {

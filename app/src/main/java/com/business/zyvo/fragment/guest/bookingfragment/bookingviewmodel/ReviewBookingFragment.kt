@@ -66,6 +66,7 @@ import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
+
     private var _binding : FragmentReviewGustBookingBinding? = null
     private  val binding get() = _binding!!
     private var bookingId = 0

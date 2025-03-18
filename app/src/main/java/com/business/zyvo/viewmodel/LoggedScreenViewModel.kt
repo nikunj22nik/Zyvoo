@@ -100,9 +100,8 @@ class LoggedScreenViewModel @Inject constructor(
     }
 
 
-    suspend fun loginPhoneNumber(code: String, number: String):
-            Flow<NetworkResult<Pair<String, String>>> {
-        return repository.loginPhoneNumber(number, code).onEach {
+    suspend fun loginPhoneNumber(code: String, number: String,fcmToken: String): Flow<NetworkResult<Pair<String, String>>> {
+        return repository.loginPhoneNumber(number, code,fcmToken).onEach {
             when (it) {
                 is NetworkResult.Loading -> {
                     isLoading.value = true
@@ -119,9 +118,26 @@ class LoggedScreenViewModel @Inject constructor(
         }
     }
 
-    suspend fun otpVerifyLoginPhone(userId: String, otp: String):
+    suspend fun otpVerifyLoginPhone(userId: String, otp: String,fcmToken :String):
             Flow<NetworkResult<JsonObject>> {
-        return repository.otpVerifyLoginPhone(userId, otp).onEach {
+        return repository.otpVerifyLoginPhone(userId, otp,fcmToken).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                }
+                is NetworkResult.Success -> {
+                    isLoading.value = false
+                }
+                else -> {
+                    isLoading.value = false
+                }
+            }
+        }
+    }
+
+    suspend fun otpVerifySignupPhone(tempId: String, otp: String,fcmToken :String):
+            Flow<NetworkResult<JsonObject>> {
+        return repository.otpVerifySignupPhone(tempId, otp,fcmToken).onEach {
             when (it) {
                 is NetworkResult.Loading -> {
                     isLoading.value = true
@@ -138,9 +154,9 @@ class LoggedScreenViewModel @Inject constructor(
         }
     }
 
-    suspend fun otpVerifySignupPhone(tempId: String, otp: String):
+    suspend fun loginEmail(email: String, password: String,fcmToken :String):
             Flow<NetworkResult<JsonObject>> {
-        return repository.otpVerifySignupPhone(tempId, otp).onEach {
+        return repository.loginEmail(email, password,fcmToken).onEach {
             when (it) {
                 is NetworkResult.Loading -> {
                     isLoading.value = true
@@ -157,28 +173,9 @@ class LoggedScreenViewModel @Inject constructor(
         }
     }
 
-    suspend fun loginEmail(email: String, password: String):
+    suspend fun otpVerifySignupEmail(tempId: String, otp: String,fcmToken :String):
             Flow<NetworkResult<JsonObject>> {
-        return repository.loginEmail(email, password).onEach {
-            when (it) {
-                is NetworkResult.Loading -> {
-                    isLoading.value = true
-                }
-
-                is NetworkResult.Success -> {
-                    isLoading.value = false
-                }
-
-                else -> {
-                    isLoading.value = false
-                }
-            }
-        }
-    }
-
-    suspend fun otpVerifySignupEmail(tempId: String, otp: String):
-            Flow<NetworkResult<JsonObject>> {
-        return repository.otpVerifySignupEmail(tempId, otp).onEach {
+        return repository.otpVerifySignupEmail(tempId, otp,fcmToken).onEach {
             when (it) {
                 is NetworkResult.Loading -> {
                     isLoading.value = true
