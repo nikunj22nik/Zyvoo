@@ -355,17 +355,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                      when (it) {
                          is NetworkResult.Success -> {
                              LoadingUtils.hideDialog()
-
                              LoadingUtils.showSuccessDialog(requireContext(),"Property Updated Succesfully")
                          }
 
                          is NetworkResult.Error -> {
                              LoadingUtils.hideDialog()
-                             Toast.makeText(
-                                 requireContext(),
-                                 it.message.toString(),
-                                 Toast.LENGTH_LONG
-                             ).show()
+                             LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
                          }
 
                          else -> {
@@ -871,6 +866,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
               LoadingUtils.showErrorDialog(requireContext(),"Please Select Add-on")
               return false
           }
+
+          if(fromHour.equals(toHour)){
+              LoadingUtils.showErrorDialog(requireContext(),"Start time and end time should be different")
+              return false
+          }
+
           if(fromHour.equals("00::00") && toHour.equals("00:00")){
             LoadingUtils.showErrorDialog(requireContext(),"Please Select Availability Hours")
             return false
@@ -1002,7 +1003,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     private fun checkingGalleryValidation():Boolean{
 
         if(galleryList.size ==0){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images of location")
+            LoadingUtils.showErrorDialog(requireContext(),"Please Upload location Images")
             return false
         }
 

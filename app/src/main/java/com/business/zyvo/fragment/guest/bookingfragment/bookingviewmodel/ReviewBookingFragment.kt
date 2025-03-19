@@ -66,6 +66,7 @@ import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
+
     private var _binding : FragmentReviewGustBookingBinding? = null
     private  val binding get() = _binding!!
     private var bookingId = 0
@@ -83,6 +84,8 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
     var reviewList: MutableList<Review> = mutableListOf()
     var pagination:Pagination?=null
     var filter = "highest_review"
+    private var hostId :String ="-1"
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -212,6 +215,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                             Log.d("DATACHECK","list : $list")
                             if (list!=null) { // Check if list is not null or empty
                                 val data = list.data
+                                hostId = list.data.host_id.toString()
                                 binding.textUserName.text = data.host_name ?: "N/A"
                                 binding.tvNamePlace.text = data.property_name ?: "N/A"
                                 binding.tvStatus.text = data.status

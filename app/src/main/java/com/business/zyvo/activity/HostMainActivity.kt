@@ -42,19 +42,20 @@ import kotlinx.coroutines.launch
 class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemoveListener{
 
     lateinit var binding: ActivityHostMainBinding
+
     lateinit var guestViewModel: GuestMainActivityModel
+
     private lateinit var myReceiver: MyReceiver
+
     private lateinit var quickstartConversationsManager: QuickstartConversationsManager
+
     lateinit var tvCOUNT :TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         binding = ActivityHostMainBinding.inflate(LayoutInflater.from(this))
-
         setContentView(binding.root)
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -114,9 +115,12 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                    when(it){
                        is NetworkResult.Success ->{
                            var number = it.data
-
-                           binding.rlBookingCount.visibility = View.VISIBLE
-                           binding.tvBookingCount.setText(number.toString())
+                           if (number != null) {
+                               if(number >0){
+                                   binding.rlBookingCount.visibility = View.VISIBLE
+                               }
+                           }
+                             binding.tvBookingCount.setText(number.toString())
 
                            Log.d("TESTING_DATA","Booking Count is "+number.toString())
                        }
@@ -136,10 +140,6 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
     fun resetBookingCountToZero(){
 
     }
-
-
-
-
     fun hideView() {
         binding.lay1.visibility = View.GONE
     }
@@ -305,11 +305,11 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
 
     inner class MyReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
+            binding.rlBookingCount.visibility = View.VISIBLE
             val message = intent.getStringExtra("message")
-//            // Do something with the message (e.g., show it in a Toast)
-
+//          // Do something with the message (e.g., show it in a Toast)
             var TVcOUNT = binding.tvBookingCount
-            TVcOUNT.setText(message)
+            TVcOUNT.setText(message.toString())
         }
     }
 

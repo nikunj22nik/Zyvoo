@@ -30,6 +30,10 @@ import com.business.zyvo.databinding.FragmentChatBinding
 import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.viewmodel.host.ChatListHostViewModel
+import com.twilio.conversations.CallbackListener
+import com.twilio.conversations.Conversation
+import com.twilio.conversations.ErrorInfo
+import com.twilio.conversations.StatusListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -128,8 +132,34 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                 try {
                     if(type.equals(AppConstant.DELETE)){
                         Log.d("TESTING", data.group_name.toString())
+                        quickstartConversationsManager.conversationsClient.getConversation(
+                            data.group_name,
+                            object : CallbackListener<Conversation> {
+                                override fun onSuccess(conversation: Conversation) {
+                                    conversation.destroy(object : StatusListener {
+                                        override fun onSuccess() {
+                                            Log.d("TESTING", "Delete Chat here")
+                                            chatList.remove(data)
+                                            adapterChatList.updateItem(chatList)
+                                        }
 
-                       quickstartConversationsManager.deleteConversation(data.group_name,SessionManager(requireContext()).getUserId().toString())
+                                        override fun onError(errorInfo: ErrorInfo) {
+                                            Log.e("TESTING", "Error deleting conversation: ${errorInfo.message}")
+                                        }
+                                    })
+
+                                }
+
+                                override fun onError(errorInfo: ErrorInfo) {
+                                    Log.e(
+                                        QuickstartConversationsManager.TAG,
+                                        "Error retrieving conversation: " + errorInfo.message
+                                    )
+                                }
+                            })
+
+
+                     //  quickstartConversationsManager.deleteConversation(data.group_name,SessionManager(requireContext()).getUserId().toString())
                     }else {
                         val intent = Intent(requireContext(), ChatActivity::class.java)
                         var channelName: String = data.group_name.toString()
@@ -191,6 +221,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                     viewModel.getChatUserChannelList(userId,userType).collect {
                         when (it) {
                             is NetworkResult.Success -> {
+                                LoadingUtils.hideDialog()
                                 Log.d("TESTING","Inside the message success")
                                 it.data?.let {
                                     viewModel.chatChannel = it
@@ -368,17 +399,14 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                         Log.d("quickstartConversationsManager","j 8888"+it.participant.conversation.state)
                         Log.d("quickstartConversationsManager","u 88888"+it.conversation.uniqueName)
                     }
-
                     for (i in quickstartConversationsManager.messages) {
                         try {
-
                             if (map.containsKey(i.conversation.uniqueName)) {
                                 var obj = map.get(i.conversation.uniqueName)
                                 obj?.lastMessage = i.messageBody
                                 obj?.lastMessageTime = TimeUtils.updateLastMsgTime(i.dateCreated)
                                 obj?.isOnline = false
                                 obj?.date=i.dateCreated
-
 
                                 if (obj != null) {
                                     chatList.add(obj)

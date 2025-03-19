@@ -6,6 +6,7 @@ import com.business.zyvo.NetworkResult
 import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingDetailModel
 import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.BookingModel
 import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.ReviewModel
+import com.business.zyvo.model.host.ChannelModel
 import com.business.zyvo.repository.ZyvoRepository
 import com.business.zyvo.utils.NetworkMonitor
 import com.google.gson.JsonArray
@@ -31,6 +32,14 @@ class BookingViewModel @Inject constructor(private val repository: ZyvoRepositor
                 isLoading.value = false
             }
             }
+        }
+    }
+
+    suspend fun joinChatChannel(
+        senderId :Int, receiverId :Int, groupChannel :String, user_type: String
+    ) : Flow<NetworkResult<ChannelModel>>{
+        return repository.joinChatChannel(senderId, receiverId, groupChannel, user_type).onEach {
+
         }
     }
 

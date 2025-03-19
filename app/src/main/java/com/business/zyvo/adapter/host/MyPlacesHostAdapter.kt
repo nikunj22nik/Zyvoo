@@ -51,11 +51,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currentItem = list[position]
 
-        holder.binding.cl1.setOnClickListener {
-            //  listener.itemClick(position)
-//            mListener.onItemClick(position)
-            Log.d("Adapter", "cl1 clicked at position $position")
-        }
+
 
         Log.d("TESTING_ID","Here in a adapter "+list.get(position).property_id.toString())
 
@@ -78,6 +74,8 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
             override fun itemClick(items: MutableList<ViewpagerModel>) {
                 //  listener.itemClick(position)
 //                mListener.onItemClick(position)
+
+                mListener.onItemClick(list.get(position),AppConstant.placeOpenActivity)
             }
         })
 
@@ -108,7 +106,9 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         holder.binding.imageAddWish.setOnClickListener {
             showPopupWindow(holder.binding.imageAddWish,position)
         }
-        holder.itemView.setOnClickListener {
+
+        holder.binding.cl1.setOnClickListener {
+            Log.d("Testing","Inside of onclick listener")
             mListener.onItemClick(list.get(position),AppConstant.placeOpenActivity)
         }
     }
