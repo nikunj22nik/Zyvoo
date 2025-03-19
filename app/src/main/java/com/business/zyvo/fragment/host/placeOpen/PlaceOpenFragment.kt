@@ -2,6 +2,7 @@ package com.business.zyvo.fragment.host.placeOpen
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -205,8 +206,8 @@ class PlaceOpenFragment : Fragment() {
 
                     val (dateRange, year) = it
                     val (startDate1, endDate1) = dateRange
-                    startDate = startDate1 + year
-                    endDate = endDate1 + year
+                    startDate = startDate1 + " " + year
+                    endDate = endDate1 + " " + year
                     binding.tvDateRange.text = "$startDate1 - $endDate1 $year"
 //                    Toast.makeText(
 //                        this,
@@ -227,14 +228,25 @@ class PlaceOpenFragment : Fragment() {
 
                                     val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
+//                                    val startDate1 = LocalDate.parse(
+//                                        "$startDate $year",
+//                                        DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH)
+//                                    )
+//                                        .format(outputFormatter)
+
+//                                    val formattedStartDate = "$startDate $year".replace(Regex("\\s+"), " ") // Ensure proper spacing
+//                                    val formattedEndDate = "$endDate $year".replace(Regex("\\s+"), " ") // Ensure proper spacing
+
+
+                                    Log.d("checkDates", startDate!!)
+                                    Log.d("checkDates", endDate!!)
                                     val startDate1 = LocalDate.parse(
-                                        "$startDate $year",
+                                        startDate,
                                         DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH)
-                                    )
-                                        .format(outputFormatter)
+                                    ).format(outputFormatter)
 
                                     val endDate1 = LocalDate.parse(
-                                        "$endDate $year",
+                                        endDate,
                                         DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH)
                                     )
                                         .format(outputFormatter)

@@ -455,23 +455,23 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         binding.recyclerViewPaymentCardListPayOut.adapter = bankNameAdapterPayout
         binding.recyclerViewCardNumberListPayOut.adapter = cardNumberAdapterPayout
 
-        if (bankListPayout.isNotEmpty()) {
-            bankNameAdapterPayout.addItems(bankListPayout)
-            binding.recyclerViewPaymentCardListPayOut.visibility = View.VISIBLE
-            binding.textBankNoDataFound.visibility = View.GONE
-        }else{
-            binding.recyclerViewPaymentCardListPayOut.visibility = View.GONE
-            binding.textBankNoDataFound.visibility = View.VISIBLE
-        }
-
-        if (cardListPayout.isNotEmpty()){
-            cardNumberAdapterPayout.addItems(cardListPayout)
-            binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
-            binding.textCardNoDataFound.visibility = View.GONE
-        }else{
-            binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
-            binding.textCardNoDataFound.visibility = View.VISIBLE
-        }
+//        if (bankListPayout.isNotEmpty()) {
+//            bankNameAdapterPayout.addItems(bankListPayout)
+//            binding.recyclerViewPaymentCardListPayOut.visibility = View.VISIBLE
+//            binding.textBankNoDataFound.visibility = View.GONE
+//        }else{
+//            binding.recyclerViewPaymentCardListPayOut.visibility = View.GONE
+//            binding.textBankNoDataFound.visibility = View.VISIBLE
+//        }
+//
+//        if (cardListPayout.isNotEmpty()){
+//            cardNumberAdapterPayout.addItems(cardListPayout)
+//            binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
+//            binding.textCardNoDataFound.visibility = View.GONE
+//        }else{
+//            binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
+//            binding.textCardNoDataFound.visibility = View.VISIBLE
+//        }
 
 
 
@@ -3160,17 +3160,28 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                         Log.d("API_RESPONSE_Payout", it.data.toString())
 
-                        // Ensure data is not null before accessing its properties
+
                         model.data?.let { payoutData ->
                             payoutData.bankAccounts?.let { bankList ->
                                 if (bankList.isNotEmpty()) {
                                     bankNameAdapterPayout.addItems(bankList)
+                                   // bankNameAdapterPayout.addItems(bankListPayout)
+                                    binding.recyclerViewPaymentCardListPayOut.visibility = View.VISIBLE
+                                    binding.textBankNoDataFound.visibility = View.GONE
+                                }else{
+                                    binding.recyclerViewPaymentCardListPayOut.visibility = View.GONE
+                                    binding.textBankNoDataFound.visibility = View.VISIBLE
                                 }
                             }
 
                             payoutData.cards?.let { cardList ->
                                 if (cardList.isNotEmpty()) {
                                     cardNumberAdapterPayout.addItems(cardList)
+                                    binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
+                                    binding.textCardNoDataFound.visibility = View.GONE
+                                }else{
+                                    binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
+                                    binding.textCardNoDataFound.visibility = View.VISIBLE
                                 }
                             }
                         } ?: run {
