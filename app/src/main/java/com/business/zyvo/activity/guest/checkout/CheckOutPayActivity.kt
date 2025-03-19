@@ -57,6 +57,7 @@ import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.formatDateyyyyMMddToMMMMddyyyy
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.business.zyvo.utils.PrepareData
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -118,6 +119,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             edTime = it.getString("edTime")
             propertyMile = it.getString("propertyMile")
             date = it.getString("date")
+
         }
         // Observe the isLoading state
         lifecycleScope.launch {
@@ -230,9 +232,9 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
     private fun setPropertyData() {
         try {
             propertyData?.let {
+                Log.d("TESTING_DATE_TIME","DATE "+date +" Hours"+hour+" StartTime"+stTime +" EndTime"+edTime)
                 propertyData?.host_profile_image?.let {
-                    Glide.with(this@CheckOutPayActivity).load(AppConstant.BASE_URL + it)
-                        .into(binding.profileImageHost)
+                    Glide.with(this@CheckOutPayActivity).load(AppConstant.BASE_URL + it).into(binding.profileImageHost)
                 }
                 propertyData?.hosted_by?.let {
                     binding.tvHostName.text = it
@@ -267,8 +269,9 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     binding.tvMiles.text = "$it miles away"
                 }
                 date?.let {
-                    date = formatDateyyyyMMddToMMMMddyyyy(it)
-                    binding.tvDate.text = date
+                    var dummyData = formatDateyyyyMMddToMMMMddyyyy(it)
+
+                    binding.tvDate.text = dummyData
                 }
                 stTime?.let { resp ->
                     edTime?.let {
@@ -484,12 +487,12 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         val days = resources.getStringArray(R.array.day).toList()
 
 
-        binding.spinnerLanguage.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        binding.spinnerLanguage.spinnerPopupHeight = 400
-        binding.spinnerLanguage.arrowAnimate = false
-        binding.spinnerLanguage.setItems(days)
-        binding.spinnerLanguage.setIsFocusable(true)
-        val recyclerView = binding.spinnerLanguage.getSpinnerRecyclerView()
+        binding.spinnerDate.layoutDirection = View.LAYOUT_DIRECTION_LTR
+        binding.spinnerDate.spinnerPopupHeight = 400
+        binding.spinnerDate.arrowAnimate = false
+        binding.spinnerDate.setItems(days)
+        binding.spinnerDate.setIsFocusable(true)
+        val recyclerView = binding.spinnerDate.getSpinnerRecyclerView()
 
         // Add item decoration for spacing
         val spacing = 16 // Spacing in pixels
@@ -584,13 +587,21 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 binding.relCalendarLayouts.visibility = View.GONE
             } else {
                 binding.relCalendarLayouts.visibility = View.VISIBLE
+                var splt = date?.split("-")
+                binding.spinnerDate.setText(splt?.get(2).toString()?:"")
+                binding.spinnermonth.setText(splt?.get(1)?:"")
+                binding.spinneryear.setText(splt?.get(0)?:"")
             }
         }
 
         binding.textSaveChangesButton.setOnClickListener {
-            date =
-                binding.spinnermonth.text.toString() + " " + binding.spinnerLanguage.text.toString() + ", " + binding.spinneryear.text.toString()
-            binding.tvDate.text = date
+           // date = binding.spinnermonth.text.toString() + " " + binding.spinnerDate.text.toString() + ", " + binding.spinneryear.text.toString()
+            var dateFormated = ""+binding.spinneryear.text.toString()+"-"+PrepareData.monthNameToNumber(binding.spinnermonth.text.toString())+"-"+binding.spinnerDate.text.toString()
+
+            Log.d("Formatted_Date",dateFormated)
+            date = dateFormated
+            var dummy  = formatDateyyyyMMddToMMMMddyyyy(dateFormated)
+            binding.tvDate.text = dummy
             binding.relCalendarLayouts.visibility = View.GONE
         }
 
@@ -638,23 +649,25 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                              intent.putExtra("date",date)
                              intent.putExtra("hour",binding.tvHours.text.toString().replace(" Hours",""))
                              startActivity(intent)*/
-                            bookProperty(
-                                propertyData?.property_id.toString(),
-                                convertDateFormatMMMMddyyyytoyyyyMMdd(date!!),
-                                convertDateFormatMMMMddyyyytoyyyyMMdd(date!!) + " " + ErrorDialog.convertToTimeFormat(
-                                    stTime!!
-                                ),
-                                convertDateFormatMMMMddyyyytoyyyyMMdd(date!!) + " " + ErrorDialog.convertToTimeFormat(
-                                    edTime!!
-                                ),
-                                binding.tvPrice.text.toString().replace("$", ""),
-                                binding.tvTotalPrice.text.toString().replace("$", ""),
-                                customerId,
-                                selectuserCard?.card_id!!, createAddonFields(addons),
-                                binding.tvZyvoServiceFee.text.toString().replace("$", ""),
-                                binding.tvTaxesPrice.text.toString().replace("$", ""),
-                                binding.tvDiscount.text.toString().replace("$", "")
-                            )
+                            date?.let { it1 ->
+                                bookProperty(
+                                    propertyData?.property_id.toString(),
+                                    it1,
+                                    convertDateFormatMMMMddyyyytoyyyyMMdd(date!!) + " " + ErrorDialog.convertToTimeFormat(
+                                        stTime!!
+                                    ),
+                                    convertDateFormatMMMMddyyyytoyyyyMMdd(date!!) + " " + ErrorDialog.convertToTimeFormat(
+                                        edTime!!
+                                    ),
+                                    binding.tvPrice.text.toString().replace("$", ""),
+                                    binding.tvTotalPrice.text.toString().replace("$", ""),
+                                    customerId,
+                                    selectuserCard?.card_id!!, createAddonFields(addons),
+                                    binding.tvZyvoServiceFee.text.toString().replace("$", ""),
+                                    binding.tvTaxesPrice.text.toString().replace("$", ""),
+                                    binding.tvDiscount.text.toString().replace("$", "")
+                                )
+                            }
                         }
                     }
                 }
@@ -824,12 +837,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun sameAsMailingAddress(
-        etStreet: EditText,
-        etCity: EditText,
-        etState: EditText,
-        etZipCode: EditText
-    ) {
+    private fun sameAsMailingAddress(etStreet: EditText, etCity: EditText, etState: EditText, etZipCode: EditText) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 checkOutPayViewModel.sameAsMailingAddress(session?.getUserId().toString()).collect {

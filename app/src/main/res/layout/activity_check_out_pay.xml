@@ -1094,7 +1094,7 @@
                                         android:background="@drawable/bg_four_side_grey_corner"
                                         >
                                         <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/spinnerLanguage"
+                                            android:id="@+id/spinnerDate"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
@@ -1127,7 +1127,7 @@
                                         >
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/spinnermonth"
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="@dimen/_70sdp"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textSize = "@dimen/_10ssp"

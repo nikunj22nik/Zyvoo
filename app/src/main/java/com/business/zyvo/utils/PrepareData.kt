@@ -29,6 +29,26 @@ import java.util.TimeZone
 
 object PrepareData {
 
+
+    fun monthNameToNumber(monthName: String): Int {
+        val months = listOf(
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        )
+
+        return months.indexOf(monthName) + 1  // Adding 1 because the list index is 0-based
+    }
+
     fun getOnlyAmenitiesList() : MutableList<Pair<String,Boolean>>{
         val amenitiesList = mutableListOf(
             "Free Parking",
