@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -27,6 +28,7 @@ import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivity
 import com.business.zyvo.activity.guest.extratime.model.ReportReason
@@ -64,6 +66,8 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
     var bookingId:String?=null
     var reportReasonsMap: HashMap<String, Int> = HashMap()
     var session: SessionManager?=null
+    var propertyId :String ="-1"
+    var hostId :String ="-1"
 
     private val extraTimeViewModel: ExtraTimeViewModel by lazy {
         ViewModelProvider(this)[ExtraTimeViewModel::class.java]
@@ -84,7 +88,13 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             propertyMile = it.getString("propertyMile")
             date = it.getString("date")
             bookingId = it.getString("bookingId")
+            propertyId = propertyData?.property_id.toString()
+            hostId = propertyData?.host_id.toString()
+
+            Log.d("TESTING_PROPERTY_DATA","PROPERTY_ID :- "+propertyId +" HostId :-"+hostId)
+
         }
+
 
         // Observe the isLoading state
         lifecycleScope.launch {
@@ -111,10 +121,103 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
         binding.tvReadMoreLess.setCollapsedText("Read More")
         binding.tvReadMoreLess.setCollapsedText("show more")
         binding.tvReadMoreLess.setCollapsedTextColor(com.business.zyvo.R.color.green_color_bar)
-
         setPropertyData()
+
+        binding.rlMsgHost.setOnClickListener {
+            callingJoinChannelApi()
+        }
+
     }
 
+
+    private fun callingJoinChannelApi(){
+        if(hostId.equals("-1") == false && propertyId.equals("-1") ==false){
+            lifecycleScope.launch {
+                val session= SessionManager(this@ExtraTimeActivity)
+                val userId = session.getUserId()
+
+                if(userId != null) {
+
+                    LoadingUtils.showDialog(this@ExtraTimeActivity,true)
+
+                    var channelName :String =""
+                    if (userId < Integer.parseInt(hostId)) {
+                        channelName = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+propertyId
+                    }
+
+                    else {
+                        channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+propertyId
+                    }
+
+                    extraTimeViewModel.joinChatChannel(userId,Integer.parseInt(hostId),channelName,"guest").collect{
+                        when(it){
+                            is NetworkResult.Success ->{
+                                LoadingUtils.hideDialog()
+                                var loggedInId = SessionManager(this@ExtraTimeActivity).getUserId()
+                                if(it.data?.receiver_id?.toInt() == loggedInId){
+
+                                    var userImage :String =  it.data?.receiver_avatar.toString()
+                                    Log.d("TESTING_PROFILE_HOST",userImage)
+                                    var friendImage :String = it.data?.sender_avatar.toString()
+                                    Log.d("TESTING_PROFILE_HOST",friendImage)
+                                    var friendName :String = ""
+                                    if(it.data?.sender_name != null){
+                                        friendName = it.data.sender_name
+                                    }
+                                    var userName = ""
+                                    userName = it.data?.receiver_name.toString()
+                                    val intent = Intent(this@ExtraTimeActivity, ChatActivity::class.java)
+                                    intent.putExtra("user_img",userImage).toString()
+                                    SessionManager(this@ExtraTimeActivity).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
+                                    Log.d("TESTING","REVIEW HOST"+channelName)
+                                    intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
+                                    intent.putExtra(AppConstant.FRIEND_ID,hostId)
+                                    intent.putExtra("friend_img",friendImage).toString()
+                                    intent.putExtra("friend_name",friendName).toString()
+                                    intent.putExtra("user_name",userName)
+                                    startActivity(intent)
+                                }
+                                else if(it.data?.sender_id?.toInt() == loggedInId){
+                                    var userImage :String =  it.data?.sender_avatar.toString()
+                                    Log.d("TESTING_PROFILE_HOST",userImage)
+                                    var friendImage :String = it.data?.receiver_avatar.toString()
+                                    Log.d("TESTING_PROFILE_HOST",friendImage)
+                                    var friendName :String = ""
+                                    if(it.data?.receiver_name != null){
+                                        friendName = it.data.receiver_name
+                                    }
+                                    var userName = ""
+                                    userName = it.data?.sender_name.toString()
+                                    val intent = Intent(this@ExtraTimeActivity, ChatActivity::class.java)
+                                    intent.putExtra("user_img",userImage).toString()
+                                    SessionManager(this@ExtraTimeActivity).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
+                                    Log.d("TESTING","REVIEW HOST"+channelName)
+                                    intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
+                                    intent.putExtra(AppConstant.FRIEND_ID,hostId)
+                                    intent.putExtra("friend_img",friendImage).toString()
+                                    intent.putExtra("friend_name",friendName).toString()
+                                    intent.putExtra("user_name",userName)
+                                    startActivity(intent)
+                                }
+                            }
+                            is NetworkResult.Error ->{
+                                LoadingUtils.hideDialog()
+
+                            }
+                            else ->{
+                                LoadingUtils.hideDialog()
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
+        }else{
+            Toast.makeText(this@ExtraTimeActivity,"Error in Loading Chat",Toast.LENGTH_LONG).show()
+        }
+    }
 
 
     private fun clickListeners(){

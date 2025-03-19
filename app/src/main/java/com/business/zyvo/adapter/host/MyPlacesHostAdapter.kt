@@ -51,8 +51,6 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currentItem = list[position]
 
-
-
         Log.d("TESTING_ID","Here in a adapter "+list.get(position).property_id.toString())
 
        var commonAuthWorkUtils = CommonAuthWorkUtils(context,null)
@@ -75,6 +73,11 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
                 //  listener.itemClick(position)
 //                mListener.onItemClick(position)
 
+
+            }
+        })
+        viewPagerAdapter.setOnItemClickListener(object :ViewPagerAdapter.onItemClickListener{
+            override fun onItemClick() {
                 mListener.onItemClick(list.get(position),AppConstant.placeOpenActivity)
             }
         })

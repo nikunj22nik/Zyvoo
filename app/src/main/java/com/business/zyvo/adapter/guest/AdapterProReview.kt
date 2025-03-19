@@ -2,6 +2,7 @@ package com.business.zyvo.adapter.guest
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,8 +30,9 @@ RecyclerView.Adapter<AdapterProReview.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = list?.get(position)
+
         currentItem?.profile_image?.let {
-            Glide.with(context).load(AppConstant.BASE_URL + currentItem).into(holder.binding.circleImageView)
+            Glide.with(context).load(AppConstant.BASE_URL + it).into(holder.binding.circleImageView)
         }
         currentItem?.reviewer_name?.let {
             holder.binding.txtName.text = it

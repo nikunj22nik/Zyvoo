@@ -5,6 +5,7 @@
     android:background="@drawable/bg_four_side_grey_corner"
     android:paddingHorizontal="@dimen/_5sdp"
     android:layout_marginStart="@dimen/_5sdp"
+    android:layout_marginTop="@dimen/_8sdp"
     android:gravity="center"
     android:paddingVertical="@dimen/_5sdp">
 

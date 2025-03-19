@@ -8,12 +8,26 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.OnLogClickListener
+import com.business.zyvo.adapter.host.MyPlacesHostAdapter
 import com.business.zyvo.databinding.LayoutImageBinding
+import com.business.zyvo.model.HostMyPlacesModel
 import com.business.zyvo.model.ViewpagerModel
 
-class ViewPagerAdapter(private var list: MutableList<String>, var context: Context,
-                       var listner: OnLogClickListener?
+class ViewPagerAdapter(
+    private var list: MutableList<String>,
+    var context: Context,
+    var listner: OnLogClickListener?
 ) : RecyclerView.Adapter<ViewPagerAdapter.ViewHolder>() {
+
+    private lateinit var mListener: onItemClickListener
+
+    interface onItemClickListener {
+        fun onItemClick()
+    }
+
+    fun setOnItemClickListener(listener: ViewPagerAdapter.onItemClickListener) {
+        mListener = listener
+    }
 
     inner class ViewHolder(val binding: LayoutImageBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -29,7 +43,7 @@ class ViewPagerAdapter(private var list: MutableList<String>, var context: Conte
         Glide.with(context).load(AppConstant.BASE_URL + currentItem).into(holder.binding.image)
 
         holder.itemView.setOnClickListener {
-
+            mListener.onItemClick()
         }
 
     }

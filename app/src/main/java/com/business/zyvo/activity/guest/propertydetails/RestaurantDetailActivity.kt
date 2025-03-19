@@ -180,8 +180,18 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                             it.data?.let { resp ->
                                propertyData = Gson().fromJson(resp.first.getAsJsonObject("data"),
                                    PropertyData::class.java)
-                                pagination = Gson().fromJson(resp.first.getAsJsonObject("pagination"),
+                                pagination = Gson().fromJson(resp.first.getAsJsonObject("pagination") ,
                                     Pagination::class.java)
+
+                                pagination?.let {
+                                    Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total +" "+"Current Pages:- "+ it.current_page)
+
+                                    if (it.total == it.current_page) {
+                                        binding.tvShowMore.visibility = View.GONE
+                                    }
+
+                                }
+
                                 val listType = object : TypeToken<List<Review>>() {}.type
                                 reviewList = Gson().fromJson(resp.second.getAsJsonArray("data"), listType)
                                 setPropertyData()
@@ -767,6 +777,14 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.startBooking.setOnClickListener {
             if (binding.tvBookingTxt.text.toString().equals("Start Booking")) {
                 binding.tvBookingTxt.setText("Proceed to Checkout")
+                binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
+                binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                binding.cv1.visibility = View.GONE
+                binding.calendarLayout.visibility = View.VISIBLE
+                binding.llday.visibility = View.VISIBLE
+                binding.llHr.visibility = View.GONE
+                binding.textend.setFocusable(false);
+                binding.textend.setClickable(false);
             } else if (binding.textHr.text.isEmpty()) {
                 showToast(this,AppConstant.hours)
             } else if (binding.textPrice.text.isEmpty()) {
@@ -898,6 +916,13 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 val localreviewList:MutableList<Review> = Gson().fromJson(resp.first, listType)
                                 pagination = Gson().fromJson(resp.second,
                                     Pagination::class.java)
+                                pagination?.let {
+                                    Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total +" "+"Current Pages:- "+ it.current_page)
+                                    if (it.total == it.current_page) {
+                                         binding.tvShowMore.visibility = View.GONE
+                                    }
+                                }
+
                                 reviewList.addAll(localreviewList)
                                 reviewList?.let {
                                     if (it.isNotEmpty()){

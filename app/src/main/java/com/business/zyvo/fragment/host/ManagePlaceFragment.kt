@@ -1086,8 +1086,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
                     imageList.removeAt(position)
                     galleryList.removeAt(position)
-                    deleteImage.add(galleryListId.get(position))
-                    galleryListId.removeAt(position)
+                    if(galleryListId.size-1 >= position) {
+                        deleteImage.add(galleryListId.get(position))
+                        galleryListId.removeAt(position)
+                    }
                     galleryAdapter.updateAdapter(imageList)
 
 

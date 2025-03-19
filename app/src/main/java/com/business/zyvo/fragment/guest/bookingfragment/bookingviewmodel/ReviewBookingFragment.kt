@@ -41,6 +41,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.R
+import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.guest.propertydetails.model.Pagination
 import com.business.zyvo.activity.guest.propertydetails.model.Review
 import com.business.zyvo.adapter.AdapterAddOn
@@ -110,6 +111,10 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         binding.imageStar1.visibility = View.GONE
         binding.textRatingStar1.visibility = View.GONE
 
+        binding.textMessageTheHostButton.setOnClickListener {
+            callingJoinChannelApi()
+        }
+
         // Observe the isLoading state
         lifecycleScope.launch {
             bookingViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -160,9 +165,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
             dialogReview()
         }
 
-        binding.textMessageTheHostButton.setOnClickListener {
-            findNavController().navigate(R.id.chatFragment)
-        }
+
 
         binding.imageShare.setOnClickListener {
             shareApp()
@@ -352,6 +355,91 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
             }
         }
     }
+
+
+    private fun callingJoinChannelApi(){
+        lifecycleScope.launch {
+            val session= SessionManager(requireContext())
+            val userId = session.getUserId()
+
+            if(userId != null) {
+
+                LoadingUtils.showDialog(requireContext(),true)
+
+                  var channelName :String =""
+                if (userId < Integer.parseInt(hostId)) {
+                    channelName = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+propertyId
+                }
+
+                else {
+                    channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+propertyId
+                }
+
+                bookingViewModel.joinChatChannel(userId,Integer.parseInt(hostId),channelName,"guest").collect{
+                    when(it){
+                        is NetworkResult.Success ->{
+                            LoadingUtils.hideDialog()
+                            var loggedInId = SessionManager(requireContext()).getUserId()
+                            if(it.data?.receiver_id?.toInt() == loggedInId){
+
+                                var userImage :String =  it.data?.receiver_avatar.toString()
+                                Log.d("TESTING_PROFILE_HOST",userImage)
+                                var friendImage :String = it.data?.sender_avatar.toString()
+                                Log.d("TESTING_PROFILE_HOST",friendImage)
+                                var friendName :String = ""
+                                if(it.data?.sender_name != null){
+                                    friendName = it.data.sender_name
+                                }
+                                var userName = ""
+                                userName = it.data?.receiver_name.toString()
+                                val intent = Intent(requireContext(), ChatActivity::class.java)
+                                intent.putExtra("user_img",userImage).toString()
+                                SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
+                                Log.d("TESTING","REVIEW HOST"+channelName)
+                                intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
+                                intent.putExtra(AppConstant.FRIEND_ID,hostId)
+                                intent.putExtra("friend_img",friendImage).toString()
+                                intent.putExtra("friend_name",friendName).toString()
+                                intent.putExtra("user_name",userName)
+                                startActivity(intent)
+                            }
+                            else if(it.data?.sender_id?.toInt() == loggedInId){
+                                var userImage :String =  it.data?.sender_avatar.toString()
+                                Log.d("TESTING_PROFILE_HOST",userImage)
+                                var friendImage :String = it.data?.receiver_avatar.toString()
+                                Log.d("TESTING_PROFILE_HOST",friendImage)
+                                var friendName :String = ""
+                                if(it.data?.receiver_name != null){
+                                    friendName = it.data.receiver_name
+                                }
+                                var userName = ""
+                                userName = it.data?.sender_name.toString()
+                                val intent = Intent(requireContext(), ChatActivity::class.java)
+                                intent.putExtra("user_img",userImage).toString()
+                                SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
+                                Log.d("TESTING","REVIEW HOST"+channelName)
+                                intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
+                                intent.putExtra(AppConstant.FRIEND_ID,hostId)
+                                intent.putExtra("friend_img",friendImage).toString()
+                                intent.putExtra("friend_name",friendName).toString()
+                                intent.putExtra("user_name",userName)
+                                startActivity(intent)
+                            }
+
+                        }
+                        is NetworkResult.Error ->{
+                            LoadingUtils.hideDialog()
+
+                        }
+                        else ->{
+                            LoadingUtils.hideDialog()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
 
     private fun reviewPublishAPI(responseRate: Int, communication: Int, onTime: Int, etMessage: String,

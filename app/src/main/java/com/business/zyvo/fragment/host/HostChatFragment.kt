@@ -221,7 +221,10 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                     viewModel.getChatUserChannelList(userId,userType).collect {
                         when (it) {
                             is NetworkResult.Success -> {
-                                LoadingUtils.hideDialog()
+                                if(it.data ==null  || it.data.size ==0){
+                                    LoadingUtils.hideDialog()
+                                }
+
                                 Log.d("TESTING","Inside the message success")
                                 it.data?.let {
                                     viewModel.chatChannel = it
@@ -235,6 +238,8 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                                     quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", SessionManager(requireContext()).getUserId().toString())
 
             //                                reloadMessages()
+
+
                                 }
                             }
 
