@@ -178,16 +178,20 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                               propertyData = Gson().fromJson(resp.first.getAsJsonObject("data"),
-                                   PropertyData::class.java)
-                                pagination = Gson().fromJson(resp.first.getAsJsonObject("pagination") ,
-                                    Pagination::class.java)
+                                propertyData = Gson().fromJson(resp.first.getAsJsonObject("data"), PropertyData::class.java)
+
+                                pagination = Gson().fromJson(resp.first.getAsJsonObject("pagination") , Pagination::class.java)
+
+                                if(pagination == null){
+                                    binding.showMoreReview.visibility = View.GONE
+                                }
+                                if(propertyData?.reviews_total_count.equals("0")) binding.showMoreReview.visibility = View.GONE
 
                                 pagination?.let {
                                     Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total +" "+"Current Pages:- "+ it.current_page)
 
                                     if (it.total == it.current_page) {
-                                        binding.tvShowMore.visibility = View.GONE
+                                        binding.showMoreReview.visibility = View.GONE
                                     }
 
                                 }
@@ -834,11 +838,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
         }
-        binding.rlView2.setOnClickListener {
-                DateManager(this).showTimePickerDialog(this) { selectedTime ->
-                    binding.textend.setText(selectedTime)
-                }
-        }
+//        binding.rlView2.setOnClickListener {
+//                DateManager(this).showTimePickerDialog(this) { selectedTime ->
+//                    binding.textend.setText(selectedTime)
+//                }
+//        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -918,9 +922,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                     Pagination::class.java)
                                 pagination?.let {
                                     Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total +" "+"Current Pages:- "+ it.current_page)
-                                    if (it.total == it.current_page) {
-                                         binding.tvShowMore.visibility = View.GONE
-                                    }
                                 }
 
                                 reviewList.addAll(localreviewList)
