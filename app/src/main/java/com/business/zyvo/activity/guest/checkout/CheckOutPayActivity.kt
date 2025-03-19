@@ -71,24 +71,24 @@ import java.util.Calendar
 import java.util.Objects
 
 @AndroidEntryPoint
-class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
+class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
 
-    lateinit var binding : ActivityCheckOutPayBinding
-    lateinit var adapterAddon : AdapterProAddOn
+    lateinit var binding: ActivityCheckOutPayBinding
+    lateinit var adapterAddon: AdapterProAddOn
 
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
 
-    var propertyData: PropertyData?=null
-    var hour:String?=null
-    var price:String?=null
-    var stTime:String?=null
-    var edTime:String?=null
-    var propertyMile:String? = null
-    var date:String?=null
+    var propertyData: PropertyData? = null
+    var hour: String? = null
+    var price: String? = null
+    var stTime: String? = null
+    var edTime: String? = null
+    var propertyMile: String? = null
+    var date: String? = null
     var addOnList: MutableList<AddOn> = mutableListOf()
-    var session: SessionManager?=null
+    var session: SessionManager? = null
     var userCardsList: MutableList<UserCards> = mutableListOf()
-    var selectuserCard:UserCards?=null
+    var selectuserCard: UserCards? = null
     var customerId = ""
     private val checkOutPayViewModel: CheckOutPayViewModel by lazy {
         ViewModelProvider(this)[CheckOutPayViewModel::class.java]
@@ -111,7 +111,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
 
         intent.extras?.let {
-            propertyData = Gson().fromJson(it.getString("propertyData"),PropertyData::class.java)
+            propertyData = Gson().fromJson(it.getString("propertyData"), PropertyData::class.java)
             hour = it.getString("hour")
             price = it.getString("price")
             stTime = it.getString("stTime")
@@ -245,7 +245,8 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     }
                 }
                 propertyData?.min_booking_hours?.let {
-                    binding.tvResponseTime.text = "Respond within "+convertHoursToHrMin(it.toDouble())
+                    binding.tvResponseTime.text =
+                        "Respond within " + convertHoursToHrMin(it.toDouble())
                 }
                 propertyData?.images?.let {
                     if (it.isNotEmpty()) {
@@ -260,7 +261,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     binding.tvRating.text = it
                 }
                 propertyData?.reviews_total_count?.let {
-                    binding.tvTotalReview.text = "("+ formatConvertCount(it) +")"
+                    binding.tvTotalReview.text = "(" + formatConvertCount(it) + ")"
                 }
                 propertyMile?.let {
                     binding.tvMiles.text = "$it miles away"
@@ -269,7 +270,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     date = formatDateyyyyMMddToMMMMddyyyy(it)
                     binding.tvDate.text = date
                 }
-                stTime?.let  { resp ->
+                stTime?.let { resp ->
                     edTime?.let {
                         binding.tvTiming.text = "From $resp to $it"
                     }
@@ -294,28 +295,27 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
     }
 
     @SuppressLint("SetTextI18n")
-    fun messageHostListener(){
+    fun messageHostListener() {
         val dateManager = DateManager(this)
         binding.rlHours.setOnClickListener {
             dateManager.showHourSelectionDialog(this) { selectedHour ->
                 binding.tvHours.text = selectedHour
-                hour = selectedHour.replace(" hours","")
+                hour = selectedHour.replace(" hours", "")
                 calculatePrice()
             }
         }
         binding.textSaveChangesButtonTime.setOnClickListener {
-            stTime = binding.endHour.text.toString()+":"+
-                    binding.endMinute.text.toString()+" "+binding.endAmPm.text.toString()
-            edTime =  binding.startHour.text.toString()+":"+
-                    binding.startMinute.text.toString()+" "+binding.startAmPm.text.toString()
-            binding.tvTiming.text = "From "+stTime+"to "+edTime
+            stTime = binding.endHour.text.toString() + ":" +
+                    binding.endMinute.text.toString() + " " + binding.endAmPm.text.toString()
+            edTime = binding.startHour.text.toString() + ":" +
+                    binding.startMinute.text.toString() + " " + binding.startAmPm.text.toString()
+            binding.tvTiming.text = "From " + stTime + "to " + edTime
             binding.relTime.visibility = View.GONE
         }
         binding.rlMsgHost.setOnClickListener {
-            if(binding.llMsgHost.visibility == View.VISIBLE){
+            if (binding.llMsgHost.visibility == View.VISIBLE) {
                 binding.llMsgHost.visibility = View.GONE
-            }
-            else{
+            } else {
                 binding.llMsgHost.visibility = View.VISIBLE
             }
         }
@@ -339,15 +339,15 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         }
 
 
-
     }
 
-    fun callingSelectionOfTime(){
-        val hoursArray = Array(24) { i -> (i + 1).toString() }
+    fun callingSelectionOfTime() {
+        val hoursArray = Array(24) { i -> String.format("%02d", i + 1) } // Ensures "01, 02, 03..."
         val hoursList: List<String> = hoursArray.toList()
-        val minutesArray = Array(60) { i -> (i + 1).toString() }
-        val minutesList :List<String> = minutesArray.toList()
-        val amPmList = listOf<String>("AM","PM")
+
+        val minutesArray = Array(60) { i -> String.format("%02d", i) } // Ensures "00, 01, 02..."
+        val minutesList: List<String> = minutesArray.toList()
+        val amPmList = listOf<String>("AM", "PM")
 
         binding.endHour.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.endHour.arrowAnimate = false
@@ -356,7 +356,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         val recyclerView = binding.endHour.getSpinnerRecyclerView()
         val spacing = 16 // Spacing in pixels
         recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
         })
@@ -369,7 +374,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         val recyclerView1 = binding.endMinute.getSpinnerRecyclerView()
         // Spacing in pixels
         recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
         })
@@ -381,7 +391,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         binding.endAmPm.setIsFocusable(true)
         val recyclerView45 = binding.endAmPm.getSpinnerRecyclerView()
         recyclerView45.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
         })
@@ -393,7 +408,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         binding.startAmPm.setIsFocusable(true)
         val recyclerView46 = binding.endAmPm.getSpinnerRecyclerView()
         recyclerView46.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
         })
@@ -433,18 +453,31 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         })
 
         binding.dateView1.setOnClickListener {
-            if(binding.relTime.visibility == View.VISIBLE){
+            if (binding.relTime.visibility == View.VISIBLE) {
                 binding.relTime.visibility = View.GONE
-            }else{
+            } else {
                 binding.relTime.visibility = View.VISIBLE
             }
         }
 
     }
 
-    fun callingSelectionOfDate(){
-        val months = listOf("January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December")
-        val am_pm_list = listOf("AM","PM")
+    fun callingSelectionOfDate() {
+        val months = listOf(
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        )
+        val am_pm_list = listOf("AM", "PM")
         val years = (2024..2050).toList()
         val yearsStringList = years.map { it.toString() }
         //Toast.makeText(this,"Year String List: "+yearsStringList.size,Toast.LENGTH_LONG).show()
@@ -462,7 +495,8 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         val spacing = 16 // Spacing in pixels
         recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(
-                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
         })
@@ -476,7 +510,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         val recyclerView3 = binding.spinnermonth.getSpinnerRecyclerView()
 
         recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
         })
@@ -484,7 +523,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         binding.spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.spinneryear.arrowAnimate = false
         binding.spinneryear.spinnerPopupHeight = 400
-        binding.spinneryear.setItems(yearsStringList.subList(0,16))
+        binding.spinneryear.setItems(yearsStringList.subList(0, 16))
         binding.spinneryear.setIsFocusable(true)
 
 
@@ -502,7 +541,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         val recyclerView6 = binding.startAmPm.getSpinnerRecyclerView()
 
         recyclerView6.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
         })
@@ -511,7 +555,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         val recyclerView5 = binding.endAmPm.getSpinnerRecyclerView()
         recyclerView5.addItemDecoration(object : RecyclerView.ItemDecoration() {
 
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
 
@@ -519,23 +568,28 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
 
         val recyclerView1 = binding.spinneryear.getSpinnerRecyclerView()
         recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 outRect.top = spacing
             }
 
         })
 
         binding.dateView.setOnClickListener {
-            if(binding.relCalendarLayouts.visibility == View.VISIBLE){
+            if (binding.relCalendarLayouts.visibility == View.VISIBLE) {
                 binding.relCalendarLayouts.visibility = View.GONE
-            }
-            else{
+            } else {
                 binding.relCalendarLayouts.visibility = View.VISIBLE
             }
         }
 
         binding.textSaveChangesButton.setOnClickListener {
-            date = binding.spinnermonth.text.toString()+" "+binding.spinnerLanguage.text.toString()+","+binding.spinneryear.text.toString()
+            date =
+                binding.spinnermonth.text.toString() + " " + binding.spinnerLanguage.text.toString() + ", " + binding.spinneryear.text.toString()
             binding.tvDate.text = date
             binding.relCalendarLayouts.visibility = View.GONE
         }
@@ -544,59 +598,62 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
 
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun clickListeneres(){
+    fun clickListeneres() {
 
         binding.rlParking.setOnClickListener {
-            if(binding.tvParkingRule.visibility == View.VISIBLE){
-                binding.tvParkingRule.visibility=View.GONE
-            }else{
+            if (binding.tvParkingRule.visibility == View.VISIBLE) {
+                binding.tvParkingRule.visibility = View.GONE
+            } else {
                 binding.tvParkingRule.visibility = View.VISIBLE
             }
         }
         binding.rlHostRules.setOnClickListener {
-            if(binding.tvHostRule.visibility == View.VISIBLE){
+            if (binding.tvHostRule.visibility == View.VISIBLE) {
                 binding.tvHostRule.visibility = View.GONE
-            }
-            else{
+            } else {
                 binding.tvHostRule.visibility = View.VISIBLE
             }
         }
         binding.rlConfirmPay.setOnClickListener {
-            if (selectuserCard==null){
-                showToast(this,AppConstant.selectCard)
-            }else {
+            if (selectuserCard == null) {
+                showToast(this, AppConstant.selectCard)
+            } else {
                 val addons = ArrayList<ReqAddOn>()
                 propertyData?.let {
-                  for (addon in addOnList){
-                      if (addon.checked){
-                          val add = ReqAddOn(addon.name,addon.price.toDouble())
-                          addons.add(add)
-                      }
-                  }
-                    stTime?.let  { resp ->
+                    for (addon in addOnList) {
+                        if (addon.checked) {
+                            val add = ReqAddOn(addon.name, addon.price.toDouble())
+                            addons.add(add)
+                        }
+                    }
+                    stTime?.let { resp ->
                         edTime?.let {
-                           /* var intent = Intent(this@CheckOutPayActivity
-                                , ExtraTimeActivity::class.java)
-                            intent.putExtra("price",binding.tvPrice.text.toString().replace("$", ""),)
-                            intent.putExtra("stTime",stTime)
-                            intent.putExtra("edTime",edTime)
-                            intent.putExtra("propertyData",Gson().toJson(propertyData))
-                            intent.putExtra("propertyMile",propertyMile)
-                            intent.putExtra("date",date)
-                            intent.putExtra("hour",binding.tvHours.text.toString().replace(" Hours",""))
-                            startActivity(intent)*/
+                            /* var intent = Intent(this@CheckOutPayActivity
+                                 , ExtraTimeActivity::class.java)
+                             intent.putExtra("price",binding.tvPrice.text.toString().replace("$", ""),)
+                             intent.putExtra("stTime",stTime)
+                             intent.putExtra("edTime",edTime)
+                             intent.putExtra("propertyData",Gson().toJson(propertyData))
+                             intent.putExtra("propertyMile",propertyMile)
+                             intent.putExtra("date",date)
+                             intent.putExtra("hour",binding.tvHours.text.toString().replace(" Hours",""))
+                             startActivity(intent)*/
                             bookProperty(
                                 propertyData?.property_id.toString(),
                                 convertDateFormatMMMMddyyyytoyyyyMMdd(date!!),
-                                convertDateFormatMMMMddyyyytoyyyyMMdd(date!!)+ " "+ErrorDialog.convertToTimeFormat(stTime!!),
-                                convertDateFormatMMMMddyyyytoyyyyMMdd(date!!)+" "+ErrorDialog.convertToTimeFormat(edTime!!),
+                                convertDateFormatMMMMddyyyytoyyyyMMdd(date!!) + " " + ErrorDialog.convertToTimeFormat(
+                                    stTime!!
+                                ),
+                                convertDateFormatMMMMddyyyytoyyyyMMdd(date!!) + " " + ErrorDialog.convertToTimeFormat(
+                                    edTime!!
+                                ),
                                 binding.tvPrice.text.toString().replace("$", ""),
                                 binding.tvTotalPrice.text.toString().replace("$", ""),
                                 customerId,
-                                selectuserCard?.card_id!!,createAddonFields(addons),
-                                binding.tvZyvoServiceFee.text.toString().replace("$",""),
-                                binding.tvTaxesPrice.text.toString().replace("$",""),
-                                binding.tvDiscount.text.toString().replace("$","")
+                                selectuserCard?.card_id!!, createAddonFields(addons),
+                                binding.tvZyvoServiceFee.text.toString().replace("$", ""),
+                                binding.tvTaxesPrice.text.toString().replace("$", ""),
+                                binding.tvDiscount.text.toString().replace("$", "")
                             )
                         }
                     }
@@ -604,10 +661,10 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
             }
         }
         binding.rlCreditDebitCard.setOnClickListener {
-            if(binding.rlCreditDebitRecycler.visibility == View.GONE) {
+            if (binding.rlCreditDebitRecycler.visibility == View.GONE) {
                 binding.rlCreditDebitRecycler.visibility = View.VISIBLE
                 binding.imageDropDown.setImageResource(R.drawable.ic_dropdown_close)
-            }else{
+            } else {
                 binding.rlCreditDebitRecycler.visibility = View.GONE
                 binding.imageDropDown.setImageResource(R.drawable.ic_dropdown_open)
             }
@@ -617,6 +674,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         }
 
     }
+
     fun createAddonFields(addons: List<ReqAddOn>): Map<String, String> {
         val fields = mutableMapOf<String, String>()
         addons.forEachIndexed { index, addon ->
@@ -625,25 +683,29 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         }
         return fields
     }
-    private fun initialization(){
-        adapterAddon = AdapterProAddOn(this@CheckOutPayActivity,addOnList,
+
+    private fun initialization() {
+        adapterAddon = AdapterProAddOn(this@CheckOutPayActivity, addOnList,
             object : AdapterProAddOn.onItemClickListener {
-            override fun onItemClick(list: MutableList<AddOn>, position: Int) {
-                addOnList = list
-                calculatePrice()
-            }
-        })
-        binding.recyclerAddOn.layoutManager = LinearLayoutManager(this@CheckOutPayActivity, LinearLayoutManager.VERTICAL ,false)
+                override fun onItemClick(list: MutableList<AddOn>, position: Int) {
+                    addOnList = list
+                    calculatePrice()
+                }
+            })
+        binding.recyclerAddOn.layoutManager =
+            LinearLayoutManager(this@CheckOutPayActivity, LinearLayoutManager.VERTICAL, false)
         binding.recyclerAddOn.adapter = adapterAddon
 
         showingMoreText()
-        addPaymentCardAdapter = AdapterAddPaymentCard(this, userCardsList,this);
+        addPaymentCardAdapter = AdapterAddPaymentCard(this, userCardsList, this);
 
-        binding.recyclerViewPaymentCardList.layoutManager = LinearLayoutManager(this@CheckOutPayActivity,LinearLayoutManager.VERTICAL,false)
+        binding.recyclerViewPaymentCardList.layoutManager =
+            LinearLayoutManager(this@CheckOutPayActivity, LinearLayoutManager.VERTICAL, false)
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
 
         val dayarray = resources.getStringArray(R.array.day)
-        val adapterday: ArrayAdapter<String> = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, dayarray)
+        val adapterday: ArrayAdapter<String> =
+            ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, dayarray)
 
         // Set years
         val years = ArrayList<String?>()
@@ -651,12 +713,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         for (i in 1950..thisYear) {
             years.add(i.toString())
         }
-       /* checkOutPayViewModel.paymentCardList.observe(this, Observer { payment ->
-            addPaymentCardAdapter.updateItem(payment)
-        })*/
+        /* checkOutPayViewModel.paymentCardList.observe(this, Observer { payment ->
+             addPaymentCardAdapter.updateItem(payment)
+         })*/
 
         binding.dateView.setOnClickListener {
-            binding.relCalendarLayouts.visibility=View.VISIBLE
+            binding.relCalendarLayouts.visibility = View.VISIBLE
         }
 
     }
@@ -671,13 +733,14 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
         binding.tvShowMore.paint.isAntiAlias = true
         binding.tvShowMore.setOnClickListener {
             adapterAddon.toggleList()
-            binding.tvShowMore.text = if (adapterAddon.itemCount == addOnList.size) "Show Less" else "Show More"
+            binding.tvShowMore.text =
+                if (adapterAddon.itemCount == addOnList.size) "Show Less" else "Show More"
         }
     }
 
     private fun dialogAddCard() {
         var dateManager = DateManager(this)
-        val dialog =  Dialog(this, R.style.BottomSheetDialog)
+        val dialog = Dialog(this, R.style.BottomSheetDialog)
         dialog.apply {
             setCancelable(true)
             setContentView(R.layout.dialog_add_card_details)
@@ -708,16 +771,15 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                 }
             }
             submitButton.setOnClickListener {
-                if (etCardHolderName.text.isEmpty()){
-                    showToast(this@CheckOutPayActivity,AppConstant.cardName)
-                }else if (textMonth.text.isEmpty()){
-                    showToast(this@CheckOutPayActivity,AppConstant.cardMonth)
-                }else if (textYear.text.isEmpty()){
-                    showToast(this@CheckOutPayActivity,AppConstant.cardYear)
-                }else if (etCardCvv.text.isEmpty()){
-                    showToast(this@CheckOutPayActivity,AppConstant.cardCVV)
-                }else
-                {
+                if (etCardHolderName.text.isEmpty()) {
+                    showToast(this@CheckOutPayActivity, AppConstant.cardName)
+                } else if (textMonth.text.isEmpty()) {
+                    showToast(this@CheckOutPayActivity, AppConstant.cardMonth)
+                } else if (textYear.text.isEmpty()) {
+                    showToast(this@CheckOutPayActivity, AppConstant.cardYear)
+                } else if (etCardCvv.text.isEmpty()) {
+                    showToast(this@CheckOutPayActivity, AppConstant.cardCVV)
+                } else {
                     LoadingUtils.showDialog(this@CheckOutPayActivity, false)
                     val stripe = Stripe(this@CheckOutPayActivity, BuildConfig.STRIPE_KEY)
                     var month: Int? = null
@@ -731,51 +793,55 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     year = textYear.text.toString().toInt()
                     val card = CardParams(
                         cardNumber,
-                       month!!,
+                        month!!,
                         Integer.valueOf(year!!),
                         cvvNumber,
-                        name)
+                        name
+                    )
                     stripe?.createCardToken(card, null, null,
                         object : ApiResultCallback<Token> {
-                        override fun onError(e: Exception) {
-                            Log.d("******  Token Error :-", "${e.message}")
-                            showErrorDialog(this@CheckOutPayActivity, e.message.toString())
-                            LoadingUtils.hideDialog()
-                        }
+                            override fun onError(e: Exception) {
+                                Log.d("******  Token Error :-", "${e.message}")
+                                showErrorDialog(this@CheckOutPayActivity, e.message.toString())
+                                LoadingUtils.hideDialog()
+                            }
 
-                        override fun onSuccess(result: Token) {
-                            val id = result.id
-                            Log.d("******  Token payment :-", "data $id")
-                            LoadingUtils.hideDialog()
-                            saveCardStripe(dialog,id,checkBox.isChecked)
+                            override fun onSuccess(result: Token) {
+                                val id = result.id
+                                Log.d("******  Token payment :-", "data $id")
+                                LoadingUtils.hideDialog()
+                                saveCardStripe(dialog, id, checkBox.isChecked)
 
-                        }
-                    })
+                            }
+                        })
                 }
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-            sameAsMailingAddress(etStreet,etCity,etState,etZipCode)
+            sameAsMailingAddress(etStreet, etCity, etState, etZipCode)
 
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun sameAsMailingAddress(etStreet:EditText,
-                                     etCity:EditText,
-                                     etState:EditText,
-                                     etZipCode:EditText) {
+    private fun sameAsMailingAddress(
+        etStreet: EditText,
+        etCity: EditText,
+        etState: EditText,
+        etZipCode: EditText
+    ) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 checkOutPayViewModel.sameAsMailingAddress(session?.getUserId().toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                            val mailingAddress:MailingAddress = Gson().fromJson(resp,MailingAddress::class.java)
+                                val mailingAddress: MailingAddress =
+                                    Gson().fromJson(resp, MailingAddress::class.java)
                                 mailingAddress?.let {
-                                   it.street_address?.let {
-                                       etStreet.setText(it)
-                                   }
+                                    it.street_address?.let {
+                                        etStreet.setText(it)
+                                    }
                                     it.city?.let {
                                         etCity.setText(it)
                                     }
@@ -788,6 +854,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                                 }
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@CheckOutPayActivity, it.message!!)
                         }
@@ -798,26 +865,31 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
 
     @SuppressLint("SetTextI18n")
-    private fun saveCardStripe(dialog: Dialog, tokenId:String, saveasMail:Boolean) {
+    private fun saveCardStripe(dialog: Dialog, tokenId: String, saveasMail: Boolean) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                checkOutPayViewModel.saveCardStripe(session?.getUserId().toString(),
-                    tokenId).collect {
+                checkOutPayViewModel.saveCardStripe(
+                    session?.getUserId().toString(),
+                    tokenId
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                               dialog.dismiss()
+                                dialog.dismiss()
                                 getUserCards()
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@CheckOutPayActivity, it.message!!)
                         }
@@ -828,24 +900,29 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setPreferredCard(card_id:String) {
+    private fun setPreferredCard(card_id: String) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                checkOutPayViewModel.setPreferredCard(session?.getUserId().toString(),
-                    card_id).collect {
+                checkOutPayViewModel.setPreferredCard(
+                    session?.getUserId().toString(),
+                    card_id
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                              showToast(this@CheckOutPayActivity,resp.first)
+                                showToast(this@CheckOutPayActivity, resp.first)
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@CheckOutPayActivity, it.message!!)
                         }
@@ -856,9 +933,11 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -872,11 +951,12 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                             it.data?.let { resp ->
                                 customerId = resp.get("stripe_customer_id").asString
                                 val listType = object : TypeToken<List<UserCards>>() {}.type
-                                userCardsList = Gson().fromJson(resp.getAsJsonArray("cards"), listType)
-                                if (userCardsList.isNotEmpty()){
+                                userCardsList =
+                                    Gson().fromJson(resp.getAsJsonArray("cards"), listType)
+                                if (userCardsList.isNotEmpty()) {
                                     addPaymentCardAdapter.updateItem(userCardsList)
-                                    for (card in userCardsList){
-                                        if (card.is_preferred){
+                                    for (card in userCardsList) {
+                                        if (card.is_preferred) {
                                             selectuserCard = card
                                             break
                                         }
@@ -884,6 +964,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                                 }
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@CheckOutPayActivity, it.message!!)
                         }
@@ -894,14 +975,16 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun calculatePrice(){
+    private fun calculatePrice() {
         try {
             var totalPrice = 0.0
             var hourlyTotal = 0.0
@@ -920,23 +1003,23 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                 binding.tvCleaningFee.text = "$$it"
                 totalPrice += it
             }
-            propertyData?.service_fee?.toDoubleOrNull()?.let {resp ->
+            propertyData?.service_fee?.toDoubleOrNull()?.let { resp ->
                 hourlyTotal?.let {
-                    val taxAmount = calculatePercentage(it,resp)
+                    val taxAmount = calculatePercentage(it, resp)
                     binding.tvZyvoServiceFee.text = "$$taxAmount"
                     totalPrice += taxAmount
                 }
             }
-            propertyData?.tax?.toDoubleOrNull()?.let {resp ->
+            propertyData?.tax?.toDoubleOrNull()?.let { resp ->
                 hourlyTotal?.let {
-                    val taxAmount = calculatePercentage(it,resp)
+                    val taxAmount = calculatePercentage(it, resp)
                     binding.tvTaxesPrice.text = "$$taxAmount"
                     totalPrice += taxAmount
 
                 }
             }
             addOnList?.let {
-                if (it.isNotEmpty()){
+                if (it.isNotEmpty()) {
                     val total = calculateTotalPrice(addOnList)
                     binding.tvAddOnPrice.text = "$$total"
                     totalPrice += total
@@ -945,7 +1028,7 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
             // Apply Discount if Hours Exceed Discount Hour
             var discountAmount = 0.0
             propertyData?.bulk_discount_hour?.let { h ->
-                hour?.let { cHr->
+                hour?.let { cHr ->
                     propertyData?.bulk_discount_rate?.let {
                         if (cHr.toInt() > h) {
                             discountAmount = (hourlyTotal * it.toDouble()) / 100
@@ -963,8 +1046,8 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
             }
             // Final Total Price Display
             binding.tvTotalPrice.text = "$$totalPrice"
-        }catch (e:Exception){
-            Log.d(ErrorDialog.TAG,"calculatePrice ${e.message}")
+        } catch (e: Exception) {
+            Log.d(ErrorDialog.TAG, "calculatePrice ${e.message}")
         }
     }
 
@@ -976,15 +1059,18 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
     override fun set(position: Int) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                checkOutPayViewModel.setPreferredCard(session?.getUserId().toString(),
-                    userCardsList?.get(position)?.card_id!!).collect {
+                checkOutPayViewModel.setPreferredCard(
+                    session?.getUserId().toString(),
+                    userCardsList?.get(position)?.card_id!!
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 getUserCards()
-                                showToast(this@CheckOutPayActivity,resp.first)
+                                showToast(this@CheckOutPayActivity, resp.first)
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@CheckOutPayActivity, it.message!!)
                         }
@@ -995,39 +1081,65 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
-     private fun bookProperty(property_id : String, booking_date : String, booking_start : String,
-                              booking_end : String, booking_amount : String, total_amount : String,
-                              customer_id : String, card_id : String, addons: Map<String, String>,
-                              service_fee : String, tax : String, discount_amount : String) {
+    private fun bookProperty(
+        property_id: String, booking_date: String, booking_start: String,
+        booking_end: String, booking_amount: String, total_amount: String,
+        customer_id: String, card_id: String, addons: Map<String, String>,
+        service_fee: String, tax: String, discount_amount: String
+    ) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                checkOutPayViewModel.bookProperty(session?.getUserId().toString(),
-                    property_id, booking_date, booking_start, booking_end, booking_amount, total_amount,
-                    customer_id, card_id, addons,
-                    service_fee,tax,discount_amount).collect {
+                checkOutPayViewModel.bookProperty(
+                    session?.getUserId().toString(),
+                    property_id,
+                    booking_date,
+                    booking_start,
+                    booking_end,
+                    booking_amount,
+                    total_amount,
+                    customer_id,
+                    card_id,
+                    addons,
+                    service_fee,
+                    tax,
+                    discount_amount
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                var intent = Intent(this@CheckOutPayActivity
-                                    , ExtraTimeActivity::class.java)
-                                intent.putExtra("price",binding.tvPrice.text.toString().replace("$", ""))
-                                intent.putExtra("stTime",stTime)
-                                intent.putExtra("edTime",edTime)
-                                intent.putExtra("propertyData",Gson().toJson(propertyData))
-                                intent.putExtra("propertyMile",propertyMile)
-                                intent.putExtra("date",date)
-                                intent.putExtra("bookingId",resp.getAsJsonObject("booking").get("id").asInt.toString())
-                                intent.putExtra("hour",binding.tvHours.text.toString().replace(" Hours",""))
+                                var intent = Intent(
+                                    this@CheckOutPayActivity, ExtraTimeActivity::class.java
+                                )
+                                intent.putExtra(
+                                    "price",
+                                    binding.tvPrice.text.toString().replace("$", "")
+                                )
+                                intent.putExtra("stTime", stTime)
+                                intent.putExtra("edTime", edTime)
+                                intent.putExtra("propertyData", Gson().toJson(propertyData))
+                                intent.putExtra("propertyMile", propertyMile)
+                                intent.putExtra("date", date)
+                                intent.putExtra(
+                                    "bookingId",
+                                    resp.getAsJsonObject("booking").get("id").asInt.toString()
+                                )
+                                intent.putExtra(
+                                    "hour",
+                                    binding.tvHours.text.toString().replace(" Hours", "")
+                                )
                                 startActivity(intent)
-                                showToast(this@CheckOutPayActivity,"Booking created successfully.")
+                                showToast(this@CheckOutPayActivity, "Booking created successfully.")
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@CheckOutPayActivity, it.message!!)
                         }
@@ -1038,9 +1150,11 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 

@@ -45,7 +45,6 @@ open class LoadingUtils {
 
         fun showErrorDialog(context: Context?, text: String) {
 
-
             if (context == null) return
 
 
@@ -54,10 +53,10 @@ open class LoadingUtils {
             val dialogView = inflater.inflate(R.layout.dialog_error, null)
 
             // Find views
-            val errorMessage = dialogView.findViewById<TextView>(R.id.errorMessage)
-            val errorIcon = dialogView.findViewById<ImageView>(R.id.errorIcon)
-            val okButton = dialogView.findViewById<Button>(R.id.okButton)
-            val cancelBtn = dialogView.findViewById<ImageView>(R.id.imageView_Cancel)
+            val errorMessage = dialogView.findViewById<TextView>(R.id.text)
+          //  val errorIcon = dialogView.findViewById<ImageView>(R.id.errorIcon)
+            val okButton = dialogView.findViewById<TextView>(R.id.textOkayButton)
+            val cancelBtn = dialogView.findViewById<ImageView>(R.id.imageCross)
 
             // Set the error message
             errorMessage.text = text
@@ -69,8 +68,8 @@ open class LoadingUtils {
                 .create()
 
             // Add animation to the error icon
-            val animation = AnimationUtils.loadAnimation(context, R.anim.shake)
-            errorIcon.startAnimation(animation)
+//            val animation = AnimationUtils.loadAnimation(context, R.anim.shake)
+//            errorIcon.startAnimation(animation)
 
 
             cancelBtn.setOnClickListener {

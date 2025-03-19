@@ -243,16 +243,16 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         }
 
        // locationList.add(newLocation)
-        val newWork = AddWorkModel(AppConstant.unknownLocation)
-        workList.add(newWork)
-        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
-        languageList.add(newLanguage)
-        val newHobbies = AddHobbiesModel(AppConstant.unknownLocation)
-
-        hobbiesList.add(newHobbies)
-        val newPets = AddPetsModel(AppConstant.unknownLocation)
-
-        petsList.add(newPets)
+//        val newWork = AddWorkModel(AppConstant.unknownLocation)
+//        workList.add(newWork)
+//        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
+//        languageList.add(newLanguage)
+//        val newHobbies = AddHobbiesModel(AppConstant.unknownLocation)
+//
+//        hobbiesList.add(newHobbies)
+//        val newPets = AddPetsModel(AppConstant.unknownLocation)
+//
+//        petsList.add(newPets)
 
 //        locationList.add(newLocation)
 //       val newWork = AddWorkModel(AppConstant.unknownLocation)

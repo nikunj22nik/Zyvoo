@@ -1227,8 +1227,22 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             } else if (data?.data != null) {
                 // Single image selected
                 val imageUri = data.data
+
                 imageUris.add(imageUri!!)
-                Toast.makeText(requireContext(), "1 image selected", Toast.LENGTH_SHORT).show()
+                Log.d("ImageDataVipin",imageUri.toString())
+               // Toast.makeText(requireContext(), "1 image selectedd", Toast.LENGTH_SHORT).show()
+
+                val bitmapString = PrepareData.uriToBase64(imageUri,requireContext().contentResolver)
+
+                imageList.add(0, imageUri)
+                if (bitmapString != null) {
+                    galleryList.add(0,Pair<String,Boolean>(bitmapString,true))
+                }
+
+
+                galleryAdapter.updateAdapter(imageList)
+                Toast.makeText(requireContext(), "1 images selected", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             // You can now handle the selected image URIs in the imageUris list

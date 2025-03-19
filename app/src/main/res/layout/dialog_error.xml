@@ -1,78 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_gravity="center_horizontal"
-    android:gravity="center_horizontal">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_marginHorizontal="@dimen/_15sdp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/dialog_bg">
 
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_43sdp"
-        android:background="#4AEAB1"
-        >
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_45sdp"
-
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_centerInParent="true"
-            app:srcCompat="@drawable/splash_icon1"
-            app:tint="@color/white"
-            android:layout_gravity="center_horizontal"
-            />
-
-        <ImageView
-            android:id="@+id/imageView_Cancel"
-            android:layout_width="@dimen/_12sdp"
-            android:layout_height="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_7sdp"
-            android:layout_marginRight="@dimen/_8sdp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_cross"
-            app:tint="@color/white"
-               android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"/>
-
-    </RelativeLayout>
-
-
-    <!-- Animated Icon -->
     <ImageView
-        android:id="@+id/errorIcon"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:src="@drawable/ic_error"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginBottom="16dp" />
+        android:id="@+id/imageCross"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
+        android:layout_margin="@dimen/_10sdp"
+        android:src="@drawable/ic_cross"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Error Message -->
     <TextView
-        android:id="@+id/errorMessage"
+        android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Error Message"
-        android:textSize="16sp"
+        android:fontFamily="@font/poppins"
+        android:text="Message"
+        android:textSize="@dimen/_13ssp"
         android:textStyle="bold"
-          android:fontFamily="@font/poppins"
-        android:textColor="@android:color/holo_red_dark"
-        android:gravity="center"
-        android:layout_marginBottom="14dp" />
 
-    <!-- OK Button -->
-    <Button
-        android:id="@+id/okButton"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageCross" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:background="#C4C4C4"
+        android:layout_marginTop="@dimen/_10sdp"
+        app:layout_constraintTop_toBottomOf="@id/textTitle" />
+
+
+    <ImageView
+        android:id="@+id/imageSuccess"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:src="@drawable/ic_error_icon"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view"/>
+
+
+    <TextView
+        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OK"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:backgroundTint="#AA0000"
-        android:textColor="@android:color/white" />
+        android:textAlignment="center"
+        android:textColor="#636363"
+        android:textSize="@dimen/_10sdp"
+        android:fontFamily="@font/poppins"
+        android:layout_marginTop="@dimen/_25sdp"
+        android:text="Your password has been changed \nsuccessfully."
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageSuccess"/>
 
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/textOkayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginBottom="@dimen/_25sdp"
+        android:background="@drawable/button_bg"
+        android:backgroundTint="#F80030"
+        android:fontFamily="@font/poppins"
+        android:paddingHorizontal="@dimen/_85sdp"
+        android:paddingVertical="@dimen/_5sdp"
+        android:text="Okay"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_10sdp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
