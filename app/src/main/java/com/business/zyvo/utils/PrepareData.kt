@@ -16,6 +16,7 @@ import android.text.format.DateFormat
 import android.util.Base64
 import com.business.zyvo.R
 import com.business.zyvo.model.ActivityModel
+import com.business.zyvo.model.TimeDetails
 import com.business.zyvo.model.host.ItemRadio
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -30,7 +31,36 @@ import java.util.TimeZone
 object PrepareData {
 
 
-    fun monthNameToNumber(monthName: String): Int {
+    fun extractTimeDetails(startTime: String, endTime: String): TimeDetails {
+        // Function to extract hour, minute, and AM/PM from a given time string
+        fun extractTimeComponents(time: String): Triple<String, String, String> {
+            val timeFormat = Regex("(\\d{1,2}):(\\d{2}) (AM|PM)")
+            val matchResult = timeFormat.matchEntire(time)
+
+            return if (matchResult != null) {
+                val (hour, minute, amPm) = matchResult.destructured
+                Triple(hour, minute, amPm)
+            } else {
+                throw IllegalArgumentException("Invalid time format")
+            }
+        }
+
+        val (startHour, startMinute, startAmPm) = extractTimeComponents(startTime)
+        val (endHour, endMinute, endAmPm) = extractTimeComponents(endTime)
+
+        return TimeDetails(
+            startHour = startHour,
+            startMinute = startMinute,
+            startAmPm = startAmPm,
+            endHour = endHour,
+            endMinute = endMinute,
+            endAmPm = endAmPm
+        )
+    }
+
+
+
+    fun monthNameToNumber(monthName: String): String {
         val months = listOf(
             "January",
             "February",
@@ -46,8 +76,34 @@ object PrepareData {
             "December"
         )
 
-        return months.indexOf(monthName) + 1  // Adding 1 because the list index is 0-based
+        var monthNumber=  months.indexOf(monthName) + 1  // Adding 1 because the list index is 0-based
+        return String.format("%02d", monthNumber)
     }
+
+    fun monthNumberToName(monthNumber: Int): String {
+        val months = listOf(
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        )
+
+        return if (monthNumber in 1..12) {
+            months[monthNumber - 1]  // Subtract 1 to adjust for 0-based indexing
+        } else {
+            "Invalid month number"  // Return error message if the number is out of range
+        }
+    }
+
+
 
     fun getOnlyAmenitiesList() : MutableList<Pair<String,Boolean>>{
         val amenitiesList = mutableListOf(

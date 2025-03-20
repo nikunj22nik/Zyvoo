@@ -4999,9 +4999,29 @@ import javax.inject.Inject
          }
      }
 
+     override suspend fun getSavedItemWishList(
+         userId: Int,
+         wishListId: Int
+     ): Flow<NetworkResult<JsonObject>> = flow{
+         try {
+             api.getSavedItemWishList(userId, wishListId).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             emit(NetworkResult.Success(resp))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
 
-
-
+                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
 
 
  }

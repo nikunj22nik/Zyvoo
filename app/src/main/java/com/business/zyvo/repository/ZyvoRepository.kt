@@ -1,5 +1,6 @@
 package com.business.zyvo.repository
 
+import android.net.Network
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
@@ -619,6 +620,13 @@ interface ZyvoRepository {
         amount : String,
         withdrawalType : String,
     ): Flow<NetworkResult<JsonObject>>
+
+
+    suspend fun getSavedItemWishList(
+        @Field("user_id") userId :Int,
+        @Field("wishlist_id") wishListId :Int
+    ) :Flow<NetworkResult<JsonObject>>
+
 }
 
 

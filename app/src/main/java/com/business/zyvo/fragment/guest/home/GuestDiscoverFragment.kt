@@ -281,8 +281,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             Location(40.7128, -74.0060, "New York")
         )
 
-        val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true) {
+        val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     requireActivity().finishAffinity()
                 }
@@ -493,8 +492,15 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
             val dialogAdapter = WishlistAdapter(requireContext(),true, wishlistItem,object: OnClickListener{
                 override fun itemClick(obj: Int) {
+
+                }
+
+            })
+
+            dialogAdapter.setOnItemClickListener(object:WishlistAdapter.onItemClickListener{
+                override fun onItemClick(position: Int, wish: WishlistItem) {
                     try {
-                        saveItemInWishlist(property_id, pos,wishlistItem?.get(obj)?.wishlist_id.toString(),
+                        saveItemInWishlist(property_id, position,wish.wishlist_id.toString(),
                             dialog)
                     }catch (e:Exception){
                         e.message

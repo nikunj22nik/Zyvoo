@@ -804,4 +804,14 @@ interface ZyvoApi {
         @Field("withdrawal_type") withdrawalType :String,
     ) : Response<JsonObject>
 
+
+    @POST("get_saved_item_wishlist")
+    @FormUrlEncoded
+    suspend fun getSavedItemWishList(
+        @Field("user_id") userId :Int,
+        @Field("wishlist_id") wishListId :Int
+    ) : Response<JsonObject>
+
+
+
 }

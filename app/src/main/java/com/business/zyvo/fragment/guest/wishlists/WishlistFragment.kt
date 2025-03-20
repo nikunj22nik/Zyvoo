@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -50,13 +51,24 @@ class WishlistFragment : Fragment() {
         session = SessionManager(requireActivity())
         adapter = WishlistAdapter(requireContext(),false, wishlistItem,object : OnClickListener{
             override fun itemClick(obj: Int) {
-             findNavController().navigate(R.id.recentlyViewedFragment)
+             // findNavController().navigate(R.id.recentlyViewedFragment)
+            }
+        })
+
+        adapter!!.setOnItemClickListener(object : WishlistAdapter.onItemClickListener{
+            override fun onItemClick(position: Int, wish: WishlistItem) {
+                var wishListId = wish.wishlist_id
+                var bundle = Bundle()
+                bundle.putString(AppConstant.WISH , wishListId.toString())
+                findNavController().navigate(R.id.recentlyViewedFragment,bundle)
             }
 
         })
+
         binding.rvWishList.adapter = adapter
-        // Observe the isLoading state
+
         lifecycleScope.launch {
+
             viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
                 if (isLoading) {
                     LoadingUtils.showDialog(requireContext(), false)
@@ -64,8 +76,11 @@ class WishlistFragment : Fragment() {
                     LoadingUtils.hideDialog()
                 }
             }
+
         }
+
         getWisList()
+
         return binding.root
     }
 

@@ -48,10 +48,7 @@ class RecentlyViewedFragment : Fragment() {
         ViewModelProvider(this)[WishListsViewModel::class.java]
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
         binding = FragmentRecentlyViewedBinding.inflate(inflater, container, false)
         session = SessionManager(requireActivity())

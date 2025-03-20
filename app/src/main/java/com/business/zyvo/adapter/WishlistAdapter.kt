@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
+import com.business.zyvo.adapter.host.ExploreArticlesAdapter
 import com.business.zyvo.databinding.LayoutWishlistBinding
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.model.WishListModel
@@ -18,35 +19,43 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean,
                       var listener: OnClickListener?) :
     RecyclerView.Adapter<WishlistAdapter.WishlistViewHolder>() {
 
+    private lateinit var mListener: onItemClickListener
+
+    interface onItemClickListener {
+        fun onItemClick(position: Int,wish: WishlistItem)
+    }
+
+    fun setOnItemClickListener(listener: WishlistAdapter.onItemClickListener) {
+        mListener = listener
+    }
+
     inner class WishlistViewHolder(var binding: LayoutWishlistBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(currentItem: WishlistItem) {
+
             currentItem.last_saved_property_image.let {
                 Glide.with(context).load(AppConstant.BASE_URL + it).into( binding.imageWishList)
             }
+
             currentItem.items_in_wishlist.let {
                 binding.textSaved.text = "$it saved"
             }
+
             currentItem.wishlist_name.let {
                 binding.textTitle.setText(it)
             }
 
             binding.root.setOnClickListener {
-                listener?.itemClick(position)
+               // listener?.itemClick(position)
+            mListener.onItemClick(position,currentItem)
             }
 
           //   Adjust size based on isSmall flag using dimensions from dimens.xml
             val resources = itemView.context.resources
             val (imageWidth, imageHeight, _) = if (isSmall) {
-                Triple(
-                    resources.getDimensionPixelSize(R.dimen.imageWishListWidthSmall),
-                    resources.getDimensionPixelSize(R.dimen.imageWishListHeightSmall),
-                    resources.getDimension(R.dimen.text_small_size))
+                Triple(resources.getDimensionPixelSize(R.dimen.imageWishListWidthSmall), resources.getDimensionPixelSize(R.dimen.imageWishListHeightSmall), resources.getDimension(R.dimen.text_small_size))
             } else {
-                Triple(
-                    resources.getDimensionPixelSize(R.dimen.imageWishListWidthLarge),
-                    resources.getDimensionPixelSize(R.dimen.imageWishListHeightLarge),
-                    resources.getDimension(R.dimen.text_large_size))
+                Triple(resources.getDimensionPixelSize(R.dimen.imageWishListWidthLarge), resources.getDimensionPixelSize(R.dimen.imageWishListHeightLarge), resources.getDimension(R.dimen.text_large_size))
             }
 
             // Apply dimensions to ImageView
