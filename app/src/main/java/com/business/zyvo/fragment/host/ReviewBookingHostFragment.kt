@@ -72,6 +72,7 @@ import kotlinx.coroutines.launch
 import android.widget.LinearLayout.LayoutParams
 import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.adapter.host.AdapterReviewHost
+import com.business.zyvo.fragment.both.MapDialogFragment
 import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
 import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.Review
 import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.ReviewModel
@@ -104,6 +105,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     var channelName: String = ""
     var guestId :Int  =-1
     var friendImage :String =""
+    var currentLatitude :String ="37.0902"
+    var currentLongitude :String ="95.7129"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -144,12 +147,15 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         callingBookingDetailApi()
 
-        return binding.root
+        binding.mapView.setOnClickListener {
+            callingMapScreenApi()
+        }
+
+       return binding.root
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
         super.onViewCreated(view, savedInstanceState)
-
         navController = Navigation.findNavController(view)
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
@@ -158,7 +164,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
         }
-
 
         binding.textReportIssueButton.setOnClickListener {
             dialogReportIssue()
@@ -204,6 +209,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
 
         callingReportReason()
+
     }
 
     private fun callingJoinChannelApi(){
@@ -551,9 +557,14 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
         data.latitude?.let {
             latitude = it.toDouble()
+            currentLatitude = latitude.toString()
+
+
             longitude = data.longitude?.let {
                 it.toDouble()
+
             } ?: 0.00
+            currentLongitude = longitude.toString()
 
             val newYork = LatLng(latitude, longitude)
             mMap?.clear()
@@ -692,7 +703,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     fun dialogReview() {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
-            setCancelable(false)
+            setCancelable(true)
             setContentView(R.layout.dialog_review)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
@@ -911,6 +922,17 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
     }
 
+    private fun callingMapScreenApi() {
+
+        val mapDialog = MapDialogFragment()
+        val args = Bundle()
+        args.putString("axis","latitude")
+        args.putString("latitude", currentLatitude)
+        args.putString("longitude", currentLongitude)
+        mapDialog.arguments = args
+        mapDialog.show(requireActivity().supportFragmentManager, "MapDialog")
+    }
+
     private fun openDialogNotification() {
 
         val dialog = Dialog(requireContext(), com.business.zyvo.R.style.BottomSheetDialog)
@@ -944,6 +966,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             show()
         }
     }
+
     private fun openDialogSuccess() {
 
         val dialog = Dialog(requireContext(), com.business.zyvo.R.style.BottomSheetDialog)
@@ -976,6 +999,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             show()
         }
     }
+
     fun initialization() {
 
         adapterAddon = AdapterAddOn(requireContext(), getAddOnList().subList(0, 4))
@@ -1128,31 +1152,35 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                     when(it){
                         is NetworkResult.Success -> {
                             LoadingUtils.hideDialog()
-                            var pair = it.data
-                            var jsonArr = pair?.first
-                            var jsonObj = pair?.second
-                            var list = mutableListOf<ReviewerProfileModel>()
+                            var pair    =  it.data
+                            var jsonArr =  pair?.first
+                            var jsonObj =  pair?.second
+                            var list    =  mutableListOf<ReviewerProfileModel>()
+
                             jsonArr?.forEach {
                                 val model: ReviewerProfileModel = Gson().fromJson(it.toString(), ReviewerProfileModel::class.java)
                                 list.add(model)
                             }
+
                             var totalPage = jsonObj?.get("total_pages")?.asInt
                             var currentPage = jsonObj?.get("current_page")?.asInt
+
                             if (currentPage != null) {
                                 viewModel.currentPage = currentPage+1;
                             }
+
                             viewModel.hashMapPageNumber.put(viewModel.currentPage,true)
 
 
                             if (totalPage != null) {
                                 viewModel.totalPage = totalPage
                             }
+
                             Log.d("TESTING_GUEST_ID","Total Page :-"+viewModel.totalPage+" Current Page:- "+viewModel.currentPage)
 
-                            if(viewModel.totalPage == viewModel.currentPage){
+                            if(viewModel.totalPage <= viewModel.currentPage){
                                 binding.showMoreReview.visibility =View.GONE
                             }
-
 
                             adapterReview.updateAdapter(list)
 

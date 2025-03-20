@@ -24,6 +24,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginBottom
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -276,6 +277,16 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 stTime?.let { resp ->
                     edTime?.let {
                         binding.tvTiming.text = "From $resp to $it"
+                       var fetchTimeDetails = PrepareData.extractTimeDetails(stTime!!, edTime!!)
+
+                       binding.endHour.setText(fetchTimeDetails.startHour)
+                       binding.endMinute.setText(fetchTimeDetails.startMinute)
+                       binding.endAmPm.setText(fetchTimeDetails.startAmPm)
+
+                       binding.startHour.setText(fetchTimeDetails.endHour)
+                       binding.startMinute.setText(fetchTimeDetails.endMinute)
+                       binding.startAmPm.setText(fetchTimeDetails.endAmPm)
+
                     }
                 }
                 propertyData?.parking_rules?.let {
@@ -300,13 +311,14 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
     @SuppressLint("SetTextI18n")
     fun messageHostListener() {
         val dateManager = DateManager(this)
-        binding.rlHours.setOnClickListener {
-            dateManager.showHourSelectionDialog(this) { selectedHour ->
-                binding.tvHours.text = selectedHour
-                hour = selectedHour.replace(" hours", "")
-                calculatePrice()
-            }
-        }
+//        binding.rlHours.setOnClickListener {
+//            dateManager.showHourSelectionDialog(this) { selectedHour ->
+//                binding.tvHours.text = selectedHour
+//                hour = selectedHour.replace(" hours", "")
+//                calculatePrice()
+//            }
+//        }
+
         binding.textSaveChangesButtonTime.setOnClickListener {
             stTime = binding.endHour.text.toString() + ":" +
                     binding.endMinute.text.toString() + " " + binding.endAmPm.text.toString()
@@ -346,7 +358,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
 
     fun callingSelectionOfTime() {
         val hoursArray = Array(24) { i -> String.format("%02d", i + 1) } // Ensures "01, 02, 03..."
-        val hoursList: List<String> = hoursArray.toList()
+        val hoursList: List<String> = hoursArray.toList().subList(0,12)
 
         val minutesArray = Array(60) { i -> String.format("%02d", i) } // Ensures "00, 01, 02..."
         val minutesList: List<String> = minutesArray.toList()
@@ -490,10 +502,11 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         binding.spinnerDate.layoutDirection = View.LAYOUT_DIRECTION_LTR
         binding.spinnerDate.spinnerPopupHeight = 400
         binding.spinnerDate.arrowAnimate = false
+
         binding.spinnerDate.setItems(days)
         binding.spinnerDate.setIsFocusable(true)
-        val recyclerView = binding.spinnerDate.getSpinnerRecyclerView()
 
+        val recyclerView = binding.spinnerDate.getSpinnerRecyclerView()
         // Add item decoration for spacing
         val spacing = 16 // Spacing in pixels
         recyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
@@ -589,7 +602,8 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 binding.relCalendarLayouts.visibility = View.VISIBLE
                 var splt = date?.split("-")
                 binding.spinnerDate.setText(splt?.get(2).toString()?:"")
-                binding.spinnermonth.setText(splt?.get(1)?:"")
+                var num = Integer.parseInt(splt?.get(1))
+                binding.spinnermonth.setText(PrepareData.monthNumberToName(num))
                 binding.spinneryear.setText(splt?.get(0)?:"")
             }
         }
@@ -606,6 +620,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         }
 
     }
+
 
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -653,10 +668,10 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                                 bookProperty(
                                     propertyData?.property_id.toString(),
                                     it1,
-                                    convertDateFormatMMMMddyyyytoyyyyMMdd(date!!) + " " + ErrorDialog.convertToTimeFormat(
+                                    date + " " + ErrorDialog.convertToTimeFormat(
                                         stTime!!
                                     ),
-                                    convertDateFormatMMMMddyyyytoyyyyMMdd(date!!) + " " + ErrorDialog.convertToTimeFormat(
+                                    date + " " + ErrorDialog.convertToTimeFormat(
                                         edTime!!
                                     ),
                                     binding.tvPrice.text.toString().replace("$", ""),
@@ -687,6 +702,8 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         }
 
     }
+
+
 
     fun createAddonFields(addons: List<ReqAddOn>): Map<String, String> {
         val fields = mutableMapOf<String, String>()

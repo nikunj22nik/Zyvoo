@@ -110,6 +110,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         binding.rlNeedHelp.visibility = View.VISIBLE
         binding.imageStar1.visibility = View.GONE
         binding.textRatingStar1.visibility = View.GONE
+        binding.viewProfile.visibility = View.GONE
 
         binding.textMessageTheHostButton.setOnClickListener {
             callingJoinChannelApi()
@@ -315,6 +316,17 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 pagination = Gson().fromJson(it.data.second.getAsJsonObject("pagination"),
                                     Pagination::class.java)
                                 val listType = object : TypeToken<List<Review>>() {}.type
+                                if(pagination == null){
+                                    Log.d("TESTING_PAGINATION","Pagination is Null")
+                                    binding.showMoreReview.visibility = View.GONE
+                                }
+                                pagination?.let {
+                                    Log.d("TESTING_PAGINATION", "Total :- "+ pagination!!.total +" Current Page:- "+pagination!!.current_page)
+                                    if (pagination!!.total <= pagination!!.current_page) {
+                                        binding.showMoreReview.visibility = View.GONE
+                                    }
+                                }
+
                                 val localreviewList:MutableList<Review> = Gson().fromJson(it.data.second.getAsJsonArray("data"), listType)
                                 reviewList.addAll(localreviewList)
                                 // Update reviews dynamically
@@ -621,6 +633,17 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 reviewList.addAll(localreviewList)
                                 pagination = Gson().fromJson(resp.second,
                                     Pagination::class.java)
+
+                                if(pagination == null){
+                                    Log.d("TESTING_PAGINATION","Pagination is Null")
+                                    binding.showMoreReview.visibility = View.GONE
+                                }
+                                pagination?.let {
+                                    Log.d("TESTING_PAGINATION", "Total :- "+ pagination!!.total +" Current Page:- "+pagination!!.current_page)
+                                    if (pagination!!.total <= pagination!!.current_page) {
+                                        binding.showMoreReview.visibility = View.GONE
+                                    }
+                                }
                                 reviewList?.let {
                                     if (it.isNotEmpty()){
                                         adapterReview.updateAdapter(it)

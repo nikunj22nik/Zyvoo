@@ -190,7 +190,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 pagination?.let {
                                     Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total +" "+"Current Pages:- "+ it.current_page)
 
-                                    if (it.total == it.current_page) {
+                                    if (it.total <= it.current_page) {
                                         binding.showMoreReview.visibility = View.GONE
                                     }
 
@@ -533,6 +533,23 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     propertyData?.hourly_rate?.let {
                         val totalPrice = progress.toInt()* it.toFloat()
                         binding.textPrice.text = totalPrice.toString()
+                        var selectedTime = binding.textstart.text
+
+                        // Define the time formatter (12-hour format with AM/PM)
+                        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+                        } else {
+                            TODO("VERSION.SDK_INT < O")
+                        }
+                        Log.d(ErrorDialog.TAG,selectedTime.toString())
+                        // Parse the start time string into a LocalTime object
+                        val startTime = LocalTime.parse(selectedTime, formatter)
+
+                        val endTime = startTime.plusHours(binding.textHr.text.toString().replace(" hour","")
+                            .toLong())
+                        // Format the end time back to a string
+                        val formattedEndTime = endTime.format(formatter)
+                        binding.textend.text = formattedEndTime.uppercase()
                     }
                 }catch (e:Exception){
                     Log.d(ErrorDialog.TAG,e.message!!)
@@ -557,11 +574,19 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 true, wishlistItem,object:
                 OnClickListener {
                 override fun itemClick(obj: Int) {
-                    saveItemInWishlist(propertyId, obj,wishlistItem?.get(obj)?.wishlist_id.toString(),
+
+                }
+
+            })
+
+            dialogAdapter.setOnItemClickListener(object :WishlistAdapter.onItemClickListener{
+                override fun onItemClick(position: Int, wish: WishlistItem) {
+                    saveItemInWishlist(propertyId, position,wish.wishlist_id.toString(),
                         dialog)
                 }
 
             })
+
             val rvWishList: RecyclerView = findViewById<RecyclerView>(R.id.rvWishList)
             rvWishList.adapter = dialogAdapter
 
@@ -909,7 +934,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun loadMoreReview(filter :String,
                                page :String) {
-        if (NetworkMonitorCheck._isConnected.value) {
+        if (NetworkMonitorCheck._isConnected.value)   {
+
             lifecycleScope.launch(Dispatchers.Main) {
                 viewModel.filterPropertyReviews(propertyId,
                     filter,page).collect {
@@ -923,7 +949,15 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 pagination?.let {
                                     Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total +" "+"Current Pages:- "+ it.current_page)
                                 }
+                                if(pagination == null){
+                                    binding.reviewMoreView.visibility = View.GONE
+                                }
 
+                                pagination?.let {
+                                    if(it.total <= it.current_page){
+                                        binding.reviewMoreView.visibility = View.GONE
+                                    }
+                                }
                                 reviewList.addAll(localreviewList)
                                 reviewList?.let {
                                     if (it.isNotEmpty()){

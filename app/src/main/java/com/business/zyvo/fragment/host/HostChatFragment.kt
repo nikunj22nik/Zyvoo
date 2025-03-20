@@ -41,25 +41,15 @@ import kotlinx.coroutines.launch
 class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversationsManagerListener {
 
     private var _binding: FragmentChatBinding? = null
-
     private val binding get() = _binding!!
-
     private lateinit var adapterChatList: AdapterChatList
-
     private val viewModel: ChatListHostViewModel by viewModels()
-
     var objects: Int = 0
-
     private var chatList :MutableList<ChannelListModel>  = mutableListOf()
-
     private  var userId :Int =-1
-
     private var filteredList: MutableList<ChannelListModel> = chatList.toMutableList()
-
     private var quickstartConversationsManager = QuickstartConversationsManager()
-
     private var map:HashMap<String,ChannelListModel> = HashMap<String,ChannelListModel>()
-
     private var loggedInUserId : Int =-1
 
 
