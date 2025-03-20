@@ -88,6 +88,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     private var _binding: FragmentReviewBookingBinding? = null
     private val binding get() = _binding!!
     private var bookingId: Int = -1
+
     lateinit var adapterAddon: AdapterAddOn
     lateinit var adapterReview: AdapterReviewHost
     private lateinit var mapView: MapView
@@ -555,6 +556,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                 binding.shapeableImageView11.visibility = View.GONE
             }
         }
+
         data.latitude?.let {
             latitude = it.toDouble()
             currentLatitude = latitude.toString()
@@ -629,14 +631,17 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         popupView.findViewById<TextView>(R.id.itemHighestReview).setOnClickListener {
 
             binding.textReviewClick.text = "Sort by: Highest Review"
+            adapterReview.updateAdapter(viewModel.highestReviewList)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemLowestReview).setOnClickListener {
             binding.textReviewClick.text = "Sort by: Lowest Review"
+            adapterReview.updateAdapter(viewModel.lowestReviewList)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemRecentReview).setOnClickListener {
             binding.textReviewClick.text = "Sort by: Recent Review"
+            adapterReview.updateAdapter(viewModel.orgReviewList)
             popupWindow.dismiss()
         }
 
@@ -1160,7 +1165,11 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                             jsonArr?.forEach {
                                 val model: ReviewerProfileModel = Gson().fromJson(it.toString(), ReviewerProfileModel::class.java)
                                 list.add(model)
+                                viewModel.orgReviewList = list
+                                viewModel.sortedByDescending(list)
+                                viewModel.sortByAscendingOrder(list)
                             }
+
 
                             var totalPage = jsonObj?.get("total_pages")?.asInt
                             var currentPage = jsonObj?.get("current_page")?.asInt
