@@ -7,12 +7,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -24,6 +26,8 @@ import com.business.zyvo.databinding.FragmentRecentlyViewedBinding
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
 import com.business.zyvo.fragment.guest.wishlists.viewModel.WishListsViewModel
+import com.business.zyvo.model.MyBookingsModel
+import com.business.zyvo.model.WishListDetailModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.showToast
@@ -43,6 +47,7 @@ class RecentlyViewedFragment : Fragment() {
     var edit : Boolean = false
     private var wishlistItem: MutableList<WishlistItem> = mutableListOf()
     var session: SessionManager?=null
+    var wishId :String ="-1"
 
     private val viewModel: WishListsViewModel by lazy {
         ViewModelProvider(this)[WishListsViewModel::class.java]
@@ -74,6 +79,13 @@ class RecentlyViewedFragment : Fragment() {
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
         }
+
+        arguments?.let {
+            if(it.containsKey(AppConstant.WISH)){
+                wishId = it.getString(AppConstant.WISH).toString()
+            }
+        }
+
     }
 
     private fun setupRecyclerView() {
@@ -81,7 +93,7 @@ class RecentlyViewedFragment : Fragment() {
             object: OnClickListener
             {
                 override fun itemClick(obj: Int) {
-                    deleteWishlist(wishlistItem?.get(obj)?.wishlist_id.toString(),obj)
+                    deleteWishlist(wishlistItem?.get(obj)?.last_saved_property_id.toString(),obj)
                 }
 
             })
@@ -99,26 +111,76 @@ class RecentlyViewedFragment : Fragment() {
     private fun getWisList() {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.getWisList(session?.getUserId().toString()).collect {
-                    when (it) {
-                        is NetworkResult.Success -> {
-                            it.data?.let { resp ->
-                                val listType = object : TypeToken<List<WishlistItem>>() {}.type
-                                val wish: MutableList<WishlistItem> = Gson().fromJson(resp, listType)
-                                wishlistItem = wish
-                                if (wishlistItem.isNotEmpty()) {
-                                    adapter?.updateItem(wishlistItem)
-                                }
+//                viewModel.getWisList(session?.getUserId().toString()).collect {
+//                    when (it) {
+//                        is NetworkResult.Success -> {
+//                            it.data?.let { resp ->
+//                                val listType = object : TypeToken<List<WishlistItem>>() {}.type
+//                                val wish: MutableList<WishlistItem> = Gson().fromJson(resp, listType)
+//                                wishlistItem = wish
+//                                if (wishlistItem.isNotEmpty()) {
+//                                    adapter?.updateItem(wishlistItem)
+//                                }
+//                            }
+//                        }
+//                        is NetworkResult.Error -> {
+//                            showErrorDialog(requireContext(), it.message!!)
+//                        }
+//                        else -> {
+//                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+//                        }
+//                    }
+//                }
+                if(wishId.equals("-1")){
+                 Toast.makeText(requireContext(),"Something Went Wrong",Toast.LENGTH_LONG).show()
+                }else {
+                    var userId = SessionManager(requireContext()).getUserId()
+                    lifecycleScope.launch {
+                        if (userId != null) {
+                            LoadingUtils.showDialog(requireContext(),false)
+                            viewModel.getSavedItemWishList(userId, Integer.parseInt(wishId)).collect {
+                              when(it){
+                                  is NetworkResult.Success ->{
+                                      LoadingUtils.hideDialog()
+                                      var list = mutableListOf<WishlistItem>()
+                                      var obj = it.data
+                                      var arr = obj?.get("data")?.asJsonArray
+                                      arr?.forEach {
+                                          var newObj = it.asJsonObject
+                                         var key = newObj.get("images").asJsonArray
+                                          var url =""
+                                          if(key.size()> 0) {
+                                              url =  key.get(0).asString
+                                              Log.d("TESTING_URL", "URL IS "+ url)
+                                          }
+                                          var wishItem = WishlistItem(
+                                              newObj.get("wishlist_item_id").asInt,
+                                              newObj.get("title").asString,
+                                          0,
+                                          newObj.get("property_id").asInt,
+                                              url
+                                          )
+                                          list.add(wishItem)
+                                      }
+                                      wishlistItem = list
+
+                                      adapter?.updateItem(list)
+                                  }
+                                  is NetworkResult.Error ->{
+                                      LoadingUtils.hideDialog()
+
+                                  }
+                                  else ->{
+                                      LoadingUtils.hideDialog()
+
+                                  }
+                              }
                             }
                         }
-                        is NetworkResult.Error -> {
-                            showErrorDialog(requireContext(), it.message!!)
-                        }
-                        else -> {
-                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-                        }
                     }
+
                 }
+
             }
         }else{
             showErrorDialog(requireContext(),
@@ -129,8 +191,8 @@ class RecentlyViewedFragment : Fragment() {
     private fun deleteWishlist(wishlist_id: String, pos: Int) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.deleteWishlist(session?.getUserId().toString(),
-                    wishlist_id).collect {
+                viewModel.removeItemFromWishlist(session?.getUserId().toString(),wishlist_id
+                    ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->

@@ -46,6 +46,7 @@ class AdapterReviewHost (
     }
 
     fun updateAdapter(newList: MutableList<ReviewerProfileModel>) {
+        list.clear()
         list.addAll(newList)
         notifyDataSetChanged()
     }

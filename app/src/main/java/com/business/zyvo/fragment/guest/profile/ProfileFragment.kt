@@ -155,6 +155,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     var userProfile: UserProfile? = null
     var isPaymentDataLoaded = false
     private lateinit var getInquiryResult: ActivityResultLauncher<Inquiry>
+    var firstName :String =""
+    var lastName :String =""
 
     // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
@@ -416,14 +418,20 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ,$resp")
                                 userProfile = Gson().fromJson(resp, UserProfile::class.java)
                                 userProfile.let {
-                                    if (it?.first_name != null && it.last_name != null) {
-                                        name =
-                                            it.first_name + " " + it.last_name
+
+                                    it?.first_name?.let {
+                                        name += it+" "
+                                        firstName = it
                                     }
+                                    it?.last_name?.let {
+                                        name+=it
+                                        lastName = it
+                                    }
+
                                     it?.name = name
                                     binding.user = it
-                                    if (it?.profile_image != null) {
 
+                                    if (it?.profile_image != null) {
                                         Glide.with(requireContext())
                                             .asBitmap() // Convert the image into Bitmap
                                             .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
@@ -2331,6 +2339,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
+            etMobileNumber.setText(binding.etPhoneNUMBER.text.toString())
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 lifecycleScope.launch {
@@ -2395,6 +2404,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
             val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
             val editTextLastName = findViewById<EditText>(R.id.editTextLastName)
+
+            editTextFirstName.setText(firstName)
+            editTextLastName.setText(lastName)
+
             textSaveChangesButton.setOnClickListener {
                 if (editTextFirstName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.firstName)
@@ -2429,7 +2442,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             var imageCross = findViewById<ImageView>(R.id.imageCross)
 
             var etEmail = findViewById<EditText>(R.id.etEmail)
-
+            etEmail.setText(binding.etEmail.text.toString())
             var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)

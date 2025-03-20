@@ -181,6 +181,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     var resendEnabled = false
     var otpValue: String = ""
     var editAboutButton = true
+    var firstName :String =""
+    var lastName :String =""
 
 
     private val list1 = mutableListOf<CountryLanguage>()
@@ -492,9 +494,16 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ," + resp.toString())
                                 userProfile = Gson().fromJson(resp, UserProfile::class.java)
                                 userProfile.let {
-                                    if (it?.first_name != null && it.last_name != null) {
-                                        name = it.first_name + " " + it.last_name
+                                   it?.first_name?.let {
+                                       name+=it+" "
+                                       firstName = it
+                                   }
+                                    it?.last_name?.let {
+                                        name+=it
+                                        lastName = it
                                     }
+
+
                                     it?.name = name
                                     binding.user = it
                                     it?.email?.let {
@@ -618,11 +627,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 }
             }
         } else {
-
-            LoadingUtils.showErrorDialog(
-                requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg)
-            )
+            LoadingUtils.showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 
@@ -717,9 +722,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
         textCamera?.setOnClickListener {
             profileImageCameraChooser()
+            bottomSheetDialog!!.dismiss()
         }
         textGallery?.setOnClickListener {
             profileImageGalleryChooser()
+            bottomSheetDialog!!.dismiss()
         }
 
 
@@ -1524,8 +1531,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             textCreateAccountButton.setOnClickListener {
                 var text = "Your account is registered \nsuccessfully"
 
-                var textHeaderOfOtpVerfication =
-                    "Please type the verification code send \nto abc@gmail.com"
+                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
                 dialogOtpLoginRegister(context, text, textHeaderOfOtpVerfication)
 
                 dismiss()
@@ -1586,6 +1592,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
+            etMobileNumber.setText(binding.etPhoneNumeber.text.toString())
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 lifecycleScope.launch {
@@ -1705,6 +1712,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
             val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
             val editTextLastName = findViewById<EditText>(R.id.editTextLastName)
+            editTextFirstName.setText(firstName)
+            editTextLastName.setText(lastName)
             textSaveChangesButton.setOnClickListener {
                 if (editTextFirstName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.firstName)
@@ -1739,6 +1748,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val imageCross = findViewById<ImageView>(R.id.imageCross)
 
             val etEmail = findViewById<EditText>(R.id.etEmail)
+            etEmail.setText(binding.etEmail.text.toString())
 
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
@@ -2512,7 +2522,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     binding.etAboutMeText.isEnabled = false
                                     editAboutButton = true
 
-                                    showErrorDialog(requireContext(), resp.first)
+                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.about_me = about_me
                                     binding.user = userProfile
                                 }

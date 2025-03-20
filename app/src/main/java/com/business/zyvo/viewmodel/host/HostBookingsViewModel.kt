@@ -207,13 +207,36 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     }
 
     fun sortedByDescending (list :MutableList<ReviewerProfileModel>){
-        val sortedReviews = list.sortedByDescending { it.review_rating?.toIntOrNull() ?: 0 }
+
+        val sortedReviews = list.sortedWith { a, b ->
+            val ratingA = a.review_rating?.toDoubleOrNull() ?: Double.MIN_VALUE // Treat null/invalid as a small value
+            val ratingB = b.review_rating?.toDoubleOrNull() ?: Double.MIN_VALUE
+            ratingB.compareTo(ratingA) // Compare decimal ratings (reverse the order for high to low)
+        }
+
         highestReviewList= sortedReviews.toMutableList()
+
+        highestReviewList.forEach {
+            Log.d("TESTING_REVIEW","Review Rating Highest"+it.review_rating.toString())
+        }
+
     }
 
     fun sortByAscendingOrder(list :MutableList<ReviewerProfileModel>){
-        val sortedReviews = list.sortedBy { it.review_rating?.toIntOrNull() ?: 0 }
-        lowestReviewList = sortedReviews.toMutableList()
+
+        val sortedReviews1 = list.sortedWith { a, b ->
+            val ratingA = a.review_rating?.toDoubleOrNull() ?: Double.MAX_VALUE // Treat null/invalid as a large value
+            val ratingB = b.review_rating?.toDoubleOrNull() ?: Double.MAX_VALUE
+            ratingA.compareTo(ratingB) // Compa
+
+        }
+
+        lowestReviewList = sortedReviews1.toMutableList()
+
+        lowestReviewList.forEach {
+            Log.d("TESTING_REVIEW","Review Rating Lowest"+it.review_rating.toString())
+        }
+
     }
 
 

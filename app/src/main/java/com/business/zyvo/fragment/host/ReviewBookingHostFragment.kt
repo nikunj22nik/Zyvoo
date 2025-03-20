@@ -1208,8 +1208,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
-
 }
 
 
