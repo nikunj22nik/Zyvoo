@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -18,7 +19,10 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Editable
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.UnderlineSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -38,6 +42,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -128,7 +133,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         var state : String =""
         var latitude :String ="0.00"
         var longitude :String ="0.00"
-
+var isExpanded = false
 
     var galleryListId = mutableListOf<Int>()
     private val viewModel: CreatePropertyViewModel by lazy {
@@ -200,7 +205,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         settingBackgroundAllWeek()
         settingBackgroundAllMonth()
         onClickDialogOpenner()
-
+        showingMoreText()
         var session : SessionManager = SessionManager(requireContext())
 
         Log.d("TESTING","Auth Token is "+session.getAuthToken().toString())
@@ -356,6 +361,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                          is NetworkResult.Success -> {
                              LoadingUtils.hideDialog()
                              LoadingUtils.showSuccessDialog(requireContext(),"Property Updated Succesfully")
+                     findNavController().navigateUp()
                          }
 
                          is NetworkResult.Error -> {
@@ -383,6 +389,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                          is NetworkResult.Success ->{
                              LoadingUtils.hideDialog()
                              LoadingUtils.showSuccessDialog(requireContext(),it.data.toString())
+                             findNavController().navigateUp()
                          }
                          is NetworkResult.Error ->{
                              LoadingUtils.hideDialog()
@@ -706,7 +713,15 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
         amenitiesAdapter.updateAdapter(dataTmp)
     }
+    private fun showingMoreText() {
+        binding.tvShowMore.setOnClickListener {
+            isExpanded = !isExpanded
+            amenitiesAdapter.toggleExpand()
 
+            // Update button text
+            binding.tvShowMore.text = if (isExpanded) "Show Less" else "Show More"
+        }
+    }
 
     private fun activitiesSetDataToUi(list :List<String>){
         val dataTmp = PrepareData.getAmenitiesList()
@@ -2633,7 +2648,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
     private fun getItemListForRadioPerHoursBulkText(): MutableList<ItemRadio> {
-        val items = PrepareData.getPriceAndHourList()
+        val items = PrepareData.getHourMinimumList()
 
         // Restore the previously selected item's state
         if (discountHourIndex != -1 && discountHourIndex < items.size) {

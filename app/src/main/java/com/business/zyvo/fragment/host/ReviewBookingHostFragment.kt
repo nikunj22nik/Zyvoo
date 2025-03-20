@@ -1149,7 +1149,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                             }
                             Log.d("TESTING_GUEST_ID","Total Page :-"+viewModel.totalPage+" Current Page:- "+viewModel.currentPage)
 
-                            if(viewModel.totalPage == viewModel.currentPage){
+                            if(viewModel.totalPage <= viewModel.currentPage){
                                 binding.showMoreReview.visibility =View.GONE
                             }
 

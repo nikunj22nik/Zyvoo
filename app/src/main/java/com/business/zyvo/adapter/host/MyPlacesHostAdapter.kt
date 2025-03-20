@@ -52,7 +52,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         val currentItem = list[position]
 
         Log.d("TESTING_ID","Here in a adapter "+list.get(position).property_id.toString())
-
+//is_instant_book
        var commonAuthWorkUtils = CommonAuthWorkUtils(context,null)
 
         if(!commonAuthWorkUtils.isScreenLarge(context)){
@@ -60,12 +60,17 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         }
 
         if (position == 1 || position == 3){
-            holder.binding.textInstantBook.visibility = View.GONE
             holder.binding.imageReward.visibility = View.GONE
         }
         else{
-            holder.binding.textInstantBook.visibility = View.GONE
             holder.binding.imageReward.visibility = View.GONE
+        }
+
+        if (currentItem.is_instant_book == 0){
+            holder.binding.textInstantBook.visibility = View.GONE
+        }
+        else{
+            holder.binding.textInstantBook.visibility = View.VISIBLE
         }
         // Setup ViewPager and its adapter
         val viewPagerAdapter = ViewPagerAdapter(mutableListOf(),context, object : OnLogClickListener {

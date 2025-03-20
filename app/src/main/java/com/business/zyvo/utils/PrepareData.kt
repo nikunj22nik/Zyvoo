@@ -402,18 +402,18 @@ object PrepareData {
             ItemRadio("$100 per hour", false),
             ItemRadio("$110 per hour", false),
             ItemRadio("$120 per hour", false),
-            ItemRadio("$130 per hour", false),
-            ItemRadio("14 hour minimum", false),
-            ItemRadio("15 hour minimum", false),
-            ItemRadio("16 hour minimum", false),
-            ItemRadio("17 hour minimum", false),
-            ItemRadio("18 hour minimum", false),
-            ItemRadio("19 hour minimum", false),
-            ItemRadio("20 hour minimum", false),
-            ItemRadio("21 hour minimum", false),
-            ItemRadio("22 hour minimum", false),
-            ItemRadio("23 hour minimum", false),
-            ItemRadio("24 hour minimum", false)
+            ItemRadio("$130 per hour", false)
+//            ItemRadio("14 hour minimum", false),
+//            ItemRadio("15 hour minimum", false),
+//            ItemRadio("16 hour minimum", false),
+//            ItemRadio("17 hour minimum", false),
+//            ItemRadio("18 hour minimum", false),
+//            ItemRadio("19 hour minimum", false),
+//            ItemRadio("20 hour minimum", false),
+//            ItemRadio("21 hour minimum", false),
+//            ItemRadio("22 hour minimum", false),
+//            ItemRadio("23 hour minimum", false),
+//            ItemRadio("24 hour minimum", false)
         )
     }
 

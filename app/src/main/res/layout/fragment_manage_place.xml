@@ -865,6 +865,14 @@
                     android:layout_marginTop="@dimen/_8sdp"
                     android:layout_marginEnd="@dimen/_7sdp" />
 
+                <TextView
+                    android:id="@+id/tv_show_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:text="Show More" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
@@ -1553,7 +1561,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="$10 per hour"
+                            android:text="5% Discount"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 
@@ -1689,6 +1697,8 @@
                             android:background="@null"
                             android:fontFamily="@font/poppins"
                             android:hint="20"
+                            android:maxLength="4"
+                            android:inputType="number"
                             android:maxWidth="@dimen/_110sdp"
 
                             android:maxLines="1"

@@ -1,5 +1,6 @@
 package com.business.zyvo.adapter.guest
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.Gravity
@@ -7,13 +8,15 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.R
+import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.adapter.AdapterActivityText
 import com.business.zyvo.databinding.AdapterAmentiesBinding
 
-
 class AmenitiesAdapter(var context : Context, var list :MutableList<Pair<String,Boolean>>) :RecyclerView.Adapter<AmenitiesAdapter.ViewHolder>() {
+private lateinit var mListener: onItemClickListener
+    private var isExpanded = false
+    private val DEFAULT_VISIBLE_COUNT = 6  // Number of items visible by default
 
-    private lateinit var mListener: onItemClickListener
 
     interface onItemClickListener {
         fun onItemClick(list :MutableList<Pair<String,Boolean>>)
@@ -35,7 +38,7 @@ class AmenitiesAdapter(var context : Context, var list :MutableList<Pair<String,
     }
 
     override fun getItemCount(): Int {
-       return list.size
+       return if (isExpanded) list.size else minOf(DEFAULT_VISIBLE_COUNT, list.size)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -72,11 +75,17 @@ class AmenitiesAdapter(var context : Context, var list :MutableList<Pair<String,
            }
         }
     }
+      // Function to toggle list expansion
+    fun toggleExpand() {
+        isExpanded = !isExpanded
+        notifyDataSetChanged()
+    }
 
     fun updateAdapter(list :MutableList<Pair<String,Boolean>>){
         this.list = list
         notifyDataSetChanged()
     }
+    // Function to toggle list expansion
 
 
 }

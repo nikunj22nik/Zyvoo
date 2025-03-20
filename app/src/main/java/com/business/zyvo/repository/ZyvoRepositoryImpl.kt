@@ -3795,7 +3795,7 @@ import javax.inject.Inject
         additionalDetail: String
     ): Flow<NetworkResult<String>> = flow {
         try {
-            api.reportListReason().apply {
+            api.hostReportViolationSend(userId,bookingId,propertyId,reportReasonId,additionalDetail).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success") && resp.get("success").asBoolean) {
