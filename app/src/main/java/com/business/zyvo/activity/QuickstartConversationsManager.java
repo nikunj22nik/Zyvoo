@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 import com.twilio.conversations.Attributes;
 import com.twilio.conversations.CallbackListener;
@@ -125,6 +126,7 @@ public class QuickstartConversationsManager {
         }).start();
     }
 
+
     void initializeWithAccessToken(final Context context, final String token, String DEFAULT_CONVERSATION_NAME, String identity, String userid, String typeApiValue) {
         this.DEFAULT_CONVERSATION_NAME = DEFAULT_CONVERSATION_NAME;
         this.identity = identity;
@@ -159,6 +161,7 @@ public class QuickstartConversationsManager {
 
     void sendMessage(String messageBody) {
         if (conversation != null) {
+           Conversation.NotificationLevel notificationLevel =  conversation.getNotificationLevel();
             Message.Options options = Message.options().withBody(messageBody);
             options.withAttributes(conversation.getAttributes());
 //            Log.d(ChatActivity.TAG,"Message created");
@@ -177,7 +180,8 @@ public class QuickstartConversationsManager {
 
     void sendMessageImage(String messageBody, File file) throws FileNotFoundException {
         if (conversation != null) {
-            Message.Options options = Message.options().withMedia(new FileInputStream(messageBody), "jpg/png")
+            Message.Options options = Message.options().withMedia(new FileInputStream(messageBody),
+                            "jpg/png")
                     .withMediaFileName(file.getName())
                     .withMediaProgressListener(new ProgressListener() {
                         @Override
@@ -211,7 +215,8 @@ public class QuickstartConversationsManager {
 
     void sendMessagefile(String messageBody, File file) throws FileNotFoundException {
         if (conversation != null) {
-            Message.Options options = Message.options().withMedia(new FileInputStream(messageBody), "application/pdf")
+            Message.Options options = Message.options().withMedia(new FileInputStream(messageBody),
+                            "application/pdf")
                     .withMediaFileName(file.getName())
                     .withMediaProgressListener(new ProgressListener() {
                         @Override
@@ -253,6 +258,7 @@ public class QuickstartConversationsManager {
             @Override
             public void onSuccess(Conversation conversation) {
                 if (conversation != null) {
+                    Log.d(TAG,conversation.getSid());
                     if (conversation.getStatus() == Conversation.ConversationStatus.JOINED
                         /*|| conversation.getStatus() == Conversation.ConversationStatus.NOT_PARTICIPATING*/) {
                         Log.d(TAG, "Already Exists in Conversation: " + DEFAULT_CONVERSATION_NAME);
@@ -263,6 +269,7 @@ public class QuickstartConversationsManager {
                         Log.d(TAG, "Joining Conversation: " + DEFAULT_CONVERSATION_NAME);
                         joinConversation(conversation);
                     }
+
                 }
             }
 
@@ -416,6 +423,30 @@ public class QuickstartConversationsManager {
         @Override
         public void onClientSynchronization(ConversationsClient.SynchronizationStatus synchronizationStatus) {
             if (synchronizationStatus == ConversationsClient.SynchronizationStatus.COMPLETED) {
+                FirebaseMessaging.getInstance().getToken()
+                        .addOnCompleteListener(task -> {
+                            if (!task.isSuccessful()) {
+                                Log.e(TAG, "Fetching FCM token failed", task.getException());
+                                return;
+                            }
+                            String newToken = task.getResult();
+                            Log.d(TAG, "Twilio Identity: " + conversationsClient.getMyUser().getIdentity());
+                            Log.d(TAG, "New FCM Token: " + newToken);
+
+                            conversationsClient.registerFCMToken(new ConversationsClient.FCMToken(newToken),
+                                    new StatusListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            Log.d(TAG,"registerFCMToken");
+                                        }
+
+                                        @Override
+                                        public void onError(ErrorInfo errorInfo) {
+                                            StatusListener.super.onError(errorInfo);
+                                            Log.d(TAG,errorInfo.getMessage());
+                                        }
+                                    });
+                        });
                 loadChannels();
             }
         }
@@ -473,13 +504,15 @@ public class QuickstartConversationsManager {
         }
     };
 
-    private final CallbackListener<ConversationsClient> mConversationsClientCallback = new CallbackListener<ConversationsClient>() {
+    private final CallbackListener<ConversationsClient> mConversationsClientCallback
+            = new CallbackListener<ConversationsClient>() {
         @Override
         public void onSuccess(ConversationsClient conversationsClient) {
             QuickstartConversationsManager.this.conversationsClient = conversationsClient;
 
             conversationsClient.addListener(QuickstartConversationsManager.this.mConversationsClientListener);
             Log.d(TAG, "Success creating Twilio Conversations Client");
+
         }
 
         @Override

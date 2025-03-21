@@ -50,6 +50,7 @@ import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.showToast
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.PaymentViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -405,7 +406,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
     }
 
     @SuppressLint("SetTextI18n")
-    private fun calculatePrice() {
+    private fun calculatePrice(){
         try {
             var totalPrice = 0.0
             var hourlyTotal = 0.0
@@ -416,40 +417,40 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             propertyData?.hourly_rate?.toDoubleOrNull()?.let { resp ->
                 hour?.let {
                     hourlyTotal = (resp * it.toDouble())
-                    binding.tvPrice.text = "$$hourlyTotal"
+                    binding.tvPrice.text = "$${truncateToTwoDecimalPlaces(hourlyTotal.toString())}"
                     totalPrice += hourlyTotal
                 }
             }
             propertyData?.cleaning_fee?.toDoubleOrNull()?.let {
-                binding.tvCleaningFee.text = "$$it"
+                binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(it.toString())}"
                 totalPrice += it
             }
-            propertyData?.service_fee?.toDoubleOrNull()?.let { resp ->
+            propertyData?.service_fee?.toDoubleOrNull()?.let {resp ->
                 hourlyTotal?.let {
-                    val taxAmount = calculatePercentage(it, resp)
-                    binding.tvZyvoServiceFee.text = "$$taxAmount"
+                    val taxAmount = calculatePercentage(it,resp)
+                    binding.tvZyvoServiceFee.text = "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
                     totalPrice += taxAmount
                 }
             }
-            propertyData?.tax?.toDoubleOrNull()?.let { resp ->
+            propertyData?.tax?.toDoubleOrNull()?.let {resp ->
                 hourlyTotal?.let {
-                    val taxAmount = calculatePercentage(it, resp)
-                    binding.tvTaxesPrice.text = "$$taxAmount"
+                    val taxAmount = calculatePercentage(it,resp)
+                    binding.tvTaxesPrice.text = "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
                     totalPrice += taxAmount
 
                 }
             }
             addOnList?.let {
-                if (it.isNotEmpty()) {
+                if (it.isNotEmpty()){
                     val total = calculateTotalPrice(addOnList)
-                    binding.tvAddOnPrice.text = "$$total"
+                    binding.tvAddOnPrice.text = "$${truncateToTwoDecimalPlaces(total.toString())}"
                     totalPrice += total
                 }
             }
             // Apply Discount if Hours Exceed Discount Hour
             var discountAmount = 0.0
             propertyData?.bulk_discount_hour?.let { h ->
-                hour?.let { cHr ->
+                hour?.let { cHr->
                     propertyData?.bulk_discount_rate?.let {
                         if (cHr.toInt() > h) {
                             discountAmount = (hourlyTotal * it.toDouble()) / 100
@@ -460,15 +461,15 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             }
             // Display Discount if Applied
             if (discountAmount > 0) {
-                binding.tvDiscount.text = "-$$discountAmount"
+                binding.tvDiscount.text = "-$${truncateToTwoDecimalPlaces(discountAmount.toString())}"
                 binding.llDiscountLabel.visibility = View.VISIBLE
             } else {
                 binding.llDiscountLabel.visibility = View.GONE
             }
             // Final Total Price Display
-            binding.tvTotalPrice.text = "$$totalPrice"
-        } catch (e: Exception) {
-            Log.d(ErrorDialog.TAG, "calculatePrice ${e.message}")
+            binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(totalPrice.toString())}"
+        }catch (e:Exception){
+            Log.d(ErrorDialog.TAG,"calculatePrice ${e.message}")
         }
     }
 

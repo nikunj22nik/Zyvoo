@@ -1,5 +1,7 @@
 package com.business.zyvo.fragment.guest.home.model
 
+import com.business.zyvo.activity.guest.propertydetails.model.AddOn
+
 data class Bookings( val booking_id: Int,
                      val guest_user_id: Int,
                      val host_user_id: Int,
@@ -19,4 +21,5 @@ data class Bookings( val booking_id: Int,
                      val discount_percent: String,
                      val extension_hours: Int?,
                      val booking_extension_amount: String?,
-                     val status: String)
+                     val status: String,
+                     var selected_add_ons: List<AddOn>? = null)

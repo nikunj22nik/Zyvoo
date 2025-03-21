@@ -94,7 +94,7 @@ public class QuickstartConversationsManager {
 
     }
 
-    void initializeWithAccessToken(final Context context, final String token, String DEFAULT_CONVERSATION_NAME, String userid) {
+   public void initializeWithAccessToken(final Context context, final String token, String DEFAULT_CONVERSATION_NAME, String userid) {
         this.DEFAULT_CONVERSATION_NAME = DEFAULT_CONVERSATION_NAME;
         this.userid = userid;
         ConversationsClient.Properties props = ConversationsClient.Properties.newBuilder().createProperties();
@@ -122,6 +122,12 @@ public class QuickstartConversationsManager {
             Log.e(TAG, ex.getLocalizedMessage(), ex);
             listener.receivedAccessToken(null, ex);
         }
+    }
+
+    public void loadChatList(){
+
+        loadAllChannel(conversationsClient);
+
     }
 
 
@@ -269,6 +275,7 @@ public class QuickstartConversationsManager {
                 conversation.getMessageByIndex(conversation.getLastMessageIndex().intValue(), new CallbackListener<Message>() {
                     @Override
                     public void onSuccess(Message result) {
+                        Log.d("*******","onConversationUpdated");
                         messages.add(result);
                         if (conversationsManagerListener != null) {
                             conversationsManagerListener.receivedNewMessage();
@@ -375,6 +382,18 @@ public class QuickstartConversationsManager {
             QuickstartConversationsManager.this.conversationsClient = conversationsClient;
             conversationsClient.addListener(QuickstartConversationsManager.this.mConversationsClientListener);
             Log.d(TAG, "Success creating Twilio Conversations Client");
+           /* conversationsClient.registerFCMToken(new ConversationsClient.FCMToken("dUv0FWUvTeyYOOPthFSZaj:APA91bHEPxtsx5rkxsDuZN3EhVXcCa2nDrbPu-8dSxF3mpbZaL2lG6WruM4KXWWvTFkX0-IN6sKEL94I_opMUZxu0sQuQoDBYouiKTH8wg3nTWyuJ4Bw6NM"), new StatusListener() {
+                @Override
+                public void onSuccess() {
+                Log.d(TAG,"registerFCMToken");
+                }
+
+                @Override
+                public void onError(ErrorInfo errorInfo) {
+                    StatusListener.super.onError(errorInfo);
+                    Log.d(TAG,errorInfo.getMessage());
+                }
+            });*/
 //            loadAllChannel(conversationsClient);
         }
 
