@@ -902,7 +902,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             R.id.imageEditEmail -> {
                 dialogEmailVerification(requireContext())
-
             }
 
             R.id.imageEditPhoneNumber -> {
@@ -1646,37 +1645,37 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         textSubmitButton: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.phoneVerification(
-                session?.getUserId().toString(),
-                countryCode,
-                phoneNumber
-            ).collect {
-                when (it) {
-                    is NetworkResult.Success -> {
-                        it.data?.let { resp ->
+            session?.getUserId()?.let {
+                profileViewModel.updatePhoneNumber(
+                    it,phoneNumber, countryCode
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                dialog.dismiss()
+                                val textHeaderOfOtpVerfication =
+                                    "Please type the verification code send \nto $phoneNumber"
+                                dialogOtp(
+                                    requireActivity(),
+                                    countryCode,
+                                    phoneNumber,
+                                    textHeaderOfOtpVerfication,
+                                    "mobile"
+                                )
+                            }
                             dialog.dismiss()
-                            val textHeaderOfOtpVerfication =
-                                "Please type the verification code send \nto $phoneNumber"
-                            dialogOtp(
-                                requireActivity(),
-                                countryCode,
-                                phoneNumber,
-                                textHeaderOfOtpVerfication,
-                                "mobile"
-                            )
+                            toggleLoginButtonEnabled(true, textSubmitButton)
                         }
-                        dialog.dismiss()
-                        toggleLoginButtonEnabled(true, textSubmitButton)
-                    }
 
-                    is NetworkResult.Error -> {
-                        showErrorDialog(requireContext(), it.message!!)
-                        toggleLoginButtonEnabled(true, textSubmitButton)
-                    }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                            toggleLoginButtonEnabled(true, textSubmitButton)
+                        }
 
-                    else -> {
-                        toggleLoginButtonEnabled(true, textSubmitButton)
-                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        else -> {
+                            toggleLoginButtonEnabled(true, textSubmitButton)
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
                     }
                 }
             }
@@ -2033,8 +2032,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         text: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.otpVerifyPhoneVerification(
-                userId,
+            profileViewModel.otpVerifyUpdatePhoneNumber(
+                Integer.parseInt(userId),
                 otp,
             ).collect {
                 when (it) {
@@ -2043,6 +2042,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             binding.textConfirmNow1.visibility = GONE
                             binding.textVerified1.visibility = View.VISIBLE
                             dialog.dismiss()
+                            LoadingUtils.showSuccessDialog(requireContext(),resp)
                         }
 
                         toggleLoginButtonEnabled(true, text)
@@ -2072,8 +2072,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         text: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.otpVerifyEmailVerification(
-                userId,
+            profileViewModel.otpVerifyUpdateEmail(
+                Integer.parseInt(userId),
                 otp,
             ).collect {
                 when (it) {

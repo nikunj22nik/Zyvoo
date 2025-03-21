@@ -5023,6 +5023,111 @@ import javax.inject.Inject
          }
      }
 
+     override suspend fun updatePhoneNumber(
+         userId :Int,
+          phoneNumber :String,
+          countryCode :String
+     ) :Flow<NetworkResult<String>> = flow{
+         try {
+             api.updatePhoneNumber(userId, phoneNumber,countryCode).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                           var obj = resp.get("data").asJsonObject
+                             var otp = obj.get("otp").asInt
+                             emit(NetworkResult.Success(otp.toString()))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+
+     override suspend fun otpVerifyUpdatePhoneNumber(
+          userId :Int,
+          otp :String
+     ) : Flow<NetworkResult<String>> = flow{
+         try {
+             api.otpVerifyUpdatePhoneNumber(userId,otp).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                            var obj = resp.get("message").asString
+                             emit(NetworkResult.Success(obj))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+   override  suspend fun updateEmail(
+         @Field("user_id") userId :Int,
+         @Field("email") email :String
+     ) :Flow<NetworkResult<String>> = flow{
+         try {
+             api.updateEmail(userId,email).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                            var data = resp.get("data").asJsonObject
+                            var otp = data.get("otp").asInt
+                             emit(NetworkResult.Success(otp.toString()))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+     override  suspend fun otpVerifyUpdateEmail(
+          userId :Int,
+         otp :String
+     ):Flow<NetworkResult<String>> = flow{
+         try {
+             api.otpVerifyUpdateEmail(userId,otp).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+
+                             emit(NetworkResult.Success(resp.get("message").asString))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(NetworkResult.Error(ErrorHandler.handleErrorBody(this.errorBody()?.string())))
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+
 
  }
 

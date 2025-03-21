@@ -627,6 +627,28 @@ interface ZyvoRepository {
         @Field("wishlist_id") wishListId :Int
     ) :Flow<NetworkResult<JsonObject>>
 
+    suspend fun updatePhoneNumber(
+        @Field("user_id") userId :Int,
+        @Field("phone_number") phoneNumber :String,
+        @Field("country_code") countryCode :String
+    ) :Flow<NetworkResult<String>>
+
+    suspend fun otpVerifyUpdatePhoneNumber(
+        @Field("user_id") userId :Int,
+        @Field("otp") otp :String
+    ) : Flow<NetworkResult<String>>
+
+
+    suspend fun updateEmail(
+        @Field("user_id") userId :Int,
+        @Field("email") email :String
+    ) :Flow<NetworkResult<String>>
+
+    suspend fun otpVerifyUpdateEmail(
+        @Field("user_id") userId :Int,
+        @Field("otp") otp :String
+    ):Flow<NetworkResult<String>>
+
 }
 
 

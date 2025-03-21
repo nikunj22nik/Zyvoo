@@ -374,6 +374,20 @@ interface ZyvoApi {
 
 
 
+    @FormUrlEncoded
+    @POST("update_email")
+    suspend fun updateEmail(
+        @Field("user_id") userId :Int,
+        @Field("email") email :String
+    ) : Response<JsonObject>
+
+    @FormUrlEncoded
+    @POST("update_phone_number")
+    suspend fun updatePhoneNumber(
+        @Field("user_id") userId :Int,
+        @Field("phone_number") phoneNumber :String,
+        @Field("country_code") countryCode :String
+    ) : Response<JsonObject>
 
     @POST("property_image_delete")
     @FormUrlEncoded
@@ -812,6 +826,20 @@ interface ZyvoApi {
         @Field("wishlist_id") wishListId :Int
     ) : Response<JsonObject>
 
+    @POST("otp_verify_update_phone")
+    @FormUrlEncoded
+    suspend fun otpVerifyUpdatePhoneNumber(
+        @Field("user_id") userId :Int,
+        @Field("otp") otp :String
+    ) : Response<JsonObject>
+
+
+    @POST("otp_verify_update_email")
+    @FormUrlEncoded
+    suspend fun otpVerifyUpdateEmail(
+        @Field("user_id") userId :Int,
+        @Field("otp") otp :String
+    ) : Response<JsonObject>
 
 
 }

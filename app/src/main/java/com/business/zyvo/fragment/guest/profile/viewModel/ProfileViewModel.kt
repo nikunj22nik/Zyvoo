@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import retrofit2.http.Field
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,7 +33,24 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         loadPaymentDetail()
     }
 
+    suspend fun updatePhoneNumber(
+        userId :Int,
+        phoneNumber :String,
+        countryCode :String
+    ) :Flow<NetworkResult<String>>{
+        return repository.updatePhoneNumber(userId, phoneNumber, countryCode).onEach {
 
+        }
+    }
+
+    suspend fun otpVerifyUpdatePhoneNumber(
+        userId :Int,
+        otp :String
+    ) : Flow<NetworkResult<String>>{
+       return repository.otpVerifyUpdatePhoneNumber(userId, otp).onEach {
+
+       }
+    }
 
     private fun loadPaymentDetail(){
         val paymentList = mutableListOf<AddPaymentCardModel>(
@@ -52,6 +70,15 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
 
     }
 
+    suspend fun updateEmail(
+        @Field("user_id") userId :Int,
+        @Field("email") email :String
+    ) :Flow<NetworkResult<String>>{
+        return repository.updateEmail(userId, email).onEach {
+
+        }
+    }
+
     suspend fun uploadProfileImage(userId: String,bytes: ByteArray):
             Flow<NetworkResult<Pair<String,String>>> {
         return repository.uploadProfileImage(userId,bytes).onEach {
@@ -64,6 +91,16 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
                 isLoading.value = false
             }
             }
+        }
+    }
+
+
+    suspend fun otpVerifyUpdateEmail(
+        userId :Int,
+        otp :String
+    ):Flow<NetworkResult<String>>{
+        return repository.otpVerifyUpdateEmail(userId,otp).onEach {
+
         }
     }
 
