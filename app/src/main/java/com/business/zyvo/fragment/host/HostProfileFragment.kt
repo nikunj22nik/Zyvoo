@@ -2088,9 +2088,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     }
 
                     is NetworkResult.Error -> {
-                        showErrorDialog(
-                            requireContext(), it.message!!
-                        )
+                        showErrorDialog(requireContext(), it.message!!)
                         toggleLoginButtonEnabled(true, text)
                     }
 

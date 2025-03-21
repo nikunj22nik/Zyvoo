@@ -55,9 +55,13 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         enableEdgeToEdge()
+
         binding = ActivityHostMainBinding.inflate(LayoutInflater.from(this))
+
         setContentView(binding.root)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -76,6 +80,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         binding.navigationInbox1.setOnClickListener(this)
         binding.navigationBookings.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
+        binding.tvbabadge.visibility =View.VISIBLE
 
         try {
             quickstartConversationsManager = (application as MyApp).conversationsManager!!
@@ -370,10 +375,11 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                                     }
                                     Log.d("*******",map.size.toString() +" Map Size is ")
                                     Log.d("*******",""+quickstartConversationsManager.conversationsClient?.myConversations?.size)
-                                    if (quickstartConversationsManager==null){
+                                    if (quickstartConversationsManager.conversationsClient==null){
                                         quickstartConversationsManager.initializeWithAccessTokenBase(this@HostMainActivity
                                             ,sessionManager.getChatToken().toString())
-                                    }else{
+                                    }
+                                    else{
                                         quickstartConversationsManager.loadChatList()
                                     }
                                 }
