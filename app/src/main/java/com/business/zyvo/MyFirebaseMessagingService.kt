@@ -14,6 +14,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.business.zyvo.utils.AppContextProvider
+import com.business.zyvo.utils.ErrorDialog
 import com.google.firebase.crashlytics.internal.common.CommonUtils
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -25,6 +26,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         // Handle FCM messages here.
 
+        Log.d(ErrorDialog.TAG,"remoteMessage")
+
         var con= AppContextProvider.getContext()
 
         Log.d("CIRCLEIT_TOEK","HERE IN A NOTIFICATION")
@@ -35,7 +38,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val intent = Intent("com.example.broadcast.ACTION_SEND_MESSAGE")
             intent.putExtra("message", str.toString())
             Log.d("BOOKING_COUNT",str.toString()+" Booking count is")
-
             // Send the broadcast using LocalBroadcastManager
             LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent)
         }

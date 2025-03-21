@@ -272,6 +272,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         binding.switchHost.setOnClickListener {
             val session = SessionManager(requireContext())
             session.setCurrentPanel(AppConstant.Guest)
+            session.setChatToken("")
             val intent = Intent(requireContext(), GuesMain::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)

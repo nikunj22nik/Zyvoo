@@ -12,7 +12,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -29,9 +28,10 @@ import com.business.zyvo.LoadingUtils
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
-
+import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
 import com.business.zyvo.databinding.ActivityHostMainBinding
-import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
+import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.GuestMainActivityModel
@@ -39,7 +39,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemoveListener{
+class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemoveListener,
+    QuickstartConversationsManagerListenerOneTowOne {
 
     lateinit var binding: ActivityHostMainBinding
 
@@ -47,9 +48,10 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
 
     private lateinit var myReceiver: MyReceiver
 
-    private lateinit var quickstartConversationsManager: QuickstartConversationsManager
 
     lateinit var tvCOUNT :TextView
+    private var map:HashMap<String, ChannelListModel> = HashMap()
+    private var quickstartConversationsManager = QuickstartConversationsManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,16 +77,12 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         binding.navigationBookings.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
 
-
-//        try {
-//            quickstartConversationsManager = (application as MyApp).conversationsManager
-//            quickstartConversationsManager.setListener(this) // Ensure this is only called after full initialization
-//            loadChat()
-//        } catch (e: Exception) {
-//            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
-//        }
-
-//        callingGetUserToken()
+        try {
+            quickstartConversationsManager = (application as MyApp).conversationsManager!!
+            quickstartConversationsManager.setListener(this)
+        } catch (e: Exception) {
+            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+        }
 
         var sessionManager = SessionManager(this)
         sessionManager.setUserType(AppConstant.Host)
@@ -94,13 +92,9 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         // Register the receiver with an IntentFilter
         val filter = IntentFilter("com.example.broadcast.ACTION_SEND_MESSAGE")
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, filter)
-
-
-
-
-//        val currentDestination = findNavController().currentDestination
-//        Log.d("NAVIGATION_DEBUG", "Current Destination: $currentDestination")
-        callingGetUserToken()
+        if (sessionManager.getChatToken().equals("")) {
+            callingGetUserToken()
+        }
         askNotificationPermission()
 
         callingBookingNumberApi()
@@ -157,9 +151,9 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                         is NetworkResult.Success -> {
                             Log.d("TESTING_TOKEN",it.data.toString()+" Token inside success")
                             sessionManager.setChatToken(it.data.toString())
-//    it.data?.let { it1 -> sessionManager.setChatToken(it1)
-//
-//                            }
+                            val app = application as MyApp
+                            app.initializeTwilioClient(sessionManager.getChatToken()!!)
+
                         }
 
                         is NetworkResult.Error -> {
@@ -316,4 +310,107 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver)
     }
 
+    private fun getTotalUnreadMessages(){
+        var totalUnreadCount:Long = 0
+        runOnUiThread {
+            try {
+                quickstartConversationsManager?.conversationsClient?.myConversations!!.forEach {
+                    Log.d("*******","m 8888"+it.friendlyName +" M "+it.uniqueName)
+                }
+
+                if (quickstartConversationsManager?.conversationsClient?.myConversations!!.size > 0) {
+                    for (i in quickstartConversationsManager?.conversationsClient?.myConversations!!) {
+                        try {
+                            if (map.containsKey(i.uniqueName)) {
+                                Log.d("*******","m 8888"+i.friendlyName +" M "+i.uniqueName)
+                               i.getUnreadMessagesCount { re->
+                                   if (re!=null) {
+                                       Log.d("*******", re.toString())
+                                       totalUnreadCount += re
+                                       Log.d("*******", "total " + totalUnreadCount.toString())
+                                       binding.tvbabadge.text = "$totalUnreadCount"
+                                   }
+                               }
+                            }
+                        } catch (e: Exception) {
+                            Log.d("massage error", "data :-" + e.message)
+                        }
+                    }
+                  //  binding.tvbabadge.text = "$totalUnreadCount"
+                }
+            }catch (e:Exception){
+                Log.d("******","msg :- "+e.message)
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        callingGetChatUser()
+    }
+
+    private fun callingGetChatUser() {
+        lifecycleScope.launch {
+            var sessionManager = SessionManager(this@HostMainActivity)
+            var userId = sessionManager.getUserId()
+            if (userId != null) {
+                var sessionManager = SessionManager(this@HostMainActivity)
+                var type = sessionManager.getUserType()
+                if (type != null) {
+                    guestViewModel.getChatUserChannelList(userId,type).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    guestViewModel.chatChannel = it
+                                    it.forEach {
+                                        map.put(it.group_name.toString(),it)
+                                    }
+                                    Log.d("*******",map.size.toString() +" Map Size is ")
+                                    Log.d("*******",""+quickstartConversationsManager.conversationsClient?.myConversations?.size)
+                                    if (quickstartConversationsManager==null){
+                                        quickstartConversationsManager.initializeWithAccessTokenBase(this@HostMainActivity
+                                            ,sessionManager.getChatToken().toString())
+                                    }else{
+                                        quickstartConversationsManager.loadChatList()
+                                    }
+                                }
+                            }
+
+                            is NetworkResult.Error -> {
+
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    override fun receivedNewMessage() {
+        Log.d("*******","receivedNewMessage gdsg")
+        getTotalUnreadMessages()
+    }
+
+    override fun messageSentCallback() {
+
+    }
+
+
+    override fun reloadMessages() {
+        Log.d("*******", "Start executing reload message" )
+        LoadingUtils.hideDialog()
+    }
+
+    override fun reloadLastMessages() {
+        getTotalUnreadMessages()
+        Log.d("*******","reloadLastMessages")
+    }
+
+    override fun showError() {
+
+    }
 }

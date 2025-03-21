@@ -2,7 +2,9 @@ package com.business.zyvo
 
 import android.app.Application
 import android.util.Log
-
+import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.chat.QuickstartConversationsManagerFragment
+import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.AppContextProvider
 import com.business.zyvo.utils.NetworkMonitor
@@ -14,7 +16,10 @@ import jakarta.inject.Inject
 class MyApp :Application() {
     @Inject
     lateinit var networkMonitor: NetworkMonitor
-//    lateinit var conversationsManager: QuickstartConversationsManager
+     lateinit var conversationsManager: QuickstartConversationsManager
+    lateinit var conversationsManagerOneTowOne: QuickstartConversationsManagerOneTowOne
+    //lateinit var conversationsManagerFragment:  QuickstartConversationsManagerFragment
+    lateinit var conversationsManagerFragment: com.business.zyvo.fragment.host.QuickstartConversationsManager
 
 
     override fun onCreate() {
@@ -22,34 +27,23 @@ class MyApp :Application() {
         // Initialize global state here
         NetworkMonitorCheck.observeNetworkStatus(networkMonitor)
         AppContextProvider.initialize(this)
-        var sessionManager = SessionManager(this)
         val token =SessionManager(this).getChatToken()
-//        val token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImN0eSI6InR3aWxpby1mcGE7dj0xIn0.eyJqdGkiOiJTS2E3MzYxYjQwZjhkOWE5MTZiYTFkMTE0Y2Q1N2ZkMjQ2LTE3NDEwODI5NDciLCJpc3MiOiJTS2E3MzYxYjQwZjhkOWE5MTZiYTFkMTE0Y2Q1N2ZkMjQ2Iiwic3ViIjoiQUM5NTYxZDk4ZjM4YWQyYmFkYzllOWJmZGFmMjdhMzE5NyIsImV4cCI6MTc0MTA4NjU0NywiZ3JhbnRzIjp7ImlkZW50aXR5IjoiNzgiLCJjaGF0Ijp7InNlcnZpY2Vfc2lkIjoiSVMyZmVkZWQyZGI3NDQ0OWIzYjNjOTg3OTdhODMwYmVlOSJ9fX0.F-ojY82GfYc6UkdlalRKLMjWv3ylnH9jVwdIFIeYY0o"
-
-//        token.let {
-//            conversationsManager = QuickstartConversationsManager.getInstance()
-//            conversationsManager.initializeWithAccessTokenBase(
-//                this,
-//                it.toString()
-//            )
-//            Log.d("Initialization" ,"Chat token initialization")
-//        }
+        initializeTwilioClient(token!!)
     }
 
-
-//    fun resetQuickConversationManager(){
-//        val token =SessionManager(this).getChatToken()
-//        token?.let {
-//            conversationsManager = QuickstartConversationsManager.getInstance()
-//            conversationsManager.initializeWithAccessTokenBase(
-//                this,
-//                it.toString()
-//            )
-//
-//            Log.d("Initialization" ,"Chat token re-initialization")
-//        }
-//    }
-
+     fun initializeTwilioClient(token:String) {
+         conversationsManager=QuickstartConversationsManager()
+         conversationsManagerOneTowOne=QuickstartConversationsManagerOneTowOne()
+         conversationsManagerFragment=
+             com.business.zyvo.fragment.host.QuickstartConversationsManager()
+         token.let {
+             conversationsManager.initializeWithAccessTokenBase(this, it)
+             conversationsManagerOneTowOne.initializeWithAccessTokenBase(this, it)
+             conversationsManagerFragment.initializeWithAccessToken(this, it,
+                 "general", "")
+             Log.d("Initialization" ,"Chat token initialization")
+         }
+    }
 
 
 }

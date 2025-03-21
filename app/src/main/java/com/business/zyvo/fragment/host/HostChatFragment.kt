@@ -3,6 +3,7 @@ package com.business.zyvo.fragment.host
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
@@ -26,6 +27,7 @@ import com.business.zyvo.TimeUtils
 import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.adapter.AdapterChatList
+import com.business.zyvo.chat.QuickstartConversationsManagerFragment
 import com.business.zyvo.databinding.FragmentChatBinding
 import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
@@ -38,7 +40,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversationsManagerListener {
+class HostChatFragment : Fragment() , View.OnClickListener,
+    QuickstartConversationsManagerListener {
 
     private var _binding: FragmentChatBinding? = null
 
@@ -58,9 +61,10 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
 
     private var quickstartConversationsManager = QuickstartConversationsManager()
 
-    private var map:HashMap<String,ChannelListModel> = HashMap<String,ChannelListModel>()
+    private var map:HashMap<String,ChannelListModel> = HashMap()
 
     private var loggedInUserId : Int =-1
+    val addedConversations = mutableSetOf<String>() // Track added conversation uniqueNames
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,7 +83,14 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
         Log.d("TESTING_ZYVOO_Proj", "onCreateView OF CHAT")
         _binding = FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
-        quickstartConversationsManager.setListener(this)
+        //quickstartConversationsManager.setListener(this)
+        try {
+            quickstartConversationsManager = (activity?.application as MyApp).conversationsManagerFragment
+            quickstartConversationsManager.setListener(this)
+            // Ensure this is only called after full initialization
+        } catch (e: Exception) {
+            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+        }
 
         var sessionManager = SessionManager(requireContext())
         sessionManager.getUserId().let {
@@ -132,7 +143,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                 try {
                     if(type.equals(AppConstant.DELETE)){
                         Log.d("TESTING", data.group_name.toString())
-                        quickstartConversationsManager.conversationsClient.getConversation(
+                        quickstartConversationsManager?.conversationsClient?.getConversation(
                             data.group_name,
                             object : CallbackListener<Conversation> {
                                 override fun onSuccess(conversation: Conversation) {
@@ -152,7 +163,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
 
                                 override fun onError(errorInfo: ErrorInfo) {
                                     Log.e(
-                                        QuickstartConversationsManager.TAG,
+                                        QuickstartConversationsManager.TAG!!,
                                         "Error retrieving conversation: " + errorInfo.message
                                     )
                                 }
@@ -227,13 +238,23 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                                     it.forEach {
                                         map.put(it.group_name.toString(),it)
                                     }
-                                    Log.d("TESTING",map.size.toString() +" Map Size is ")
-                                    Log.d("TESTING_TOKEN","Chat token is "+sessionManager.getChatToken())
-                                    var currentUserId = ""+SessionManager(requireContext()).getUserId()+"_"+SessionManager(requireContext()).getUserType()
+                                    Log.d("*******",map.size.toString() +" Map Size is ")
+                                    Log.d("*******","Chat token is "+sessionManager.getChatToken())
+                                    if (quickstartConversationsManager.conversationsClient==null) {
+                                        var currentUserId =
+                                            "" + SessionManager(requireContext()).getUserId() + "_" + SessionManager(
+                                                requireContext()
+                                            ).getUserType()
+                                        quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", SessionManager(requireContext()).getUserId().toString())
+                                      /*  quickstartConversationsManager.initializeWithAccessTokenBase(
+                                            requireContext(),
+                                            sessionManager.getChatToken().toString()
+                                        )*/
+                                    }else{
+                                        Log.d("*******","loadChatList");
 
-                                    quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", SessionManager(requireContext()).getUserId().toString())
-
-            //                                reloadMessages()
+                                        quickstartConversationsManager.loadChatList()
+                                    }
                                 }
                             }
 
@@ -342,6 +363,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
 
     override fun receivedNewMessage() {
         try {
+            Log.d("*******","receivedNewMessage()")
             requireActivity().runOnUiThread {
                 try {
                     var position =0
@@ -364,6 +386,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                         }
                     }
 
+
                     chatList.sortWith { o1, o2 ->
                         if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
                     }
@@ -381,39 +404,39 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
     }
 
     override fun messageSentCallback() {
-
+        LoadingUtils.hideDialog()
+        Log.d("*******", "messageSentCallback" )
     }
 
-    override fun reloadMessages() {
-        Log.d("TESTING", "Start executing reload message" )
-        LoadingUtils.hideDialog()
+
+    fun updateAdapter(){
         requireActivity().runOnUiThread {
             try {
                 chatList.clear()
-                Log.d("TESTING", ""+quickstartConversationsManager.messages.size + " SIZE OF MESSAGE")
+                Log.d("*******", ""+quickstartConversationsManager.messages.size + " SIZE OF MESSAGE")
                 if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
 
                     quickstartConversationsManager.messages.forEach {
-                        Log.d("quickstartConversationsManager","m 8888"+it.messageBody)
-                        Log.d("quickstartConversationsManager","j 8888"+it.participant.conversation.state)
-                        Log.d("quickstartConversationsManager","u 88888"+it.conversation.uniqueName)
+                        Log.d("*******","m 8888"+it.messageBody)
+                      //  Log.d("*******","j 8888"+it.participant.conversation.state)
+                        Log.d("*******","u 88888"+it.conversation.uniqueName)
                     }
-                    for (i in quickstartConversationsManager.messages) {
+                    for (conversation  in quickstartConversationsManager.conversationsClient?.myConversations!!) {
                         try {
-                            if (map.containsKey(i.conversation.uniqueName)) {
-                                var obj = map.get(i.conversation.uniqueName)
-                                obj?.lastMessage = i.messageBody
-                                obj?.lastMessageTime = TimeUtils.updateLastMsgTime(i.dateCreated)
+                            if (map.containsKey(conversation.uniqueName)) {
+                                var obj = map.get(conversation.uniqueName)
+                                obj?.lastMessage ="hello" //i.messageBody
+                                obj?.lastMessageTime = TimeUtils.updateLastMsgTime(conversation.dateCreated)
                                 obj?.isOnline = false
-                                obj?.date=i.dateCreated
+                                obj?.date=conversation.dateCreated
 
                                 if (obj != null) {
                                     chatList.add(obj)
-                                    map.put(i.conversation.uniqueName,obj)
+                                    map.put(conversation.uniqueName,obj)
                                 }
                             }
                         } catch (e: Exception) {
-                            Log.d("massage error", "data :-" + e.message)
+                            Log.d("*******", "data :-" + e.message)
                         }
 
                     }
@@ -422,10 +445,6 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
                 Log.d("******","msg :- "+e.message)
             }
 
-//            chatList.sortWith { o1, o2 ->
-//                if (o1?.da == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
-//            }
-
             chatList.sortWith { o1, o2 ->
                 if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
             }
@@ -433,6 +452,66 @@ class HostChatFragment : Fragment() , View.OnClickListener,QuickstartConversatio
             adapterChatList.updateItem(chatList)
         }
     }
+
+    override fun reloadMessages() {
+        Log.d("*******", "reloadMessages" )
+        LoadingUtils.hideDialog()
+        requireActivity().runOnUiThread {
+            try {
+                chatList.clear()
+                Log.d("*******", "" + chatList.size)
+                Log.d("*******", ""+quickstartConversationsManager.messages.size + " SIZE OF MESSAGE")
+                if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
+
+                   /* quickstartConversationsManager.messages.forEach {
+                        Log.d("*******","m 8888"+it.messageBody)
+                        //Log.d("*******","j 8888"+it.participant.conversation.state)
+                        Log.d("*******","u 88888"+it.conversation.uniqueName)
+                    }*/
+
+                    for (i in quickstartConversationsManager.messages) {
+                        try {
+                            if (map.containsKey(i.conversation.uniqueName)) {
+                                var obj = map.get(i.conversation.uniqueName)
+                                obj?.lastMessage = i.messageBody
+                                obj?.lastMessageTime = TimeUtils.updateLastMsgTime(i.dateCreated)
+                                obj?.isOnline = false
+                                obj?.date=i.dateCreated
+                                if (obj != null/* && i.conversation.uniqueName !in addedConversations*/) {
+                                    chatList.add(obj)
+                                    map.put(i.conversation.uniqueName, obj)
+                                    addedConversations.add(i.conversation.uniqueName) // Mark as added
+                                    Log.d("*******", "" + TextUtils.join(",",addedConversations))
+                                    Log.d("*******", "" + chatList.size)
+                                }
+                            }
+                        } catch (e: Exception) {
+                            Log.d("*******", "data :-" + e.message)
+                        }
+
+                    }
+                }
+            }catch (e:Exception){
+                Log.d("******","msg :- "+e.message)
+            }
+            chatList.sortWith { o1, o2 ->
+                if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+            }
+
+            adapterChatList.updateItem(chatList)
+        }
+    }
+
+   /* override fun reloadLastMessages() {
+        Log.d("*******", "reloadLastMessages " )
+        LoadingUtils.hideDialog()
+        //updateAdapter()
+        reloadMessages()
+    }
+
+    override fun showError() {
+        LoadingUtils.hideDialog()
+    }*/
 
 
 }

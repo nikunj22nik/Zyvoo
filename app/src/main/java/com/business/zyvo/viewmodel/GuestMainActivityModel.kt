@@ -15,6 +15,8 @@ import javax.inject.Inject
 class GuestMainActivityModel @Inject constructor(private val repository: ZyvoRepository):
     ViewModel(){
 
+    var chatChannel :MutableList<ChannelListModel> = mutableListOf()
+
     suspend fun getChatToken(userId :Int,role:String) : Flow<NetworkResult<String>>{
         return repository.getChatToken(userId, role).onEach {
           when(it){
