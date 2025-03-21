@@ -16,6 +16,7 @@ import android.text.format.DateFormat
 import android.util.Base64
 import com.business.zyvo.R
 import com.business.zyvo.model.ActivityModel
+import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.TimeDetails
 import com.business.zyvo.model.host.ItemRadio
 import java.io.ByteArrayOutputStream
@@ -679,5 +680,21 @@ object PrepareData {
     fun isMediaDocument(uri: Uri): Boolean {
         return "com.android.providers.media.documents" == uri.authority
     }
+
+    val languages = arrayOf(
+        "Amharic", "Arabic", "Aragonese", "Armenian", "Azerbaijani", "Bashkir", "Basque",
+        "Bengali", "Bengali-Assamese", "Bhojpuri", "Burmese", "Catalan", "Czech", "Danish",
+        "Egyptian Arabic", "English", "Farsi", "Finnish", "French", "Georgian", "Gujarati",
+        "Haitian Creole", "Hindi", "Hmong", "Hmong-Mien", "Ibo", "Indonesian", "Italian",
+        "Javanese", "Japanese", "Kazakh", "Khmer", "Korean", "Kurdish", "Latin", "Latvian",
+        "Lithuanian", "Malayalam", "Mandarin Chinese", "Marathi", "Māori", "Mongolian",
+        "Nepali", "Norwegian", "Pashto", "Polish", "Portuguese", "Punjabi", "Quechua",
+        "Romanian", "Russian", "Serbo-Croatian", "Shona", "Sinhala", "Sunda", "Swahili",
+        "Swedish", "Tagalog", "Tamil", "Tatar", "Telugu", "Thai", "Tigrinya", "Turkish",
+        "Ukrainian", "Urdu", "Uzbek", "Vietnamese", "Wolof", "Wu Chinese", "Xhosa",
+        "Xiang Chinese", "Yoruba", "Zulu")
+
+    val languageObjects = languages.map { AddLanguageModel(it) }.toTypedArray().toMutableList()
+
 
 }

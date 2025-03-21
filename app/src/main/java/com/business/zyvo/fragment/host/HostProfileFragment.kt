@@ -685,6 +685,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             // Set the adapter for RecyclerView
             localeAdapter = LocaleAdapter(locales, object : OnLocalListener {
                 override fun onItemClick(local: String) {
+
                     val newLanguage = AddLanguageModel(local)
                     addLanguageApi(newLanguage.name)
                     // Add the new language to the list
@@ -2735,11 +2736,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    resp.toString(),
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+//                                                Toast.makeText(
+//                                                    requireContext(),
+//                                                    resp.toString(),
+//                                                    Toast.LENGTH_SHORT
+//                                                ).show()
                                             }
                                         }
 
