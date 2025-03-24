@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.business.zyvo.AppConstant
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.model.MyBookingsModel
@@ -16,6 +17,7 @@ import com.business.zyvo.model.host.HostReviewModel
 import com.business.zyvo.model.host.PaginationModel
 import com.business.zyvo.model.host.ReviewerProfileModel
 import com.business.zyvo.model.host.hostdetail.HostDetailModel
+import com.business.zyvo.model.host.hostdetail.Review
 import com.business.zyvo.repository.ZyvoRepository
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
@@ -47,6 +49,9 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     var cancelledList = mutableListOf<MyBookingsModel>()
     var finishedList = mutableListOf<MyBookingsModel>()
     var finalList = mutableListOf<MyBookingsModel>()
+    var highestReviewList = mutableListOf<ReviewerProfileModel>()
+    var lowestReviewList = mutableListOf<ReviewerProfileModel>()
+    var orgReviewList = mutableListOf<ReviewerProfileModel>()
 
 
     val list: LiveData<MutableList<MyBookingsModel>> get() = _list
@@ -56,6 +61,16 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
         propertyId :Int, filter :String, page :Int
     ) : Flow<NetworkResult<Pair<JsonArray, JsonObject>>> {
         return  repository.filterPropertyReviewsHost(propertyId, filter, page).onEach {
+            when(it){
+                is NetworkResult.Success ->{
+                }
+                is NetworkResult.Error ->{
+
+                }
+                else ->{
+
+                }
+            }
 
         }
 
@@ -189,6 +204,39 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
         return repository.markHostBooking(userId).onEach {
 
         }
+    }
+
+    fun sortedByDescending (list :MutableList<ReviewerProfileModel>){
+
+        val sortedReviews = list.sortedWith { a, b ->
+            val ratingA = a.review_rating?.toDoubleOrNull() ?: Double.MIN_VALUE // Treat null/invalid as a small value
+            val ratingB = b.review_rating?.toDoubleOrNull() ?: Double.MIN_VALUE
+            ratingB.compareTo(ratingA) // Compare decimal ratings (reverse the order for high to low)
+        }
+
+        highestReviewList= sortedReviews.toMutableList()
+
+        highestReviewList.forEach {
+            Log.d("TESTING_REVIEW","Review Rating Highest"+it.review_rating.toString())
+        }
+
+    }
+
+    fun sortByAscendingOrder(list :MutableList<ReviewerProfileModel>){
+
+        val sortedReviews1 = list.sortedWith { a, b ->
+            val ratingA = a.review_rating?.toDoubleOrNull() ?: Double.MAX_VALUE // Treat null/invalid as a large value
+            val ratingB = b.review_rating?.toDoubleOrNull() ?: Double.MAX_VALUE
+            ratingA.compareTo(ratingB) // Compa
+
+        }
+
+        lowestReviewList = sortedReviews1.toMutableList()
+
+        lowestReviewList.forEach {
+            Log.d("TESTING_REVIEW","Review Rating Lowest"+it.review_rating.toString())
+        }
+
     }
 
 

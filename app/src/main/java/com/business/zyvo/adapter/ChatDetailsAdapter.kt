@@ -15,7 +15,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.business.zyvo.AppConstant
 import com.business.zyvo.R
-import com.business.zyvo.activity.QuickstartConversationsManager
+import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
+//import com.business.zyvo.activity.QuickstartConversationsManager
 
 import com.business.zyvo.databinding.LayoutMessageChatingBinding
 import com.business.zyvo.model.ChatMessageModel
@@ -23,7 +25,7 @@ import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.PrepareData
 
 
-class ChatDetailsAdapter(var context: Context, var quickstartConversationsManager: QuickstartConversationsManager, var user_id: String, var profile_image:String, var friend_profile_image:String, var friend_name:String,var userName :String =""): RecyclerView.Adapter<ChatDetailsAdapter.ChatViewHolder>() {
+class ChatDetailsAdapter(var context: Context, var quickstartConversationsManager: QuickstartConversationsManagerOneTowOne, var user_id: String, var profile_image:String, var friend_profile_image:String, var friend_name:String, var userName :String =""): RecyclerView.Adapter<ChatDetailsAdapter.ChatViewHolder>() {
 
     var userId :String =""
     init {

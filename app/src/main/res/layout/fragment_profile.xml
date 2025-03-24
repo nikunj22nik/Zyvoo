@@ -630,6 +630,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textEmail">
 
                 <EditText
+                    android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_10ssp"
@@ -694,6 +695,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/textPhoneNumberTitle">
 
                 <EditText
+                    android:id="@+id/etPhoneNUMBER"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_10ssp"

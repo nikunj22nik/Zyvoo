@@ -14,20 +14,16 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.MyApp
 import com.business.zyvo.R
 import com.business.zyvo.adapter.ChatDetailsAdapter
-
 import com.business.zyvo.databinding.ActivityChatBinding
-import com.business.zyvo.databinding.FragmentChatDetailsBinding
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CompressImage
 import com.business.zyvo.utils.NetworkMonitorCheck
@@ -37,17 +33,18 @@ import com.github.dhaval2404.imagepicker.ImagePicker
 import com.jaiselrahman.filepicker.activity.FilePickerActivity
 import com.jaiselrahman.filepicker.config.Configurations
 import com.jaiselrahman.filepicker.model.MediaFile
-import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileNotFoundException
+import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
+import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
 
 
-
-class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener {
+class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerOneTowOne {
 
     lateinit var binding: ActivityChatBinding
-    lateinit var adapter: ChatDetailsAdapter
-    private var quickstartConversationsManager = QuickstartConversationsManager()
+    private var adapter: ChatDetailsAdapter?=null
+    private var quickstartConversationsManager = QuickstartConversationsManagerOneTowOne()
     lateinit var sessionManagement: SessionManager
     private lateinit var viewModel: ChatDetailsViewModel
     var profileImage :String =""
@@ -100,10 +97,20 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
         if (NetworkMonitorCheck._isConnected.value) {
             LoadingUtils.showDialog(this,false)
 
-            quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
-
-
-            quickstartConversationsManager.setListener(this)
+          /*  quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
+            quickstartConversationsManager.setListener(this)*/
+            try {
+                quickstartConversationsManager = (application as MyApp).conversationsManagerOneTowOne
+                if (quickstartConversationsManager?.conversationsClient!=null){
+                    quickstartConversationsManager.setListener(this)
+                    quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
+                }else{
+                    quickstartConversationsManager.initializeWithAccessTokenBase(this@ChatActivity
+                        ,sessionManagement.getChatToken().toString())
+                }
+            } catch (e: Exception) {
+                Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+            }
         }else{
             LoadingUtils.showSuccessDialog(this,"Please check your internet connection")
         }
@@ -250,15 +257,17 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
                 loadRecyclerview(quickstartConversationsManager)
             } else {
                 Log.d("TESTING","RECEIVE NEW MESSAGE 2")
-                adapter.notifyItemRangeChanged(quickstartConversationsManager.messages.size, 1)
-                binding.rvChatting.scrollToPosition(quickstartConversationsManager.messages.size - 1)
-                binding.rvChatting.visibility = View.VISIBLE
+                if (adapter!=null) {
+                    adapter?.notifyItemRangeChanged(quickstartConversationsManager.messages.size, 1)
+                    binding.rvChatting.scrollToPosition(quickstartConversationsManager.messages.size - 1)
+                    binding.rvChatting.visibility = View.VISIBLE
+                }
             }
         }
     }
 
 
-    private fun loadRecyclerview(quickstartConversationsManager: QuickstartConversationsManager) {
+    private fun loadRecyclerview(quickstartConversationsManager: QuickstartConversationsManagerOneTowOne) {
         adapter = ChatDetailsAdapter(this, quickstartConversationsManager, userId.toString(),profileImage,friendprofileimage,friend_name,userName)
         binding.rvChatting.adapter = adapter
         binding.rvChatting.scrollToPosition(quickstartConversationsManager.messages.size - 1)
@@ -280,6 +289,15 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListener 
                 Log.d("@Error","not massage found")
             }
         }
+    }
+
+    override fun reloadLastMessages() {
+        Log.d("*******","reloadLastMessages")
+        quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
+    }
+
+    override fun showError() {
+
     }
 
 

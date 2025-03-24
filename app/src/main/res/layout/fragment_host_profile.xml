@@ -151,7 +151,7 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15sdp"
                     android:textStyle="bold"
-                    android:text="@{user.name != null ? user.name : ``}"
+                    android:text="@{user.name != null ? user.name : `NAMAN SHARMA`}"
                     app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
                     app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
 

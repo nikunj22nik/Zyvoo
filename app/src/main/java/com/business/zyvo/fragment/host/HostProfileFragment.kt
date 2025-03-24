@@ -181,6 +181,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     var resendEnabled = false
     var otpValue: String = ""
     var editAboutButton = true
+    var firstName :String =""
+    var lastName :String =""
 
 
     private val list1 = mutableListOf<CountryLanguage>()
@@ -297,6 +299,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         binding.switchHost.setOnClickListener {
             val session = SessionManager(requireContext())
             session.setCurrentPanel(AppConstant.Guest)
+            session.setChatToken("")
             val intent = Intent(requireContext(), GuesMain::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)
@@ -492,9 +495,16 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ," + resp.toString())
                                 userProfile = Gson().fromJson(resp, UserProfile::class.java)
                                 userProfile.let {
-                                    if (it?.first_name != null && it.last_name != null) {
-                                        name = it.first_name + " " + it.last_name
+                                   it?.first_name?.let {
+                                       name+=it+" "
+                                       firstName = it
+                                   }
+                                    it?.last_name?.let {
+                                        name+=it
+                                        lastName = it
                                     }
+
+
                                     it?.name = name
                                     binding.user = it
                                     it?.email?.let {
@@ -618,11 +628,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 }
             }
         } else {
-
-            LoadingUtils.showErrorDialog(
-                requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg)
-            )
+            LoadingUtils.showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 
@@ -680,6 +686,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             // Set the adapter for RecyclerView
             localeAdapter = LocaleAdapter(locales, object : OnLocalListener {
                 override fun onItemClick(local: String) {
+
                     val newLanguage = AddLanguageModel(local)
                     addLanguageApi(newLanguage.name)
                     // Add the new language to the list
@@ -717,9 +724,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
         textCamera?.setOnClickListener {
             profileImageCameraChooser()
+            bottomSheetDialog!!.dismiss()
         }
         textGallery?.setOnClickListener {
             profileImageGalleryChooser()
+            bottomSheetDialog!!.dismiss()
         }
 
 
@@ -893,7 +902,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             R.id.imageEditEmail -> {
                 dialogEmailVerification(requireContext())
-
             }
 
             R.id.imageEditPhoneNumber -> {
@@ -1524,8 +1532,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             textCreateAccountButton.setOnClickListener {
                 var text = "Your account is registered \nsuccessfully"
 
-                var textHeaderOfOtpVerfication =
-                    "Please type the verification code send \nto abc@gmail.com"
+                var textHeaderOfOtpVerfication = "Please type the verification code send \nto abc@gmail.com"
                 dialogOtpLoginRegister(context, text, textHeaderOfOtpVerfication)
 
                 dismiss()
@@ -1586,6 +1593,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
+            etMobileNumber.setText(binding.etPhoneNumeber.text.toString())
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 lifecycleScope.launch {
@@ -1637,37 +1645,37 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         textSubmitButton: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.phoneVerification(
-                session?.getUserId().toString(),
-                countryCode,
-                phoneNumber
-            ).collect {
-                when (it) {
-                    is NetworkResult.Success -> {
-                        it.data?.let { resp ->
+            session?.getUserId()?.let {
+                profileViewModel.updatePhoneNumber(
+                    it,phoneNumber, countryCode
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                dialog.dismiss()
+                                val textHeaderOfOtpVerfication =
+                                    "Please type the verification code send \nto $phoneNumber"
+                                dialogOtp(
+                                    requireActivity(),
+                                    countryCode,
+                                    phoneNumber,
+                                    textHeaderOfOtpVerfication,
+                                    "mobile"
+                                )
+                            }
                             dialog.dismiss()
-                            val textHeaderOfOtpVerfication =
-                                "Please type the verification code send \nto $phoneNumber"
-                            dialogOtp(
-                                requireActivity(),
-                                countryCode,
-                                phoneNumber,
-                                textHeaderOfOtpVerfication,
-                                "mobile"
-                            )
+                            toggleLoginButtonEnabled(true, textSubmitButton)
                         }
-                        dialog.dismiss()
-                        toggleLoginButtonEnabled(true, textSubmitButton)
-                    }
 
-                    is NetworkResult.Error -> {
-                        showErrorDialog(requireContext(), it.message!!)
-                        toggleLoginButtonEnabled(true, textSubmitButton)
-                    }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                            toggleLoginButtonEnabled(true, textSubmitButton)
+                        }
 
-                    else -> {
-                        toggleLoginButtonEnabled(true, textSubmitButton)
-                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        else -> {
+                            toggleLoginButtonEnabled(true, textSubmitButton)
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
                     }
                 }
             }
@@ -1705,6 +1713,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
             val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
             val editTextLastName = findViewById<EditText>(R.id.editTextLastName)
+            editTextFirstName.setText(firstName)
+            editTextLastName.setText(lastName)
             textSaveChangesButton.setOnClickListener {
                 if (editTextFirstName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.firstName)
@@ -1739,6 +1749,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val imageCross = findViewById<ImageView>(R.id.imageCross)
 
             val etEmail = findViewById<EditText>(R.id.etEmail)
+            etEmail.setText(binding.etEmail.text.toString())
 
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
@@ -2021,8 +2032,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         text: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.otpVerifyPhoneVerification(
-                userId,
+            profileViewModel.otpVerifyUpdatePhoneNumber(
+                Integer.parseInt(userId),
                 otp,
             ).collect {
                 when (it) {
@@ -2031,6 +2042,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             binding.textConfirmNow1.visibility = GONE
                             binding.textVerified1.visibility = View.VISIBLE
                             dialog.dismiss()
+                            LoadingUtils.showSuccessDialog(requireContext(),resp)
                         }
 
                         toggleLoginButtonEnabled(true, text)
@@ -2060,8 +2072,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         text: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.otpVerifyEmailVerification(
-                userId,
+            profileViewModel.otpVerifyUpdateEmail(
+                Integer.parseInt(userId),
                 otp,
             ).collect {
                 when (it) {
@@ -2076,9 +2088,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     }
 
                     is NetworkResult.Error -> {
-                        showErrorDialog(
-                            requireContext(), it.message!!
-                        )
+                        showErrorDialog(requireContext(), it.message!!)
                         toggleLoginButtonEnabled(true, text)
                     }
 
@@ -2512,7 +2522,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     binding.etAboutMeText.isEnabled = false
                                     editAboutButton = true
 
-                                    showErrorDialog(requireContext(), resp.first)
+                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.about_me = about_me
                                     binding.user = userProfile
                                 }
@@ -2725,11 +2735,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    resp.toString(),
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+//                                                Toast.makeText(
+//                                                    requireContext(),
+//                                                    resp.toString(),
+//                                                    Toast.LENGTH_SHORT
+//                                                ).show()
                                             }
                                         }
 

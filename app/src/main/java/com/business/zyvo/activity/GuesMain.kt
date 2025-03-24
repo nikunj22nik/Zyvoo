@@ -21,10 +21,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BookingRemoveListener
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.chat.QuickstartConversationsManager
+import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
 import com.business.zyvo.databinding.ActivityGuesMainBinding
+import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
@@ -34,10 +39,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class GuesMain : AppCompatActivity(), OnClickListener {
+class GuesMain : AppCompatActivity(), OnClickListener,
+    QuickstartConversationsManagerListenerOneTowOne {
 
     lateinit var binding: ActivityGuesMainBinding
     lateinit var guestViewModel: GuestMainActivityModel
+    private var quickstartConversationsManager = QuickstartConversationsManager()
+    private var map:HashMap<String, ChannelListModel> = HashMap()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +59,12 @@ class GuesMain : AppCompatActivity(), OnClickListener {
         binding.navigationBookings.setOnClickListener(this)
         binding.navigationWishlist.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
+        try {
+            quickstartConversationsManager = (application as MyApp).conversationsManager!!
+            quickstartConversationsManager.setListener(this)
+        } catch (e: Exception) {
+            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+        }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
@@ -75,9 +89,11 @@ class GuesMain : AppCompatActivity(), OnClickListener {
             }
         }
         observeButtonState()
-        callingGetUserToken()
         var sessionManager = SessionManager(this)
         sessionManager.setUserType(AppConstant.Guest)
+        if (sessionManager.getChatToken().equals("")) {
+            callingGetUserToken()
+        }
         askNotificationPermission()
 
 
@@ -94,6 +110,8 @@ class GuesMain : AppCompatActivity(), OnClickListener {
                         is NetworkResult.Success -> {
                             Log.d("TESTING_TOKEN", "HERE SUCEESS THE TOKEN" +it.data)
                             sessionManager.setChatToken(it.data.toString())
+                            val app = application as MyApp
+                            app.initializeTwilioClient(sessionManager.getChatToken()!!)
                         }
 
                         is NetworkResult.Error -> {
@@ -128,6 +146,48 @@ class GuesMain : AppCompatActivity(), OnClickListener {
                 intent.removeExtra("key_name")
                 bookingResume()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
+            }
+        }
+        callingGetChatUser()
+    }
+
+    private fun callingGetChatUser() {
+        lifecycleScope.launch {
+            var sessionManager = SessionManager(this@GuesMain)
+            var userId = sessionManager.getUserId()
+            if (userId != null) {
+                var sessionManager = SessionManager(this@GuesMain)
+                var type = sessionManager.getUserType()
+                if (type != null) {
+                    guestViewModel.getChatUserChannelList(userId,type).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    guestViewModel.chatChannel = it
+                                    it.forEach {
+                                        map.put(it.group_name.toString(),it)
+                                    }
+                                    Log.d("*******",map.size.toString() +" Map Size is ")
+                                    Log.d("*******",""+quickstartConversationsManager.conversationsClient?.myConversations?.size)
+                                    if (quickstartConversationsManager.conversationsClient==null){
+                                        quickstartConversationsManager.initializeWithAccessTokenBase(this@GuesMain
+                                            ,sessionManager.getChatToken().toString())
+                                    }else{
+                                        quickstartConversationsManager.loadChatList()
+                                    }
+                                }
+                            }
+
+                            is NetworkResult.Error -> {
+
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -300,6 +360,66 @@ class GuesMain : AppCompatActivity(), OnClickListener {
             var sessionManager = SessionManager(this)
             sessionManager.setNotificationOnOffStatus(false)
         }
+    }
+
+
+    override fun receivedNewMessage() {
+        Log.d("*******","receivedNewMessage gdsg")
+        getTotalUnreadMessages()
+    }
+
+    override fun messageSentCallback() {
+
+    }
+
+
+    override fun reloadMessages() {
+        Log.d("*******", "Start executing reload message" )
+        LoadingUtils.hideDialog()
+    }
+
+    override fun reloadLastMessages() {
+        Log.d("*******","reloadLastMessages")
+        getTotalUnreadMessages()
+
+    }
+
+    private fun getTotalUnreadMessages(){
+        var totalUnreadCount:Long = 0
+        runOnUiThread {
+            try {
+                quickstartConversationsManager?.conversationsClient?.myConversations!!.forEach {
+                    Log.d("*******","m 8888"+it.friendlyName +" M "+it.uniqueName)
+                }
+
+                if (quickstartConversationsManager?.conversationsClient?.myConversations!!.size > 0) {
+                    for (i in quickstartConversationsManager?.conversationsClient?.myConversations!!) {
+                        try {
+                            if (map.containsKey(i.uniqueName)) {
+                                Log.d("*******","m 8888"+i.friendlyName +" M "+i.uniqueName)
+                                i.getUnreadMessagesCount { re->
+                                    if (re!=null) {
+                                        Log.d("*******", re.toString())
+                                        totalUnreadCount += re
+                                        Log.d("*******", "total " + totalUnreadCount.toString())
+                                        binding.tvChatNumber.text = "$totalUnreadCount"
+                                    }
+                                }
+                            }
+                        } catch (e: Exception) {
+                            Log.d("massage error", "data :-" + e.message)
+                        }
+                    }
+                  //  binding.tvChatNumber.text = "$totalUnreadCount"
+                }
+            }catch (e:Exception){
+                Log.d("******","msg :- "+e.message)
+            }
+        }
+    }
+
+    override fun showError() {
+
     }
 
 

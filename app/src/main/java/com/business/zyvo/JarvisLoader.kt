@@ -14,7 +14,7 @@ class JarvisLoader(context: Context) : Dialog(context){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.dialog_loading)
         window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
-        window?.setBackgroundDrawableResource(R.color.white_transparent)
+        window?.setBackgroundDrawableResource(R.color.white)
     }
 
 

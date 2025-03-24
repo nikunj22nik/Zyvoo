@@ -25,11 +25,12 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
         RecyclerView.ViewHolder(binding.root) {
         fun bind(languageItem: AddLanguageModel) {
 
-
             binding.textMyWorkName.text = languageItem.name
+
             binding.imageCross.setOnClickListener {
                 listner.itemClick(adapterPosition, "language")
             }
+
         }
 
     }
@@ -89,12 +90,12 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
     }
 
     fun updateLanguage(newList: MutableList<AddLanguageModel>) {
-
         this.list = newList
 
         if (list.isEmpty()) {
             list.add(AddLanguageModel("Add New")) // Placeholder for "Add New"
         }
+
         notifyDataSetChanged()
     }
 

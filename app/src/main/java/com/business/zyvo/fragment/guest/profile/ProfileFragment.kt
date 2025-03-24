@@ -155,6 +155,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     var userProfile: UserProfile? = null
     var isPaymentDataLoaded = false
     private lateinit var getInquiryResult: ActivityResultLauncher<Inquiry>
+    var firstName :String =""
+    var lastName :String =""
 
     // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
@@ -232,13 +234,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
         binding.switchHost.setOnClickListener {
-
             val session = SessionManager(requireContext())
             session.setCurrentPanel(AppConstant.Host)
+            session.setChatToken("")
             val intent = Intent(requireContext(), HostMainActivity::class.java)
-
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
-
             startActivity(intent)
         }
 
@@ -416,14 +416,20 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ,$resp")
                                 userProfile = Gson().fromJson(resp, UserProfile::class.java)
                                 userProfile.let {
-                                    if (it?.first_name != null && it.last_name != null) {
-                                        name =
-                                            it.first_name + " " + it.last_name
+
+                                    it?.first_name?.let {
+                                        name += it+" "
+                                        firstName = it
                                     }
+                                    it?.last_name?.let {
+                                        name+=it
+                                        lastName = it
+                                    }
+
                                     it?.name = name
                                     binding.user = it
-                                    if (it?.profile_image != null) {
 
+                                    if (it?.profile_image != null) {
                                         Glide.with(requireContext())
                                             .asBitmap() // Convert the image into Bitmap
                                             .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
@@ -2331,6 +2337,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
+            etMobileNumber.setText(binding.etPhoneNUMBER.text.toString())
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 lifecycleScope.launch {
@@ -2395,6 +2402,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
             val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
             val editTextLastName = findViewById<EditText>(R.id.editTextLastName)
+
+            editTextFirstName.setText(firstName)
+            editTextLastName.setText(lastName)
+
             textSaveChangesButton.setOnClickListener {
                 if (editTextFirstName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.firstName)
@@ -2429,7 +2440,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             var imageCross = findViewById<ImageView>(R.id.imageCross)
 
             var etEmail = findViewById<EditText>(R.id.etEmail)
-
+            etEmail.setText(binding.etEmail.text.toString())
             var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
@@ -2872,8 +2883,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         textLoginButton: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.emailVerification(
-                userId,
+            profileViewModel.updateEmail(
+                Integer.parseInt(userId),
                 email
             ).collect {
                 when (it) {
@@ -2909,37 +2920,38 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         textSubmitButton: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.phoneVerification(
-                session?.getUserId().toString(),
-                countryCode,
-                phoneNumber
-            ).collect {
-                when (it) {
-                    is NetworkResult.Success -> {
-                        it.data?.let { resp ->
+            session?.getUserId()?.let {
+                profileViewModel.updatePhoneNumber(
+                    it,phoneNumber,
+                    countryCode
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                dialog.dismiss()
+                                val textHeaderOfOtpVerfication =
+                                    "Please type the verification code send \nto $phoneNumber"
+                                dialogOtp(
+                                    requireActivity(),
+                                    countryCode,
+                                    phoneNumber,
+                                    textHeaderOfOtpVerfication,
+                                    "mobile"
+                                )
+                            }
                             dialog.dismiss()
-                            val textHeaderOfOtpVerfication =
-                                "Please type the verification code send \nto $phoneNumber"
-                            dialogOtp(
-                                requireActivity(),
-                                countryCode,
-                                phoneNumber,
-                                textHeaderOfOtpVerfication,
-                                "mobile"
-                            )
+                            toggleLoginButtonEnabled(true, textSubmitButton)
                         }
-                        dialog.dismiss()
-                        toggleLoginButtonEnabled(true, textSubmitButton)
-                    }
 
-                    is NetworkResult.Error -> {
-                        showErrorDialog(requireContext(), it.message!!)
-                        toggleLoginButtonEnabled(true, textSubmitButton)
-                    }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                            toggleLoginButtonEnabled(true, textSubmitButton)
+                        }
 
-                    else -> {
-                        toggleLoginButtonEnabled(true, textSubmitButton)
-                        Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        else -> {
+                            toggleLoginButtonEnabled(true, textSubmitButton)
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
                     }
                 }
             }
@@ -2953,8 +2965,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         text: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.otpVerifyPhoneVerification(
-                userId,
+            profileViewModel.otpVerifyUpdatePhoneNumber(
+                Integer.parseInt(userId),
                 otp,
             ).collect {
                 when (it) {
@@ -2963,6 +2975,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             binding.textConfirmNow1.visibility = GONE
                             binding.textVerified1.visibility = View.VISIBLE
                             dialog.dismiss()
+                            LoadingUtils.showSuccessDialog(requireContext(),resp)
                         }
 
                         toggleLoginButtonEnabled(true, text)
@@ -2992,8 +3005,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         text: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.otpVerifyEmailVerification(
-                userId,
+            profileViewModel.otpVerifyUpdateEmail(
+                Integer.parseInt(userId),
                 otp,
             ).collect {
                 when (it) {
