@@ -47,7 +47,7 @@ class SplashFragment : Fragment() {
             val session =SessionManager(requireContext())
             Log.d("TESTING","Session "+session.getUserId().toString())
             if(session.getUserId() !=-1 && session.getUserSession()
-                !! && !session.getAuthToken().equals("")){
+                !! && !session.getAuthToken().equals("") && session.getName() != ""){
                 if(session.getCurrentPanel().equals(AppConstant.Host)){
                     val intent = Intent(requireContext(), HostMainActivity::class.java)
                     startActivity(intent)
@@ -57,6 +57,9 @@ class SplashFragment : Fragment() {
                     startActivity(intent)
                     requireActivity().finish()
                 }
+            }
+            else if (session.getUserId() !=-1 && session.getName() == ""){
+                findNavController().navigate(R.id.completeProfileFragment)
             }
             else {
                 findNavController().navigate(R.id.loggedScreenFragment)

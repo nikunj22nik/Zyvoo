@@ -126,6 +126,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     private var token:String = ""
     var type:String = ""
     var email:String = ""
+    var fullName:String = ""
     var session: SessionManager?=null
     var imageBytes: ByteArray = byteArrayOf()
     private val completeProfileReq = CompleteProfileReq()
@@ -269,6 +270,10 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         binding.skipNow.setOnClickListener(this)
 
         adapterInitialize()
+        if (session?.getName() != ""){
+            binding.textName.text = session?.getName()
+            fullName = session?.getName().toString()
+        }
 
         // Initialize Places API if not already initialized
         if (!Places.isInitialized()) {
@@ -760,6 +765,7 @@ private fun dialogChangeName(context: Context?) {
             width = WindowManager.LayoutParams.MATCH_PARENT
             height = WindowManager.LayoutParams.MATCH_PARENT
         }
+
         val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
         if (imageBytes.isNotEmpty()) {
             MediaUtils.setImageFromByteArray(imageBytes, imageProfilePicture)
@@ -769,6 +775,12 @@ private fun dialogChangeName(context: Context?) {
         val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
         val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
         val editTextLastName = findViewById<EditText>(R.id.editTextLastName)
+        if (fullName != ""){
+            val nameParts = fullName.trim().split(" ", limit = 2)
+            editTextFirstName.setText(nameParts[0]) // First name
+            editTextLastName.setText(if (nameParts.size > 1) nameParts[1] else "")
+        }
+
         textSaveChangesButton.setOnClickListener {
             if (editTextFirstName.text.isEmpty()) {
                 showErrorDialog(requireContext(), AppConstant.firstName)

@@ -33,6 +33,7 @@ class AppConstant {
         var Guest = "guest"
         var PANNEL = "Pannel"
         var AuthToken = "AuthToken"
+        var Name1 = "FullName"
         val DATE: String? = "event_date"
         val MY_INTERESET: String? ="my_interest"
         val START_TIME: String? = "START_TIME"

@@ -99,6 +99,15 @@ class SessionManager(var context: Context) {
     fun getAuthToken():String?{
         return pref?.getString(AppConstant.AuthToken,"")
     }
+
+    fun setName(name:String){
+        editor!!.putString(AppConstant.Name1,name)
+        editor!!.commit()
+    }
+
+    fun getName():String?{
+        return pref?.getString(AppConstant.Name1,"")
+    }
     fun logOut() {
         editor?.clear()
         editor?.apply()

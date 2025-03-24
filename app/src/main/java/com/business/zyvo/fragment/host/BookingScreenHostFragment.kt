@@ -135,6 +135,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                                             requireContext(),
                                             it.data.toString()
                                         )
+                                        callingBookingData()
                                     }
 
                                     is NetworkResult.Error -> {

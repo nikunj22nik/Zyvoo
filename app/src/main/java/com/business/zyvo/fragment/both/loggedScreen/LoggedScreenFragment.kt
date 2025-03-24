@@ -763,6 +763,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                     }
                                     session.setUserId(resp.get("user_id").asInt)
                                     session.setAuthToken(resp.get("token").asString)
+                                    if (resp.has("full_name") && !resp.get("full_name").isJsonNull){
+                                        session.setName(resp.get("full_name").asString)
+                                    }
+
                                     Log.d("Testing","Response Token is "+ resp.get("token").asString)
                                     val intent = Intent(requireActivity(), GuesMain::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -777,6 +781,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 session.setUserId(resp.get("user_id").asInt)
                                 session.setAuthToken(resp.get("token").asString)
                                 val bundle = Bundle()
+                                if (resp.has("full_name") && !resp.get("full_name").isJsonNull){
+                                    session.setName(resp.get("full_name").asString)
+                                    bundle.putString("full_name",resp.get("full_name").asString)
+                                }
+
                                 bundle.putString("data",Gson().toJson(resp))
                                 bundle.putString("type","email")
                                 bundle.putString("email",email)
@@ -1472,22 +1481,28 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             val session: SessionManager = SessionManager(requireActivity())
-//                            if (resp.has("is_profile_complete") &&
-//                                resp.get("is_profile_complete").asBoolean) {
+                            if (resp.has("is_profile_complete") &&
+                                resp.get("is_profile_complete").asBoolean) {
                                 if (resp.has("user_id")) {
                                     if (checkBox!=null && checkBox.isChecked){
                                         session.setUserSession(true)
                                     }
                                     session.setUserId(resp.get("user_id").asInt)
                                     session.setAuthToken(resp.get("token").asString)
+
                                     val intent = Intent(requireActivity(), GuesMain::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     startActivity(intent)
                                 }
-//                            }
+                            }
                             else{
                                 if (checkBox!=null && checkBox.isChecked){
                                     session.setUserSession(true)
+                                }
+                                session.setUserId(resp.get("user_id").asInt)
+                                session.setAuthToken(resp.get("token").asString)
+                                if (resp.has("full_name") && !resp.get("full_name").isJsonNull){
+                                    session.setName(resp.get("full_name").asString)
                                 }
                                 val bundle = Bundle()
                                 bundle.putString("data",Gson().toJson(resp))
