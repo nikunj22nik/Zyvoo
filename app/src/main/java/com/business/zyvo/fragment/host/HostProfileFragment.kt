@@ -62,6 +62,7 @@ import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
+import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.OnLocalListener
@@ -297,9 +298,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             Places.initialize(requireActivity(), apiKey)
         }
         binding.switchHost.setOnClickListener {
+            val app = activity?.application as MyApp
             val session = SessionManager(requireContext())
             session.setCurrentPanel(AppConstant.Guest)
             session.setChatToken("")
+            app.clearInstance()
             val intent = Intent(requireContext(), GuesMain::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
             startActivity(intent)

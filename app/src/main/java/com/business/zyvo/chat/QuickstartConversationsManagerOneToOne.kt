@@ -1,6 +1,8 @@
 package com.business.zyvo.chat
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.widget.TextView
 import com.google.gson.Gson
@@ -22,6 +24,10 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.io.IOException
+import java.time.Duration
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
 interface QuickstartConversationsManagerListenerOneTowOne {
@@ -29,7 +35,9 @@ interface QuickstartConversationsManagerListenerOneTowOne {
     fun messageSentCallback()
     fun reloadMessages()
     fun reloadLastMessages()
-    fun showError()
+    fun showError(value:String)
+    fun onlineOffline(value:String)
+    fun notInit()
 }
 
 interface TokenResponseListenerOneTowOne {
@@ -49,14 +57,14 @@ class QuickstartConversationsManagerOneTowOne {
     val messages: ArrayList<Message> = ArrayList()
 
     var conversationsClient: ConversationsClient? = null
-    private var conversation: Conversation? = null
+     var conversation: Conversation? = null
     private var conversationsManagerListener: QuickstartConversationsManagerListenerOneTowOne? = null
     private var tokenURL: String = ""
 
-    private var identity: String? = null
+     var identity: String? = null
 
     private var userid: String? = null
-    private var tvOnline: TextView? = null
+    var tvOnline: TextView? = null
 
     private data class TokenResponse(val token: String)
 
@@ -64,6 +72,21 @@ class QuickstartConversationsManagerOneTowOne {
     fun initializeWithAccessTokenBase(context: Context, token: String){
         val props = ConversationsClient.Properties.newBuilder().createProperties()
         ConversationsClient.create(context, token, props, mConversationsClientCallback)
+    }
+
+
+    fun initializeWithAccessToken(
+        context: Context?,
+        token: String?,
+        DEFAULT_CONVERSATION_NAME: String?,
+        identity: String?,
+        userid: String?,
+    ) {
+        this.DEFAULT_CONVERSATION_NAME = DEFAULT_CONVERSATION_NAME!!
+        this.identity = identity
+        this.userid = userid
+        val props = ConversationsClient.Properties.newBuilder().createProperties()
+        ConversationsClient.create(context!!, token!!, props, mConversationsClientCallback)
     }
 
 
@@ -109,13 +132,14 @@ class QuickstartConversationsManagerOneTowOne {
             if (conversationsClient==null){
                 messages.clear()
                 Log.d(TAG, "Loaded conversation: $DEFAULT_CONVERSATION_NAME")
+                conversationsManagerListener?.notInit()
             }else{
                 val client = conversationsClient ?: return
                 client.getConversation(DEFAULT_CONVERSATION_NAME, object : CallbackListener<Conversation> {
                     override fun onSuccess(conversation: Conversation) {
                         Log.d(TAG, "Loaded conversation: $DEFAULT_CONVERSATION_NAME")
-
                         handleConversation(conversation)
+
                     }
                     override fun onError(errorInfo: ErrorInfo) {
                         Log.e(TAG, "Error retrieving conversation: ${errorInfo.message}")
@@ -126,6 +150,62 @@ class QuickstartConversationsManagerOneTowOne {
         }catch (e:Exception){
             e.printStackTrace()
         }
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+     fun lastReadTime(conversation: Conversation,
+                             identity:String){
+            val participant: Participant = conversation.getParticipantByIdentity(identity)
+            if (participant == null) {
+                Log.e(TAG, "Participant with identity $identity not found in conversation.")
+                return
+            }
+            participant?.let {
+                val lastSeenTimestamp = it.getLastReadTimestamp()
+                if (lastSeenTimestamp != null) {
+                    val lastSeenDate =
+                        getFormattedLastSeen(lastSeenTimestamp) // Convert to readable date
+                    conversationsManagerListener?.onlineOffline(lastSeenDate)
+                    Log.d(TAG, "Last seen at: $lastSeenDate")
+                }
+            }
+
+    }
+
+    fun getFormattedLastSeen(lastSeen: String?): String {
+        if (lastSeen.isNullOrEmpty()) return "Last seen unavailable"
+
+        val lastSeenInstant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Instant.parse(lastSeen)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        } // Parse ISO date
+        val now = Instant.now() // Get current time
+        val lastSeenDateTime =
+            lastSeenInstant.atZone(ZoneId.systemDefault()) // Convert to local timezone
+        val nowDateTime = now.atZone(ZoneId.systemDefault())
+
+        val duration = Duration.between(lastSeenInstant, now)
+        val minutesAgo = duration.toMinutes()
+        val hoursAgo = duration.toHours()
+
+        return when {
+            minutesAgo < 1 -> "Online" // If within a minute
+            minutesAgo < 60 -> "$minutesAgo minutes ago" // If within an hour
+            hoursAgo < 24 && lastSeenDateTime.dayOfMonth == nowDateTime.dayOfMonth -> "$hoursAgo hours ago" // Today
+            hoursAgo < 48 && lastSeenDateTime.dayOfMonth == nowDateTime.minusDays(1).dayOfMonth -> "Yesterday" // Yesterday
+            else -> lastSeenDateTime.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) // Older dates
+        }
+    }
+    fun formatIsoDate(isoDate: String): String {
+        val instant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Instant.parse(isoDate)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+            .withZone(ZoneId.systemDefault()) // Convert to local timezone
+        return formatter.format(instant)
     }
 
     private fun handleConversation(conversation: Conversation) {
@@ -200,9 +280,9 @@ class QuickstartConversationsManagerOneTowOne {
                     override fun onCompleted(mediaSid: String) {
                     }
                 })
-            conversation!!.sendMessage(options) {
+            conversation?.sendMessage(options) {
                 if (conversationsManagerListener != null) {
-                    conversationsManagerListener!!.messageSentCallback()
+                    conversationsManagerListener?.messageSentCallback()
                 }
             }
         }
@@ -225,9 +305,9 @@ class QuickstartConversationsManagerOneTowOne {
 
                         }
                     })
-            conversation!!.sendMessage(options) {
+            conversation?.sendMessage(options) {
                 if (conversationsManagerListener != null) {
-                    conversationsManagerListener!!.messageSentCallback()
+                    conversationsManagerListener?.messageSentCallback()
                 }
             }
         }
@@ -281,7 +361,7 @@ class QuickstartConversationsManagerOneTowOne {
 
                 override   fun onError(errorInfo: ErrorInfo) {
                     Log.e(TAG, "Error retrieving conversation: ${errorInfo.message}")
-                    conversationsManagerListener?.showError()
+                    conversationsManagerListener?.showError(errorInfo.message)
 
                 }
             })
@@ -326,6 +406,12 @@ class QuickstartConversationsManagerOneTowOne {
         }else{
             conversationsManagerListener?.reloadMessages()
         }
+        conversationsClient?.let { client->
+            identity?.let {
+                subscribeToUserStatus(client,it)
+            }
+
+        }
     }
 
     private val mConversationsClientListener = object : ConversationsClientListener {
@@ -360,7 +446,7 @@ class QuickstartConversationsManagerOneTowOne {
         override fun onClientSynchronization(synchronizationStatus: ConversationsClient.SynchronizationStatus) {
             if (synchronizationStatus == ConversationsClient.SynchronizationStatus.COMPLETED) {
                 loadChannels()
-                loadChatList()
+                //loadChatList()
             }
         }
 
@@ -401,7 +487,7 @@ class QuickstartConversationsManagerOneTowOne {
         }
 
         override fun onError(errorInfo: ErrorInfo) {
-            conversationsManagerListener?.showError()
+            conversationsManagerListener?.showError(errorInfo.message)
             Log.e(TAG, "Error creating Twilio Conversations Client: ${errorInfo.message}")
         }
     }
@@ -429,12 +515,17 @@ class QuickstartConversationsManagerOneTowOne {
 
         override fun onParticipantAdded(participant: Participant) {
             Log.d(TAG, "Participant added: ${participant.identity}")
-//            tvOnline!!.text = "Online"
         }
 
         override fun onParticipantUpdated(participant: Participant, updateReason: Participant.UpdateReason) {
-            Log.d(TAG, "Participant updated: ${participant.identity} $updateReason")
-//            tvOnline!!.text = "Online"
+            try {
+                Log.d(TAG, "Participant updated: ${participant.identity} $updateReason")
+               /* if (conversation != null && identity != null) {
+                    lastReadTime(conversation!!, identity!!)
+                }*/
+            }catch (e:Exception){
+                Log.e(TAG, "Error in onParticipantUpdated: ${e.localizedMessage}", e)
+            }
         }
 
         override fun onParticipantDeleted(participant: Participant) {
@@ -466,6 +557,20 @@ class QuickstartConversationsManagerOneTowOne {
             conversation!!.setAllMessagesRead { }
         }
     }
+
+     fun subscribeToUserStatus(conversationsClient: ConversationsClient, identity: String) {
+      conversationsClient.getAndSubscribeUser(identity,object : CallbackListener<User> {
+          override fun onSuccess(result: User?) {
+              result?.let {
+                  val statusText = if (result.isOnline) "Online" else "Offline"
+                  conversationsManagerListener?.onlineOffline(statusText)
+                  Log.d(TAG, "Last seen at: $statusText")
+              }
+          }
+
+      })
+    }
+
 
 
 

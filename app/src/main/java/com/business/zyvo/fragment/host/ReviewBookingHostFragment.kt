@@ -267,6 +267,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                            intent.putExtra("friend_name",friendName).toString()
 
                            intent.putExtra("user_name",userName)
+                           intent.putExtra("sender_id", guestId.toString())
 
                            startActivity(intent)
                        }
@@ -421,9 +422,20 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             binding.tvTaxes.setText("$ " + it)
         } ?: binding.tvTaxes.setText("$ 0")
 
-        data.add_on_total?.let {
+        /*data.add_on_total?.let {
             binding.tvAddOn.setText("$ " + it)
-        } ?: binding.tvAddOn.setText("$ 0")
+        } ?: binding.tvAddOn.setText("$ 0")*/
+        binding.tvAddOn.text = if (!data.add_on_total.isNullOrEmpty()) {
+            "$ ${data.add_on_total}"
+        } else {
+            "$ 0"
+        }
+
+        binding.tvTotalPrice.text = if (!data.booking_total_amount.isNullOrEmpty()) {
+            "$ ${data.booking_total_amount}"
+        } else {
+            "$ 0"
+        }
 
         data.guest_name?.let {
             binding.textUserName.setText(it)

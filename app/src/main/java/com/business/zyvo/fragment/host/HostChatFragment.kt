@@ -1,16 +1,19 @@
 package com.business.zyvo.fragment.host
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextUtils
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -19,6 +22,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
@@ -27,17 +31,20 @@ import com.business.zyvo.TimeUtils
 import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.adapter.AdapterChatList
-import com.business.zyvo.chat.QuickstartConversationsManagerFragment
 import com.business.zyvo.databinding.FragmentChatBinding
 import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog.showToast
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.host.ChatListHostViewModel
+import com.skydoves.powerspinner.PowerSpinnerView
 import com.twilio.conversations.CallbackListener
 import com.twilio.conversations.Conversation
 import com.twilio.conversations.ErrorInfo
 import com.twilio.conversations.StatusListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 
 @AndroidEntryPoint
 class HostChatFragment : Fragment() , View.OnClickListener,
@@ -71,19 +78,30 @@ class HostChatFragment : Fragment() , View.OnClickListener,
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
 
         Log.d("TESTING_ZYVOO_Proj", "onCreateView OF CHAT")
         _binding = FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
-        //quickstartConversationsManager.setListener(this)
         try {
-            quickstartConversationsManager = (activity?.application as MyApp).conversationsManagerFragment
+            val myApp = activity?.application as? MyApp
+            quickstartConversationsManager = myApp?.conversationsManagerFragment ?: QuickstartConversationsManager()
             quickstartConversationsManager.setListener(this)
-            // Ensure this is only called after full initialization
         } catch (e: Exception) {
             Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+        }
+
+
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(requireContext(), false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
         }
 
         var sessionManager = SessionManager(requireContext())
@@ -126,7 +144,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,
             }
         })
 
-        callingGetChatUser()
+       // callingGetChatUser("")
 
     }
 
@@ -135,62 +153,88 @@ class HostChatFragment : Fragment() , View.OnClickListener,
         adapterChatList.setOnItemClickListener(object : AdapterChatList.onItemClickListener{
             override fun onItemClick(data: ChannelListModel, index: Int,type:String) {
                 try {
-                    if(type.equals(AppConstant.DELETE)){
-                        Log.d("TESTING", data.group_name.toString())
-                        quickstartConversationsManager?.conversationsClient?.getConversation(
-                            data.group_name,
-                            object : CallbackListener<Conversation> {
-                                override fun onSuccess(conversation: Conversation) {
-                                    conversation.destroy(object : StatusListener {
-                                        override fun onSuccess() {
-                                            Log.d("TESTING", "Delete Chat here")
-                                            chatList.remove(data)
-                                            adapterChatList.updateItem(chatList)
+                    when (type) {
+                        AppConstant.DELETE ->{
+                                Log.d("TESTING", data.group_name.toString())
+                                quickstartConversationsManager.conversationsClient?.getConversation(
+                                    data.group_name,
+                                    object : CallbackListener<Conversation> {
+                                        override fun onSuccess(conversation: Conversation) {
+                                            conversation.leave(object : StatusListener {
+                                                override fun onSuccess() {
+                                                    Log.d("TESTING", "Delete Chat here")
+                                                    chatList.remove(data)
+                                                    adapterChatList.updateItem(chatList)
+                                                }
+
+                                                override fun onError(errorInfo: ErrorInfo) {
+                                                    Log.e("TESTING", "Error deleting conversation: ${errorInfo.message}")
+                                                }
+                                            })
+
                                         }
 
                                         override fun onError(errorInfo: ErrorInfo) {
-                                            Log.e("TESTING", "Error deleting conversation: ${errorInfo.message}")
+                                            Log.e(
+                                                QuickstartConversationsManager.TAG,
+                                                "Error retrieving conversation: " + errorInfo.message
+                                            )
                                         }
                                     })
-
-                                }
-
-                                override fun onError(errorInfo: ErrorInfo) {
-                                    Log.e(
-                                        QuickstartConversationsManager.TAG!!,
-                                        "Error retrieving conversation: " + errorInfo.message
-                                    )
-                                }
-                            })
-
-
-                     //  quickstartConversationsManager.deleteConversation(data.group_name,SessionManager(requireContext()).getUserId().toString())
-                    }else {
-                        val intent = Intent(requireContext(), ChatActivity::class.java)
-                        var channelName: String = data.group_name.toString()
-                        if (data.receiver_id.equals(userId.toString())) {
-                            intent.putExtra("user_img", data.receiver_image).toString()
-                            SessionManager(requireContext()).getUserId()
-                                ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
-                            Log.d("TESTING", "REVIEW HOST" + channelName)
-                            intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
-                            intent.putExtra(AppConstant.FRIEND_ID, data.sender_id)
-                            intent.putExtra("friend_img", data.sender_profile).toString()
-                            intent.putExtra("friend_name", data.sender_name).toString()
-                            intent.putExtra("user_name", data.receiver_name)
-                        } else {
-                            intent.putExtra("user_img", data.sender_profile).toString()
-                            SessionManager(requireContext()).getUserId()
-                                ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
-                            Log.d("TESTING", "REVIEW HOST" + channelName)
-                            intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
-                            intent.putExtra(AppConstant.FRIEND_ID, data.receiver_id)
-                            intent.putExtra("friend_img", data.receiver_image).toString()
-                            intent.putExtra("friend_name", data.receiver_name).toString()
-                            intent.putExtra("user_name", data.sender_name)
+                        }
+                        AppConstant.BLOCK -> {
+                            Log.d("TESTING", "Blocking user for group: ${data.group_name}")
+                            chatUserBlock(data, index)
                         }
 
-                        startActivity(intent)
+                        AppConstant.MUTE -> {
+                            Log.d("TESTING", "Muting chat for group: ${data.group_name}")
+                            muteChat(data, index)
+                        }
+
+                        AppConstant.REPORT -> {
+                            Log.d("TESTING", "Reporting chat for group: ${data.group_name}")
+                        }
+                        AppConstant.ARCHIVED -> {
+                            Log.d("TESTING", "Reporting chat for group: ${data.group_name}")
+                            toggleArchiveUnarchive(data,index)
+                        }
+                        else ->{
+                            val intent = Intent(requireContext(), ChatActivity::class.java)
+                            var channelName: String = data.group_name.toString()
+                            if (data.receiver_id.equals(userId.toString())) {
+                                intent.putExtra("user_img", data.receiver_image).toString()
+                                SessionManager(requireContext()).getUserId()
+                                    ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
+                                Log.d("TESTING", "REVIEW HOST" + channelName)
+                                intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
+                                intent.putExtra(AppConstant.FRIEND_ID, data.sender_id)
+                                intent.putExtra("friend_img", data.sender_profile).toString()
+                                intent.putExtra("friend_name", data.sender_name).toString()
+                                intent.putExtra("user_name", data.receiver_name)
+                                intent.putExtra("is_blocked", data.is_blocked)
+                                intent.putExtra("is_favorite", data.is_favorite)
+                                intent.putExtra("is_muted", data.is_muted)
+                                intent.putExtra("is_archived", data.is_archived)
+                            } else {
+                                intent.putExtra("user_img", data.sender_profile).toString()
+                                SessionManager(requireContext()).getUserId()
+                                    ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
+                                Log.d("TESTING", "REVIEW HOST" + channelName)
+                                intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
+                                intent.putExtra(AppConstant.FRIEND_ID, data.receiver_id)
+                                intent.putExtra("friend_img", data.receiver_image).toString()
+                                intent.putExtra("friend_name", data.receiver_name).toString()
+                                intent.putExtra("user_name", data.sender_name)
+                                intent.putExtra("is_blocked", data.is_blocked)
+                                intent.putExtra("is_favorite", data.is_favorite)
+                                intent.putExtra("is_muted", data.is_muted)
+                                intent.putExtra("is_archived", data.is_archived)
+                            }
+
+                            intent.putExtra("sender_id", data.sender_id)
+                            startActivity(intent)
+                        }
                     }
                 }catch(e:Exception){
                     Log.d("TESTING","INSIDE THE CATCH BLOCK")
@@ -199,6 +243,50 @@ class HostChatFragment : Fragment() , View.OnClickListener,
             }
 
         })
+    }
+
+    private fun dialogReportIssue() {
+        val dialog =  Dialog(requireActivity(), R.style.BottomSheetDialog)
+        dialog.apply {
+            setCancelable(true)
+            setContentView(R.layout.report_violation)
+            val crossButton: ImageView = findViewById(R.id.img_cross)
+            val submit : RelativeLayout = findViewById(R.id.rl_submit_report)
+            val txtSubmit : TextView = findViewById(R.id.txt_submit)
+            val et_addiotnal_detail : EditText = findViewById(R.id.et_addiotnal_detail)
+            val powerSpinner : PowerSpinnerView = findViewById(R.id.spinnerView1)
+            submit.setOnClickListener {
+                if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
+                    txtSubmit.text = "Submitted"
+                }else if(et_addiotnal_detail.text.isEmpty()){
+                    showToast(requireActivity(),AppConstant.additional)
+                } else{
+                    /*reportViolation(session?.getUserId().toString(),
+                            *//*"44"*//*bookingId!!,
+                            propertyData?.property_id.toString(),
+                            reportReasonsMap.get(powerSpinner.text.toString()).toString(),
+                            et_addiotnal_detail.text.toString(),dialog)*/
+                }
+            }
+            // Handle item click
+            powerSpinner.setOnSpinnerItemSelectedListener<String> { _, _, position, item ->
+
+            }
+            crossButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent) // Optional
+
+
+            show()
+            //   listReportReasons(powerSpinner)
+        }
+
     }
 
     fun filter(query: String) {
@@ -214,59 +302,96 @@ class HostChatFragment : Fragment() , View.OnClickListener,
 
     }
 
-    private fun callingGetChatUser() {
-        lifecycleScope.launch {
-            var sessionManager = SessionManager(requireContext())
-            LoadingUtils.showDialog(requireContext(),false)
-            var userId = sessionManager.getUserId()
-            if (userId != null) {
+
+    private fun callingGetChatUser(archive_status:String) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
                 var sessionManager = SessionManager(requireContext())
-                var userType = sessionManager.getUserType()
-                if (userType != null) {
-                    viewModel.getChatUserChannelList(userId,userType).collect {
-                        when (it) {
-                            is NetworkResult.Success -> {
-                                if(it.data ==null  || it.data.size ==0){
-                                    LoadingUtils.hideDialog()
+                LoadingUtils.showDialog(requireContext(),false)
+                var userId = sessionManager.getUserId()
+                if (userId != null) {
+                    var sessionManager = SessionManager(requireContext())
+                    var userType = sessionManager.getUserType()
+                    if (userType != null) {
+                        viewModel.getChatUserChannelList(userId,userType,archive_status).collect {
+                            when (it) {
+                                is NetworkResult.Success -> {
+                                    if(it.data ==null  || it.data.size ==0){
+                                        LoadingUtils.hideDialog()
+                                    }
+                                    it.data?.let {
+                                        viewModel.chatChannel = it
+                                        it.forEach {
+                                            map.put(it.group_name.toString(),it)
+                                        }
+                                        Log.d("*******",map.size.toString() +" Map Size is ")
+                                        Log.d("*******","Chat token is "+sessionManager.getChatToken())
+                                        val myApp = activity?.application as? MyApp
+                                        quickstartConversationsManager = myApp?.conversationsManagerFragment ?: QuickstartConversationsManager()
+                                        if (myApp?.conversationsManagerFragment == null &&
+                                            quickstartConversationsManager.conversationsClient ==null) {
+                                            quickstartConversationsManager.initializeWithAccessToken(requireContext(),
+                                                sessionManager.getChatToken(),"general",
+                                               sessionManager.getUserId().toString())
+                                            quickstartConversationsManager.setListener(this@HostChatFragment)
+                                        }else{
+                                            Log.d("*******","loadChatList")
+                                            quickstartConversationsManager.loadChatList()
+                                        }
+
+                                    }
                                 }
 
-                                Log.d("TESTING","Inside the message success")
+                                is NetworkResult.Error -> {
+                                    LoadingUtils.hideDialog()
+                                    Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
+                                }
+
+                                else -> {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
+    }
+
+    private fun chatUserBlock(data: ChannelListModel, index: Int) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                LoadingUtils.showDialog(requireContext(), false)
+                val id = data.sender_id?.toInt()
+                val group_name = data.group_name
+                val block = if (data.is_blocked == 0) 1 else 0
+                if (id != null && group_name != null) {
+                    viewModel.blockUser(id, group_name.toString(), block).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
                                 it.data?.let {
-                                    viewModel.chatChannel = it
-                                    it.forEach {
-                                        map.put(it.group_name.toString(),it)
-                                    }
-                                    Log.d("*******",map.size.toString() +" Map Size is ")
-                                    Log.d("*******","Chat token is "+sessionManager.getChatToken())
-                                    if (quickstartConversationsManager.conversationsClient==null) {
-                                        var currentUserId =
-                                            "" + SessionManager(requireContext()).getUserId() + "_" + SessionManager(
-                                                requireContext()
-                                            ).getUserType()
-                                        quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", SessionManager(requireContext()).getUserId().toString())
-                                      /*  quickstartConversationsManager.initializeWithAccessTokenBase(
-                                            requireContext(),
-                                            sessionManager.getChatToken().toString()
-                                        )*/
-                                    }else{
-                                        Log.d("*******","loadChatList");
-
-
-                                    quickstartConversationsManager.initializeWithAccessToken(requireContext(), sessionManager.getChatToken(),"general", SessionManager(requireContext()).getUserId().toString())
-
-            //                                reloadMessages()
-
-
-
-                                        quickstartConversationsManager.loadChatList()
-                                    }
-
+                                    Log.d("******", "ChatUserBlock")
+                                    val chat = chatList.get(index)
+                                    chat.is_blocked = block
+                                    chatList.set(index, chat)
+                                    showToast(
+                                        requireContext(),
+                                        it.get("message").asString
+                                    )
                                 }
                             }
 
                             is NetworkResult.Error -> {
                                 LoadingUtils.hideDialog()
-                                Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    requireContext(),
+                                    it.message.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
 
                             else -> {
@@ -276,7 +401,103 @@ class HostChatFragment : Fragment() , View.OnClickListener,
                     }
                 }
             }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
+    }
+
+    private fun muteChat(data: ChannelListModel, index: Int) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                LoadingUtils.showDialog(requireContext(), false)
+                val  group_name = data.group_name
+                val muted = if (data.is_muted == 0) 1 else 0
+                if (userId!=null && group_name!=null) {
+                    viewModel.muteChat(userId, group_name.toString(),muted).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    Log.d("******", "muteChat")
+                                    val chat = chatList.get(index)
+                                    chat.is_muted = muted
+                                    chatList.set(index, chat)
+                                    showToast(
+                                        requireContext(),
+                                        it.get("message").asString
+                                    )
+                                }
+                            }
+
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(
+                                    requireContext(),
+                                    it.message.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
+    }
+
+    private fun toggleArchiveUnarchive(data: ChannelListModel, index: Int) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                LoadingUtils.showDialog(requireContext(), false)
+                val  group_name = data.group_name
+                val archived = if (data.is_archived == 0) 1 else 0
+                userId?.let { id->
+                    group_name?.let {
+                        viewModel.toggleArchiveUnarchive(id, it).collect {
+                            when (it) {
+                                is NetworkResult.Success -> {
+                                    it.data?.let {
+                                        Log.d("******", "toggleArchiveUnarchive")
+                                        val chat = chatList.get(index)
+                                        chat.is_archived = archived
+                                        chatList.set(index, chat)
+                                        showToast(
+                                            requireContext(),
+                                            it.get("message").asString
+                                        )
+                                    }
+                                }
+                                is NetworkResult.Error -> {
+                                    LoadingUtils.hideDialog()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        it.message.toString(),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+
+                                else -> {
+
+                                }
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
     }
 
     private fun showPopupWindow(anchorView: View, position: Int) {
@@ -294,16 +515,49 @@ class HostChatFragment : Fragment() , View.OnClickListener,
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
-
+            chatList.sortWith { o1, o2 ->
+                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
+            }
+            adapterChatList.updateItem(chatList)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
-
+            val localtchat:MutableList<ChannelListModel> =  mutableListOf()
             popupWindow.dismiss()
+            val filteredChats = chatList.filter { it.is_archived == 1 }
+            localtchat.addAll(filteredChats)
+            localtchat.sortWith { o1, o2 ->
+                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
+            }
+
+            adapterChatList.updateItem(localtchat)
         }
         popupView.findViewById<TextView>(R.id.itemUnread).setOnClickListener {
-
             popupWindow.dismiss()
+            quickstartConversationsManager.let { quick ->
+                quick.conversationsClient?.let {
+                    LoadingUtils.showDialog(requireContext(),false)
+                    quick.getUnreadConversations(it
+                    ) { unreadConversations ->
+                        LoadingUtils.hideDialog()
+                        Log.d("******", "Unread conversations count: " + unreadConversations.size)
+                        val localtchat:MutableList<ChannelListModel> =  mutableListOf()
+                        for (conversation in unreadConversations) {
+                            Log.d("******", "Unread conversation: " + conversation.uniqueName)
+                            if (map.containsKey(conversation.uniqueName)) {
+                                val filteredChats = chatList.filter { it.group_name == conversation.uniqueName }
+                                localtchat.addAll(filteredChats)
+                            }
+                        }
+                        localtchat.sortWith { o1, o2 ->
+                            if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
+                        }
+
+                        adapterChatList.updateItem(localtchat)
+                    }
+                }
+            }
+
         }
 
 
@@ -365,6 +619,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,
     override fun onResume() {
         super.onResume()
         (activity as? GuesMain)?.inboxColor()
+        callingGetChatUser("")
     }
 
     override fun receivedNewMessage() {
@@ -376,7 +631,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,
                     quickstartConversationsManager.messages.forEach {
                         Log.d("message ","*******"+it.messageBody  +" auther "+ it.conversation.uniqueName)
                         for(i in 0..chatList.size -1){
-                            position =i;
+                            position =i
                             if(it.conversation.uniqueName.equals(chatList.get(i).group_name)){
                                 var obj = map.get(it.conversation.uniqueName)
                                 obj?.lastMessage = it.messageBody
@@ -394,7 +649,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,
 
 
                     chatList.sortWith { o1, o2 ->
-                        if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+                        if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
                     }
 
                     adapterChatList.updateItem(chatList)
@@ -452,7 +707,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,
             }
 
             chatList.sortWith { o1, o2 ->
-                if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
             }
 
             adapterChatList.updateItem(chatList)
@@ -465,16 +720,36 @@ class HostChatFragment : Fragment() , View.OnClickListener,
         requireActivity().runOnUiThread {
             try {
                 chatList.clear()
-                Log.d("*******", "" + chatList.size)
-                Log.d("*******", ""+quickstartConversationsManager.messages.size + " SIZE OF MESSAGE")
-                if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
-
-                   /* quickstartConversationsManager.messages.forEach {
-                        Log.d("*******","m 8888"+it.messageBody)
-                        //Log.d("*******","j 8888"+it.participant.conversation.state)
-                        Log.d("*******","u 88888"+it.conversation.uniqueName)
-                    }*/
-
+                Log.d("*******", "${chatList.size}")
+                quickstartConversationsManager.messages?.takeIf { it.isNotEmpty() }?.forEach { message ->
+                    try {
+                        map.let { map ->
+                            if (map.containsKey(message.conversation.uniqueName)) {
+                                val obj = map.get(message.conversation.uniqueName)
+                                obj?.let {
+                                    obj.lastMessage = message.messageBody
+                                    obj.lastMessageTime =
+                                        TimeUtils.updateLastMsgTime(message.dateCreated)
+                                    obj.isOnline = false
+                                    obj.date = message.dateCreated
+                                    // Only add if it's a new conversation
+                                    if (obj != null) {
+                                        chatList.add(obj)
+                                        map[message.conversation.uniqueName] = obj
+                                        addedConversations.add(message.conversation.uniqueName) // Mark as added
+                                        Log.d(
+                                            "*******",
+                                            "Added conversation: ${message.conversation.uniqueName}"
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }catch (e:Exception){
+                        Log.e("*******", "Error processing message: ${e.message}", e)
+                    }
+                }
+                /*if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
                     for (i in quickstartConversationsManager.messages) {
                         try {
                             if (map.containsKey(i.conversation.uniqueName)) {
@@ -483,7 +758,8 @@ class HostChatFragment : Fragment() , View.OnClickListener,
                                 obj?.lastMessageTime = TimeUtils.updateLastMsgTime(i.dateCreated)
                                 obj?.isOnline = false
                                 obj?.date=i.dateCreated
-                                if (obj != null/* && i.conversation.uniqueName !in addedConversations*/) {
+                                // Fetch user identity (assuming it's in i.conversation)
+                                if (obj != null*//* && i.conversation.uniqueName !in addedConversations*//*) {
                                     chatList.add(obj)
                                     map.put(i.conversation.uniqueName, obj)
                                     addedConversations.add(i.conversation.uniqueName) // Mark as added
@@ -496,28 +772,32 @@ class HostChatFragment : Fragment() , View.OnClickListener,
                         }
 
                     }
-                }
+                }*/
             }catch (e:Exception){
                 Log.d("******","msg :- "+e.message)
             }
             chatList.sortWith { o1, o2 ->
-                if (o1?.date == null || o2?.date == null) 0 else o2.date!!.compareTo(o1.date!!)
+                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
             }
 
             adapterChatList.updateItem(chatList)
         }
     }
 
-   /* override fun reloadLastMessages() {
-        Log.d("*******", "reloadLastMessages " )
-        LoadingUtils.hideDialog()
-        //updateAdapter()
-        reloadMessages()
+    override fun showError(message: String?) {
+        if (message != null && isAdded && !requireActivity().isFinishing) {
+            LoadingUtils.hideDialog()
+            LoadingUtils.showSuccessDialog(requireContext(), message)
+        }
     }
 
-    override fun showError() {
-        LoadingUtils.hideDialog()
-    }*/
+    override fun notInit() {
+        Log.d("******","notInit")
+        quickstartConversationsManager.initializeWithAccessToken(requireContext(),
+            SessionManager(requireContext()).getChatToken(),"general",
+            SessionManager(requireContext()).getUserId().toString())
+        quickstartConversationsManager.setListener(this@HostChatFragment)
+    }
 
 
 }

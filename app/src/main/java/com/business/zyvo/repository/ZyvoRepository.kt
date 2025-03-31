@@ -446,7 +446,8 @@ interface ZyvoRepository {
 
     suspend fun getUserChannel(
         @Field("user_id") userId :Int
-        ,getUserChannel: String
+        ,getUserChannel: String,
+        archive_status:String
     ) : Flow<NetworkResult<MutableList<ChannelListModel>>>
 
 
@@ -625,6 +626,34 @@ interface ZyvoRepository {
     suspend fun getSavedItemWishList(
         @Field("user_id") userId :Int,
         @Field("wishlist_id") wishListId :Int
+    ) :Flow<NetworkResult<JsonObject>>
+
+    suspend fun blockUser(
+        senderId :Int,
+        group_channel :String,
+        blockUnblock:Int
+    ) :Flow<NetworkResult<JsonObject>>
+
+    suspend fun markFavoriteChat(
+        senderId :Int,
+        group_channel :String,
+        favorite:Int
+    ) :Flow<NetworkResult<JsonObject>>
+
+    suspend fun sendChatNotification(
+        senderId :String,
+        receiverId :String,
+    ) :Flow<NetworkResult<JsonObject>>
+
+    suspend fun muteChat(
+        userId :Int,
+        group_channel :String,
+        mute:Int
+    ) :Flow<NetworkResult<JsonObject>>
+
+    suspend fun toggleArchiveUnarchive(
+        userId :Int,
+        group_channel :String
     ) :Flow<NetworkResult<JsonObject>>
 
 }

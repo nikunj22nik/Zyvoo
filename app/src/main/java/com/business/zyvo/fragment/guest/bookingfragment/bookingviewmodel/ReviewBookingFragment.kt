@@ -413,6 +413,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 intent.putExtra("friend_img",friendImage).toString()
                                 intent.putExtra("friend_name",friendName).toString()
                                 intent.putExtra("user_name",userName)
+                                intent.putExtra("sender_id", hostId)
                                 startActivity(intent)
                             }
                             else if(it.data?.sender_id?.toInt() == loggedInId){
@@ -435,6 +436,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 intent.putExtra("friend_img",friendImage).toString()
                                 intent.putExtra("friend_name",friendName).toString()
                                 intent.putExtra("user_name",userName)
+                                intent.putExtra("sender_id", hostId)
                                 startActivity(intent)
                             }
 

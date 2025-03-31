@@ -50,7 +50,7 @@ class QuickstartConversationsManager {
 
     var conversationsClient: ConversationsClient? = null
     private var conversation: Conversation? = null
-    private var conversationsManagerListener: QuickstartConversationsManagerListenerOneTowOne? = null
+    private var conversationsManagerListener: QuickstartConversationsManagerListener? = null
     private var tokenURL: String = ""
 
     private var identity: String? = null
@@ -76,27 +76,33 @@ class QuickstartConversationsManager {
 
 
     private fun loadAllChannel(conversationsClient: ConversationsClient){
-        messages.clear()
-        try {
-            val conversations = conversationsClient.myConversations
-            for (data in conversations) {
-                val lastMessageIndex = data.lastMessageIndex
-                if (lastMessageIndex != null && lastMessageIndex >= 0) {
-                Log.d("*******", "list ${data.uniqueName}")
-                data.getLastMessages(data.lastMessageIndex.toInt()) { result ->
-                    try {
-                        messages.addAll(result)
-                        conversationsManagerListener?.reloadLastMessages()
-                    } catch (e: Exception) {
-                        conversationsManagerListener?.reloadLastMessages()
-                        Log.e("*******", "Failed to process messages: ${e.message}")
+        if (conversationsClient!=null) {
+            messages.clear()
+            try {
+                val conversations = conversationsClient.myConversations
+                for (data in conversations) {
+                    val lastMessageIndex = data.lastMessageIndex
+                    if (lastMessageIndex != null && lastMessageIndex >= 0) {
+                        Log.d("*******", "list ${data.uniqueName}")
+                        data.getLastMessages(data.lastMessageIndex.toInt()) { result ->
+                            try {
+                                messages.addAll(result)
+                                if (conversationsManagerListener!=null) {
+                                    conversationsManagerListener?.reloadLastMessages()
+                                }
+                            } catch (e: Exception) {
+                                if (conversationsManagerListener!=null) {
+                                    conversationsManagerListener?.reloadLastMessages()
+                                    Log.e("*******", "Failed to process messages: ${e.message}")
+                                }
+                            }
+                        }
                     }
                 }
-                    }
+            } catch (e: Exception) {
+                conversationsManagerListener?.reloadLastMessages()
+                Log.e("*******", "msg ${e.message}")
             }
-        } catch (e: Exception) {
-            conversationsManagerListener?.reloadLastMessages()
-            Log.e("*******", "msg ${e.message}")
         }
     }
 
@@ -315,11 +321,13 @@ class QuickstartConversationsManager {
         if (conversation.lastMessageIndex != null) {
             conversation.getLastMessages(conversation.lastMessageIndex.toInt() + 1
             ) { result ->
-                messages.clear()
-                messages.addAll(result)
-                Log.d("*******", "${messages.size}")
-                conversation.setAllMessagesRead {
-                    conversationsManagerListener?.reloadMessages()
+                if (result!=null) {
+                    messages.clear()
+                    messages.addAll(result)
+                    Log.d("*******", "${messages.size}")
+                    conversation.setAllMessagesRead {
+                        conversationsManagerListener?.reloadMessages()
+                    }
                 }
             }
         }else{
@@ -358,7 +366,7 @@ class QuickstartConversationsManager {
 
         override fun onClientSynchronization(synchronizationStatus: ConversationsClient.SynchronizationStatus) {
             if (synchronizationStatus == ConversationsClient.SynchronizationStatus.COMPLETED) {
-            //    loadChannels()
+                //loadChannels()
                 loadChatList()
             }
         }
@@ -428,12 +436,10 @@ class QuickstartConversationsManager {
 
         override fun onParticipantAdded(participant: Participant) {
             Log.d(TAG, "Participant added: ${participant.identity}")
-//            tvOnline!!.text = "Online"
         }
 
         override fun onParticipantUpdated(participant: Participant, updateReason: Participant.UpdateReason) {
             Log.d(TAG, "Participant updated: ${participant.identity} $updateReason")
-//            tvOnline!!.text = "Online"
         }
 
         override fun onParticipantDeleted(participant: Participant) {
@@ -443,20 +449,18 @@ class QuickstartConversationsManager {
 
         override fun onTypingStarted(conversation: Conversation, participant: Participant) {
             Log.d(TAG, "Started Typing: ${participant.identity}")
-//            tvOnline!!.text = "Typing ..."
 
         }
 
         override fun onTypingEnded(conversation: Conversation, participant: Participant) {
             Log.d(TAG, "Ended Typing: ${participant.identity}")
-//            tvOnline!!.text = ""
         }
 
         override fun onSynchronizationChanged(conversation: Conversation) {}
     }
 
 
-    fun setListener(listener: QuickstartConversationsManagerListenerOneTowOne) {
+    fun setListener(listener: QuickstartConversationsManagerListener) {
         this.conversationsManagerListener = listener
     }
 

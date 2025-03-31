@@ -664,7 +664,8 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun getUserChannel(
           @Field("user_id") userId :Int,
-          @Field("type") type:String
+          @Field("type") type:String,
+          @Field("archive_status") archive_status:String
     ) : Response<JsonObject>
 
 
@@ -810,6 +811,46 @@ interface ZyvoApi {
     suspend fun getSavedItemWishList(
         @Field("user_id") userId :Int,
         @Field("wishlist_id") wishListId :Int
+    ) : Response<JsonObject>
+
+    @POST("block_user")
+    @FormUrlEncoded
+    suspend fun blockUser(
+        @Field("senderId") userId :Int,
+        @Field("group_channel") group_channel :String,
+        @Field("blockUnblock") blockUnblock :Int,
+    ) : Response<JsonObject>
+
+
+    @POST("mark_favorite_chat")
+    @FormUrlEncoded
+    suspend fun markFavoriteChat(
+        @Field("senderId") userId :Int,
+        @Field("group_channel") group_channel :String,
+        @Field("favorite") favorite :Int,
+    ) : Response<JsonObject>
+
+    @POST("send_chat_notification")
+    @FormUrlEncoded
+    suspend fun sendChatNotification(
+        @Field("sender_id") sender_id :String,
+        @Field("receiver_id") receiver_id :String
+    ) : Response<JsonObject>
+
+    @POST("mute_chat")
+    @FormUrlEncoded
+    suspend fun muteChat(
+        @Field("user_id") userId :Int,
+        @Field("group_channel") group_channel :String,
+        @Field("mute") mute :Int,
+    ) : Response<JsonObject>
+
+
+    @POST("toggle_archive_unarchive")
+    @FormUrlEncoded
+    suspend fun toggleArchiveUnarchive(
+        @Field("user_id") userId :Int,
+        @Field("group_channel") group_channel :String,
     ) : Response<JsonObject>
 
 

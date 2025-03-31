@@ -1,9 +1,6 @@
 
 
 package com.business.zyvo.activity
-
-
-import android.Manifest.permission
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -11,16 +8,27 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.PopupWindow
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.MyApp
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.adapter.ChatDetailsAdapter
 import com.business.zyvo.databinding.ActivityChatBinding
@@ -35,54 +43,100 @@ import com.jaiselrahman.filepicker.config.Configurations
 import com.jaiselrahman.filepicker.model.MediaFile
 import java.io.File
 import java.io.FileNotFoundException
-import com.business.zyvo.chat.QuickstartConversationsManager
 import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
 import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
+import com.business.zyvo.model.ChannelListModel
+import com.business.zyvo.utils.ErrorDialog.showToast
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-
+@AndroidEntryPoint
 class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerOneTowOne {
 
     lateinit var binding: ActivityChatBinding
     private var adapter: ChatDetailsAdapter?=null
     private var quickstartConversationsManager = QuickstartConversationsManagerOneTowOne()
     lateinit var sessionManagement: SessionManager
-    private lateinit var viewModel: ChatDetailsViewModel
     var profileImage :String =""
     var providertoken :String =""
     var groupName :String =""
     var friendprofileimage :String =""
     var userId :String=""
+    var sender_id :String=""
     var friendId :String=""
     var friend_name :String =""
-    private var file: File? = null
     var userName :String = ""
-    var PERMISSIONS: Array<String> = arrayOf(permission.CAMERA, permission.READ_EXTERNAL_STORAGE, permission.WRITE_EXTERNAL_STORAGE,)
-    private val REQUEST_IMAGE_CODE_ASK_PERMISSIONS = 123
     private val mediaFiles: ArrayList<MediaFile?> = ArrayList<MediaFile?>()
     private val REQUEST_Folder = 2
+    private var is_blocked = 0
+    private var is_favorite = 0
+    private  var is_muted = 0
+    private var is_archived = 0
+    private var isOnline = false
+    private val handler = Handler(Looper.getMainLooper())
+    private val updateInterval = 30000L // 30 seconds
+    private var isPolling = false // Flag to track polling state
+
+    private val viewModel: ChatDetailsViewModel by lazy {
+        ViewModelProvider(this)[ChatDetailsViewModel::class.java]
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatBinding.inflate(LayoutInflater.from(this))
         sessionManagement = SessionManager(this)
 
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            viewModel.isLoading.observe(this@ChatActivity) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(this@ChatActivity, false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
+        }
+
         binding.etmassage.setOnClickListener {
             binding.etmassage.requestFocus() // Request focus explicitly
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.showSoftInput(binding.etmassage, InputMethodManager.SHOW_IMPLICIT)
         }
-
         if (intent.extras != null) {
             profileImage = intent?.extras?.getString("user_img").toString()
             providertoken = sessionManagement.getChatToken().toString()
-            userId = intent?.extras?.getString(AppConstant.USER_ID).toString()
+            userId = intent?.extras?.getInt(AppConstant.USER_ID).toString()
             groupName = intent?.extras?.getString(AppConstant.CHANNEL_NAME).toString()
             Log.d("TESTING_Group_NAME",groupName)
             friendId = intent?.extras?.getString(AppConstant.FRIEND_ID).toString()
-            friendprofileimage = intent?.extras?.getString("friend_img").toString()
-            friend_name = intent?.extras?.getString("friend_name").toString()
-            userName = intent?.extras?.getString("user_name").toString()
+            friendprofileimage = intent?.extras?.getString("friend_img","")?:""
+            friend_name = intent?.extras?.getString("friend_name","")?:""
+            userName = intent?.extras?.getString("user_name","")?:""
+            is_blocked = intent?.extras?.getInt("is_blocked",0)?:0
+            is_favorite = intent?.extras?.getInt("is_favorite",0)?:0
+            is_muted = intent?.extras?.getInt("is_muted",0)?:0
+            is_archived = intent?.extras?.getInt("is_archived",0)?:0
+            userName = intent?.extras?.getString("user_name","")?:""
+            sender_id = intent?.extras?.getString("sender_id","")?:""
             binding.tvStatus.setText(friend_name)
+
+            if (is_blocked==1){
+                binding.rvChatting1.visibility = View.GONE
+                binding.rvChattingblock.visibility = View.VISIBLE
+            }else{
+                binding.rvChatting1.visibility = View.VISIBLE
+                binding.rvChattingblock.visibility = View.GONE
+            }
+
+
+            if (is_favorite==1){
+                binding.imageUnFavourite.visibility = View.GONE
+                binding.imageFavourite.visibility = View.VISIBLE
+            }else{
+                binding.imageUnFavourite.visibility = View.VISIBLE
+                binding.imageFavourite.visibility = View.GONE
+            }
+
 
             Glide.with(this).load(AppConstant.BASE_URL+ friendprofileimage).error(R.drawable.ic_img_not_found).into(binding.imageProfilePicture)
 
@@ -99,22 +153,48 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
           /*  quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
             quickstartConversationsManager.setListener(this)*/
-            try {
-                quickstartConversationsManager = (application as MyApp).conversationsManagerOneTowOne
-                if (quickstartConversationsManager?.conversationsClient!=null){
+           /* try {
+                quickstartConversationsManager = (application as MyApp).conversationsManagerOneTowOne!!
+                if (quickstartConversationsManager!=null){
                     quickstartConversationsManager.setListener(this)
                     quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
                 }else{
-                    quickstartConversationsManager.initializeWithAccessTokenBase(this@ChatActivity
-                        ,sessionManagement.getChatToken().toString())
+                    quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity,
+                        providertoken, groupName, friendId, userId)
+                    quickstartConversationsManager.setListener(this)
                 }
             } catch (e: Exception) {
                 Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+            }*/
+            try {
+                val myApp = application as? MyApp
+                quickstartConversationsManager = myApp?.conversationsManagerOneTowOne ?: QuickstartConversationsManagerOneTowOne()
+                quickstartConversationsManager.setListener(this)
+                if (myApp?.conversationsManagerOneTowOne == null) {
+                    quickstartConversationsManager.initializeWithAccessToken(
+                        this@ChatActivity, providertoken, groupName, friendId, userId
+                    )
+                    myApp?.conversationsManagerOneTowOne = quickstartConversationsManager
+                }
+                quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
+            } catch (e: Exception) {
+                Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
             }
+
         }else{
             LoadingUtils.showSuccessDialog(this,"Please check your internet connection")
         }
 
+        binding.imageThreeDots.setOnClickListener {
+            showPopupWindow(it)
+        }
+
+        binding.rvChattingblock.setOnClickListener {
+            chatUserBlock(groupName,0)
+        }
+        binding.imageUnFavourite.setOnClickListener {
+            markFavoriteChat(groupName,1)
+        }
 
         initialize()
 
@@ -128,25 +208,26 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         }
 
         binding.imgFile.setOnClickListener {
-//            if (hasPermissions(this@ChatActivity, *PERMISSIONS)) {
-//                Log.d("TESTING_PERMISSION","PERMISSION GRANTED")
+            if (is_blocked==2){
+                LoadingUtils.showErrorDialog(this, "You are blocked by $friend_name.")
+            }else {
                 browsePicture()
-//            } else {
-//                ActivityCompat.requestPermissions(this@ChatActivity, PERMISSIONS, REQUEST_IMAGE_CODE_ASK_PERMISSIONS)
-//                Log.d("TESTING_PERMISSION","PERMISSION NOT GRANTED")
-//            }
+            }
         }
 
         binding.sendBtn.setOnClickListener {
-            if(NetworkMonitorCheck._isConnected.value) {
-                if (binding.etmassage.text.toString().trim().isNotEmpty()) {
-                    Log.d("TESTING","I am here in sending message")
-                    quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
+            if (is_blocked==2){
+                LoadingUtils.showErrorDialog(this, "You are blocked by $friend_name.")
+            }else {
+                if (NetworkMonitorCheck._isConnected.value) {
+                    if (binding.etmassage.text.toString().trim().isNotEmpty()) {
+                        quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
+                    } else {
+                        LoadingUtils.showErrorDialog(this, "Message can't be empty")
+                    }
                 } else {
-                    LoadingUtils.showErrorDialog(this, "Message can't be empty")
+                    LoadingUtils.showSuccessDialog(this, "Please check your internet connection")
                 }
-            }else{
-                LoadingUtils.showSuccessDialog(this,"Please check your internet connection")
             }
         }
 
@@ -276,6 +357,9 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
     override fun messageSentCallback() {
+        if (!isOnline) {
+            sendChatNotification()
+        }
     }
 
 
@@ -293,13 +377,51 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
     override fun reloadLastMessages() {
         Log.d("*******","reloadLastMessages")
-        quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
+      //  quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
     }
 
-    override fun showError() {
-
+    override fun showError(message:String) {
+        if (!(isFinishing) && !(isDestroyed)) {
+            LoadingUtils.hideDialog()
+            LoadingUtils.showSuccessDialog(this, message)
+        }
     }
 
+    override fun onlineOffline(value:String) {
+        value?.let {
+            Log.d("*******",it)
+            if (it.equals("Online")){
+                isOnline = true
+            }else{
+                isOnline = false
+
+            }
+            binding.tvLastMessage?.text = it
+            startUserStatusPolling()
+
+        }
+    }
+
+    override fun notInit() {
+        quickstartConversationsManager?.initializeWithAccessToken(
+                this@ChatActivity, providertoken, groupName, friendId, userId)
+        quickstartConversationsManager?.setListener(this)
+    }
+
+    private fun startUserStatusPolling() {
+        if (isPolling) return // Prevent duplicate polling
+        isPolling = true
+        handler.post(object : Runnable {
+            override fun run() {
+                quickstartConversationsManager.conversationsClient?.let { conversation ->
+                    quickstartConversationsManager.identity?.let { identity ->
+                        quickstartConversationsManager.subscribeToUserStatus(conversation, identity)
+                        handler.postDelayed(this, updateInterval) // Continue polling
+                    }
+                }
+            }
+        })
+    }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -345,6 +467,347 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             LoadingUtils.showDialog(this,false)
             quickstartConversationsManager.sendMessageImage(uri.path, file)
         }
+    }
+
+
+    private fun showPopupWindow(anchorView: View) {
+        // Inflate the custom layout for the popup menu
+        val popupView =
+            LayoutInflater.from(this).inflate(R.layout.layout_custom_popup_menu, null)
+
+        // Create PopupWindow with the custom layout
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        popupView.findViewById<TextView>(R.id.itemReport).setOnClickListener {
+            popupWindow.dismiss()
+        }
+        popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
+            popupWindow.dismiss()
+
+        }
+        // Find the "block" item inside the popup
+        val blockItem = popupView.findViewById<View>(R.id.itemBlock)
+        val unblockItem = popupView.findViewById<View>(R.id.itemUnBlock)
+        val itemMute = popupView.findViewById<View>(R.id.itemMute)
+        val itemunMute = popupView.findViewById<View>(R.id.itemunMute)
+        val itemArchived = popupView.findViewById<View>(R.id.itemArchived)
+        val itemUnArchived = popupView.findViewById<View>(R.id.itemUnArchived)
+        if (is_blocked==1){
+            blockItem.visibility = View.GONE
+            unblockItem.visibility = View.VISIBLE
+        }else{
+            blockItem.visibility = View.VISIBLE
+            unblockItem.visibility = View.GONE
+        }
+        if (is_muted==1){
+            itemMute.visibility = View.GONE
+            itemunMute.visibility = View.VISIBLE
+        }else{
+            itemMute.visibility = View.VISIBLE
+            itemunMute.visibility = View.GONE
+        }
+
+        if (is_archived==1){
+            itemArchived.visibility = View.GONE
+            itemUnArchived.visibility = View.VISIBLE
+        }else{
+            itemArchived.visibility = View.VISIBLE
+            itemUnArchived.visibility = View.GONE
+        }
+        blockItem.setOnClickListener {
+            chatUserBlock(groupName,1)
+            popupWindow.dismiss()
+        }
+
+        unblockItem.setOnClickListener {
+            chatUserBlock(groupName,0)
+            popupWindow.dismiss()
+        }
+
+        itemMute.setOnClickListener {
+            muteChat(groupName,1)
+            popupWindow.dismiss()
+        }
+
+        itemunMute.setOnClickListener {
+            muteChat(groupName,0)
+            popupWindow.dismiss()
+        }
+
+        itemArchived.setOnClickListener {
+            popupWindow.dismiss()
+            toggleArchiveUnarchive(groupName)
+        }
+
+        itemUnArchived.setOnClickListener {
+            popupWindow.dismiss()
+            toggleArchiveUnarchive(groupName)
+        }
+
+        // Get the location of the anchor view (three-dot icon)
+        val location = IntArray(2)
+        anchorView.getLocationOnScreen(location)
+
+        // Get the height of the PopupView after inflating it
+        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val popupHeight = popupView.measuredHeight
+        val popupWeight = popupView.measuredWidth
+        val screenWidht = resources.displayMetrics.widthPixels
+        val anchorX = location[1]
+        val spaceEnd = screenWidht - (anchorX + anchorView.width)
+
+        val xOffset = if (popupWeight > spaceEnd) {
+            // If there is not enough space below, show it above
+            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+        } else {
+            // Otherwise, show it below
+            // 20 // This adds a small gap between the popup and the anchor view
+            -(popupWeight + 20)
+        }
+        // Calculate the Y offset to make the popup appear above the three-dot icon
+        val screenHeight = resources.displayMetrics.heightPixels
+        val anchorY = location[1]
+
+        // Calculate the available space above the anchorView
+        val spaceAbove = anchorY
+        val spaceBelow = screenHeight - (anchorY + anchorView.height)
+
+        // Determine the Y offset
+        val yOffset = if (popupHeight > spaceBelow) {
+            // If there is not enough space below, show it above
+            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+        } else {
+            // Otherwise, show it below
+            20 // This adds a small gap between the popup and the anchor view
+        }
+
+        // Show the popup window anchored to the view (three-dot icon)
+        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
+        popupWindow.showAsDropDown(
+            anchorView,
+            xOffset,
+            yOffset,
+            Gravity.END
+        )  // Adjust the Y offset dynamically
+    }
+
+    private fun chatUserBlock(groupName: String,value:Int) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                sender_id?.let {
+                    LoadingUtils.showDialog(this@ChatActivity, false)
+                    viewModel.blockUser(it.toInt(), groupName,value).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    Log.d("******", "ChatUserBlock")
+                                    is_blocked = value
+                                    if (is_blocked==1){
+                                        binding.rvChatting1.visibility = View.GONE
+                                        binding.rvChattingblock.visibility = View.VISIBLE
+                                    }else{
+                                        binding.rvChatting1.visibility = View.VISIBLE
+                                        binding.rvChattingblock.visibility = View.GONE
+                                    }
+                                }
+                            }
+
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(
+                                    this@ChatActivity,
+                                    it.message.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                }
+
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
+        }
+
+    private fun muteChat(groupName: String,value:Int) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                val userId: Int? = sessionManagement.getUserId()
+                if (userId != null && userId != -1) {
+                    LoadingUtils.showDialog(this@ChatActivity, false)
+                    viewModel.muteChat(userId, groupName,value).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    Log.d("******", "muteChat")
+                                    is_muted = value
+                                }
+                            }
+
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(
+                                    this@ChatActivity,
+                                    it.message.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
+    }
+
+    private fun toggleArchiveUnarchive(groupName: String) {
+        if (NetworkMonitorCheck._isConnected.value) {
+        lifecycleScope.launch {
+            LoadingUtils.showDialog(this@ChatActivity, false)
+            val archived = if (is_archived == 0) 1 else 0
+            userId?.let { id ->
+                groupName?.let {
+                    viewModel.toggleArchiveUnarchive(id.toInt(), it).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    Log.d("******", "toggleArchiveUnarchive")
+                                    is_archived = archived
+                                }
+                            }
+
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(
+                                    this@ChatActivity,
+                                    it.message.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    private fun markFavoriteChat(groupName: String,value:Int) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                sender_id?.let {
+                    LoadingUtils.showDialog(this@ChatActivity, false)
+                    viewModel.markFavoriteChat(it.toInt(), groupName, value).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    Log.d("******", "ChatUserBlock")
+                                    is_favorite = value
+                                    binding.imageUnFavourite.visibility = View.GONE
+                                    binding.imageFavourite.visibility = View.VISIBLE
+
+                                }
+                            }
+
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(
+                                    this@ChatActivity,
+                                    it.message.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+                }
+
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+        }
+
+    private fun sendChatNotification() {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                userId?.let { senderId->
+                    friendId?.let { friendId->
+                        viewModel.sendChatNotification(senderId,friendId).collect {
+                            when (it) {
+                                is NetworkResult.Success -> {
+                                    it.data?.let {
+                                        Log.d("******", "sendChatNotification")
+                                    }
+                                }
+
+                                is NetworkResult.Error -> {
+                                    LoadingUtils.hideDialog()
+                                    /*Toast.makeText(
+                                        this@ChatActivity,
+                                        it.message.toString(),
+                                        Toast.LENGTH_LONG
+                                    ).show()*/
+                                }
+
+                                else -> {
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
+
+    }
+
+    private fun stopUserStatusPolling() {
+        handler?.let {
+            it.removeCallbacksAndMessages(null)
+            Log.d("******","stopUserStatusPolling")
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopUserStatusPolling()
+        isPolling = false
     }
 
 

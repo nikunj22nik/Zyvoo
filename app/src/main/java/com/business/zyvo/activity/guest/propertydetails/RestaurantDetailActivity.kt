@@ -277,7 +277,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                             Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(1)).into(binding.prImageTwo)
                             Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(2)).into(binding.prImageThree)
                         }
-                        if (it.size==4){
+                        if (it.size>=4){
                             binding.cvTwoAndThreeImage.visibility = View.VISIBLE
                             binding.cvOneImage.visibility = View.GONE
                             binding.llThreeImage.visibility = View.VISIBLE
@@ -1037,6 +1037,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onDestroy() {
         super.onDestroy()
         mapView.onDestroy()  // Important to call in onDestroy
+
     }
 
     override fun onLowMemory() {

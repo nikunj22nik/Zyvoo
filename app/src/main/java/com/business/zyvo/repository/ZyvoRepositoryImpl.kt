@@ -4113,10 +4113,11 @@ import javax.inject.Inject
 
     override suspend fun getUserChannel(
         userId: Int,
-        type: String
+        type: String,
+        archive_status:String
     ): Flow<NetworkResult<MutableList<ChannelListModel>>> = flow {
         try {
-            api.getUserChannel(userId, type).apply {
+            api.getUserChannel(userId, type,archive_status).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success") && resp.get("success").asBoolean) {
@@ -5022,6 +5023,233 @@ import javax.inject.Inject
              emit(NetworkResult.Error(ErrorHandler.emitError(e)))
          }
      }
+
+
+     override suspend fun blockUser(
+         senderId :Int,
+         group_channel :String,
+         blockUnblock:Int
+     ): Flow<NetworkResult<JsonObject>> =
+         flow {
+             try {
+                 api.blockUser(senderId,group_channel,blockUnblock).apply {
+                     if (isSuccessful) {
+                         body()?.let { resp ->
+                             if (resp.has("success") && resp.get("success").asBoolean) {
+                                 emit(NetworkResult.Success(resp))
+                             } else {
+                                 emit(NetworkResult.Error(resp.get("message").asString))
+                             }
+                         }
+                             ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                     } else {
+                         try {
+                             val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                             emit(
+                                 NetworkResult.Error(
+                                     jsonObj?.getString("message")
+                                         ?: AppConstant.unKnownError
+                                 )
+                             )
+                         } catch (e: JSONException) {
+                             e.printStackTrace()
+                             emit(NetworkResult.Error(AppConstant.unKnownError))
+                         }
+                     }
+                 }
+             } catch (e: HttpException) {
+                 Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: IOException) {
+                 Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: Exception) {
+                 Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+
+         }
+
+
+     override suspend fun markFavoriteChat(
+         senderId :Int,
+         group_channel :String,
+         favorite:Int
+     ): Flow<NetworkResult<JsonObject>> =
+         flow {
+             try {
+                 api.markFavoriteChat(senderId,group_channel,favorite).apply {
+                     if (isSuccessful) {
+                         body()?.let { resp ->
+                             if (resp.has("success") && resp.get("success").asBoolean) {
+                                 emit(NetworkResult.Success(resp))
+                             } else {
+                                 emit(NetworkResult.Error(resp.get("message").asString))
+                             }
+                         }
+                             ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                     } else {
+                         try {
+                             val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                             emit(
+                                 NetworkResult.Error(
+                                     jsonObj?.getString("message")
+                                         ?: AppConstant.unKnownError
+                                 )
+                             )
+                         } catch (e: JSONException) {
+                             e.printStackTrace()
+                             emit(NetworkResult.Error(AppConstant.unKnownError))
+                         }
+                     }
+                 }
+             } catch (e: HttpException) {
+                 Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: IOException) {
+                 Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: Exception) {
+                 Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+
+         }
+
+
+     override suspend fun sendChatNotification(
+         senderId :String,
+         receiverId :String,
+     ): Flow<NetworkResult<JsonObject>> =
+         flow {
+             try {
+                 api.sendChatNotification(senderId,receiverId).apply {
+                     if (isSuccessful) {
+                         body()?.let { resp ->
+                             if (resp.has("success") && resp.get("success").asBoolean) {
+                                 emit(NetworkResult.Success(resp))
+                             } else {
+                                 emit(NetworkResult.Error(resp.get("message").asString))
+                             }
+                         }
+                             ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                     } else {
+                         try {
+                             val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                             emit(
+                                 NetworkResult.Error(
+                                     jsonObj?.getString("message")
+                                         ?: AppConstant.unKnownError
+                                 )
+                             )
+                         } catch (e: JSONException) {
+                             e.printStackTrace()
+                             emit(NetworkResult.Error(AppConstant.unKnownError))
+                         }
+                     }
+                 }
+             } catch (e: HttpException) {
+                 Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: IOException) {
+                 Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: Exception) {
+                 Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+
+         }
+
+
+     override suspend fun muteChat(
+         userId :Int,
+         group_channel :String,
+         mute:Int
+     ): Flow<NetworkResult<JsonObject>> =
+         flow {
+             try {
+                 api.muteChat(userId,group_channel,mute).apply {
+                     if (isSuccessful) {
+                         body()?.let { resp ->
+                             if (resp.has("success") && resp.get("success").asBoolean) {
+                                 emit(NetworkResult.Success(resp))
+                             } else {
+                                 emit(NetworkResult.Error(resp.get("message").asString))
+                             }
+                         }
+                             ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                     } else {
+                         try {
+                             val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                             emit(
+                                 NetworkResult.Error(
+                                     jsonObj?.getString("message")
+                                         ?: AppConstant.unKnownError
+                                 )
+                             )
+                         } catch (e: JSONException) {
+                             e.printStackTrace()
+                             emit(NetworkResult.Error(AppConstant.unKnownError))
+                         }
+                     }
+                 }
+             } catch (e: HttpException) {
+                 Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: IOException) {
+                 Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: Exception) {
+                 Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+
+         }
+
+     override suspend fun toggleArchiveUnarchive(
+         userId :Int,
+         group_channel :String
+     ): Flow<NetworkResult<JsonObject>> =
+         flow {
+             try {
+                 api.toggleArchiveUnarchive(userId,group_channel).apply {
+                     if (isSuccessful) {
+                         body()?.let { resp ->
+                             if (resp.has("success") && resp.get("success").asBoolean) {
+                                 emit(NetworkResult.Success(resp))
+                             } else {
+                                 emit(NetworkResult.Error(resp.get("message").asString))
+                             }
+                         }
+                             ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                     } else {
+                         try {
+                             val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                             emit(
+                                 NetworkResult.Error(
+                                     jsonObj?.getString("message")
+                                         ?: AppConstant.unKnownError
+                                 )
+                             )
+                         } catch (e: JSONException) {
+                             e.printStackTrace()
+                             emit(NetworkResult.Error(AppConstant.unKnownError))
+                         }
+                     }
+                 }
+             } catch (e: HttpException) {
+                 Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: IOException) {
+                 Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: Exception) {
+                 Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+
+         }
 
 
  }

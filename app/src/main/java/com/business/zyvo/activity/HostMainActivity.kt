@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemoveListener,
-    QuickstartConversationsManagerListenerOneTowOne {
+    com.business.zyvo.chat.QuickstartConversationsManagerListener {
 
     lateinit var binding: ActivityHostMainBinding
 
@@ -51,7 +51,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
 
     lateinit var tvCOUNT :TextView
     private var map:HashMap<String, ChannelListModel> = HashMap()
-    private var quickstartConversationsManager = QuickstartConversationsManager()
+    private var quickstartConversationsManager =  QuickstartConversationsManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,11 +77,24 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         binding.navigationBookings.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
 
-        try {
+        /*try {
             quickstartConversationsManager = (application as MyApp).conversationsManager!!
             quickstartConversationsManager.setListener(this)
         } catch (e: Exception) {
-            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+            Log.e("******", "Error setting QuickstartConversationsManager listener", e)
+        }*/
+        try {
+            val app = application as? MyApp
+            if (app?.conversationsManager != null) {
+                quickstartConversationsManager = app.conversationsManager!!
+                quickstartConversationsManager.setListener(this)
+            } else {
+                Log.e("******", "ConversationsManager is null")
+            }
+        } catch (e: ClassCastException) {
+            Log.e("******", "Application is not of type MyApp", e)
+        } catch (e: Exception) {
+            Log.e("******", "Error setting QuickstartConversationsManager listener", e)
         }
 
         var sessionManager = SessionManager(this)
@@ -92,9 +105,8 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         // Register the receiver with an IntentFilter
         val filter = IntentFilter("com.example.broadcast.ACTION_SEND_MESSAGE")
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, filter)
-        if (sessionManager.getChatToken().equals("")) {
-            callingGetUserToken()
-        }
+
+        callingGetUserToken()
         askNotificationPermission()
 
         callingBookingNumberApi()
@@ -154,8 +166,24 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                         is NetworkResult.Success -> {
                             Log.d("TESTING_TOKEN",it.data.toString()+" Token inside success")
                             sessionManager.setChatToken(it.data.toString())
-                            val app = application as MyApp
-                            app.initializeTwilioClient(sessionManager.getChatToken()!!)
+                            val app = application as? MyApp
+                            if (app?.conversationsManager==null) {
+                                val chatToken = sessionManager.getChatToken()
+                                if (!chatToken.isNullOrEmpty()) {
+                                    app?.initializeTwilioClient(chatToken)
+                                    try {
+                                        app?.conversationsManager?.let { manager ->
+                                            quickstartConversationsManager = manager
+                                            quickstartConversationsManager.setListener(this@HostMainActivity)
+                                            Log.e("******", "initializeConversationsManager")
+                                        } ?: Log.e("******", "ConversationsManager is still null after initialization")
+                                    } catch (e: Exception) {
+                                        Log.e("******", "Error setting QuickstartConversationsManager listener", e)
+                                    }
+                                }
+                                Log.e("******", "initializeConversationsManager")
+
+                            }
 
                         }
 
@@ -369,13 +397,17 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                                         map.put(it.group_name.toString(),it)
                                     }
                                     Log.d("*******",map.size.toString() +" Map Size is ")
-                                    Log.d("*******",""+quickstartConversationsManager.conversationsClient?.myConversations?.size)
-                                    if (quickstartConversationsManager==null){
+                                  /*  if (quickstartConversationsManager.conversationsClient==null){
                                         quickstartConversationsManager.initializeWithAccessTokenBase(this@HostMainActivity
                                             ,sessionManager.getChatToken().toString())
                                     }else{
                                         quickstartConversationsManager.loadChatList()
-                                    }
+                                    }*/
+                                    quickstartConversationsManager.conversationsClient?.let {
+                                        quickstartConversationsManager.loadChatList()
+                                    } ?: quickstartConversationsManager.initializeWithAccessTokenBase(
+                                        this@HostMainActivity, sessionManager.getChatToken().toString()
+                                    )
                                 }
                             }
 
@@ -416,4 +448,5 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
     override fun showError() {
 
     }
+
 }

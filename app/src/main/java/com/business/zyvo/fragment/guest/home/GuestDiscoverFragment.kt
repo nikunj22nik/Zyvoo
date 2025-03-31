@@ -348,7 +348,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     binding.tvMapContent.setText("Show List")
                     binding.rlMapView.visibility = View.VISIBLE
                     binding.recyclerViewBooking.visibility = View.GONE
-                    binding.clTimeLeftProgressBar.visibility = View.GONE
                     binding.clSearch.visibility = View.GONE
                     if (homePropertyData.isNotEmpty()) {
                         for (location in homePropertyData) {
@@ -376,10 +375,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                         }
                     }
                     try {
-                        val params = binding.rlShowMap.layoutParams as ConstraintLayout.LayoutParams
-                        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 300) // 50px bottom margin
-                        binding.rlShowMap.layoutParams = params
-                        binding.rlShowMap.requestLayout() // Ensure UI updates
+                        if (binding.clTimeLeftProgressBar.visibility == View.GONE){
+                            val params = binding.rlShowMap.layoutParams as ConstraintLayout.LayoutParams
+                            params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 300) // 50px bottom margin
+                            binding.rlShowMap.layoutParams = params
+                            binding.rlShowMap.requestLayout() // Ensure UI updates
+                        }
                     }catch (e:Exception){
                         e.message
                     }
@@ -389,12 +390,18 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     binding.tvMapContent.setText("Show Map")
                     binding.rlMapView.visibility = View.GONE
                     binding.recyclerViewBooking.visibility = View.VISIBLE
-                  //  binding.clTimeLeftProgressBar.visibility = View.VISIBLE
                     try {
-                        val params = binding.rlShowMap.layoutParams as ConstraintLayout.LayoutParams
-                        params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 50) // 50px bottom margin
-                        binding.rlShowMap.layoutParams = params
-                        binding.rlShowMap.requestLayout() // Ensure UI updates
+                        if (binding.clTimeLeftProgressBar.visibility == View.GONE){
+                            val params = binding.rlShowMap.layoutParams as ConstraintLayout.LayoutParams
+                            params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 300) // 50px bottom margin
+                            binding.rlShowMap.layoutParams = params
+                            binding.rlShowMap.requestLayout() // Ensure UI updates
+                        }else{
+                            val params = binding.rlShowMap.layoutParams as ConstraintLayout.LayoutParams
+                            params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 50) // 50px bottom margin
+                            binding.rlShowMap.layoutParams = params
+                            binding.rlShowMap.requestLayout() // Ensure UI updates
+                        }
 
                     }catch (e:Exception){
                         e.message
@@ -404,24 +411,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
 
             R.id.customProgressBar ->{
-               /* bookings?.let { bookings: Bookings ->
-                    property?.let {
-                        val intent = Intent(requireContext(), ExtraTimeChargesActivity::class.java)
-                        //  intent.putExtra(AppConstant.TIME, AppConstant.TIME)
-                        intent.putExtra("price",bookings.booking_amount)
-                        intent.putExtra("stTime",bookings.booking_start)
-                        intent.putExtra("edTime",bookings.booking_end)
-                        val add:List<AddOn> = bookings.selected_add_ons!!
-                        it.add_ons = add
-                        intent.putExtra("propertyData",Gson().toJson(it))
-                        intent.putExtra("propertyMile","")
-                        intent.putExtra("date",bookings.booking_date)
-                        intent.putExtra("hour",bookings.booking_hours)
-                        intent.putExtra("type","Booking")
-                        intent.putExtra("bookingId",bookings.booking_id)
-                        startActivity(intent)
-                    }
-                }*/
 
             }
 
@@ -903,7 +892,11 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                         }
                         is NetworkResult.Error -> {
                             binding.clTimeLeftProgressBar.visibility = View.GONE
-                       //     showErrorDialog(requireContext(), it.message!!)
+                            Log.d("******","run")
+                            val params = binding.rlShowMap.layoutParams as ConstraintLayout.LayoutParams
+                            params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 300) // 50px bottom margin
+                            binding.rlShowMap.layoutParams = params
+                            binding.rlShowMap.requestLayout() // Ensure UI updates
                         }
 
                         else -> {
