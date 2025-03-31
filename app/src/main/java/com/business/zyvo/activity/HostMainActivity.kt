@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemoveListener,
-    QuickstartConversationsManagerListenerOneTowOne {
+    com.business.zyvo.chat.QuickstartConversationsManagerListener {
 
     lateinit var binding: ActivityHostMainBinding
 
@@ -51,17 +51,13 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
 
     lateinit var tvCOUNT :TextView
     private var map:HashMap<String, ChannelListModel> = HashMap()
-    private var quickstartConversationsManager = QuickstartConversationsManager()
+    private var quickstartConversationsManager =  QuickstartConversationsManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
-
         binding = ActivityHostMainBinding.inflate(LayoutInflater.from(this))
-
         setContentView(binding.root)
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -80,13 +76,25 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         binding.navigationInbox1.setOnClickListener(this)
         binding.navigationBookings.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
-        binding.tvbabadge.visibility =View.VISIBLE
 
-        try {
+        /*try {
             quickstartConversationsManager = (application as MyApp).conversationsManager!!
             quickstartConversationsManager.setListener(this)
         } catch (e: Exception) {
-            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+            Log.e("******", "Error setting QuickstartConversationsManager listener", e)
+        }*/
+        try {
+            val app = application as? MyApp
+            if (app?.conversationsManager != null) {
+                quickstartConversationsManager = app.conversationsManager!!
+                quickstartConversationsManager.setListener(this)
+            } else {
+                Log.e("******", "ConversationsManager is null")
+            }
+        } catch (e: ClassCastException) {
+            Log.e("******", "Application is not of type MyApp", e)
+        } catch (e: Exception) {
+            Log.e("******", "Error setting QuickstartConversationsManager listener", e)
         }
 
         var sessionManager = SessionManager(this)
@@ -97,9 +105,8 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         // Register the receiver with an IntentFilter
         val filter = IntentFilter("com.example.broadcast.ACTION_SEND_MESSAGE")
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver, filter)
-        if (sessionManager.getChatToken().equals("")) {
-            callingGetUserToken()
-        }
+
+        callingGetUserToken()
         askNotificationPermission()
 
         callingBookingNumberApi()
@@ -111,25 +118,25 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
             var userId = SessionManager(this@HostMainActivity).getUserId()
             if (userId != null) {
                 guestViewModel.getHostUnreadBookings(userId).collect{
-                   when(it){
-                       is NetworkResult.Success ->{
-                           var number = it.data
-                           if (number != null) {
-                               if(number >0){
-                                   binding.rlBookingCount.visibility = View.VISIBLE
-                               }
-                           }
-                             binding.tvBookingCount.setText(number.toString())
+                    when(it){
+                        is NetworkResult.Success ->{
+                            var number = it.data
+                            if (number != null) {
+                                if(number >0){
+                                    binding.rlBookingCount.visibility = View.VISIBLE
+                                }
+                            }
+                            binding.tvBookingCount.setText(number.toString())
 
-                           Log.d("TESTING_DATA","Booking Count is "+number.toString())
-                       }
-                       is NetworkResult.Error ->{
+                            Log.d("TESTING_DATA","Booking Count is "+number.toString())
+                        }
+                        is NetworkResult.Error ->{
 
-                       }
-                       else ->{
+                        }
+                        else ->{
 
-                       }
-                   }
+                        }
+                    }
                 }
             }
 
@@ -159,8 +166,24 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                         is NetworkResult.Success -> {
                             Log.d("TESTING_TOKEN",it.data.toString()+" Token inside success")
                             sessionManager.setChatToken(it.data.toString())
-                            val app = application as MyApp
-                            app.initializeTwilioClient(sessionManager.getChatToken()!!)
+                            val app = application as? MyApp
+                            if (app?.conversationsManager==null) {
+                                val chatToken = sessionManager.getChatToken()
+                                if (!chatToken.isNullOrEmpty()) {
+                                    app?.initializeTwilioClient(chatToken)
+                                    try {
+                                        app?.conversationsManager?.let { manager ->
+                                            quickstartConversationsManager = manager
+                                            quickstartConversationsManager.setListener(this@HostMainActivity)
+                                            Log.e("******", "initializeConversationsManager")
+                                        } ?: Log.e("******", "ConversationsManager is still null after initialization")
+                                    } catch (e: Exception) {
+                                        Log.e("******", "Error setting QuickstartConversationsManager listener", e)
+                                    }
+                                }
+                                Log.e("******", "initializeConversationsManager")
+
+                            }
 
                         }
 
@@ -331,20 +354,20 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                         try {
                             if (map.containsKey(i.uniqueName)) {
                                 Log.d("*******","m 8888"+i.friendlyName +" M "+i.uniqueName)
-                               i.getUnreadMessagesCount { re->
-                                   if (re!=null) {
-                                       Log.d("*******", re.toString())
-                                       totalUnreadCount += re
-                                       Log.d("*******", "total " + totalUnreadCount.toString())
-                                       binding.tvbabadge.text = "$totalUnreadCount"
-                                   }
-                               }
+                                i.getUnreadMessagesCount { re->
+                                    if (re!=null) {
+                                        Log.d("*******", re.toString())
+                                        totalUnreadCount += re
+                                        Log.d("*******", "total " + totalUnreadCount.toString())
+                                        binding.tvbabadge.text = "$totalUnreadCount"
+                                    }
+                                }
                             }
                         } catch (e: Exception) {
                             Log.d("massage error", "data :-" + e.message)
                         }
                     }
-                  //  binding.tvbabadge.text = "$totalUnreadCount"
+                    //  binding.tvbabadge.text = "$totalUnreadCount"
                 }
             }catch (e:Exception){
                 Log.d("******","msg :- "+e.message)
@@ -374,14 +397,17 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                                         map.put(it.group_name.toString(),it)
                                     }
                                     Log.d("*******",map.size.toString() +" Map Size is ")
-                                    Log.d("*******",""+quickstartConversationsManager.conversationsClient?.myConversations?.size)
-                                    if (quickstartConversationsManager.conversationsClient==null){
-                                        quickstartConversationsManager.initializeWithAccessTokenBase(this@HostMainActivity
-                                            ,sessionManager.getChatToken().toString())
-                                    }
-                                    else{
+                                    /*  if (quickstartConversationsManager.conversationsClient==null){
+                                          quickstartConversationsManager.initializeWithAccessTokenBase(this@HostMainActivity
+                                              ,sessionManager.getChatToken().toString())
+                                      }else{
+                                          quickstartConversationsManager.loadChatList()
+                                      }*/
+                                    quickstartConversationsManager.conversationsClient?.let {
                                         quickstartConversationsManager.loadChatList()
-                                    }
+                                    } ?: quickstartConversationsManager.initializeWithAccessTokenBase(
+                                        this@HostMainActivity, sessionManager.getChatToken().toString()
+                                    )
                                 }
                             }
 
@@ -422,4 +448,5 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
     override fun showError() {
 
     }
+
 }

@@ -80,9 +80,6 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
             friendprofileimage = it.getString("friend_img").toString()
         }
 
-        viewModel.list.observe(viewLifecycleOwner, Observer {
-        //    chatDetailsAdapter!!.updateItem(it)
-        })
 
         var sessionManager = SessionManager(requireContext())
         var userType = sessionManager.getUserId()

@@ -161,7 +161,7 @@ class ChatFragment : Fragment(), View.OnClickListener, QuickstartConversationsMa
             LoadingUtils.showDialog(requireContext(), false)
             var userId = sessionManager.getUserId()
             if (userId != null) {
-                viewModel.getChatUserChannelList(userId, "guest").collect {
+                viewModel.getChatUserChannelList(userId, "guest","").collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             Log.d("TESTING", "Inside the message success")
@@ -207,6 +207,14 @@ class ChatFragment : Fragment(), View.OnClickListener, QuickstartConversationsMa
     }
 
     override fun reloadMessages() {
+
+    }
+
+    override fun showError(message: String?) {
+
+    }
+
+    override fun notInit() {
 
     }
 

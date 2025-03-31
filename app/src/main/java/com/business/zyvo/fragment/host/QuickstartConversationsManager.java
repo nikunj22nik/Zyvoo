@@ -21,6 +21,7 @@ import com.twilio.conversations.User;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -125,8 +126,12 @@ public class QuickstartConversationsManager {
     }
 
     public void loadChatList(){
-
-        loadAllChannel(conversationsClient);
+        if (conversationsClient!=null) {
+            loadAllChannel(conversationsClient);
+        }else {
+            conversationsManagerListener.notInit();
+            Log.d("******", "conversationsClient = null");
+        }
 
     }
 
@@ -177,6 +182,9 @@ public class QuickstartConversationsManager {
             @Override
             public void onError(ErrorInfo errorInfo) {
                 Log.e(TAG, "Error joining conversation: " + errorInfo.getMessage());
+                if (conversationsManagerListener!=null) {
+                    conversationsManagerListener.showError(errorInfo.getMessage());
+                }
             }
         });
     }
@@ -229,20 +237,14 @@ public class QuickstartConversationsManager {
         if (messages != null) {
             messages.clear();
         }
-
-
         for (Conversation data : conversationsClient.getMyConversations()) {
-            Log.d("channel name :-", "list" + data.getUniqueName().toString());
-
+            Log.d("******", "list" + data.getUniqueName().toString());
             try {
                 if (data.getLastMessageIndex()!=null){
-                    data.getLastMessages(0, new CallbackListener<List<Message>>() {
-                        @Override
-                        public void onSuccess(List<Message> result) {
-                            messages.addAll(result);
-                            if (conversationsManagerListener != null) {
-                                conversationsManagerListener.reloadMessages();
-                            }
+                    data.getLastMessages(0, result -> {
+                        messages.addAll(result);
+                        if (conversationsManagerListener != null) {
+                            conversationsManagerListener.reloadMessages();
                         }
                     });
                 }else {
@@ -400,6 +402,9 @@ public class QuickstartConversationsManager {
         @Override
         public void onError(ErrorInfo errorInfo) {
             Log.e(TAG, "Error creating Twilio Conversations Client: " + errorInfo.getMessage());
+            if (conversationsManagerListener!=null) {
+                conversationsManagerListener.showError(errorInfo.getMessage());
+            }
         }
     };
 
@@ -537,6 +542,73 @@ public class QuickstartConversationsManager {
         });
       }
 
+    /**
+     * Fetch user online status and return the result via a callback
+     */
+    public void subscribeToUserStatus(ConversationsClient conversationsClient, String identity, UserStatusCallback callback) {
+        conversationsClient.getAndSubscribeUser(identity, new CallbackListener<User>() {
+            @Override
+            public void onSuccess(User result) {
+                if (result != null) {
+                    boolean isOnline = result.isOnline();
+                    Log.d(TAG, result.getIdentity() + " is now " + (isOnline ? "Online" : "Offline"));
+                    callback.onUserStatusReceived(isOnline); // Return the result
+                }
+            }
+
+            @Override
+            public void onError(ErrorInfo errorInfo) {
+                Log.e(TAG, "Error fetching user status: " + (errorInfo != null ? errorInfo.getMessage() : "Unknown error"));
+                callback.onUserStatusReceived(false); // Default to false if there's an error
+            }
+        });
+    }
+
+    /**
+     * Callback interface for user status
+     */
+    public interface UserStatusCallback {
+        void onUserStatusReceived(boolean isOnline);
+    }
+
+
+    public void getUnreadConversations(ConversationsClient conversationsClient,
+                                       UnreadConversationsCallback callback) {
+        List<Conversation> unreadConversations = new ArrayList<>();
+
+        if (conversationsClient.getMyConversations() != null) {
+            List<Conversation> conversations = conversationsClient.getMyConversations();
+            AtomicInteger processed = new AtomicInteger(0);
+
+            for (Conversation conversation : conversations) {
+                conversation.getUnreadMessagesCount(new CallbackListener<Long>() {
+                    @Override
+                    public void onSuccess(Long result) {
+                        if (result != null && result > 0) {
+                            unreadConversations.add(conversation); // Add if unread messages exist
+                        }
+                        if (processed.incrementAndGet() == conversations.size()) {
+                            callback.onResult(unreadConversations); // Return final list
+                        }
+                    }
+
+                    @Override
+                    public void onError(ErrorInfo errorInfo) {
+                        Log.e("Twilio", "Error checking unread messages: " + errorInfo.getMessage());
+                        if (processed.incrementAndGet() == conversations.size()) {
+                            callback.onResult(unreadConversations);
+                        }
+                    }
+                });
+            }
+        } else {
+            callback.onResult(new ArrayList<>()); // Return empty list if no conversations exist
+        }
+    }
+
+    public interface UnreadConversationsCallback {
+        void onResult(List<Conversation> unreadConversations);
+    }
 
 }
 

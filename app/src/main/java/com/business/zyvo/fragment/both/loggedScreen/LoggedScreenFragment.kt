@@ -2288,7 +2288,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         _binding = null
+
+        countDownTimer?.cancel()
+        locationManager = null
+
     }
 
 }

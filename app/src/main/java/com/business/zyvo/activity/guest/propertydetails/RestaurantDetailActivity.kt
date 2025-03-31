@@ -1038,6 +1038,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onDestroy() {
         super.onDestroy()
         mapView.onDestroy()  // Important to call in onDestroy
+
     }
 
     override fun onLowMemory() {

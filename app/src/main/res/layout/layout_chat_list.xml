@@ -14,7 +14,6 @@
         android:layout_height="@dimen/_75sdp"
         android:background="@drawable/profle_picture_ring"
         android:padding="@dimen/_15sdp"
-
         android:src="@drawable/ic_img_girl_dumm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +25,7 @@
         android:layout_height="@dimen/_20sdp"
         android:layout_margin="@dimen/_46sdp"
         android:src="@drawable/ic_live_icon_green_dot"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/imageProfilePicture"
         app:layout_constraintTop_toTopOf="@+id/imageProfilePicture" />
 

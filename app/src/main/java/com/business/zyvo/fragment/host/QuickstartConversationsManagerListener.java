@@ -6,4 +6,6 @@ public interface QuickstartConversationsManagerListener {
     void messageSentCallback();
 
     void reloadMessages();
+    void showError(String message);
+    void notInit();
 }

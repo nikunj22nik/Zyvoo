@@ -176,6 +176,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                                     intent.putExtra("friend_img",friendImage).toString()
                                     intent.putExtra("friend_name",friendName).toString()
                                     intent.putExtra("user_name",userName)
+                                    intent.putExtra("sender_id", hostId)
                                     startActivity(intent)
                                 }
                                 else if(it.data?.sender_id?.toInt() == loggedInId){
@@ -198,6 +199,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                                     intent.putExtra("friend_img",friendImage).toString()
                                     intent.putExtra("friend_name",friendName).toString()
                                     intent.putExtra("user_name",userName)
+                                    intent.putExtra("sender_id", hostId)
                                     startActivity(intent)
                                 }
                             }
@@ -501,7 +503,6 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
     }
 
     private fun dialogReportIssue() {
-        var dateManager = DateManager(this)
         val dialog =  Dialog(this, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(true)
@@ -519,7 +520,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 }
                 else{
                     reportViolation(session?.getUserId().toString(),
-                        /*"44"*/bookingId!!,
+                        bookingId!!,
                         propertyData?.property_id.toString(),
                         reportReasonsMap.get(powerSpinner.text.toString()).toString(),
                         et_addiotnal_detail.text.toString(),dialog)

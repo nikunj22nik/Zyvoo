@@ -227,18 +227,14 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             lifecycleScope.launch {
                 val session = SessionManager(this@ExtraTimeChargesActivity)
                 val userId = session.getUserId()
-
                 if (userId != null) {
-
                     LoadingUtils.showDialog(this@ExtraTimeChargesActivity, true)
-
                     var channelName: String = ""
                     if (userId < Integer.parseInt(hostId)) {
                         channelName = "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyId
                     } else {
                         channelName = "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyId
                     }
-
                     extraTimeChargeViewModel.joinChatChannel(
                         userId,
                         Integer.parseInt(hostId),
@@ -281,6 +277,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                                     intent.putExtra("friend_img", friendImage).toString()
                                     intent.putExtra("friend_name", friendName).toString()
                                     intent.putExtra("user_name", userName)
+                                    intent.putExtra("sender_id", hostId)
                                     startActivity(intent)
                                 } else if (it.data?.sender_id?.toInt() == loggedInId) {
                                     var userImage: String = it.data?.sender_avatar.toString()
@@ -311,6 +308,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                                     intent.putExtra("friend_img", friendImage).toString()
                                     intent.putExtra("friend_name", friendName).toString()
                                     intent.putExtra("user_name", userName)
+                                    intent.putExtra("sender_id", hostId)
                                     startActivity(intent)
                                 }
                             }
