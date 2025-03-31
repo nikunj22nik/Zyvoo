@@ -63,7 +63,8 @@ import java.io.File
 @AndroidEntryPoint
 class HostPayoutFragment : Fragment() {
 
-    lateinit var binding: FragmentHostPayoutBinding
+    private var _binding: FragmentHostPayoutBinding? = null
+    private val binding get() = _binding!!
     val viewModel: HostPayoutViewModel by lazy {
         ViewModelProvider(this)[HostPayoutViewModel::class.java]
     }
@@ -147,7 +148,7 @@ class HostPayoutFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentHostPayoutBinding.inflate(
+        _binding = FragmentHostPayoutBinding.inflate(
             LayoutInflater.from(requireContext()),
             container,
             false
@@ -1628,6 +1629,11 @@ class HostPayoutFragment : Fragment() {
             cardNumber.startsWith("3") -> cvv.length == 4  // American Express (AMEX) uses 4-digit CVV
             else -> cvv.length == 3  // Visa, MasterCard, Discover, and other European cards use 3-digit CVV
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

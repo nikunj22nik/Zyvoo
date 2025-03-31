@@ -56,7 +56,6 @@ class LocationManager(var applicationContext : Context, var applicationActivity 
 
     @SuppressLint("ClickableViewAccessibility")
     fun autoCompleteLocationWork(autocompleteTextView :AutoCompleteTextView){
-
         this.autocompleteTextView =autocompleteTextView
 
         autocompleteTextView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)

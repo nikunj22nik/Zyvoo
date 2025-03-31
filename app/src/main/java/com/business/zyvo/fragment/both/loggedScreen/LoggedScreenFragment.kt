@@ -112,7 +112,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     var resendEnabled = false
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
-    private lateinit var binding: FragmentLoggedScreenBinding
+    private  var _binding: FragmentLoggedScreenBinding? = null
+    private  val binding get() = _binding!!
     private lateinit var adapter: LoggedScreenAdapter
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
     private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
@@ -149,7 +150,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         Log.d("TESTING","Inside On Create of LoggedScreen")
         navController = findNavController()
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(), navController)
-        binding = FragmentLoggedScreenBinding.inflate(inflater, container, false)
+        _binding = FragmentLoggedScreenBinding.inflate(inflater, container, false)
 
         session = SessionManager(requireActivity())
         // This is use for LocationServices declaration
@@ -2283,6 +2284,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         if (requestCode == 200) {
             getCurrentLocation()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

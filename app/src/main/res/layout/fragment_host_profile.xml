@@ -703,7 +703,7 @@
                     android:layout_marginEnd="@dimen/_25sdp"
                     android:background="@null"
                     android:fontFamily="@font/poppins"
-                    android:hint="XXXXXXXXXX"
+                    android:hint="Enter your Phone Number"
                     android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:maxLength="10"

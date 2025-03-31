@@ -21,7 +21,8 @@ import retrofit2.http.Tag
 
 class SplashFragment : Fragment() {
 
-    private lateinit var binding: FragmentSplashBinding
+    private  var _binding: FragmentSplashBinding? = null
+    private val binding get() = _binding!!
     private lateinit var handler: Handler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding =
+        _binding =
             FragmentSplashBinding.inflate(LayoutInflater.from(requireActivity()), container, false)
         return binding.root
     }
@@ -69,7 +70,9 @@ class SplashFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         handler.removeCallbacksAndMessages(null)
+        _binding = null
     }
 
 

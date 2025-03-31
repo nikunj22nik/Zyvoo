@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/llAcceptRequest"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+   android:layout_gravity="center"
+    android:layout_marginHorizontal="@dimen/_20sdp"
+    android:background="@drawable/bg_four_side_grey_corner_white"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+
+
+    <EditText
+        android:id="@+id/tvShareMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/_150sdp"
+        android:layout_marginHorizontal="@dimen/_6sdp"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+        android:gravity="start"
+        android:hint="Share a message..."
+        android:paddingHorizontal="@dimen/_6sdp"
+        android:paddingVertical="@dimen/_6sdp"
+        android:textSize="@dimen/_11ssp"
+
+        />
+
+
+    <RelativeLayout
+        android:id="@+id/rlAcceptRequestBtn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_marginHorizontal="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10sdp"
+        android:background="@drawable/bg_save_button">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Approve Request"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp" />
+    </RelativeLayout>
+
+</LinearLayout>

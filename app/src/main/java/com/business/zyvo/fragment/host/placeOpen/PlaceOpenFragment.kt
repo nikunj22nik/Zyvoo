@@ -46,7 +46,8 @@ import kotlin.random.Random
 @AndroidEntryPoint
 class PlaceOpenFragment : Fragment() {
 
-    lateinit var binding: FragmentPlaceOpenBinding
+    private var _binding: FragmentPlaceOpenBinding? = null
+    private val binding get() = _binding!!
     lateinit var adapterOuterPlaceOrder: AdapterOuterPlaceOrder
     val viewModel: PlaceOpenViewModel by lazy {
         ViewModelProvider(this)[PlaceOpenViewModel::class.java]
@@ -101,7 +102,7 @@ class PlaceOpenFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        binding = FragmentPlaceOpenBinding.inflate(LayoutInflater.from(requireContext()))
+        _binding = FragmentPlaceOpenBinding.inflate(LayoutInflater.from(requireContext()))
         initializeData()
         initialization()
         list = mutableListOf()
@@ -526,6 +527,11 @@ class PlaceOpenFragment : Fragment() {
     fun initialization() {
 
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

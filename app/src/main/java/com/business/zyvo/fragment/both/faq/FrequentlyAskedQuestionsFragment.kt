@@ -117,5 +117,10 @@ private var list : MutableList<FaqModel> = mutableListOf()
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 
 }

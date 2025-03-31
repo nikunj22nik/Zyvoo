@@ -128,7 +128,8 @@ import java.util.Objects
 
 @AndroidEntryPoint
 class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener, SetPreferred {
-    lateinit var binding: FragmentHostProfileBinding
+    private var _binding: FragmentHostProfileBinding? = null
+    private val binding get() = _binding!!
     var userCardsList: MutableList<UserCards> = mutableListOf()
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
@@ -251,7 +252,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = FragmentHostProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
+        _binding = FragmentHostProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
         session = SessionManager(requireActivity())
 
@@ -864,6 +865,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
 
             R.id.textCreateList -> {
+                findNavController().navigate(R.id.host_manage_property_frag)
               //  startActivity(Intent(requireActivity(), PlaceOpenActivity::class.java))
 
             }
@@ -2041,6 +2043,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         it.data?.let { resp ->
                             binding.textConfirmNow1.visibility = GONE
                             binding.textVerified1.visibility = View.VISIBLE
+                            getUserProfile()
                             dialog.dismiss()
                             LoadingUtils.showSuccessDialog(requireContext(),resp)
                         }
@@ -2081,6 +2084,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         it.data?.let { resp ->
                             binding.textConfirmNow.visibility = View.GONE
                             binding.textVerified.visibility = View.VISIBLE
+                            getUserProfile()
                             dialog.dismiss()
                         }
 
@@ -3595,6 +3599,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     }
                 }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
 

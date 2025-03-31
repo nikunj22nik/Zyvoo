@@ -585,7 +585,7 @@ interface ZyvoApi {
     @GET("list_report_reasons")
     suspend fun listReportReasons() :Response<JsonObject>
 
-    @POST("cancel_booking")
+    @POST("guest_cancel_booking")
     @FormUrlEncoded
     suspend fun cancelBooking(
         @Field("user_id") userId : String,
@@ -841,5 +841,9 @@ interface ZyvoApi {
         @Field("otp") otp :String
     ) : Response<JsonObject>
 
-
+    @POST("withdraw_funds")
+    @FormUrlEncoded
+    suspend fun withdrawFunds(
+        @Field("user_id") userId :String
+    ) : Response<JsonObject>
 }

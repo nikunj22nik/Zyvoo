@@ -27,7 +27,8 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HostDetailsFragment : Fragment() , OnClickListener, OnItemClickListener {
-    lateinit var binding : FragmentHostDetailsBinding;
+    private var _binding : FragmentHostDetailsBinding? = null
+    private  val binding get() = _binding!!
     lateinit var adapterReview: AdapterReview
 
     lateinit var navController :NavController
@@ -54,7 +55,7 @@ class HostDetailsFragment : Fragment() , OnClickListener, OnItemClickListener {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentHostDetailsBinding.inflate(LayoutInflater.from(requireContext()),container, false)
+        _binding = FragmentHostDetailsBinding.inflate(LayoutInflater.from(requireContext()),container, false)
 
 
 
@@ -136,4 +137,8 @@ class HostDetailsFragment : Fragment() , OnClickListener, OnItemClickListener {
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

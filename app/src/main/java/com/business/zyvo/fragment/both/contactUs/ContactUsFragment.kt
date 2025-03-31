@@ -27,7 +27,8 @@ import java.util.regex.Pattern
 @AndroidEntryPoint
 class ContactUsFragment : Fragment() , OnMapReadyCallback {
 
-    lateinit var binding :FragmentContactUsBinding
+    private var _binding :FragmentContactUsBinding? = null
+    private val binding get() = _binding!!
     private lateinit var googleMap: GoogleMap
     private val viewModel : ContactUsViewModel by lazy {
      ViewModelProvider(this)[ContactUsViewModel::class.java]
@@ -40,7 +41,7 @@ class ContactUsFragment : Fragment() , OnMapReadyCallback {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = FragmentContactUsBinding.inflate(inflater, container, false)
+        _binding = FragmentContactUsBinding.inflate(inflater, container, false)
         session = SessionManager(requireContext())
         val mapView = binding.map
         mapView.onCreate(savedInstanceState)
@@ -141,5 +142,10 @@ class ContactUsFragment : Fragment() , OnMapReadyCallback {
 
     }
 
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

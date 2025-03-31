@@ -21,7 +21,8 @@ class MapDialogFragment : DialogFragment(), OnMapReadyCallback {
 
     var latitude :String ="0.00"
     var longitude :String ="0.00"
-    private lateinit var binding: FragmentMapDialogBinding
+    private  var _binding: FragmentMapDialogBinding? = null
+    private  val binding get() = _binding!!
     private lateinit var googleMap: GoogleMap
     private val zoomLevel = 15f
     private lateinit var mapView: MapView
@@ -39,7 +40,7 @@ class MapDialogFragment : DialogFragment(), OnMapReadyCallback {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentMapDialogBinding.inflate(inflater, container, false)
+        _binding = FragmentMapDialogBinding.inflate(inflater, container, false)
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
@@ -74,6 +75,10 @@ class MapDialogFragment : DialogFragment(), OnMapReadyCallback {
         mapView.onLowMemory()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 
 }

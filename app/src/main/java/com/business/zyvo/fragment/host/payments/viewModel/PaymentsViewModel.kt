@@ -117,6 +117,21 @@ class PaymentsViewModel @Inject constructor(private val repository: ZyvoReposito
             }
         }
     }
+    suspend fun withdrawFunds(
+        userId: String,
+    ): Flow<NetworkResult<Pair<String, String>>>{
+        return repository.withdrawFunds(userId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
 
 
     suspend fun requestWithdrawal(

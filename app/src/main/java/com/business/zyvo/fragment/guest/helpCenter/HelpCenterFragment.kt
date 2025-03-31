@@ -35,7 +35,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HelpCenterFragment : Fragment() ,View.OnClickListener, OnClickListener{
 
-    private var binding : FragmentHelpCenterBinding?=null
+    private var _binding : FragmentHelpCenterBinding?=null
+    private  val binding get() = _binding!!
 
     private  val viewModel : HelpCenterViewModel by lazy {
         ViewModelProvider(this)[HelpCenterViewModel::class.java]
@@ -48,7 +49,7 @@ class HelpCenterFragment : Fragment() ,View.OnClickListener, OnClickListener{
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        binding = FragmentHelpCenterBinding.inflate(layoutInflater,container,false)
+        _binding = FragmentHelpCenterBinding.inflate(layoutInflater,container,false)
         session = SessionManager(requireContext())
 //        adapterAllGuides = AdapterAllGuides(requireContext(), arrayListOf(),maxItemsToShow = 4,this)
 //        binding!!.recyclerViewGuests.adapter = adapterAllGuides
@@ -167,6 +168,9 @@ class HelpCenterFragment : Fragment() ,View.OnClickListener, OnClickListener{
        findNavController().navigate(R.id.browseAllGuidesArticleOpenFragment)
     }
 
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

@@ -119,10 +119,10 @@
                     android:id="@+id/llTransaction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                   android:gravity="center"
                     android:orientation="vertical"
                     android:minHeight="@dimen/_220sdp"
                     android:maxHeight="@dimen/_250sdp"
+                    android:background="@color/white"
                     app:layout_constraintBottom_toTopOf="@+id/clBottom"
                     app:layout_constraintTop_toBottomOf="@+id/viewTop">
 
@@ -159,8 +159,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="No Data Found"
+                        android:layout_gravity="center"
                         android:visibility="gone"
                         android:gravity="center"
+                        android:layout_marginTop="@dimen/_30sdp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins"
                         android:textSize="@dimen/_18sdp"/>

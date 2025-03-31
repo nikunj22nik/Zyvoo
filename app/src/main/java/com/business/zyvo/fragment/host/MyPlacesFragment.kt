@@ -38,7 +38,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class MyPlacesFragment : Fragment(), View.OnClickListener {
 
-    lateinit var binding: FragmentMyPlacesBinding
+    private var _binding: FragmentMyPlacesBinding? = null
+    private  val binding get() =  _binding!!
 
     private lateinit var placesList: MutableList<HostMyPlacesModel>
 
@@ -64,7 +65,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     ): View? {
         // Inflate the layout for this fragment
 
-        binding = FragmentMyPlacesBinding.inflate(LayoutInflater.from(requireContext()))
+        _binding = FragmentMyPlacesBinding.inflate(LayoutInflater.from(requireContext()))
         adapter = MyPlacesHostAdapter(requireContext(), mutableListOf())
         binding.recyclerMyPlaces.adapter = adapter
         adapter.setOnItemClickListener(object : MyPlacesHostAdapter.onItemClickListener {
@@ -543,5 +544,9 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

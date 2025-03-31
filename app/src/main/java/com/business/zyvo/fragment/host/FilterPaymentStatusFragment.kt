@@ -13,9 +13,10 @@ import com.business.zyvo.databinding.FragmentFilterPaymentStatusBinding
 
 
 class FilterPaymentStatusFragment : DialogFragment() {
-  lateinit var  binding: FragmentFilterPaymentStatusBinding
+  private var  _binding: FragmentFilterPaymentStatusBinding? = null
+    private  val binding get() =  _binding!!
 
-    private var filter: String = "finished"
+    private var filter: String = "completed"
     private var updateListener: CallUpdateListener? = null
 
     interface DialogListener {
@@ -48,7 +49,7 @@ class FilterPaymentStatusFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding=  FragmentFilterPaymentStatusBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
+        _binding=  FragmentFilterPaymentStatusBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
         selectingClickListener()
         bydefaultSelect()
 
@@ -101,7 +102,7 @@ class FilterPaymentStatusFragment : DialogFragment() {
 
     private fun selectingClickListener(){
         binding.tvCompleted.setOnClickListener {
-            filter = "finished"
+            filter = "completed"
             binding.tvCompleted.setBackgroundResource(R.drawable.bg_inner_manage_place)
             binding.tvPending.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvCancelled.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -124,5 +125,10 @@ class FilterPaymentStatusFragment : DialogFragment() {
 
         }
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

@@ -220,6 +220,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:visibility="visible"
                     android:weightSum="2">
 
                     <TextView
@@ -245,6 +246,43 @@
                         android:paddingHorizontal="@dimen/_15sdp"
                         android:paddingVertical="@dimen/_7sdp"
                         android:text="Message the host"
+                        android:textColor="#000000"
+                        android:textSize="@dimen/_12ssp" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llTopButtons1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <TextView
+                        android:id="@+id/textApproveBookingButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_save_button"
+                        android:paddingHorizontal="@dimen/_18sdp"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:text="Approve Booking"
+                        android:textColor="#FFFFFF"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <TextView
+                        android:id="@+id/textDeclineTheHostButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_10sdp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_four_corner_light_black"
+                        android:paddingHorizontal="@dimen/_15sdp"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:text="Decline Booking"
                         android:textColor="#000000"
                         android:textSize="@dimen/_12ssp" />
 
@@ -406,7 +444,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
-                                android:text="2"
+                                android:text=""
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/_13ssp" />
 
@@ -629,6 +667,7 @@
 
                     <!-- Share Icon -->
                     <LinearLayout
+                        android:id="@+id/llShare"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -656,6 +695,7 @@
                     <!-- Favorite Icon -->
 
                     <LinearLayout
+                        android:id="@+id/llFavorite"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_10sdp"

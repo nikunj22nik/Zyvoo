@@ -117,7 +117,8 @@ import java.util.Objects
 @AndroidEntryPoint
 class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener ,
     SetPreferred {
-    lateinit var binding: FragmentProfileBinding
+    private var _binding: FragmentProfileBinding? = null
+    private  val binding get() = _binding!!
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
     private lateinit var addWorkAdapter: AddWorkAdapter
@@ -224,7 +225,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
         // Inflate the layout for this fragment
-        binding =
+        _binding =
             FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
        // val newLocation = AddLocationModel(AppConstant.unknownLocation)
@@ -3325,5 +3326,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

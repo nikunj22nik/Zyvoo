@@ -277,7 +277,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                             Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(1)).into(binding.prImageTwo)
                             Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(2)).into(binding.prImageThree)
                         }
-                        if (it.size==4){
+                        if (it.size>=4){
                             binding.cvTwoAndThreeImage.visibility = View.VISIBLE
                             binding.cvOneImage.visibility = View.GONE
                             binding.llThreeImage.visibility = View.VISIBLE
@@ -332,6 +332,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (it.isNotEmpty()) {
                         addOnList = it.toMutableList()
                         adapterAddon.updateAdapter(addOnList)
+                        Log.d("CheckAddOn",addOnList.toString())
                     }
                 }
                 propertyData?.address?.let {

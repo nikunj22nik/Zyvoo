@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddOnHostBinding
 import com.business.zyvo.databinding.LayoutAddOnTextHostBinding
+import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.model.host.AddOnModel
 
 
@@ -97,6 +98,9 @@ class AddOnAdapter(var context: Context, var list : MutableList<AddOnModel>, var
     fun updateAddOn(newList: MutableList<AddOnModel>) {
 
         this.list = newList
+        if (list.isEmpty()) {
+            list.add(AddOnModel("","")) // Placeholder for "Add New"
+        }
         notifyDataSetChanged()
     }
     // Update data in the adapter

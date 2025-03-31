@@ -138,8 +138,8 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                 }
                 binding.textName.setText(currentItem.guest_name)
                 binding.textDate.setText(currentItem.booking_date)
-                binding.textStatus.setText(currentItem.booking_status)
-
+             //   binding.textStatus.setText(currentItem.booking_status)
+                binding.textStatus.setText(currentItem.booking_status.replaceFirstChar { it.uppercase() })
             }
 
         }

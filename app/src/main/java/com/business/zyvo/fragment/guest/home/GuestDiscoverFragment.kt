@@ -162,7 +162,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         binding = FragmentGuestDiscoverBinding.inflate(LayoutInflater.from(requireContext()))
         val navController = findNavController()
 
-
         // Observe the isLoading state
         lifecycleScope.launch {
             guestDiscoverViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -202,7 +201,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             try {
                 if (result.resultCode == Activity.RESULT_OK) {
                     val data = result.data
-                    // Handle the resultl
+                                  // Handle the resultl
                     if (data!=null) {
                         if (data?.extras?.getString("type").equals("filter")) {
                             val value: SearchFilterRequest = Gson().fromJson(

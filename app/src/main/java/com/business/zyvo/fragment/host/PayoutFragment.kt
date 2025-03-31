@@ -16,7 +16,8 @@ import com.business.zyvo.databinding.FragmentPayoutBinding
 
 class PayoutFragment : Fragment() {
 
-    lateinit var binding : FragmentPayoutBinding
+    private var _binding : FragmentPayoutBinding? = null
+    private  val binding get() = _binding!!
 
     private var closeSelectIDType = 0
     private var closeSelectCountry = 0
@@ -42,7 +43,7 @@ class PayoutFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentPayoutBinding.inflate(LayoutInflater.from(requireContext()),container,false)
+        _binding = FragmentPayoutBinding.inflate(LayoutInflater.from(requireContext()),container,false)
         dateManager = DateManager(requireContext())
         return binding.root
     }
@@ -272,6 +273,10 @@ class PayoutFragment : Fragment() {
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 
 }

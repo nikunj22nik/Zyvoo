@@ -71,6 +71,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
     var endDate: String? = null
     var filterStatus: String? = null
     var totalAmount: String? = null
+    var instantAmount: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -186,6 +187,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
         paymentWithdrawalList()
         getPayoutMethods()
         payoutBalanceMethods()
+        withdrawFundsMethods()
         binding.imageBackButton.setOnClickListener {
             navController.navigateUp()
         }
@@ -228,6 +230,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
             val imageCross = findViewById<ImageView>(R.id.imageCross)
             val etAmount = findViewById<EditText>(R.id.etAmount)
             val textAvailableBalance = findViewById<TextView>(R.id.textAvailableBalance)
+            val textInstantAvailableBalance = findViewById<TextView>(R.id.textInstantAvailableBalance)
             val btnWithdraw = findViewById<TextView>(R.id.btnWithdraw)
             val spinner = findViewById<Spinner>(R.id.spinner)
 
@@ -238,6 +241,10 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
             )
             if (totalAmount != null) {
                 textAvailableBalance.text = "Available Balance :" + "$totalAmount"
+            }
+
+            if (instantAmount != null) {
+                textInstantAvailableBalance.text = "Instant Available Balance :" + "$instantAmount"
             }
 
             val customAdapter = CustomSpinnerWithImageAdapter(requireContext(), customList)
@@ -799,8 +806,55 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
                     is NetworkResult.Success -> {
 
                         it.data?.first.let { it1 -> binding.tvNextPayoutAmount.text = "$" + it1 }
-                        it.data?.first.let { it1 -> totalAmount = "$" + it1 }
                         it.data?.second.let { it1 -> binding.tvNextPayoutDate.text = "On " + it1 }
+
+
+                    }
+
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
+    private fun  withdrawFundsMethods() {
+        lifecycleScope.launch {
+            viewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        withdrawFunds()
+                    }
+
+                }
+        }
+    }
+
+    private fun withdrawFunds() {
+
+        lifecycleScope.launch {
+            viewModel.withdrawFunds(session?.getUserId().toString()).collect {
+                when (it) {
+
+                    is NetworkResult.Success -> {
+
+
+                        it.data?.first.let { it1 -> totalAmount = "$" + it1 }
+                        it.data?.second.let { it1 -> instantAmount = "$" + it1 }
 
 
                     }

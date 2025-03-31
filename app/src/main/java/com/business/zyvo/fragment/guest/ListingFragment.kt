@@ -80,4 +80,9 @@ private var _binding : FragmentListingBinding? = null
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
 }

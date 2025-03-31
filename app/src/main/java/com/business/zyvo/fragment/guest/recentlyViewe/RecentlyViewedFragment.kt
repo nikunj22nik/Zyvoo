@@ -41,7 +41,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class RecentlyViewedFragment : Fragment() {
-    lateinit var  binding : FragmentRecentlyViewedBinding
+    private var  _binding : FragmentRecentlyViewedBinding? = null
+    private val binding get() = _binding!!
     lateinit var  navController: NavController
     private var adapter : RecentViewAdapter? = null
     var edit : Boolean = false
@@ -55,7 +56,7 @@ class RecentlyViewedFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
-        binding = FragmentRecentlyViewedBinding.inflate(inflater, container, false)
+        _binding = FragmentRecentlyViewedBinding.inflate(inflater, container, false)
         session = SessionManager(requireActivity())
         // Observe the isLoading state
         lifecycleScope.launch {
@@ -219,4 +220,8 @@ class RecentlyViewedFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

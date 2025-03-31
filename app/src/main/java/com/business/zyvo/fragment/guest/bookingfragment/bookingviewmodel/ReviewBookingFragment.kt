@@ -833,5 +833,9 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

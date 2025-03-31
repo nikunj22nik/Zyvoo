@@ -110,5 +110,20 @@ class CompleteProfileViewModel @Inject constructor(private val repository: ZyvoR
         }
     }
 
+    suspend fun getUserProfile(userId: String):
+            Flow<NetworkResult<JsonObject>> {
+        return repository.getUserProfile(userId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
 
 }

@@ -5127,6 +5127,53 @@ import javax.inject.Inject
          }
      }
 
+     override suspend fun withdrawFunds(userId: String): Flow<NetworkResult<Pair<String, String>>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.withdrawFunds(
+                 userId
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+
+                             if (resp.has("data") && !resp.get("data").isJsonNull) {
+                                 val data = resp.getAsJsonObject("data")
+
+                                 val availableBalance = if (data.has("available_balance") && !data.get("available_balance").isJsonNull) {
+                                     data.get("available_balance").asString
+                                 } else {
+                                     ""
+                                 }
+
+                                 val instantAvailableBalance = if (data.has("instant_available_balance") && !data.get("instant_available_balance").isJsonNull) {
+                                     data.get("instant_available_balance").asString
+                                 } else {
+                                     ""
+                                 }
+
+                                 emit(NetworkResult.Success(Pair(availableBalance,instantAvailableBalance)))
+                             }
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
 
 
  }

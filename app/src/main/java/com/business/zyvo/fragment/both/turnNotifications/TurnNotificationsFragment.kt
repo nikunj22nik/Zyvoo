@@ -11,7 +11,8 @@ import com.business.zyvo.databinding.FragmentTurnNotificationsBinding
 
 
 class TurnNotificationsFragment : Fragment() {
-private lateinit var  binding: FragmentTurnNotificationsBinding
+private var  _binding: FragmentTurnNotificationsBinding? = null
+    private val binding get() = _binding!!
 
     var data:String = ""
     var type:String = ""
@@ -30,7 +31,7 @@ private lateinit var  binding: FragmentTurnNotificationsBinding
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentTurnNotificationsBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
+        _binding = FragmentTurnNotificationsBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
         return binding.root
     }
 
@@ -53,4 +54,8 @@ private lateinit var  binding: FragmentTurnNotificationsBinding
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

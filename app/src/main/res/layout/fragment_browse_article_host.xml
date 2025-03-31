@@ -114,6 +114,19 @@
         android:nestedScrollingEnabled="false"
         />
 
+            <TextView
+                android:id="@+id/textNoDataFound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No Data Found"
+                android:textAlignment="center"
+                android:gravity="center"
+                android:textSize="@dimen/_20ssp"
+                android:visibility="gone"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:minHeight="@dimen/_180sdp"/>
+
     <View
         android:layout_width="wrap_content"
         android:layout_height="@dimen/_1sdp"
