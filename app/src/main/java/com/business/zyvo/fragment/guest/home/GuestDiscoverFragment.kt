@@ -93,6 +93,7 @@ import com.business.zyvo.utils.ErrorDialog.calculateDifferenceInSeconds
 import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.getCurrentDateTime
 import com.business.zyvo.utils.ErrorDialog.getMinutesPassed
+import com.business.zyvo.utils.ErrorDialog.isAfterOrSame
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.google.android.gms.common.api.GoogleApiClient
@@ -266,7 +267,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             filteredDataAPI(it)
         }*/
 
-        getUserBookings()
+        if (runnable==null) {
+            getUserBookings()
+        }
 
 
         return binding.root
@@ -277,27 +280,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.clSearch.visibility = View.VISIBLE
-        val locations = listOf(
-            Location(37.7749, -122.4194, "San Francisco"),
-            Location(34.0522, -118.2437, "Los Angeles"),
-            Location(40.7128, -74.0060, "New York")
-        )
-
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     requireActivity().finishAffinity()
                 }
             }
-
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
-
-     //   binding.customProgressBar.setProgressWidth(15f)
-       // binding.customProgressBar.setMax(100.0) // Set max progress as 100%
-     //   binding.customProgressBar.setMax(1000.0)
-
-        // Start the countdown timer
-     //   startCountdown()
     }
     private fun startCountdown(remaning:String) {
         // Countdown timer for 20 seconds with 1-second intervals
@@ -405,12 +393,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     }catch (e:Exception){
                         e.message
                     }
-
                 }
-            }
-
-            R.id.customProgressBar ->{
-
             }
 
         }
@@ -843,46 +826,47 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 guestDiscoverViewModel.getUserBookings(session?.getUserId().toString()
-                ,ErrorDialog.getCurrentDate(),getCurrentDateTime()).collect {
+                ,ErrorDialog.getCurrentDate(),/*"2025-04-01 11:00:00"*/getCurrentDateTime()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                session?.setFilterRequest("")
-                                session?.setSearchFilterRequest("")
-                                binding.clTimeLeftProgressBar.visibility = View.VISIBLE
                                 if (resp.has("bookings")) {
                                     val booking: JsonObject = resp
                                         .getAsJsonArray("bookings").get(0).asJsonObject
                                     bookings = Gson().fromJson(booking,Bookings::class.java)
                                 }
+
                                 if (resp.has("properties")){
                                     val reqpro: JsonObject = resp
                                         .getAsJsonArray("properties").get(0).asJsonObject
                                     property = Gson().fromJson(reqpro,PropertyData::class.java)
                                 }
-
                                 bookings?.let { bookings: Bookings ->
-                                    property?.let {
-                                        if (bookings.booking_start!=null && !bookings.booking_start.equals("") &&
-                                            bookings.final_booking_end!=null && !bookings.final_booking_end.equals("")){
-                                            val booking_start = bookings.booking_start
-                                            val booking_end = bookings.final_booking_end
-                                            try {
-                                                val differenceIntoMinutes  = calculateDifferenceInSeconds(
-                                                   /* "2025-03-12 15:00:00"*/booking_start,/*"2025-03-12 17:30:00"*/booking_end)
-                                                initialstartTime = getMinutesPassed(/*"2025-03-12 15:00:00"*/booking_start)
-                                                Log.e(ErrorDialog.TAG,"passway"+initialstartTime.toString())
-                                                Log.e(ErrorDialog.TAG,"differenceIntoMinutes"+differenceIntoMinutes)
-                                                totalDuration = differenceIntoMinutes//20L//differenceInSeconds
-                                                initialstartTime =initialstartTime //10
-                                                //startProgressUpdate()
-                                                startProgressUpdateMinute()
-                                                // Start the countdown timer
-                                                val remain = totalDuration.toInt()-initialstartTime.toInt()
-                                                Log.e(ErrorDialog.TAG,"remain"+remain)
-                                                startCountdown(remain.toString())
-                                            }catch (e:Exception){
-                                                Log.e(ErrorDialog.TAG,e.message!!)
+                                    if (isAfterOrSame(bookings.booking_start)){
+                                        session?.setFilterRequest("")
+                                        session?.setSearchFilterRequest("")
+                                        binding.clTimeLeftProgressBar.visibility = View.VISIBLE
+                                        property?.let {
+                                            if (!bookings.booking_start.isNullOrEmpty() &&
+                                                !bookings.final_booking_end.isNullOrEmpty()){
+                                                val booking_start = bookings.booking_start
+                                                val booking_end = bookings.final_booking_end
+                                                try {
+                                                    val differenceIntoMinutes  = calculateDifferenceInSeconds(
+                                                        /* "2025-03-12 15:00:00"*/booking_start,/*"2025-03-12 17:30:00"*/booking_end)
+                                                    initialstartTime = getMinutesPassed(/*"2025-03-12 15:00:00"*/booking_start)
+                                                    Log.e(ErrorDialog.TAG,"passway"+initialstartTime.toString())
+                                                    Log.e(ErrorDialog.TAG,"differenceIntoMinutes"+differenceIntoMinutes)
+                                                    totalDuration = differenceIntoMinutes//20L//differenceInSeconds
+                                                    initialstartTime =initialstartTime //10
+                                                    startProgressUpdateMinute()
+                                                    // Start the countdown timer
+                                                    val remain = totalDuration.toInt()-initialstartTime.toInt()
+                                                    Log.e(ErrorDialog.TAG,"remain"+remain)
+                                                    startCountdown(remain.toString())
+                                                }catch (e:Exception){
+                                                    Log.e(ErrorDialog.TAG,e.message!!)
+                                                }
                                             }
                                         }
                                     }
@@ -926,8 +910,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                session?.setFilterRequest("")
-                                session?.setSearchFilterRequest("")
                                 val listType = object : TypeToken<List<HomePropertyData>>() {}.type
                                 val properties: MutableList<HomePropertyData> = Gson().fromJson(resp, listType)
                                 homePropertyData = properties

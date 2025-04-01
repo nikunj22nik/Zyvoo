@@ -5404,5 +5404,53 @@ import javax.inject.Inject
          }
 
 
+     override suspend fun reportChat(
+         reporter_id :String,
+         reported_user_id :String,
+         reason :String,
+         message :String
+     ): Flow<NetworkResult<JsonObject>> =
+         flow {
+             try {
+                 api.reportChat(reporter_id,reported_user_id,
+                     reason,message).apply {
+                     if (isSuccessful) {
+                         body()?.let { resp ->
+                             if (resp.has("success") && resp.get("success").asBoolean) {
+                                 emit(NetworkResult.Success(resp))
+                             } else {
+                                 emit(NetworkResult.Error(resp.get("message").asString))
+                             }
+                         }
+                             ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                     } else {
+                         try {
+                             val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                             emit(
+                                 NetworkResult.Error(
+                                     jsonObj?.getString("message")
+                                         ?: AppConstant.unKnownError
+                                 )
+                             )
+                         } catch (e: JSONException) {
+                             e.printStackTrace()
+                             emit(NetworkResult.Error(AppConstant.unKnownError))
+                         }
+                     }
+                 }
+             } catch (e: HttpException) {
+                 Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: IOException) {
+                 Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: Exception) {
+                 Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+
+         }
+
+
  }
 

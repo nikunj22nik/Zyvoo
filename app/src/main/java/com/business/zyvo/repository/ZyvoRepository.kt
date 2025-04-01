@@ -688,6 +688,14 @@ interface ZyvoRepository {
     ) :Flow<NetworkResult<JsonObject>>
 
 
+    suspend fun reportChat(
+        reporter_id :String,
+        reported_user_id :String,
+        reason :String,
+        message :String
+    ) :Flow<NetworkResult<JsonObject>>
+
+
 }
 
 
