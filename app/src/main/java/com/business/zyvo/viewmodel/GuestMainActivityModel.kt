@@ -50,7 +50,7 @@ class GuestMainActivityModel @Inject constructor(private val repository: ZyvoRep
     }
 
     suspend fun getChatUserChannelList(userId :Int,type :String) : Flow<NetworkResult<MutableList<ChannelListModel>>>{
-        return repository.getUserChannel(userId,type).onEach {
+        return repository.getUserChannel(userId,type,"").onEach {
 
         }
     }

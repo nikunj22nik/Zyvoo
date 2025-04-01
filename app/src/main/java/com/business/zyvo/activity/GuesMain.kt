@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.telephony.NetworkScan
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -18,33 +17,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
-import com.business.zyvo.BookingRemoveListener
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
-import com.business.zyvo.chat.QuickstartConversationsManager
-import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
 import com.business.zyvo.databinding.ActivityGuesMainBinding
+import com.business.zyvo.di.ConversationsManagerSingleton
 import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
-import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.GuestMainActivityModel
-import com.business.zyvo.viewmodel.LoggedScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class GuesMain : AppCompatActivity(), OnClickListener,
-    QuickstartConversationsManagerListenerOneTowOne {
+    com.business.zyvo.chat.QuickstartConversationsManagerListener {
 
     lateinit var binding: ActivityGuesMainBinding
     lateinit var guestViewModel: GuestMainActivityModel
-    private var quickstartConversationsManager = QuickstartConversationsManager()
+    private var quickstartConversationsManager = com.business.zyvo.chat.QuickstartConversationsManager()
     private var map:HashMap<String, ChannelListModel> = HashMap()
 
 
@@ -59,11 +53,27 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         binding.navigationBookings.setOnClickListener(this)
         binding.navigationWishlist.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
-        try {
+        /*try {
             quickstartConversationsManager = (application as MyApp).conversationsManager!!
-            quickstartConversationsManager.setListener(this)
+            if (quickstartConversationsManager!=null) {
+                quickstartConversationsManager.setListener(this)
+            }
+            Log.e("******", "Error setting QuickstartConversationsManager listener Add")
         } catch (e: Exception) {
-            Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
+            Log.e("******", "Error setting QuickstartConversationsManager listener", e)
+        }*/
+        try {
+            val app = application as? MyApp
+            if (app?.conversationsManager != null) {
+                quickstartConversationsManager = app.conversationsManager!!
+                quickstartConversationsManager.setListener(this)
+            } else {
+                Log.e("******", "ConversationsManager is null")
+            }
+        } catch (e: ClassCastException) {
+            Log.e("******", "Application is not of type MyApp", e)
+        } catch (e: Exception) {
+            Log.e("******", "Error setting QuickstartConversationsManager listener", e)
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -91,9 +101,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         observeButtonState()
         var sessionManager = SessionManager(this)
         sessionManager.setUserType(AppConstant.Guest)
-        if (sessionManager.getChatToken().equals("")) {
-            callingGetUserToken()
-        }
+        callingGetUserToken()
         askNotificationPermission()
 
 
@@ -110,8 +118,35 @@ class GuesMain : AppCompatActivity(), OnClickListener,
                         is NetworkResult.Success -> {
                             Log.d("TESTING_TOKEN", "HERE SUCEESS THE TOKEN" +it.data)
                             sessionManager.setChatToken(it.data.toString())
-                            val app = application as MyApp
-                            app.initializeTwilioClient(sessionManager.getChatToken()!!)
+                           val app = application as MyApp
+                            if (app?.conversationsManager==null) {
+                                val chatToken = sessionManager.getChatToken()
+                                if (!chatToken.isNullOrEmpty()) {
+                                    app?.initializeTwilioClient(chatToken)
+                                    try {
+                                        app?.conversationsManager?.let { manager ->
+                                            quickstartConversationsManager = manager
+                                            quickstartConversationsManager.setListener(this@GuesMain)
+                                            Log.e("******", "initializeConversationsManager")
+                                        } ?: Log.e("******", "ConversationsManager is still null after initialization")
+                                    } catch (e: Exception) {
+                                        Log.e("******", "Error setting QuickstartConversationsManager listener", e)
+                                    }
+                                }
+                            }
+                           /* if (app.conversationsManager==null) {
+                                app.initializeTwilioClient(sessionManager.getChatToken()!!)
+                                try {
+                                    quickstartConversationsManager = app.conversationsManager!!
+                                    if (quickstartConversationsManager!=null) {
+                                        quickstartConversationsManager.setListener(this@GuesMain)
+                                    }
+                                } catch (e: Exception) {
+                                    Log.e("******", "Error setting QuickstartConversationsManager listener", e)
+                                }
+                                Log.e("******", "initializeConversationsManager")
+
+                            }*/
                         }
 
                         is NetworkResult.Error -> {
@@ -127,6 +162,12 @@ class GuesMain : AppCompatActivity(), OnClickListener,
             }
         }
 
+    }
+    private fun initializeConversationsManager(token: String) {
+        if (!ConversationsManagerSingleton.isInitialized()) {
+            ConversationsManagerSingleton.init(this@GuesMain, token)
+            Log.d("******", "Twilio Conversations initialized.")
+        }
     }
     fun hideView() {
         binding.lay1.visibility = View.GONE
@@ -168,7 +209,6 @@ class GuesMain : AppCompatActivity(), OnClickListener,
                                         map.put(it.group_name.toString(),it)
                                     }
                                     Log.d("*******",map.size.toString() +" Map Size is ")
-                                    Log.d("*******",""+quickstartConversationsManager.conversationsClient?.myConversations?.size)
                                     if (quickstartConversationsManager.conversationsClient==null){
                                         quickstartConversationsManager.initializeWithAccessTokenBase(this@GuesMain
                                             ,sessionManager.getChatToken().toString())

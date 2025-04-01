@@ -5,6 +5,9 @@ import android.util.Log
 import com.business.zyvo.chat.QuickstartConversationsManager
 import com.business.zyvo.chat.QuickstartConversationsManagerFragment
 import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
+import com.business.zyvo.di.ConversationsManagerSingleton.instanceHost
+import com.business.zyvo.di.ConversationsManagerSingleton.instanceMain
+import com.business.zyvo.di.ConversationsManagerSingleton.instanceOneToOne
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.AppContextProvider
 import com.business.zyvo.utils.NetworkMonitor
@@ -16,11 +19,10 @@ import jakarta.inject.Inject
 class MyApp :Application() {
     @Inject
     lateinit var networkMonitor: NetworkMonitor
-     lateinit var conversationsManager: QuickstartConversationsManager
-    lateinit var conversationsManagerOneTowOne: QuickstartConversationsManagerOneTowOne
+      var conversationsManager: QuickstartConversationsManager?=null
+     var conversationsManagerOneTowOne: QuickstartConversationsManagerOneTowOne?=null
     //lateinit var conversationsManagerFragment:  QuickstartConversationsManagerFragment
-    lateinit var conversationsManagerFragment: com.business.zyvo.fragment.host.QuickstartConversationsManager
-
+     var conversationsManagerFragment: com.business.zyvo.fragment.host.QuickstartConversationsManager?=null
 
     override fun onCreate() {
         super.onCreate()
@@ -34,15 +36,20 @@ class MyApp :Application() {
      fun initializeTwilioClient(token:String) {
          conversationsManager=QuickstartConversationsManager()
          conversationsManagerOneTowOne=QuickstartConversationsManagerOneTowOne()
-         conversationsManagerFragment=
-             com.business.zyvo.fragment.host.QuickstartConversationsManager()
+         conversationsManagerFragment= com.business.zyvo.fragment.host.QuickstartConversationsManager()
          token.let {
-             conversationsManager.initializeWithAccessTokenBase(this, it)
-             conversationsManagerOneTowOne.initializeWithAccessTokenBase(this, it)
-             conversationsManagerFragment.initializeWithAccessToken(this, it,
+             conversationsManager?.initializeWithAccessTokenBase(this, it)
+             conversationsManagerOneTowOne?.initializeWithAccessTokenBase(this, it)
+             conversationsManagerFragment?.initializeWithAccessToken(this, it,
                  "general", "")
-             Log.d("Initialization" ,"Chat token initialization")
+             Log.d("******" ,"Chat token initialization")
          }
+    }
+
+    fun clearInstance() { // Reset instance if needed
+        conversationsManager = null
+        conversationsManagerOneTowOne = null
+        conversationsManagerFragment = null
     }
 
 

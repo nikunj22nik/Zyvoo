@@ -190,9 +190,8 @@
         android:layout_height="190dp"
         android:layout_marginBottom="@dimen/_40sdp"
         android:gravity="center"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent">
-
 
         <com.business.zyvo.SemiCircleProgressBar
             android:id="@+id/customProgressBar"
@@ -209,9 +208,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
         </com.business.zyvo.SemiCircleProgressBar>
-
-
-
 
         <com.google.android.flexbox.FlexboxLayout
             android:layout_width="match_parent"

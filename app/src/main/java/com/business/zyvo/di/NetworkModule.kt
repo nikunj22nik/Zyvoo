@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.util.Log
 import com.business.zyvo.BuildConfig
+import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
 import com.business.zyvo.remote.ZyvoApi
 import com.business.zyvo.repository.ZyvoRepository
 import com.business.zyvo.repository.ZyvoRepositoryImpl

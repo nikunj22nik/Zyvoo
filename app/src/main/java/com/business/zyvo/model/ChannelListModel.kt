@@ -12,5 +12,9 @@ data class ChannelListModel(
     var lastMessageTime :String ="",
     var isOnline :Boolean = false,
     var property_title :String ="",
-    var date :String =""
+    var date :String ="",
+    var is_blocked :Int =0,
+    var is_favorite :Int = 0,
+    var is_muted :Int = 0,
+    var is_archived :Int = 0
 )

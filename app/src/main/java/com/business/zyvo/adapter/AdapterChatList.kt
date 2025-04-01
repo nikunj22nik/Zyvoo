@@ -66,8 +66,7 @@ class AdapterChatList(
             binding.imageProfilePicture.setOnClickListener {
                 listener1?.itemClick(position,"image")
             }
-
-            // Change the background color based on selectedPosition
+                // Change the background color based on selectedPosition
             if (position == selectedPosition) {
                 // Set the selected background color
                 binding.clMain.setBackgroundResource(R.drawable.chat_list_bg)
@@ -79,7 +78,7 @@ class AdapterChatList(
             // Set click listener to change selected position
             binding.root.setOnClickListener {
                 // Update selected position
- // Optional: Trigger any listener action
+                // Optional: Trigger any listener action
                 mListener.onItemClick(currentItem,position,AppConstant.MOVE)
             }
         }
@@ -132,7 +131,7 @@ class AdapterChatList(
         }
         popupView.findViewById<TextView>(R.id.itemReport).setOnClickListener {
             // Handle report action
-            // listner.onReport(position)
+            mListener.onItemClick(currentItem,position,AppConstant.REPORT)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
@@ -141,11 +140,72 @@ class AdapterChatList(
             popupWindow.dismiss()
         mListener.onItemClick(currentItem,position,AppConstant.DELETE)
         }
-        popupView.findViewById<TextView>(R.id.itemBlock).setOnClickListener {
-            // Handle block action
-            // listner.onBlock(position)
-            popupWindow.dismiss()
+        // Find the "block" item inside the popup
+        val blockItem = popupView.findViewById<View>(R.id.itemBlock)
+        val unblockItem = popupView.findViewById<View>(R.id.itemUnBlock)
+        val itemMute = popupView.findViewById<View>(R.id.itemMute)
+        val itemunMute = popupView.findViewById<View>(R.id.itemunMute)
+
+        val itemArchived = popupView.findViewById<View>(R.id.itemArchived)
+        val itemUnArchived = popupView.findViewById<View>(R.id.itemUnArchived)
+
+        if (currentItem.is_blocked==1){
+            blockItem.visibility = View.GONE
+            unblockItem.visibility = View.VISIBLE
+        }else{
+            blockItem.visibility = View.VISIBLE
+            unblockItem.visibility = View.GONE
         }
+        if (currentItem.is_muted==1){
+            itemMute.visibility = View.GONE
+            itemunMute.visibility = View.VISIBLE
+        }else{
+            itemMute.visibility = View.VISIBLE
+            itemunMute.visibility = View.GONE
+        }
+
+        if (currentItem.is_archived==1){
+            itemArchived.visibility = View.GONE
+            itemUnArchived.visibility = View.VISIBLE
+        }else{
+            itemArchived.visibility = View.VISIBLE
+            itemUnArchived.visibility = View.GONE
+        }
+        blockItem.setOnClickListener {
+            mListener.onItemClick(currentItem,position,AppConstant.BLOCK)
+            popupWindow.dismiss()
+
+        }
+
+        unblockItem.setOnClickListener {
+            mListener.onItemClick(currentItem,position,AppConstant.BLOCK)
+            popupWindow.dismiss()
+
+        }
+
+        itemMute.setOnClickListener {
+            mListener.onItemClick(currentItem,position,AppConstant.MUTE)
+            popupWindow.dismiss()
+
+        }
+
+        itemunMute.setOnClickListener {
+            mListener.onItemClick(currentItem,position,AppConstant.MUTE)
+            popupWindow.dismiss()
+
+        }
+
+        itemArchived.setOnClickListener {
+            popupWindow.dismiss()
+            mListener.onItemClick(currentItem,position,AppConstant.ARCHIVED)
+        }
+
+        itemUnArchived.setOnClickListener {
+            popupWindow.dismiss()
+            mListener.onItemClick(currentItem,position,AppConstant.ARCHIVED)
+        }
+
+
 
         // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)
