@@ -341,7 +341,22 @@
                                     <com.business.zyvo.ScheduleView
                                         android:id="@+id/scheduleView"
                                         android:layout_width="wrap_content"
-                                        android:layout_height="match_parent" />
+                                        android:layout_height="match_parent"
+                                        app:timeColumnWidth="@dimen/_120sdp"
+                                        app:dayColumnWidth="@dimen/_100sdp"
+                                        app:daySpacing="@dimen/_15sdp"
+                                        app:rowHeight="@dimen/_69sdp"
+                                        app:rowSpacing="@dimen/_5sdp"
+                                        app:tenSpace="@dimen/_4sdp"
+                                        app:fifteenSpace="@dimen/_8sdp"
+                                        app:twontySpace="@dimen/_8sdp"
+                                        app:thirtySpace="@dimen/_10sdp"
+                                        app:fourtySpace="@dimen/_12sdp"
+                                        app:textSizeDays="@dimen/_15sdp"
+                                        app:textSizeName="@dimen/_10sdp"
+                                        app:textSizeStatus ="@dimen/_10sdp"
+                                        app:textSizeTime ="@dimen/_10sdp"
+                                        />
                                 </HorizontalScrollView>
                             </ScrollView>
                         </LinearLayout>
