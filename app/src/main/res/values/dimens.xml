@@ -22,4 +22,17 @@
     <dimen name="imageWishListHeightLarge">@dimen/_140sdp</dimen>
     <dimen name="text_large_size">16sp</dimen>
 
+
+    <dimen name="default_timeColumnWidth">250dp</dimen>
+    <dimen name="default_dayColumnWidth">370dp</dimen>
+    <dimen name="default_daySpacing">20dp</dimen>
+    <dimen name="default_rowHeight">250dp</dimen>
+    <dimen name="default_rowSpacing">20dp</dimen>
+
+    <dimen name="default_tenSpacing">10dp</dimen>
+    <dimen name="default_fiftSpacing">15dp</dimen>
+    <dimen name="default_twentySpacing">20dp</dimen>
+    <dimen name="default_thirtySpacing">30dp</dimen>
+    <dimen name="default_fourtySpacing">40dp</dimen>
+
 </resources>

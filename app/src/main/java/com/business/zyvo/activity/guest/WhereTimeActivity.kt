@@ -76,7 +76,6 @@ class WhereTimeActivity : AppCompatActivity() {
     private var selectedDate: LocalDate? = LocalDate.now()
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

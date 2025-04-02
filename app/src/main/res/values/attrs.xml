@@ -97,4 +97,24 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="ScheduleView">
+        <attr name="timeColumnWidth" format="dimension" />
+        <attr name="dayColumnWidth" format="dimension" />
+        <attr name="daySpacing" format="dimension" />
+        <attr name="rowHeight" format="dimension" />
+        <attr name="rowSpacing" format="dimension" />
+
+        <attr name="tenSpace" format="dimension" />
+        <attr name="fifteenSpace" format="dimension" />
+        <attr name="twontySpace" format="dimension" />
+        <attr name="thirtySpace" format="dimension" />
+        <attr name="fourtySpace" format="dimension" />
+        <attr name="textSizeDays" format="dimension" />
+        <attr name="textSizeName" format="dimension" />
+        <attr name="textSizeStatus" format="dimension" />
+        <attr name="textSizeTime" format="dimension" />
+    </declare-styleable>
+
+
+
 </resources>

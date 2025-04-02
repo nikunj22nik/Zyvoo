@@ -543,8 +543,14 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                toggleLoginButtonEnabled(true, binding.textSaveButton)
                            } else {
                                lifecycleScope.launch(Dispatchers.Main) {
+                                   val fullName = binding.textName.text.toString().trim()
+                                   val nameParts = fullName.split(" ")
+
+                                    firstName = nameParts.getOrNull(0) ?: ""
+                                    lastName = nameParts.getOrNull(1) ?: ""
+
                                    if (validation()) {
-                                       completeProfileReq.user_id = userId.toInt()
+                                       completeProfileReq.user_id = session?.getUserId()!!
                                        completeProfileReq.first_name =  firstName
                                        completeProfileReq.last_name =  lastName
                                        completeProfileReq.about_me = binding.etAboutMe.text.toString()
@@ -1397,6 +1403,10 @@ private fun dialogChangeName(context: Context?) {
                                     it?.last_name?.let {
                                         name+=it
                                         lastName = it
+                                    }
+                                    it?.about_me?.let {
+
+                                        binding.etAboutMe.setText(it)
                                     }
 
 
