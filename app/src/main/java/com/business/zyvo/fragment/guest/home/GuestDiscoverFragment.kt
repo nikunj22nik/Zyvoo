@@ -902,8 +902,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     filterRequest.latitude,filterRequest.longitude,
                     filterRequest.date,
                     filterRequest.hour,
-                    filterRequest.date + " "+ErrorDialog.convertToTimeFormat(filterRequest.start_time),
-                    filterRequest.date +" "+ErrorDialog.convertToTimeFormat(filterRequest.end_time),
+                    ErrorDialog.convertToTimeFormat(filterRequest.start_time),
+                    ErrorDialog.convertToTimeFormat(filterRequest.end_time),
                    /* filterRequest.start_time,
                     filterRequest.end_time,*/
                     filterRequest.activity,).collect {

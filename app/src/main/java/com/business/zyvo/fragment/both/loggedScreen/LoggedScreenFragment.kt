@@ -201,6 +201,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 SearchFilterRequest::class.java
                             )
                             value.let {
+                                it.user_id = ""
                                 Log.d(TAG, Gson().toJson(value))
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     getHomeDataSearchFilter(it)
@@ -298,8 +299,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     filterRequest.latitude,filterRequest.longitude,
                     filterRequest.date,
                     filterRequest.hour,
-                    filterRequest.date + " "+ErrorDialog.convertToTimeFormat(filterRequest.start_time),
-                    filterRequest.date +" "+ErrorDialog.convertToTimeFormat(filterRequest.end_time),
+                    ErrorDialog.convertToTimeFormat(filterRequest.start_time),
+                    ErrorDialog.convertToTimeFormat(filterRequest.end_time),
                     filterRequest.activity,).collect {
                     when (it) {
                         is NetworkResult.Success -> {
@@ -334,7 +335,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.textLogin.setOnClickListener(this)
-        binding.rlFind.setOnClickListener(this)
+        binding.textWhere.setOnClickListener(this)
+        binding.textTime.setOnClickListener(this)
+        binding.textActivity.setOnClickListener(this)
         binding.filterIcon.setOnClickListener(this)
         binding.textWishlists.setOnClickListener(this)
         binding.textDiscover.setOnClickListener(this)
@@ -529,9 +532,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 dialogLogin(requireContext())
 
             }
-
             R.id.filter_icon -> {
-                startActivity(Intent(requireActivity(), FiltersActivity::class.java))
+                val intent = Intent(requireContext(),FiltersActivity::class.java)
+                startForResult.launch(intent)
             }
             R.id.textWhere ->{
                 val intent = Intent(requireContext(),WhereTimeActivity::class.java)
