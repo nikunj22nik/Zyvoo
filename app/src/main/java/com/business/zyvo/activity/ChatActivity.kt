@@ -2,6 +2,7 @@
 
 package com.business.zyvo.activity
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -16,7 +17,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
+import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +34,7 @@ import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.activity.guest.extratime.model.ReportReason
 import com.business.zyvo.adapter.ChatDetailsAdapter
 import com.business.zyvo.databinding.ActivityChatBinding
 import com.business.zyvo.session.SessionManager
@@ -46,8 +51,13 @@ import java.io.FileNotFoundException
 import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
 import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
 import com.business.zyvo.model.ChannelListModel
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.showToast
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.skydoves.powerspinner.PowerSpinnerView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -383,7 +393,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
     override fun showError(message:String) {
         if (!(isFinishing) && !(isDestroyed)) {
             LoadingUtils.hideDialog()
-            LoadingUtils.showSuccessDialog(this, message)
+           // LoadingUtils.showSuccessDialog(this, message)
         }
     }
 
@@ -485,6 +495,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
         popupView.findViewById<TextView>(R.id.itemReport).setOnClickListener {
             popupWindow.dismiss()
+            dialogReportIssue()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
             popupWindow.dismiss()
@@ -594,6 +605,131 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             yOffset,
             Gravity.END
         )  // Adjust the Y offset dynamically
+    }
+
+    private fun dialogReportIssue() {
+        var reportReasonsMap: HashMap<String, Int> = HashMap()
+        val dialog =  Dialog(this, R.style.BottomSheetDialog)
+        dialog.apply {
+            setCancelable(true)
+            setContentView(R.layout.report_violation)
+            val crossButton: ImageView = findViewById(R.id.img_cross)
+            val submit : RelativeLayout = findViewById(R.id.rl_submit_report)
+            val txtSubmit : TextView = findViewById(R.id.txt_submit)
+            val et_addiotnal_detail : EditText = findViewById(R.id.et_addiotnal_detail)
+            val powerSpinner : PowerSpinnerView = findViewById(R.id.spinnerView1)
+            submit.setOnClickListener {
+                if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
+                    txtSubmit.text = "Submitted"
+                }else if(et_addiotnal_detail.text.isEmpty()){
+                    showToast(this@ChatActivity,AppConstant.additional)
+                } else{
+                   friendId?.let {
+                        reportChat(it,
+                            reportReasonsMap.get(powerSpinner.text.toString()).toString(),
+                            et_addiotnal_detail.text.toString(),dialog)
+                    }
+                }
+            }
+            // Handle item click
+            powerSpinner.setOnSpinnerItemSelectedListener<String> { _, _, position, item ->
+
+            }
+            crossButton.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent) // Optional
+
+
+            show()
+            listReportReasons(powerSpinner,reportReasonsMap)
+        }
+
+    }
+
+    private fun reportChat(reported_user_id: String, reason: String, message: String, dialog: Dialog) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                LoadingUtils.showDialog(this@ChatActivity, false)
+                userId?.let { id->
+                    viewModel.reportChat(id.toString(),reported_user_id,
+                        reason,message).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    Log.d("******", "toggleArchiveUnarchive")
+                                    dialog.dismiss()
+                                    showToast(
+                                        this@ChatActivity,
+                                        it.get("message").asString
+                                    )
+                                }
+                            }
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(
+                                    this@ChatActivity,
+                                    it.message.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
+    }
+    private fun listReportReasons(
+        powerSpinner: PowerSpinnerView,
+        reportReasonsMap: HashMap<String, Int>
+    ) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                viewModel.listReportReasons().collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val items: MutableList<String> = ArrayList()
+
+                                val listType = object : TypeToken<List<ReportReason>>() {}.type
+                                val reportReason:MutableList<ReportReason> = Gson().fromJson(resp, listType)
+                                // Populate the HashMap
+                                reportReason.forEach { reason ->
+                                    reportReasonsMap[reason.reason] = reason.id
+                                    items.add(reason.reason)
+                                }
+                                powerSpinner.setItems(items)
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(this@ChatActivity, it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
     }
 
     private fun chatUserBlock(groupName: String,value:Int) {

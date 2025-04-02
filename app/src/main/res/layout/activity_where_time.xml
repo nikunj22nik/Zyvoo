@@ -472,7 +472,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_toRightOf="@id/ic_clock_1"
-                                android:text="01:00 PM"
+                                android:text="00:00 PM"
                                 android:textSize="@dimen/_13sdp"
                                 android:textStyle="bold" />
 
@@ -516,7 +516,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_toRightOf="@id/ic_clock_2"
-                                android:text="03:00 PM"
+                                android:text="00:00 PM"
                                 android:textSize="@dimen/_13sdp"
                                 android:textStyle="bold" />
 

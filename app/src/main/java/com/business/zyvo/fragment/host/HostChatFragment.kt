@@ -30,19 +30,24 @@ import com.business.zyvo.R
 import com.business.zyvo.TimeUtils
 import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.GuesMain
+import com.business.zyvo.activity.guest.extratime.model.ReportReason
 import com.business.zyvo.adapter.AdapterChatList
 import com.business.zyvo.databinding.FragmentChatBinding
 import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.host.ChatListHostViewModel
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.skydoves.powerspinner.PowerSpinnerView
 import com.twilio.conversations.CallbackListener
 import com.twilio.conversations.Conversation
 import com.twilio.conversations.ErrorInfo
 import com.twilio.conversations.StatusListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 
@@ -160,7 +165,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             }
         })
 
-       // callingGetChatUser("")
+        callingGetChatUser("")
 
     }
 
@@ -210,6 +215,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
                         AppConstant.REPORT -> {
                             Log.d("TESTING", "Reporting chat for group: ${data.group_name}")
+                            dialogReportIssue(data)
                         }
                         AppConstant.ARCHIVED -> {
                             Log.d("TESTING", "Reporting chat for group: ${data.group_name}")
@@ -261,7 +267,8 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         })
     }
 
-    private fun dialogReportIssue() {
+    private fun dialogReportIssue(data: ChannelListModel) {
+        var reportReasonsMap: HashMap<String, Int> = HashMap()
         val dialog =  Dialog(requireActivity(), R.style.BottomSheetDialog)
         dialog.apply {
             setCancelable(true)
@@ -277,11 +284,11 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                 }else if(et_addiotnal_detail.text.isEmpty()){
                     showToast(requireActivity(),AppConstant.additional)
                 } else{
-                    /*reportViolation(session?.getUserId().toString(),
-                            *//*"44"*//*bookingId!!,
-                            propertyData?.property_id.toString(),
+                    data.receiver_id?.let {
+                        reportChat(it,
                             reportReasonsMap.get(powerSpinner.text.toString()).toString(),
-                            et_addiotnal_detail.text.toString(),dialog)*/
+                            et_addiotnal_detail.text.toString(),dialog)
+                    }
                 }
             }
             // Handle item click
@@ -300,9 +307,47 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
 
             show()
-            //   listReportReasons(powerSpinner)
+            listReportReasons(powerSpinner,reportReasonsMap)
         }
 
+    }
+
+    private fun listReportReasons(
+        powerSpinner: PowerSpinnerView,
+        reportReasonsMap: HashMap<String, Int>
+    ) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                viewModel.listReportReasons().collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val items: MutableList<String> = ArrayList()
+
+                                val listType = object : TypeToken<List<ReportReason>>() {}.type
+                                val reportReason:MutableList<ReportReason> = Gson().fromJson(resp, listType)
+                                // Populate the HashMap
+                                reportReason.forEach { reason ->
+                                    reportReasonsMap[reason.reason] = reason.id
+                                    items.add(reason.reason)
+                                }
+                                powerSpinner.setItems(items)
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireActivity(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireActivity(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
     }
 
     fun filter(query: String) {
@@ -516,6 +561,49 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
     }
 
+    private fun reportChat(reported_user_id: String, reason: String, message: String, dialog: Dialog) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                LoadingUtils.showDialog(requireContext(), false)
+                userId?.let { id->
+                        viewModel.reportChat(id.toString(),reported_user_id,
+                            reason,message).collect {
+                            when (it) {
+                                is NetworkResult.Success -> {
+                                    it.data?.let {
+                                        Log.d("******", "toggleArchiveUnarchive")
+                                        dialog.dismiss()
+                                        showToast(
+                                            requireContext(),
+                                            it.get("message").asString
+                                        )
+                                    }
+                                }
+                                is NetworkResult.Error -> {
+                                    LoadingUtils.hideDialog()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        it.message.toString(),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+
+                                else -> {
+
+                                }
+                            }
+                    }
+
+                }
+
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
+    }
+
     private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
         val popupView =
@@ -635,7 +723,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
     override fun onResume() {
         super.onResume()
         (activity as? GuesMain)?.inboxColor()
-        callingGetChatUser("")
+      //  callingGetChatUser("")
     }
 
     override fun receivedNewMessage() {
@@ -803,7 +891,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
     override fun showError(message: String?) {
         if (message != null && isAdded && !requireActivity().isFinishing) {
             LoadingUtils.hideDialog()
-            LoadingUtils.showSuccessDialog(requireContext(), message)
+          //  LoadingUtils.showSuccessDialog(requireContext(), message)
         }
     }
 
