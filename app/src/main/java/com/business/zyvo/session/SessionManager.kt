@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.business.zyvo.AppConstant
 import com.business.zyvo.MyApp
+import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.ChannelListModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -202,6 +203,58 @@ class SessionManager(var context: Context) {
         }
 
         return null // Return null if no data found
+    }
+    // Remove a language from the stored list
+    fun removeLanguage(context: Context, languageName: String) {
+        val languages = getLanguages(context).toMutableList()
+
+        // Remove the language by name
+        val languageToRemove = languages.find { it.name == languageName }
+        if (languageToRemove != null) {
+            languages.remove(languageToRemove)
+            // Save the updated list back to SharedPreferences
+            saveLanguages(context, languages)
+        }
+    }
+
+
+    private  val LANGUAGES_KEY = "languages"
+
+    // Save a list of AddLanguageModel to SharedPreferences
+    fun saveLanguages(context: Context, languages: List<AddLanguageModel>) {
+
+
+        // Convert the list to a JSON string
+        val gson = Gson()
+        val json = gson.toJson(languages)
+
+        // Save the JSON string to SharedPreferences
+        editor?.putString(LANGUAGES_KEY, json)
+        editor?.apply()
+    }
+
+    // Fetch the list of AddLanguageModel from SharedPreferences
+    fun getLanguages(context: Context): List<AddLanguageModel> {
+
+
+        // Get the stored JSON string
+        val json = pref?.getString(LANGUAGES_KEY, null)
+
+        // If no data, return an empty list
+        if (json == null) {
+            return emptyList()
+        }
+
+        // Deserialize the JSON string into a list of AddLanguageModel objects
+        val gson = Gson()
+        val type = object : TypeToken<List<AddLanguageModel>>() {}.type
+        return gson.fromJson(json, type)
+    }
+
+    // Check if a language is already stored
+    fun isLanguageStored(context: Context, languageName: String): Boolean {
+        val languages = getLanguages(context)
+        return languages.any { it.name == languageName }
     }
 
 

@@ -5360,9 +5360,7 @@ import javax.inject.Inject
          }
 
      override suspend fun toggleArchiveUnarchive(
-         userId :Int,
-         group_channel :String
-     ): Flow<NetworkResult<JsonObject>> =
+         userId :Int, group_channel :String): Flow<NetworkResult<JsonObject>> =
          flow {
              try {
                  api.toggleArchiveUnarchive(userId,group_channel).apply {
@@ -5390,17 +5388,19 @@ import javax.inject.Inject
                          }
                      }
                  }
-             } catch (e: HttpException) {
+             }
+             catch (e: HttpException) {
                  Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
                  emit(NetworkResult.Error(e.message!!))
-             } catch (e: IOException) {
+             }
+             catch (e: IOException) {
                  Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
                  emit(NetworkResult.Error(e.message!!))
-             } catch (e: Exception) {
+             }
+             catch (e: Exception) {
                  Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
                  emit(NetworkResult.Error(e.message!!))
              }
-
          }
 
 

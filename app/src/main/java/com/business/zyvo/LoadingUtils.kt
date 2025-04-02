@@ -25,7 +25,7 @@ open class LoadingUtils {
                         jarvisLoader.setCancelable(isCancelable)
                         jarvisLoader.show()
                     }
-                } catch (e: Exception) {
+                }       catch (e: Exception) {
                     e.printStackTrace()
                 }
             }

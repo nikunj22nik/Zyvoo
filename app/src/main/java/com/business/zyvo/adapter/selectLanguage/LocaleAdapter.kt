@@ -3,20 +3,19 @@ package com.business.zyvo.adapter.selectLanguage
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.OnLocalListener
 import com.business.zyvo.R
 import com.business.zyvo.model.AddLanguageModel
+import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.PrepareData
 import java.util.Locale
 
 class LocaleAdapter(
     private val locales: List<Locale>,
-    var listner: OnLocalListener,
-    var thirdList: MutableList<AddLanguageModel> = PrepareData.languageObjects
+    var listner: OnLocalListener, var thirdList: MutableList<AddLanguageModel> = PrepareData.languagesWithRegions
 ) :
     RecyclerView.Adapter<LocaleAdapter.LocaleViewHolder>() {
 
@@ -27,18 +26,37 @@ class LocaleAdapter(
     }
 
     override fun onBindViewHolder(holder: LocaleViewHolder, position: Int) {
+        // Get language and region names from the Locale
 
         val locale = thirdList[position]
 
-        // Get language and region names from the Locale
         var languageName = locale.name
-        holder.countryName.visibility = View.GONE
 
+        holder.countryName.visibility = View.VISIBLE
 
+        if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
+            holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)
+        }else{
+            holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
+        }
+
+        holder.countryName.setText(locale.country)
         holder.ll1.setOnClickListener {
-            listner.onItemClick(languageName)
+           if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
+                  SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context,languageName)
+                   holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
+           }else {
+               var list1 = SessionManager(holder.itemView.context).getLanguages((holder.itemView.context)).toMutableList()
+
+               list1.add(locale)
+
+               SessionManager(holder.itemView.context).saveLanguages(holder.itemView.context,list1)
+               holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)
+           }
+           // listner.onItemClick(languageName)
 
         }
+
         holder.languageTitle.text = languageName
 
     }

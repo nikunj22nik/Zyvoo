@@ -129,6 +129,7 @@ import java.util.Objects
 
 @AndroidEntryPoint
 class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener, SetPreferred {
+
     private var _binding: FragmentHostProfileBinding? = null
     private val binding get() = _binding!!
     var userCardsList: MutableList<UserCards> = mutableListOf()
@@ -179,13 +180,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     lateinit var navController: NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
-
     var resendEnabled = false
     var otpValue: String = ""
     var editAboutButton = true
     var firstName :String =""
     var lastName :String =""
-
 
     private val list1 = mutableListOf<CountryLanguage>()
     private val list2 = mutableListOf<CountryLanguage>()
@@ -225,6 +224,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+       Log.d("TESTING_ZYVOO","I AM INSIDE THE ONCREATE")
         val navController = findNavController()
         commonAuthWorkUtils = CommonAuthWorkUtils(requireContext(), navController)
         apiKey = getString(R.string.api_key)
@@ -252,7 +252,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
+        Log.d("TESTING_ZYVOO","I AM INSIDE THE ONCREATEVIEW")
         _binding = FragmentHostProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
         session = SessionManager(requireActivity())
@@ -270,6 +270,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("TESTING_ZYVOO","I AM INSIDE THE ONVIEWCREATED")
+
         binding.textGiveFeedback.setOnClickListener(this)
         binding.rlPasswordTitle.setOnClickListener(this)
         binding.textBooking.setOnClickListener(this)
@@ -343,6 +345,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 }
             }
         }
+
 
         binding.imageEditStreetAddress.setOnClickListener {
             binding.streetEditText.isEnabled = true
@@ -485,7 +488,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this, this)
     }
 
-
+// this is used to get the userProfile and this func will provide the profile of the users there in the city
     private fun getUserProfile() {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
@@ -494,6 +497,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
+                            binding.llScrlView.visibility=View.VISIBLE
                             var name = ""
                             it.data?.let { resp ->
                                 Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ," + resp.toString())
@@ -575,8 +579,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                         locationList = getObjectsFromNames(it.where_live) { name ->
                                             AddLocationModel(name)  // Using the constructor of MyObject to create instances
                                         }
-                                        val newLanguage =
-                                            AddLocationModel(AppConstant.unknownLocation)
+
+                                        val newLanguage = AddLocationModel(AppConstant.unknownLocation)
                                         locationList.add(newLanguage)
                                         addLocationAdapter.updateLocations(locationList)
                                     }
@@ -619,7 +623,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         }
 
                         is NetworkResult.Error -> {
-
+                            binding.llScrlView.visibility=View.GONE
                             showErrorDialog(requireContext(), it.message!!)
                         }
 
@@ -661,6 +665,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     // Display a dialog to select a language
     @SuppressLint("ObsoleteSdkInt")
     private fun dialogSelectLanguage() {
+        Log.d("TESTING_ZYVOO_LANGUAGE","SELECT LANGUAGE HERE")
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
@@ -690,7 +695,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             // Set the adapter for RecyclerView
             localeAdapter = LocaleAdapter(locales, object : OnLocalListener {
                 override fun onItemClick(local: String) {
-
                     val newLanguage = AddLanguageModel(local)
                     addLanguageApi(newLanguage.name)
                     // Add the new language to the list
@@ -700,9 +704,10 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     //addLanguageSpeakAdapter.notifyItemInserted(0)
 
                     // Delay dismissing the dialog slightly to prevent UI issues
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        dialog.dismiss()
-                    }, 200) // 200ms delay ensures smooth UI transition
+
+                     Handler(Looper.getMainLooper()).postDelayed({ dialog.dismiss() }, 200)
+
+                    // 200ms delay ensures smooth UI transition
                 }
             })
 
@@ -896,7 +901,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
 
             R.id.textLanguage -> {
-                findNavController().navigate(R.id.language_fragment_host)
+              //  findNavController().navigate(R.id.language_fragment_host)
+                dialogSelectLanguage()
             }
 
             R.id.textNotifications -> {

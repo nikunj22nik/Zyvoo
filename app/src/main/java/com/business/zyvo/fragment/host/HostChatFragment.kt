@@ -47,8 +47,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class HostChatFragment : Fragment() , View.OnClickListener,
-    QuickstartConversationsManagerListener {
+class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversationsManagerListener {
 
     private var _binding: FragmentChatBinding? = null
     private val binding get() = _binding!!
@@ -73,6 +72,7 @@ class HostChatFragment : Fragment() , View.OnClickListener,
         Log.d("TESTING_ZYVOO_Proj", "onCreate OF CHAT")
         var sessionManager = SessionManager(requireContext())
         loggedInUserId = sessionManager.getUserId()!!
+
     }
 
     override fun onCreateView(
@@ -82,9 +82,11 @@ class HostChatFragment : Fragment() , View.OnClickListener,
         // Inflate the layout for this fragment
 
         Log.d("TESTING_ZYVOO_Proj", "onCreateView OF CHAT")
+
         _binding = FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
         try {
+
             val myApp = activity?.application as? MyApp
             quickstartConversationsManager = myApp?.conversationsManagerFragment ?: QuickstartConversationsManager()
             quickstartConversationsManager.setListener(this)
@@ -110,8 +112,22 @@ class HostChatFragment : Fragment() , View.OnClickListener,
                  userId = it
              }
          }
-
+        searchFuntionality()
         return binding.root
+    }
+
+    private fun searchFuntionality() {
+
+        binding.etSearchButton.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                adapterChatList.filter.filter(p0.toString().trim())
+            }
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
