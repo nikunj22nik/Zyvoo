@@ -9,6 +9,10 @@ import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.ChannelListModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 class SessionManager(var context: Context) {
 
@@ -255,6 +259,26 @@ class SessionManager(var context: Context) {
     fun isLanguageStored(context: Context, languageName: String): Boolean {
         val languages = getLanguages(context)
         return languages.any { it.name == languageName }
+    }
+
+
+    fun isDateGreaterOrEqual(dateStr: String): Boolean {
+        return try {
+            // Define the date format (yyyy-MM-dd)
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+            // Parse the input date string into a Date object
+            val inputDate = dateFormat.parse(dateStr)
+
+            // Get the current date
+            val currentDate = Date()
+
+            // Compare the dates
+            inputDate >= currentDate
+        } catch (e: Exception) {
+            // Return false if the date format is incorrect
+            false
+        }
     }
 
 

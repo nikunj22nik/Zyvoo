@@ -153,7 +153,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -163,7 +162,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         binding = FragmentGuestDiscoverBinding.inflate(LayoutInflater.from(requireContext()))
         val navController = findNavController()
 
-        // Observe the isLoading state
         lifecycleScope.launch {
             guestDiscoverViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
                 if (isLoading) {
@@ -178,7 +176,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             try {
                 if (result.resultCode == Activity.RESULT_OK) {
                     val data = result.data
-                    // Handle the resultl
                     if (data!=null) {
                         if (data?.extras?.getString("type").equals("filter")) {
                             val value: FilterRequest = Gson().fromJson(
@@ -287,6 +284,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
+
     private fun startCountdown(remaning:String) {
         // Countdown timer for 20 seconds with 1-second intervals
         object : CountDownTimer(remaning.toLong()*(1000*60), 1000) {
@@ -888,9 +886,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     }
                 }
             }
-        }else{
-            showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg))
+        }
+        else{
+            showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 

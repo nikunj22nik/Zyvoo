@@ -31,6 +31,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.business.zyvo.AppConstant
 import com.business.zyvo.CircularSeekBar.OnSeekBarChangeListener
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.R
 import com.business.zyvo.adapter.AdapterActivityText
 import com.business.zyvo.adapter.AdapterLocationSearch
@@ -612,6 +613,13 @@ class WhereTimeActivity : AppCompatActivity() {
                     }
                     dateView.setOnClickListener {
                         selectedDate = date1
+                        if(!SessionManager(this).isDateGreaterOrEqual(selectedDate.toString())){
+                           LoadingUtils.showErrorDialog(this@WhereTimeActivity,"You cannot select a past date from the calendar.")
+                           return@setOnClickListener
+                        }
+
+                        Log.d("TESTING_DATE",selectedDate.toString())
+
                         updateCalendar()
                         updateCalendar1()
                         // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
@@ -713,6 +721,8 @@ class WhereTimeActivity : AppCompatActivity() {
 
         return actList
     }
+
+
 
 
 }

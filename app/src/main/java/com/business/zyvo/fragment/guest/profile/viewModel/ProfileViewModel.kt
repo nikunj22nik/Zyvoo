@@ -52,6 +52,12 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
        }
     }
 
+    suspend fun otpResetPassword(userId :Int) : Flow<NetworkResult<Pair<String,String>>>{
+        return repository.otpResetPassword(userId).onEach {
+
+        }
+    }
+
     private fun loadPaymentDetail(){
         val paymentList = mutableListOf<AddPaymentCardModel>(
             AddPaymentCardModel("...458888"),

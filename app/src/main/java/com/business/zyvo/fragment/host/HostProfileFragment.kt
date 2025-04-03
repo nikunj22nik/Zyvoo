@@ -84,7 +84,6 @@ import com.business.zyvo.adapter.host.CardNumberAdapter
 import com.business.zyvo.adapter.host.CardNumberAdapterPayout
 import com.business.zyvo.adapter.selectLanguage.LocaleAdapter
 import com.business.zyvo.databinding.FragmentHostProfileBinding
-import com.business.zyvo.fragment.both.browseArticleHost.model.BrowseArticleModel
 import com.business.zyvo.fragment.both.completeProfile.HasName
 import com.business.zyvo.fragment.guest.profile.model.BankAccountPayout
 import com.business.zyvo.fragment.guest.profile.model.CardPayout
@@ -2037,11 +2036,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     }
 
     private fun otpVerifyPhoneVerification(
-        userId: String,
-        otp: String,
-        dialog: Dialog,
-        text: TextView
-    ) {
+        userId: String, otp: String, dialog: Dialog, text: TextView) {
         lifecycleScope.launch {
             profileViewModel.otpVerifyUpdatePhoneNumber(
                 Integer.parseInt(userId),
@@ -2175,30 +2170,21 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         textTimeResend: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.emailVerification(
-                userId,
-                email
-            ).collect {
+
+            profileViewModel.emailVerification(userId, email).collect {
                 when (it) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             rlResendLine.visibility = View.VISIBLE
                             incorrectOtp.visibility = View.GONE
                             countDownTimer?.cancel()
-                            startCountDownTimer(
-                                requireContext(),
-                                textTimeResend,
-                                rlResendLine,
-                                textResend
-                            )
+                            startCountDownTimer(requireContext(), textTimeResend, rlResendLine, textResend)
                             textResend.setTextColor(
-                                ContextCompat.getColor(
-                                    requireContext(),
-                                    R.color.grey
-                                )
+                                ContextCompat.getColor(requireContext(), R.color.grey)
                             )
                         }
                         toggleLoginButtonEnabled(true, textResend)
+
                     }
 
                     is NetworkResult.Error -> {
@@ -2235,12 +2221,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 rlResendLine.visibility = View.GONE
                 if (textTimeResend.text == "00:00") {
                     resendEnabled = true
-                    textResend.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.scroll_bar_color
-                        )
-                    )
+                    textResend.setTextColor(ContextCompat.getColor(context, R.color.scroll_bar_color))
                 } else {
                     textResend.setTextColor(
                         ContextCompat.getColor(
@@ -2277,14 +2258,20 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 findViewById<TextView>(R.id.textSubmitButton)?.setOnClickListener {
                     val password = etPassword.text.toString().trim()
                     val confirmPassword = etConfirmPassword.text.toString().trim()
+                    if(!password.equals(confirmPassword)){
+                        LoadingUtils.showErrorDialog(requireContext(),"Password and confirm password should be same")
+                        return@setOnClickListener
+                    }
 
                     when {
                         password.isEmpty() -> showErrorDialog(ctx, "Enter Password")
                         confirmPassword.isEmpty() -> showErrorDialog(ctx, "Enter Confirm Password")
                         password != confirmPassword -> showErrorDialog(ctx, "Password not match")
                         else -> {
-                            updatePasswordApi(password, confirmPassword)
-                            dismiss() // Dismiss the dialog after successful API call
+                            dismiss()
+                            callingOtpFetchApi(password,confirmPassword)
+
+                             // Dismiss the dialog after successful API call
                         }
                     }
                 }
@@ -2295,6 +2282,126 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     }
 
 
+    private fun callingOtpFetchApi(password:String, confirmPassword: String){
+        lifecycleScope.launch {
+           LoadingUtils.showDialog(requireContext(),true)
+            SessionManager(requireContext()).getUserId()
+                ?.let { profileViewModel.otpResetPassword(it).collect{
+                    when(it){
+                        is NetworkResult.Success ->{
+                          LoadingUtils.hideDialog()
+                            dialogOtp(requireContext(),it.data?.first.toString(),it.data?.second.toString(),password)
+                        }
+                        is NetworkResult.Error ->{
+                            LoadingUtils.hideDialog()
+                            LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                        }
+                        else ->{
+
+                        }
+
+                      }
+                    }
+                }
+        }
+    }
+
+
+
+    fun dialogOtp(context: Context, otp:String, otpType:String,password :String) {
+
+        val dialog = Dialog(context, R.style.BottomSheetDialog)
+
+        dialog.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_otp_verification)
+            var str = "Please type the verification code send \nto"+ " "+otpType
+
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            val textResend = findViewById<TextView>(R.id.textResend)
+            val textEnterYourEmail = findViewById<TextView>(R.id.textEnterYourEmail)
+            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            val rlResendLine = findViewById<RelativeLayout>(R.id.rlResendLine)
+            val textTimeResend = findViewById<TextView>(R.id.textTimeResend)
+            val incorrectOtp = findViewById<TextView>(R.id.incorrectOtp)
+            textEnterYourEmail.text = str
+            rlResendLine.visibility =View.GONE
+
+            imageCross.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            otpDigits = arrayOf<EditText>(
+                findViewById(R.id.otp_digit1),
+                findViewById(R.id.otp_digit2),
+                findViewById(R.id.otp_digit3),
+                findViewById(R.id.otp_digit4)
+            )
+
+            for (i in 0 until otpDigits.size) {
+                val index = i
+                otpDigits.get(i).setOnClickListener { v ->
+                    otpDigits.get(index).requestFocus()
+                }
+
+                otpDigits.get(i).addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(
+                        s: CharSequence, start: Int, count: Int, after: Int
+                    ) {
+                    }
+
+                    override fun onTextChanged(
+                        s: CharSequence, start: Int, before: Int,
+                        count: Int
+                    ) {
+                        if (s.length == 1 && index < otpDigits.size - 1) {
+                            otpDigits.get(index + 1).requestFocus()
+                        } else if (s.length == 0 && index > 0) {
+                            otpDigits.get(index - 1).requestFocus()
+                        }
+                    }
+
+                    override fun afterTextChanged(s: Editable) {}
+                })
+            }
+
+            startCountDownTimer(requireContext(),textTimeResend, rlResendLine, textResend)
+
+            countDownTimer!!.cancel()
+
+            textTimeResend.text = "${"00"}:${"00"} sec"
+
+            if (textTimeResend.text == "${"00"}:${"00"} sec") {
+                resendEnabled = true
+                textResend.setTextColor(
+                    ContextCompat.getColor(context, R.color.scroll_bar_color)
+                )
+            }
+            else {
+                textResend.setTextColor(ContextCompat.getColor(context, R.color.grey))
+            }
+
+            textSubmitButton.setOnClickListener {
+                var enteredOtp = ""
+                var count =0;
+                otpDigits.forEach {
+                    enteredOtp += it.text.toString().trim()
+                }
+                if(enteredOtp == otp){
+                   updatePasswordApi(password,password ,it)
+                   dialog.dismiss()
+                }else{
+                    Toast.makeText(requireContext(),"Otp not match",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+        dialog.show()
+    }
 
 
     fun dialogSuccess(context: Context?, text: String) {
@@ -2910,7 +3017,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 }
         }
     }
-    private fun updatePasswordApi(password: String, confirmPassword: String) {
+    private fun updatePasswordApi(password: String, confirmPassword: String, view: View) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -2934,6 +3041,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                                     context,
                                                     "Your password has been changed\n" + " successfully."
                                                 )
+
                                             }
                                         }
 

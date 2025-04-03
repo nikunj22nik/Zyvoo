@@ -5451,6 +5451,52 @@ import javax.inject.Inject
 
          }
 
+    override suspend fun otpResetPassword(
+         @Field("user_id") userId :Int
+     ) : Flow<NetworkResult<Pair<String,String>>> = flow{
+         try {
+             api.otpResetPassword(userId).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                            var obj = resp.get("data").asJsonObject
+                             var code = obj.get("otp").asInt
+                             var type = obj.get("type").asString
+                             emit(NetworkResult.Success(Pair<String,String>(code.toString(),type)))
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     }
+                         ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+                     try {
+                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                         emit(
+                             NetworkResult.Error(
+                                 jsonObj?.getString("message")
+                                     ?: AppConstant.unKnownError
+                             )
+                         )
+                     }
+                     catch (e: JSONException) {
+                         e.printStackTrace()
+                         emit(NetworkResult.Error(AppConstant.unKnownError))
+                     }
+                 }
+             }
+         } catch (e: HttpException) {
+             Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: IOException) {
+             Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: Exception) {
+             Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+             emit(NetworkResult.Error(e.message!!))
+         }
+     }
+
 
  }
 

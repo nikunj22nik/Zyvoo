@@ -898,4 +898,14 @@ interface ZyvoApi {
         @Field("reason") reason :String,
         @Field("message") message :String
     ) : Response<JsonObject>
+
+    @POST("otp_reset_password")
+    @FormUrlEncoded
+    suspend fun otpResetPassword(
+        @Field("user_id") userId :Int
+    ) : Response<JsonObject>
+
+
+
+
 }
