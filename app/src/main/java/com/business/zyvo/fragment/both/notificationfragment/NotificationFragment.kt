@@ -160,7 +160,7 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                             LoadingUtils.hideDialog()
                             val list = result.data // Ensure non-null list
                             Log.d("API_RESPONSE", "Raw Response: $list")
-                            Toast.makeText(requireContext(),"Marked Read",Toast.LENGTH_LONG).show()
+                          //  Toast.makeText(requireContext(),"Marked Read",Toast.LENGTH_LONG).show()
                         }
                         is NetworkResult.Error -> {
                             Log.e("API_ERROR", "Server Error: ${result.message}")

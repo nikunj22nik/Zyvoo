@@ -156,24 +156,6 @@ class QuickstartConversationsManagerFragment {
 
 
 
-    private fun retrieveToken(listener: AccessTokenListenerOneTowOne) {
-       /* val client = OkHttpClient()
-        val request = Request.Builder().url(tokenURL).build()
-
-        try {
-            client.newCall(request).execute().use { response ->
-                val responseBody = response.body?.string() ?: ""
-                Log.d(TAG, "Response from server: $responseBody")
-                val tokenResponse = Gson().fromJson(responseBody, TokenResponse::class.java)
-                val accessToken = tokenResponse.token
-                Log.d(TAG, "Retrieved access token from server: $accessToken")
-                listener.receivedAccessToken(accessToken, null)
-            }
-        } catch (ex: IOException) {
-            Log.e(TAG, ex.localizedMessage, ex)
-            listener.receivedAccessToken(null, ex)
-        }*/
-    }
 
     fun sendMessage(messageBody: String) {
         if (conversation != null) {

@@ -1201,7 +1201,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         } else {
             TODO("VERSION.SDK_INT < O")
         }
-
         for (day in 1..daysInMonth) {
             week.add(yearMonth.atDay(day))
             if (week.size == 7) {

@@ -247,7 +247,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private fun filteredDataAPI(filterRequest: FilterRequest) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                loggedScreenViewModel.getFilterHomeDataApi(filterRequest.user_id,
+                loggedScreenViewModel.getFilterHomeDataApi("",
                     filterRequest.latitude,filterRequest.longitude,
                     filterRequest.place_type,
                     filterRequest.minimum_price,
@@ -295,7 +295,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private fun getHomeDataSearchFilter(filterRequest: SearchFilterRequest) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                loggedScreenViewModel.getHomeDataSearchFilter(filterRequest.user_id,
+                loggedScreenViewModel.getHomeDataSearchFilter("",
                     filterRequest.latitude,filterRequest.longitude,
                     filterRequest.date,
                     filterRequest.hour,
