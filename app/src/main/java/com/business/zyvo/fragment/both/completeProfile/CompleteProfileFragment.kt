@@ -589,6 +589,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                 session?.setUserId(userId.toInt())
                                 Log.d("CheckUserIdComplete",session?.getUserId().toString())
                             }
+                            ErrorDialog.showToast(requireActivity(),resp.first)
                             val intent = Intent(requireContext(),GuesMain::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intent)
@@ -1402,15 +1403,6 @@ private fun dialogChangeName(context: Context?) {
 
                                     it?.name = name
                                     binding.user = it
-//                                    it?.email?.let {
-//                                        binding.etEmail.setText(it)
-//                                        binding.etEmail.isEnabled = false
-//                                    }
-//                                    it?.phone_number?.let {
-//                                        binding.etPhoneNumeber.setText(it)
-//                                        binding.etPhoneNumeber.isEnabled = false
-//                                    }
-
 
                                     if (it?.profile_image != null) {
 

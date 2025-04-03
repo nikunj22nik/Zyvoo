@@ -317,6 +317,15 @@ object ErrorDialog {
         }
     }
 
+    fun isFutureOrToday(date: LocalDate): Boolean {
+        val today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDate.now()
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        return date.isEqual(today) || date.isAfter(today)
+    }
+
 
 
 }
