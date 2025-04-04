@@ -7,6 +7,7 @@ import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.model.ChatMessageModel
 import com.business.zyvo.repository.ZyvoRepository
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -77,6 +78,39 @@ class ChatDetailsViewModel @Inject constructor(private var repository: ZyvoRepos
     suspend fun toggleArchiveUnarchive(userId: Int,group_channel:String) :Flow<NetworkResult<JsonObject>> {
         return repository.toggleArchiveUnarchive(userId,group_channel).onEach {
             when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun reportChat( reporter_id :String,
+                            reported_user_id :String,
+                            reason :String,
+                            message :String) :Flow<NetworkResult<JsonObject>> {
+        return repository.reportChat(reporter_id,reported_user_id,
+            reason,message).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun listReportReasons( ):
+            Flow<NetworkResult<JsonArray>>{
+        return repository.listReportReasons().onEach {
+            when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
                 } is NetworkResult.Success -> {

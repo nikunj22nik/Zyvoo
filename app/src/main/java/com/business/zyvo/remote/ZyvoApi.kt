@@ -889,4 +889,23 @@ interface ZyvoApi {
     suspend fun withdrawFunds(
         @Field("user_id") userId :String
     ) : Response<JsonObject>
+
+    @POST("report_chat")
+    @FormUrlEncoded
+    suspend fun reportChat(
+        @Field("reporter_id") reporter_id :String,
+        @Field("reported_user_id") reported_user_id :String,
+        @Field("reason") reason :String,
+        @Field("message") message :String
+    ) : Response<JsonObject>
+
+    @POST("otp_reset_password")
+    @FormUrlEncoded
+    suspend fun otpResetPassword(
+        @Field("user_id") userId :Int
+    ) : Response<JsonObject>
+
+
+
+
 }

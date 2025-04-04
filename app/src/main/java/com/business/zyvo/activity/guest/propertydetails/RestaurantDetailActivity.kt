@@ -1120,6 +1120,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                     dateView.setOnClickListener {
                         selectedDate = date
+                        if(!SessionManager(this).isDateGreaterOrEqual(selectedDate.toString())){
+                            LoadingUtils.showErrorDialog(this@RestaurantDetailActivity,
+                                "You cannot select a past date from the calendar.")
+                            return@setOnClickListener
+                        }
                         updateCalendar()
                         // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
                     }
@@ -1196,7 +1201,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         } else {
             TODO("VERSION.SDK_INT < O")
         }
-
         for (day in 1..daysInMonth) {
             week.add(yearMonth.atDay(day))
             if (week.size == 7) {

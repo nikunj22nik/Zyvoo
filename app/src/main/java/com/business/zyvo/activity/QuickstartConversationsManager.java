@@ -45,16 +45,6 @@ interface QuickstartConversationsManagerListener {
     void reloadMessages();
 }
 
-interface TokenResponseListener {
-    void receivedTokenResponse(boolean success, @Nullable Exception exception);
-}
-
-
-interface AccessTokenListenerOne {
-    void receivedAccessToken(@Nullable String token, @Nullable Exception exception);
-}
-
-
 public class QuickstartConversationsManager {
 
     //    private final static String DEFAULT_CONVERSATION_NAME = "anotherchanz_43_70";
@@ -81,50 +71,6 @@ public class QuickstartConversationsManager {
         String token;
     }
 
-    void retrieveAccessTokenFromServer(final Context context, String identity, final TokenResponseListener listener) {
-
-        // Set the chat token URL in your strings.xml file
-//        String chatTokenURL = context.getString(R.string.chat_token_url);
-        String chatTokenURL = "";
-
-        if ("".equals(chatTokenURL)) {
-            listener.receivedTokenResponse(true, new Exception("You need to replace the chat token URL in strings.xml"));
-            return;
-        }
-
-        tokenURL = chatTokenURL + "?identity=" + identity;
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                retrieveToken(new AccessTokenListenerOne() {
-                    @Override
-                    public void receivedAccessToken(@Nullable String token, @Nullable Exception exception) {
-                        if (token != null) {
-                            ConversationsClient.Properties props = ConversationsClient.Properties.newBuilder().createProperties();
-                            ConversationsClient.create(context, token, props, mConversationsClientCallback);
-                            listener.receivedTokenResponse(true, null);
-                        } else {
-                            listener.receivedTokenResponse(false, exception);
-                        }
-                    }
-                });
-               /* retrieveToken(new AccessTokenListenerOne() {
-                    @Override
-                    public void receivedAccessToken(@org.jetbrains.annotations.Nullable String token,
-                                                    @org.jetbrains.annotations.Nullable Exception exception) {
-                        if (token != null) {
-                            ConversationsClient.Properties props = ConversationsClient.Properties.newBuilder().createProperties();
-                            ConversationsClient.create(context, token, props, mConversationsClientCallback);
-                            listener.receivedTokenResponse(true, null);
-                        } else {
-                            listener.receivedTokenResponse(false, exception);
-                        }
-                    }
-                });*/
-            }
-        }).start();
-    }
 
 
     void initializeWithAccessToken(final Context context, final String token, String DEFAULT_CONVERSATION_NAME, String identity, String userid, String typeApiValue) {
@@ -136,28 +82,6 @@ public class QuickstartConversationsManager {
         ConversationsClient.create(context, token, props, mConversationsClientCallback);
     }
 
-
-    private void retrieveToken(AccessTokenListenerOne listener) {
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url(tokenURL)
-                .build();
-        try (Response response = client.newCall(request).execute()) {
-            String responseBody = "";
-            if (response != null && response.body() != null) {
-                responseBody = response.body().string();
-            }
-            Log.d(TAG, "Response from server: " + responseBody);
-            Gson gson = new Gson();
-            TokenResponse tokenResponse = gson.fromJson(responseBody, TokenResponse.class);
-            String accessToken = tokenResponse.token;
-            Log.d(TAG, "Retrieved access token from server: " + accessToken);
-            listener.receivedAccessToken(accessToken, null);
-        } catch (IOException ex) {
-            Log.e(TAG, ex.getLocalizedMessage(), ex);
-            listener.receivedAccessToken(null, ex);
-        }
-    }
 
     void sendMessage(String messageBody) {
         if (conversation != null) {
@@ -488,19 +412,7 @@ public class QuickstartConversationsManager {
 
         @Override
         public void onTokenAboutToExpire() {
-            retrieveToken(new AccessTokenListenerOne() {
-                @Override
-                public void receivedAccessToken(@Nullable String token, @Nullable Exception exception) {
-                    if (token != null) {
-                        conversationsClient.updateToken(token, new StatusListener() {
-                            @Override
-                            public void onSuccess() {
-                                Log.d(TAG, "Refreshed access token.");
-                            }
-                        });
-                    }
-                }
-            });
+
         }
     };
 

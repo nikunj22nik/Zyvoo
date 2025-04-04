@@ -641,7 +641,9 @@ interface ZyvoRepository {
         @Field("user_id") userId :Int,
         @Field("otp") otp :String
     ) : Flow<NetworkResult<String>>
-
+     suspend fun otpResetPassword(
+        @Field("user_id") userId :Int
+    ) : Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun updateEmail(
         @Field("user_id") userId :Int,
@@ -685,6 +687,14 @@ interface ZyvoRepository {
     suspend fun toggleArchiveUnarchive(
         userId :Int,
         group_channel :String
+    ) :Flow<NetworkResult<JsonObject>>
+
+
+    suspend fun reportChat(
+        reporter_id :String,
+        reported_user_id :String,
+        reason :String,
+        message :String
     ) :Flow<NetworkResult<JsonObject>>
 
 

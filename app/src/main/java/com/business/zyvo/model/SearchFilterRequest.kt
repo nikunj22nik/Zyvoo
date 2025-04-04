@@ -5,7 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class SearchFilterRequest(
-    val user_id: String = "",
+    var user_id: String = "",
     val latitude: String = "",
     val longitude: String = "",
     val date: String = "",

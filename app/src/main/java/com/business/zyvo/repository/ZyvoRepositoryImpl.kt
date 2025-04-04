@@ -5360,12 +5360,60 @@ import javax.inject.Inject
          }
 
      override suspend fun toggleArchiveUnarchive(
-         userId :Int,
-         group_channel :String
-     ): Flow<NetworkResult<JsonObject>> =
+         userId :Int, group_channel :String): Flow<NetworkResult<JsonObject>> =
          flow {
              try {
                  api.toggleArchiveUnarchive(userId,group_channel).apply {
+                     if (isSuccessful) {
+                         body()?.let { resp ->
+                             if (resp.has("success") && resp.get("success").asBoolean) {
+                                 emit(NetworkResult.Success(resp))
+                             } else {
+                                 emit(NetworkResult.Error(resp.get("message").asString))
+                             }
+                         }
+                             ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                     } else {
+                         try {
+                             val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                             emit(
+                                 NetworkResult.Error(
+                                     jsonObj?.getString("message")
+                                         ?: AppConstant.unKnownError
+                                 )
+                             )
+                         } catch (e: JSONException) {
+                             e.printStackTrace()
+                             emit(NetworkResult.Error(AppConstant.unKnownError))
+                         }
+                     }
+                 }
+             }
+             catch (e: HttpException) {
+                 Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+             catch (e: IOException) {
+                 Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+             catch (e: Exception) {
+                 Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+         }
+
+
+     override suspend fun reportChat(
+         reporter_id :String,
+         reported_user_id :String,
+         reason :String,
+         message :String
+     ): Flow<NetworkResult<JsonObject>> =
+         flow {
+             try {
+                 api.reportChat(reporter_id,reported_user_id,
+                     reason,message).apply {
                      if (isSuccessful) {
                          body()?.let { resp ->
                              if (resp.has("success") && resp.get("success").asBoolean) {
@@ -5402,6 +5450,52 @@ import javax.inject.Inject
              }
 
          }
+
+    override suspend fun otpResetPassword(
+         @Field("user_id") userId :Int
+     ) : Flow<NetworkResult<Pair<String,String>>> = flow{
+         try {
+             api.otpResetPassword(userId).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                            var obj = resp.get("data").asJsonObject
+                             var code = obj.get("otp").asInt
+                             var type = obj.get("type").asString
+                             emit(NetworkResult.Success(Pair<String,String>(code.toString(),type)))
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     }
+                         ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+                     try {
+                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                         emit(
+                             NetworkResult.Error(
+                                 jsonObj?.getString("message")
+                                     ?: AppConstant.unKnownError
+                             )
+                         )
+                     }
+                     catch (e: JSONException) {
+                         e.printStackTrace()
+                         emit(NetworkResult.Error(AppConstant.unKnownError))
+                     }
+                 }
+             }
+         } catch (e: HttpException) {
+             Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: IOException) {
+             Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: Exception) {
+             Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+             emit(NetworkResult.Error(e.message!!))
+         }
+     }
 
 
  }

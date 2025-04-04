@@ -382,7 +382,7 @@
             <EditText
                 android:id="@+id/etAboutMe"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_60sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_17sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/button_grey_line_bg"

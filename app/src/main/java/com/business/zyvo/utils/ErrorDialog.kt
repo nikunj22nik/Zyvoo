@@ -233,6 +233,22 @@ object ErrorDialog {
         return date
     }
 
+    fun isAfterOrSame(dateTimeString: String): Boolean {
+        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        val targetDateTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDateTime.parse(dateTimeString, formatter)
+        } else {
+           return false
+        }
+        val referenceDateTime = LocalDateTime.of(2025, 4, 1, 12, 15, 0)
+
+        return targetDateTime.isAfter(referenceDateTime) || targetDateTime.isEqual(referenceDateTime)
+    }
+
     fun getCurrentDateTime(): String {
         var date = ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -299,6 +315,15 @@ object ErrorDialog {
         } catch (e: NumberFormatException) {
             "0.00" // Default value if input is invalid
         }
+    }
+
+    fun isFutureOrToday(date: LocalDate): Boolean {
+        val today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalDate.now()
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        return date.isEqual(today) || date.isAfter(today)
     }
 
 

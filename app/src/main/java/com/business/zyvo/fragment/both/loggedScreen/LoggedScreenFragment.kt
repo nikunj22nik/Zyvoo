@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable
 import android.location.LocationManager
 
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.os.Looper
@@ -38,8 +39,10 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.ActivityResultLauncher
 
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -61,6 +64,7 @@ import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.guest.FiltersActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
+import com.business.zyvo.activity.guest.sorryresult.SorryActivity
 import com.business.zyvo.adapter.LoggedScreenAdapter
 import com.business.zyvo.databinding.FragmentLoggedScreenBinding
 
@@ -68,6 +72,8 @@ import com.business.zyvo.model.Data
 import com.business.zyvo.model.SocialLoginModel
 
 import com.business.zyvo.fragment.guest.home.model.HomePropertyData
+import com.business.zyvo.model.FilterRequest
+import com.business.zyvo.model.SearchFilterRequest
 
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
@@ -105,7 +111,8 @@ import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, OnClickListener1 {
-
+    private lateinit var startSearchForResult: ActivityResultLauncher<Intent>
+    private lateinit var startForResult: ActivityResultLauncher<Intent>
     lateinit var navController: NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
@@ -163,6 +170,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         } else {
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 100)
         }
+
         return binding.root
     }
 
@@ -179,12 +187,157 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso)
         googleSignInClient.signOut()
+
+        startSearchForResult = registerForActivityResult(ActivityResultContracts
+            .StartActivityForResult()) { result ->
+            try {
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val data = result.data
+                    // Handle the resultl
+                    if (data!=null) {
+                        if (data.extras?.getString("type").equals("filter")) {
+                            val value: SearchFilterRequest = Gson().fromJson(
+                                data.extras?.getString("SearchrequestData"),
+                                SearchFilterRequest::class.java
+                            )
+                            value.let {
+                                it.user_id = ""
+                                Log.d(TAG, Gson().toJson(value))
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    getHomeDataSearchFilter(it)
+                                }
+                            }
+                        }else{
+                            loadHomeApi()
+                        }
+                    }
+                }
+            }catch (e:Exception){
+                Log.e(TAG,e.message!!)
+            }
+        }
+
+        startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            try {
+                if (result.resultCode == Activity.RESULT_OK) {
+                    val data = result.data
+                    // Handle the resultl
+                    if (data!=null) {
+                        if (data.extras?.getString("type").equals("filter")) {
+                            val value: FilterRequest = Gson().fromJson(
+                                data.extras?.getString("requestData"), FilterRequest::class.java
+                            )
+                            value.let {
+                                Log.d(TAG, Gson().toJson(value))
+                                filteredDataAPI(it)
+                            }
+                        }else{
+                            loadHomeApi()
+                        }
+                    }
+                }
+            }catch (e:Exception){
+                Log.e(TAG,e.message!!)
+            }
+        }
+
+    }
+
+
+    private fun filteredDataAPI(filterRequest: FilterRequest) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                loggedScreenViewModel.getFilterHomeDataApi("",
+                    filterRequest.latitude,filterRequest.longitude,
+                    filterRequest.place_type,
+                    filterRequest.minimum_price,
+                    filterRequest.maximum_price,
+                    filterRequest.location,filterRequest.date,
+                    filterRequest.time,
+                    filterRequest.people_count,
+                    filterRequest.property_size,
+                    filterRequest.bedroom,
+                    filterRequest.bathroom,
+                    filterRequest.instant_booking,
+                    filterRequest.self_check_in,
+                    filterRequest.allows_pets,
+                    filterRequest.activities,
+                    filterRequest.amenities,filterRequest.languages).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val listType = object : TypeToken<List<HomePropertyData>>() {}.type
+                                val properties: MutableList<HomePropertyData> = Gson().fromJson(resp, listType)
+                                homePropertyData = properties
+                                if (homePropertyData.isNotEmpty()) {
+                                    adapter.updateData(homePropertyData)
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            requireActivity().startActivity(Intent(requireActivity(),SorryActivity::class.java))
+                        }
+
+                        else -> {
+                            Log.v(TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getHomeDataSearchFilter(filterRequest: SearchFilterRequest) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                loggedScreenViewModel.getHomeDataSearchFilter("",
+                    filterRequest.latitude,filterRequest.longitude,
+                    filterRequest.date,
+                    filterRequest.hour,
+                    ErrorDialog.convertToTimeFormat(filterRequest.start_time),
+                    ErrorDialog.convertToTimeFormat(filterRequest.end_time),
+                    filterRequest.activity,).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                              //  session?.setFilterRequest("")
+                             //   session?.setSearchFilterRequest("")
+                                val listType = object : TypeToken<List<HomePropertyData>>() {}.type
+                                val properties: MutableList<HomePropertyData> = Gson().fromJson(resp, listType)
+                                homePropertyData = properties
+                                if (homePropertyData.isNotEmpty()) {
+                                    adapter.updateData(homePropertyData)
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            requireActivity().startActivity(Intent(requireActivity(),
+                                SorryActivity::class.java))
+                        }
+
+                        else -> {
+                            Log.v(TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.textLogin.setOnClickListener(this)
-        binding.rlFind.setOnClickListener(this)
+        binding.textWhere.setOnClickListener(this)
+        binding.textTime.setOnClickListener(this)
+        binding.textActivity.setOnClickListener(this)
         binding.filterIcon.setOnClickListener(this)
         binding.textWishlists.setOnClickListener(this)
         binding.textDiscover.setOnClickListener(this)
@@ -379,13 +532,24 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 dialogLogin(requireContext())
 
             }
-
             R.id.filter_icon -> {
-                startActivity(Intent(requireActivity(), FiltersActivity::class.java))
+                val intent = Intent(requireContext(),FiltersActivity::class.java)
+                startForResult.launch(intent)
             }
-
-            R.id.rlFind -> {
-                startActivity(Intent(requireActivity(), WhereTimeActivity::class.java))
+            R.id.textWhere ->{
+                val intent = Intent(requireContext(),WhereTimeActivity::class.java)
+                intent.putExtra(AppConstant.WHERE, AppConstant.WHERE)
+                startSearchForResult.launch(intent)
+            }
+            R.id.textTime ->{
+                val intent = Intent(requireContext(),WhereTimeActivity::class.java)
+                intent.putExtra(AppConstant.TIME, AppConstant.TIME)
+                startSearchForResult.launch(intent)
+            }
+            R.id.textActivity ->{
+                val intent = Intent(requireContext(),WhereTimeActivity::class.java)
+                intent.putExtra(AppConstant.ACTIVITY, AppConstant.ACTIVITY)
+                startSearchForResult.launch(intent)
             }
 
             R.id.textDiscover -> {
@@ -649,7 +813,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 "Please type the verification code send \n to " + code + " " + number
                             dialogOtp(requireContext(), text, textHeaderOfOtpVerfication, code,
                                 number,
-                                temp!!,checkBox,"RegisterPhone")
+                                temp,checkBox,"RegisterPhone")
                         }
                         dialog.dismiss()
                         toggleLoginButtonEnabled(true, text)
@@ -1070,7 +1234,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         otpType:String
     ) {
         val dialog = Dialog(context, R.style.BottomSheetDialog)
-        dialog?.apply {
+        dialog.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_otp_verification)
             window?.attributes = WindowManager.LayoutParams().apply {
@@ -1105,7 +1269,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                     override fun onTextChanged(s: CharSequence, start: Int, before: Int,
-                        count: Int
+                                               count: Int
                     ) {
                         if (s.length == 1 && index < otpDigits.size - 1) {
                             otpDigits.get(index + 1).requestFocus()
@@ -1113,6 +1277,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             otpDigits.get(index - 1).requestFocus()
                         }
                     }
+
                     override fun afterTextChanged(s: Editable) {}
                 })
             }
@@ -1857,7 +2022,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     bundle.putString("data",data)
                     bundle.putString("type",type)
                     bundle.putString("email",number)
-                    navController?.navigate(R.id.turnNotificationsFragment,bundle)
+                    navController.navigate(R.id.turnNotificationsFragment,bundle)
 
                 } else if (text == "Your password has been changed\n successfully.") {
                     dialogLoginEmail(context)
@@ -2122,12 +2287,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val status: Status = result.status
             when (status.statusCode) {
                 LocationSettingsStatusCodes.SUCCESS -> {
-                    Log.i(ErrorDialog.TAG, "All location settings are satisfied.")
+                    Log.i(TAG, "All location settings are satisfied.")
                     getCurrentLocation()
                 }
                 LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                     Log.i(
-                        ErrorDialog.TAG,
+                        TAG,
                         "Location settings are not satisfied. Show the user a dialog to upgrade location settings "
                     )
                     try {
@@ -2146,11 +2311,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         }
 
                     } catch (e: SendIntentException) {
-                        Log.i(ErrorDialog.TAG, "PendingIntent unable to execute request.")
+                        Log.i(TAG, "PendingIntent unable to execute request.")
                     }
                 }
                 LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> Log.i(
-                    ErrorDialog.TAG,
+                    TAG,
                     "Location settings are inadequate, and cannot be fixed here. Dialog not created."
                 )
 
@@ -2175,12 +2340,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val status: Status = result.status
             when (status.statusCode) {
                 LocationSettingsStatusCodes.SUCCESS -> {
-                    Log.i(ErrorDialog.TAG, "All location settings are satisfied.")
+                    Log.i(TAG, "All location settings are satisfied.")
                     getCurrentLocation()
                 }
                 LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                     Log.i(
-                        ErrorDialog.TAG,
+                        TAG,
                         "Location settings are not satisfied. Show the user a dialog to upgrade location settings "
                     )
                     try {
@@ -2199,11 +2364,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         }
 
                     } catch (e: SendIntentException) {
-                        Log.i(ErrorDialog.TAG, "PendingIntent unable to execute request.")
+                        Log.i(TAG, "PendingIntent unable to execute request.")
                     }
                 }
                 LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> Log.i(
-                    ErrorDialog.TAG,
+                    TAG,
                     "Location settings are inadequate, and cannot be fixed here. Dialog not created."
                 )
 
@@ -2260,7 +2425,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         }
 
                         else -> {
-                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                            Log.v(TAG, "error::" + it.message)
                         }
                     }
                 }
@@ -2293,8 +2458,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
         countDownTimer?.cancel()
         locationManager = null
+        session?.setFilterRequest("")
+        session?.setSearchFilterRequest("")
 
     }
+
 
 }
 

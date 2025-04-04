@@ -7,6 +7,8 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -20,11 +22,12 @@ import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
 
 class AdapterChatList(
-    var context: Context, var list: MutableList<ChannelListModel>, var listener: OnClickListener,
-    var listener1: OnClickListener1?) : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>() {
+    var context: Context, var list: MutableList<ChannelListModel>, var listener: OnClickListener, var listener1: OnClickListener1?)
+    : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>(), Filterable {
     // Track the selected position
     private lateinit var  sessionManager: SessionManager
     private lateinit var mListener: onItemClickListener
+    private var filteredList: List<ChannelListModel> = list
 
     interface onItemClickListener {
         fun onItemClick(data:ChannelListModel , index:Int,type:String)
@@ -33,7 +36,6 @@ class AdapterChatList(
     fun setOnItemClickListener(listener: AdapterChatList.onItemClickListener) {
         mListener = listener
     }
-
 
     init {
          sessionManager = SessionManager(context)
@@ -91,10 +93,10 @@ class AdapterChatList(
         return ChatListViewHolder(binding)
     }
 
-    override fun getItemCount() = list.size
+    override fun getItemCount() = filteredList.size
 
     override fun onBindViewHolder(holder: ChatListViewHolder, position: Int) {
-        val currentItem = list[position]
+        val currentItem = filteredList[position]
 
 
         holder.binding.imageThreeDots.setOnClickListener {
@@ -279,6 +281,31 @@ class AdapterChatList(
         this.list = list
         selectedPosition = -1
         notifyDataSetChanged()
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val query = constraint?.toString()?.toLowerCase()
+
+                val results = FilterResults()
+                if (query.isNullOrBlank()) {
+                    results.values = list
+                } else {
+                    val filteredItems = list.filter {
+                        it.receiver_name?.toLowerCase()?.contains(query) == true || it.sender_name?.toLowerCase()?.contains(query) == true
+                    }
+                    results.values = filteredItems
+                }
+                return results
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredList = results?.values as List<ChannelListModel>
+                notifyDataSetChanged()
+            }
+        }
     }
 
 }

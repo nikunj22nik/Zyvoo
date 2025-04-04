@@ -31,6 +31,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.business.zyvo.AppConstant
 import com.business.zyvo.CircularSeekBar.OnSeekBarChangeListener
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.R
 import com.business.zyvo.adapter.AdapterActivityText
 import com.business.zyvo.adapter.AdapterLocationSearch
@@ -145,6 +146,18 @@ class WhereTimeActivity : AppCompatActivity() {
             if (!selectdate){
                 date = ""
             }
+            if (!binding.text1.text.toString().equals("00:00 PM")){
+                start_time   = binding.text1.text.toString()
+                start_time = "$date $start_time"
+            }else{
+                start_time = ""
+            }
+            if (!binding.text2.text.toString().equals("00:00 PM")){
+                end_time   = binding.text2.text.toString()
+                start_time = "$date $end_time"
+            }else{
+                end_time = ""
+            }
             val requestData = SearchFilterRequest(
                 user_id = sessionManager.getUserId().toString(),
                 latitude = selectedLatitude.toString(),
@@ -188,8 +201,8 @@ class WhereTimeActivity : AppCompatActivity() {
               end_time = ""
              activity = ""
             binding.circularSeekBar.endHours = 2f
-            binding.text1.text = "01:00 PM"
-            binding.text2.text = "03:00 PM"
+            binding.text1.text = "00:00 PM"
+            binding.text2.text = "00:00 PM"
             binding.etSearchLocation.post {
                 binding.etSearchLocation.text.clear()
             }
@@ -231,7 +244,7 @@ class WhereTimeActivity : AppCompatActivity() {
                 if (!it.date.equals("")){
                     val dateString = it.date
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        selectedDate = LocalDate.parse(dateString.toString(), DateTimeFormatter.ISO_DATE)
+                        selectedDate = LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE)
                         updateCalendar()
                         updateCalendar1()
                     }
@@ -260,13 +273,11 @@ class WhereTimeActivity : AppCompatActivity() {
         binding.rlView1.setOnClickListener {
                 DateManager(this).showTimePickerDialog(this) { selectedTime ->
                     binding.text1.setText(selectedTime)
-                    start_time = selectedTime
                 }
         }
         binding.rlView2.setOnClickListener {
                 DateManager(this).showTimePickerDialog(this) { selectedTime ->
                     binding.text2.setText(selectedTime)
-                    end_time = selectedTime
                 }
         }
     }
@@ -602,6 +613,13 @@ class WhereTimeActivity : AppCompatActivity() {
                     }
                     dateView.setOnClickListener {
                         selectedDate = date1
+                        if(!SessionManager(this).isDateGreaterOrEqual(selectedDate.toString())){
+                           LoadingUtils.showErrorDialog(this@WhereTimeActivity,"You cannot select a past date from the calendar.")
+                           return@setOnClickListener
+                        }
+
+                        Log.d("TESTING_DATE",selectedDate.toString())
+
                         updateCalendar()
                         updateCalendar1()
                         // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
@@ -703,6 +721,8 @@ class WhereTimeActivity : AppCompatActivity() {
 
         return actList
     }
+
+
 
 
 }

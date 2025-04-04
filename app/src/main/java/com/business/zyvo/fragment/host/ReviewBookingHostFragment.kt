@@ -159,6 +159,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         return binding.root
     }
+    //onView Create is called
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
