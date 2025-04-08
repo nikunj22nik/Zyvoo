@@ -108,6 +108,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.regex.Pattern
 
 @AndroidEntryPoint
 class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, OnClickListener1 {
@@ -1109,16 +1110,26 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 if (NetworkMonitorCheck._isConnected.value) {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        if (etEmail.text!!.isEmpty()) {
-                            etEmail.error = "Email Address required"
-                            showErrorDialog(requireContext(),AppConstant.email)
-                            toggleLoginButtonEnabled(true, textSubmitButton)
-                        } else {
-                            forgotPassword(etEmail.text.toString(),
-                                dialog,textSubmitButton)
-                        }
-                    }
+if (isValidEmail(etEmail.text!!.toString().trim())){
+    if (etEmail.text!!.isEmpty()) {
+        etEmail.error = "Email Address required"
+        showErrorDialog(requireContext(),AppConstant.email)
+        toggleLoginButtonEnabled(true, textSubmitButton)
+    } else {
+        lifecycleScope.launch(Dispatchers.Main) {
+            forgotPassword(
+                etEmail.text.toString(),
+                dialog, textSubmitButton
+            )
+        }
+    }
+}else{
+    etEmail.error = "Please enter a valid email."
+    showErrorDialog(requireContext(),"Please enter a valid email.")
+    toggleLoginButtonEnabled(true, textSubmitButton)
+}
+
+
                 }else{
                     showErrorDialog(requireContext(),
                         resources.getString(R.string.no_internet_dialog_msg)
@@ -1134,6 +1145,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             show()
         }
     }
+
 
     fun dialogNumberVerification(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -2451,6 +2463,31 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         }
     }
 
+    fun isValidEmailOrPhone(input: String): Boolean {
+        val pattern = """^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$|^\+?[0-9]{10,15}$"""
+        val regex = Pattern.compile(pattern)
+        val matcher = regex.matcher(input)
+        return matcher.matches()
+    }
+
+    fun isValidPassword(password: String): Boolean {
+        // val pattern = """^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"""
+        val pattern = """^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"""
+        val regex = Pattern.compile(pattern)
+        val matcher = regex.matcher(password)
+        return matcher.matches()
+    }
+
+    fun isPhoneNumber(input: String): Boolean {
+        val phonePattern = """^\+?[0-9]{10,15}$"""
+        val regex = Pattern.compile(phonePattern)
+        return regex.matcher(input).matches()
+    }
+    private fun isValidEmail(email: String): Boolean {
+        val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
+        val pattern = Pattern.compile(emailPattern)
+        return pattern.matcher(email).matches()
+    }
     override fun onDestroyView() {
         super.onDestroyView()
 
