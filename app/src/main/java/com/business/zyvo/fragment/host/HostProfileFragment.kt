@@ -911,6 +911,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
 
             R.id.imageEditEmail -> {
+
                 dialogEmailVerification(requireContext())
             }
 
@@ -1660,18 +1661,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     it,phoneNumber, countryCode
                 ).collect {
                     when (it) {
-                        is NetworkResult.Success -> {
+                          is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 dialog.dismiss()
-                                val textHeaderOfOtpVerfication =
-                                    "Please type the verification code send \nto $phoneNumber"
-                                dialogOtp(
-                                    requireActivity(),
-                                    countryCode,
-                                    phoneNumber,
-                                    textHeaderOfOtpVerfication,
-                                    "mobile"
-                                )
+                                val textHeaderOfOtpVerfication = "Please type the verification code send \nto $phoneNumber"
+                                dialogOtp(requireActivity(), countryCode, phoneNumber, textHeaderOfOtpVerfication, "mobile")
                             }
                             dialog.dismiss()
                             toggleLoginButtonEnabled(true, textSubmitButton)
@@ -1745,7 +1739,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }
     }
 
-
     private fun dialogEmailVerification(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -1756,12 +1749,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
 
-            val etEmail = findViewById<EditText>(R.id.etEmail)
+            var etEmail = findViewById<EditText>(R.id.etEmail)
             etEmail.setText(binding.etEmail.text.toString())
-
-            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 lifecycleScope.launch {
@@ -1782,7 +1774,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
                                         emailVerification(
-                                            session?.getUserId().toString(),
+                                            SessionManager(requireContext()).getUserId().toString(),
                                             etEmail.text.toString(),
                                             dialog,
                                             textSubmitButton
@@ -1800,6 +1792,61 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             show()
         }
     }
+
+//    private fun dialogEmailVerification(context: Context?) {
+//        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+//        dialog?.apply {
+//            setCancelable(false)
+//            setContentView(R.layout.dialog_email_verification)
+//            window?.attributes = WindowManager.LayoutParams().apply {
+//                copyFrom(window?.attributes)
+//                width = WindowManager.LayoutParams.MATCH_PARENT
+//                height = WindowManager.LayoutParams.MATCH_PARENT
+//            }
+//            val imageCross = findViewById<ImageView>(R.id.imageCross)
+//
+//            val etEmail = findViewById<EditText>(R.id.etEmail)
+//            etEmail.setText(binding.etEmail.text.toString())
+//
+//            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+//            textSubmitButton.setOnClickListener {
+//                toggleLoginButtonEnabled(false, textSubmitButton)
+//                lifecycleScope.launch {
+//                    profileViewModel.networkMonitor.isConnected
+//                        .distinctUntilChanged() // Ignore duplicate consecutive values
+//                        .collect { isConn ->
+//                            if (!isConn) {
+//                                showErrorDialog(
+//                                    requireContext(),
+//                                    resources.getString(R.string.no_internet_dialog_msg)
+//                                )
+//                                toggleLoginButtonEnabled(true, textSubmitButton)
+//                            } else {
+//                                lifecycleScope.launch(Dispatchers.Main) {
+//                                    if (etEmail.text!!.isEmpty()) {
+//                                        etEmail.error = "Email Address required"
+//                                        showErrorDialog(requireContext(), AppConstant.email)
+//                                        toggleLoginButtonEnabled(true, textSubmitButton)
+//                                    } else {
+//                                        emailVerification(
+//                                            session?.getUserId().toString(),
+//                                            etEmail.text.toString(),
+//                                            dialog,
+//                                            textSubmitButton
+//                                        )
+//                                    }
+//                                }
+//                            }
+//                        }
+//                }
+//            }
+//            imageCross.setOnClickListener {
+//                dismiss()
+//            }
+//            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+//            show()
+//        }
+//    }
 
     private fun emailVerification(
         userId: String,

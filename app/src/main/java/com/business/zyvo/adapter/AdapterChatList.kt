@@ -279,6 +279,7 @@ class AdapterChatList(
     @SuppressLint("NotifyDataSetChanged")
     fun updateItem(list: MutableList<ChannelListModel>) {
         this.list = list
+        this.filteredList = list
         selectedPosition = -1
         notifyDataSetChanged()
     }

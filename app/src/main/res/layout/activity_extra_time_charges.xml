@@ -268,6 +268,7 @@ android:textColor="@color/black"
                             android:paddingVertical="@dimen/_6sdp">
 
                             <EditText
+                                android:id="@+id/etShareMessage"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
@@ -281,6 +282,7 @@ android:textColor="@color/black"
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rlSubmitMessage"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_33sdp"
                             android:layout_marginHorizontal="@dimen/_10sdp"

@@ -67,7 +67,7 @@
                     android:fontFamily="@font/poppins"
                     android:padding="8dp"
                     android:id="@+id/proName"
-                    android:hint="Cabin in Peshastinsddd"
+                    android:hint="Cabin "
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
@@ -79,6 +79,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
                     android:src="@drawable/ic_start_new" />
 
                 <TextView
@@ -96,7 +97,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_6sdp"
                     android:layout_marginTop="@dimen/_7sdp"
                     android:id="@+id/proreviewCount"
                     android:hint="(30 reviews)" />
@@ -349,6 +350,7 @@
                         android:textStyle="bold" />
 
                     <TextView
+                        android:id="@+id/minTimeTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"

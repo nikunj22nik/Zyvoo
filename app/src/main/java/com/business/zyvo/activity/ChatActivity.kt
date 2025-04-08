@@ -86,7 +86,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
     private val handler = Handler(Looper.getMainLooper())
     private val updateInterval = 30000L // 30 seconds
     private var isPolling = false // Flag to track polling state
-
+    private var previousScreenMessage =""
     private val viewModel: ChatDetailsViewModel by lazy {
         ViewModelProvider(this)[ChatDetailsViewModel::class.java]
     }
@@ -129,6 +129,11 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             userName = intent?.extras?.getString("user_name","")?:""
             sender_id = intent?.extras?.getString("sender_id","")?:""
             binding.tvStatus.setText(friend_name)
+            if(intent?.extras?.containsKey("message") == true){
+                Log.d("ZYVOO-TESTING"," Message Send in CHAT SCREEN")
+                previousScreenMessage = intent?.extras?.getString("message").toString()
+
+            }
 
             if (is_blocked==1){
                 binding.rvChatting1.visibility = View.GONE
@@ -378,8 +383,15 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         runOnUiThread {
             if (quickstartConversationsManager.messages.size > 0) {
                 loadRecyclerview(quickstartConversationsManager)
+                if(previousScreenMessage.length > 0) {
+                    quickstartConversationsManager.sendMessage(previousScreenMessage)
+                }
                 Log.d("@Error","massage found")
             } else {
+
+                if(previousScreenMessage.length > 0) {
+                    quickstartConversationsManager.sendMessage(previousScreenMessage)
+                }
                 Log.d("@Error","not massage found")
             }
         }
@@ -387,6 +399,10 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
     override fun reloadLastMessages() {
         Log.d("*******","reloadLastMessages")
+        Log.d("ZYVOO-TESTING",previousScreenMessage+" Previous Screen message")
+        if(previousScreenMessage!= null && previousScreenMessage.length >0) {
+            quickstartConversationsManager.sendMessage(previousScreenMessage)
+        }
       //  quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
     }
 

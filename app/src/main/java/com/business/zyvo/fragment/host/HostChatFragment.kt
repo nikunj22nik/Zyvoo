@@ -55,20 +55,28 @@ import kotlinx.coroutines.launch
 class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversationsManagerListener {
 
     private var _binding: FragmentChatBinding? = null
+
     private val binding get() = _binding!!
+
     private lateinit var adapterChatList: AdapterChatList
+
     private val viewModel: ChatListHostViewModel by viewModels()
+
     var objects: Int = 0
+
     private var chatList :MutableList<ChannelListModel>  = mutableListOf()
+
     private  var userId :Int =-1
+
     private var filteredList: MutableList<ChannelListModel> = chatList.toMutableList()
+
     private var quickstartConversationsManager = QuickstartConversationsManager()
 
 
     private var map:HashMap<String,ChannelListModel> = HashMap()
 
-
     private var loggedInUserId : Int =-1
+
     val addedConversations = mutableSetOf<String>() // Track added conversation uniqueNames
 
 
@@ -625,17 +633,37 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             adapterChatList.updateItem(chatList)
             popupWindow.dismiss()
         }
+
         popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
+            Log.d("TESTING_ZYVOO","here in a  item Archeived")
             val localtchat:MutableList<ChannelListModel> =  mutableListOf()
-            popupWindow.dismiss()
-            val filteredChats = chatList.filter { it.is_archived == 1 }
-            localtchat.addAll(filteredChats)
+
+            chatList.forEach {
+                if(it.is_archived ==1){
+                    localtchat.add(it)
+                }
+            }
+           // val filteredChats = chatList.filter { it.is_archived == 1 }
+          //  localtchat.addAll(filteredChats)
             localtchat.sortWith { o1, o2 ->
                 if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
             }
 
             adapterChatList.updateItem(localtchat)
+            popupWindow.dismiss()
+            Log.d("TESTING_ZYVOO","here in a  item Archeived")
         }
+//        popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
+//            val localtchat:MutableList<ChannelListModel> =  mutableListOf()
+//            popupWindow.dismiss()
+//            val filteredChats = chatList.filter { it.is_archived == 1 }
+//            localtchat.addAll(filteredChats)
+//            localtchat.sortWith { o1, o2 ->
+//                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
+//            }
+//
+//            adapterChatList.updateItem(localtchat)
+//        }
         popupView.findViewById<TextView>(R.id.itemUnread).setOnClickListener {
             popupWindow.dismiss()
             quickstartConversationsManager.let { quick ->

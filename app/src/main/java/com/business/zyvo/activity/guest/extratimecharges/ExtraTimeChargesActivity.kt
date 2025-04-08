@@ -6,6 +6,8 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -172,13 +174,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             }
         }
 
-        binding.rlMsgHost.setOnClickListener {
-            if (binding.llMsgHost.visibility == View.VISIBLE) {
-                binding.llMsgHost.visibility = View.GONE
-            } else {
-                binding.llMsgHost.visibility = View.VISIBLE
-            }
-        }
+
         binding.imgBack.setOnClickListener {
             onBackPressed()
         }
@@ -217,12 +213,72 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         setPropertyData()
         getUserCards()
         binding.rlMsgHost.setOnClickListener {
-            callingJoinChannelApi()
+           // callingJoinChannelApi()
+            callingMessageClickListner()
         }
     }
 
+    private fun callingMessageClickListner(){
+        if (binding.llMsgHost.visibility == View.VISIBLE) {
+            binding.llMsgHost.visibility = View.GONE
+        }
+        else {
+            binding.llMsgHost.visibility = View.VISIBLE
+        }
 
-    private fun callingJoinChannelApi() {
+
+        var messageSend = "I have a doubt"
+        binding.doubt.setOnClickListener {
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            messageSend = "I have a doubt"
+            binding.etShareMessage.setText("")
+        }
+        binding.tvAvailableDay.setOnClickListener {
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            messageSend = "Available days"
+            binding.etShareMessage.setText("")
+        }
+        var writeMessage =""
+        binding.etShareMessage.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                writeMessage+=charSequence.toString()
+                binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+                binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+
+
+            }
+        })
+
+
+        binding.rlSubmitMessage.setOnClickListener {
+            val userInput = binding.etShareMessage.text.toString()
+            if(userInput.length>0){
+                messageSend = userInput
+            }
+            propertyData?.let {
+                var propertyid = it.property_id
+                var hostId = it.host_id
+                var userId = SessionManager(this).getUserId()
+                var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+
+                Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+
+                callingJoinChannelApi(messageSend)
+
+            }
+        }
+
+    }
+
+
+    private fun callingJoinChannelApi(messageSend :String) {
         if (hostId.equals("-1") == false && propertyId.equals("-1") ==false) {
             lifecycleScope.launch {
                 val session = SessionManager(this@ExtraTimeChargesActivity)
@@ -278,6 +334,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                                     intent.putExtra("friend_name", friendName).toString()
                                     intent.putExtra("user_name", userName)
                                     intent.putExtra("sender_id", hostId)
+                                    intent.putExtra("message",messageSend)
                                     startActivity(intent)
                                 } else if (it.data?.sender_id?.toInt() == loggedInId) {
                                     var userImage: String = it.data?.sender_avatar.toString()
@@ -309,6 +366,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                                     intent.putExtra("friend_name", friendName).toString()
                                     intent.putExtra("user_name", userName)
                                     intent.putExtra("sender_id", hostId)
+                                    intent.putExtra("message",messageSend)
                                     startActivity(intent)
                                 }
                             }
@@ -336,7 +394,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         }
     }
 
-    @SuppressLint("SetTextI18n")
+
     private fun setPropertyData() {
         try {
             propertyData?.let {
@@ -403,7 +461,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         }
     }
 
-    @SuppressLint("SetTextI18n")
+
     private fun calculatePrice(){
         try {
             var totalPrice = 0.0
@@ -471,20 +529,14 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         }
     }
 
-    fun calculateTotalPrice(addOnList: List<AddOn>): Double {
+    private fun calculateTotalPrice(addOnList: List<AddOn>): Double {
         return addOnList.filter { it.checked }
             .sumOf { it.price.toDoubleOrNull() ?: 0.0 }
     }
 
     private fun getBookingExtensionTimeAmount(
-        booking_id: String,
-        extension_time: String,
-        service_fee: String,
-        tax: String,
-        cleaning_fee: String,
-        extension_total_amount: String,
-        extension_booking_amount: String,
-        discount_amount: String
+        booking_id: String, extension_time: String, service_fee: String, tax: String,
+        cleaning_fee: String, extension_total_amount: String, extension_booking_amount: String, discount_amount: String
     ) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
@@ -620,7 +672,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
     }
 
 
-    @SuppressLint("SetTextI18n")
+
     private fun sameAsMailingAddress(
         etStreet: EditText,
         etCity: EditText,
@@ -674,7 +726,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
     }
 
 
-    @SuppressLint("SetTextI18n")
+
     private fun saveCardStripe(
         dialog: Dialog,
         tokenId: String,
