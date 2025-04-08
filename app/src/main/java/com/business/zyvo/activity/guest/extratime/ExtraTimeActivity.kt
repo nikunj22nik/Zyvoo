@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +25,6 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.skydoves.powerspinner.PowerSpinnerView
-import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -77,6 +78,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        Log.d("TESTING_ZYVOO","ON CREATE OF Extra Time ")
         binding = ActivityExtraTimeBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         session = SessionManager(this)
@@ -125,13 +127,76 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
         setPropertyData()
 
         binding.rlMsgHost.setOnClickListener {
-            callingJoinChannelApi()
+            //  callingJoinChannelApi()
+            Log.d("TESTING_ZYVOO","ON click of message host")
+            callingMessageClickListner()
+        }
+
+    }
+
+    private fun callingMessageClickListner(){
+        if (binding.llMsgHost.visibility == View.VISIBLE) {
+                binding.llMsgHost.visibility = View.GONE
+        }
+        else {
+                binding.llMsgHost.visibility = View.VISIBLE
+        }
+
+
+        var messageSend = "I have a doubt"
+        binding.doubt.setOnClickListener {
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            messageSend = "I have a doubt"
+            binding.etShareMessage.setText("")
+        }
+        binding.tvAvailableDay.setOnClickListener {
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            messageSend = "Available days"
+            binding.etShareMessage.setText("")
+        }
+        var writeMessage =""
+        binding.etShareMessage.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                writeMessage+=charSequence.toString()
+                binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+                binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+            }
+        })
+
+
+        binding.rlSubmitMessage.setOnClickListener {
+            val userInput = binding.etShareMessage.text.toString()
+
+            if(userInput.length>0){
+                messageSend = userInput
+            }
+
+            propertyData?.let {
+                var propertyid = it.property_id
+                var hostId = it.host_id
+                var userId = SessionManager(this).getUserId()
+                var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+
+                Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+
+                callingJoinChannelApi(messageSend)
+
+            }
         }
 
     }
 
 
-    private fun callingJoinChannelApi(){
+
+
+    private fun callingJoinChannelApi(messageSend: String) {
         if(hostId.equals("-1") == false && propertyId.equals("-1") ==false){
             lifecycleScope.launch {
                 val session= SessionManager(this@ExtraTimeActivity)
@@ -177,6 +242,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                                     intent.putExtra("friend_name",friendName).toString()
                                     intent.putExtra("user_name",userName)
                                     intent.putExtra("sender_id", hostId)
+                                    intent.putExtra("message",messageSend)
                                     startActivity(intent)
                                 }
                                 else if(it.data?.sender_id?.toInt() == loggedInId){
@@ -200,6 +266,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                                     intent.putExtra("friend_name",friendName).toString()
                                     intent.putExtra("user_name",userName)
                                     intent.putExtra("sender_id", hostId)
+                                    intent.putExtra("message",messageSend)
                                     startActivity(intent)
                                 }
                             }
@@ -250,14 +317,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             }
         }
 
-        binding.rlMsgHost.setOnClickListener {
-            if(binding.llMsgHost.visibility == View.VISIBLE){
-                binding.llMsgHost.visibility = View.GONE
-            }
-            else{
-                binding.llMsgHost.visibility = View.VISIBLE
-            }
-        }
+
 
         binding.doubt.setOnClickListener {
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)

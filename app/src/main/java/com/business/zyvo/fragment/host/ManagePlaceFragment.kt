@@ -2407,9 +2407,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     @SuppressLint("MissingInflatedId", "ClickableViewAccessibility")
     fun showAddOnDialog() {
+
         val dialog = context?.let {
             Dialog(it, R.style.BottomSheetDialog)
         }
+
         dialog?.apply {
             setCancelable(true)
             setCanceledOnTouchOutside(true)
@@ -2417,18 +2419,13 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
 
-
             val recyclerView: RecyclerView = findViewById(R.id.rcy)
-
             val etItemName: EditText = findViewById(R.id.etAdd)
-
             val etItemPrice: EditText = findViewById(R.id.etRupees)
-
             val btnSubmit: TextView = findViewById(R.id.textAddButton)
-
             val itemList = getItemList()
             var selectedItem: String? = null
 

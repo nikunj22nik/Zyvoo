@@ -252,6 +252,7 @@
                             android:layout_below="@id/doubt"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:visibility="gone"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             >
 
@@ -280,6 +281,7 @@
                             >
 
                             <EditText
+                                android:id="@+id/et_share_message"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Share a message"
@@ -293,6 +295,7 @@
 
                         </RelativeLayout>
                         <RelativeLayout
+                            android:id="@+id/rl_submit_message"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_33sdp"
                             android:background="@drawable/bg_save_button"
@@ -1127,7 +1130,7 @@
                                         >
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/spinnermonth"
-                                            android:layout_width="@dimen/_70sdp"
+                                            android:layout_width="@dimen/_80sdp"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textSize = "@dimen/_10ssp"

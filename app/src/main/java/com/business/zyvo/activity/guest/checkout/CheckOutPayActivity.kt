@@ -9,8 +9,10 @@ import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.LayoutInflater
@@ -24,7 +26,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.marginBottom
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -52,7 +53,6 @@ import com.business.zyvo.databinding.ActivityCheckOutPayBinding
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
-import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.formatDateyyyyMMddToMMMMddyyyy
@@ -140,26 +140,80 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         messageHostListener()
         setPropertyData()
         getUserCards()
+        callingMessageClickListner()
 
+
+
+    }
+
+    private fun callingMessageClickListner(){
         binding.rlMsgHost.setOnClickListener {
+            if (binding.llMsgHost.visibility == View.VISIBLE) {
+                binding.llMsgHost.visibility = View.GONE
+            }
+            else {
+                binding.llMsgHost.visibility = View.VISIBLE
+            }
+        }
+
+        var messageSend = "I have a doubt"
+
+        binding.doubt.setOnClickListener {
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            messageSend = "I have a doubt"
+            binding.etShareMessage.setText("")
+        }
+
+        binding.tvAvailableDay.setOnClickListener {
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            messageSend = "Available days"
+            binding.etShareMessage.setText("")
+        }
+
+        var writeMessage =""
+        binding.etShareMessage.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                writeMessage+=charSequence.toString()
+                binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+                binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+
+
+            }
+        })
+
+
+        binding.rlSubmitMessage.setOnClickListener {
+            val userInput = binding.etShareMessage.text.toString()
+            if(userInput.length>0){
+                messageSend = userInput
+            }
             propertyData?.let {
                 var propertyid = it.property_id
                 var hostId = it.host_id
                 var userId = SessionManager(this).getUserId()
                 var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
-
                 Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
-
-                callingJoinChannel(propertyid,hostId,userId,channelName)
-
+                callingJoinChannel(propertyid,hostId,userId,channelName,messageSend)
             }
-
         }
 
     }
 
 
-    private fun callingJoinChannel(property_id: Int,hostId:Int,userId:Int,channel:String){
+    private fun callingJoinChannel(
+        property_id: Int,
+        hostId: Int,
+        userId: Int,
+        channel: String,
+        messageSend: String
+    ){
         lifecycleScope.launch {
             LoadingUtils.showDialog(this@CheckOutPayActivity,false)
             checkOutPayViewModel.joinChatChannel(userId, hostId, channel, "guest").collect {
@@ -190,6 +244,8 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                             intent.putExtra("friend_name",friendName).toString()
                             intent.putExtra("user_name",userName)
                             intent.putExtra("sender_id",hostId.toString())
+                            Log.d("ZYVOO-TESTING",messageSend+" Message Send in CheckOut")
+                            intent.putExtra("message",messageSend)
                             startActivity(intent)
                         }
                         else if(it.data?.sender_id?.toInt() == loggedInId){
@@ -213,6 +269,8 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                             intent.putExtra("friend_name",friendName).toString()
                             intent.putExtra("user_name",userName)
                             intent.putExtra("sender_id",hostId.toString())
+                            Log.d("ZYVOO-TESTING",messageSend+" Message Send in CheckOut")
+                            intent.putExtra("message",messageSend)
                             startActivity(intent)
                         }
                     }
@@ -301,7 +359,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 propertyData?.add_ons?.let {
                     if (it.isNotEmpty()) {
                         addOnList = it.toMutableList()
-                        adapterAddon.updateAdapter(addOnList)
+                        adapterAddon.updateAdapter(addOnList.subList(0,Math.min(3,addOnList.size)))
                     }
                 }
                 calculatePrice()
@@ -330,13 +388,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             binding.tvTiming.text = "From " + stTime + "to " + edTime
             binding.relTime.visibility = View.GONE
         }
-        binding.rlMsgHost.setOnClickListener {
-            if (binding.llMsgHost.visibility == View.VISIBLE) {
-                binding.llMsgHost.visibility = View.GONE
-            } else {
-                binding.llMsgHost.visibility = View.VISIBLE
-            }
-        }
+
         binding.imgBack.setOnClickListener {
             onBackPressed()
         }
@@ -766,8 +818,12 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         binding.tvShowMore.paint.isAntiAlias = true
         binding.tvShowMore.setOnClickListener {
             adapterAddon.toggleList()
-            binding.tvShowMore.text =
-                if (adapterAddon.itemCount == addOnList.size) "Show Less" else "Show More"
+            if (binding.tvShowMore.text.equals("Show More")){
+                    binding.tvShowMore.text ="Show Less"
+              }
+          else{
+              binding.tvShowMore.text = "Show More"
+            }
         }
     }
 

@@ -166,8 +166,61 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             showPopupWindow(it,0)
         }
 
+        binding.tvWishlist.setOnClickListener {
+            showAddWishlistDialog(propertyId,-1)
+        }
+
         getHomePropertyDetails()
     }
+
+
+
+
+    private fun showAddWishlistDialog(property_id: String,pos: Int) {
+        val dialog = Dialog(this, R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_add_wishlist)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            val dialogAdapter = WishlistAdapter(this@RestaurantDetailActivity,true, wishlistItem,object: OnClickListener{
+                override fun itemClick(obj: Int) {
+
+                }
+
+            })
+
+            dialogAdapter.setOnItemClickListener(object:WishlistAdapter.onItemClickListener{
+                override fun onItemClick(position: Int, wish: WishlistItem) {
+                    try {
+                        saveItemInWishlist(property_id, position,wish.wishlist_id.toString(),
+                            dialog)
+                    }catch (e:Exception){
+                        e.message
+                    }
+                }
+
+            })
+            val rvWishList : RecyclerView =  findViewById(R.id.rvWishList)
+            rvWishList.adapter = dialogAdapter
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+            findViewById<TextView>(R.id.textCreateWishList).setOnClickListener {
+                createWishListDialog()
+                dismiss()
+            }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+            getWisList(dialogAdapter)
+        }
+    }
+
+
 
     @SuppressLint("SetTextI18n")
     private fun getHomePropertyDetails() {
@@ -181,6 +234,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 propertyData = Gson().fromJson(resp.first.getAsJsonObject("data"), PropertyData::class.java)
 
                                 pagination = Gson().fromJson(resp.first.getAsJsonObject("pagination") , Pagination::class.java)
+
+
+                                propertyData?.min_booking_hours?.let {
+                                    binding.minTimeTxt.setText(it.toString() +"hr minimum")
+                                    binding.circularSeekBar.endHours = it.toString().toFloat()
+                                }
 
                                 if(pagination == null){
                                     binding.showMoreReview.visibility = View.GONE
@@ -222,15 +281,15 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         try {
             propertyData?.let {
                 propertyData?.property_title?.let {
-                    binding.proName.text = it
+                    binding.proName.text = it.trim()
                 }
                 propertyData?.reviews_total_rating?.let {
-                    binding.proRating.text = it
-                    binding.proTotalrating.text = it
+                    binding.proRating.text = it.trim()
+                    binding.proTotalrating.text = it.trim()
                 }
                 propertyData?.reviews_total_count?.let {
-                    binding.proreviewCount.text = "("+ formatConvertCount(it) +" reviews)"
-                    binding.proTotalReview.text = "Reviews "+"("+formatConvertCount(it) +")"
+                    binding.proreviewCount.text = "("+ formatConvertCount(it).trim() +" reviews)"
+                    binding.proTotalReview.text = "Reviews "+"("+formatConvertCount(it).trim() +")"
                 }
                 propertyData?.min_booking_hours?.let {
                     binding.proBookingMin.text = convertHoursToHrMin(it.toDouble())
@@ -617,6 +676,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                             it.data?.let { resp ->
                                 showToast(this@RestaurantDetailActivity,resp.first)
                                 dialog.dismiss()
+
+
                                 binding.proAddWishLists.visibility = View.VISIBLE
                                 binding.proNoWishLists.visibility = View.GONE
 
@@ -802,7 +863,15 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.tvShowMore.setOnClickListener {
             adapterAddon.toggleList()
-            binding.tvShowMore.text = if (adapterAddon.itemCount == addOnList.size) "Show Less" else "Show More"
+
+            if (binding.tvShowMore.text.equals("Show More")){
+                binding.tvShowMore.text ="Show Less"
+            }
+            else{
+                binding.tvShowMore.text = "Show More"
+            }
+
+          //  binding.tvShowMore.text = if (adapterAddon.itemCount == addOnList.size) "Show Less" else "Show More"
         }
         binding.startBooking.setOnClickListener {
             if (binding.tvBookingTxt.text.toString().equals("Start Booking")) {
