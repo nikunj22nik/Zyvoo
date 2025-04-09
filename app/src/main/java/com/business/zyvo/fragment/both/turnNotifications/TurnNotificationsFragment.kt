@@ -91,6 +91,8 @@ private var  _binding: FragmentTurnNotificationsBinding? = null
         }
     }
 
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

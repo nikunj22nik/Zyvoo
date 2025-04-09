@@ -225,6 +225,7 @@ class AppConstant {
         val selectCard = "Please select Card"
 
         val additional = "Additional Details is required"
+        val spinner = "Please select a reason"
 
         const val firstNameError: String ="First name can't be empty."
         const val lastNameError: String ="Last name can't be empty."

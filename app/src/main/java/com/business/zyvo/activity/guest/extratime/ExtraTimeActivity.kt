@@ -580,6 +580,9 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 }else if(et_addiotnal_detail.text.isEmpty()){
                     showToast(this@ExtraTimeActivity,AppConstant.additional)
                 }
+                else if(powerSpinner.text.toString().isEmpty()){
+                    showToast(this@ExtraTimeActivity,AppConstant.spinner)
+                }
                 else{
                     reportViolation(session?.getUserId().toString(),
                         bookingId!!,

@@ -638,7 +638,11 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                     txtSubmit.text = "Submitted"
                 }else if(et_addiotnal_detail.text.isEmpty()){
                     showToast(this@ChatActivity,AppConstant.additional)
-                } else{
+                }
+                else if(powerSpinner.text.toString().isEmpty()){
+                    showToast(this@ChatActivity,AppConstant.spinner)
+                }
+                else{
                    friendId?.let {
                         reportChat(it,
                             reportReasonsMap.get(powerSpinner.text.toString()).toString(),
