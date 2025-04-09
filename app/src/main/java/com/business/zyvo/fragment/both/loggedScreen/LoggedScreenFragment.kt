@@ -670,7 +670,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             val userId = resp.second
                             dialogOtp(requireActivity(), text, textHeaderOfOtpVerfication,
                                 code, number,userId,checkBox,"loginPhone")
+                            Toast.makeText(requireContext(),resp.first,Toast.LENGTH_LONG).show()
                         }
+
                         toggleLoginButtonEnabled(true, text)
                     }
 
@@ -815,6 +817,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             dialogOtp(requireContext(), text, textHeaderOfOtpVerfication, code,
                                 number,
                                 temp,checkBox,"RegisterPhone")
+                            Toast.makeText(requireContext(),resp.first,Toast.LENGTH_LONG).show()
                         }
                         dialog.dismiss()
                         toggleLoginButtonEnabled(true, text)
