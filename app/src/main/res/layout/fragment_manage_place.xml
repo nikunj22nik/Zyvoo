@@ -1424,7 +1424,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="1 hour minimum"
+                            android:text="2 hour minimum"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 
@@ -1525,7 +1525,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="1 hour minimum"
+                            android:text="2 hour minimum"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 
@@ -1950,8 +1950,8 @@
                             android:layout_below="@+id/tvJun"
                             android:layout_gravity="center"
                             android:layout_marginVertical="2dp"
-                            android:layout_toEndOf="@+id/tvOct"
-                            android:layout_weight="1"
+                            android:layout_toEndOf = "@+id/tvOct"
+                            android:layout_weight = "1"
                             android:fontFamily="@font/poppins"
                             android:gravity="center"
                             android:paddingVertical="8dp"

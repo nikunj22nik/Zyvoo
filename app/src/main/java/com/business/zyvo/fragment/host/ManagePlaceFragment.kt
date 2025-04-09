@@ -93,9 +93,9 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     // variables for availability
 
-    var minimumHourValue = 1;
+    var minimumHourValue = 2;
     var hourlyPrice = 10;
-    var bulkDiscountHour = 1;
+    var bulkDiscountHour = 2;
     var bulkDiscountPrice = 10;
     var availableMonth: String = "00"
     var fromHour: String = "00:00"

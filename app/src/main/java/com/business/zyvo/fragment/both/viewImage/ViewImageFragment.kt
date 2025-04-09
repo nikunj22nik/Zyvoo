@@ -43,6 +43,14 @@ binding.imageBack.setOnClickListener(this)
         // Initialize the ViewPager adapter after binding has been set
         adapter = ViewPagerAdapter(mutableListOf(),requireContext(),null)
         binding.viewpager.adapter = adapter
+        adapter?.setOnItemClickListener(object:ViewPagerAdapter.onItemClickListener{
+            override fun onItemClick() {
+
+            }
+
+        })
+
+
         binding.viewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
         // Observe the data in ViewModel and update the adapter

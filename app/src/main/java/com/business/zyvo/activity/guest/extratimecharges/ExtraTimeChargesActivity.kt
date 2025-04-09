@@ -229,18 +229,21 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
 
         var messageSend = "I have a doubt"
         binding.doubt.setOnClickListener {
+            binding.etShareMessage.setText("")
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             messageSend = "I have a doubt"
-            binding.etShareMessage.setText("")
+
         }
         binding.tvAvailableDay.setOnClickListener {
+            binding.etShareMessage.setText("")
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             messageSend = "Available days"
-            binding.etShareMessage.setText("")
         }
+
         var writeMessage =""
+
         binding.etShareMessage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -249,13 +252,10 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
                 binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             }
-
             override fun afterTextChanged(editable: Editable?) {
-
 
             }
         })
-
 
         binding.rlSubmitMessage.setOnClickListener {
             val userInput = binding.etShareMessage.text.toString()
