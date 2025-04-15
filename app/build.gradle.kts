@@ -78,6 +78,7 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation(libs.places)
     implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.annotations)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

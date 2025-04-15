@@ -49,6 +49,12 @@ class ViewImageDialogFragment : DialogFragment(), OnClickListener {
         // Initialize the ViewPager adapter after binding has been set
         adapter = ViewPagerAdapter(mutableListOf(),requireContext(),null)
         binding.viewpager.adapter = adapter
+        adapter?.setOnItemClickListener(object:ViewPagerAdapter.onItemClickListener{
+            override fun onItemClick() {
+
+            }
+
+        })
         binding.viewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
         // Set up the TabLayout mediator

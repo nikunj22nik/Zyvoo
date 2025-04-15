@@ -46,6 +46,7 @@ private var  _binding: FragmentTurnNotificationsBinding? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 val bundle = Bundle()
@@ -60,16 +61,17 @@ private var  _binding: FragmentTurnNotificationsBinding? = null
                 bundle.putString("email",email)
                 findNavController().navigate(R.id.turnLocationFragment,bundle)
             }
+
         }
 
         binding.textNotnow.setOnClickListener{
-
             val bundle = Bundle()
             bundle.putString("data",data)
             bundle.putString("type",type)
             bundle.putString("email",email)
             findNavController().navigate(R.id.turnLocationFragment,bundle)
         }
+
         binding.btnNotification.setOnClickListener{
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.POST_NOTIFICATIONS) ==

@@ -388,7 +388,6 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                 }
                 Log.d("@Error","massage found")
             } else {
-
                 if(previousScreenMessage.length > 0) {
                     quickstartConversationsManager.sendMessage(previousScreenMessage)
                 }

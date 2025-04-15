@@ -137,6 +137,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     var userProfile: UserProfile? = null
     var firstName :String =""
     var lastName :String =""
+    var updateFirstName :String =""
+    var updateLastName :String =""
 
 
     private val completeProfileViewModel: CompleteProfileViewModel by lazy {
@@ -229,6 +231,11 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
         petsList.add(newPets)
         session = SessionManager(requireActivity())
+
+        binding.imageEditAbout.setOnClickListener {
+          binding.etAboutMe.isEnabled = true
+        }
+
         arguments?.let {
           val data = Gson().fromJson(requireArguments().getString("data")!!,JsonObject::class.java)
 
@@ -316,6 +323,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         getInquiryResult.launch(inquiry)
 
     }
+
     private fun setCheckVerified() {
         if ("mobile".equals(type)){
 
@@ -331,45 +339,31 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
     // Function to initialize the adapter for adding locations
     private fun adapterInitialize() {
+
         addLocationAdapter = AddLocationAdapter(requireContext(), locationList, this,this)
         binding.recyclerViewLocation.adapter = addLocationAdapter
 
         // Update the adapter with the initial location list (if any)
         addLocationAdapter.updateLocations(locationList)
-
-        
         addWorkAdapter = AddWorkAdapter(requireContext(), workList, this,this)
-
         binding.recyclerViewWork.adapter = addWorkAdapter
-
         addWorkAdapter.updateWork(workList)
-
         addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this,this)
         binding.recyclerViewlanguages.adapter = addLanguageSpeakAdapter
-
         addLanguageSpeakAdapter.updateLanguage(languageList)
-
-
         addHobbiesAdapter = AddHobbiesAdapter(requireContext(),hobbiesList,this,this)
         binding.recyclerViewHobbies.adapter = addHobbiesAdapter
-
         addHobbiesAdapter.updateHobbies(hobbiesList)
-
-
         addPetsAdapter = AddPetsAdapter(requireContext(),petsList,this,this)
         binding.recyclerViewPets.adapter = addPetsAdapter
-
         addPetsAdapter.updatePets(petsList)
-
-
 
     }
 
     // Function to start the location picker using Autocomplete
     private fun startLocationPicker() {
         val fields = listOf(Place.Field.ID, Place.Field.NAME)
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
-            .build(requireContext())
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).build(requireContext())
         startAutocomplete.launch(intent)
     }
 
@@ -441,30 +435,25 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         return true
     }
 
-
-
-
    private fun bottomSheetUploadImage(){
-
+       Log.d("TESTING_COMPELETE_PROFILE","Inside of Bottom Sheet Upload Image")
        bottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog1)
-       bottomSheetDialog!!.setContentView(R.layout.bottom_sheet_upload_image)
-       bottomSheetDialog!!.show()
-
-
+       bottomSheetDialog?.setContentView(R.layout.bottom_sheet_upload_image)
 
        val textCamera = bottomSheetDialog?.findViewById<TextView>(R.id.textCamera)
-       val textGallery = bottomSheetDialog?.findViewById<TextView>(R.id.textGallery)
 
+       val textGallery = bottomSheetDialog?.findViewById<TextView>(R.id.textGallery)
 
        textCamera?.setOnClickListener {
            profileImageCameraChooser()
-           bottomSheetDialog!!.dismiss()
-       }
-       textGallery?.setOnClickListener {
-           profileImageGalleryChooser()
-           bottomSheetDialog!!.dismiss()
+           bottomSheetDialog?.dismiss()
        }
 
+       textGallery?.setOnClickListener {
+           profileImageGalleryChooser()
+           bottomSheetDialog?.dismiss()
+       }
+       bottomSheetDialog?.show()
 
    }
 
@@ -509,22 +498,29 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     }
 
     override fun onClick(p0: View?) {
-       when(p0?.id){
-           R.id.imageInfoIcon->{
+
+        when(p0?.id){
+           R.id.imageInfoIcon -> {
                binding.cvInfo.visibility = View.VISIBLE
            }
-           R.id.clHead->{
+
+           R.id.clHead -> {
                binding.cvInfo.visibility = View.GONE
            }
-           R.id.imageEditPicture->{
+
+           R.id.imageEditPicture -> {
                bottomSheetUploadImage()
            }
+
            R.id.imageEditName->{
             dialogChangeName(requireContext())
            }
+
            R.id.textConfirmNow->{
+
               dialogEmailVerification(requireContext())
            }
+
            R.id.textConfirmNow1->{
                dialogNumberVerification(requireContext())
            }
@@ -582,6 +578,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                }
            }
        }
+
     }
 
     private fun completeProfile(completeProfileReq: CompleteProfileReq, textSaveButton: TextView) {
@@ -772,6 +769,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
  */
 
+    // this function change the name of dialog
 private fun dialogChangeName(context: Context?) {
     val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
     dialog?.apply {
@@ -779,8 +777,8 @@ private fun dialogChangeName(context: Context?) {
         setContentView(R.layout.dialog_change_names)
         window?.attributes = WindowManager.LayoutParams().apply {
             copyFrom(window?.attributes)
-            width = WindowManager.LayoutParams.MATCH_PARENT
-            height = WindowManager.LayoutParams.MATCH_PARENT
+            width = WindowManager.LayoutParams.WRAP_CONTENT
+            height = WindowManager.LayoutParams.WRAP_CONTENT
         }
 
         val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
@@ -814,6 +812,25 @@ private fun dialogChangeName(context: Context?) {
             }
         }
 
+        editTextFirstName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                updateFirstName = s.toString()
+                 firstName = s.toString()
+            }
+        })
+
+        editTextLastName.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable?) {
+                updateLastName = s.toString()
+                lastName = s.toString()
+            }
+        })
+
+
         window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         show()
     }
@@ -823,12 +840,12 @@ private fun dialogChangeName(context: Context?) {
     private fun dialogEmailVerification(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
-            setCancelable(false)
+            setCancelable(true)
             setContentView(R.layout.dialog_email_verification)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                width = WindowManager.LayoutParams.WRAP_CONTENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
             var imageCross =  findViewById<ImageView>(R.id.imageCross)
 
@@ -910,8 +927,7 @@ private fun dialogChangeName(context: Context?) {
     ) {
         lifecycleScope.launch {
             completeProfileViewModel.phoneVerification(userId,
-                code,
-                number
+                code, number
             ).collect {
                 when (it) {
                     is NetworkResult.Success -> {
@@ -943,6 +959,7 @@ private fun dialogChangeName(context: Context?) {
         dialog.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_otp_verification)
+
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT

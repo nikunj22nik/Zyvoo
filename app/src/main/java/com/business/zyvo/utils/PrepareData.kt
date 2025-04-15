@@ -402,7 +402,6 @@ object PrepareData {
 
     fun getHourMinimumList(): MutableList<ItemRadio> {
         return mutableListOf(
-            ItemRadio("1 hour minimum", false),
             ItemRadio("2 hour minimum", false),
             ItemRadio("3 hour minimum", false),
             ItemRadio("4 hour minimum", false),

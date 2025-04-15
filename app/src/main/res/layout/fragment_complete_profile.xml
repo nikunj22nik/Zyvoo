@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-
     <data>
         <variable
             name="user"
@@ -51,7 +47,7 @@
                 android:layout_height="@dimen/_75sdp"
                 android:background="@drawable/profle_picture_ring"
                 android:padding="@dimen/_15sdp"
-                android:src="@drawable/image_hotel"
+                android:src="@drawable/ic_img_not_found"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -72,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:fontFamily="@font/poppins"
-                android:hint="Hey James"
+                android:hint="Hey Guest"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
@@ -130,10 +126,12 @@
                 android:fontFamily="@font/poppins"
                 android:padding="@dimen/_4sdp"
                 android:textColor="@color/black"
-                android:text="Before you can book or host  on the platform the\n name on Id must match verification documents."
-                android:textSize="@dimen/_7ssp"
+                android:text="Before you can book or host  on the platform the name on Id must match verification documents."
+                android:textSize="@dimen/_9ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="@dimen/_5sdp"
+
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.cardview.widget.CardView>
@@ -346,8 +344,9 @@
             android:background="@drawable/button_grey_line_bg"
             android:fontFamily="@font/poppins"
             android:inputType="textMultiLine"
+            android:enabled="false"
             android:padding="@dimen/_10sdp"
-            android:hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
+            android:hint="Describe yourself"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="@dimen/_10ssp"
@@ -613,4 +612,5 @@
 
 
 </ScrollView>
+
 </layout>

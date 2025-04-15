@@ -913,6 +913,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         var seekBar = binding.seekBar
 
         val heights = arrayOf(5f, 3f, 4f, 7f, 8f, 15f, 13f, 12f, 10f, 5f, 17f, 16f, 13f, 12f, 8f,
+            13f,10f,6f,9f,11f,7f,5f, 3f, 4f, 7f, 8f, 15f, 13f, 12f, 10f, 5f, 17f, 16f, 13f, 12f, 8f,
             13f,10f,6f,9f,11f,7f)
 
         for (i in heights.indices) {
@@ -921,8 +922,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         seekBar.setEntries(barEntrys)
 
         seekBar.onRangeChanged = { leftPinValue, rightPinValue ->
-            val leftVal = (leftPinValue?.toInt()?.div(2))?.times(10)
-            val rightVal = (rightPinValue?.toInt()?.div(2))?.times(10)
+            val leftVal = (leftPinValue?.toInt()?.div(2))?.times(100)
+            val rightVal = (rightPinValue?.toInt()?.div(2))?.times(100)
             binding.tvMinimumVal.text = "$"+leftVal.toString()
             min = leftVal.toString()
             binding.tvMaximumValue.text = "$"+rightVal.toString()

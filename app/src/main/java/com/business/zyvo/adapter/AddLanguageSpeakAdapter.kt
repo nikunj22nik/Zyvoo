@@ -21,8 +21,7 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
     private val uploadLanguageFixed = 0
     private  var textAddNew : TextView? = null
 
-    inner class LanguageViewHolder(var binding: LayoutAddLanguageBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+    inner class LanguageViewHolder(var binding: LayoutAddLanguageBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(languageItem: AddLanguageModel) {
 
             binding.textMyWorkName.text = languageItem.name

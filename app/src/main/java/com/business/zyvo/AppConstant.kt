@@ -6,6 +6,10 @@ import com.business.zyvo.model.CountryLanguage
 class AppConstant {
 
     companion object {
+
+        val VALID_PHONE :String ="Please enter a valid phone."
+        val VALID_EMAIL: String ="Please enter a valid email ID."
+        val VALID_PASSWORD :String ="Password should be minimum eight characters long and should" +"at least have one numeric, one alphabetic and one special character."
         val WISH: String? ="WISH"
         val NOTIFICATION: String ="Notification"
         val FRIEND_ID: String? ="FRIENDiD"
@@ -177,7 +181,7 @@ class AppConstant {
         val email = "Email Address is required"
         val password = "Password is required"
         val conPassword = "Confirm Password is required"
-        val mobile = "Mobile is required "
+        val mobile = "Mobile is required."
         val locationCheck = "Please Add Location Details"
         val workCheck = "Please Add Work Details"
         val languageCheck = "Please Add Language Details"

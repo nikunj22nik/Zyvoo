@@ -335,28 +335,26 @@ class RangeBarWithChart @JvmOverloads constructor(
         }
 
         calculateSelectedItemsSize()
+
+        //cal
         calculateSelectedEntriesSize()
 
         drawChart()
     }
 
-    /**
-     * Styling data for chart
-     * @param dataSet passed prepared data for chart
-     * @param isSelected indicate selected part of chart
-     * */
+
     private fun styleDataSet(dataSet: BarDataSet, isSelected: Boolean = false): BarDataSet {
         if (!isSelected) {
             dataSet.apply {
-
                 color = chartUnSelectedLineColor
             }
-        } else {
+        }
+        else {
             dataSet.apply {
-
                 color = chartSelectedLineColor
             }
         }
+
         dataSet.apply {
 
             setDrawValues(false)
@@ -385,40 +383,19 @@ class RangeBarWithChart @JvmOverloads constructor(
             chartUnselectedBackgroundColor
         )
 
-        chartSelectedLineColor = typedArray.getColor(
-            R.styleable.PriceRangeBar_barChartSelectedLineColor,
-            chartSelectedLineColor
-        )
+        chartSelectedLineColor = typedArray.getColor(R.styleable.PriceRangeBar_barChartSelectedLineColor, chartSelectedLineColor)
 
-        chartUnSelectedLineColor = typedArray.getColor(
-            R.styleable.PriceRangeBar_barChartUnSelectedLineColor,
-            chartUnSelectedLineColor
-        )
+        chartUnSelectedLineColor = typedArray.getColor(R.styleable.PriceRangeBar_barChartUnSelectedLineColor, chartUnSelectedLineColor)
 
-        selectedSeekColor = typedArray.getColor(
-            R.styleable.PriceRangeBar_barActiveLineColor,
-            selectedSeekColor
-        )
+        selectedSeekColor = typedArray.getColor(R.styleable.PriceRangeBar_barActiveLineColor, selectedSeekColor)
 
-        unselectedSeekColor = typedArray.getColor(
-            R.styleable.PriceRangeBar_barLineColor,
-            unselectedSeekColor
-        )
+        unselectedSeekColor = typedArray.getColor(R.styleable.PriceRangeBar_barLineColor, unselectedSeekColor)
 
-        thumbColor = typedArray.getColor(
-            R.styleable.PriceRangeBar_barThumbColor,
-            thumbColor
-        )
+        thumbColor = typedArray.getColor(R.styleable.PriceRangeBar_barThumbColor, thumbColor)
 
-        thumbActiveColor = typedArray.getColor(
-            R.styleable.PriceRangeBar_barActiveThumbColor,
-            thumbActiveColor
-        )
+        thumbActiveColor = typedArray.getColor(R.styleable.PriceRangeBar_barActiveThumbColor, thumbActiveColor)
 
-        tickRadius = typedArray.getDimension(
-            R.styleable.PriceRangeBar_barActiveTickRadius,
-            tickRadius
-        )
+        tickRadius = typedArray.getDimension(R.styleable.PriceRangeBar_barActiveTickRadius, tickRadius)
 
         typedArray.recycle()
     }

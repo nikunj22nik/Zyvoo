@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Date
+import java.util.regex.Pattern
 
 class SessionManager(var context: Context) {
 
@@ -279,6 +280,27 @@ class SessionManager(var context: Context) {
             // Return false if the date format is incorrect
             false
         }
+    }
+
+    fun isValidEmailOrPhone(input: String): Boolean {
+        val pattern = """^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$|^\+?[0-9]{10,15}$"""
+        val regex = Pattern.compile(pattern)
+        val matcher = regex.matcher(input)
+        return matcher.matches()
+    }
+
+    fun isValidPassword(password: String): Boolean {
+        // val pattern = """^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"""
+        val pattern = """^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"""
+        val regex = Pattern.compile(pattern)
+        val matcher = regex.matcher(password)
+        return matcher.matches()
+    }
+
+    fun isPhoneNumber(input: String): Boolean {
+        val phonePattern = """^\+?[0-9]{10,15}$"""
+        val regex = Pattern.compile(phonePattern)
+        return regex.matcher(input).matches()
     }
 
 
