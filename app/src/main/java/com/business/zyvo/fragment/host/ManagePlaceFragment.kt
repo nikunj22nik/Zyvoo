@@ -1213,11 +1213,28 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 //                    }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
-                        context?.let { openGallery() }
+                        Log.d("nikunjcheckPosition",position.toString())
+                        context?.let {
+                            if (position <= 5){
+                                openGallery()
+                            }else{
+                                Toast.makeText(requireContext(), "You can only add 5 images to one property.", Toast.LENGTH_LONG).show();
+
+                            }
+
+                        }
                     } else {
                         if (hasPermissions(requireContext(), *permissions())) {
+                            Log.d("nikunjcheckPosition",position.toString())
                             //Do our task
-                            context?.let { openGallery() }
+                            context?.let {
+                                if (position <= 5){
+                                    openGallery()
+                                }else{
+                                    Toast.makeText(requireContext(), "You can only add 5 images to one property.", Toast.LENGTH_LONG).show();
+
+                                }
+                            }
                         } else {
                             requestPermission();
                         }
