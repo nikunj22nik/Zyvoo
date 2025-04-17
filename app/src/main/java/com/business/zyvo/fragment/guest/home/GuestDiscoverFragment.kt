@@ -144,6 +144,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     private var initialstartTime: Long = 0
     private var bookings:Bookings? = null
     private var property:PropertyData?=null
+    private  var wishOpen : Boolean = false
 
 
 
@@ -456,6 +457,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
    private fun showAddWishlistDialog(property_id: String,pos: Int) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+       wishOpen = true
         dialog?.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_add_wishlist)
@@ -474,6 +476,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             dialogAdapter.setOnItemClickListener(object:WishlistAdapter.onItemClickListener{
                 override fun onItemClick(position: Int, wish: WishlistItem) {
                     try {
+                        wishOpen = false
                         saveItemInWishlist(property_id, position,wish.wishlist_id.toString(),
                             dialog)
                     }catch (e:Exception){
@@ -485,6 +488,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         val rvWishList : RecyclerView =  findViewById(R.id.rvWishList)
             rvWishList.adapter = dialogAdapter
             findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                wishOpen = false
                 dismiss()
             }
       findViewById<TextView>(R.id.textCreateWishList).setOnClickListener {
@@ -518,6 +522,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
             val etName =    findViewById<EditText>(R.id.etName)
             findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                wishOpen = false
                 dismiss()
             }
             findViewById<TextView>(R.id.textCreate).setOnClickListener {
@@ -530,11 +535,13 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     etDescription.requestFocus()
                     showToast(requireContext(),AppConstant.description)
                 }else{
+                    wishOpen = false
                     createWishlist(etName.text.toString(),etDescription.text.toString(),
                         property_id,dialog,pos)
                 }
             }
             findViewById<TextView>(R.id.textClear).setOnClickListener {
+                wishOpen = false
                 dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -691,6 +698,10 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     override fun itemClick(obj: Int, text: String) {
         when(text){
             "Add Wish"->{
+                //vipin
+                if (wishOpen){
+                    return
+                }
                 showAddWishlistDialog(homePropertyData?.get(obj)?.property_id.toString(),obj)
             }
             "Remove Wish"->{

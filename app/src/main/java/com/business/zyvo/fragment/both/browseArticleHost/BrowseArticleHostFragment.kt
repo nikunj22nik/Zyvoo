@@ -160,6 +160,7 @@ class BrowseArticleHostFragment : Fragment() {
                     is NetworkResult.Success -> {
                         val model = Gson().fromJson(it.data, BrowseArticleModel::class.java)
 
+                        Log.d("checkDataList",model.data.toString())
                             if (!model.data.isNullOrEmpty()){
                                 binding.textNoDataFound.visibility = View.GONE
                                 binding.recyclerNewArticles.visibility = View.VISIBLE

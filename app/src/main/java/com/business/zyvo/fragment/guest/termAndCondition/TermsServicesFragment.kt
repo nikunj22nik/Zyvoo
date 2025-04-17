@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -23,6 +24,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @AndroidEntryPoint
 class TermsServicesFragment : Fragment() ,OnClickListener{
@@ -55,6 +58,7 @@ class TermsServicesFragment : Fragment() ,OnClickListener{
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageBackButton.setOnClickListener(this)
@@ -85,22 +89,38 @@ class TermsServicesFragment : Fragment() ,OnClickListener{
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getTermsAndCondition() {
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.getTermCondition().collect{
                 when(it){
 
                     is NetworkResult.Success -> {
-                        if (it.data != null){
-                            Log.d("checkDataTerms",it.data)
+                        try {
 
-                            val termsText = it.data
+
+                        if (it.data != null){
+                            Log.d("checkDataTerms",it.data.first)
+
+                            if (it.data.second != null){
+                                // Parse the input string to a ZonedDateTime
+                                val zonedDateTime = ZonedDateTime.parse(it.data.second)
+
+                                // Format the date to "dd/MM/yyyy"
+                                val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                                val formattedDate = zonedDateTime.format(outputFormatter)
+                                binding.textLastUpdate.text = "Last Updated "+formattedDate
+                            }
+                            val termsText = it.data.first
                             binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 Html.fromHtml(termsText, Html.FROM_HTML_MODE_LEGACY)
                             } else {
                                 Html.fromHtml(termsText)
                             }
 
+                        }
+                        }catch (e :Exception){
+                            e.printStackTrace()
                         }
 
 

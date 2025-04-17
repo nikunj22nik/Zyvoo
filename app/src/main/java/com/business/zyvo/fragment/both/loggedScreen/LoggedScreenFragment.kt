@@ -1431,7 +1431,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
             textTimeResend.text = "${"00"}:${"00"} sec"
 
-            if (textTimeResend.text == "${"00"}:${"00"} sec") {
+            if (textTimeResend.text.toString() == "${"00"}:${"00"} sec") {
                 resendEnabled = true
                 textResend.setTextColor(
                     ContextCompat.getColor(context, R.color.scroll_bar_color)
@@ -1442,6 +1442,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
             textSubmitButton.setOnClickListener {
              //   toggleLoginButtonEnabled(false, textSubmitButton)
+                if (textTimeResend.text.toString() == "${"00"}:${"00"} sec") {
+                    resendEnabled = true
+                    textResend.setTextColor(
+                        ContextCompat.getColor(context, R.color.scroll_bar_color)
+                    )
+
                 if (text == "Your password has been changed\n successfully.") {
                     if (NetworkMonitorCheck._isConnected.value)   {
 
@@ -1458,7 +1464,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                         findViewById<EditText>(R.id.otp_digit2).text.toString() +
                                         findViewById<EditText>(R.id.otp_digit3).text.toString() +
                                         findViewById<EditText>(R.id.otp_digit4).text.toString()
-                                otpVerifyForgotPassword(userId, otp, dialog, textSubmitButton, text)
+                                if (otp.length == 4){
+                                    otpVerifyForgotPassword(userId, otp, dialog, textSubmitButton, text)
+                                }else{
+                                    LoadingUtils.showErrorDialog(requireContext(),"Please enter the complete OTP.")
+                                }
+
                             }
                         }
                     } else {
@@ -1480,7 +1491,19 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                         findViewById<EditText>(R.id.otp_digit2).text.toString() +
                                         findViewById<EditText>(R.id.otp_digit3).text.toString() +
                                         findViewById<EditText>(R.id.otp_digit4).text.toString()
-                                otpVerifyLoginPhone(userId, otp,dialog, textSubmitButton, checkBox, number)
+                                if (otp.length == 4) {
+                                    otpVerifyLoginPhone(
+                                        userId,
+                                        otp,
+                                        dialog,
+                                        textSubmitButton,
+                                        checkBox,
+                                        number
+                                    )
+                                }
+                                else{
+                                    LoadingUtils.showErrorDialog(requireContext(),"Please enter the complete OTP.")
+                                }
                             }
                         }
                     } else {
@@ -1512,6 +1535,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                     otpVerifySignupPhone(userId, otp, dialog, textSubmitButton, checkBox, text, number, "mobile")
                                 }
                                 if (otpType.equals("RegisterEmail")) {
+                                    if (otp.length == 4) {
                                     otpVerifySignupEmail(
                                         userId, otp, dialog, textSubmitButton,
                                         checkBox,
@@ -1519,6 +1543,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                         number,
                                         "email"
                                     )
+                                }else{
+                                        LoadingUtils.showErrorDialog(requireContext(),"Please enter the complete OTP.")
+                                    }
+
                                 }
                             }
                         }
@@ -1529,6 +1557,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         )
                         toggleLoginButtonEnabled(true, textSubmitButton)
                     }
+                }
+
                 }
             }
 
@@ -2028,14 +2058,17 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 val f = android.icu.text.DecimalFormat("00")
                 val min = (millisUntilFinished / 60000) % 60
                 val sec = (millisUntilFinished / 1000) % 60
+                textResend.isEnabled = false
                 textTimeResend.text = "${f.format(min)}:${f.format(sec)} sec"
             }
 
             override fun onFinish() {
                 textTimeResend.text = "00:00"
                 rlResendLine.visibility = View.GONE
+                textResend.isEnabled = true
                 if (textTimeResend.text == "00:00") {
                     resendEnabled = true
+
                     textResend.setTextColor(
                         ContextCompat.getColor(
                             context,

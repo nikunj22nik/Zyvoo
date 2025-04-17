@@ -204,7 +204,7 @@ class AppConstant {
         val message = "Message is required"
         val emailValid = "Please enter a valid email"
 
-        val description = "Name is Description"
+        val description = "Description is required"
 
 
         val placeOpenActivity = "placeOpenActivity"

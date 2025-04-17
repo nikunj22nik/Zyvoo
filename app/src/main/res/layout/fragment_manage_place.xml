@@ -336,6 +336,7 @@
                             android:layout_marginTop="@dimen/_3sdp"
                             android:background="@null"
                             android:hint="Type.."
+                            android:maxLength="4"
                             android:inputType="number"
                             android:textColor="#3F3D56" />
 
@@ -463,6 +464,7 @@
                             android:layout_marginTop="@dimen/_3sdp"
                             android:background="@null"
                             android:hint="Type.."
+                            android:maxLength="4"
                             android:inputType="number"
                             android:textColor="#3F3D56" />
 
@@ -616,6 +618,7 @@
                             android:layout_marginTop="@dimen/_3sdp"
                             android:background="@null"
                             android:hint="Type.."
+                            android:maxLength="4"
                             android:inputType="number"
                             android:textColor="#3F3D56" />
 
@@ -769,6 +772,7 @@
                             android:layout_marginTop="@dimen/_3sdp"
                             android:background="@null"
                             android:hint="Type.."
+                            android:maxLength="4"
                             android:inputType="number"
                             android:textColor="#3F3D56" />
 

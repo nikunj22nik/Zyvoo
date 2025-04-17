@@ -2250,7 +2250,7 @@ import javax.inject.Inject
     }
 
 
-    override suspend fun getPrivacyPolicy(): Flow<NetworkResult<String>> = flow {
+    override suspend fun getPrivacyPolicy(): Flow<NetworkResult<Pair<String,String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.getPrivacyPolicy().apply {
@@ -2291,7 +2291,7 @@ import javax.inject.Inject
     }
 
 
-    override suspend fun getTermCondition(): Flow<NetworkResult<String>> = flow {
+    override suspend fun getTermCondition(): Flow<NetworkResult<Pair<String,String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             api.getTermCondition().apply {

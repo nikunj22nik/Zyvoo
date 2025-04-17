@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -21,6 +22,8 @@ import com.business.zyvo.fragment.guest.privacy.viewModel.PrivacyPolicyViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 
 @AndroidEntryPoint
@@ -57,6 +60,7 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
         return binding.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageBackButton.setOnClickListener(this)
@@ -86,16 +90,28 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun getPrivacyPolicy() {
         lifecycleScope.launch {
             viewModel.getPrivacyPolicy().collect{
                 when(it){
 
                     is NetworkResult.Success -> {
-                        if (it.data != null){
-                            Log.d("checkDataPrivacy",it.data)
+                        try {
 
-                            val termsText = it.data
+
+                        if (it.data != null){
+                            Log.d("checkDataPrivacy",it.data.first)
+                            if (it.data.second != null){
+                                // Parse the input string to a ZonedDateTime
+                                val zonedDateTime = ZonedDateTime.parse(it.data.second)
+
+                                // Format the date to "dd/MM/yyyy"
+                                val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                                val formattedDate = zonedDateTime.format(outputFormatter)
+                                binding.textLastUpdate.text = "Last Updated "+formattedDate
+                            }
+                            val termsText = it.data.first
                             binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 Html.fromHtml(termsText, Html.FROM_HTML_MODE_LEGACY)
                             } else {
@@ -103,7 +119,9 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
                             }
 
                         }
-
+                        }catch (e:Exception){
+                            e.printStackTrace()
+                        }
 
                     }
                     is NetworkResult.Error -> {

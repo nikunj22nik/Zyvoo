@@ -61,6 +61,27 @@
                 android:text="Terms And Condition"
                 android:textColor="@color/black"
                 app:layout_constraintTop_toBottomOf="@+id/llHeader" />
+            <TextView
+                android:id="@+id/textLastUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10ssp"
+                android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_11ssp"
+                android:textStyle="normal"
+                android:text=""
+                android:textColor="#807B7B" />
+
+
+            <View
+                android:id="@+id/viewHead1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginHorizontal="@dimen/_10ssp"
+                android:background="#C4C4C4C4"
+                android:layout_marginBottom="@dimen/_10ssp"
+                app:layout_constraintTop_toBottomOf="@+id/textLastUpdate" />
+
 
             <TextView
                 android:id="@+id/textDescription"
