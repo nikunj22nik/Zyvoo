@@ -3,6 +3,7 @@ package com.business.zyvo.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -16,6 +17,7 @@ import com.business.zyvo.model.WishListModel
 
 class WishlistAdapter(var context: Context, private val isSmall: Boolean,
                       var list: MutableList<WishlistItem>,
+                      var edit: Boolean,
                       var listener: OnClickListener?) :
     RecyclerView.Adapter<WishlistAdapter.WishlistViewHolder>() {
 
@@ -49,6 +51,9 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean,
                // listener?.itemClick(position)
             mListener.onItemClick(position,currentItem)
             }
+            binding.imageCross.setOnClickListener {
+                listener?.itemClick(position)
+            }
 
           //   Adjust size based on isSmall flag using dimensions from dimens.xml
             val resources = itemView.context.resources
@@ -64,6 +69,13 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean,
                 height = imageHeight
             }
             binding.imageWishList.requestLayout()
+
+            if (edit) {
+                binding.imageCross.visibility = View.VISIBLE
+            } else {
+                binding.imageCross.visibility = View.GONE
+            }
+
         }
         }
 
@@ -83,5 +95,10 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean,
     fun updateItem(newItem : MutableList<WishlistItem>){
         this.list = newItem
         notifyDataSetChanged()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateEditMode(isEdit: Boolean) {
+        this.edit = isEdit
+        notifyDataSetChanged() // Notify the adapter to refresh the views
     }
 }

@@ -23,15 +23,6 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
 
     val isLoading = MutableLiveData<Boolean>()
 
-    private val _paymentCardList = MutableLiveData<MutableList<AddPaymentCardModel>>()
-    val paymentCardList : LiveData<MutableList<AddPaymentCardModel>> get() =  _paymentCardList
-
-
-
-
-    init {
-        loadPaymentDetail()
-    }
 
     suspend fun updatePhoneNumber(
         userId :Int,
@@ -39,7 +30,15 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         countryCode :String
     ) :Flow<NetworkResult<String>>{
         return repository.updatePhoneNumber(userId, phoneNumber, countryCode).onEach {
-
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
         }
     }
 
@@ -48,40 +47,47 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         otp :String
     ) : Flow<NetworkResult<String>>{
        return repository.otpVerifyUpdatePhoneNumber(userId, otp).onEach {
-
+           when(it){
+               is NetworkResult.Loading -> {
+                   isLoading.value = true
+               } is NetworkResult.Success -> {
+               isLoading.value = false
+           } else -> {
+               isLoading.value = false
+           }
+           }
        }
     }
 
     suspend fun otpResetPassword(userId :Int) : Flow<NetworkResult<Pair<String,String>>>{
         return repository.otpResetPassword(userId).onEach {
-
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
         }
     }
 
-    private fun loadPaymentDetail(){
-        val paymentList = mutableListOf<AddPaymentCardModel>(
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888")
-        )
-
-        _paymentCardList.value = paymentList
-
-    }
 
     suspend fun updateEmail(
         @Field("user_id") userId :Int,
         @Field("email") email :String
     ) :Flow<NetworkResult<String>>{
         return repository.updateEmail(userId, email).onEach {
-
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
         }
     }
 
@@ -106,7 +112,15 @@ class ProfileViewModel  @Inject constructor(private val repository: ZyvoReposito
         otp :String
     ):Flow<NetworkResult<String>>{
         return repository.otpVerifyUpdateEmail(userId,otp).onEach {
-
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
         }
     }
 

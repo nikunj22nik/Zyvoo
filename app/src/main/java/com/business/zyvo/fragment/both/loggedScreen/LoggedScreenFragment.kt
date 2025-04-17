@@ -554,7 +554,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
 
             R.id.textDiscover -> {
-                dialogLogin(requireContext())
+                latitude.takeIf { it.isNotEmpty() }?.let {
+                    longitude.takeIf { it.isNotEmpty() }?.let {
+                        loadHomeApi()
+                    }
+                }
+
             }
 
 
@@ -578,7 +583,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     fun dialogLogin(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
-            setCancelable(false)
+            setCancelable(true)
             setContentView(R.layout.dialog_login)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
@@ -849,14 +854,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val checkBox = findViewById<CheckBox>(R.id.checkBox)
             val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
             val textForget = findViewById<TextView>(R.id.textForget)
+
             val imgHidePass = findViewById<ImageView>(R.id.imgHidePass)
             val imgShowPass = findViewById<ImageView>(R.id.imgShowPass)
+
             val textDontHaveAnAccount = findViewById<TextView>(R.id.textDontHaveAnAccount)
             val textRegister = findViewById<TextView>(R.id.textRegister)
 
             val etLoginEmail = findViewById<EditText>(R.id.etLoginEmail)
             val etLoginPassword = findViewById<EditText>(R.id.etLoginPassword)
-
             eyeHideShow(imgHidePass, imgShowPass, etLoginPassword)
 
             textRegister.setOnClickListener {
@@ -873,10 +879,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 if (NetworkMonitorCheck._isConnected.value) {
                     lifecycleScope.launch(Dispatchers.Main) {
                         if (etLoginEmail.text!!.isEmpty()) {
-                            etLoginEmail.error = "Email Address required"
+                            etLoginEmail.error = "Email address required"
                             showErrorDialog(requireContext(),AppConstant.email)
                             toggleLoginButtonEnabled(true, textLoginButton)
-                        }else if (etLoginPassword.text!!.isEmpty()) {
+                        }else if (!isValidEmail(etLoginEmail.text.toString())){
+                            etLoginEmail.error = "Invalid email address"
+                            showErrorDialog(requireContext(),AppConstant.invalideemail)
+                            toggleLoginButtonEnabled(true, textLoginButton)
+                        }
+                        else if (etLoginPassword.text!!.isEmpty()) {
                             etLoginPassword.error = "Password required"
                             showErrorDialog(requireContext(),AppConstant.password)
                             toggleLoginButtonEnabled(true, textLoginButton)
@@ -996,6 +1007,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         dialog?.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_register_email)
+
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
@@ -1011,6 +1023,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val etRegisterEmail = findViewById<EditText>(R.id.etRegisterEmail)
             val etRegisterPassword = findViewById<EditText>(R.id.etRegisterPassword)
 
+            val imgHidePass = findViewById<ImageView>(R.id.imgHidePass)
+            val imgShowPass = findViewById<ImageView>(R.id.imgShowPass)
+
+            eyeHideShow(imgHidePass, imgShowPass, etRegisterPassword)
+
             textLoginHere.setOnClickListener {
                 dialogLoginEmail(context)
                 dismiss()
@@ -1019,11 +1036,16 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 toggleLoginButtonEnabled(false, textCreateAccountButton)
                 if (NetworkMonitorCheck._isConnected.value) {
                     lifecycleScope.launch(Dispatchers.Main) {
-                        if (etRegisterEmail.text!!.isEmpty()) {
+                        if (etRegisterEmail.text.isEmpty()) {
                             etRegisterEmail.error = "Email Address required"
                             showErrorDialog(requireContext(),AppConstant.email)
                             toggleLoginButtonEnabled(true, textCreateAccountButton)
-                        }else if (etRegisterPassword.text!!.isEmpty()) {
+                        }else if (!isValidEmail(etRegisterEmail.text.toString())){
+                            etRegisterEmail.error = "Invalid Email Address"
+                            showErrorDialog(requireContext(),AppConstant.invalideemail)
+                            toggleLoginButtonEnabled(true, textCreateAccountButton)
+                        }
+                        else if (etRegisterPassword.text.isEmpty()) {
                             etRegisterPassword.error = "Password required"
                             showErrorDialog(requireContext(),AppConstant.password)
                             toggleLoginButtonEnabled(true, textCreateAccountButton)
@@ -1115,7 +1137,12 @@ if (isValidEmail(etEmail.text!!.toString().trim())){
         etEmail.error = "Email Address required"
         showErrorDialog(requireContext(),AppConstant.email)
         toggleLoginButtonEnabled(true, textSubmitButton)
-    } else {
+    }else if (!isValidEmail(etEmail.text.toString())){
+        etEmail.error = "Invalid Email Address"
+        showErrorDialog(requireContext(),AppConstant.invalideemail)
+        toggleLoginButtonEnabled(true, textSubmitButton)
+    }
+    else {
         lifecycleScope.launch(Dispatchers.Main) {
             forgotPassword(
                 etEmail.text.toString(),
@@ -1283,11 +1310,32 @@ if (isValidEmail(etEmail.text!!.toString().trim())){
                     override fun onTextChanged(s: CharSequence, start: Int, before: Int,
                                                count: Int
                     ) {
-                        if (s.length == 1 && index < otpDigits.size - 1) {
+                        val currentEditText = otpDigits.get(index)
+                        if (s.length == 1) {
+                            // Set background color when a value is entered
+                            currentEditText.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.otp_fill_box))
+
+                            // Move to next EditText
+                            if (index < otpDigits.size - 1) {
+                                otpDigits.get(index + 1).requestFocus()
+                            }
+
+                        } else if (s.isEmpty()) {
+                            // Set default background color when value is removed
+                            currentEditText.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.otp_box))
+
+                            // Move to previous EditText
+                            if (index > 0) {
+                                otpDigits.get(index - 1).requestFocus()
+                            }
+                        }
+
+                       /* if (s.length == 1 && index < otpDigits.size - 1) {
                             otpDigits.get(index + 1).requestFocus()
+
                         } else if (s.length == 0 && index > 0) {
                             otpDigits.get(index - 1).requestFocus()
-                        }
+                        }*/
                     }
 
                     override fun afterTextChanged(s: Editable) {}
@@ -1938,7 +1986,30 @@ if (isValidEmail(etEmail.text!!.toString().trim())){
             }
             val imageCross = findViewById<ImageView>(R.id.imageCross)
             val etPassword = findViewById<EditText>(R.id.etPassword)
+            val imgCorrectSign1 = findViewById<ImageView>(R.id.imgCorrectSign1)
+            val imgWrongSign1 = findViewById<ImageView>(R.id.imgWrongSign1)
             val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
+            etConfirmPassword.addTextChangedListener(object : TextWatcher{
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    val password = etPassword.text.toString()
+                    val confirmPassword = p0.toString()
+                    if (confirmPassword.isEmpty()) {
+                        imgCorrectSign1.visibility = View.GONE
+                        imgWrongSign1.visibility = View.GONE
+                    } else if (password == confirmPassword) {
+                        imgCorrectSign1.visibility = View.VISIBLE
+                        imgWrongSign1.visibility = View.GONE
+                    } else {
+                        imgWrongSign1.visibility = View.VISIBLE
+                        imgCorrectSign1.visibility = View.GONE
+                    }
+                }
+                override fun afterTextChanged(p0: Editable?) {
+                }
+
+            })
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)

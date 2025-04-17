@@ -85,6 +85,7 @@ import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
@@ -100,6 +101,7 @@ import com.google.gson.reflect.TypeToken
 import com.hbb20.CountryCodePicker
 import com.stripe.android.ApiResultCallback
 import com.stripe.android.Stripe
+import com.stripe.android.model.Address
 import com.stripe.android.model.CardParams
 import com.stripe.android.model.Token
 import com.withpersona.sdk2.inquiry.Environment
@@ -274,9 +276,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
         addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf(),this)
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
-        profileViewModel.paymentCardList.observe(viewLifecycleOwner) { payment ->
-            //  addPaymentCardAdapter.updateItem(payment)
-        }
 
         session = SessionManager(requireActivity())
         Log.d("CheckUserId", session?.getUserId().toString())
@@ -1754,6 +1753,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
     private fun dialogAddCard() {
+        var street_address=""
+        var city = ""
+        var state = ""
+        var zip_code = ""
         var dateManager = DateManager(requireContext())
         val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog.apply {
@@ -1775,6 +1778,19 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val etZipCode: EditText = findViewById(R.id.etZipCode)
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+            checkBox.setOnClickListener {
+                if (checkBox.isChecked){
+                    etStreet.setText(street_address)
+                    etCity.setText(city)
+                    etState.setText(state)
+                    etZipCode.setText(zip_code)
+                }else{
+                    etStreet.text.clear()
+                    etCity.text.clear()
+                    etState.text.clear()
+                    etZipCode.text.clear()
+                }
+            }
             textMonth.setOnClickListener {
                 dateManager.showMonthSelectorDialog { selectedMonth ->
                     textMonth.text = selectedMonth
@@ -1807,12 +1823,25 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     val name: String = etCardHolderName.text.toString().trim()
                     month = dateManager.getMonthNumber(textMonth.text.toString())
                     year = textYear.text.toString().toInt()
+                    // Billing Address fields
+                    val street = etStreet.text.toString().trim()
+                    val city = etCity.text.toString().trim()
+                    val state = etState.text.toString().trim()
+                    val zip = etZipCode.text.toString().trim()
+                    // Create Address object
+                    val billingAddress = Address.Builder()
+                        .setLine1(street)
+                        .setCity(city)
+                        .setState(state)
+                        .setPostalCode(zip)
+                        .build()
                     val card = CardParams(
                         cardNumber,
                         month!!,
                         Integer.valueOf(year!!),
                         cvvNumber,
-                        name)
+                        name,
+                        address = billingAddress)
                     stripe?.createCardToken(card, null, null,
                         object : ApiResultCallback<Token> {
                             override fun onError(e: Exception) {
@@ -1833,16 +1862,32 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-            sameAsMailingAddress(etStreet,etCity,etState,etZipCode)
+            sameAsMailingAddress{mailingAddress ->
+                // Do something with the address here
+                if (mailingAddress != null) {
+                    Log.d(ErrorDialog.TAG, mailingAddress.toString())
+                    mailingAddress?.let {
+                        it.street_address?.let {
+                            street_address = it
+                        }
+                        it.city?.let {
+                            city = it
+                        }
+                        it.state?.let {
+                            state = it
+                        }
+                        it.zip_code?.let {
+                            zip_code = it
+                        }
+                    }
+                }
+            }
 
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun sameAsMailingAddress(etStreet:EditText,
-                                     etCity:EditText,
-                                     etState:EditText,
-                                     etZipCode:EditText) {
+    private fun sameAsMailingAddress(onAddressReceived: (MailingAddress?) -> Unit) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 profileViewModel.sameAsMailingAddress(session?.getUserId().toString()).collect { it ->
@@ -1851,33 +1896,23 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             it.data?.let { resp ->
                                 val mailingAddress: MailingAddress = Gson().fromJson(resp,
                                     MailingAddress::class.java)
-                                mailingAddress.let { it ->
-                                    it.street_address?.let {
-                                        etStreet.setText(it)
-                                    }
-                                    it.city?.let {
-                                        etCity.setText(it)
-                                    }
-                                    it.state?.let {
-                                        etState.setText(it)
-                                    }
-                                    it.zip_code?.let {
-                                        etZipCode.setText(it)
-                                    }
-                                }
+                                onAddressReceived(mailingAddress)
                             }
                         }
                         is NetworkResult.Error -> {
                             showErrorDialog(requireContext(), it.message!!)
+                            onAddressReceived(null)
                         }
 
                         else -> {
                             Log.v(ErrorDialog.TAG, "error::" + it.message)
+                            onAddressReceived(null)
                         }
                     }
                 }
             }
         }else{
+            onAddressReceived(null)
             showErrorDialog(requireContext(),
                 resources.getString(R.string.no_internet_dialog_msg))
         }
@@ -2116,7 +2151,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             }
                         }
                         is NetworkResult.Error -> {
-                            LoadingUtils.showSuccessDialog(requireContext(), it.message!!)
+                            showSuccessDialog(requireContext(), it.message!!)
                         }
 
                         else -> {
@@ -2464,7 +2499,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         etEmail.error = "Email Address required"
                                         showErrorDialog(requireContext(), AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
-                                    } else {
+                                    } else if (!isValidEmail(etEmail.text.toString())){
+                                        etEmail.error = "Invalid Email Address"
+                                        showErrorDialog(requireContext(),AppConstant.invalideemail)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    }else {
                                         emailVerification(
                                             userId,
                                             etEmail.text.toString(),
@@ -2618,6 +2657,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                                 userId,
                                                 otp,
                                                 dialog,
+                                                number,
                                                 textSubmitButton
                                             )
                                         }
@@ -2626,6 +2666,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                                 userId,
                                                 otp,
                                                 dialog,
+                                                number,
                                                 textSubmitButton
                                             )
                                         }
@@ -2966,6 +3007,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         userId: String,
         otp: String,
         dialog: Dialog,
+        number:String,
         text: TextView
     ) {
         lifecycleScope.launch {
@@ -2979,7 +3021,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             binding.textConfirmNow1.visibility = GONE
                             binding.textVerified1.visibility = View.VISIBLE
                             dialog.dismiss()
-                            LoadingUtils.showSuccessDialog(requireContext(),resp)
+                            showSuccessDialog(requireContext(),resp)
+                            userProfile?.let {
+                                it.phone_number = number
+                                binding.user = it
+                            }
                         }
 
                         toggleLoginButtonEnabled(true, text)
@@ -3006,6 +3052,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         userId: String,
         otp: String,
         dialog: Dialog,
+        number:String,
         text: TextView
     ) {
         lifecycleScope.launch {
@@ -3018,6 +3065,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         it.data?.let { resp ->
                             binding.textConfirmNow.visibility = GONE
                             binding.textVerified.visibility = View.VISIBLE
+                            showErrorDialog(requireContext(), resp)
+                            userProfile?.let {
+                             it.email = number
+                                binding.user = it
+                            }
                             dialog.dismiss()
                         }
 

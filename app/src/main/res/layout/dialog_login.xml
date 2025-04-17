@@ -149,7 +149,7 @@ android:layout_centerVertical="true"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/button_bg"
         android:layout_marginTop="@dimen/_10sdp"
-        android:paddingHorizontal="@dimen/_85sdp"
+        android:paddingHorizontal="@dimen/_95sdp"
         android:paddingVertical="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
@@ -161,13 +161,12 @@ android:layout_centerVertical="true"
         android:id="@+id/rlCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginHorizontal="@dimen/_20ssp"
         app:layout_constraintTop_toBottomOf="@+id/textContinueButton">
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             app:buttonTint="#4AEAB1"/>
 
         <TextView

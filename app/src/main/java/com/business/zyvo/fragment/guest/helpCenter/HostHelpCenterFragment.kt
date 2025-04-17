@@ -43,12 +43,6 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
     var session: SessionManager? = null
     var type: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,7 +73,6 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
                     .equals(AppConstant.Guest)
             ) {
                 binding.radioGuest.isChecked = true
-
                 binding.radioHost.isChecked = false
                 type = "guest"
                 Log.d("TESTING_ANDROID", "Guest")

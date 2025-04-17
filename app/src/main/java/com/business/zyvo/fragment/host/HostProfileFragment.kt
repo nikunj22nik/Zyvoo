@@ -101,6 +101,7 @@ import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
@@ -111,6 +112,7 @@ import com.google.gson.reflect.TypeToken
 import com.hbb20.CountryCodePicker
 import com.stripe.android.ApiResultCallback
 import com.stripe.android.Stripe
+import com.stripe.android.model.Address
 import com.stripe.android.model.CardParams
 import com.stripe.android.model.Token
 import com.withpersona.sdk2.inquiry.Environment
@@ -1772,7 +1774,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                         etEmail.error = "Email Address required"
                                         showErrorDialog(requireContext(), AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
-                                    } else {
+                                    } else if (!isValidEmail(etEmail.text.toString())){
+                                        etEmail.error = "Invalid Email Address"
+                                        showErrorDialog(requireContext(),AppConstant.invalideemail)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    }else {
                                         emailVerification(
                                             SessionManager(requireContext()).getUserId().toString(),
                                             etEmail.text.toString(),
@@ -3511,6 +3517,10 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
 
     private fun dialogAddCardGuest() {
+        var street_address=""
+        var city = ""
+        var state = ""
+        var zip_code = ""
         var dateManager = DateManager(requireContext())
         val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog.apply {
@@ -3532,6 +3542,19 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val etZipCode: EditText = findViewById(R.id.etZipCode)
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+            checkBox.setOnClickListener {
+                if (checkBox.isChecked){
+                    etStreet.setText(street_address)
+                    etCity.setText(city)
+                    etState.setText(state)
+                    etZipCode.setText(zip_code)
+                }else{
+                    etStreet.text.clear()
+                    etCity.text.clear()
+                    etState.text.clear()
+                    etZipCode.text.clear()
+                }
+            }
             textMonth.setOnClickListener {
                 dateManager.showMonthSelectorDialog { selectedMonth ->
                     textMonth.text = selectedMonth
@@ -3564,12 +3587,25 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     val name: String = etCardHolderName.text.toString().trim()
                     month = dateManager.getMonthNumber(textMonth.text.toString())
                     year = textYear.text.toString().toInt()
+                    // Billing Address fields
+                    val street = etStreet.text.toString().trim()
+                    val city = etCity.text.toString().trim()
+                    val state = etState.text.toString().trim()
+                    val zip = etZipCode.text.toString().trim()
+                    // Create Address object
+                    val billingAddress = Address.Builder()
+                        .setLine1(street)
+                        .setCity(city)
+                        .setState(state)
+                        .setPostalCode(zip)
+                        .build()
                     val card = CardParams(
                         cardNumber,
                         month!!,
                         Integer.valueOf(year!!),
                         cvvNumber,
-                        name)
+                        name,
+                        address = billingAddress)
                     stripe?.createCardToken(card, null, null,
                         object : ApiResultCallback<Token> {
                             override fun onError(e: Exception) {
@@ -3590,16 +3626,32 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-            sameAsMailingAddress(etStreet,etCity,etState,etZipCode)
+            sameAsMailingAddress{mailingAddress ->
+                // Do something with the address here
+                if (mailingAddress != null) {
+                    Log.d(ErrorDialog.TAG, mailingAddress.toString())
+                    mailingAddress?.let {
+                        it.street_address?.let {
+                            street_address = it
+                        }
+                        it.city?.let {
+                            city = it
+                        }
+                        it.state?.let {
+                            state = it
+                        }
+                        it.zip_code?.let {
+                            zip_code = it
+                        }
+                    }
+                }
+            }
 
         }
     }
 
 
-    private fun sameAsMailingAddress(etStreet:EditText,
-                                     etCity:EditText,
-                                     etState:EditText,
-                                     etZipCode:EditText) {
+    private fun sameAsMailingAddress(onAddressReceived: (MailingAddress?) -> Unit) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 profileViewModel.sameAsMailingAddress(session?.getUserId().toString()).collect { it ->
@@ -3608,28 +3660,17 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             it.data?.let { resp ->
                                 val mailingAddress: MailingAddress = Gson().fromJson(resp,
                                     MailingAddress::class.java)
-                                mailingAddress.let { it ->
-                                    it.street_address?.let {
-                                        etStreet.setText(it)
-                                    }
-                                    it.city?.let {
-                                        etCity.setText(it)
-                                    }
-                                    it.state?.let {
-                                        etState.setText(it)
-                                    }
-                                    it.zip_code?.let {
-                                        etZipCode.setText(it)
-                                    }
-                                }
+                                onAddressReceived(mailingAddress)
                             }
                         }
                         is NetworkResult.Error -> {
                             showErrorDialog(requireContext(), it.message!!)
+                            onAddressReceived(null)
                         }
 
                         else -> {
                             Log.v(ErrorDialog.TAG, "error::" + it.message)
+                            onAddressReceived(null)
                         }
                     }
                 }
@@ -3637,6 +3678,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }else{
             showErrorDialog(requireContext(),
                 resources.getString(R.string.no_internet_dialog_msg))
+            onAddressReceived(null)
         }
     }
 

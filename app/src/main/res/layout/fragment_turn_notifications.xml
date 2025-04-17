@@ -33,7 +33,7 @@
         android:layout_marginBottom="@dimen/_15sdp"
         android:fontFamily="@font/poppins"
         android:layout_gravity="center"
-        android:text="Turn on notifications"
+        android:text="@string/turn_on_notifications"
         android:textColor="@color/black"
         android:textSize="@dimen/_14sdp"
         android:textStyle="bold" />

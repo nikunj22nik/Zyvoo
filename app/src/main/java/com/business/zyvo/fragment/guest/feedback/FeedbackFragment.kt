@@ -168,6 +168,7 @@ class FeedbackFragment : Fragment() {
                     is NetworkResult.Success -> {
                         if (it.data != null){
                            LoadingUtils.showSuccessDialog(requireContext(),it.data)
+                            binding.etAddDetails.text.clear()
                         }
                     }
                     is NetworkResult.Error -> {

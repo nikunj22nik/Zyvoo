@@ -8,7 +8,39 @@
 android:layout_marginStart="@dimen/_10sdp"
     android:layout_marginTop="@dimen/_10sdp">
 
+    <!--<RelativeLayout
+        android:layout_width="@dimen/_135sdp"
+        android:layout_height="@dimen/_140sdp"
+        android:layout_gravity="center">
 
+        <ImageView
+            android:id="@+id/imageCross"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/_7sdp"
+            android:elevation="@dimen/_30sdp"
+            android:src="@drawable/ic_cross"
+            app:tint="@color/white"
+
+            />
+    </RelativeLayout>-->
+
+    <RelativeLayout
+        android:layout_width="@dimen/_135sdp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/imageCross"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/_7sdp"
+            android:elevation="@dimen/_30sdp"
+            android:src="@drawable/ic_cross"
+            app:tint="@color/white"
+
+            />
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/imageWishList"
         android:layout_width="@dimen/imageWishListWidthLarge"
@@ -23,6 +55,7 @@ android:layout_marginStart="@dimen/_10sdp"
         android:layout_width="@dimen/_110sdp"
         android:layout_height="wrap_content"
         android:text="Cabin in Peshastin"
+        android:layout_below="@+id/imageWishList"
         android:layout_gravity="center"
         android:fontFamily="@font/poppins"
         android:layout_marginStart="@dimen/_2sdp"
@@ -36,8 +69,9 @@ android:layout_marginStart="@dimen/_10sdp"
         android:text="4 saved"
         android:layout_gravity="center"
         android:layout_marginStart="@dimen/_2sdp"
+        android:layout_below="@+id/textTitle"
         android:fontFamily="@font/poppins"
         android:textColor="#7F7F7F"
         android:textStyle="normal"/>
-
+    </RelativeLayout>
 </LinearLayout>

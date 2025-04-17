@@ -138,4 +138,5 @@
     <string name="finished">Finished</string>
     <string name="cancelled">Cancelled</string>
     <string name="sorry_we">Sorry, we couldn’t find \n any results.</string>
+    <string name="turn_on_notifications">Turn on Notifications</string>
 </resources>

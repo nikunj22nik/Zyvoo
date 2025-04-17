@@ -174,10 +174,11 @@ class AppConstant {
             CountryLanguage("Belgium", "Dutch")
         )
         //All Error Message
-        val email = "Email Address is required"
+        val email = "Email address is required"
+        val invalideemail = "Invalid Email Address"
         val password = "Password is required"
         val conPassword = "Confirm Password is required"
-        val mobile = "Mobile is required "
+        val mobile = "Phone number is required"
         val locationCheck = "Please Add Location Details"
         val workCheck = "Please Add Work Details"
         val languageCheck = "Please Add Language Details"
@@ -186,7 +187,7 @@ class AppConstant {
         val name = "Name is required"
         val firstName = "First name is required"
         val lastName = "Last name is required"
-        val otp = "Otp is required"
+        val otp = "Please enter the OTP"
         val unKnownError = "There was an unknown error. Check your connection, and try again."
         val unknownLocation = "Unknown Location"
         val aboutMe = "AboutMe is required"

@@ -326,6 +326,10 @@ object ErrorDialog {
         return date.isEqual(today) || date.isAfter(today)
     }
 
+    fun isValidEmail(email: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
 
 
 }
