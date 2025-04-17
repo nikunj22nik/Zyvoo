@@ -5004,6 +5004,7 @@ import javax.inject.Inject
          userId: Int,
          wishListId: Int
      ): Flow<NetworkResult<JsonObject>> = flow{
+         emit(NetworkResult.Loading())
          try {
              api.getSavedItemWishList(userId, wishListId).apply {
                  if (isSuccessful) {
@@ -5029,6 +5030,7 @@ import javax.inject.Inject
           phoneNumber :String,
           countryCode :String
      ) :Flow<NetworkResult<String>> = flow{
+         emit(NetworkResult.Loading())
          try {
              api.updatePhoneNumber(userId, phoneNumber,countryCode).apply {
                  if (isSuccessful) {
@@ -5056,6 +5058,7 @@ import javax.inject.Inject
           userId :Int,
           otp :String
      ) : Flow<NetworkResult<String>> = flow{
+         emit(NetworkResult.Loading())
          try {
              api.otpVerifyUpdatePhoneNumber(userId,otp).apply {
                  if (isSuccessful) {
@@ -5081,6 +5084,7 @@ import javax.inject.Inject
          @Field("user_id") userId :Int,
          @Field("email") email :String
      ) :Flow<NetworkResult<String>> = flow{
+       emit(NetworkResult.Loading())
          try {
              api.updateEmail(userId,email).apply {
                  if (isSuccessful) {
@@ -5107,6 +5111,7 @@ import javax.inject.Inject
           userId :Int,
          otp :String
      ):Flow<NetworkResult<String>> = flow{
+         emit(NetworkResult.Loading())
          try {
              api.otpVerifyUpdateEmail(userId,otp).apply {
                  if (isSuccessful) {

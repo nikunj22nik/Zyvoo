@@ -186,7 +186,10 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            val dialogAdapter = WishlistAdapter(this@RestaurantDetailActivity,true, wishlistItem,object: OnClickListener{
+            val dialogAdapter = WishlistAdapter(this@RestaurantDetailActivity,true,
+                wishlistItem,
+                false,
+                object: OnClickListener{
                 override fun itemClick(obj: Int) {
 
                 }
@@ -631,7 +634,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
             val dialogAdapter = WishlistAdapter(this@RestaurantDetailActivity,
-                true, wishlistItem,object:
+                true, wishlistItem,false,object:
                 OnClickListener {
                 override fun itemClick(obj: Int) {
 

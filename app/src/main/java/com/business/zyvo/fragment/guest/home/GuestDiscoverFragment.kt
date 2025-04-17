@@ -466,7 +466,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            val dialogAdapter = WishlistAdapter(requireContext(),true, wishlistItem,object: OnClickListener{
+            val dialogAdapter = WishlistAdapter(requireContext(),true, wishlistItem,false,
+                object: OnClickListener{
                 override fun itemClick(obj: Int) {
 
                 }

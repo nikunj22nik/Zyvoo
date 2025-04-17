@@ -77,9 +77,15 @@ class HomeScreenAdapter(
             holder.binding.textTotal.text = "("+formatConvertCount(it)+")"
         }
 
-        currentItem.distance_miles?.let {
-            holder.binding.textMiles.text = "$it miles away"
+        if (currentItem.distance_miles.isNullOrBlank()) {
+            holder.binding.textMiles.visibility = View.GONE
+        } else {
+            holder.binding.textMiles.text = "${currentItem.distance_miles} miles away"
+            holder.binding.textMiles.visibility = View.VISIBLE
         }
+      /*  currentItem.distance_miles?.let {
+            holder.binding.textMiles.text = "$it miles away"
+        }*/
         currentItem.hourly_rate?.let {
             holder.binding.textPricePerHours.text = "$it/h"
         }

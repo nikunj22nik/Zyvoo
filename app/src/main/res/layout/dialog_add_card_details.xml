@@ -264,7 +264,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:textColor="@color/black"
         android:paddingHorizontal="@dimen/_40sdp"
-        android:paddingVertical="@dimen/_8ssp"/>
+        android:paddingVertical="@dimen/_10ssp"/>
 
 
 

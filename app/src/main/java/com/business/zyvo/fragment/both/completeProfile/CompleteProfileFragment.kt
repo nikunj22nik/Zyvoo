@@ -83,6 +83,7 @@ import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.TAG
 import com.business.zyvo.utils.ErrorDialog.customDialog
+import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.google.gson.Gson
@@ -327,12 +328,12 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     private fun setCheckVerified() {
         if ("mobile".equals(type)){
 
-            binding.textConfirmNow1.visibility = View.GONE
+            binding.textConfirmNow1.visibility = GONE
             binding.textVerified1.visibility = View.VISIBLE
         }
         if ("email".equals(type)){
 
-            binding.textConfirmNow.visibility = View.GONE
+            binding.textConfirmNow.visibility = GONE
             binding.textVerified.visibility = View.VISIBLE
         }
     }
@@ -528,8 +529,11 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                binding.cvInfo.visibility = View.VISIBLE
            }
 
+
            R.id.clHead -> {
                binding.cvInfo.visibility = View.GONE
+
+
            }
 
            R.id.imageEditPicture -> {
@@ -598,7 +602,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                    startActivity(intent)
                    requireActivity().finish()
                }else{
-                   LoadingUtils.showErrorDialog(requireContext(),"Enter your name to proceed to the next screen.")
+                   showErrorDialog(requireContext(),"Enter your name to proceed to the next screen.")
                }
            }
        }
@@ -894,8 +898,13 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                         etEmail.error = "Email Address required"
                                         showErrorDialog(requireContext(),AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
+                                    }else if (!isValidEmail(etEmail.text.toString())){
+                                        etEmail.error = "Invalid Email Address"
+                                        showErrorDialog(requireContext(),AppConstant.invalideemail)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
-                                        emailVerification(session?.getUserId().toString(),etEmail.text.toString(),dialog,textSubmitButton)
+                                        emailVerification(session?.getUserId().toString(),
+                                            etEmail.text.toString(),dialog,textSubmitButton)
                                     }
                                 }
                             }
@@ -1150,7 +1159,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                 when (it) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
-                            binding.textConfirmNow1.visibility = View.GONE
+                            binding.textConfirmNow1.visibility = GONE
                             binding.textVerified1.visibility = View.VISIBLE
                             dialog.dismiss()
                         }
@@ -1185,7 +1194,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
 
-                            binding.textConfirmNow.visibility = View.GONE
+                            binding.textConfirmNow.visibility = GONE
                             binding.textVerified.visibility = View.VISIBLE
                             dialog.dismiss()
                         }
@@ -1228,7 +1237,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             rlResendLine.visibility = View.VISIBLE
-                            incorrectOtp.visibility = View.GONE
+                            incorrectOtp.visibility = GONE
                             countDownTimer?.cancel()
                             startCountDownTimer(requireContext(),textTimeResend,rlResendLine,textResend)
                             textResend.setTextColor(
@@ -1270,7 +1279,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             rlResendLine.visibility = View.VISIBLE
-                            incorrectOtp.visibility = View.GONE
+                            incorrectOtp.visibility = GONE
                             countDownTimer?.cancel()
                             startCountDownTimer(requireContext(),textTimeResend,rlResendLine,textResend)
                             textResend.setTextColor(
@@ -1310,7 +1319,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             @SuppressLint("SetTextI18n")
             override fun onFinish() {
                 textTimeResend.text = "00:00"
-                rlResendLine.visibility = View.GONE
+                rlResendLine.visibility = GONE
                 if (textTimeResend.text == "00:00") {
                     resendEnabled = true
                     textResend.setTextColor(
@@ -1488,7 +1497,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             lifecycleScope.launch(Dispatchers.Main) {
                 LoadingUtils.showDialog(requireContext(), false)
                 val session = SessionManager(requireContext())
-                completeProfileViewModel.getUserProfile(session?.getUserId().toString()).collect {
+                completeProfileViewModel.getUserProfile(session.getUserId().toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             var name = ""
@@ -1613,7 +1622,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                 }
             }
         } else {
-            LoadingUtils.showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
+            showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 

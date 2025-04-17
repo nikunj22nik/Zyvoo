@@ -25,6 +25,7 @@ class ProfileViewModel @Inject constructor(
 
     val isLoading = MutableLiveData<Boolean>()
 
+
     private val _paymentCardList = MutableLiveData<MutableList<AddPaymentCardModel>>()
     val paymentCardList: LiveData<MutableList<AddPaymentCardModel>> get() = _paymentCardList
 
@@ -33,30 +34,59 @@ class ProfileViewModel @Inject constructor(
         loadPaymentDetail()
     }
 
+
     suspend fun updatePhoneNumber(
         userId: Int,
         phoneNumber: String,
         countryCode: String
     ): Flow<NetworkResult<String>> {
         return repository.updatePhoneNumber(userId, phoneNumber, countryCode).onEach {
-
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
         }
     }
 
     suspend fun otpVerifyUpdatePhoneNumber(
+
         userId: Int,
         otp: String
     ): Flow<NetworkResult<String>> {
-        return repository.otpVerifyUpdatePhoneNumber(userId, otp).onEach {
 
-        }
+       return repository.otpVerifyUpdatePhoneNumber(userId, otp).onEach {
+           when(it){
+               is NetworkResult.Loading -> {
+                   isLoading.value = true
+               } is NetworkResult.Success -> {
+               isLoading.value = false
+           } else -> {
+               isLoading.value = false
+           }
+           }
+       }
+
     }
 
     suspend fun otpResetPassword(userId: Int): Flow<NetworkResult<Pair<String, String>>> {
         return repository.otpResetPassword(userId).onEach {
-
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
         }
     }
+
 
     private fun loadPaymentDetail() {
         val paymentList = mutableListOf<AddPaymentCardModel>(
@@ -76,12 +106,21 @@ class ProfileViewModel @Inject constructor(
 
     }
 
+
     suspend fun updateEmail(
         @Field("user_id") userId: Int,
         @Field("email") email: String
     ): Flow<NetworkResult<String>> {
         return repository.updateEmail(userId, email).onEach {
-
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
         }
     }
 
@@ -109,7 +148,16 @@ class ProfileViewModel @Inject constructor(
         userId: Int,
         otp: String
     ): Flow<NetworkResult<String>> {
-        return repository.otpVerifyUpdateEmail(userId, otp).onEach {
+        return repository.otpVerifyUpdateEmail(userId,otp).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
 
         }
     }

@@ -17,7 +17,6 @@
             android:id="@+id/clHead"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:background="@color/white"
             tools:context=".fragment.guest.profile.ProfileFragment">
 
@@ -29,14 +28,13 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintTop_toTopOf="parent">
-
+                <!--android:src="@drawable/ic_women_image"-->
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageProfilePicture"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_100sdp"
                     android:background="@drawable/profle_picture_ring"
                     android:padding="@dimen/_17sdp"
-                    android:src="@drawable/ic_women_image"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -390,6 +388,7 @@
                 android:inputType="textMultiLine"
                 android:padding="@dimen/_10sdp"
                 android:enabled="false"
+                android:gravity="top|start"
                 android:hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
                 android:textColorHint="@color/black"
                 android:textColor="@color/black"
@@ -651,7 +650,6 @@
                     android:id="@+id/imageEditEmail"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-
                     android:layout_alignParentEnd="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:src="@drawable/ic_edit_icon"

@@ -65,6 +65,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.stripe.android.ApiResultCallback
 import com.stripe.android.Stripe
+import com.stripe.android.model.Address
 import com.stripe.android.model.CardParams
 import com.stripe.android.model.Token
 import dagger.hilt.android.AndroidEntryPoint
@@ -831,7 +832,11 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
     }
 
     private fun dialogAddCard() {
-        var dateManager = DateManager(this)
+        var street_address=""
+        var city = ""
+        var state = ""
+        var zip_code = ""
+        val dateManager = DateManager(this)
         val dialog = Dialog(this, R.style.BottomSheetDialog)
         dialog.apply {
             setCancelable(true)
@@ -852,6 +857,20 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             val etZipCode: EditText = findViewById(R.id.etZipCode)
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+            checkBox.setOnClickListener {
+                if (checkBox.isChecked){
+                    etStreet.setText(street_address)
+                    etCity.setText(city)
+                    etState.setText(state)
+                    etZipCode.setText(zip_code)
+                }else{
+                    etStreet.text.clear()
+                    etCity.text.clear()
+                    etState.text.clear()
+                    etZipCode.text.clear()
+                }
+            }
+
             textMonth.setOnClickListener {
                 dateManager.showMonthSelectorDialog { selectedMonth ->
                     textMonth.text = selectedMonth
@@ -883,12 +902,25 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     val name: String = etCardHolderName.text.toString().trim()
                     month = dateManager.getMonthNumber(textMonth.text.toString())
                     year = textYear.text.toString().toInt()
+                    // Billing Address fields
+                    val street = etStreet.text.toString().trim()
+                    val city = etCity.text.toString().trim()
+                    val state = etState.text.toString().trim()
+                    val zip = etZipCode.text.toString().trim()
+                    // Create Address object
+                    val billingAddress = Address.Builder()
+                        .setLine1(street)
+                        .setCity(city)
+                        .setState(state)
+                        .setPostalCode(zip)
+                        .build()
                     val card = CardParams(
                         cardNumber,
                         month!!,
                         Integer.valueOf(year!!),
                         cvvNumber,
-                        name
+                        name,
+                        address = billingAddress
                     )
                     stripe?.createCardToken(card, null, null,
                         object : ApiResultCallback<Token> {
@@ -910,13 +942,32 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-            sameAsMailingAddress(etStreet, etCity, etState, etZipCode)
+            sameAsMailingAddress{mailingAddress ->
+                // Do something with the address here
+                if (mailingAddress != null) {
+                    Log.d(ErrorDialog.TAG, mailingAddress.toString())
+                    mailingAddress?.let {
+                        it.street_address?.let {
+                            street_address = it
+                        }
+                        it.city?.let {
+                          city = it
+                        }
+                        it.state?.let {
+                           state = it
+                        }
+                        it.zip_code?.let {
+                            zip_code = it
+                        }
+                    }
+                }
+            }
 
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun sameAsMailingAddress(etStreet: EditText, etCity: EditText, etState: EditText, etZipCode: EditText) {
+    private fun sameAsMailingAddress(onAddressReceived: (MailingAddress?) -> Unit) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 checkOutPayViewModel.sameAsMailingAddress(session?.getUserId().toString()).collect {
@@ -925,34 +976,24 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                             it.data?.let { resp ->
                                 val mailingAddress: MailingAddress =
                                     Gson().fromJson(resp, MailingAddress::class.java)
-                                mailingAddress?.let {
-                                    it.street_address?.let {
-                                        etStreet.setText(it)
-                                    }
-                                    it.city?.let {
-                                        etCity.setText(it)
-                                    }
-                                    it.state?.let {
-                                        etState.setText(it)
-                                    }
-                                    it.zip_code?.let {
-                                        etZipCode.setText(it)
-                                    }
-                                }
+                                onAddressReceived(mailingAddress)
                             }
                         }
 
                         is NetworkResult.Error -> {
                             showErrorDialog(this@CheckOutPayActivity, it.message!!)
+                            onAddressReceived(null)
                         }
 
                         else -> {
                             Log.v(ErrorDialog.TAG, "error::" + it.message)
+                            onAddressReceived(null)
                         }
                     }
                 }
             }
         } else {
+            onAddressReceived(null)
             showErrorDialog(
                 this,
                 resources.getString(R.string.no_internet_dialog_msg)

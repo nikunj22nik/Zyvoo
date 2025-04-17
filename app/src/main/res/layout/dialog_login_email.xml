@@ -90,9 +90,10 @@
 
         <EditText
             android:id="@+id/etLoginEmail"
-            android:layout_width="@dimen/_130sdp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/_5ssp"
             android:layout_marginStart="@dimen/_10sdp"
             android:layout_toEndOf="@+id/imageEmail"
             android:background="@null"
@@ -155,7 +156,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginEnd="@dimen/_10sdp">
+            android:layout_marginEnd="@dimen/_10ssp">
 
             <ImageView
                 android:id="@+id/imgShowPass"
@@ -163,7 +164,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_10sdp"
                 android:background="@drawable/eye_show_vector"
                 android:visibility="gone"
                 tools:ignore="ContentDescription" />
@@ -173,9 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-
                 android:layout_marginStart="@dimen/_5sdp"
-                android:layout_marginEnd="@dimen/_10sdp"
                 android:background="@drawable/eye_icon_show"
                 android:visibility="visible"
                 tools:ignore="ContentDescription" />
@@ -227,7 +225,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/button_bg"
         android:layout_marginTop="@dimen/_10sdp"
-        android:paddingHorizontal="@dimen/_85sdp"
+        android:paddingHorizontal="@dimen/_98sdp"
         android:paddingVertical="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
@@ -239,13 +237,12 @@
         android:id="@+id/rlCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginHorizontal="@dimen/_30sdp"
         app:layout_constraintTop_toBottomOf="@+id/textLoginButton">
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             app:buttonTint="#4AEAB1"/>
 
         <TextView
