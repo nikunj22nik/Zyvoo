@@ -59,30 +59,60 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
     private fun sendNotification(title: String?, messageBody: String?) {
+
         val channelId = "default_channel_id"
 
-        val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setContentTitle(title)
-            .setSmallIcon(R.drawable.notification_icon)
-            .setContentText(messageBody)
-            .setAutoCancel(true)
+        val countdownDuration = 30 * 60 * 1000L
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        // Create notification channel for Android O and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT)
-            notificationManager.createNotificationChannel(channel)
-        }
+        val endTime = System.currentTimeMillis() + countdownDuration
 
-        var con= AppContextProvider.getContext()
+         if(messageBody.equals("Your Booking Will Start in 30 minutes")){
+            val notificationBuilder = NotificationCompat.Builder(this, channelId).setContentTitle(title)
+                .setSmallIcon(R.drawable.notification_icon).setUsesChronometer(true).setWhen(endTime)
+                .setChronometerCountDown(true).setOngoing(true).setContentText(messageBody).setAutoCancel(true).setTimeoutAfter(countdownDuration)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (ContextCompat.checkSelfPermission(con, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                notificationManager.notify(0, notificationBuilder.build())
-            }
-        }
+             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                 val channel = NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT)
+                 notificationManager.createNotificationChannel(channel)
+             }
+
+             var con= AppContextProvider.getContext()
+
+             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                 if (ContextCompat.checkSelfPermission(con, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                     notificationManager.notify(0, notificationBuilder.build())
+                 }
+             }
+             else{
+                 notificationManager.notify(0, notificationBuilder.build())
+             }
+         }
         else{
-            notificationManager.notify(0, notificationBuilder.build())
+            val notificationBuilder = NotificationCompat.Builder(this, channelId)
+                .setContentTitle(title)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentText(messageBody)
+                .setAutoCancel(true)
+
+             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                 val channel = NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT)
+                 notificationManager.createNotificationChannel(channel)
+             }
+
+             var con= AppContextProvider.getContext()
+
+             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                 if (ContextCompat.checkSelfPermission(con, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+                     notificationManager.notify(0, notificationBuilder.build())
+                 }
+             }
+             else{
+                 notificationManager.notify(0, notificationBuilder.build())
+             }
         }
     }
 

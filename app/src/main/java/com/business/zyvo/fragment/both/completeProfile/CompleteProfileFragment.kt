@@ -282,7 +282,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         binding.textConfirmNow1.setOnClickListener(this)
         binding.textSaveButton.setOnClickListener(this)
         binding.skipNow.setOnClickListener(this)
-
+        SessionManager(requireContext()).clearLanguage()
         adapterInitialize()
         if (session?.getName() != ""){
             binding.textName.text = session?.getName()
@@ -405,6 +405,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
                     languageList.add(languageList.size - 1, newLanguage)
                     addLanguageSpeakAdapter.updateLanguage(languageList)
+                    callingLanguageApi(local)
                     //  addLocationAdapter.notifyItemInserted(locationList.size - 1)
                     dismiss()
                 }
@@ -416,6 +417,27 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
             window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
             show()
+        }
+    }
+    private fun callingLanguageApi(languageName :String){
+        lifecycleScope.launch {
+            var userId = SessionManager(requireContext()).getUserId()
+            LoadingUtils.showDialog(requireContext(),false)
+            completeProfileViewModel.addLanguageApi(userId.toString(), languageName).collect {
+                     when(it){
+                         is NetworkResult.Success ->{
+                             LoadingUtils.hideDialog()
+                         }
+                         is NetworkResult.Error ->{
+                             LoadingUtils.hideDialog()
+                             LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                         }
+                         else ->{
+
+                         }
+                     }
+            }
+
         }
     }
 
@@ -453,6 +475,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
            profileImageGalleryChooser()
            bottomSheetDialog?.dismiss()
        }
+
+
        bottomSheetDialog?.show()
 
    }
@@ -619,6 +643,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     private val pickImageLauncher: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
+
                 result.data?.data?.let { uri ->
                     if (uri!=null) {
                         // Load image into BottomSheetDialog's ImageView if available
@@ -770,7 +795,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
  */
 
     // this function change the name of dialog
-private fun dialogChangeName(context: Context?) {
+      private fun dialogChangeName(context: Context?) {
     val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
     dialog?.apply {
         setCancelable(true)
@@ -837,7 +862,7 @@ private fun dialogChangeName(context: Context?) {
 }
 
 
-    private fun dialogEmailVerification(context: Context?){
+      private fun dialogEmailVerification(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(true)
@@ -1021,10 +1046,8 @@ private fun dialogChangeName(context: Context?) {
             startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
             countDownTimer!!.cancel()
 
-
-
-
             textTimeResend.text = "${"00"}:${"00"} sec"
+
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true
                 textResend.setTextColor(
@@ -1033,7 +1056,8 @@ private fun dialogChangeName(context: Context?) {
                         R.color.scroll_bar_color
                     )
                 )
-            } else {
+            }
+            else {
                 textResend.setTextColor(
                     ContextCompat.getColor(
                         context,
@@ -1046,7 +1070,7 @@ private fun dialogChangeName(context: Context?) {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 lifecycleScope.launch {
                     completeProfileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .distinctUntilChanged()
                         .collect { isConn ->
                             if (!isConn) {
                                 showErrorDialog(
@@ -1338,10 +1362,8 @@ private fun dialogChangeName(context: Context?) {
             }
 
             "language" ->{
-                languageList.removeAt(obj)
-                addLanguageSpeakAdapter.updateLanguage(languageList)
-
-            }
+                deleteLanguageApi(obj)
+               }
 
             "Hobbies"->{
                 hobbiesList.removeAt(obj)
@@ -1355,6 +1377,66 @@ private fun dialogChangeName(context: Context?) {
 
         }
     }
+
+    private fun deleteLanguageApi(index: Int) {
+        lifecycleScope.launch {
+            completeProfileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            lifecycleScope.launch {
+                                completeProfileViewModel.deleteLanguageApi(
+                                    session?.getUserId().toString(),
+                                    index
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            it.data?.let {
+                                                resp ->
+//                                                Toast.makeText(
+//                                                requireContext(),
+//                                                    resp.toString(),
+//                                                    Toast.LENGTH_SHORT
+//                                                ).show()
+                                                languageList.removeAt(index)
+                                                addLanguageSpeakAdapter.updateLanguage(languageList)
+                                                var savingList = mutableListOf<AddLanguageModel>()
+                                                languageList.forEach {
+                                                    var localeNew = AddLanguageModel(it.name,it.country)
+                                                    savingList.add(localeNew)
+                                                }
+
+                                                SessionManager(requireContext()).clearLanguage()
+                                                SessionManager(requireContext()).saveLanguages(requireContext(),savingList)
+
+                                            }
+                                        }
+
+                                        is NetworkResult.Error -> {
+                                            showErrorDialog(requireContext(), it.message!!)
+                                        }
+
+                                        else -> {
+                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+    }
+
+
+
+
     private fun updateName(
         first_name: String,
         last_name: String,
@@ -1432,14 +1514,10 @@ private fun dialogChangeName(context: Context?) {
                                     binding.user = it
 
                                     if (it?.profile_image != null) {
-
-                                        Glide.with(requireContext())
-                                            .asBitmap() // Convert the image into Bitmap
-                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
+                                            Glide.with(requireContext()).asBitmap().load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
                                             .into(object : SimpleTarget<Bitmap>() {
                                                 override fun onResourceReady(
-                                                    resource: Bitmap,
-                                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                                                    resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
                                                 ) {
                                                     // The 'resource' is the Bitmap
                                                     // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
@@ -1489,10 +1567,16 @@ private fun dialogChangeName(context: Context?) {
                                         languageList = getObjectsFromNames(it.languages) { name ->
                                             AddLanguageModel(name)  // Using the constructor of MyObject to create instances
                                         }
-                                        val newLanguage =
-                                            AddLanguageModel(AppConstant.unknownLocation)
+                                        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
                                         languageList.add(newLanguage)
                                         addLanguageSpeakAdapter.updateLanguage(languageList)
+                                        var savingList = mutableListOf<AddLanguageModel>()
+                                        languageList.forEach {
+                                           var localeNew = AddLanguageModel(it.name,it.country)
+                                            savingList.add(localeNew)
+                                        }
+                                        SessionManager(requireContext()).clearLanguage()
+                                        SessionManager(requireContext()).saveLanguages(requireContext(),savingList)
                                     }
                                     if (it?.hobbies != null && it.hobbies.isNotEmpty()) {
                                         hobbiesList = getObjectsFromNames(it.hobbies) { name ->
@@ -1551,3 +1635,7 @@ private fun dialogChangeName(context: Context?) {
         _binding = null
     }
 }
+
+
+
+

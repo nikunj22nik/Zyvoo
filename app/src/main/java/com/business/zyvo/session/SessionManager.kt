@@ -256,6 +256,16 @@ class SessionManager(var context: Context) {
         return gson.fromJson(json, type)
     }
 
+    fun clearLanguage(){
+        val gson = Gson()
+        var languages: List<AddLanguageModel> = mutableListOf()
+        val json = gson.toJson(languages)
+
+        // Save the JSON string to SharedPreferences
+        editor?.putString(LANGUAGES_KEY, json)
+        editor?.apply()
+    }
+
     // Check if a language is already stored
     fun isLanguageStored(context: Context, languageName: String): Boolean {
         val languages = getLanguages(context)

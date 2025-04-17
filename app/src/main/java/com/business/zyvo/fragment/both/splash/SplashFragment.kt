@@ -23,8 +23,9 @@ import retrofit2.http.Tag
 
 
 class SplashFragment : Fragment() {
+
   var binding : FragmentSplashBinding? = null
-  //  private var _binding: FragmentSplashBinding? = null
+      //  private var _binding: FragmentSplashBinding? = null
 
     //private val binding get() = _binding!!
 
@@ -48,12 +49,8 @@ class SplashFragment : Fragment() {
 
        Log.d("Testing","I AM ON SPLASH SCREEN")
             handler = Handler(Looper.getMainLooper())
-
-//            findNavController().navigate(R.id.completeProfileFragment)
-
-            handler.postDelayed({
+          handler.postDelayed({
                 val session = SessionManager(requireContext())
-
                 if (session.getUserId() != -1 && session.getUserSession()!! && !session.getAuthToken().equals("") && session.getName() != "") {
                     if (session.getCurrentPanel().equals(AppConstant.Host)) {
                         val intent = Intent(requireContext(), HostMainActivity::class.java)

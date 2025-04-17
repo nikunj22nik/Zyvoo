@@ -111,7 +111,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginTop="@dimen/_10sdp"
-        android:nestedScrollingEnabled="false"
+        android:nestedScrollingEnabled="true"
         />
 
             <TextView

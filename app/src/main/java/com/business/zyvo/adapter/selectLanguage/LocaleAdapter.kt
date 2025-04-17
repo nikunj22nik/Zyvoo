@@ -14,38 +14,36 @@ import com.business.zyvo.utils.PrepareData
 import java.util.Locale
 
 class LocaleAdapter(
-    private val locales: List<Locale>,
-    var listner: OnLocalListener, var thirdList: MutableList<AddLanguageModel> = PrepareData.languagesWithRegions
-) :
-    RecyclerView.Adapter<LocaleAdapter.LocaleViewHolder>() {
+    private val locales: List<Locale>, var listner: OnLocalListener, var thirdList: MutableList<AddLanguageModel> = PrepareData.languagesWithRegions
+) : RecyclerView.Adapter<LocaleAdapter.LocaleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocaleViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_language, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_language, parent, false)
         return LocaleViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: LocaleViewHolder, position: Int) {
-        // Get language and region names from the Locale
 
         val locale = thirdList[position]
-
         var languageName = locale.name
 
         holder.countryName.visibility = View.VISIBLE
 
         if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
             holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)
-        }else{
+        }
+        else{
             holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
         }
 
         holder.countryName.setText(locale.country)
+
         holder.ll1.setOnClickListener {
            if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
                   SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context,languageName)
                    holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
-           }else {
+           }
+           else {
                var list1 = SessionManager(holder.itemView.context).getLanguages((holder.itemView.context)).toMutableList()
 
                list1.add(locale)
@@ -53,12 +51,10 @@ class LocaleAdapter(
                SessionManager(holder.itemView.context).saveLanguages(holder.itemView.context,list1)
                holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)
            }
-           // listner.onItemClick(languageName)
-
+           listner.onItemClick(languageName)
         }
 
         holder.languageTitle.text = languageName
-
     }
 
     override fun getItemCount(): Int {
@@ -68,7 +64,7 @@ class LocaleAdapter(
     class LocaleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val languageTitle: TextView = itemView.findViewById(R.id.languageTitle)
         val countryName: TextView = itemView.findViewById(R.id.countryName)
-
         val ll1: RelativeLayout = itemView.findViewById(R.id.ll1)
     }
+
 }

@@ -19,7 +19,24 @@ class CompleteProfileViewModel @Inject constructor(private val repository: ZyvoR
 
     val isLoading = MutableLiveData<Boolean>()
 
+    suspend fun deleteLanguageApi(userId: String, index: Int):
+            Flow<NetworkResult<Pair<String, String>>> {
+        return repository.deleteLanguage(userId, index).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                }
 
+                is NetworkResult.Success -> {
+                    isLoading.value = false
+                }
+
+                else -> {
+                    isLoading.value = false
+                }
+            }
+        }
+    }
     suspend fun emailVerification(userId: String,email :String):
             Flow<NetworkResult<Pair<String,String>>> {
         return repository.emailVerification(userId, email).onEach {
@@ -124,6 +141,62 @@ class CompleteProfileViewModel @Inject constructor(private val repository: ZyvoR
             }
         }
     }
+
+
+    suspend fun addLanguageApi(userId: String, language_name: String):
+            Flow<NetworkResult<Pair<String, String>>> {
+        return repository.addLanguage(userId, language_name).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                }
+
+                is NetworkResult.Success -> {
+                    isLoading.value = false
+                }
+
+                else -> {
+                    isLoading.value = false
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 }
