@@ -223,7 +223,7 @@ interface ZyvoRepository {
 
 
 
-    suspend fun getTermCondition(): Flow<NetworkResult<String>>
+    suspend fun getTermCondition(): Flow<NetworkResult<Pair<String,String>>>
 
     suspend fun feedback(
         user_id: String,
@@ -302,7 +302,7 @@ interface ZyvoRepository {
 
     suspend fun getSocialLogin(fname:String,lname:String,email:String,social_id:String,fcm_token:String,device_type:String) : Flow<NetworkResult<JsonObject>>
 
-    suspend fun getPrivacyPolicy() : Flow<NetworkResult<String>>
+    suspend fun getPrivacyPolicy() : Flow<NetworkResult<Pair<String,String>>>
 
 
 //    suspend fun feedback(user_id : String,type: String,details: String) : Flow<NetworkResult<String>>

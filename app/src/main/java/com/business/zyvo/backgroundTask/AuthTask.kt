@@ -129,16 +129,18 @@ class AuthTask {
 
          }
 
-         fun processPrivacyData(apiResponse: JsonObject):NetworkResult<String>{
+         fun processPrivacyData(apiResponse: JsonObject):NetworkResult<Pair<String,String>>{
              val obj = apiResponse.get("data").asJsonObject
              val text = obj.get("text").asString
-             return  NetworkResult.Success(text)
+             val lastUpdateAt = obj.get("last_update_at").asString
+             return  NetworkResult.Success(Pair(text,lastUpdateAt))
          }
 
-         fun processTermAndConditionData(apiResponse: JsonObject):NetworkResult<String>{
+         fun processTermAndConditionData(apiResponse: JsonObject):NetworkResult<Pair<String,String>>{
              val obj = apiResponse.get("data").asJsonObject
              val text = obj.get("text").asString
-             return  NetworkResult.Success(text)
+             val lastUpdateAt = obj.get("last_update_at").asString
+             return  NetworkResult.Success(Pair(text,lastUpdateAt))
          }
 
      }
