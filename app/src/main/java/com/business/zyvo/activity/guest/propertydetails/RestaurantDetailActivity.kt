@@ -1,6 +1,7 @@
 package com.business.zyvo.activity.guest.propertydetails
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
@@ -75,10 +76,12 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Locale
 
 
@@ -911,6 +914,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         selectTime()
     }
 
+/*
     fun selectTime() {
         binding.rlView1.setOnClickListener {
                 DateManager(this).showTimePickerDialog(this) { selectedTime ->
@@ -942,6 +946,46 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 //                }
 //        }
     }
+
+ */
+
+    fun selectTime() {
+        binding.rlView1.setOnClickListener {
+            DateManager(this).showTimePickerDialog1(this) { selectedTime ->
+                try {
+                    Log.d("checkSelectedTime",selectedTime.toString())
+                    binding.textstart.setText(selectedTime)
+                    // Define the time formatter (12-hour format with AM/PM)
+                    val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+                    } else {
+                        TODO("VERSION.SDK_INT < O")
+                    }
+                    Log.d(ErrorDialog.TAG,selectedTime)
+                    // Parse the start time string into a LocalTime object
+                    val startTime = LocalTime.parse(selectedTime, formatter)
+                    // Add 2 hours to get the end time
+                    val endTime = startTime.plusHours(binding.textHr.text.toString().replace(" hour","")
+                        .toLong())
+                    // Format the end time back to a string
+                    val formattedEndTime = endTime.format(formatter)
+                    binding.textend.text = formattedEndTime.uppercase()
+                }catch (e:Exception){
+                    Log.d(ErrorDialog.TAG,e.message!!)
+                }
+            }
+        }
+//        binding.rlView2.setOnClickListener {
+//                DateManager(this).showTimePickerDialog(this) { selectedTime ->
+//                    binding.textend.setText(selectedTime)
+//                }
+//        }
+    }
+
+
+
+
+
 
     @SuppressLint("ClickableViewAccessibility")
     fun disableScrollViewScrollForChildView(childView: View, scrollView: ScrollView) {
@@ -997,6 +1041,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.tvHour.setOnClickListener {
             binding.tvDay.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvHour.setBackgroundResource(R.drawable.bg_inner_manage_place)
+            binding.tvBookingTxt.setText("Start Booking")
             binding.cv1.visibility = View.VISIBLE
             binding.calendarLayout.visibility = View.GONE
             binding.llday.visibility = View.GONE

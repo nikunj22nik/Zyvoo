@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.util.Log
 import android.widget.NumberPicker
@@ -300,6 +302,50 @@ fun getRangeSelectedDateWithYear(
         )
         timePickerDialog.show()
     }
+
+    fun showTimePickerDialog1(context: Context, onTimeSelected: (String) -> Unit) {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+        val minute = calendar.get(Calendar.MINUTE)
+
+        val timePickerDialog = TimePickerDialog(
+            context,
+            android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+            { _, hourOfDay, minute1 ->
+                var formattedHour = hourOfDay
+                var period = "AM"
+
+                if (hourOfDay >= 12) {
+                    period = "PM"
+                    if (hourOfDay > 12) {
+                        formattedHour = hourOfDay % 12
+                    }
+                } else if (hourOfDay == 0) {
+                    formattedHour = 12 // Midnight edge case
+                }
+
+             //   val formattedTime = "$formattedHour:${convertDate(minute1)} $period"
+             //   val formattedTime = String.format("%02d:%02d %s", formattedHour, minute1, period)
+                val formattedTime = "${convertDate(formattedHour)}:${convertDate(minute1)} $period"
+
+
+                // ✅ Send selected time to caller
+                onTimeSelected(formattedTime)
+
+            },
+            hour,
+            minute,
+            false
+        )
+
+        timePickerDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        timePickerDialog.show()
+    }
+
+    fun convertDate(minute: Int): String {
+        return if (minute < 10) "0$minute" else "$minute"
+    }
+
 
     fun showHourSelectionDialog(context: Context, onHourSelected: (String) -> Unit) {
         val timeOptions = mutableListOf("1 hours").apply {

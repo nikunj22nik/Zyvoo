@@ -59,6 +59,7 @@
         <!-- android:name=".activity.guest.RestaurentDeatilActivity" -->
         <!-- android:exported="false" -->
         <!-- android:theme="@style/Theme.ZYVO" /> -->
+
         <activity
             android:name=".activity.guest.WhereTimeActivity"
             android:exported="false" />

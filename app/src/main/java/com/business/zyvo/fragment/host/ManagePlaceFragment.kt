@@ -2904,7 +2904,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
 
         binding.llAvailabilityFromHours.setOnClickListener {
-            DateManager(requireContext()).showTimePickerDialog(requireContext()) { selectedHour ->
+            DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
                 binding.tvHours.setText(selectedHour.toString())
                 fromHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
                 Log.d("TESTING_ZYVOO", "From " + fromHour)
@@ -2912,7 +2912,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
 
         binding.llAvailabilityEndHours.setOnClickListener {
-            DateManager(requireContext()).showTimePickerDialog(requireContext()) { selectedHour ->
+            DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
                 binding.tvHours1.setText(selectedHour.toString())
                 toHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
                 Log.d("TESTING_ZYVOO", "To " + toHour)

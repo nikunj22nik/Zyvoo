@@ -77,6 +77,7 @@ class WhereTimeActivity : AppCompatActivity() {
     private var selectedDate: LocalDate? = LocalDate.now()
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -154,7 +155,7 @@ class WhereTimeActivity : AppCompatActivity() {
             }
             if (!binding.text2.text.toString().equals("00:00 PM")){
                 end_time   = binding.text2.text.toString()
-                start_time = "$date $end_time"
+                end_time = "$date $end_time"
             }else{
                 end_time = ""
             }
@@ -228,6 +229,7 @@ class WhereTimeActivity : AppCompatActivity() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setSearchFilterData() {
         val filterdata = sessionManager.getSearchFilterRequest()
         if (!filterdata.equals("")){
@@ -255,11 +257,11 @@ class WhereTimeActivity : AppCompatActivity() {
                 }
                 if (!it.start_time.equals("")){
                     start_time = it.start_time
-                    binding.text1.text = start_time
+                    binding.text1.text = ErrorDialog.convertDateToTimeFormat(start_time)
                 }
                 if (!it.end_time.equals("")){
                     end_time = it.end_time
-                    binding.text2.text = end_time
+                    binding.text2.text = ErrorDialog.convertDateToTimeFormat(end_time)
                 }
                 if (!it.activity.equals("")){
                     activity = it.activity
@@ -271,12 +273,12 @@ class WhereTimeActivity : AppCompatActivity() {
 
     fun selectTime(){
         binding.rlView1.setOnClickListener {
-                DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                DateManager(this).showTimePickerDialog1(this) { selectedTime ->
                     binding.text1.setText(selectedTime)
                 }
         }
         binding.rlView2.setOnClickListener {
-                DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                DateManager(this).showTimePickerDialog1(this) { selectedTime ->
                     binding.text2.setText(selectedTime)
                 }
         }

@@ -203,8 +203,34 @@ object ErrorDialog {
     @RequiresApi(Build.VERSION_CODES.O)
     fun convertToTimeFormat(time: String): String {
         var value  = ""
+
         if (!time.equals("")) {
             val formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH) // Input format
+            val outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss") // Output format
+            value =  LocalTime.parse(time, formatter).format(outputFormatter)
+        }
+        return value
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertDateToTimeFormat(time: String): String {
+        var value  = ""
+
+        if (!time.equals("")) {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH) // Input format
+            val outputFormatter = DateTimeFormatter.ofPattern("hh:mm a") // Output format
+
+            value =  LocalTime.parse(time, formatter).format(outputFormatter).uppercase()
+        }
+        return value
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertDateToTimeFormat1(time: String): String {
+        var value  = ""
+
+        if (!time.equals("")) {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH) // Input format
             val outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss") // Output format
             value =  LocalTime.parse(time, formatter).format(outputFormatter)
         }

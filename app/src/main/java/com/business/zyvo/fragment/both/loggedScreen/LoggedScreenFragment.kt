@@ -702,6 +702,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     )
                     toggleLoginButtonEnabled(true, textContinueButton)
                 }
+
             }
             imageCross.setOnClickListener {
                 dismiss()
@@ -738,10 +739,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             dialog.dismiss()
                             val userId = resp.second
 
-                            dialogOtp(
-                                requireActivity(), text, textHeaderOfOtpVerfication,
-                                code, number, userId, checkBox, "loginPhone"
-                            )
+//                            dialogOtp(
+//                                requireActivity(), text, textHeaderOfOtpVerfication,
+//                                code, number, userId, checkBox, "loginPhone"
+//                            )
 
                             dialogOtp(requireActivity(), text, textHeaderOfOtpVerfication,
                                 code, number,userId,checkBox,"loginPhone")

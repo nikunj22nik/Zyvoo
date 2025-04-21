@@ -212,7 +212,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     binding.textConfirmNow2.visibility = View.VISIBLE
                     binding.textVerified2.visibility = GONE
                     Toast.makeText(requireContext(),"Error Occurred, Try Again",Toast.LENGTH_LONG).show()
-
+Log.d("personaError", result.errorCode.toString())
+Log.d("personaError", result.cause.toString())
+Log.d("personaError", result.debugMessage.toString())
                 }
             }
         }

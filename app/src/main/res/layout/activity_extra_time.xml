@@ -517,7 +517,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:text="Zyvoo Service Fee"
+                        android:text="Zyvo Service Fee"
                         android:textSize="@dimen/_12sdp"
                         android:textStyle="bold" />
 

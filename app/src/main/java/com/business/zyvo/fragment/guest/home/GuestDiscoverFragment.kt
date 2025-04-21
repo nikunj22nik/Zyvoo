@@ -906,14 +906,16 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun getHomeDataSearchFilter(filterRequest: SearchFilterRequest) {
+        Log.d("checkTime", filterRequest.start_time)
+
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 guestDiscoverViewModel.getHomeDataSearchFilter(filterRequest.user_id,
                     filterRequest.latitude,filterRequest.longitude,
                     filterRequest.date,
                     filterRequest.hour,
-                    ErrorDialog.convertToTimeFormat(filterRequest.start_time),
-                    ErrorDialog.convertToTimeFormat(filterRequest.end_time),
+                    ErrorDialog.convertDateToTimeFormat(filterRequest.start_time),
+                    ErrorDialog.convertDateToTimeFormat(filterRequest.end_time),
                    /* filterRequest.start_time,
                     filterRequest.end_time,*/
                     filterRequest.activity,).collect {

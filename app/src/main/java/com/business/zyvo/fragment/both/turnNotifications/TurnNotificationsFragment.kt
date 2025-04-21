@@ -86,6 +86,12 @@ private var  _binding: FragmentTurnNotificationsBinding? = null
                 else {
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
+            }else{
+                val bundle = Bundle()
+                bundle.putString("data",data)
+                bundle.putString("type",type)
+                bundle.putString("email",email)
+                findNavController().navigate(R.id.turnLocationFragment,bundle)
             }
 
         }
