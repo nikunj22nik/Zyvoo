@@ -200,7 +200,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         imagePermissionInitialization()
         val newWork = AddOnModel("Unknown Location", "0")
 
-        addOnList.add(newWork)
+        addOnList.add( newWork)
         swictchChangeListener()
         galleryTextField()
         return binding.root
@@ -356,7 +356,15 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         requestBody.activities = resultActivityList
         requestBody.amenities = amenitiesListResult
         if (!addOnList.isEmpty()) {
-            requestBody.add_ons = addOnList.subList(1, addOnList.size);
+          //  requestBody.add_ons = addOnList.subList(1, addOnList.size);
+            val validAddOns = addOnList.filter { addOn ->
+                !addOn.name.isNullOrBlank() &&
+                        addOn.price != null &&
+                        addOn.price!!.toDouble() > 0
+            }
+
+            requestBody.add_ons = validAddOns.toMutableList()
+
         }
 
         lifecycleScope.launch {
@@ -535,7 +543,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 availableMonth = "12"
             }
 
-            binding.etType.setText(it.cleaning_fee)
+            binding.textType.setText(it.cleaning_fee)
             cleaningCharges = it.cleaning_fee
 
             if (it.available_day.equals("working_days")) {
@@ -583,6 +591,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
 
             addOnList = it.add_ons.toMutableList()
+            addOnList.add(AddOnModel("Unknown Location", "0"))
+            Log.d("checkAddOnDataNew", it.add_ons.toMutableList().toString())
             addOnAdapter.updateAddOn(addOnList)
         }
     }
@@ -2408,8 +2418,9 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                     //  dialogSelectLanguage()
                 } else {
                     addOnList.removeAt(obj)
-                    addonlist.removeAt(obj)
-                    addonPrice.removeAt(obj)
+//                    addonlist.removeAt(obj)
+                    //vipin check later
+                //    addonPrice.removeAt(obj)
                     addOnAdapter.updateAddOn(addOnList)
 
                 }
@@ -2458,9 +2469,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 if (itemName.isNotEmpty() && itemPrice.isNotEmpty()) {
                     val newAddOn = AddOnModel(itemName, itemPrice)
                     addOnList.add(0, newAddOn)
-                    addonlist.add(itemName)
-                    addonPrice.add(itemPrice)
+                   // addonlist.add(itemName)
+                //    addonPrice.add(itemPrice)
+                    Log.d("checkAddonData",addOnList.toString())
+                    Log.d("checkAddonData",addonPrice.toString())
                     addOnAdapter.updateAddOn(addOnList)
+                  //  addOnAdapter.notifyDataSetChanged()
                     addOnAdapter.notifyItemInserted(0)
                     dialog.dismiss()
                 } else {

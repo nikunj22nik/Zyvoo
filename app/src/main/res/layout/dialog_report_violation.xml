@@ -102,6 +102,7 @@
             android:background="@drawable/bg_four_side_grey_corner_white"
             android:fontFamily="@font/poppins"
             android:gravity="start"
+            android:text=""
             android:hint="You can also add additional details to help us investigate further. "
             android:padding="@dimen/_5sdp"
             android:textColorHint="#444444"

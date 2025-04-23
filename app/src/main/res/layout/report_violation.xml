@@ -140,6 +140,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_130sdp"
                     android:background="@null"
+                    android:gravity="start|top"
+                    android:inputType="textMultiLine"
+                    android:text=""
                     android:layout_margin="@dimen/_7sdp"
                     android:layout_marginTop="0dp"
                     />

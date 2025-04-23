@@ -240,7 +240,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_maximum"
                         android:layout_marginStart="@dimen/_10sdp"
-                        android:text="$100"
+                        android:text="$2000"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_14sdp"
                         android:textStyle="bold" />

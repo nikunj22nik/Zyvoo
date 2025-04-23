@@ -202,7 +202,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 // Set Location values
                 binding.autocompleteLocation.setText(it.location)
                 //Set Date Value
-                binding.tvDateSelect.text = it.date
+                binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(it.date)
                 //Set Time Value
                 if (!it.time.equals("")) {
                     binding.tvHour.text = "${it.time} hours"//toString().replace(" hours","")
@@ -870,12 +870,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 val month = calendar.get(Calendar.MONTH)
                 val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-                val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
+                val datePickerDialog = DatePickerDialog(this, R.style.DialogTheme,{ _, selectedYear, selectedMonth, selectedDay ->
                     val formattedMonth = String.format("%02d", selectedMonth + 1) // 1-based month
                     val formattedDay = String.format("%02d", selectedDay)
                     val selectedDate = "$selectedYear-$formattedMonth-$formattedDay"
 
-                    binding.tvDateSelect.text = selectedDate // Set API format date
+                    binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(selectedDate) // Set API format date
                 }, year, month, day)
 
                 datePickerDialog.show()
@@ -956,7 +956,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                         minimum_price = min,
                         maximum_price = max,
                         location = binding.autocompleteLocation.text.toString(),
-                        date = binding.tvDateSelect.text.toString(),
+                        date = if (!binding.tvDateSelect.text.toString().equals(""))ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd(binding.tvDateSelect.text.toString())else "",
                         time = binding.tvHour.text.toString().replace(" hours",""),
                         people_count = availOption,
                         property_size = propertySize,

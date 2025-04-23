@@ -146,18 +146,35 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
         var messageSend = "I have a doubt"
         binding.doubt.setOnClickListener {
             binding.etShareMessage.setText("")
+            binding.tvShareMessage.visibility = View.GONE
+            messageSend = "I have a doubt"
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
-            messageSend = "I have a doubt"
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+
 
         }
+
         binding.tvAvailableDay.setOnClickListener {
             binding.etShareMessage.setText("")
+            binding.tvShareMessage.visibility = View.GONE
+            messageSend = "Available days"
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-            messageSend = "Available days"
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+
 
         }
+        binding.tvOtherReason.setOnClickListener {
+
+            binding.tvShareMessage.visibility = View.VISIBLE
+            messageSend = "other"
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+
+        }
+
         var writeMessage =""
         binding.etShareMessage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -172,7 +189,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             }
         })
 
-
+/*
         binding.rlSubmitMessage.setOnClickListener {
             val userInput = binding.etShareMessage.text.toString()
 
@@ -191,6 +208,46 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 callingJoinChannelApi(messageSend)
 
             }
+        }
+
+ */
+        binding.rlSubmitMessage.setOnClickListener {
+            val userInput = binding.etShareMessage.text.toString()
+            if(userInput.length>0){
+                messageSend = userInput
+            }
+            if (!messageSend.equals("other")  ){
+                propertyData?.let {
+                    var propertyid = it.property_id
+                    var hostId = it.host_id
+                    var userId = SessionManager(this).getUserId()
+                    var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+
+                    Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+
+                    callingJoinChannelApi(messageSend)
+
+                }
+            }else{
+                if (userInput.trim().isNotEmpty()){
+                    propertyData?.let {
+                        var propertyid = it.property_id
+                        var hostId = it.host_id
+                        var userId = SessionManager(this).getUserId()
+                        var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+
+                        Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+
+                        callingJoinChannelApi(messageSend)
+
+                    }
+                }else{
+                    binding.etShareMessage.error ="Please Enter something"
+                }
+
+
+            }
+
         }
 
     }
@@ -339,6 +396,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
         }
 
+
         binding.dateView2.setOnClickListener {
             var dialog1 = SelectHourFragmentDialog()
             dialog1.setDialogListener(this)
@@ -372,7 +430,8 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 dialog.dismiss()
-                                openDialogNotification()
+                                //openDialogNotification()
+                                openDialogSuccess()
                             }
                         }
                         is NetworkResult.Error -> {
@@ -575,9 +634,10 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             val et_addiotnal_detail : EditText = findViewById(R.id.et_addiotnal_detail)
             val powerSpinner :PowerSpinnerView = findViewById(R.id.spinnerView1)
             submit.setOnClickListener {
-                if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
-                    txtSubmit.setText("Submitted")
-                }else if(et_addiotnal_detail.text.isEmpty()){
+//                if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
+//                    txtSubmit.setText("Submitted")
+//                }else
+                    if(et_addiotnal_detail.text.isEmpty()){
                     showToast(this@ExtraTimeActivity,AppConstant.additional)
                 }
                 else if(powerSpinner.text.toString().isEmpty()){

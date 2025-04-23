@@ -21,6 +21,7 @@ import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -44,6 +45,7 @@ import com.business.zyvo.activity.guest.checkout.model.MailingAddress
 import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
 import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.activity.guest.checkout.viewmodel.CheckOutPayViewModel
+import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.activity.guest.propertydetails.model.PropertyData
 import com.business.zyvo.adapter.AdapterAddPaymentCard
@@ -161,24 +163,37 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
 
         binding.doubt.setOnClickListener {
             binding.etShareMessage.setText("")
+            binding.tvShareMessage.visibility = View.GONE
+            messageSend = "I have a doubt"
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
-            messageSend = "I have a doubt"
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+
 
         }
 
         binding.tvAvailableDay.setOnClickListener {
             binding.etShareMessage.setText("")
+            binding.tvShareMessage.visibility = View.GONE
+            messageSend = "Available days"
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-            messageSend = "Available days"
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+
+
+        }
+        binding.tvOtherReason.setOnClickListener {
+
+            binding.tvShareMessage.visibility = View.VISIBLE
+            messageSend = "other"
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
 
         }
 
         var writeMessage =""
-        binding.etShareMessage.setOnClickListener {
 
-        }
         binding.etShareMessage.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
 
@@ -198,14 +213,32 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             if(userInput.length>0){
                 messageSend = userInput
             }
-            propertyData?.let {
-                var propertyid = it.property_id
-                var hostId = it.host_id
-                var userId = SessionManager(this).getUserId()
-                var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
-                Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
-                callingJoinChannel(propertyid,hostId,userId,channelName,messageSend)
+            if (!messageSend.equals("other")  ){
+                propertyData?.let {
+                    var propertyid = it.property_id
+                    var hostId = it.host_id
+                    var userId = SessionManager(this).getUserId()
+                    var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                    Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+                    callingJoinChannel(propertyid,hostId,userId,channelName,messageSend)
+                }
+            }else{
+                if (userInput.trim().isNotEmpty()){
+                    propertyData?.let {
+                        var propertyid = it.property_id
+                        var hostId = it.host_id
+                        var userId = SessionManager(this).getUserId()
+                        var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                        Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+                        callingJoinChannel(propertyid,hostId,userId,channelName,userInput.trim())
+                    }
+                }else{
+                    binding.etShareMessage.error ="Please Enter something"
+                }
+
+
             }
+
         }
 
     }
@@ -396,24 +429,25 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         binding.imgBack.setOnClickListener {
             onBackPressed()
         }
-        binding.doubt.setOnClickListener {
-            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
-            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-        }
-        binding.tvAvailableDay.setOnClickListener {
-            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
-            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-        }
-        binding.tvOtherReason.setOnClickListener {
-            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
-        }
+//        binding.doubt.setOnClickListener {
+//            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+//            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+//            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+//        }
+//        binding.tvAvailableDay.setOnClickListener {
+//            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+//            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+//            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+//        }
+//        binding.tvOtherReason.setOnClickListener {
+//            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+//            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+//            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+//        }
 
 
     }
+
 
     fun callingSelectionOfTime() {
         val hoursArray = Array(24) { i -> String.format("%02d", i + 1) } // Ensures "01, 02, 03..."
@@ -527,11 +561,16 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         })
 
         binding.dateView1.setOnClickListener {
-            if (binding.relTime.visibility == View.VISIBLE) {
-                binding.relTime.visibility = View.GONE
-            } else {
-                binding.relTime.visibility = View.VISIBLE
-            }
+//            if (binding.relTime.visibility == View.VISIBLE) {
+//                binding.relTime.visibility = View.GONE
+//            } else {
+//                binding.relTime.visibility = View.VISIBLE
+//            }
+            finish()
+        }
+
+        binding.rlHours.setOnClickListener{
+            finish()
         }
 
     }
@@ -655,16 +694,18 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         })
 
         binding.dateView.setOnClickListener {
-            if (binding.relCalendarLayouts.visibility == View.VISIBLE) {
-                binding.relCalendarLayouts.visibility = View.GONE
-            } else {
-                binding.relCalendarLayouts.visibility = View.VISIBLE
-                var splt = date?.split("-")
-                binding.spinnerDate.setText(splt?.get(2).toString()?:"")
-                var num = Integer.parseInt(splt?.get(1))
-                binding.spinnermonth.setText(PrepareData.monthNumberToName(num))
-                binding.spinneryear.setText(splt?.get(0)?:"")
-            }
+//            if (binding.relCalendarLayouts.visibility == View.VISIBLE) {
+//                binding.relCalendarLayouts.visibility = View.GONE
+//            } else {
+//                binding.relCalendarLayouts.visibility = View.VISIBLE
+//                var splt = date?.split("-")
+//                binding.spinnerDate.setText(splt?.get(2).toString()?:"")
+//                var num = Integer.parseInt(splt?.get(1))
+//                binding.spinnermonth.setText(PrepareData.monthNumberToName(num))
+//                binding.spinneryear.setText(splt?.get(0)?:"")
+//            }
+
+            finish()
         }
 
         binding.textSaveChangesButton.setOnClickListener {

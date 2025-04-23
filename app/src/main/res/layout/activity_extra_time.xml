@@ -238,7 +238,8 @@
                             android:layout_marginTop="@dimen/_6sdp"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             android:paddingHorizontal="@dimen/_6sdp"
-                            android:visibility="gone"
+                            android:layout_marginBottom="@dimen/_5sdp"
+                            android:visibility="visible"
                             android:paddingVertical="@dimen/_6sdp">
 
                             <TextView
@@ -260,6 +261,7 @@
                             android:layout_marginHorizontal="@dimen/_6sdp"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
+                            android:visibility="gone"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             android:paddingHorizontal="@dimen/_6sdp"
                             android:paddingVertical="@dimen/_6sdp">

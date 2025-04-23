@@ -52,6 +52,8 @@ class HomeScreenAdapter(
         }
         // Setup ViewPager and its adapter
         currentItem.images.let {
+            Log.d("checkImageSize", currentItem.images.toMutableList().size.toString())
+            if (currentItem.images.toMutableList().size == 1 ) holder.binding.tabLayoutForIndicator.visibility = View.GONE else holder.binding.tabLayoutForIndicator.visibility = View.VISIBLE
             val viewPagerAdapter = GuestViewPagerAdapter(
                 currentItem.images.toMutableList(),
                 context,

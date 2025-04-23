@@ -1,7 +1,6 @@
 package com.business.zyvo.activity.guest.propertydetails
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
@@ -76,12 +75,10 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 import java.util.Locale
 
 
@@ -243,7 +240,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
                                 propertyData?.min_booking_hours?.let {
-                                    binding.minTimeTxt.setText(it.toString() +"hr minimum")
+
+                                    binding.minTimeTxt.setText(it.toDouble().toInt().toString() +"hr minimum")
                                     binding.circularSeekBar.endHours = it.toString().toFloat()
                                 }
 
@@ -355,7 +353,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
                 propertyData?.hourly_rate?.let {
-                    binding.proPriceHr.text = "$it/hr"
+                   // binding.proPriceHr.text = "$it/hr"
+                    val formatted = it.toDouble().toInt().toString()
+                    binding.proPriceHr.text = "$formatted/hr"
                     binding.textPrice.text = it
                     val totalPrice = binding.textHr.text.toString().replace(" hour","")
                         .toInt()* it.toFloat()
@@ -366,7 +366,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.textHourDiscount.text = "$it+ hour discount"
                 }
                 propertyData?.bulk_discount_rate?.let {
-                    binding.proDiscount.text = "$it% Off"
+                    var proDiscountR = it.toDouble().toInt().toString()
+                    binding.proDiscount.text = "$proDiscountR% Off"
                 }
 
                 propertyData?.property_description?.let {
@@ -431,6 +432,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
     }
+
+
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     private fun showPopupWindow(anchorView: View, position: Int) {
@@ -598,7 +601,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.textHr.text = "$progress hour"
                     propertyData?.hourly_rate?.let {
                         val totalPrice = progress.toInt()* it.toFloat()
-                        binding.textPrice.text = totalPrice.toString()
+                        binding.textPrice.text = totalPrice.toDouble().toInt().toString()
                         var selectedTime = binding.textstart.text
 
                         // Define the time formatter (12-hour format with AM/PM)

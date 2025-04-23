@@ -212,6 +212,7 @@
                         android:fontFamily="@font/poppins"
                         android:gravity="center"
                         android:text="Dates"
+                        android:layout_marginStart="@dimen/_5sdp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
 
@@ -238,7 +239,7 @@
                         android:fontFamily="@font/poppins"
                         android:gravity="center"
                         android:text="Flexible"
-
+android:layout_marginEnd="@dimen/_5sdp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
 

@@ -62,6 +62,10 @@ class SelectHourFragmentDialog : DialogFragment() {
             DateManager(requireContext()).showHourSelectionDialog(requireContext()) { selectedHour ->
                 binding.textSelectedHour.setText(selectedHour)
                 hour = selectedHour.replace(" hours","")
+                Log.d("checkHoursValue",selectedHour.toString())
+                // Remove "hours", trim spaces, keep only number
+              var  hour1 = selectedHour.replace("hours", "", ignoreCase = true).trim()
+                binding.circularSeekBar.endHours = (hour1.toIntOrNull() ?: 0).toFloat()
             }
         }
         binding.circularSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener
@@ -70,6 +74,8 @@ class SelectHourFragmentDialog : DialogFragment() {
             override fun onProgressChanged(progress: String) {
                 try {
                     hour = progress
+                    binding.textSelectedHour.setText(hour +" hours")
+                    Log.d("checkHoursValue",hour.toString())
                 }catch (e:Exception){
                     Log.d(ErrorDialog.TAG,e.message!!)
                 }

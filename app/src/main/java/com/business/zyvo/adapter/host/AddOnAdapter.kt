@@ -30,11 +30,11 @@ class AddOnAdapter(var context: Context, var list : MutableList<AddOnModel>, var
 
         fun bind(item: AddOnModel) {
 
-            if (list.size >= 3) {
-                textAddNew?.visibility = View.GONE
-            } else {
-                textAddNew?.visibility  = View.VISIBLE
-            }
+//            if (list.size >= 3) {
+//                textAddNew?.visibility = View.GONE
+//            } else {
+//                textAddNew?.visibility  = View.VISIBLE
+//            }
 
             binding.textName.text = item.name
             binding.textRupees.text = "$" +item.price
@@ -92,6 +92,11 @@ class AddOnAdapter(var context: Context, var list : MutableList<AddOnModel>, var
         } else if (holder is AddOnViewHolderFixed) {
             holder.bind()
             textAddNew = holder.binding.textAddNew
+            if (list.size >= 3) {
+                holder.binding.textAddNew?.visibility = View.GONE
+            } else {
+                holder.binding.textAddNew?.visibility  = View.VISIBLE
+            }
         }
     }
 

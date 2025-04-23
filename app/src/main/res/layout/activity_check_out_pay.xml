@@ -251,8 +251,9 @@
                             android:paddingVertical="@dimen/_6sdp"
                             android:layout_below="@id/doubt"
                             android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginBottom="@dimen/_5sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
-                            android:visibility="gone"
+                            android:visibility="visible"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             >
 
@@ -277,6 +278,7 @@
                             android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
+                            android:visibility="gone"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             >
 

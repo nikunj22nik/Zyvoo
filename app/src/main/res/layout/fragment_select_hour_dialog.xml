@@ -83,7 +83,7 @@
                             android:layout_marginBottom="@dimen/_10sdp"
                             android:fontFamily="@font/poppins"
                             android:gravity="center"
-                            android:text="4"
+                            android:text=""
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_35ssp"

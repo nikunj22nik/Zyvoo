@@ -224,7 +224,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 binding.tvNamePlace.text = data.property_name ?: "N/A"
                                 binding.tvStatus.text = data.status
                                 binding.textMiles.text = (data.distance_miles ?: "N/A").toString()+" miles away"
-                                binding.textRatingStar.text = "$${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
+                                binding.textRatingStar.text = "${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
                                 binding.time.text = data.charges?.booking_hours.toString()
                                 binding.money.text = "$${truncateToTwoDecimalPlaces(data.charges?.booking_amount ?: "0.00")}"
                                 binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(data.charges?.cleaning_fee ?: "0.00")}"
@@ -316,6 +316,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 pagination = Gson().fromJson(it.data.second.getAsJsonObject("pagination"),
                                     Pagination::class.java)
                                 val listType = object : TypeToken<List<Review>>() {}.type
+
                                 if(pagination == null){
                                     Log.d("TESTING_PAGINATION","Pagination is Null")
                                     binding.showMoreReview.visibility = View.GONE
@@ -324,6 +325,11 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                     Log.d("TESTING_PAGINATION", "Total :- "+ pagination!!.total +" Current Page:- "+pagination!!.current_page)
                                     if (pagination!!.total <= pagination!!.current_page) {
                                         binding.showMoreReview.visibility = View.GONE
+                                    }
+                                    if (pagination!!.count < 4){
+                                        binding.showMoreReview.visibility = View.GONE
+                                    }else{
+                                        binding.showMoreReview.visibility = View.VISIBLE
                                     }
                                 }
 
@@ -644,6 +650,11 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                     Log.d("TESTING_PAGINATION", "Total :- "+ pagination!!.total +" Current Page:- "+pagination!!.current_page)
                                     if (pagination!!.total <= pagination!!.current_page) {
                                         binding.showMoreReview.visibility = View.GONE
+                                    }
+                                    if (pagination!!.count < 4){
+                                        binding.showMoreReview.visibility = View.GONE
+                                    }else{
+                                        binding.showMoreReview.visibility = View.VISIBLE
                                     }
                                 }
                                 reviewList?.let {
