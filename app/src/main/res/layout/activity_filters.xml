@@ -921,6 +921,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bedrooms"
+                android:id="@+id/tvbadroom"
                 android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
@@ -933,6 +934,7 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/bg_outer_manage_place"
                 android:paddingHorizontal="@dimen/_4sdp"
+                android:id="@+id/llbadrooms"
                 android:weightSum="9">
 
                 <TextView

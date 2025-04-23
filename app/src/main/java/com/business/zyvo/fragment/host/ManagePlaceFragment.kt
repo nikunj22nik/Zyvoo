@@ -1473,18 +1473,18 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         adapterActivity = ActivitiesAdapter(requireContext(), activityList.subList(0, 3))
 
-        adapterActivity.setOnItemClickListener { adapterActivity, Int ->
+        adapterActivity.setOnItemClickListener { adapterActivity, Int,status ->
             run {
-                savingActivityBackground(adapterActivity)
+                savingActivityBackground(adapterActivity,status)
             }
         }
 
         adapterActivity2 =
             ActivitiesAdapter(requireContext(), activityList.subList(3, activityList.size))
 
-        adapterActivity2.setOnItemClickListener { adapterActivity, Int ->
+        adapterActivity2.setOnItemClickListener { adapterActivity, Int,status ->
             run {
-                savingActivityBackground(adapterActivity)
+                savingActivityBackground(adapterActivity,status)
             }
         }
 
@@ -1534,12 +1534,23 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         settingClickListenertoSpaceManagePlace()
     }
 
-    private fun savingActivityBackground(adapterActivity: MutableList<ActivityModel>) {
+    /*private fun savingActivityBackground(adapterActivity: MutableList<ActivityModel>) {
         CoroutineScope(Dispatchers.IO).launch {
             adapterActivity.forEach {
                 if (it.checked) {
                     Log.d("TESTING", "cHECKING nAME IS " + it.name)
                     activityListResult.add(it.name)
+                }
+            }
+        }
+    }*/
+    private fun savingActivityBackground(adapterActivity: String,status:Boolean) {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (status) {
+                activityListResult.add(adapterActivity)
+            }else{
+                if (activityListResult.contains(adapterActivity)){
+                    activityListResult.remove(adapterActivity)
                 }
             }
         }

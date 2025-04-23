@@ -107,6 +107,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResult
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
+import com.google.android.gms.maps.model.Marker
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -121,7 +123,7 @@ import kotlinx.coroutines.launch
 import java.util.Objects
 
 @AndroidEntryPoint
-class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback,
+class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback,OnMarkerClickListener,
     OnClickListener1 , onItemClickListener {
 
     lateinit var binding :FragmentGuestDiscoverBinding
@@ -270,6 +272,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         }
 
 
+
         return binding.root
     }
 
@@ -345,10 +348,11 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                                       .position(LatLng(location.latitude.toDouble(), location.longitude.toDouble()))
                                       .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
                                       .title("${location.hourly_rate}/h")
-                                  googleMap?.addMarker(markerOptions)
+                                  val marker = googleMap?.addMarker(markerOptions)
+                                  marker?.tag = location.property_id  // 🔑 Save property_id in tag
                                   // Move and zoom the camera to the first location
                                       googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                          LatLng(location.latitude.toDouble(), location.longitude.toDouble()), 10f))
+                                          LatLng(location.latitude.toDouble(), location.longitude.toDouble()), 12f))
                               }
                           }
                         }
@@ -411,6 +415,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         try {
             googleMap = mp
             // Add a marker in New York and move the camera
+            googleMap.setOnMarkerClickListener(this)
         } catch (e: Resources.NotFoundException) {
             Log.e("MapsActivity", "Can't find style. Error: ", e)
         }
@@ -1334,6 +1339,17 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             handler.removeCallbacks(it)
             Log.e(ErrorDialog.TAG,"stopHandler")
         }
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val propertyId = marker.tag as? Int
+        // 🔍 Find the clicked property from your list
+        val property = homePropertyData.find { it.property_id == propertyId }
+        val intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
+        intent.putExtra("propertyId",property?.property_id.toString())
+        intent.putExtra("propertyMile",property?.distance_miles.toString())
+        startActivity(intent)
+        return true
     }
 
 }

@@ -147,4 +147,7 @@ dependencies {
     //Stripe SDK
     implementation("com.stripe:stripe-android:16.3.0")
 
+    //AppsFlyer
+    implementation ("com.appsflyer:af-android-sdk:6.12.1")
+
 }
