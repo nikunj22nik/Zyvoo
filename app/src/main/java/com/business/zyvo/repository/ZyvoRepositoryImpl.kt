@@ -630,8 +630,8 @@ import javax.inject.Inject
 
     override suspend fun completeProfile(completeProfileReq: CompleteProfileReq):
             Flow<NetworkResult<Pair<String, String>>> = flow {
+        emit(NetworkResult.Loading())
         try {
-
             var multipart: MultipartBody.Part? = null
             if (completeProfileReq.bytes != null) {
                 var multipart: MultipartBody.Part? = null

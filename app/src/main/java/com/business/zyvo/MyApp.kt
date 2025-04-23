@@ -2,6 +2,8 @@ package com.business.zyvo
 
 import android.app.Application
 import android.util.Log
+import com.appsflyer.AppsFlyerConversionListener
+import com.appsflyer.AppsFlyerLib
 import com.business.zyvo.chat.QuickstartConversationsManager
 import com.business.zyvo.chat.QuickstartConversationsManagerFragment
 import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
@@ -31,6 +33,20 @@ class MyApp :Application() {
         AppContextProvider.initialize(this)
         val token =SessionManager(this).getChatToken()
         initializeTwilioClient(token!!)
+
+        AppsFlyerLib.getInstance().init("yBV8TF8buEhf3rgFccBSyd", object : AppsFlyerConversionListener {
+            override fun onConversionDataSuccess(data: MutableMap<String, Any>?) {
+                // Handle deep link data here
+            }
+
+            override fun onConversionDataFail(error: String?) {}
+
+            override fun onAppOpenAttribution(data: MutableMap<String, String>?) {}
+
+            override fun onAttributionFailure(error: String?) {}
+        }, this)
+
+        AppsFlyerLib.getInstance().start(this)
     }
 
      fun initializeTwilioClient(token:String) {

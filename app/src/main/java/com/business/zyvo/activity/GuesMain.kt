@@ -1,7 +1,9 @@
 package com.business.zyvo.activity
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -23,10 +25,12 @@ import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.databinding.ActivityGuesMainBinding
 import com.business.zyvo.di.ConversationsManagerSingleton
 import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.GuestMainActivityModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -103,8 +107,27 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         sessionManager.setUserType(AppConstant.Guest)
         callingGetUserToken()
         askNotificationPermission()
+        handlingDeepLink()
 
+    }
 
+    private fun handlingDeepLink() {
+        // Get the intent that started this activity
+        val intent = intent
+        // Check if the intent contains a URI (deep link)
+        if (intent?.action == Intent.ACTION_VIEW) {
+            val data: Uri? = intent.data
+            if (data != null && data.scheme == "zyvoo" && data.host == "property") {
+                val propertyId = data.getQueryParameter("propertyId")
+                // Now you can use the propertyId in your activity
+                Log.d(ErrorDialog.TAG, "Property ID: $propertyId")
+                // Fetch property details using the propertyId
+                val intent = Intent(this, RestaurantDetailActivity::class.java)
+                intent.putExtra("propertyId",propertyId)
+                intent.putExtra("propertyMile","")
+                startActivity(intent)
+            }
+        }
     }
 
     private fun callingGetUserToken() {

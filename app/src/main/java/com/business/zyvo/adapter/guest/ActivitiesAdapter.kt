@@ -14,10 +14,10 @@ import com.business.zyvo.model.ActivityModel
 class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var onItemClickListener: ((list: MutableList<ActivityModel>, Int) -> Unit)? = null
+    private var onItemClickListener: ((list: String/*MutableList<ActivityModel>*/, Int,Boolean) -> Unit)? = null
 
 
-    fun setOnItemClickListener(listener: (list: MutableList<ActivityModel>, Int) -> Unit) {
+    fun setOnItemClickListener(listener: (list: String/*MutableList<ActivityModel>*/, Int,Boolean) -> Unit) {
         onItemClickListener = listener
     }
 
@@ -61,14 +61,16 @@ class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityMode
                        var pair = list[position]
                         pair.checked = true
                         list[position] = pair
-                        onItemClickListener?.invoke(list,position)
+                        //onItemClickListener?.invoke(list,position,true)
+                        onItemClickListener?.invoke(pair.name,position,true)
                     }
                     else{
                       laypout.setBackgroundResource(R.drawable.bg_four_side_grey_corner)
                         var pair = list[position]
                         pair.checked = false
                         list[position] = pair
-                        onItemClickListener?.invoke(list,position)
+                        //onItemClickListener?.invoke(list,position,false)
+                        onItemClickListener?.invoke(pair.name,position,false)
                     }
                 }
             }

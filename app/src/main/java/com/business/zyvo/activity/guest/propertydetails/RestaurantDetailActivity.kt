@@ -4,13 +4,17 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
+import android.transition.Transition
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -29,12 +33,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.share.LinkGenerator
+import com.appsflyer.share.ShareInviteHelper
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
 import com.business.zyvo.AppConstant
 import com.business.zyvo.CircularSeekBar.OnSeekBarChangeListener
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -75,6 +84,8 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.YearMonth
@@ -103,8 +114,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         YearMonth.now()
     } else {
-        TODO("VERSION.SDK_INT < O")
+        YearMonth.of(1970, 1) // Default fallback, won't be used on <O devices anyway
     }
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate: LocalDate? = LocalDate.now()
@@ -147,7 +159,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         initialization()
-        share()
+        //share()
         updateCalendar()
         clickListeners1()
 
@@ -159,7 +171,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             showPopupWindowForPets(it)
         }
         binding.imageShare.setOnClickListener {
-            shareApp()
+            //shareApp()
+            generateDeepLink()
         }
 
         binding.rlTextReviewClick.setOnClickListener {
@@ -509,18 +522,95 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
-    private fun shareApp() {
-        val appPackageName = packageName
+    private fun generateDeepLink() {
+        // Your OneLink base URL and campaign details
+        val currentCampaign = "property_share"
+        val oneLinkId = "scFp" // Replace with your OneLink ID
+        val brandDomain = "zyvobusiness.onelink.me" // Your OneLink domain
+
+        // Prepare the deep link values
+        val deepLink = "zyvoo://property?propertyId=$propertyId"
+        val webLink = "https://https://zyvo.tgastaging.com/property/$propertyId" // Web fallback link
+
+        // Create the link generator
+        val linkGenerator = ShareInviteHelper.generateInviteUrl(this)
+            .setBaseDeeplink("https://$brandDomain/$oneLinkId")
+            .setCampaign(currentCampaign)
+            .addParameter("af_dp", deepLink) // App deep link
+            .addParameter("af_web_dp", webLink) // Web fallback URL
+
+        // Generate the link
+        linkGenerator.generateLink(this, object : LinkGenerator.ResponseListener {
+            override fun onResponse(s: String) {
+                // Successfully generated the link
+                Log.d(ErrorDialog.TAG, s)
+                // Example share message with the generated link
+                val message = "Check out this property: $s"
+                if (propertyData?.images.isNullOrEmpty()){
+                    propertyData?.images?.firstOrNull()?.let { imageUrl ->
+                        shareLinkWithImage(message, imageUrl)
+                    }
+                }else {
+                    shareLink(message)
+                }
+            }
+
+            override fun onResponseError(s: String) {
+                // Handle error if link generation fails
+                Log.e("Error", "Error Generating Link: $s")
+            }
+        })
+    }
+
+    private fun shareLinkWithImage(message: String, imageUrl: String) {
+        Glide.with(this)
+            .asBitmap()
+            .load(imageUrl)
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(
+                    resource: Bitmap,
+                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                ) {
+                    val imageFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "property_share.jpg")
+                    val outputStream = FileOutputStream(imageFile)
+                    resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    outputStream.flush()
+                    outputStream.close()
+
+                    val uri = FileProvider.getUriForFile(
+                        this@RestaurantDetailActivity,
+                        "${applicationContext.packageName}.provider",
+                        imageFile
+                    )
+
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "image/*"
+                        putExtra(Intent.EXTRA_TEXT, message)
+                        putExtra(Intent.EXTRA_STREAM, uri)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+
+                    startActivity(Intent.createChooser(shareIntent, "Share via"))
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+
+                }
+
+            })
+    }
+
+
+    private fun shareLink(message: String) {
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_TEXT,
-                "Buy this best app at: https://play.google.com/store/apps/details?id=$appPackageName"
-            )
+            putExtra(Intent.EXTRA_TEXT, message)
             type = "text/plain"
         }
-        startActivity(sendIntent)
+        val shareIntent = Intent.createChooser(sendIntent, "Share via")
+        startActivity(shareIntent)
     }
+
 
     private fun sortReviewsBy(option: String) {
         when (option) {
@@ -1187,7 +1277,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 currentMonth.plusMonths(it.toLong())
             } else {
-                TODO("VERSION.SDK_INT < O")
+                TODO(reason = "VERSION.SDK_INT < O")
             }
         }
         allMonths.forEachIndexed { index, month ->

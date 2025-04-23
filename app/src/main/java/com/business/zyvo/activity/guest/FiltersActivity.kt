@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextUtils
 import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.util.Log
@@ -86,6 +87,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     private var selectedLongitude: Double = 0.0
     private  var min = ""
     private var max  =  ""
+    var isExpanded = false
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -824,21 +826,57 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         })
 
         // Capture selected activities
-        adapterActivity.setOnItemClickListener { list, _ ->
-            selectedActivities = list.filter { it.checked }.toMutableList()
-            selectedActivities.forEach { activity ->
-                selectedActivityName.add(activity.name)
-                Log.d("Selected Activity", "Name: ${activity.name}, Checked: ${activity.checked}")
+        adapterActivity.setOnItemClickListener { list, _,status ->
+         /*   selectedActivities = list.filter { it.checked }.toMutableList()
+            selectedActivities.forEach { activity ->*/
+            if (status) {
+                //selectedActivityName.add(activity.name)
+                selectedActivityName.add(list)
+            }else{
+                /*  if (selectedActivityName.contains(activity.name)){
+                        selectedActivityName.remove(activity.name)
+                    }*/
+                if (selectedActivityName.contains(list)){
+                    selectedActivityName.remove(list)
+                }
             }
+            if (selectedActivityName.contains("Stays")){
+                    binding.tvbadroom.visibility = View.VISIBLE
+                    binding.llbadrooms.visibility = View.VISIBLE
+                }else{
+                    binding.tvbadroom.visibility = View.GONE
+                    binding.llbadrooms.visibility = View.GONE
+                }
+             //   Log.d("Selected Activity", "Name: ${activity.name}, Checked: ${activity.checked}")
+                Log.d("Selected Activity", "List: "+TextUtils.join(",",selectedActivityName))
+          //  }
         }
 
         // Capture Other selected activities
-        adapterActivity2.setOnItemClickListener { list, _ ->
-            selectedActivities = list.filter { it.checked }.toMutableList()
-            selectedActivities.forEach { activity ->
-                selectedActivityName.add(activity.name)
-                Log.d("Selected Other Activity", "Name: ${activity.name}, Checked: ${activity.checked}")
-            }
+        adapterActivity2.setOnItemClickListener { list, _ ,status->
+           /* selectedActivities = list.filter { it.checked }.toMutableList()
+            selectedActivities.forEach { activity ->*/
+                if (status) {
+                    //selectedActivityName.add(activity.name)
+                    selectedActivityName.add(list)
+                }else{
+                  /*  if (selectedActivityName.contains(activity.name)){
+                        selectedActivityName.remove(activity.name)
+                    }*/
+                    if (selectedActivityName.contains(list)){
+                        selectedActivityName.remove(list)
+                    }
+                }
+                if (selectedActivityName.contains("Stays")){
+                    binding.tvbadroom.visibility = View.VISIBLE
+                    binding.llbadrooms.visibility = View.VISIBLE
+                }else{
+                    binding.tvbadroom.visibility = View.GONE
+                    binding.llbadrooms.visibility = View.GONE
+                }
+             //   Log.d("Selected Other Activity", "Name: ${activity.name}, Checked: ${activity.checked}")
+                Log.d("Selected Activity", "List: "+TextUtils.join(",",selectedActivityName))
+          //  }
         }
 
         // Toggle Other Activities RecyclerView
@@ -1086,9 +1124,15 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.underlinedTextView1.paint.isAntiAlias = true
         binding.underlinedTextView1.setOnClickListener {
             amenitiesAdapter.updateAdapter(amenitiesList)
+            isExpanded = !isExpanded
+            amenitiesAdapter.toggleExpand()
+
+            // Update button text
+            binding.underlinedTextView1.text = if (isExpanded) "Show Less" else "Show More"
             // binding.underlinedTextView.visibility =View.GONE
-            showingLessAmText()
+         //   showingLessAmText()
         }
+
     }
 
     private fun showingLessAmText() {
