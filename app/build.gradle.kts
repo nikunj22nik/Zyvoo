@@ -34,11 +34,14 @@ android{
             val STRIPE_KEY = project.property("STRIPE_KEY")
             buildConfigField("String", "STRIPE_KEY", "${STRIPE_KEY}")
 
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
         }
         release {
             isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
             val BASE_URL = project.property("BASE_URL")
             buildConfigField("String", "BASE_URL", "${BASE_URL}")
 
@@ -82,8 +85,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("com.github.bumptech.glide:glide:4.8.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.8.0")
+ //   implementation("com.github.bumptech.glide:glide:4.8.0")  //By Shrawan
+  //  annotationProcessor("com.github.bumptech.glide:compiler:4.8.0")  //By Shrawan
     //sdp and ssp
     implementation(libs.ssp.android)
     implementation(libs.sdp.android)
@@ -109,7 +112,7 @@ dependencies {
     //Image Picker
     implementation(libs.imagepicker)
     implementation(libs.glide)
-    api("com.github.PhilJay:MPAndroidChart:v3.1.0")
+   // api("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.github.stfalcon-studio:StfalconPriceRangeBar-android:v1.5")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
     implementation("com.google.android.libraries.places:places:2.4.0")

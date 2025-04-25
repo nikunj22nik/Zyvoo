@@ -393,13 +393,13 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                     channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+propertyId
                 }
 
-                bookingViewModel.joinChatChannel(userId,Integer.parseInt(hostId),channelName,"guest").collect{
+                bookingViewModel.joinChatChannel(userId,Integer.parseInt(hostId),
+                    channelName,"guest").collect{
                     when(it){
                         is NetworkResult.Success ->{
                             LoadingUtils.hideDialog()
                             var loggedInId = SessionManager(requireContext()).getUserId()
                             if(it.data?.receiver_id?.toInt() == loggedInId){
-
                                 var userImage :String =  it.data?.receiver_avatar.toString()
                                 Log.d("TESTING_PROFILE_HOST",userImage)
                                 var friendImage :String = it.data?.sender_avatar.toString()
@@ -435,7 +435,8 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 userName = it.data?.sender_name.toString()
                                 val intent = Intent(requireContext(), ChatActivity::class.java)
                                 intent.putExtra("user_img",userImage).toString()
-                                SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
+                                SessionManager(requireContext()).getUserId()?.
+                                let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
                                 Log.d("TESTING","REVIEW HOST"+channelName)
                                 intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
                                 intent.putExtra(AppConstant.FRIEND_ID,hostId)

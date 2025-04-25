@@ -233,6 +233,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                         AppConstant.Image ->{
                             val sessionManager = SessionManager(requireContext())
                             val userType = sessionManager.getUserType()
+
                             val hostId = data.receiver_id
                             val bundle = Bundle()
                             bundle.putString(AppConstant.HOST_ID, hostId)
@@ -390,7 +391,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                 LoadingUtils.showDialog(requireContext(),false)
                 var userId = sessionManager.getUserId()
                 if (userId != null) {
-                    var sessionManager = SessionManager(requireContext())
                     var userType = sessionManager.getUserType()
                     if (userType != null) {
                         viewModel.getChatUserChannelList(userId,userType,archive_status).collect {
@@ -829,7 +829,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                         try {
                             if (map.containsKey(conversation.uniqueName)) {
                                 var obj = map.get(conversation.uniqueName)
-                                obj?.lastMessage ="hello" //i.messageBody
+                             //   obj?.lastMessage ="hello" //i.messageBody
                                 obj?.lastMessageTime = TimeUtils.updateLastMsgTime(conversation.dateCreated)
                                 obj?.isOnline = false
                                 obj?.date=conversation.dateCreated
@@ -857,9 +857,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         }
     }
 
-    override fun reloadMessages() {
-        Log.d("*******", "reloadMessages" )
-        LoadingUtils.hideDialog()
+    fun updateNewCode(){
         requireActivity().runOnUiThread {
             try {
                 chatList.clear()
@@ -892,7 +890,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                         Log.e("*******", "Error processing message: ${e.message}", e)
                     }
                 }
-                /*if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
+              /*  if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
                     for (i in quickstartConversationsManager.messages) {
                         try {
                             if (map.containsKey(i.conversation.uniqueName)) {
@@ -902,7 +900,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                                 obj?.isOnline = false
                                 obj?.date=i.dateCreated
                                 // Fetch user identity (assuming it's in i.conversation)
-                                if (obj != null*//* && i.conversation.uniqueName !in addedConversations*//*) {
+                                if (obj != null && i.conversation.uniqueName !in addedConversations) {
                                     chatList.add(obj)
                                     map.put(i.conversation.uniqueName, obj)
                                     addedConversations.add(i.conversation.uniqueName) // Mark as added
@@ -925,6 +923,13 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
             adapterChatList.updateItem(chatList)
         }
+    }
+
+    override fun reloadMessages() {
+        Log.d("*******", "reloadMessages" )
+        LoadingUtils.hideDialog()
+      //  updateAdapter()
+        updateNewCode()
     }
 
     override fun showError(message: String?) {

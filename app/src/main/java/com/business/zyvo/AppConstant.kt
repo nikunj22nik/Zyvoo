@@ -112,6 +112,7 @@ class AppConstant {
         val MOVE: String="MOVE"
         val DELETE: String="delete"
         val ARCHIVED: String="Archived"
+        val Image: String="image"
         val REPORT: String="report"
         val BLOCK: String="block"
         val MUTE: String="mute"

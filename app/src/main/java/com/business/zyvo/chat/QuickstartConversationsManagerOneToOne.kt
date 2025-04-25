@@ -225,6 +225,7 @@ class QuickstartConversationsManagerOneTowOne {
 
                 override fun onError(errorInfo: ErrorInfo) {
                     Log.e(TAG, "Error joining conversation: ${errorInfo.message}")
+                    conversationsManagerListener?.showError(errorInfo.message)
                 }
             })
         }
@@ -334,6 +335,7 @@ class QuickstartConversationsManagerOneTowOne {
                            }
 
                            override fun onError(errorInfo: ErrorInfo?) {
+                               Log.d(TAG, "identity: $identity")
                                super.onError(errorInfo)
                                joinConversation(conversation)
                                Log.e(TAG, "error  .." + errorInfo?.message)

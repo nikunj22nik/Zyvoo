@@ -372,6 +372,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
     override fun messageSentCallback() {
+        Log.d("ZYVOO-TESTING","messageSentCallback")
         if (!isOnline) {
             sendChatNotification()
         }
@@ -379,6 +380,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
     override fun reloadMessages() {
+        Log.d("ZYVOO-TESTING","reloadLastMessages")
         LoadingUtils.hideDialog()
         runOnUiThread {
             if (quickstartConversationsManager.messages.size > 0) {
@@ -386,23 +388,24 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                 if(previousScreenMessage.length > 0) {
                     quickstartConversationsManager.sendMessage(previousScreenMessage)
                 }
-                Log.d("@Error","massage found")
+                Log.d("ZYVOO-TESTING",previousScreenMessage+" massage found")
             } else {
                 if(previousScreenMessage.length > 0) {
                     quickstartConversationsManager.sendMessage(previousScreenMessage)
                 }
-                Log.d("@Error","not massage found")
+                Log.d("ZYVOO-TESTING","not massage found")
             }
         }
     }
 
     override fun reloadLastMessages() {
-        Log.d("*******","reloadLastMessages")
+        LoadingUtils.hideDialog()
+        Log.d("ZYVOO-TESTING","reloadLastMessages")
         Log.d("ZYVOO-TESTING",previousScreenMessage+" Previous Screen message")
-        if(previousScreenMessage!= null && previousScreenMessage.length >0) {
+       /* if(previousScreenMessage!= null && previousScreenMessage.length >0) {
             quickstartConversationsManager.sendMessage(previousScreenMessage)
-        }
-      //  quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
+        }*/
+        quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
     }
 
     override fun showError(message:String) {

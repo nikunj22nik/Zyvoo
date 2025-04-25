@@ -22,7 +22,8 @@ import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
 
 class AdapterChatList(
-    var context: Context, var list: MutableList<ChannelListModel>, var listener: OnClickListener, var listener1: OnClickListener1?)
+    var context: Context, var list: MutableList<ChannelListModel>, var listener: OnClickListener,
+    var listener1: OnClickListener1?)
     : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>(), Filterable {
     // Track the selected position
     private lateinit var  sessionManager: SessionManager
@@ -65,9 +66,11 @@ class AdapterChatList(
                 binding.textDescription.setText(currentItem.lastMessage)
             }
 
-                binding.imageProfilePicture.setOnClickListener {
-                    mListener.onItemClick(currentItem,position,AppConstant.Image)
-                }
+
+            binding.imageProfilePicture.setOnClickListener {
+                mListener.onItemClick(currentItem,position,AppConstant.Image)
+            }
+
                 // Change the background color based on selectedPosition
             if (position == selectedPosition) {
                 // Set the selected background color
