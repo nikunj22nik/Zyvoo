@@ -172,6 +172,7 @@
                         android:layout_marginTop="@dimen/_8ssp"
                         android:layout_marginEnd="@dimen/_15sdp"
                         android:layout_marginStart="@dimen/_15sdp"
+                        android:visibility="gone"
                         android:background="@drawable/bg_four_corner_light_black">
 
                         <TextView
@@ -180,7 +181,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/_5sdp"
                             android:text="Message the host"
-                           android:fontFamily="@font/poppins"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"/>
 

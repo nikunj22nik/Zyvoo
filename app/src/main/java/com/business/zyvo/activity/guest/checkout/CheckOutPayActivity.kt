@@ -218,9 +218,18 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     var propertyid = it.property_id
                     var hostId = it.host_id
                     var userId = SessionManager(this).getUserId()
-                    var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                    //var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                    var channelName= ""
+                    if (userId!=null && hostId!=null) {
+                        if (userId < hostId) {
+                            channelName = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+propertyid
+                        }else{
+                            channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+propertyid
+                        }
+                    }
+
                     Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
-                    callingJoinChannel(propertyid,hostId,userId,channelName,messageSend)
+                    callingJoinChannel(propertyid,hostId,userId!!,channelName,messageSend)
                 }
             }else{
                 if (userInput.trim().isNotEmpty()){
@@ -253,14 +262,20 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
     ){
         lifecycleScope.launch {
             LoadingUtils.showDialog(this@CheckOutPayActivity,false)
+            var channel :String =""
+            if (userId < hostId) {
+                channel = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+property_id
+            }
+            else {
+                channel = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+property_id
+            }
             checkOutPayViewModel.joinChatChannel(userId, hostId, channel, "guest").collect {
                 when (it) {
-                    is NetworkResult.Success -> {
+                  /*  is NetworkResult.Success -> {
                         LoadingUtils.hideDialog()
 
                         var loggedInId = SessionManager(this@CheckOutPayActivity).getUserId()
                         if(it.data?.receiver_id?.toInt() == loggedInId){
-
                             var userImage :String =  it.data?.receiver_avatar.toString()
                             Log.d("TESTING_PROFILE_HOST",userImage)
                             var friendImage :String = it.data?.sender_avatar.toString()
@@ -298,7 +313,8 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                             userName = it.data?.sender_name.toString()
                             val intent = Intent(this@CheckOutPayActivity, ChatActivity::class.java)
                             intent.putExtra("user_img",userImage).toString()
-                            SessionManager(this@CheckOutPayActivity).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
+                            SessionManager(this@CheckOutPayActivity).getUserId()?.
+                            let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
                             Log.d("TESTING","REVIEW HOST"+channel)
                             intent.putExtra(AppConstant.CHANNEL_NAME,channel)
                             intent.putExtra(AppConstant.FRIEND_ID,hostId)
@@ -307,6 +323,59 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                             intent.putExtra("user_name",userName)
                             intent.putExtra("sender_id",hostId.toString())
                             Log.d("ZYVOO-TESTING",messageSend+" Message Send in CheckOut")
+                            intent.putExtra("message",messageSend)
+                            startActivity(intent)
+                        }
+                    }*/
+                    is NetworkResult.Success ->{
+                        LoadingUtils.hideDialog()
+                        var loggedInId = SessionManager(this@CheckOutPayActivity).getUserId()
+                        if(it.data?.receiver_id?.toInt() == loggedInId){
+
+                            var userImage :String =  it.data?.receiver_avatar.toString()
+                            Log.d("TESTING_PROFILE_HOST",userImage)
+                            var friendImage :String = it.data?.sender_avatar.toString()
+                            Log.d("TESTING_PROFILE_HOST",friendImage)
+                            var friendName :String = ""
+                            if(it.data?.sender_name != null){
+                                friendName = it.data.sender_name
+                            }
+                            var userName = ""
+                            userName = it.data?.receiver_name.toString()
+                            val intent = Intent(this@CheckOutPayActivity, ChatActivity::class.java)
+                            intent.putExtra("user_img",userImage).toString()
+                            SessionManager(this@CheckOutPayActivity).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
+                            Log.d("TESTING","REVIEW HOST"+channel)
+                            intent.putExtra(AppConstant.CHANNEL_NAME,channel)
+                            intent.putExtra(AppConstant.FRIEND_ID,hostId)
+                            intent.putExtra("friend_img",friendImage).toString()
+                            intent.putExtra("friend_name",friendName).toString()
+                            intent.putExtra("user_name",userName)
+                            intent.putExtra("sender_id", hostId)
+                            intent.putExtra("message",messageSend)
+                            startActivity(intent)
+                        }
+                        else if(it.data?.sender_id?.toInt() == loggedInId){
+                            var userImage :String =  it.data?.sender_avatar.toString()
+                            Log.d("TESTING_PROFILE_HOST",userImage)
+                            var friendImage :String = it.data?.receiver_avatar.toString()
+                            Log.d("TESTING_PROFILE_HOST",friendImage)
+                            var friendName :String = ""
+                            if(it.data?.receiver_name != null){
+                                friendName = it.data.receiver_name
+                            }
+                            var userName = ""
+                            userName = it.data?.sender_name.toString()
+                            val intent = Intent(this@CheckOutPayActivity, ChatActivity::class.java)
+                            intent.putExtra("user_img",userImage).toString()
+                            SessionManager(this@CheckOutPayActivity).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
+                            Log.d("TESTING","REVIEW HOST"+channel)
+                            intent.putExtra(AppConstant.CHANNEL_NAME,channel)
+                            intent.putExtra(AppConstant.FRIEND_ID,hostId)
+                            intent.putExtra("friend_img",friendImage).toString()
+                            intent.putExtra("friend_name",friendName).toString()
+                            intent.putExtra("user_name",userName)
+                            intent.putExtra("sender_id", hostId)
                             intent.putExtra("message",messageSend)
                             startActivity(intent)
                         }
