@@ -698,6 +698,13 @@ interface ZyvoRepository {
     ) :Flow<NetworkResult<JsonObject>>
 
 
+    suspend fun hostListing(
+        hostId :String,
+        latitude :String,
+        longitude :String
+    ) :Flow<NetworkResult<JsonObject>>
+
+
 }
 
 

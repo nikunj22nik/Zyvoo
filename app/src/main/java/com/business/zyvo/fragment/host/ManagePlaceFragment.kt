@@ -96,7 +96,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     var minimumHourValue = 2;
     var hourlyPrice = 10;
     var bulkDiscountHour = 2;
-    var bulkDiscountPrice = 10;
+    var bulkDiscountPrice = 0;
     var availableMonth: String = "00"
     var fromHour: String = "00:00"
     var toHour: String = "00:00"
@@ -294,6 +294,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     @RequiresApi(Build.VERSION_CODES.O)
     fun callingPublishNowApi() {
         var requestBody = PropertyDetailsSave()
+        Log.d("dataPropertyDetails", requestBody.toString())
         var resultActivityList = mutableListOf<String>()
 
         activityListResult.forEach {
@@ -366,7 +367,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             requestBody.add_ons = validAddOns.toMutableList()
 
         }
-
+        Log.d("dataPropertyDetails", requestBody.toString())
         lifecycleScope.launch {
 
 

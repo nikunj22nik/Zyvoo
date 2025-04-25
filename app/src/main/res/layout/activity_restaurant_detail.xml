@@ -606,7 +606,7 @@
                             android:layout_marginStart="@dimen/_6sdp"
                             android:layout_toEndOf="@id/cl1"
                             android:fontFamily="@font/poppins"
-                            android:hint="01:00 PM"
+                            android:hint="Start Time"
                             android:textColorHint="@color/black"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10ssp" />
@@ -650,7 +650,7 @@
                             android:layout_marginStart="@dimen/_6sdp"
                             android:layout_toEndOf="@id/cl2"
                             android:fontFamily="@font/poppins"
-                            android:hint="04:00 PM"
+                            android:hint="End Time"
                             android:textColorHint="@color/black"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10ssp" />

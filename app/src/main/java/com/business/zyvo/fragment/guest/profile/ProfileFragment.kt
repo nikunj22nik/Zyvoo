@@ -1071,7 +1071,7 @@ Log.d("personaError", result.debugMessage.toString())
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "State added successfully",
+                                                    "Zipcode added successfully.",
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -1116,7 +1116,7 @@ Log.d("personaError", result.debugMessage.toString())
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "item added successfully",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -1359,9 +1359,10 @@ Log.d("personaError", result.debugMessage.toString())
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
+                                                Log.d("checkResponse",resp.toString())
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "item removed",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -1405,7 +1406,7 @@ Log.d("personaError", result.debugMessage.toString())
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "item removed",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -1447,7 +1448,7 @@ Log.d("personaError", result.debugMessage.toString())
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(requireContext(), "Language added!", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(requireContext(), resp.first, Toast.LENGTH_SHORT).show()
                                             }
                                         }
 
@@ -1489,7 +1490,7 @@ Log.d("personaError", result.debugMessage.toString())
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "Language deleted!",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -1533,7 +1534,7 @@ Log.d("personaError", result.debugMessage.toString())
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "Hobbie added!",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -1577,7 +1578,7 @@ Log.d("personaError", result.debugMessage.toString())
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "Hobbie removed!",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -1618,10 +1619,12 @@ Log.d("personaError", result.debugMessage.toString())
                                 ).collect {
                                     when (it) {
                                         is NetworkResult.Success -> {
+
                                             it.data?.let { resp ->
+
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "Hobbie added!",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -1665,7 +1668,7 @@ Log.d("personaError", result.debugMessage.toString())
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "Pet removed!",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }

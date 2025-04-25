@@ -111,6 +111,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     var addOnList: MutableList<AddOn> = mutableListOf()
     var filter = "highest_review"
     private var wishlistItem: MutableList<WishlistItem> = mutableListOf()
+    @RequiresApi(Build.VERSION_CODES.O)
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         YearMonth.now()
     } else {

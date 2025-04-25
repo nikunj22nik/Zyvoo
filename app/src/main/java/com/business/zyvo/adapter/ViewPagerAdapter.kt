@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.OnLogClickListener
+import com.business.zyvo.R
 import com.business.zyvo.adapter.host.MyPlacesHostAdapter
 import com.business.zyvo.databinding.LayoutImageBinding
 import com.business.zyvo.model.HostMyPlacesModel
@@ -25,7 +26,7 @@ class ViewPagerAdapter(
         fun onItemClick()
     }
 
-    fun setOnItemClickListener(listener: ViewPagerAdapter.onItemClickListener) {
+    fun setOnItemClickListener(listener: onItemClickListener) {
         mListener = listener
     }
 
@@ -40,8 +41,11 @@ class ViewPagerAdapter(
         val currentItem = list[position]
 
         Log.d("TESTING_ZYVOO",AppConstant.BASE_URL + currentItem)
-        Glide.with(context).load(AppConstant.BASE_URL + currentItem).into(holder.binding.image)
-
+//        Glide.with(context).load(AppConstant.BASE_URL + currentItem).into(holder.binding.image)
+        Glide.with(context)
+            .load(AppConstant.BASE_URL + currentItem)
+            .error(R.drawable.ic_circular_img_user)
+            .into(holder.binding.image)
         holder.itemView.setOnClickListener {
             mListener.onItemClick()
         }

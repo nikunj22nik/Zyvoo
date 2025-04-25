@@ -423,8 +423,8 @@ object PrepareData {
             ItemRadio("20 hour minimum", false),
             ItemRadio("21 hour minimum", false),
             ItemRadio("22 hour minimum", false),
-            ItemRadio("23 hour minimum", false),
-            ItemRadio("24 hour minimum", false)
+            ItemRadio("23 hour minimum", false)
+           // ItemRadio("24 hour minimum", false)
         )
     }
 
@@ -497,8 +497,8 @@ object PrepareData {
             ItemRadio("20 hour minimum", false),
             ItemRadio("21 hour minimum", false),
             ItemRadio("22 hour minimum", false),
-            ItemRadio("23 hour minimum", false),
-            ItemRadio("24 hour minimum", false)
+            ItemRadio("23 hour minimum", false)
+
         )
     }
 

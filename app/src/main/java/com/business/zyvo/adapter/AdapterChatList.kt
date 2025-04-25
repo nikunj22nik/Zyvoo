@@ -65,9 +65,9 @@ class AdapterChatList(
                 binding.textDescription.setText(currentItem.lastMessage)
             }
 
-            binding.imageProfilePicture.setOnClickListener {
-                listener1?.itemClick(position,"image")
-            }
+                binding.imageProfilePicture.setOnClickListener {
+                    mListener.onItemClick(currentItem,position,AppConstant.Image)
+                }
                 // Change the background color based on selectedPosition
             if (position == selectedPosition) {
                 // Set the selected background color

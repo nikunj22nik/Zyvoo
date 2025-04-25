@@ -351,7 +351,7 @@ interface ZyvoApi {
     suspend fun approveDeclineBooking(
         @Field("booking_id") bookingId :Int,
         @Field("status") status :String,
-        @Field("message") message :String,
+        @Field("host_message") message :String,
         @Field("declined_reason") declineReason :String
     ) : Response<JsonObject>
 
@@ -907,6 +907,12 @@ interface ZyvoApi {
     ) : Response<JsonObject>
 
 
-
+    @POST("host_listing")
+    @FormUrlEncoded
+    suspend fun hostListing(
+        @Field("host_id") hostId :String,
+        @Field("latitude") latitude :String,
+        @Field("longitude") longitude :String
+    ) : Response<JsonObject>
 
 }

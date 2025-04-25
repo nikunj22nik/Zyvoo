@@ -78,7 +78,7 @@
         tools:layout="@layout/fragment_chat_details" />
     <fragment
         android:id="@+id/hostDetailsFragment"
-        android:name="com.business.zyvo.fragment.guest.HostDetailsFragment"
+        android:name="com.business.zyvo.fragment.guest.hostDetails.HostDetailsFragment"
         android:label="fragment_host_details"
         tools:layout="@layout/fragment_host_details" />
     <fragment

@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
@@ -228,6 +229,16 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                         AppConstant.ARCHIVED -> {
                             Log.d("TESTING", "Reporting chat for group: ${data.group_name}")
                             toggleArchiveUnarchive(data,index)
+                        }
+                        AppConstant.Image ->{
+                            val sessionManager = SessionManager(requireContext())
+                            val userType = sessionManager.getUserType()
+                            val hostId = data.receiver_id
+                            val bundle = Bundle()
+                            bundle.putString(AppConstant.HOST_ID, hostId)
+                            if (userType.equals("guest")){
+                                findNavController().navigate(R.id.hostDetailsFragment,bundle)
+                            }
                         }
                         else ->{
                             val intent = Intent(requireContext(), ChatActivity::class.java)

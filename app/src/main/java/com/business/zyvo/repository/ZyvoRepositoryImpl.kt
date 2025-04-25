@@ -5456,7 +5456,8 @@ import javax.inject.Inject
 
          }
 
-    override suspend fun otpResetPassword(
+
+     override suspend fun otpResetPassword(
          @Field("user_id") userId :Int
      ) : Flow<NetworkResult<Pair<String,String>>> = flow{
          try {
@@ -5503,5 +5504,42 @@ import javax.inject.Inject
      }
 
 
+
+
+
+     override suspend fun hostListing(
+         hostId: String,
+         latitude: String,
+         longitude: String
+     ): Flow<NetworkResult<JsonObject>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.hostListing(
+                 hostId,latitude,longitude
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             emit(NetworkResult.Success(resp))
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
  }
 

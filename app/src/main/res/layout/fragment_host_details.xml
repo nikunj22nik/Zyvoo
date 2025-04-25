@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/white"
-    tools:context=".fragment.guest.HostDetailsFragment">
+    tools:context=".fragment.guest.hostDetails.HostDetailsFragment">
 
 
     <androidx.core.widget.NestedScrollView
@@ -62,7 +62,7 @@
                     android:padding="@dimen/_16sdp"
 
 
-                    android:src="@drawable/ic_mia_pic"
+                    android:src="@drawable/ic_circular_img_user"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -75,12 +75,13 @@
                     android:background="#E5E5E5" />
 
                 <TextView
+                    android:id="@+id/textHostName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_7sdp"
                     android:fontFamily="@font/poppins"
-                    android:text="Mia J."
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/_17ssp" />
 
@@ -120,6 +121,7 @@
                     android:id="@+id/textLocationName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:maxWidth="@dimen/_120sdp"
                     android:layout_marginVertical="@dimen/_5sdp"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_toEndOf="@+id/textMyWorkName"
@@ -129,7 +131,7 @@
                     android:maxLines="1"
                     android:paddingHorizontal="@dimen/_10sdp"
                     android:paddingVertical="@dimen/_7sdp"
-                    android:text="New York, US"
+                    android:text=""
 
                     android:textColor="@color/black"
                     android:textSize="@dimen/_11sdp"
@@ -140,7 +142,7 @@
                     android:id="@+id/textMyWorkName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
+                    android:maxWidth="@dimen/_150sdp"
                     android:layout_marginVertical="@dimen/_5sdp"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:background="@drawable/button_grey_line_bg"
@@ -150,7 +152,7 @@
                     android:maxLines="1"
                     android:paddingHorizontal="@dimen/_10sdp"
                     android:paddingVertical="@dimen/_7sdp"
-                    android:text="Lawyer"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/_11sdp"
 
@@ -171,7 +173,7 @@
                     android:fontFamily="@font/poppins"
                     android:paddingHorizontal="@dimen/_10sdp"
                     android:paddingVertical="@dimen/_7sdp"
-                    android:text="English &amp; Hindi"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/_11sdp"
                     app:drawableStartCompat="@drawable/ic_add_language_icon" />
@@ -186,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only. Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only."
+                android:text=""
                 android:textColor="@color/black" />
 
             <View
@@ -203,10 +205,11 @@
                 android:layout_marginTop="@dimen/_10sdp">
 
                 <TextView
+                    android:id="@+id/textListing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins"
-                    android:text="Mia’s Listings"
+                    android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/_15ssp"
                     android:textStyle="bold" />
@@ -232,6 +235,7 @@
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="true"
                 android:orientation="vertical"
+
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/layout_logged_recyclerview" />
 
@@ -249,7 +253,7 @@
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Reviews (30)"
+                android:text="Reviews ()"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
@@ -275,7 +279,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_8sdp"
-                        android:text="4.9"
+                        android:text=""
                         android:textColor="#FCA800"
                         android:textSize="@dimen/_12sdp" />
 
@@ -328,31 +332,31 @@
                 android:src="@drawable/ic_show_more_review" />
 
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/bg_four_side_grey_corner"
-                android:paddingVertical="@dimen/_11sdp"
-                android:paddingStart="@dimen/_10sdp"
-                android:paddingEnd="@dimen/_12sdp">
+<!--            <LinearLayout-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="@dimen/_10sdp"-->
+<!--                android:background="@drawable/bg_four_side_grey_corner"-->
+<!--                android:paddingVertical="@dimen/_11sdp"-->
+<!--                android:paddingStart="@dimen/_10sdp"-->
+<!--                android:paddingEnd="@dimen/_12sdp">-->
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_m_shape" />
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_gravity="center_vertical"-->
+<!--                    android:src="@drawable/ic_m_shape" />-->
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_7sdp"
-                    android:text="2 Rooms"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_12sdp"
-                    android:textStyle="bold" />
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginStart="@dimen/_7sdp"-->
+<!--                    android:text="2 Rooms"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    android:textSize="@dimen/_12sdp"-->
+<!--                    android:textStyle="bold" />-->
 
-            </LinearLayout>
+<!--            </LinearLayout>-->
 
 
         </LinearLayout>

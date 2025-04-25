@@ -2822,7 +2822,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "Place removed",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -2866,7 +2866,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "My Work Place Removed",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -2908,11 +2908,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-//                                                Toast.makeText(
-//                                                    requireContext(),
-//                                                    resp.toString(),
-//                                                    Toast.LENGTH_SHORT
-//                                                ).show()
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    resp.first,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                             }
                                         }
 
@@ -3003,7 +3003,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "Work added successfully",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -3047,7 +3047,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "Language added!",
+                                                    resp.first,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
 
@@ -3266,7 +3266,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(requireContext(), "Zipcode added successfully", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(requireContext(), "Zipcode added successfully.", Toast.LENGTH_SHORT).show()
                                             }
                                         }
 
