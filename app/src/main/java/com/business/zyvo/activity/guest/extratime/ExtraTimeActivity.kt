@@ -498,7 +498,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 }
                 propertyData?.is_instant_book?.let {
                     if (it == 1) {
-                        binding.ivInsta.visibility = View.VISIBLE
+                        binding.ivInsta.visibility = View.GONE
                     } else {
                         binding.ivInsta.visibility = View.GONE
                     }

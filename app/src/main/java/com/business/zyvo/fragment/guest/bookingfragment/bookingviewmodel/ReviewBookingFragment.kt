@@ -222,7 +222,18 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 hostId = list.data.host_id.toString()
                                 binding.textUserName.text = data.host_name ?: "N/A"
                                 binding.tvNamePlace.text = data.property_name ?: "N/A"
-                                binding.tvStatus.text = data.status
+                               // binding.tvStatus.text = data.status
+                                val status = data.status
+                                binding.tvStatus.text = status?.replaceFirstChar { it.uppercaseChar() } ?: ""
+
+                                //Set background based on booking status
+                                when (data.status) {
+                                    "confirmed" -> binding.tvStatus.setBackgroundResource(R.drawable.blue_button_bg)
+                                    "waiting payment" -> binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                                    "cancelled" -> binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                                    else -> binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
+                                }
+
                                 binding.textMiles.text = (data.distance_miles ?: "N/A").toString()+" miles away"
                                 binding.textRatingStar.text = "${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
                                 binding.time.text = data.charges?.booking_hours.toString()

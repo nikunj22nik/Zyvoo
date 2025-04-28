@@ -1153,7 +1153,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
     private fun profileImageGalleryChooser() {
         ImagePicker.with(this)
-            .galleryOnly().crop() // Crop image (Optional)
+            .galleryOnly().crop(4f,4f) // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
             .createIntent { intent ->
@@ -1164,7 +1164,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private fun profileImageCameraChooser() {
         ImagePicker.with(this)
             .cameraOnly()
-            .crop() // Crop image (Optional)
+            .crop(4f,4f) // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
             .createIntent { intent ->

@@ -788,6 +788,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
+                    android:id="@+id/tvcancelTime"
                     android:text="Cancel for free within 24 hours" />
 
             </LinearLayout>

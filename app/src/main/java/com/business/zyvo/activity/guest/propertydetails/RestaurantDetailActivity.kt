@@ -440,6 +440,10 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
 
+                it.cancellation_time?.let {
+                    binding.tvcancelTime.text = "Cancel for free within $it hours"
+                }
+
             }
         }catch (e:Exception){
             Log.d(ErrorDialog.TAG,e.message.toString())

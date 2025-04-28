@@ -333,13 +333,25 @@ object ErrorDialog {
     }
 
 
-    fun truncateToTwoDecimalPlaces(value: String): String {
+    /*fun truncateToTwoDecimalPlaces(value: String): String {
         return try {
             BigDecimal(value)
                 .setScale(2, RoundingMode.DOWN) // Truncate without rounding
                 .toPlainString() // Ensures no scientific notation
         } catch (e: NumberFormatException) {
             "0.00" // Default value if input is invalid
+        }
+    }*/
+    fun truncateToTwoDecimalPlaces(value: String): String {
+        return try {
+            val bigDecimal = BigDecimal(value).setScale(2, RoundingMode.DOWN)
+            if (bigDecimal.stripTrailingZeros().scale() <= 0) {
+                bigDecimal.toBigInteger().toString() // No decimal part
+            } else {
+                bigDecimal.toPlainString() // Show decimal part
+            }
+        } catch (e: NumberFormatException) {
+            "0"
         }
     }
 

@@ -1,7 +1,5 @@
 package com.business.zyvo.fragment.guest.hostDetails.model
 
-import com.business.zyvo.fragment.guest.profile.model.PayoutData
-import com.google.gson.annotations.SerializedName
 
 
 
@@ -15,7 +13,10 @@ data class HostListingModel(
 data class HostData(
     val host: Host?,
     val about_host: AboutHost?,
-    val properties: MutableList<Property>?
+    val properties: MutableList<Property>?,
+    val total_host_review_count:String,
+    val total_host_review_rating:String
+
 
 )
 

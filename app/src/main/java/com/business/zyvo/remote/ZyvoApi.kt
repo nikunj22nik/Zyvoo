@@ -915,4 +915,14 @@ interface ZyvoApi {
         @Field("longitude") longitude :String
     ) : Response<JsonObject>
 
+    @POST("filter_host_reviews")
+    @FormUrlEncoded
+    suspend fun filterHostReviews(
+        @Field("host_id") host_id :String,
+        @Field("latitude") latitude :String,
+        @Field("longitude") longitude :String,
+        @Field("filter") filter: String,
+        @Field("page") page :String
+    ) : Response<JsonObject>
+
 }

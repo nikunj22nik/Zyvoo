@@ -10,6 +10,7 @@ data class PropertyData(var property_id: Int = 0,  // Use default value or make 
                         var bulk_discount_hour: Int = 0,
                         var bulk_discount_rate: String? = null,
                         var is_instant_book: Int = 0,
+                        var cancellation_time: Int = 0,
                         var images: List<String> = emptyList(),  // Empty list instead of null
                         var hosted_by: String? = null,
                         var host_profile_image: String? = null,

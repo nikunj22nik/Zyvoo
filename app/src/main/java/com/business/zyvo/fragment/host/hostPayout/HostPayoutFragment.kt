@@ -237,7 +237,7 @@ class HostPayoutFragment : Fragment() {
                 imgtype = "camera"
                 ImagePicker.with(this)
                     .cameraOnly()
-                    .crop()
+                    .crop(4f,4f)
                     .compress(1024)
                     .maxResultSize(1080, 1080)
                     .start()
@@ -248,7 +248,7 @@ class HostPayoutFragment : Fragment() {
                 imgtype = "Gallery"
                 ImagePicker.with(this)
                     .galleryOnly()
-                    .crop()
+                    .crop(4f,4f)
                     .compress(1024)
                     .maxResultSize(1080, 1080)
                     .start()

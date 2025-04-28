@@ -38,7 +38,8 @@ class PropertyDetailsViewModel @Inject constructor(private var repository: ZyvoR
         }
     }
 
-    suspend fun filterPropertyReviews(propertyId :String, filter :String, page :String): Flow<NetworkResult<Pair<JsonArray, JsonObject>>> {
+    suspend fun filterPropertyReviews(propertyId :String, filter :String, page :String):
+            Flow<NetworkResult<Pair<JsonArray, JsonObject>>> {
         return repository.filterPropertyReviews(propertyId, filter, page).onEach {
             when(it){
                 is NetworkResult.Loading -> {

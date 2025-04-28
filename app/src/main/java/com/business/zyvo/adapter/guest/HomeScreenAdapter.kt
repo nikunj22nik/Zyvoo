@@ -95,7 +95,7 @@ class HomeScreenAdapter(
         currentItem.is_instant_book?.let {
             if (it==1){
                 holder.binding.textInstantBook.visibility = View.VISIBLE
-                holder.binding.imageReward.visibility = View.VISIBLE
+                holder.binding.imageReward.visibility = View.GONE
             }else{
                 holder.binding.textInstantBook.visibility = View.GONE
                 holder.binding.imageReward.visibility = View.GONE

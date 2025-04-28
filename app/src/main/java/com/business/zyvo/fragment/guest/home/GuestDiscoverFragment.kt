@@ -297,7 +297,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 formatTime(secondsRemaining)
             }
             override fun onFinish() {
-
+                session?.setNeedMore(false)
             }
         }.start()
     }
@@ -483,7 +483,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 override fun onItemClick(position: Int, wish: WishlistItem) {
                     try {
                         wishOpen = false
-                        saveItemInWishlist(property_id, position,wish.wishlist_id.toString(),
+                        saveItemInWishlist(property_id, pos,wish.wishlist_id.toString(),
                             dialog)
                     }catch (e:Exception){
                         e.message
@@ -663,12 +663,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                showToast(requireContext(),resp.first)
                                 val homeData = homePropertyData.get(pos)
                                 homeData.is_in_wishlist = 1
                                 homePropertyData.set(pos,homeData)
                                 adapter.updateData(homePropertyData)
                                 dialog.dismiss()
+                                showToast(requireContext(),resp.first)
 
                             }
                         }
@@ -891,6 +891,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                         is NetworkResult.Error -> {
                             binding.clTimeLeftProgressBar.visibility = View.GONE
                             Log.d("******","run")
+                            session?.setNeedMore(false)
                             val params = binding.rlShowMap.layoutParams as ConstraintLayout.LayoutParams
                             params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 300) // 50px bottom margin
                             binding.rlShowMap.layoutParams = params

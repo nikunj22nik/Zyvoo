@@ -174,7 +174,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             }
         })
 
-        callingGetChatUser("")
+        //callingGetChatUser("")
 
     }
 
@@ -233,11 +233,10 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                         AppConstant.Image ->{
                             val sessionManager = SessionManager(requireContext())
                             val userType = sessionManager.getUserType()
-
-                            val hostId = data.receiver_id
-                            val bundle = Bundle()
-                            bundle.putString(AppConstant.HOST_ID, hostId)
                             if (userType.equals("guest")){
+                                val hostId = data.receiver_id
+                                val bundle = Bundle()
+                                bundle.putString(AppConstant.HOST_ID, hostId)
                                 findNavController().navigate(R.id.hostDetailsFragment,bundle)
                             }
                         }
@@ -273,7 +272,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                                 intent.putExtra("is_muted", data.is_muted)
                                 intent.putExtra("is_archived", data.is_archived)
                             }
-
                             intent.putExtra("sender_id", data.sender_id)
                             startActivity(intent)
                         }
@@ -762,7 +760,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
     override fun onResume() {
         super.onResume()
         (activity as? GuesMain)?.inboxColor()
-      //  callingGetChatUser("")
+        callingGetChatUser("")
     }
 
     override fun receivedNewMessage() {
@@ -946,6 +944,8 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             SessionManager(requireContext()).getUserId().toString())
         quickstartConversationsManager.setListener(this@HostChatFragment)
     }
+
+
 
 
 }

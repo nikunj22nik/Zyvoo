@@ -268,8 +268,8 @@ class AppConstant {
 
         const val validEmail:String="Please Enter Valid Email Address"
         const val validPhoneNumber:String="Please Enter Valid Phone Number"
-const val Image : String = "image"
-const val  propertyList : String = "propertyList"
+        //const val Image : String = "image"
+        const val  propertyList : String = "propertyList"
 
     }
 

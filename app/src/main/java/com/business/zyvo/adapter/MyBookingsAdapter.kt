@@ -27,7 +27,9 @@ class MyBookingsAdapter(
 
             binding.textName.text = currentItem.property_name
             binding.textDate.text = currentItem.booking_date
-            binding.textStatus.text = currentItem.booking_status
+            //binding.textStatus.text = currentItem.booking_status
+            val status = currentItem.booking_status
+            binding.textStatus.text = status?.replaceFirstChar { it.uppercaseChar() } ?: ""
 
             // Set background based on booking status
             when (currentItem.booking_status) {

@@ -409,15 +409,15 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 }
                 propertyData?.is_instant_book?.let {
                     if (it == 1) {
-                        binding.ivInsta.visibility = View.VISIBLE
+                        binding.ivInsta.visibility = View.GONE
                     } else {
                         binding.ivInsta.visibility = View.GONE
                     }
                 }
-                propertyData?.min_booking_hours?.let {
+               /* propertyData?.min_booking_hours?.let {
                     binding.tvResponseTime.text =
                         "Respond within " + convertHoursToHrMin(it.toDouble())
-                }
+                }*/
                 propertyData?.images?.let {
                     if (it.isNotEmpty()) {
                         Glide.with(this@CheckOutPayActivity).load(AppConstant.BASE_URL + it.get(0))

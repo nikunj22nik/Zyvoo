@@ -1145,11 +1145,11 @@ Log.d("personaError", result.debugMessage.toString())
 
                     // Load image into BottomSheetDialog's ImageView if available
                     binding.imageProfilePicture?.let {
-                        /* Glide.with(this)
+                         Glide.with(this)
                             .load(uri)
                             .error(R.drawable.ic_profile_login)
                             .placeholder(R.drawable.ic_profile_login)
-                            .into(it)*/
+                            .into(it)
                         Glide.with(this)
                             .asBitmap()
                             .load(uri)
@@ -1737,7 +1737,7 @@ Log.d("personaError", result.debugMessage.toString())
     private fun profileImageGalleryChooser() {
         ImagePicker.with(this)
             .galleryOnly()
-            .crop() // Crop image (Optional)
+            .crop(4f,4f) // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
             .createIntent { intent ->
@@ -1748,7 +1748,7 @@ Log.d("personaError", result.debugMessage.toString())
     private fun profileImageCameraChooser() {
         ImagePicker.with(this)
             .cameraOnly()
-            .crop() // Crop image (Optional)
+            .crop(4f,4f) // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
             .createIntent { intent ->
@@ -3037,9 +3037,7 @@ Log.d("personaError", result.debugMessage.toString())
                     }
 
                     is NetworkResult.Error -> {
-                        showErrorDialog(
-                            requireContext(), it.message!!
-                        )
+                        showErrorDialog(requireContext(), it.message!!)
                         toggleLoginButtonEnabled(true, text)
                     }
 
@@ -3070,7 +3068,7 @@ Log.d("personaError", result.debugMessage.toString())
                         it.data?.let { resp ->
                             binding.textConfirmNow.visibility = GONE
                             binding.textVerified.visibility = View.VISIBLE
-                            showErrorDialog(requireContext(), resp)
+                            showSuccessDialog(requireContext(), resp)
                             userProfile?.let {
                              it.email = number
                                 binding.user = it
