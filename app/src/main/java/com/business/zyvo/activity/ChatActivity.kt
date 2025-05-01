@@ -164,7 +164,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
         if (NetworkMonitorCheck._isConnected.value) {
-            LoadingUtils.showDialog(this,false)
+        //    LoadingUtils.showDialog(this,false)
 
           /*  quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
             quickstartConversationsManager.setListener(this)*/

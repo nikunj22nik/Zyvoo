@@ -129,7 +129,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_4ssp"
-                            android:id="@+id/ivInsta"
+                            android:id="@+id/ivStar"
                             android:src="@drawable/ic_badge_img" />
 
                     </LinearLayout>
@@ -335,17 +335,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:weightSum="1"
+                    android:weightSum="1">
 
-                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_65sdp"
+                        android:layout_marginVertical="@dimen/_10sdp"
+                        android:layout_weight="0.3"
+                        app:cardCornerRadius="@dimen/_7sdp">
 
-                    <com.google.android.material.imageview.ShapeableImageView
+                        <!-- Image Placeholder -->
+                        <ImageView
+                            android:id="@+id/ivProImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/image_hotel" />
+                    </androidx.cardview.widget.CardView>
+                    <!--<com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_65sdp"
                         android:layout_marginVertical="@dimen/_10sdp"
                         android:layout_weight="0.3"
                         android:id="@+id/ivProImage"
-                        android:src="@drawable/ic_img_check_out_pay" />
+                        android:src="@drawable/ic_img_check_out_pay" />-->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -383,6 +396,7 @@
                                 android:hint="5.0"
                                 android:textColorHint="@color/black"
                                 android:id="@+id/tvRating"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="#FCA800" />
 
                             <TextView
@@ -392,6 +406,7 @@
                                 android:hint="(1k+)"
                                 android:textColorHint="@color/black"
                                 android:id="@+id/tvTotalReview"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="#A4A4A4" />
                         </LinearLayout>
 
@@ -411,6 +426,7 @@
                                 android:layout_marginStart="@dimen/_7sdp"
                                 android:hint="0 miles away"
                                 android:id="@+id/tvMiles"
+                                android:fontFamily="@font/poppins"
                                 android:textColorHint="@color/a4a4a4"
                                 android:textColor="@color/a4a4a4" />
 
@@ -524,9 +540,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-
-                    >
+                    android:layout_marginTop="@dimen/_8sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -549,14 +563,14 @@
                         android:textColor="@color/black"/>" />
 
                 </RelativeLayout>
+                <!--android:layout_marginBottom="@dimen/_10sdp"-->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:id="@+id/llDiscountLabel"
-                    android:visibility="gone"
-                    android:layout_marginBottom="@dimen/_10sdp">
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -583,8 +597,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:layout_marginBottom="@dimen/_10sdp">
+                    android:layout_marginTop="@dimen/_8sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -605,7 +618,7 @@
                         android:textColorHint="@color/black"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/black"/>
-" />
+                     />
 
                 </RelativeLayout>
 
@@ -701,6 +714,7 @@
                             android:layout_toRightOf="@id/img_calendar"
                             android:text="October 22, 2023"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black" />
 
                         <ImageView
@@ -740,6 +754,7 @@
                             android:layout_toRightOf="@id/clock_1"
                             android:hint="2 Hours"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
                             android:textColorHint="@color/black"
                             android:textColor="@color/black" />
 
@@ -771,6 +786,7 @@
                             android:layout_toRightOf="@id/clock_old"
                             android:text="From 01pm to 03pm"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black" />
 
                         <ImageView
@@ -1261,6 +1277,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_14sdp"
+                android:fontFamily="@font/poppins"
                 android:text="Show More" />
 
             <View
@@ -1279,7 +1296,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-
                     android:text="Payment Method"
                     android:textSize="@dimen/_14sdp"
                     android:fontFamily="@font/poppins"
@@ -1331,6 +1347,7 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Credit or Debit Card"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
 
@@ -1379,6 +1396,7 @@
                         android:layout_marginHorizontal="@dimen/_12sdp"
                         android:text="Add New Card"
                         android:textSize="@dimen/_13sdp"
+                        android:fontFamily="@font/poppins"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -1564,6 +1582,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:text="Confirm &amp; Pay"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/poppins"
                     android:textStyle="bold" />
 
             </RelativeLayout>

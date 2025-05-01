@@ -111,6 +111,7 @@ class WhereTimeActivity : AppCompatActivity() {
         binding.rlTiming.setOnClickListener {
             if(binding.llTime.visibility == View.GONE){
                 binding.llTime.visibility = View.VISIBLE
+                selectdate = true
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     date = selectedDate.toString()
                 }
@@ -144,9 +145,6 @@ class WhereTimeActivity : AppCompatActivity() {
             else{
                 onBackPressed()
             }*/
-            if (!selectdate){
-                date = ""
-            }
             if (!binding.text1.text.toString().equals("00:00 PM")){
                 start_time   = binding.text1.text.toString()
                 start_time = "$date $start_time"
@@ -158,6 +156,9 @@ class WhereTimeActivity : AppCompatActivity() {
                 end_time = "$date $end_time"
             }else{
                 end_time = ""
+            }
+            if (!selectdate){
+                date = ""
             }
             val requestData = SearchFilterRequest(
                 user_id = sessionManager.getUserId().toString(),
@@ -288,6 +289,7 @@ class WhereTimeActivity : AppCompatActivity() {
         intent?.let {
             if(it.hasExtra(AppConstant.TIME)){
                 binding.llTime.visibility = View.VISIBLE
+                selectdate = true
                 binding.rlActivityRecy.visibility = View.GONE
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     date = selectedDate.toString()
@@ -630,7 +632,6 @@ class WhereTimeActivity : AppCompatActivity() {
                         when (date1) {
                             selectedDate -> {
                                 dateView.setBackgroundResource(R.drawable.current_bg_date)
-                                selectdate = true
                                 date = selectedDate.toString()
                             }
                             else -> dateView.setBackgroundResource(R.drawable.date_bg)

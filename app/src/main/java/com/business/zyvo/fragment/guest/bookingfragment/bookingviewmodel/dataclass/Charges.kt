@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName
 data class Charges(
     @SerializedName("add-on")
     val add_on: Int? = 0,
+    val discount: Int? = 0,
     val booking_amount: String? = "0.0",
     val booking_hours: Int? = 0,
     val bulk_discount_hours: Any? = null,

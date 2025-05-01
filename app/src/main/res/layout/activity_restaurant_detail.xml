@@ -215,13 +215,13 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.49"
                     android:visibility="visible"
-                    android:id="@+id/cvTwoAndThreeImage"
-                    android:background="@drawable/rounded_left_corners">
+                    android:id="@+id/cvTwoAndThreeImage">
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/proImageViewTwoAndThree"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_155sdp"
                         android:scaleType="fitXY"
+                        app:shapeAppearanceOverlay="@style/RoundedCornerImageBigThree"
                         android:src="@drawable/ic_dummy_img_1" />
                 </androidx.cardview.widget.CardView>
 
@@ -230,14 +230,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:visibility="gone"
-                    android:id="@+id/cvOneImage"
-                    android:background="@drawable/rounded_left_corners">
+                    app:cardCornerRadius="15dp"
+                    android:id="@+id/cvOneImage">
 
                     <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/proImageViewOne"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_155sdp"
                         android:scaleType="fitXY"
+                        app:shapeAppearanceOverlay="@style/RoundedCornerImageOne"
                         android:src="@drawable/ic_dummy_img_1" />
                 </androidx.cardview.widget.CardView>
 
@@ -255,35 +256,36 @@
                     android:id="@+id/llThreeImage"
                     android:orientation="vertical">
 
-                    <androidx.cardview.widget.CardView
+                    <!--<androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_75sdp"
-                        android:background="@drawable/rounded_right_corners">
+                        android:layout_height="@dimen/_75sdp">-->
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_72sdp"
-                            android:scaleType="fitXY"
-                            android:id="@+id/prImageTwo"
-                            android:src="@drawable/ic_dummy_img_2" />
-
-
-                    </androidx.cardview.widget.CardView>
-
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_75sdp"
-                        android:layout_marginTop="@dimen/_4sdp"
-                        android:background="@drawable/rounded_right_corners">
-
-                        <ImageView
+                        <com.google.android.material.imageview.ShapeableImageView
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_75sdp"
                             android:scaleType="fitXY"
+                            android:id="@+id/prImageTwo"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
+                            android:src="@drawable/ic_dummy_img_2" />
+
+
+                   <!-- </androidx.cardview.widget.CardView>-->
+
+
+                    <!--<androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_75sdp"
+                        android:layout_marginTop="@dimen/_4sdp">-->
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_75sdp"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:scaleType="fitXY"
                             android:id="@+id/prImageThree"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
                             android:src="@drawable/ic_dummy_img_3" />
-                    </androidx.cardview.widget.CardView>
+                  <!--  </androidx.cardview.widget.CardView>-->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -298,26 +300,26 @@
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="0.45"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.49"
                     android:id="@+id/llTwoImage"
                     android:visibility="gone"
                     android:orientation="vertical">
 
-                    <androidx.cardview.widget.CardView
+                   <!-- <androidx.cardview.widget.CardView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/rounded_right_corners">
+                        android:layout_height="match_parent">-->
 
-                        <ImageView
+                        <com.google.android.material.imageview.ShapeableImageView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="@dimen/_155sdp"
                             android:scaleType="fitXY"
                             android:id="@+id/proImageTwo"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
                             android:src="@drawable/ic_dummy_img_2" />
 
 
-                    </androidx.cardview.widget.CardView>
+                  <!--  </androidx.cardview.widget.CardView>-->
                 </LinearLayout>
 
             </LinearLayout>

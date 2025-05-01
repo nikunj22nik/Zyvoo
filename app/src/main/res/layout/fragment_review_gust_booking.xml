@@ -213,32 +213,35 @@
                     android:id="@+id/llTopButtons"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/textReviewBookingButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="00dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_10sdp"
                         android:layout_weight="1"
+                        android:textAlignment="center"
                         android:background="@drawable/bg_save_button"
                         android:paddingHorizontal="@dimen/_18sdp"
                         android:paddingVertical="@dimen/_7sdp"
                         android:text="Review Booking"
+                        android:visibility="gone"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/_12ssp" />
 
                     <TextView
                         android:id="@+id/textMessageTheHostButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="00dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_10sdp"
                         android:layout_weight="1"
+                        android:textAlignment="center"
                         android:background="@drawable/bg_four_corner_light_black"
                         android:paddingHorizontal="@dimen/_15sdp"
                         android:paddingVertical="@dimen/_7sdp"
                         android:text="Message the host"
+                        android:fontFamily="@font/poppins"
                         android:textColor="#000000"
                         android:textSize="@dimen/_12ssp" />
 
@@ -253,11 +256,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_15sdp"
                     android:layout_weight="1"
+                    android:textAlignment="center"
                     android:layout_gravity="center_horizontal"
                     android:background="@drawable/bg_four_corner_light_black"
                     android:paddingHorizontal="@dimen/_16sdp"
                     android:paddingVertical="@dimen/_7sdp"
                     android:text="Report an Issue"
+                    android:fontFamily="@font/poppins"
                     android:textColor="#000000"
                     android:textSize="@dimen/_12ssp" />
 
@@ -344,7 +349,6 @@
                                     android:fontFamily="@font/poppins"
                                     android:text=" (0)"
                                     android:textColor="#666"
-
                                     android:textSize="@dimen/_13ssp" />
 
                                 <ImageView
@@ -365,7 +369,7 @@
                                     android:layout_marginTop="@dimen/_1sdp"
                                     android:layout_toEndOf="@+id/imageMilesIcon"
                                     android:fontFamily="@font/poppins"
-                                    android:text="37 miles away"
+                                    android:text="0 miles away"
                                     android:textColor="#A4A4A4"
                                     android:textSize="@dimen/_11ssp"
                                     app:layout_constraintEnd_toEndOf="parent" />
@@ -515,6 +519,34 @@
 
                         </LinearLayout>
 
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/llDiscountLabel"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/poppins"
+                                android:textColor="@color/black"
+                                android:text="@string/discount"
+                                android:textSize="@dimen/_12sdp"
+                                />
+
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:text="$0"
+                                android:id="@+id/tvDiscount"
+                                android:textColorHint="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textColor="@color/black"/> />
+
+                        </RelativeLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -610,6 +642,7 @@
                         android:paddingHorizontal="@dimen/_10sdp"
                         android:paddingVertical="@dimen/_2sdp"
                         android:text=""
+                        android:fontFamily="@font/poppins"
                         android:textColor="#3A4B4C"
                         android:textSize="@dimen/_11ssp" />
                 </LinearLayout>
@@ -641,7 +674,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:fontFamily="@font/poppins_light"
+                            android:fontFamily="@font/poppins"
                             android:text="Share"
                             android:textColor="#000"
                             android:textSize="@dimen/_10ssp" />
@@ -667,15 +700,135 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_3sdp"
-                            android:fontFamily="@font/poppins_light"
+                            android:fontFamily="@font/poppins"
                             android:text="Favorite"
                             android:textColor="#000"
                             android:textSize="@dimen/_10ssp" />
                     </LinearLayout>
                 </LinearLayout>
 
-
                 <LinearLayout
+                    android:id="@+id/ll_hotel_views"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:weightSum="1">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.49"
+                        android:visibility="visible"
+                        android:id="@+id/cvTwoAndThreeImage">
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/proImageViewTwoAndThree"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_155sdp"
+                            android:scaleType="fitXY"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageBigThree"
+                            android:src="@drawable/ic_dummy_img_1" />
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="gone"
+                        app:cardCornerRadius="15dp"
+                        android:id="@+id/cvOneImage">
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/proImageViewOne"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_155sdp"
+                            android:scaleType="fitXY"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageOne"
+                            android:src="@drawable/ic_dummy_img_1" />
+                    </androidx.cardview.widget.CardView>
+
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.03" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.45"
+                        android:visibility="visible"
+                        android:id="@+id/llThreeImage"
+                        android:orientation="vertical">
+
+                        <!--<androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_75sdp">-->
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_75sdp"
+                            android:scaleType="fitXY"
+                            android:id="@+id/prImageTwo"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
+                            android:src="@drawable/ic_dummy_img_2" />
+
+
+                        <!-- </androidx.cardview.widget.CardView>-->
+
+
+                        <!--<androidx.cardview.widget.CardView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_75sdp"
+                            android:layout_marginTop="@dimen/_4sdp">-->
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_75sdp"
+                            android:layout_marginTop="@dimen/_4sdp"
+                            android:scaleType="fitXY"
+                            android:id="@+id/prImageThree"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
+                            android:src="@drawable/ic_dummy_img_3" />
+                        <!--  </androidx.cardview.widget.CardView>-->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/poppins"
+                            android:layout_gravity="end"
+                            android:visibility="gone"
+                            android:id="@+id/proImageMore"
+                            android:textAlignment="textEnd"
+                            android:layout_marginTop="@dimen/_3sdp"
+                            android:text="@string/see_more"
+                            android:textColor="@color/black" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.49"
+                        android:id="@+id/llTwoImage"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+
+                        <!-- <androidx.cardview.widget.CardView
+                             android:layout_width="match_parent"
+                             android:layout_height="match_parent">-->
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_155sdp"
+                            android:scaleType="fitXY"
+                            android:id="@+id/proImageTwo"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
+                            android:src="@drawable/ic_dummy_img_2" />
+
+
+                        <!--  </androidx.cardview.widget.CardView>-->
+                    </LinearLayout>
+
+                </LinearLayout>
+                <!--<LinearLayout
                     android:id="@+id/ll_hotel_views"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -793,147 +946,8 @@
                         </androidx.cardview.widget.CardView>
                     </LinearLayout>
 
-                </LinearLayout>
-
-               <!-- <LinearLayout
-                    android:id="@+id/ll_hotel_views"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="1"
-                    android:visibility="gone"
-                    android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    >
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/rounded_left_corners"
-                        android:layout_weight="0.49"
-                        >
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/shapeableImageView"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_155sdp"
-                            android:src="@drawable/ic_dummy_img_1"
-                            android:scaleType="fitXY"
-                            />
-                    </androidx.cardview.widget.CardView>
-
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.03"
-                        />
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.45"
-                        android:orientation="vertical"
-                        >
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_75sdp"
-                            android:background="@drawable/rounded_right_corners"
-                            >
-                            <ImageView
-                                android:id="@+id/img1"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/_72sdp"
-                                android:src="@drawable/ic_dummy_img_2"
-                                android:scaleType="fitXY"
-                                />
-
-
-                        </androidx.cardview.widget.CardView>
-
-
-                        <androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_70sdp"
-                            android:background="@drawable/rounded_right_corners"
-                            android:layout_marginTop="@dimen/_4sdp"
-                            >
-                            <ImageView
-                                android:id="@+id/img2"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/_75sdp"
-                                android:src="@drawable/ic_dummy_img_3"
-                                android:scaleType="fitXY"
-                                />
-                        </androidx.cardview.widget.CardView>
-
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_two_img_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:weightSum="1"
-                    android:visibility="gone"
-                    android:layout_margin="@dimen/_10sdp"
-
-                    >
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.45"
-                        >
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/shapeableImageView_2_1"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_155sdp"
-                            android:src="@drawable/ic_dummy_img_1"
-                            android:scaleType="fitXY"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.05"
-                        />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.45"
-
-                        >
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/shapeableImageView_2_2"
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_155sdp"
-                            android:src="@drawable/ic_dummy_img_1"
-                            android:scaleType="fitXY"
-
-                            android:layout_marginEnd="@dimen/_10sdp"
-                            app:shapeAppearanceOverlay="@style/RoundedCorners"
-                            />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ll_single_img"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    >
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/shapeableImageView_1_1"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/_155sdp"
-                        android:src="@drawable/ic_dummy_img_1"
-                        android:scaleType="fitXY"
-                        />
-
                 </LinearLayout>-->
+
 
                 <View
                     android:layout_width="match_parent"
@@ -947,6 +961,7 @@
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_12ssp"
                     android:text="Booking Details"
+                    android:fontFamily="@font/poppins"
                     android:textColor="#000"
                     android:textSize="@dimen/_16sdp"
                     android:textStyle="bold" />
@@ -984,6 +999,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_5sdp"
                             android:text="October 22, 2023"
+                            android:fontFamily="@font/poppins"
                             android:textColor="#000"
                             android:textSize="@dimen/_13ssp" />
                     </LinearLayout>
@@ -1018,6 +1034,7 @@
                             android:text="2 Hours"
                             android:layout_marginStart="@dimen/_3sdp"
                             android:textColor="#000"
+                            android:fontFamily="@font/poppins"
                             android:textSize="@dimen/_13ssp" />
                     </LinearLayout>
 
@@ -1049,6 +1066,7 @@
                         android:text="From 01pm to 03pm"
                         android:layout_marginStart="@dimen/_3sdp"
                         android:textColor="#000"
+                        android:fontFamily="@font/poppins"
                         android:textSize="@dimen/_13ssp" />
                 </LinearLayout>
 
@@ -1068,6 +1086,7 @@
                     android:layout_marginStart="@dimen/_13sdp"
                     android:text="Included in your booking"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/poppins"
                     android:textSize="@dimen/_14sdp"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:textStyle="bold" />
@@ -1097,6 +1116,7 @@
                     android:layout_marginTop="@dimen/_15sdp"
                     android:text="Rules"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/poppins"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
 
@@ -1146,6 +1166,7 @@
                         android:id="@+id/tv_parking_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
                         android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
                         android:padding="@dimen/_10sdp"
                         />
@@ -1197,6 +1218,7 @@
                         android:id="@+id/tv_host_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
                         android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
                         android:padding="@dimen/_10sdp"
                         />
@@ -1216,6 +1238,7 @@
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Add-ons from the host"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp"
                     android:visibility="gone"
@@ -1246,6 +1269,7 @@
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Show More"
+                    android:fontFamily="@font/poppins"
                     android:visibility="gone"/>
 
                 <View
@@ -1262,11 +1286,11 @@
                     android:layout_marginStart="@dimen/_11sdp"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:text="Address &amp; Location"
+                    android:fontFamily="@font/poppins"
                     android:textSize="@dimen/_14sdp"
                     android:textStyle="bold" />
 
                 <TextView
-
                     android:id="@+id/tv_location_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -1327,6 +1351,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_8sdp"
                             android:text="4.9"
+                            android:fontFamily="@font/poppins"
                             android:textColor="#FCA800"
                             android:textSize="@dimen/_12sdp" />
 
@@ -1420,6 +1445,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_7sdp"
                 android:text="2 Rooms"
+                android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />

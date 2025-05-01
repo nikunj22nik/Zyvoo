@@ -15,7 +15,6 @@ import android.os.CountDownTimer
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
-import android.text.Html
 import android.text.TextWatcher
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
@@ -39,7 +38,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -85,6 +83,7 @@ import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.getLocationDetails
 import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.MediaUtils
@@ -113,7 +112,6 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.Objects
 
@@ -181,6 +179,43 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     addLocationAdapter.updateLocations(locationList)
 
                     Log.i(ErrorDialog.TAG, "Place: $placeName, ${place.id}")
+                }
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                Log.i(ErrorDialog.TAG, "User canceled autocomplete")
+            }
+        }
+
+
+
+    // For handling the result of the Autocomplete Activity
+    private val startStreertAutocomplete =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                result.data?.let { intent ->
+                    val place = Autocomplete.getPlaceFromIntent(intent)
+                    val latLng = place.latLng
+                    getLocationDetails(requireContext(), latLng) { locationDetails ->
+                        // Use city, state, zipCode here
+                        locationDetails?.let {
+                            Log.d(ErrorDialog.TAG,
+                                "City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}")
+                            if (!it.city.isNullOrEmpty()&&
+                                !it.state.isNullOrEmpty()&&
+                                !it.zipCode.isNullOrEmpty()){
+                                binding.streetEditText.setText(place.name ?: "")
+                                binding.cityET.setText(it.city)
+                                binding.stateEt.setText(it.state)
+                                binding.zipEt.setText(it.zipCode)
+                                binding.streetEditText.isEnabled = false
+                                binding.imageEditStreetAddress.visibility = View.VISIBLE
+                                binding.imageStreetCheckedButton.visibility = GONE
+                                updateAddStreetAddress(place.name ?: "")
+                                updateStateAddress(AppConstant.profileType)
+                                updateZipCode(it.zipCode,AppConstant.profileType)
+                                updateCityAddress(it.city,AppConstant.profileType)
+                        }
+                        }
+                    }
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
                 Log.i(ErrorDialog.TAG, "User canceled autocomplete")
@@ -315,6 +350,15 @@ Log.d("personaError", result.debugMessage.toString())
                 }
             }
 
+            streetEditText.setOnFocusChangeListener { v, hasFocus ->
+                if (hasFocus) {
+                    startStreetLocationPicker()
+                }
+            }
+            streetEditText.setOnClickListener {
+                    startStreetLocationPicker()
+            }
+
             imageEditStreetAddress.setOnClickListener {
                 streetEditText.isEnabled = true
                 imageEditStreetAddress.visibility = GONE
@@ -340,7 +384,7 @@ Log.d("personaError", result.debugMessage.toString())
                 if (cityET.text.isEmpty()) {
                     showErrorDialog(requireContext(), "City Cannot be Empty")
                 } else {
-                    updateCityAddress(cityET.text.toString())
+                    updateCityAddress(cityET.text.toString(),"")
                 }
                 cityET.isEnabled = false
                 imageEditCityAddress.visibility = View.VISIBLE
@@ -356,7 +400,7 @@ Log.d("personaError", result.debugMessage.toString())
                 if (stateEt.text.isEmpty()) {
                     showErrorDialog(requireContext(), "State Cannot be Empty")
                 } else {
-                    updateStateAddress()
+                    updateStateAddress("")
                 }
                 stateEt.isEnabled = false
                 imageEditStateAddress.visibility = View.VISIBLE
@@ -372,7 +416,7 @@ Log.d("personaError", result.debugMessage.toString())
                 if (zipEt.text.isEmpty()) {
                     showErrorDialog(requireContext(), "Zip Cannot be Empty")
                 } else {
-                    updateZipCode(zipEt.text.toString())
+                    updateZipCode(zipEt.text.toString(),"")
                 }
                 zipEt.isEnabled = false
                 imageEditZipAddress.visibility = View.VISIBLE
@@ -391,6 +435,14 @@ Log.d("personaError", result.debugMessage.toString())
 
         }
 
+    }
+
+    // Function to start the location picker using Autocomplete
+    private fun startStreetLocationPicker() {
+        val fields = listOf(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG)
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+            .build(requireContext())
+        startStreertAutocomplete.launch(intent)
     }
 
     private fun launchVerifyIdentity(){
@@ -961,7 +1013,7 @@ Log.d("personaError", result.debugMessage.toString())
         }
     }
 
-    private fun updateCityAddress(cityName: String) {
+    private fun updateCityAddress(cityName: String,type:String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -981,11 +1033,13 @@ Log.d("personaError", result.debugMessage.toString())
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "City added successfully",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+                                                if (!type.equals(AppConstant.profileType)) {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "City added successfully",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
                                             }
                                         }
 
@@ -1005,7 +1059,7 @@ Log.d("personaError", result.debugMessage.toString())
         }
     }
 
-    private fun updateStateAddress() {
+    private fun updateStateAddress(type:String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -1025,11 +1079,13 @@ Log.d("personaError", result.debugMessage.toString())
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "State added successfully",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+                                                if (!type.equals(AppConstant.profileType)) {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "State added successfully",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
                                             }
                                         }
 
@@ -1049,7 +1105,7 @@ Log.d("personaError", result.debugMessage.toString())
         }
     }
 
-    private fun updateZipCode(zipCode: String) {
+    private fun updateZipCode(zipCode: String,type:String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -1069,11 +1125,13 @@ Log.d("personaError", result.debugMessage.toString())
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "Zipcode added successfully.",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+                                                if (!type.equals(AppConstant.profileType)) {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "Zipcode added successfully.",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
                                             }
                                         }
 

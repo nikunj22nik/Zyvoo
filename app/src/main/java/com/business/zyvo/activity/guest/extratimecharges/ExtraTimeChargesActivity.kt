@@ -453,6 +453,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun setPropertyData() {
         try {
             propertyData?.let {
@@ -463,11 +464,11 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 propertyData?.hosted_by?.let {
                     binding.tvHostName.text = it
                 }
-                propertyData?.is_instant_book?.let {
-                    if (it == 1) {
-                        binding.ivInsta.visibility = View.VISIBLE
+                propertyData?.is_star_host?.let {
+                    if (it == "true") {
+                        binding.ivStar.visibility = View.VISIBLE
                     } else {
-                        binding.ivInsta.visibility = View.GONE
+                        binding.ivStar.visibility = View.GONE
                     }
                 }
                 propertyData?.min_booking_hours?.let {

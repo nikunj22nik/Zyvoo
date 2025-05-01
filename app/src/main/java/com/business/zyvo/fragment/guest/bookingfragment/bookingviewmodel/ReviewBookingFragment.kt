@@ -3,10 +3,13 @@ package com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.os.Environment
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.UnderlineSpan
@@ -21,6 +24,7 @@ import android.widget.PopupWindow
 import android.widget.RatingBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -29,7 +33,10 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.appsflyer.share.LinkGenerator
+import com.appsflyer.share.ShareInviteHelper
 import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
@@ -64,6 +71,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
@@ -169,7 +178,8 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
 
         binding.imageShare.setOnClickListener {
-            shareApp()
+            //shareApp()
+            generateDeepLink()
         }
         binding.textReviewClick.setOnClickListener {
             showPopupWindow(it,0)
@@ -200,6 +210,49 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                 }
             }
         }
+    }
+
+    private fun generateDeepLink() {
+        // Your OneLink base URL and campaign details
+        val currentCampaign = "property_share"
+        val oneLinkId = "scFp" // Replace with your OneLink ID
+        val brandDomain = "zyvobusiness.onelink.me" // Your OneLink domain
+
+        // Prepare the deep link values
+        val deepLink = "zyvoo://property?propertyId=$propertyId"
+        val webLink = "https://https://zyvo.tgastaging.com/property/$propertyId" // Web fallback link
+
+        // Create the link generator
+        val linkGenerator = ShareInviteHelper.generateInviteUrl(requireContext())
+            .setBaseDeeplink("https://$brandDomain/$oneLinkId")
+            .setCampaign(currentCampaign)
+            .addParameter("af_dp", deepLink) // App deep link
+            .addParameter("af_web_dp", webLink) // Web fallback URL
+
+        // Generate the link
+        linkGenerator.generateLink(requireContext(), object : LinkGenerator.ResponseListener {
+            override fun onResponse(s: String) {
+                // Successfully generated the link
+                Log.d(ErrorDialog.TAG, s)
+                // Example share message with the generated link
+                val message = "Check out this property: $s"
+                    shareLink(message)
+            }
+
+            override fun onResponseError(s: String) {
+                // Handle error if link generation fails
+                Log.e("Error", "Error Generating Link: $s")
+            }
+        })
+    }
+    private fun shareLink(message: String) {
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, message)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, "Share via")
+        startActivity(shareIntent)
     }
 
     @SuppressLint("SetTextI18n")
@@ -234,6 +287,11 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                     else -> binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
                                 }
 
+                                if (data.status=="finished"){
+                                    binding.textReviewBookingButton.visibility = View.VISIBLE
+                                }else{
+                                    binding.textReviewBookingButton.visibility = View.GONE
+                                }
                                 binding.textMiles.text = (data.distance_miles ?: "N/A").toString()+" miles away"
                                 binding.textRatingStar.text = "${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
                                 binding.time.text = data.charges?.booking_hours.toString()
@@ -245,6 +303,12 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 binding.tvTaxes.text = "$${truncateToTwoDecimalPlaces(data.charges?.taxes ?: "0.00")}"
                                 binding.tvAddOn.text = "$${truncateToTwoDecimalPlaces(data.charges?.add_on?.toString() ?: "0.00")}"
                                 binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(data.charges?.total ?: "0.00")}"
+                                if (data.charges?.discount!=0){
+                                    binding.llDiscountLabel.visibility = View.VISIBLE
+                                    binding.tvDiscount.text = "$${truncateToTwoDecimalPlaces(data.charges?.discount.toString() ?: "0.00")}"
+                                }else{
+                                    binding.llDiscountLabel.visibility = View.GONE
+                                }
                                 binding.tvBookingDate.text = data.booking_detail?.date ?: "N/A"
                                 binding.bookingFromTo.text = data.booking_detail?.start_end_time ?: "N/A"
                                 binding.tvBookingTotalTime.text = data.booking_detail?.time ?: "N/A"
@@ -280,6 +344,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                     }
                                     data.property_images?.let {
                                         if (it.isNotEmpty()){
+                                            binding.llHotelViews.visibility = View.VISIBLE
                                             if (it.size==1){
                                                 binding.cvTwoAndThreeImage.visibility = View.GONE
                                                 binding.cvOneImage.visibility = View.VISIBLE
@@ -317,6 +382,8 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                                 Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(1)).into(binding.prImageTwo)
                                                 Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(2)).into(binding.prImageThree)
                                             }
+                                        }else{
+                                            binding.llHotelViews.visibility = View.GONE
                                         }
                                     }
                                 }

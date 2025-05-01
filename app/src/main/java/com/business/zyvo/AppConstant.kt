@@ -86,6 +86,7 @@ class AppConstant {
         val EVENT_ID: String?="EVENT_ID"
         val PROVIDER_ID: String?="PROVIDER_ID"
         val type:String? = "type"
+        val profileType:String = "street"
         val article :String= "article"
         val VOOPON_ID :String? = "VOOPOM_ID"
         val Id: String?="ID"
