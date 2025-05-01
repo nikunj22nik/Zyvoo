@@ -14,7 +14,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
-import android.transition.Transition
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -39,7 +38,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.appsflyer.AppsFlyerLib
 import com.appsflyer.share.LinkGenerator
 import com.appsflyer.share.ShareInviteHelper
 import com.bumptech.glide.Glide
@@ -129,8 +127,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         intent.extras?.let {
             propertyId = intent.extras?.getString("propertyId")!!
             propertyMile = intent.extras?.getString("propertyMile")!!
-          //  var status: String = intent.getStringExtra("key_name").toString()
-           // Log.d(ErrorDialog.TAG, status)
+          //var status: String = intent.getStringExtra("key_name").toString()
+         // Log.d(ErrorDialog.TAG, status)
         }
         Log.d(ErrorDialog.TAG, "I am in Restaurent Details")
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
@@ -440,6 +438,10 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
 
+                it.cancellation_time?.let {
+                    binding.tvcancelTime.text = "Cancel for free within $it hours"
+                }
+
             }
         }catch (e:Exception){
             Log.d(ErrorDialog.TAG,e.message.toString())
@@ -523,6 +525,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
+
     private fun generateDeepLink() {
         // Your OneLink base URL and campaign details
         val currentCampaign = "property_share"

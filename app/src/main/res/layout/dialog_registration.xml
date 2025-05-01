@@ -89,8 +89,8 @@
             <com.hbb20.CountryCodePicker
                 android:id="@+id/countyCodePicker"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_height="@dimen/_25ssp"
+                android:layout_marginStart="@dimen/_10ssp"
                 android:background="@android:color/white"
                 android:backgroundTint="@color/white"
                 android:layoutDirection="ltr"

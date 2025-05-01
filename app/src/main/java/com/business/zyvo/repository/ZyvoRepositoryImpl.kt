@@ -5511,7 +5511,7 @@ import javax.inject.Inject
          hostId: String,
          latitude: String,
          longitude: String
-     ): Flow<NetworkResult<JsonObject>> = flow {
+     ): Flow<NetworkResult<Pair<JsonObject, JsonObject>>> = flow {
          emit(NetworkResult.Loading())
          try {
              api.hostListing(
@@ -5520,14 +5520,58 @@ import javax.inject.Inject
                  if (isSuccessful) {
                      body()?.let { resp ->
                          if (resp.has("success") && resp.get("success").asBoolean) {
-                             emit(NetworkResult.Success(resp))
-
+                            // emit(NetworkResult.Success(resp))
+                             val response =
+                                 api.filterHostReviews(hostId, latitude,
+                                     longitude,"highest_review", "1")
+                             if (response.isSuccessful) {
+                                 response.body()?.let { reviewResp ->
+                                     // ✅ Emit both responses as Pair
+                                     emit(NetworkResult.Success(Pair(resp, reviewResp)))
+                                 } ?: emit(NetworkResult.Error("Reviews response is empty"))
+                             } else {
+                                 emit(NetworkResult.Error("Failed to load reviews"))
+                             }
                          } else {
                              emit(NetworkResult.Error(resp.get("message").asString))
                          }
                      } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
                  } else {
 
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+     override suspend fun filterHostReviews(
+         hostId :String,
+         latitude :String,
+         longitude :String,
+         filter: String,
+         page:String
+     ): Flow<NetworkResult<Pair<JsonArray, JsonObject>>> = flow {
+         try {
+             api.filterHostReviews(hostId, latitude,longitude,filter, page).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") &&
+                             resp.get("success").asBoolean
+                         ) {
+                             emit(AuthTask.processDataArrayAndObject(resp))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
                      emit(
                          NetworkResult.Error(
                              ErrorHandler.handleErrorBody(

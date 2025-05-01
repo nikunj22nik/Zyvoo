@@ -6,7 +6,10 @@ import android.content.Context
 import android.content.DialogInterface
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.location.Geocoder
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +20,10 @@ import androidx.databinding.DataBindingUtil
 import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.databinding.CustomDialogBinding
+import com.business.zyvo.model.LocationDetails
+import com.google.android.gms.maps.model.LatLng
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -333,13 +340,25 @@ object ErrorDialog {
     }
 
 
-    fun truncateToTwoDecimalPlaces(value: String): String {
+    /*fun truncateToTwoDecimalPlaces(value: String): String {
         return try {
             BigDecimal(value)
                 .setScale(2, RoundingMode.DOWN) // Truncate without rounding
                 .toPlainString() // Ensures no scientific notation
         } catch (e: NumberFormatException) {
             "0.00" // Default value if input is invalid
+        }
+    }*/
+    fun truncateToTwoDecimalPlaces(value: String): String {
+        return try {
+            val bigDecimal = BigDecimal(value).setScale(2, RoundingMode.DOWN)
+            if (bigDecimal.stripTrailingZeros().scale() <= 0) {
+                bigDecimal.toBigInteger().toString() // No decimal part
+            } else {
+                bigDecimal.toPlainString() // Show decimal part
+            }
+        } catch (e: NumberFormatException) {
+            "0"
         }
     }
 
@@ -355,6 +374,36 @@ object ErrorDialog {
     fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
+
+
+    fun getLocationDetails(context: Context, latLng: LatLng, callback: (LocationDetails?) -> Unit) {
+        Thread {
+            try {
+                val geocoder = Geocoder(context, Locale.getDefault())
+                val addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1)
+
+                val result = if (!addresses.isNullOrEmpty()) {
+                    val address = addresses[0]
+                    LocationDetails(
+                        city = address.locality,
+                        state = address.adminArea,
+                        zipCode = address.postalCode
+                    )
+                } else null
+
+                Handler(Looper.getMainLooper()).post {
+                    callback(result)
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Handler(Looper.getMainLooper()).post {
+                    callback(null)
+                }
+            }
+        }.start()
+    }
+
 
 
 

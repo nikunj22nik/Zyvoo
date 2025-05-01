@@ -61,6 +61,19 @@ android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginStart="@dimen/_2sdp"
         android:textColor="@color/black"
         android:textStyle="normal"/>
+        <TextView
+            android:id="@+id/textdis"
+            android:layout_width="@dimen/_110sdp"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:layout_below="@+id/textTitle"
+            android:layout_gravity="center"
+            android:fontFamily="@font/poppins"
+            android:maxLines="1"
+            android:visibility="gone"
+            android:layout_marginStart="@dimen/_2sdp"
+            android:textColor="@color/black"
+            android:textStyle="normal"/>
 
     <TextView
         android:id="@+id/textSaved"
@@ -69,7 +82,7 @@ android:layout_marginStart="@dimen/_10sdp"
         android:text="4 saved"
         android:layout_gravity="center"
         android:layout_marginStart="@dimen/_2sdp"
-        android:layout_below="@+id/textTitle"
+        android:layout_below="@+id/textdis"
         android:fontFamily="@font/poppins"
         android:textColor="#7F7F7F"
         android:textStyle="normal"/>

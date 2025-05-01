@@ -107,7 +107,7 @@ class TermsServicesFragment : Fragment() ,OnClickListener{
                                 val zonedDateTime = ZonedDateTime.parse(it.data.second)
 
                                 // Format the date to "dd/MM/yyyy"
-                                val outputFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                                val outputFormatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
                                 val formattedDate = zonedDateTime.format(outputFormatter)
                                 binding.textLastUpdate.text = "Last Updated "+formattedDate
                             }

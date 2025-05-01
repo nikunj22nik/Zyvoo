@@ -164,7 +164,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
         if (NetworkMonitorCheck._isConnected.value) {
-            LoadingUtils.showDialog(this,false)
+        //    LoadingUtils.showDialog(this,false)
 
           /*  quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
             quickstartConversationsManager.setListener(this)*/
@@ -299,7 +299,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
     private fun cameraIntent() {
         ImagePicker.with(this)
-            .crop()
+            .crop(4f,4f)
             .cameraOnly() //Crop image(Optional), Check Customization for more option
             .compress(1024) //Final image size will be less than 1 MB(Optional)
             .maxResultSize(
@@ -312,7 +312,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
     private fun galleryIntent() {
         ImagePicker.with(this)
-            .crop()
+            .crop(4f,4f)
             .galleryOnly() //Crop image(Optional), Check Customization for more option
             .compress(1024) //Final image size will be less than 1 MB(Optional)
             .maxResultSize(

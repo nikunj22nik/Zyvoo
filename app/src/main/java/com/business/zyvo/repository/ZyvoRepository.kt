@@ -35,6 +35,7 @@ import com.google.gson.JsonArray
 
 import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
 import retrofit2.http.Field
 
@@ -702,8 +703,15 @@ interface ZyvoRepository {
         hostId :String,
         latitude :String,
         longitude :String
-    ) :Flow<NetworkResult<JsonObject>>
+    ) :Flow<NetworkResult<Pair<JsonObject, JsonObject>>>
 
+    suspend fun filterHostReviews(
+        hostId :String,
+        latitude :String,
+        longitude :String,
+        filter: String,
+        page:String
+    ) :Flow<NetworkResult<Pair<JsonArray, JsonObject>>>
 
 }
 

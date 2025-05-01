@@ -8,7 +8,14 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+   <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK">
+    </uses-permission>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />-->
+
 
 
     <application
@@ -25,7 +32,6 @@
             android:name=".activity.ChatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"
-
             />
         <activity android:name=".activity.guest.sorryresult.SorryActivity"
             android:exported="false">
@@ -72,16 +78,16 @@
             android:exported="true"
             android:windowSoftInputMode="adjustPan"
             tools:ignore="AppLinkUrlError">
-            <intent-filter>
+         <!--   <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="zyvoo" android:host="property" />
-                <!--<data
+                &lt;!&ndash;<data
                     android:scheme="https"
                     android:host="zyvobusiness.onelink.me"
-                    android:pathPrefix="/scFp" />-->
-            </intent-filter>
+                    android:pathPrefix="/scFp" />&ndash;&gt;
+            </intent-filter>-->
         </activity>
 
         <activity
@@ -93,6 +99,15 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+
+                <!--DeepLink-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="zyvoo" android:host="property" />
             </intent-filter>
         </activity>
         <activity
@@ -118,7 +133,13 @@
         </service>
 
 
+      <!--  <service
+            android:name=".service.CountdownService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+            tools:ignore="Instantiatable" />
 
+        <receiver android:name=".service.ReminderReceiver" android:exported="false" />-->
 
     </application>
 

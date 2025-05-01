@@ -101,9 +101,14 @@ class LoggedScreenAdapter(
         currentItem.is_instant_book?.let {
             if (it==1){
                 holder.binding.textInstantBook.visibility = View.VISIBLE
-                holder.binding.imageReward.visibility = View.VISIBLE
             }else{
                 holder.binding.textInstantBook.visibility = View.GONE
+            }
+        }
+        currentItem.is_star_host?.let {
+            if (it=="true"){
+                holder.binding.imageReward.visibility = View.VISIBLE
+            }else{
                 holder.binding.imageReward.visibility = View.GONE
             }
         }

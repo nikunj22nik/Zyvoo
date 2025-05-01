@@ -146,12 +146,13 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_45sdp"
             android:visibility="gone"
+            android:layout_marginHorizontal="@dimen/_10ssp"
             android:layout_marginBottom="10dp">
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/rlblock"
-                android:background="@drawable/bg_four_side_corner_msg_box">
+                android:background="@drawable/button_bg">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -188,8 +189,7 @@
                 android:layout_height="match_parent"
                 android:layout_toStartOf="@+id/sendBtn"
                 android:layout_toEndOf="@+id/imgFile"
-                android:background="@drawable/bg_four_side_corner_msg_box"
-                >
+                android:background="@drawable/bg_four_side_corner_msg_box">
 
                 <EditText
                     android:id="@+id/etmassage"

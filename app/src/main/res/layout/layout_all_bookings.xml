@@ -78,7 +78,6 @@
             android:layout_height="wrap_content"
             android:text="Finished"
             android:maxLines="1"
-
             android:paddingVertical="@dimen/_3sdp"
             android:paddingHorizontal="@dimen/_10ssp"
             android:layout_marginStart="@dimen/_10ssp"

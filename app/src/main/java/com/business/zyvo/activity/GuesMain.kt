@@ -113,21 +113,16 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
     private fun handlingDeepLink() {
         // Get the intent that started this activity
-        val intent = intent
         // Check if the intent contains a URI (deep link)
-        if (intent?.action == Intent.ACTION_VIEW) {
-            val data: Uri? = intent.data
-            if (data != null && data.scheme == "zyvoo" && data.host == "property") {
-                val propertyId = data.getQueryParameter("propertyId")
-                // Now you can use the propertyId in your activity
-                Log.d(ErrorDialog.TAG, "Property ID: $propertyId")
-                // Fetch property details using the propertyId
-                val intent = Intent(this, RestaurantDetailActivity::class.java)
+        if (intent.extras!=null){
+            val propertyId = intent?.extras?.getString("propertyId")
+            val propertyMile = intent?.extras?.getString("propertyMile")
+            val intent = Intent(this, RestaurantDetailActivity::class.java)
                 intent.putExtra("propertyId",propertyId)
-                intent.putExtra("propertyMile","")
+                intent.putExtra("propertyMile",propertyMile)
                 startActivity(intent)
-            }
         }
+
     }
 
     private fun callingGetUserToken() {

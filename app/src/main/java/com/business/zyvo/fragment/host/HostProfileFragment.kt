@@ -101,6 +101,7 @@ import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.getLocationDetails
 import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.MediaUtils
@@ -373,7 +374,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             if (binding.cityET.text.isEmpty()) {
                 showErrorDialog(requireContext(), "City Cannot be Empty")
             } else {
-                updateCityAddress(binding.cityET.text.toString())
+                updateCityAddress(binding.cityET.text.toString(),"")
             }
             binding.cityET.isEnabled = false
             binding.imageEditCityAddress.visibility = View.VISIBLE
@@ -389,7 +390,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             if (binding.stateEt.text.isEmpty()) {
                 showErrorDialog(requireContext(), "State Cannot be Empty")
             } else {
-                updateStateAddress()
+                updateStateAddress("")
             }
             binding.stateEt.isEnabled = false
             binding.imageEditStateAddress.visibility = View.VISIBLE
@@ -405,7 +406,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             if (binding.zipEt.text.isEmpty()) {
                 showErrorDialog(requireContext(), "Zip Cannot be Empty")
             } else {
-                updateZipCode(binding.zipEt.text.toString())
+                updateZipCode(binding.zipEt.text.toString(),"")
             }
             binding.zipEt.isEnabled = false
             binding.imageEditZipAddress.visibility = View.VISIBLE
@@ -421,7 +422,59 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
         }
 
+        binding.streetEditText.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                startStreetLocationPicker()
+            }
+        }
+        binding.streetEditText.setOnClickListener {
+            startStreetLocationPicker()
+        }
 
+
+    }
+
+    // For handling the result of the Autocomplete Activity
+    private val startStreertAutocomplete =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                result.data?.let { intent ->
+                    val place = Autocomplete.getPlaceFromIntent(intent)
+                    val latLng = place.latLng
+                    getLocationDetails(requireContext(), latLng) { locationDetails ->
+                        // Use city, state, zipCode here
+                        locationDetails?.let {
+                            Log.d(ErrorDialog.TAG,
+                                "City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}")
+                            if (!it.city.isNullOrEmpty()&&
+                                !it.state.isNullOrEmpty()&&
+                                !it.zipCode.isNullOrEmpty()){
+                                binding.streetEditText.setText(place.name ?: "")
+                                binding.cityET.setText(it.city)
+                                binding.stateEt.setText(it.state)
+                                binding.zipEt.setText(it.zipCode)
+                                binding.streetEditText.isEnabled = false
+                                binding.imageEditStreetAddress.visibility = View.VISIBLE
+                                binding.imageStreetCheckedButton.visibility = GONE
+                                updateAddStreetAddress(place.name ?: "")
+                                updateStateAddress(AppConstant.profileType)
+                                updateZipCode(it.zipCode,AppConstant.profileType)
+                                updateCityAddress(it.city,AppConstant.profileType)
+                            }
+                        }
+                    }
+                }
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                Log.i(ErrorDialog.TAG, "User canceled autocomplete")
+            }
+        }
+
+    // Function to start the location picker using Autocomplete
+    private fun startStreetLocationPicker() {
+        val fields = listOf(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG)
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+            .build(requireContext())
+        startStreertAutocomplete.launch(intent)
     }
 
 
@@ -1153,7 +1206,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
     private fun profileImageGalleryChooser() {
         ImagePicker.with(this)
-            .galleryOnly().crop() // Crop image (Optional)
+            .galleryOnly().crop(4f,4f) // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
             .createIntent { intent ->
@@ -1164,7 +1217,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private fun profileImageCameraChooser() {
         ImagePicker.with(this)
             .cameraOnly()
-            .crop() // Crop image (Optional)
+            .crop(4f,4f) // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
             .createIntent { intent ->
@@ -3158,7 +3211,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }
     }
 
-    private fun updateCityAddress(cityName: String) {
+    private fun updateCityAddress(cityName: String,type:String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -3178,11 +3231,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "City added successfully",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+                                                if (!type.equals(AppConstant.profileType)) {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "City added successfully",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
                                             }
                                         }
 
@@ -3202,7 +3257,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }
     }
 
-    private fun updateStateAddress() {
+    private fun updateStateAddress(type:String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -3222,11 +3277,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    "State added successfully",
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
+                                                if (!type.equals(AppConstant.profileType)) {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "State added successfully",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
                                             }
                                         }
 
@@ -3246,7 +3303,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }
     }
 
-    private fun updateZipCode(zipCode: String) {
+    private fun updateZipCode(zipCode: String,type:String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -3266,7 +3323,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(requireContext(), "Zipcode added successfully.", Toast.LENGTH_SHORT).show()
+                                                if (!type.equals(AppConstant.profileType)) {
+                                                    Toast.makeText(
+                                                        requireContext(),
+                                                        "Zipcode added successfully.",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
                                             }
                                         }
 
