@@ -343,11 +343,11 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                           location.latitude?.let {
                               location.longitude?.let {
                                   val customMarkerBitmap =
-                                      createCustomMarker(requireContext(), "${location.hourly_rate}/h")
+                                      createCustomMarker(requireContext(), "$${location.hourly_rate.toDouble().toInt()}/h")
                                   val markerOptions = MarkerOptions()
                                       .position(LatLng(location.latitude.toDouble(), location.longitude.toDouble()))
                                       .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
-                                      .title("${location.hourly_rate}/h")
+                                      .title("$${location.hourly_rate.toDouble().toInt()}/h")
                                   val marker = googleMap?.addMarker(markerOptions)
                                   marker?.tag = location.property_id  // 🔑 Save property_id in tag
                                   // Move and zoom the camera to the first location
@@ -404,6 +404,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
     override fun onItemClick(position: Int) {
         Log.d(ErrorDialog.TAG,"I AM HERE IN DEVELOPMENT")
+        Log.d("checkPropertyId",homePropertyData?.get(position)?.property_id.toString())
         val intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
         intent.putExtra("propertyId",homePropertyData?.get(position)?.property_id.toString())
         intent.putExtra("propertyMile",homePropertyData?.get(position)?.distance_miles.toString())

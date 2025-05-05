@@ -63,12 +63,13 @@
         android:hint="Card Number"
         android:inputType="number"
         android:maxLines="1"
-        android:maxLength="16"
+        android:maxLength="19"
         android:paddingHorizontal="@dimen/_10ssp"
         android:paddingVertical="@dimen/_4sdp"
         android:textColor="#000"
         android:textColorHint="#000"
         android:textSize="@dimen/_11ssp"
+
         app:layout_constraintTop_toBottomOf="@id/etCardHolderName" />
 
     <TextView
@@ -119,7 +120,7 @@
         android:autofillHints="creditCardNumber"
         android:background="@drawable/button_grey_line_bg"
         android:fontFamily="@font/poppins"
-        android:hint="Card Cvv"
+        android:hint="Card CVV"
         android:inputType="number"
         android:maxLines="1"
         android:maxLength="4"

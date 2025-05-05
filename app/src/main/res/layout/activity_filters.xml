@@ -273,18 +273,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+
                         android:layout_marginStart="@dimen/_10sdp"
                         android:src="@drawable/ic_location_line" />
 
                     <AutoCompleteTextView
                         android:id="@+id/autocomplete_location"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/_7sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
+
                         android:background="@null"
                         android:hint="Location"
                         android:singleLine="true"
+                        android:gravity="center_vertical"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 

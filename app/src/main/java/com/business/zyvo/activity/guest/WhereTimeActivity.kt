@@ -45,6 +45,8 @@ import com.google.gson.Gson
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.util.Locale
+import java.time.LocalTime
 
 class WhereTimeActivity : AppCompatActivity() {
 
@@ -126,6 +128,24 @@ class WhereTimeActivity : AppCompatActivity() {
             override fun onProgressChanged(progress: String) {
                 try {
                     hour = progress
+
+                    var selectedTime = binding.text1.text
+
+                    // Define the time formatter (12-hour format with AM/PM)
+                    val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+                    } else {
+                        TODO("VERSION.SDK_INT < O")
+                    }
+                    Log.d(ErrorDialog.TAG,selectedTime.toString())
+                    // Parse the start time string into a LocalTime object
+                    val startTime = LocalTime.parse(selectedTime, formatter)
+
+                    val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
+                        .toLong())
+                    // Format the end time back to a string
+                    val formattedEndTime = endTime.format(formatter)
+                    binding.text2.text = formattedEndTime.uppercase()
 
                 }catch (e:Exception){
                     Log.d(ErrorDialog.TAG,e.message!!)
@@ -276,12 +296,26 @@ class WhereTimeActivity : AppCompatActivity() {
         binding.rlView1.setOnClickListener {
                 DateManager(this).showTimePickerDialog1(this) { selectedTime ->
                     binding.text1.setText(selectedTime)
+                    val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+                    } else {
+                        TODO("VERSION.SDK_INT < O")
+                    }
+                    Log.d(ErrorDialog.TAG,selectedTime)
+                    // Parse the start time string into a LocalTime object
+                    val startTime = LocalTime.parse(selectedTime, formatter)
+                    // Add 2 hours to get the end time
+                    val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
+                        .toLong())
+                    // Format the end time back to a string
+                    val formattedEndTime = endTime.format(formatter)
+                    binding.text2.text = formattedEndTime.uppercase()
                 }
         }
         binding.rlView2.setOnClickListener {
-                DateManager(this).showTimePickerDialog1(this) { selectedTime ->
-                    binding.text2.setText(selectedTime)
-                }
+//                DateManager(this).showTimePickerDialog1(this) { selectedTime ->
+//                    binding.text2.setText(selectedTime)
+//                }
         }
     }
 

@@ -344,7 +344,6 @@ class QuickstartConversationsManager {
                     conversation.lastMessageIndex.toInt().toLong()
                 ) { result ->
                     Log.d("*******", "onConversationUpdated")
-                   // messages.add(result!!)
                     if (conversationsManagerListener != null) {
                         conversationsManagerListener!!.receivedNewMessage()
                     }

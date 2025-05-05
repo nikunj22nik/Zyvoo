@@ -40,6 +40,7 @@ import com.business.zyvo.databinding.ActivityExtraTimeBinding
 import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.TAG
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
@@ -229,7 +230,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                         }
 
                         Log.d(
-                            "TESTING_IDS",
+                            TAG,
                             "PropertyId :- " + propertyid.toString() + " Hostid" + hostId
                         )
 
@@ -284,7 +285,6 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                     if (userId < Integer.parseInt(hostId)) {
                         channelName = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+bookingId
                     }
-
                     else {
                         channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+bookingId
                     }
@@ -422,7 +422,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             val intent = Intent(this, GuesMain::class.java)
             intent.putExtra("key_name","12345")
             startActivity(intent)
-            finish()
+           finish()
         }
 
     }
@@ -573,6 +573,11 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             hour?.let {
                 binding.tvHours.text = "$it Hours"
                 binding.tvTotalHours.text = "$it Hours"
+                if (it.equals("23")){
+                    binding.dateView2.visibility = View.GONE
+                }else{
+                    binding.dateView2.visibility = View.VISIBLE
+                }
             }
             propertyData?.hourly_rate?.toDoubleOrNull()?.let { resp ->
                 hour?.let {

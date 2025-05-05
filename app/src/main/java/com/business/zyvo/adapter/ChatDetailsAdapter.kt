@@ -52,7 +52,7 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
 
         val message = quickstartConversationsManager.messages[position]
 
-        quickstartConversationsManager?.readConversastion()
+     //   quickstartConversationsManager?.readConversastion()
 
         Log.d(ErrorDialog.TAG,message.messageBody.toString())
 
@@ -74,9 +74,10 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
         }
 
         val messagetype = String.format(message.type.toString())
-
-        holder.binding.textMessage.text = message.messageBody
-        holder.binding.textDate.text = PrepareData.getMyPrettyDate(message.dateCreated)
+        if (message.conversationSid==quickstartConversationsManager?.conversation?.sid) {
+            holder.binding.textMessage.text = message.messageBody
+            holder.binding.textDate.text = PrepareData.getMyPrettyDate(message.dateCreated)
+        }
         if (messagetype.equals("TEXT",true)){
             holder.binding.textDate.visibility=View.VISIBLE
             holder.binding.textMessage.visibility=View.VISIBLE

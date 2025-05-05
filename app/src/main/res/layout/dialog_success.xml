@@ -6,6 +6,7 @@
     android:layout_marginHorizontal="@dimen/_15sdp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:paddingHorizontal="@dimen/_5sdp"
     android:background="@drawable/dialog_bg">
 
     <ImageView
@@ -60,6 +61,7 @@
         android:fontFamily="@font/poppins"
         android:textStyle="bold"
         android:layout_marginTop="@dimen/_10sdp"
+        android:paddingHorizontal="@dimen/_10sdp"
         android:text="Your password has been changed \nsuccessfully."
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -69,7 +69,7 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
 
      //   var context: Context, var quickstartConversationsManager: QuickstartConversationsManager, var user_id: String, var profile_image:String, var friend_profile_image:String, var typelogin:String
 
-        var session :SessionManager = SessionManager(requireContext())
+        val session :SessionManager = SessionManager(requireContext())
 
         arguments?.let {
             profileImage = it.getString("user_img").toString()
@@ -81,8 +81,8 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
         }
 
 
-        var sessionManager = SessionManager(requireContext())
-        var userType = sessionManager.getUserId()
+        val sessionManager = SessionManager(requireContext())
+        val userType = sessionManager.getUserId()
         if(userType?.equals(AppConstant.Host) == true) {
             val rootView = inflater.inflate(R.layout.activity_host_main, container, false)
             linearLayout = rootView.findViewById(R.id.lay1)
@@ -337,9 +337,4 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
         }
 
     }
-
-
-
-
-
 }
