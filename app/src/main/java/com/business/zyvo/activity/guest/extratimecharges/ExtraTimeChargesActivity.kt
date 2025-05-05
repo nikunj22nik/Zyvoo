@@ -47,6 +47,7 @@ import com.business.zyvo.databinding.ActivityExtraTimeChargesBinding
 import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.addHours
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
 import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
@@ -514,9 +515,14 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 date?.let {
                     binding.tvDate.text = date
                 }
-                stTime?.let { resp ->
+              /*  stTime?.let { resp ->
                     edTime?.let {
-                        binding.tvTiming.text = "From $resp to $it"
+                        binding.tvTiming.text = "From $it to ${addHours(it,hour)}"
+                    }
+                }*/
+                hour?.let { resp ->
+                    edTime?.let {
+                        binding.tvTiming.text = "From $it to ${addHours(it,resp.toInt())}"
                     }
                 }
                 propertyData?.parking_rules?.let {

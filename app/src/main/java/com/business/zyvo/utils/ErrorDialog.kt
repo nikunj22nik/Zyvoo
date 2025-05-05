@@ -165,6 +165,17 @@ object ErrorDialog {
         }
     }
 
+    fun addHours(timeStr: String, hoursToAdd: Int): String {
+        val format = SimpleDateFormat("hh:mm a", Locale.US)
+        val date = format.parse(timeStr) ?: return "Invalid time"
+
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.add(Calendar.HOUR_OF_DAY, hoursToAdd)
+
+        return format.format(calendar.time)
+    }
+
     fun showToast(context: Context?,string: String?){
         Toast.makeText(context,string, Toast.LENGTH_SHORT).show()
     }

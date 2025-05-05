@@ -225,7 +225,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
         binding.imgFile.setOnClickListener {
             if (is_blocked==2){
-                LoadingUtils.showErrorDialog(this, "You are blocked by $friend_name.")
+                showErrorDialog(this, "You are blocked by $friend_name.")
             }else {
                 browsePicture()
             }
@@ -233,7 +233,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
         binding.sendBtn.setOnClickListener {
             if (is_blocked==2){
-                LoadingUtils.showErrorDialog(this, "You are blocked by $friend_name.")
+                showErrorDialog(this, "You are blocked by $friend_name.")
             }else {
                 if (NetworkMonitorCheck._isConnected.value) {
                     if (binding.etmassage.text.toString().trim().isNotEmpty()) {

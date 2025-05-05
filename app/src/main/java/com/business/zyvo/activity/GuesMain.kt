@@ -446,7 +446,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
     }
 
-    private fun getTotalUnreadMessages(){
+ /*   private fun getTotalUnreadMessages(){
         var totalUnreadCount:Long = 0
         runOnUiThread {
             try {
@@ -478,7 +478,55 @@ class GuesMain : AppCompatActivity(), OnClickListener,
                 Log.d("******","msg :- "+e.message)
             }
         }
+    }*/
+
+    private fun getTotalUnreadMessages() {
+        val conversations = quickstartConversationsManager?.conversationsClient?.myConversations
+
+        if (conversations.isNullOrEmpty()) {
+            Log.d("******", "No conversations found")
+            binding.tvChatNumber.text = "0"
+            return
+        }
+
+        var totalUnreadCount: Long = 0
+        var completed = 0
+        val relevantConversations = conversations.filter { map.containsKey(it.uniqueName) }
+
+        if (relevantConversations.isEmpty()) {
+            Log.d("******", "No relevant conversations in map")
+            binding.tvChatNumber.text = "0"
+            return
+        }
+
+        for (conv in relevantConversations) {
+            try {
+                conv.getUnreadMessagesCount { count ->
+                    if (count != null) {
+                        totalUnreadCount += count
+                    }
+                    completed++
+
+                    if (completed == relevantConversations.size) {
+                        // Safely update UI once all async calls complete
+                        runOnUiThread {
+                            Log.d("******", "Final total unread: $totalUnreadCount")
+                            binding.tvChatNumber.text = "$totalUnreadCount"
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("******", "Error while getting unread count: ${e.message}")
+                completed++
+                if (completed == relevantConversations.size) {
+                    runOnUiThread {
+                        binding.tvChatNumber.text = "$totalUnreadCount"
+                    }
+                }
+            }
+        }
     }
+
 
     override fun showError() {
 

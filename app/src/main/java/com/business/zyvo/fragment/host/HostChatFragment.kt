@@ -677,17 +677,27 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             popupWindow.dismiss()
             quickstartConversationsManager.let { quick ->
                 quick.conversationsClient?.let {
+                    try {
                     LoadingUtils.showDialog(requireContext(),false)
                     quick.getUnreadConversations(it
                     ) { unreadConversations ->
                         LoadingUtils.hideDialog()
+                        if (unreadConversations == null) {
+                            Log.e("******", "Unread conversations are null")
+                            return@getUnreadConversations
+                        }
                         Log.d("******", "Unread conversations count: " + unreadConversations.size)
                         val localtchat:MutableList<ChannelListModel> =  mutableListOf()
                         for (conversation in unreadConversations) {
-                            Log.d("******", "Unread conversation: " + conversation.uniqueName)
-                            if (map.containsKey(conversation.uniqueName)) {
-                                val filteredChats = chatList.filter { it.group_name == conversation.uniqueName }
-                                localtchat.addAll(filteredChats)
+                            try {
+                                Log.d("******", "Unread conversation: " + conversation.uniqueName)
+                                if (map.containsKey(conversation.uniqueName)) {
+                                    val filteredChats =
+                                        chatList.filter { it.group_name == conversation.uniqueName }
+                                    localtchat.addAll(filteredChats)
+                                }
+                            }catch (e: Exception) {
+                                Log.e("******", "Error processing conversation: ${e.message}")
                             }
                         }
                         localtchat.sortWith { o1, o2 ->
@@ -696,7 +706,11 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
                         adapterChatList.updateItem(localtchat)
                     }
-                }
+                }  catch (e: Exception) {
+                LoadingUtils.hideDialog()
+                Log.e("******", "Failed to load unread conversations: ${e.message}")
+            }
+                    }
             }
 
         }
