@@ -316,4 +316,14 @@ class SessionManager(var context: Context) {
 
 
 
+    fun setLoginType(loginType :String){
+        editor?.putString(AppConstant.loginType,loginType)
+        editor?.apply()
+    }
+
+    fun getLoginType(): String{
+        return pref?.getString(AppConstant.loginType,"")?: ""
+    }
+
+
 }

@@ -695,6 +695,47 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     }
                 }
             }
+            //vipin
+            etCardNumber.addTextChangedListener(object : TextWatcher {
+                private var isFormatting: Boolean = false
+                private var previousText: String = ""
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    previousText = s.toString()
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (isFormatting) return
+
+                    isFormatting = true
+
+                    val digitsOnly = s.toString().replace(" ", "")
+                    val formatted = StringBuilder()
+
+                    for (i in digitsOnly.indices) {
+                        formatted.append(digitsOnly[i])
+                        if ((i + 1) % 4 == 0 && i != digitsOnly.length - 1) {
+                            formatted.append(" ")
+                        }
+                    }
+
+                    if (formatted.toString() != s.toString()) {
+                        etCardNumber.setText(formatted.toString())
+                        etCardNumber.setSelection(formatted.length)
+                    }
+
+                    isFormatting = false
+                }
+            })
+            //end
+
             submitButton.setOnClickListener {
                 if (etCardHolderName.text.isEmpty()) {
                     showToast(this@ExtraTimeChargesActivity, AppConstant.cardName)
@@ -709,8 +750,15 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     val stripe = Stripe(this@ExtraTimeChargesActivity, BuildConfig.STRIPE_KEY)
                     var month: Int? = null
                     var year: Int? = null
+                   // val cardNumber: String =
+                     //   Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
+                    //vipin
                     val cardNumber: String =
-                        Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
+                        Objects.requireNonNull(etCardNumber.text.toString().replace(" ", "").trim())
+                            .toString()
+                    Log.d("checkCardNumber",cardNumber)
+
+
                     val cvvNumber: String =
                         Objects.requireNonNull(etCardCvv.text.toString().trim()).toString()
                     val name: String = etCardHolderName.text.toString().trim()

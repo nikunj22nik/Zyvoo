@@ -218,60 +218,70 @@ class HostPayoutFragment : Fragment() {
 
     private fun setUpUi() {
         binding.imguploaddocument.setOnClickListener {
-            //if (hasPermissions(requireContext(), *permissions())) {
-            val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
-            dialog.setContentView(R.layout.alert_box_gallery_pdf)
-            val layoutParams = WindowManager.LayoutParams()
-            layoutParams.copyFrom(dialog.window!!.attributes)
-            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-            dialog.window!!.attributes = layoutParams
-            val laygallery: LinearLayout = dialog.findViewById(R.id.lay_gallery)
-            val laycamera: LinearLayout = dialog.findViewById(R.id.lay_camera)
-            val view1: View = dialog.findViewById(R.id.view1)
-            val laypdf: LinearLayout = dialog.findViewById(R.id.lay_pdf)
-            view1.visibility = View.VISIBLE
-            laycamera.visibility = View.VISIBLE
-            laycamera.setOnClickListener {
-                dialog.dismiss()
-                imgtype = "camera"
-                ImagePicker.with(this)
-                    .cameraOnly()
-                    .crop(4f,4f)
-                    .compress(1024)
-                    .maxResultSize(1080, 1080)
-                    .start()
-            }
 
-            laygallery.setOnClickListener {
-                dialog.dismiss()
-                imgtype = "Gallery"
-                ImagePicker.with(this)
-                    .galleryOnly()
-                    .crop(4f,4f)
-                    .compress(1024)
-                    .maxResultSize(1080, 1080)
-                    .start()
-            }
-
-            laypdf.setOnClickListener {
-                imgtype = "pdffile"
-                dialog.dismiss()
-                //fileIntentMulti()
-                //  onUploadPdfClick()
-                openFilePicker()
-            }
-
-            dialog.show()
-//            } else {
-//                Toast.makeText(
-//                    requireContext(),
-//                    "Please go to setting Enable Permission",
-//                    Toast.LENGTH_SHORT
-//                ).show()
+            imgtype = "uploaddocument"
+            ImagePicker.with(this)
+                .crop()
+                .compress(1024)
+                .maxResultSize(1080, 1080)
+                .start()
+//            /*
+//
+//            //if (hasPermissions(requireContext(), *permissions())) {
+//            val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
+//            dialog.setContentView(R.layout.alert_box_gallery_pdf)
+//            val layoutParams = WindowManager.LayoutParams()
+//            layoutParams.copyFrom(dialog.window!!.attributes)
+//            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+//            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+//            dialog.window!!.attributes = layoutParams
+//            val laygallery: LinearLayout = dialog.findViewById(R.id.lay_gallery)
+//            val laycamera: LinearLayout = dialog.findViewById(R.id.lay_camera)
+//            val view1: View = dialog.findViewById(R.id.view1)
+//            val laypdf: LinearLayout = dialog.findViewById(R.id.lay_pdf)
+//            view1.visibility = View.VISIBLE
+//            laycamera.visibility = View.VISIBLE
+//            laycamera.setOnClickListener {
+//                dialog.dismiss()
+//                imgtype = "camera"
+//                ImagePicker.with(this)
+//                    .cameraOnly()
+//                    .crop(4f,4f)
+//                    .compress(1024)
+//                    .maxResultSize(1080, 1080)
+//                    .start()
 //            }
-
-            //  onUploadPdfClick()
+//
+//            laygallery.setOnClickListener {
+//                dialog.dismiss()
+//                imgtype = "Gallery"
+//                ImagePicker.with(this)
+//                    .galleryOnly()
+//                    .crop(4f,4f)
+//                    .compress(1024)
+//                    .maxResultSize(1080, 1080)
+//                    .start()
+//            }
+//
+//            laypdf.setOnClickListener {
+//                imgtype = "pdffile"
+//                dialog.dismiss()
+//                //fileIntentMulti()
+//                //  onUploadPdfClick()
+//                openFilePicker()
+//            }
+//
+//            dialog.show()
+////            } else {
+////                Toast.makeText(
+////                    requireContext(),
+////                    "Please go to setting Enable Permission",
+////                    Toast.LENGTH_SHORT
+////                ).show()
+////            }
+//
+//            //  onUploadPdfClick()
+//         */
         }
 
 
@@ -380,6 +390,16 @@ class HostPayoutFragment : Fragment() {
                     filebackid = "Yes"
                     binding.textChooseVerificationDocumentBack.text = fileback.toString()
                 }
+
+                if(imgtype.equals("uploaddocument",true)){
+                    val uri = data.data!!
+                      filebankid = "Yes"
+                    bankuploadfile =
+                        BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
+
+                    binding.textChooseBankProof.text = bankuploadfile.toString()
+                }
+
                 if (imgtype.equals("camera", true)) {
                     val uri = data.data!!
                     bankuploadfile =
@@ -862,6 +882,7 @@ class HostPayoutFragment : Fragment() {
                         filefront?.name,
                         requestBody!!
                     )
+
                 } else {
                     null
                 }
@@ -1115,10 +1136,12 @@ class HostPayoutFragment : Fragment() {
 
         binding.spinnerSelectCityDebitCard.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
             cityCode = cityListStr.get(newIndex)
+
         }
 
         binding.spinnerSelectOption.setItems(
             listOf("Bank account statement", "Voided cheque", "Bank letterhead")
+
         )
 
 
@@ -1153,6 +1176,7 @@ class HostPayoutFragment : Fragment() {
         lifecycleScope.launch {
             LoadingUtils.showDialog(requireContext(), false)
             Log.d("TESTING_CODE", "CountryCode is " + countryCode + " State Code is" + statetCode)
+
             viewModel.getCityName(countryCode, statetCode).collect {
                 when (it) {
                     is NetworkResult.Success -> {
@@ -1460,7 +1484,6 @@ class HostPayoutFragment : Fragment() {
             } else {
                 null
             }
-
 
             viewModel.addPayOutCard(
                 userIdPart,

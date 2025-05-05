@@ -968,6 +968,4 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         isPolling = false
     }
 
-
-
 }

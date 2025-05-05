@@ -277,7 +277,7 @@ class AppConstant {
         const val validPhoneNumber: String = "Please Enter Valid Phone Number"
         //const val Image : String = "image"
         const val propertyList: String = "propertyList"
-
+       const val  loginType : String  = "LoginType"
 
     }
 

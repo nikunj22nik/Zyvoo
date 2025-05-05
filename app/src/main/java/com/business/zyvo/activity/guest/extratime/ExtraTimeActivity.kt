@@ -407,7 +407,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             val intent = Intent(this, GuesMain::class.java)
             intent.putExtra("key_name","12345")
             startActivity(intent)
-            finish()
+           finish()
         }
 
     }
@@ -558,6 +558,11 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             hour?.let {
                 binding.tvHours.text = "$it Hours"
                 binding.tvTotalHours.text = "$it Hours"
+                if (it.equals("23")){
+                    binding.dateView2.visibility = View.GONE
+                }else{
+                    binding.dateView2.visibility = View.VISIBLE
+                }
             }
             propertyData?.hourly_rate?.toDoubleOrNull()?.let { resp ->
                 hour?.let {

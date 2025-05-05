@@ -125,6 +125,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         intent.extras?.let {
+            Log.d("getPropertyId",intent.extras?.getString("propertyId")?: "")
             propertyId = intent.extras?.getString("propertyId")!!
             propertyMile = intent.extras?.getString("propertyMile")!!
           //var status: String = intent.getStringExtra("key_name").toString()

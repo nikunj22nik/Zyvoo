@@ -2971,16 +2971,24 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 override fun itemClick(selectedIndex: Int) {
                     if (type.equals(AppConstant.MINIMUM_HOUR)) {
                         minimumHourIndex = selectedIndex
-                        minimumHourValue = selectedIndex + 1;
+                        //minimumHourValue = selectedIndex + 1;
+                        //Vipin
+                        minimumHourValue = selectedIndex + 2;
                     } else if (type.equals(AppConstant.PRICE)) {
                         priceIndex = selectedIndex
-                        hourlyPrice = (selectedIndex + 1) * 10
+                       // hourlyPrice = (selectedIndex + 1) * 10
+                        //Vipin
+                        hourlyPrice = (selectedIndex + 2) * 10
                     } else if (type.equals(AppConstant.DISCOUNT)) {
                         discountPriceIndex = selectedIndex
-                        bulkDiscountPrice = (selectedIndex + 1) * 10
+                        // bulkDiscountPrice = (selectedIndex + 1) * 10
+                        //Vipin
+                        bulkDiscountPrice = (selectedIndex + 2) * 10
                     } else if (type.equals(AppConstant.BULK_HOUR)) {
                         discountHourIndex = selectedIndex
-                        bulkDiscountHour = (selectedIndex + 1)
+                       // bulkDiscountHour = (selectedIndex + 1)
+                        //Vipin
+                        bulkDiscountHour = (selectedIndex + 2)
                     }
                 }
             }) { selectedText ->

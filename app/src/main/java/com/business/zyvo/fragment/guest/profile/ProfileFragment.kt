@@ -116,10 +116,10 @@ import java.util.Locale
 import java.util.Objects
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener ,
+class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,
     SetPreferred {
     private var _binding: FragmentProfileBinding? = null
-    private  val binding get() = _binding!!
+    private val binding get() = _binding!!
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
     private lateinit var addWorkAdapter: AddWorkAdapter
@@ -128,7 +128,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     private lateinit var addPetsAdapter: AddPetsAdapter
     private lateinit var dateManager: DateManager
     private lateinit var userId: String
-
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
     private val profileViewModel: ProfileViewModel by lazy {
         ViewModelProvider(this)[ProfileViewModel::class.java]
@@ -147,7 +146,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     private var imageStatus = ""
     var customerId = ""
     private var isDropdownOpen = false
-    var selectuserCard:UserCards?=null
+    var selectuserCard: UserCards? = null
     lateinit var navController: NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
@@ -157,8 +156,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     var userProfile: UserProfile? = null
     var isPaymentDataLoaded = false
     private lateinit var getInquiryResult: ActivityResultLauncher<Inquiry>
-    var firstName :String =""
-    var lastName :String =""
+    var firstName: String = ""
+    var lastName: String = ""
 
     // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
@@ -174,7 +173,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     addLivePlace(place_name = placeName)
 
                     // Update the list and notify adapter in one step
-                    locationList.add(locationList.size-1, newLocation)
+                    locationList.add(locationList.size - 1, newLocation)
                     // addLocationAdapter.notifyItemInserted(0)
                     addLocationAdapter.updateLocations(locationList)
 
@@ -184,7 +183,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 Log.i(ErrorDialog.TAG, "User canceled autocomplete")
             }
         }
-
 
 
     // For handling the result of the Autocomplete Activity
@@ -197,11 +195,14 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     getLocationDetails(requireContext(), latLng) { locationDetails ->
                         // Use city, state, zipCode here
                         locationDetails?.let {
-                            Log.d(ErrorDialog.TAG,
-                                "City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}")
-                            if (!it.city.isNullOrEmpty()&&
-                                !it.state.isNullOrEmpty()&&
-                                !it.zipCode.isNullOrEmpty()){
+                            Log.d(
+                                ErrorDialog.TAG,
+                                "City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}"
+                            )
+                            if (!it.city.isNullOrEmpty() &&
+                                !it.state.isNullOrEmpty() &&
+                                !it.zipCode.isNullOrEmpty()
+                            ) {
                                 binding.streetEditText.setText(place.name ?: "")
                                 binding.cityET.setText(it.city)
                                 binding.stateEt.setText(it.state)
@@ -211,9 +212,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 binding.imageStreetCheckedButton.visibility = GONE
                                 updateAddStreetAddress(place.name ?: "")
                                 updateStateAddress(AppConstant.profileType)
-                                updateZipCode(it.zipCode,AppConstant.profileType)
-                                updateCityAddress(it.city,AppConstant.profileType)
-                        }
+                                updateZipCode(it.zipCode, AppConstant.profileType)
+                                updateCityAddress(it.city, AppConstant.profileType)
+                            }
                         }
                     }
                 }
@@ -236,20 +237,23 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     // User identity verification completed successfully
                     verifyIdentityApi()
                 }
+
                 is InquiryResponse.Cancel -> {
                     // User abandoned the verification process
                     binding.textConfirmNow2.visibility = View.VISIBLE
                     binding.textVerified2.visibility = GONE
-                    Toast.makeText(requireContext(),"Request Cancelled",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), "Request Cancelled", Toast.LENGTH_LONG).show()
                 }
+
                 is InquiryResponse.Error -> {
                     // Error occurred during identity verification
                     binding.textConfirmNow2.visibility = View.VISIBLE
                     binding.textVerified2.visibility = GONE
-                    Toast.makeText(requireContext(),"Error Occurred, Try Again",Toast.LENGTH_LONG).show()
-Log.d("personaError", result.errorCode.toString())
-Log.d("personaError", result.cause.toString())
-Log.d("personaError", result.debugMessage.toString())
+                    Toast.makeText(requireContext(), "Error Occurred, Try Again", Toast.LENGTH_LONG)
+                        .show()
+                    Log.d("personaError", result.errorCode.toString())
+                    Log.d("personaError", result.cause.toString())
+                    Log.d("personaError", result.debugMessage.toString())
                 }
             }
         }
@@ -268,10 +272,9 @@ Log.d("personaError", result.debugMessage.toString())
         _binding =
             FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
-       // val newLocation = AddLocationModel(AppConstant.unknownLocation)
+        // val newLocation = AddLocationModel(AppConstant.unknownLocation)
 
         //  val newLocation = AddLocationModel(AppConstant.unknownLocation)
-
 
 
         binding.switchHost.setOnClickListener {
@@ -285,7 +288,7 @@ Log.d("personaError", result.debugMessage.toString())
             startActivity(intent)
         }
 
-       // locationList.add(newLocation)
+        // locationList.add(newLocation)
 //        val newWork = AddWorkModel(AppConstant.unknownLocation)
 //        workList.add(newWork)
 //        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
@@ -310,13 +313,13 @@ Log.d("personaError", result.debugMessage.toString())
 //        petsList.add(newPets)
 
 
-
-        addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf(),this)
+        addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf(), this)
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
 
         session = SessionManager(requireActivity())
         Log.d("CheckUserId", session?.getUserId().toString())
         userId = session?.getUserId().toString()
+
 
         // Observe the isLoading state
         lifecycleScope.launch {
@@ -335,6 +338,18 @@ Log.d("personaError", result.debugMessage.toString())
     }
 
     private fun initView() {
+        session?.getLoginType()?.let { Log.d("checkLoginType", it) }
+        if (session?.getLoginType().equals("mobileNumber")) {
+            Log.d("checkLoginType","1")
+            binding.textPasswordTitle.visibility = View.GONE
+            binding.rlPasswordTitle.visibility = View.GONE
+            binding.viewPassword.visibility = View.GONE
+        }else{
+            Log.d("checkLoginType","2")
+            binding.textPasswordTitle.visibility = View.VISIBLE
+            binding.rlPasswordTitle.visibility = View.VISIBLE
+            binding.viewPassword.visibility = View.VISIBLE
+        }
         binding.apply {
             imageEditAbout.setOnClickListener {
                 etAboutMe.isEnabled = true
@@ -356,7 +371,7 @@ Log.d("personaError", result.debugMessage.toString())
                 }
             }
             streetEditText.setOnClickListener {
-                    startStreetLocationPicker()
+                startStreetLocationPicker()
             }
 
             imageEditStreetAddress.setOnClickListener {
@@ -384,7 +399,7 @@ Log.d("personaError", result.debugMessage.toString())
                 if (cityET.text.isEmpty()) {
                     showErrorDialog(requireContext(), "City Cannot be Empty")
                 } else {
-                    updateCityAddress(cityET.text.toString(),"")
+                    updateCityAddress(cityET.text.toString(), "")
                 }
                 cityET.isEnabled = false
                 imageEditCityAddress.visibility = View.VISIBLE
@@ -416,7 +431,7 @@ Log.d("personaError", result.debugMessage.toString())
                 if (zipEt.text.isEmpty()) {
                     showErrorDialog(requireContext(), "Zip Cannot be Empty")
                 } else {
-                    updateZipCode(zipEt.text.toString(),"")
+                    updateZipCode(zipEt.text.toString(), "")
                 }
                 zipEt.isEnabled = false
                 imageEditZipAddress.visibility = View.VISIBLE
@@ -428,7 +443,10 @@ Log.d("personaError", result.debugMessage.toString())
                 if (NetworkMonitorCheck._isConnected.value) {
                     launchVerifyIdentity()
                 } else {
-                    showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
+                    showErrorDialog(
+                        requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
                 }
             }
 
@@ -439,13 +457,13 @@ Log.d("personaError", result.debugMessage.toString())
 
     // Function to start the location picker using Autocomplete
     private fun startStreetLocationPicker() {
-        val fields = listOf(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG)
+        val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
             .build(requireContext())
         startStreertAutocomplete.launch(intent)
     }
 
-    private fun launchVerifyIdentity(){
+    private fun launchVerifyIdentity() {
         val TEMPLATE_ID = "itmpl_yEu1QvFA5fJ1zZ9RbUo1yroGahx2"
 
         val inquiry = Inquiry.fromTemplate(TEMPLATE_ID)
@@ -475,11 +493,11 @@ Log.d("personaError", result.debugMessage.toString())
                                 userProfile.let {
 
                                     it?.first_name?.let {
-                                        name += it+" "
+                                        name += it + " "
                                         firstName = it
                                     }
                                     it?.last_name?.let {
-                                        name+=it
+                                        name += it
                                         lastName = it
                                     }
 
@@ -525,16 +543,16 @@ Log.d("personaError", result.debugMessage.toString())
                                         locationList = getObjectsFromNames(it.where_live) { name ->
                                             AddLocationModel(name)  // Using the constructor of MyObject to create instances
                                         }
-                                        Log.d("ProfileCheck","getObjectsFromNames")
+                                        Log.d("ProfileCheck", "getObjectsFromNames")
                                         val newLanguage =
                                             AddLocationModel(AppConstant.unknownLocation)
                                         locationList.add(newLanguage)
 
 
                                         locationList.forEach {
-                                            Log.d("ProifleDataLoc",it.toString())
+                                            Log.d("ProifleDataLoc", it.toString())
                                         }
-                                        Log.d("ProifleDataLoc",locationList.size.toString())
+                                        Log.d("ProifleDataLoc", locationList.size.toString())
                                         addLocationAdapter.updateLocations(locationList)
                                     }
                                     if (it?.my_work != null && it.my_work.isNotEmpty()) {
@@ -652,7 +670,8 @@ Log.d("personaError", result.debugMessage.toString())
         Log.d("checkWorkList", workList.toString())
         addWorkAdapter.updateWork(workList)
 
-        addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this,this)
+        addLanguageSpeakAdapter =
+            AddLanguageSpeakAdapter(requireContext(), languageList, this, this)
         binding.recyclerViewlanguages.adapter = addLanguageSpeakAdapter
 
         addLanguageSpeakAdapter.updateLanguage(languageList)
@@ -715,7 +734,7 @@ Log.d("personaError", result.debugMessage.toString())
                     val newLanguage = AddLanguageModel(local)
                     addLanguageApi(newLanguage.name)
                     // Add the new language to the list
-                    Log.d("laguageListSize",languageList.size.toString())
+                    Log.d("laguageListSize", languageList.size.toString())
                     languageList.add(languageList.size - 1, newLanguage)
                     addLanguageSpeakAdapter.updateLanguage(languageList)
                     //addLanguageSpeakAdapter.notifyItemInserted(0)
@@ -941,11 +960,12 @@ Log.d("personaError", result.debugMessage.toString())
                             it.data?.let { resp ->
                                 customerId = resp.get("stripe_customer_id").asString
                                 val listType = object : TypeToken<List<UserCards>>() {}.type
-                                userCardsList = Gson().fromJson(resp.getAsJsonArray("cards"), listType)
-                                if (userCardsList.isNotEmpty()){
+                                userCardsList =
+                                    Gson().fromJson(resp.getAsJsonArray("cards"), listType)
+                                if (userCardsList.isNotEmpty()) {
                                     addPaymentCardAdapter.updateItem(userCardsList)
-                                    for (card in userCardsList){
-                                        if (card.is_preferred){
+                                    for (card in userCardsList) {
+                                        if (card.is_preferred) {
                                             selectuserCard = card
                                             break
                                         }
@@ -953,6 +973,7 @@ Log.d("personaError", result.debugMessage.toString())
                                 }
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(requireContext(), it.message!!)
                         }
@@ -963,9 +984,11 @@ Log.d("personaError", result.debugMessage.toString())
                     }
                 }
             }
-        }else{
-            showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -1013,7 +1036,7 @@ Log.d("personaError", result.debugMessage.toString())
         }
     }
 
-    private fun updateCityAddress(cityName: String,type:String) {
+    private fun updateCityAddress(cityName: String, type: String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -1059,7 +1082,7 @@ Log.d("personaError", result.debugMessage.toString())
         }
     }
 
-    private fun updateStateAddress(type:String) {
+    private fun updateStateAddress(type: String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -1105,7 +1128,7 @@ Log.d("personaError", result.debugMessage.toString())
         }
     }
 
-    private fun updateZipCode(zipCode: String,type:String) {
+    private fun updateZipCode(zipCode: String, type: String) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -1203,7 +1226,7 @@ Log.d("personaError", result.debugMessage.toString())
 
                     // Load image into BottomSheetDialog's ImageView if available
                     binding.imageProfilePicture?.let {
-                         Glide.with(this)
+                        Glide.with(this)
                             .load(uri)
                             .error(R.drawable.ic_profile_login)
                             .placeholder(R.drawable.ic_profile_login)
@@ -1417,7 +1440,7 @@ Log.d("personaError", result.debugMessage.toString())
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Log.d("checkResponse",resp.toString())
+                                                Log.d("checkResponse", resp.toString())
                                                 Toast.makeText(
                                                     requireContext(),
                                                     resp.first,
@@ -1506,7 +1529,11 @@ Log.d("personaError", result.debugMessage.toString())
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                Toast.makeText(requireContext(), resp.first, Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    resp.first,
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                             }
                                         }
 
@@ -1748,7 +1775,7 @@ Log.d("personaError", result.debugMessage.toString())
         }
     }
 
-    private fun verifyIdentityApi(){
+    private fun verifyIdentityApi() {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -1771,7 +1798,11 @@ Log.d("personaError", result.debugMessage.toString())
                                                 binding.textConfirmNow2.visibility = GONE
                                                 binding.textVerified2.visibility = View.VISIBLE
                                                 session?.setUserVerified(true)
-                                                Toast.makeText(requireContext(), "Verified Successfully!", Toast.LENGTH_SHORT).show()
+                                                Toast.makeText(
+                                                    requireContext(),
+                                                    "Verified Successfully!",
+                                                    Toast.LENGTH_SHORT
+                                                ).show()
                                             }
                                         }
 
@@ -1795,7 +1826,7 @@ Log.d("personaError", result.debugMessage.toString())
     private fun profileImageGalleryChooser() {
         ImagePicker.with(this)
             .galleryOnly()
-            .crop(4f,4f) // Crop image (Optional)
+            .crop(4f, 4f) // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
             .createIntent { intent ->
@@ -1806,7 +1837,7 @@ Log.d("personaError", result.debugMessage.toString())
     private fun profileImageCameraChooser() {
         ImagePicker.with(this)
             .cameraOnly()
-            .crop(4f,4f) // Crop image (Optional)
+            .crop(4f, 4f) // Crop image (Optional)
             .compress(1024 * 5) // Compress the image to less than 5 MB
             .maxResultSize(250, 250) // Set max resolution
             .createIntent { intent ->
@@ -1816,12 +1847,12 @@ Log.d("personaError", result.debugMessage.toString())
 
 
     private fun dialogAddCard() {
-        var street_address=""
+        var street_address = ""
         var city = ""
         var state = ""
         var zip_code = ""
         var dateManager = DateManager(requireContext())
-        val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
+        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog.apply {
             setCancelable(true)
             setContentView(R.layout.dialog_add_card_details)
@@ -1842,12 +1873,12 @@ Log.d("personaError", result.debugMessage.toString())
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
             checkBox.setOnClickListener {
-                if (checkBox.isChecked){
+                if (checkBox.isChecked) {
                     etStreet.setText(street_address)
                     etCity.setText(city)
                     etState.setText(state)
                     etZipCode.setText(zip_code)
-                }else{
+                } else {
                     etStreet.text.clear()
                     etCity.text.clear()
                     etState.text.clear()
@@ -1864,23 +1895,69 @@ Log.d("personaError", result.debugMessage.toString())
                     }
                 }
             }
+            //vipin
+            etCardNumber.addTextChangedListener(object : TextWatcher {
+                private var isFormatting: Boolean = false
+                private var previousText: String = ""
+
+                override fun beforeTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    count: Int,
+                    after: Int
+                ) {
+                    previousText = s.toString()
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                override fun afterTextChanged(s: Editable?) {
+                    if (isFormatting) return
+
+                    isFormatting = true
+
+                    val digitsOnly = s.toString().replace(" ", "")
+                    val formatted = StringBuilder()
+
+                    for (i in digitsOnly.indices) {
+                        formatted.append(digitsOnly[i])
+                        if ((i + 1) % 4 == 0 && i != digitsOnly.length - 1) {
+                            formatted.append(" ")
+                        }
+                    }
+
+                    if (formatted.toString() != s.toString()) {
+                        etCardNumber.setText(formatted.toString())
+                        etCardNumber.setSelection(formatted.length)
+                    }
+
+                    isFormatting = false
+                }
+            })
+            //end
+
+
             submitButton.setOnClickListener {
-                if (etCardHolderName.text.isEmpty()){
-                    showToast(requireContext(),AppConstant.cardName)
-                }else if (textMonth.text.isEmpty()){
-                    showToast(requireContext(),AppConstant.cardMonth)
-                }else if (textYear.text.isEmpty()){
-                    showToast(requireContext(),AppConstant.cardYear)
-                }else if (etCardCvv.text.isEmpty()){
-                    showToast(requireContext(),AppConstant.cardCVV)
-                }else
-                {
+                if (etCardHolderName.text.isEmpty()) {
+                    showToast(requireContext(), AppConstant.cardName)
+                } else if (textMonth.text.isEmpty()) {
+                    showToast(requireContext(), AppConstant.cardMonth)
+                } else if (textYear.text.isEmpty()) {
+                    showToast(requireContext(), AppConstant.cardYear)
+                } else if (etCardCvv.text.isEmpty()) {
+                    showToast(requireContext(), AppConstant.cardCVV)
+                } else {
                     LoadingUtils.showDialog(requireContext(), false)
                     val stripe = Stripe(requireContext(), BuildConfig.STRIPE_KEY)
                     var month: Int? = null
                     var year: Int? = null
+                    //  val cardNumber: String = Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
+                    //vipin
                     val cardNumber: String =
-                        Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
+                        Objects.requireNonNull(etCardNumber.text.toString().replace(" ", "").trim())
+                            .toString()
+                    Log.d("checkCardNumber",cardNumber)
+
                     val cvvNumber: String =
                         Objects.requireNonNull(etCardCvv.text.toString().trim()).toString()
                     val name: String = etCardHolderName.text.toString().trim()
@@ -1904,7 +1981,8 @@ Log.d("personaError", result.debugMessage.toString())
                         Integer.valueOf(year!!),
                         cvvNumber,
                         name,
-                        address = billingAddress)
+                        address = billingAddress
+                    )
                     stripe?.createCardToken(card, null, null,
                         object : ApiResultCallback<Token> {
                             override fun onError(e: Exception) {
@@ -1917,7 +1995,7 @@ Log.d("personaError", result.debugMessage.toString())
                                 val id = result.id
                                 Log.d("******  Token payment :-", "data $id")
                                 LoadingUtils.hideDialog()
-                                saveCardStripe(dialog,id,checkBox.isChecked)
+                                saveCardStripe(dialog, id, checkBox.isChecked)
 
                             }
                         })
@@ -1925,7 +2003,7 @@ Log.d("personaError", result.debugMessage.toString())
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
-            sameAsMailingAddress{mailingAddress ->
+            sameAsMailingAddress { mailingAddress ->
                 // Do something with the address here
                 if (mailingAddress != null) {
                     Log.d(ErrorDialog.TAG, mailingAddress.toString())
@@ -1953,40 +2031,48 @@ Log.d("personaError", result.debugMessage.toString())
     private fun sameAsMailingAddress(onAddressReceived: (MailingAddress?) -> Unit) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                profileViewModel.sameAsMailingAddress(session?.getUserId().toString()).collect { it ->
-                    when (it) {
-                        is NetworkResult.Success -> {
-                            it.data?.let { resp ->
-                                val mailingAddress: MailingAddress = Gson().fromJson(resp,
-                                    MailingAddress::class.java)
-                                onAddressReceived(mailingAddress)
+                profileViewModel.sameAsMailingAddress(session?.getUserId().toString())
+                    .collect { it ->
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let { resp ->
+                                    val mailingAddress: MailingAddress = Gson().fromJson(
+                                        resp,
+                                        MailingAddress::class.java
+                                    )
+                                    onAddressReceived(mailingAddress)
+                                }
+                            }
+
+                            is NetworkResult.Error -> {
+                                showErrorDialog(requireContext(), it.message!!)
+                                onAddressReceived(null)
+                            }
+
+                            else -> {
+                                Log.v(ErrorDialog.TAG, "error::" + it.message)
+                                onAddressReceived(null)
                             }
                         }
-                        is NetworkResult.Error -> {
-                            showErrorDialog(requireContext(), it.message!!)
-                            onAddressReceived(null)
-                        }
-
-                        else -> {
-                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-                            onAddressReceived(null)
-                        }
                     }
-                }
             }
-        }else{
+        } else {
             onAddressReceived(null)
-            showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg))
+            showErrorDialog(
+                requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
     @SuppressLint("SetTextI18n")
-    private fun saveCardStripe(dialog: Dialog, tokenId:String, saveasMail:Boolean) {
+    private fun saveCardStripe(dialog: Dialog, tokenId: String, saveasMail: Boolean) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                profileViewModel.saveCardStripe(session?.getUserId().toString(),
-                    tokenId).collect {
+                profileViewModel.saveCardStripe(
+                    session?.getUserId().toString(),
+                    tokenId
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
@@ -1994,6 +2080,7 @@ Log.d("personaError", result.debugMessage.toString())
                                 getUserCards()
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(requireContext(), it.message!!)
                         }
@@ -2004,9 +2091,11 @@ Log.d("personaError", result.debugMessage.toString())
                     }
                 }
             }
-        }else{
-            showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -2203,16 +2292,18 @@ Log.d("personaError", result.debugMessage.toString())
     override fun set(position: Int) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                profileViewModel.setPreferredCard(session?.getUserId().toString(),
+                profileViewModel.setPreferredCard(
+                    session?.getUserId().toString(),
                     userCardsList[position].card_id
                 ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 getUserCards()
-                                showToast(requireContext(),resp.first)
+                                showToast(requireContext(), resp.first)
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showSuccessDialog(requireContext(), it.message!!)
                         }
@@ -2223,7 +2314,7 @@ Log.d("personaError", result.debugMessage.toString())
                     }
                 }
             }
-        }else{
+        } else {
             showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
         }
     }
@@ -2435,11 +2526,11 @@ Log.d("personaError", result.debugMessage.toString())
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross = findViewById<ImageView>(R.id.imageCross)
-            var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
+            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
-            etMobileNumber.setText(binding.etPhoneNUMBER.text.toString())
+          //  etMobileNumber.setText(binding.etPhoneNUMBER.text.toString())
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 lifecycleScope.launch {
@@ -2539,11 +2630,11 @@ Log.d("personaError", result.debugMessage.toString())
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            var imageCross = findViewById<ImageView>(R.id.imageCross)
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
 
-            var etEmail = findViewById<EditText>(R.id.etEmail)
-            etEmail.setText(binding.etEmail.text.toString())
-            var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            val etEmail = findViewById<EditText>(R.id.etEmail)
+           // etEmail.setText(binding.etEmail.text.toString())
+            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 lifecycleScope.launch {
@@ -2562,11 +2653,11 @@ Log.d("personaError", result.debugMessage.toString())
                                         etEmail.error = "Email Address required"
                                         showErrorDialog(requireContext(), AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
-                                    } else if (!isValidEmail(etEmail.text.toString())){
+                                    } else if (!isValidEmail(etEmail.text.toString())) {
                                         etEmail.error = "Invalid Email Address"
-                                        showErrorDialog(requireContext(),AppConstant.invalideemail)
+                                        showErrorDialog(requireContext(), AppConstant.invalideemail)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
-                                    }else {
+                                    } else {
                                         emailVerification(
                                             userId,
                                             etEmail.text.toString(),
@@ -2694,7 +2785,8 @@ Log.d("personaError", result.debugMessage.toString())
                             if (!isConn) {
                                 showErrorDialog(
                                     requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg))
+                                    resources.getString(R.string.no_internet_dialog_msg)
+                                )
                                 toggleLoginButtonEnabled(true, textSubmitButton)
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
@@ -2789,7 +2881,7 @@ Log.d("personaError", result.debugMessage.toString())
         rlResendLine: RelativeLayout,
         textResend: TextView
     ) {
-        countDownTimer = object : CountDownTimer(120000, 1000) {
+        countDownTimer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val f = android.icu.text.DecimalFormat("00")
                 val min = (millisUntilFinished / 60000) % 60
@@ -2916,10 +3008,13 @@ Log.d("personaError", result.debugMessage.toString())
                 lifecycleScope.launch {
                     profileViewModel.networkMonitor.isConnected
                         .distinctUntilChanged()
-                        .collect{isConn ->
-                            if (!isConn){
-                                LoadingUtils.showErrorDialog(requireContext(),resources.getString(R.string.no_internet_dialog_msg))
-                            }else{
+                        .collect { isConn ->
+                            if (!isConn) {
+                                LoadingUtils.showErrorDialog(
+                                    requireContext(),
+                                    resources.getString(R.string.no_internet_dialog_msg)
+                                )
+                            } else {
                                 logout()
                             }
 
@@ -3001,7 +3096,13 @@ Log.d("personaError", result.debugMessage.toString())
                             dialog.dismiss()
                             val textHeaderOfOtpVerfication =
                                 "Please type the verification code send \nto $email"
-                            dialogOtp(requireActivity(), "", email, textHeaderOfOtpVerfication, "email")
+                            dialogOtp(
+                                requireActivity(),
+                                "",
+                                email,
+                                textHeaderOfOtpVerfication,
+                                "email"
+                            )
                         }
                         dialog.dismiss()
                         toggleLoginButtonEnabled(true, textLoginButton)
@@ -3030,7 +3131,7 @@ Log.d("personaError", result.debugMessage.toString())
         lifecycleScope.launch {
             session?.getUserId()?.let {
                 profileViewModel.updatePhoneNumber(
-                    it,phoneNumber,
+                    it, phoneNumber,
                     countryCode
                 ).collect {
                     when (it) {
@@ -3070,7 +3171,7 @@ Log.d("personaError", result.debugMessage.toString())
         userId: String,
         otp: String,
         dialog: Dialog,
-        number:String,
+        number: String,
         text: TextView
     ) {
         lifecycleScope.launch {
@@ -3084,7 +3185,7 @@ Log.d("personaError", result.debugMessage.toString())
                             binding.textConfirmNow1.visibility = GONE
                             binding.textVerified1.visibility = View.VISIBLE
                             dialog.dismiss()
-                            showSuccessDialog(requireContext(),resp)
+                            showSuccessDialog(requireContext(), resp)
                             userProfile?.let {
                                 it.phone_number = number
                                 binding.user = it
@@ -3113,7 +3214,7 @@ Log.d("personaError", result.debugMessage.toString())
         userId: String,
         otp: String,
         dialog: Dialog,
-        number:String,
+        number: String,
         text: TextView
     ) {
         lifecycleScope.launch {
@@ -3128,7 +3229,7 @@ Log.d("personaError", result.debugMessage.toString())
                             binding.textVerified.visibility = View.VISIBLE
                             showSuccessDialog(requireContext(), resp)
                             userProfile?.let {
-                             it.email = number
+                                it.email = number
                                 binding.user = it
                             }
                             dialog.dismiss()
@@ -3414,14 +3515,13 @@ Log.d("personaError", result.debugMessage.toString())
     }
 
 
-
     private fun logout() {
         lifecycleScope.launch {
-            profileViewModel.logout(session?.getUserId().toString()).collect{
-                when(it){
+            profileViewModel.logout(session?.getUserId().toString()).collect {
+                when (it) {
 
                     is NetworkResult.Success -> {
-                        showSuccessDialog(requireContext(),it.data!!)
+                        showSuccessDialog(requireContext(), it.data!!)
 
                         val sessionManager = SessionManager(requireContext())
                         sessionManager.setUserId(-1)
@@ -3429,11 +3529,13 @@ Log.d("personaError", result.debugMessage.toString())
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         requireActivity().startActivity(intent)
                     }
+
                     is NetworkResult.Error -> {
-                        showErrorDialog(requireContext(),it.message!!)
+                        showErrorDialog(requireContext(), it.message!!)
 
                     }
-                    else ->{
+
+                    else -> {
 
                     }
 
