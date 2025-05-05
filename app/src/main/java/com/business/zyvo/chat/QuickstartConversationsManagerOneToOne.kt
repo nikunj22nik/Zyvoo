@@ -470,7 +470,9 @@ class QuickstartConversationsManagerOneTowOne {
             Log.d(TAG, "Message added")
             messages.add(message)
             if (message.author == userid) {
-                conversation!!.setAllMessagesRead { }
+                conversation!!.setAllMessagesRead {
+
+                }
             }
             if (conversationsManagerListener != null) {
                 conversationsManagerListener!!.receivedNewMessage()
@@ -479,7 +481,9 @@ class QuickstartConversationsManagerOneTowOne {
         }
 
         override fun onMessageUpdated(message: Message, updateReason: Message.UpdateReason) {
-            conversation!!.setAllMessagesRead { }
+            conversation!!.setAllMessagesRead {
+
+            }
         }
 
         override fun onMessageDeleted(message: Message) {
@@ -542,6 +546,13 @@ class QuickstartConversationsManagerOneTowOne {
           }
 
       })
+    }
+
+    fun readConversation() {
+        conversation?.setAllMessagesRead { result ->
+            // result: Long (number of messages marked as read)
+            // Handle success here if needed
+        }
     }
 
 

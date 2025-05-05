@@ -93,4 +93,21 @@ class BookingViewModel @Inject constructor(private val repository: ZyvoRepositor
         }
     }
 
+    suspend fun cancelBooking( userId : String,
+                               booking_id : String):
+            Flow<NetworkResult<Pair<String, String>>>{
+        return repository.cancelBooking( userId,
+            booking_id,).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
 }

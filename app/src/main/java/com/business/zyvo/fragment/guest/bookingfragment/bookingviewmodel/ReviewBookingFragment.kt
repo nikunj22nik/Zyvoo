@@ -10,8 +10,10 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.os.Environment
+import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.Gravity
@@ -20,8 +22,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.RatingBar
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.FileProvider
@@ -49,6 +53,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.R
 import com.business.zyvo.activity.ChatActivity
+import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.guest.propertydetails.model.Pagination
 import com.business.zyvo.activity.guest.propertydetails.model.Review
 import com.business.zyvo.adapter.AdapterAddOn
@@ -122,7 +127,9 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
         binding.viewProfile.visibility = View.GONE
 
         binding.textMessageTheHostButton.setOnClickListener {
-            callingJoinChannelApi()
+           // callingJoinChannelApi()
+            Log.d(ErrorDialog.TAG,"ON click of message host")
+            callingMessageClickListner()
         }
 
         // Observe the isLoading state
@@ -143,9 +150,160 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
             findNavController().navigate(R.id.helpCenterFragment_host,bundle)
         }
 
+        binding.textCancelTheHostButton.setOnClickListener {
+            cancelScreen()
+        }
+
         getBookingDetailsListAPI()
 
         return binding.root
+    }
+
+    private fun cancelScreen(){
+        val dialog=Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_cancel)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            val okBtn : ImageView = findViewById(R.id.img_crss_1)
+            val cross : RelativeLayout = findViewById(R.id.yes_btn)
+            val cancelBtn : RelativeLayout = findViewById(R.id.cancel_btn)
+
+            cancelBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            cross.setOnClickListener {
+                cancelBooking(dialog)
+            }
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+
+            show()
+        }
+    }
+
+    private fun cancelBooking(dialog: Dialog) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                bookingViewModel.cancelBooking(
+                    sessionManager?.getUserId().toString(),
+                   bookingId.toString()
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                dialog.dismiss()
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireActivity(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    private fun callingMessageClickListner(){
+        if (binding.llMsgHost.visibility == View.VISIBLE) {
+            binding.llMsgHost.visibility = View.GONE
+        }
+        else {
+            binding.llMsgHost.visibility = View.VISIBLE
+        }
+
+
+        var messageSend = "I have a doubt"
+        binding.doubt.setOnClickListener {
+            binding.etShareMessage.setText("")
+            binding.tvShareMessage.visibility = View.GONE
+            messageSend = "I have a doubt"
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+
+
+        }
+
+        binding.tvAvailableDay.setOnClickListener {
+            binding.etShareMessage.setText("")
+            binding.tvShareMessage.visibility = View.GONE
+            messageSend = "Available days"
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+
+
+        }
+        binding.tvOtherReason.setOnClickListener {
+
+            binding.tvShareMessage.visibility = View.VISIBLE
+            messageSend = "other"
+            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
+
+        }
+
+        var writeMessage =""
+        binding.etShareMessage.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+                writeMessage+=charSequence.toString()
+                binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+                binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+            }
+
+            override fun afterTextChanged(editable: Editable?) {
+            }
+        })
+
+        binding.rlSubmitMessage.setOnClickListener {
+            val userInput = binding.etShareMessage.text.toString()
+            if(userInput.length>0){
+                messageSend = userInput
+            }
+            if (!messageSend.equals("other")  ){
+                    bookingId?.let {
+                        callingJoinChannelApi(messageSend)
+
+                }
+            }else{
+                if (userInput.trim().isNotEmpty()){
+                        bookingId?.let {
+                            callingJoinChannelApi(messageSend)
+
+                    }
+                }else{
+                    binding.etShareMessage.error ="Please Enter something"
+                }
+
+
+            }
+
+        }
+
     }
 
 
@@ -289,8 +447,10 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
                                 if (data.status=="finished"){
                                     binding.textReviewBookingButton.visibility = View.VISIBLE
+                                    binding.textCancelTheHostButton.visibility = View.GONE
                                 }else{
                                     binding.textReviewBookingButton.visibility = View.GONE
+                                    binding.textCancelTheHostButton.visibility = View.VISIBLE
                                 }
                                 binding.textMiles.text = (data.distance_miles ?: "N/A").toString()+" miles away"
                                 binding.textRatingStar.text = "${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
@@ -453,7 +613,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
     }
 
 
-    private fun callingJoinChannelApi(){
+    private fun callingJoinChannelApi(messageSend: String){
         lifecycleScope.launch {
             val session= SessionManager(requireContext())
             val userId = session.getUserId()
@@ -464,11 +624,11 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
                   var channelName :String =""
                 if (userId < Integer.parseInt(hostId)) {
-                    channelName = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+propertyId
+                    channelName = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+bookingId
                 }
 
                 else {
-                    channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+propertyId
+                    channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+bookingId
                 }
 
                 bookingViewModel.joinChatChannel(userId,Integer.parseInt(hostId),
@@ -476,6 +636,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                     when(it){
                         is NetworkResult.Success ->{
                             LoadingUtils.hideDialog()
+                            binding.llMsgHost.visibility = View.GONE
                             var loggedInId = SessionManager(requireContext()).getUserId()
                             if(it.data?.receiver_id?.toInt() == loggedInId){
                                 var userImage :String =  it.data?.receiver_avatar.toString()
@@ -491,13 +652,14 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 val intent = Intent(requireContext(), ChatActivity::class.java)
                                 intent.putExtra("user_img",userImage).toString()
                                 SessionManager(requireContext()).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
-                                Log.d("TESTING","REVIEW HOST"+channelName)
+                                Log.d(ErrorDialog.TAG,"REVIEW HOST"+channelName)
                                 intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
                                 intent.putExtra(AppConstant.FRIEND_ID,hostId)
                                 intent.putExtra("friend_img",friendImage).toString()
                                 intent.putExtra("friend_name",friendName).toString()
                                 intent.putExtra("user_name",userName)
                                 intent.putExtra("sender_id", hostId)
+                                intent.putExtra("message",messageSend)
                                 startActivity(intent)
                             }
                             else if(it.data?.sender_id?.toInt() == loggedInId){
@@ -522,6 +684,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 intent.putExtra("friend_name",friendName).toString()
                                 intent.putExtra("user_name",userName)
                                 intent.putExtra("sender_id", hostId)
+                                intent.putExtra("message",messageSend)
                                 startActivity(intent)
                             }
 

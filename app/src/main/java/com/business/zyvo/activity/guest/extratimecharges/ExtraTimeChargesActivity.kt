@@ -301,29 +301,46 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 messageSend = userInput
             }
             if (!messageSend.equals("other")  ){
-                propertyData?.let {
-                    var propertyid = it.property_id
-                    var hostId = it.host_id
-                    var userId = SessionManager(this).getUserId()
-                    var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                propertyData?.let  { pro->
+                    bookingId?.let {
+                        var propertyid = it
+                        var hostId = pro.host_id
+                        var userId = SessionManager(this).getUserId()
+                        var channelName = if (userId!! < hostId) {
+                            "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
+                        } else {
+                            "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyid
+                        }
 
-                    Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+                        Log.d(
+                            "TESTING_IDS",
+                            "PropertyId :- " + propertyid.toString() + " Hostid" + hostId
+                        )
 
-                    callingJoinChannelApi(messageSend)
+                        callingJoinChannelApi(messageSend)
+                    }
 
                 }
             }else{
                 if (userInput.trim().isNotEmpty()){
-                    propertyData?.let {
-                        var propertyid = it.property_id
-                        var hostId = it.host_id
-                        var userId = SessionManager(this).getUserId()
-                        var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                    propertyData?.let  { pro->
+                        bookingId?.let {
+                            var propertyid = it
+                            var hostId = pro.host_id
+                            var userId = SessionManager(this).getUserId()
+                            var channelName = if (userId!! < hostId) {
+                                "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
+                            } else {
+                                "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyid
+                            }
 
-                        Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+                            Log.d(
+                                "TESTING_IDS",
+                                "PropertyId :- " + propertyid.toString() + " Hostid" + hostId
+                            )
 
-                        callingJoinChannelApi(messageSend)
-
+                            callingJoinChannelApi(messageSend)
+                        }
                     }
                 }else{
                     binding.etShareMessage.error ="Please Enter something"
@@ -345,9 +362,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     LoadingUtils.showDialog(this@ExtraTimeChargesActivity, true)
                     var channelName: String = ""
                     if (userId < Integer.parseInt(hostId)) {
-                        channelName = "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyId
+                        channelName = "ZYVOOPROJ_" + userId + "_" + hostId + "_" + bookingId
                     } else {
-                        channelName = "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyId
+                        channelName = "ZYVOOPROJ_" + hostId + "_" + userId + "_" + bookingId
                     }
                     extraTimeChargeViewModel.joinChatChannel(
                         userId,

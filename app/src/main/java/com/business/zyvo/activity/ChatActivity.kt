@@ -117,7 +117,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             providertoken = sessionManagement.getChatToken().toString()
             userId = intent?.extras?.getInt(AppConstant.USER_ID).toString()
             groupName = intent?.extras?.getString(AppConstant.CHANNEL_NAME).toString()
-            Log.d("TESTING_Group_NAME",groupName)
+            Log.d(ErrorDialog.TAG,groupName)
             friendId = intent?.extras?.getString(AppConstant.FRIEND_ID).toString()
             friendprofileimage = intent?.extras?.getString("friend_img","")?:""
             friend_name = intent?.extras?.getString("friend_name","")?:""
@@ -164,7 +164,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
         if (NetworkMonitorCheck._isConnected.value) {
-        //    LoadingUtils.showDialog(this,false)
+            LoadingUtils.showDialog(this,false)
 
           /*  quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
             quickstartConversationsManager.setListener(this)*/

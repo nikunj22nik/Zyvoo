@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BaseApplication
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
@@ -1278,8 +1279,7 @@ class HostPayoutFragment : Fragment() {
                                 val fullName = firstName + lastName
                                 val stripe = Stripe(
                                     requireContext(),
-                                    "pk_test_51QnHZl2Nd862ZJtETiUKw9fMnacKnSy3u27rwJzDsDzGoKV7yFcHWW7Zy68KXflyGZqc5Cjm2ChdpWlaE72R0fp200DSuioFyd"
-                                )
+                                    BuildConfig.STRIPE_KEY)
                                 val card = CardParams(
                                     cNumber,
                                     Integer.valueOf(month),

@@ -385,6 +385,7 @@ object ErrorDialog {
                 val result = if (!addresses.isNullOrEmpty()) {
                     val address = addresses[0]
                     LocationDetails(
+                        streetAddress = address.getAddressLine(0),
                         city = address.locality,
                         state = address.adminArea,
                         zipCode = address.postalCode

@@ -122,7 +122,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         callingPriceRangeGraphSelection()
         setUpRecyclerView()
 
-        appLocationManager = com.business.zyvo.locationManager.LocationManager(this, this)
+        appLocationManager = com.business.zyvo.locationManager.LocationManager(application, this)
 
         appLocationManager.autoCompleteLocationWork(binding.autocompleteLocation)
 
@@ -202,7 +202,16 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     binding.tvMaximumValue.text = "$$max"
                 }
                 // Set Location values
-                binding.autocompleteLocation.setText(it.location)
+                val location = it.location ?: ""
+                Log.d(ErrorDialog.TAG,location)
+                selectedLatitude = it.latitude.toDouble()
+                selectedLongitude = it.longitude.toDouble()
+              //  binding.autocompleteLocation.setText(location, false)
+                binding.autocompleteLocation.post {
+                    binding.autocompleteLocation.setText(location, false)
+                    binding.autocompleteLocation.dismissDropDown()
+                }
+
                 //Set Date Value
                 binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(it.date)
                 //Set Time Value
@@ -1216,22 +1225,30 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
         dropdownView.findViewById<TextView>(R.id.item_3).setOnClickListener {
             selectedItemTextView.text = "3 Hour"
-            popupWindow.dismiss()
+            if (popupWindow != null && popupWindow.isShowing()) {
+                popupWindow.dismiss();
+            }
 
         }
         dropdownView.findViewById<TextView>(R.id.item_4).setOnClickListener{
             selectedItemTextView.text = "4 Hour"
-            popupWindow.dismiss()
+            if (popupWindow != null && popupWindow.isShowing()) {
+                popupWindow.dismiss();
+            }
 
         }
         dropdownView.findViewById<TextView>(R.id.item_5).setOnClickListener {
             selectedItemTextView.text = "5 Hour"
-            popupWindow.dismiss()
+            if (popupWindow != null && popupWindow.isShowing()) {
+                popupWindow.dismiss();
+            }
 
         }
         dropdownView.findViewById<TextView>(R.id.item_6).setOnClickListener {
             selectedItemTextView.text = "6 Hour"
-            popupWindow.dismiss()
+            if (popupWindow != null && popupWindow.isShowing()) {
+                popupWindow.dismiss();
+            }
 
         }
 
