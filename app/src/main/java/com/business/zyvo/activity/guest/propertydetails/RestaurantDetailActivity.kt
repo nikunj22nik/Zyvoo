@@ -1,5 +1,6 @@
 package com.business.zyvo.activity.guest.propertydetails
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
@@ -119,6 +120,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private var selectedDate: LocalDate? = LocalDate.now()
+    var checkLoginType: String = ""
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,6 +130,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             Log.d("getPropertyId",intent.extras?.getString("propertyId")?: "")
             propertyId = intent.extras?.getString("propertyId")!!
             propertyMile = intent.extras?.getString("propertyMile")!!
+            checkLoginType = intent.extras?.getString("LoginType")!!
           //var status: String = intent.getStringExtra("key_name").toString()
          // Log.d(ErrorDialog.TAG, status)
         }
@@ -180,7 +183,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.tvWishlist.setOnClickListener {
-            showAddWishlistDialog(propertyId,-1)
+            if (!checkLoginType.equals("NotLogging")) {
+                showAddWishlistDialog(propertyId, -1)
+            }
         }
 
         getHomePropertyDetails()
@@ -241,8 +246,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     @SuppressLint("SetTextI18n")
     private fun getHomePropertyDetails() {
         if (NetworkMonitorCheck._isConnected.value) {
+            var userIdCheck = ""
+            if (session?.getUserId() != -1) {
+                userIdCheck = session?.getUserId().toString()
+            }
             lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.getHomePropertyDetails(session?.getUserId().toString(),
+                viewModel.getHomePropertyDetails(userIdCheck,
                     propertyId).collect {
                     when (it) {
                         is NetworkResult.Success -> {
@@ -663,8 +672,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.proNoWishLists.setOnClickListener {
-            showAddWishlistDialog()
+            if (!checkLoginType.equals("NotLogging")) {
+                showAddWishlistDialog()
+            }
         }
+
         binding.proAddWishLists.setOnClickListener {
             removeItemFromWishlist(propertyId)
         }
@@ -977,6 +989,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
           //  binding.tvShowMore.text = if (adapterAddon.itemCount == addOnList.size) "Show Less" else "Show More"
         }
+        /*
         binding.startBooking.setOnClickListener {
             if (binding.tvBookingTxt.text.toString().equals("Start Booking")) {
                 binding.tvBookingTxt.setText("Proceed to Checkout")
@@ -1006,6 +1019,47 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 intent.putExtra("propertyMile",propertyMile)
                 intent.putExtra("date",selectedDate.toString())
                 startActivity(intent)
+            }
+        }
+         */
+        binding.startBooking.setOnClickListener {
+            if (!checkLoginType.equals("NotLogging")) {
+                if (binding.tvBookingTxt.text.toString().equals("Start Booking")) {
+                    binding.tvBookingTxt.setText("Proceed to Checkout")
+                    binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
+                    binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
+                    binding.cv1.visibility = View.GONE
+                    binding.calendarLayout.visibility = View.VISIBLE
+                    binding.llday.visibility = View.VISIBLE
+                    binding.llHr.visibility = View.GONE
+                    binding.textend.setFocusable(false);
+                    binding.textend.setClickable(false);
+                } else if (binding.textHr.text.isEmpty()) {
+                    showToast(this, AppConstant.hours)
+                } else if (binding.textPrice.text.isEmpty()) {
+                    showToast(this, AppConstant.price)
+                } else if (binding.textstart.text.isEmpty()) {
+                    showToast(this, AppConstant.stTime)
+                } else if (binding.textend.text.isEmpty()) {
+                    showToast(this, AppConstant.edTime)
+                } else {
+                    val intent =
+                        Intent(this@RestaurantDetailActivity, CheckOutPayActivity::class.java)
+                    intent.putExtra("hour", binding.textHr.text.toString().replace(" hour", ""))
+                    intent.putExtra("price", binding.textPrice.text.toString())
+                    intent.putExtra("stTime", binding.textstart.text.toString())
+                    intent.putExtra("edTime", binding.textend.text.toString())
+                    intent.putExtra("propertyData", Gson().toJson(propertyData))
+                    intent.putExtra("propertyMile", propertyMile)
+                    intent.putExtra("date", selectedDate.toString())
+                    startActivity(intent)
+                }
+            } else {
+                val resultIntent = Intent().apply {
+                    putExtra("SHOW_DIALOG", true)
+                }
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish() // Return to Fragment1
             }
         }
         clickListeners()

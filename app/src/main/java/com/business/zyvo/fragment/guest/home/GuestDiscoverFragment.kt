@@ -406,6 +406,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         Log.d(ErrorDialog.TAG,"I AM HERE IN DEVELOPMENT")
         Log.d("checkPropertyId",homePropertyData?.get(position)?.property_id.toString())
         val intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
+        intent.putExtra("LoginType","Logging")
         intent.putExtra("propertyId",homePropertyData?.get(position)?.property_id.toString())
         intent.putExtra("propertyMile",homePropertyData?.get(position)?.distance_miles.toString())
         startActivity(intent)
@@ -1350,6 +1351,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         // 🔍 Find the clicked property from your list
         val property = homePropertyData.find { it.property_id == propertyId }
         val intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
+        intent.putExtra("LoginType","Logging")
         intent.putExtra("propertyId",property?.property_id.toString())
         intent.putExtra("propertyMile",property?.distance_miles.toString())
         startActivity(intent)
