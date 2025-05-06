@@ -22,6 +22,7 @@ import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
 import com.business.zyvo.databinding.LayoutMessageChatingBinding
 import com.business.zyvo.model.ChatMessageModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.PrepareData
 
 
@@ -51,23 +52,32 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
 
         val message = quickstartConversationsManager.messages[position]
 
-        Log.d("TESTING_CHAT",message.messageBody.toString())
+     //   quickstartConversationsManager?.readConversastion()
 
-        Log.d("author",message.author)
-        Log.d("userId",userId.toString())
+        Log.d(ErrorDialog.TAG,message.messageBody.toString())
+
+        Log.d(ErrorDialog.TAG,message.author)
+        Log.d(ErrorDialog.TAG,userId.toString())
 
         if(message.author.equals(userId,true)){
-          Glide.with(context).load(AppConstant.BASE_URL+ profile_image).into(holder.binding.imageProfilePicture)
-            holder.binding.textUserName.text=userName
+            if (message.conversationSid==quickstartConversationsManager?.conversation?.sid) {
+                Glide.with(context).load(AppConstant.BASE_URL + profile_image)
+                    .into(holder.binding.imageProfilePicture)
+                holder.binding.textUserName.text = userName
+            }
          } else{
-            Glide.with(context).load(AppConstant.BASE_URL+ friend_profile_image).into(holder.binding.imageProfilePicture)
-            holder.binding.textUserName.text=friend_name
+            if (message.conversationSid==quickstartConversationsManager?.conversation?.sid) {
+                Glide.with(context).load(AppConstant.BASE_URL + friend_profile_image)
+                    .into(holder.binding.imageProfilePicture)
+                holder.binding.textUserName.text = friend_name
+            }
         }
 
         val messagetype = String.format(message.type.toString())
-
-        holder.binding.textMessage.text = message.messageBody
-        holder.binding.textDate.text = PrepareData.getMyPrettyDate(message.dateCreated)
+        if (message.conversationSid==quickstartConversationsManager?.conversation?.sid) {
+            holder.binding.textMessage.text = message.messageBody
+            holder.binding.textDate.text = PrepareData.getMyPrettyDate(message.dateCreated)
+        }
         if (messagetype.equals("TEXT",true)){
             holder.binding.textDate.visibility=View.VISIBLE
             holder.binding.textMessage.visibility=View.VISIBLE

@@ -40,6 +40,7 @@ import com.business.zyvo.databinding.ActivityExtraTimeBinding
 import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.TAG
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
@@ -217,29 +218,47 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 messageSend = userInput
             }
             if (!messageSend.equals("other")  ){
-                propertyData?.let {
-                    var propertyid = it.property_id
-                    var hostId = it.host_id
-                    var userId = SessionManager(this).getUserId()
-                    var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                propertyData?.let  { pro->
+                    bookingId?.let {
+                        var propertyid = it
+                        var hostId = pro.host_id
+                        var userId = SessionManager(this).getUserId()
+                        var channelName = if (userId!! < hostId) {
+                            "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
+                        } else {
+                            "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyid
+                        }
 
-                    Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+                        Log.d(
+                            TAG,
+                            "PropertyId :- " + propertyid.toString() + " Hostid" + hostId
+                        )
 
-                    callingJoinChannelApi(messageSend)
+                        callingJoinChannelApi(messageSend)
+                    }
 
                 }
             }else{
                 if (userInput.trim().isNotEmpty()){
-                    propertyData?.let {
-                        var propertyid = it.property_id
-                        var hostId = it.host_id
-                        var userId = SessionManager(this).getUserId()
-                        var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                    propertyData?.let { pro->
+                        bookingId?.let {
+                            var propertyid = it
+                            var hostId = pro.host_id
+                            var userId = SessionManager(this).getUserId()
+                            var channelName = if (userId!! < hostId) {
+                                "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
+                            } else {
+                                "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyid
+                            }
 
-                        Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+                            Log.d(
+                                "TESTING_IDS",
+                                "PropertyId :- " + propertyid.toString() + " Hostid" + hostId
+                            )
 
-                        callingJoinChannelApi(messageSend)
+                            callingJoinChannelApi(messageSend)
 
+                        }
                     }
                 }else{
                     binding.etShareMessage.error ="Please Enter something"
@@ -260,18 +279,14 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             lifecycleScope.launch {
                 val session= SessionManager(this@ExtraTimeActivity)
                 val userId = session.getUserId()
-
                 if(userId != null) {
-
                     LoadingUtils.showDialog(this@ExtraTimeActivity,true)
-
                     var channelName :String =""
                     if (userId < Integer.parseInt(hostId)) {
-                        channelName = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+propertyId
+                        channelName = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+bookingId
                     }
-
                     else {
-                        channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+propertyId
+                        channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+bookingId
                     }
 
                     extraTimeViewModel.joinChatChannel(userId,Integer.parseInt(hostId),channelName,"guest").collect{

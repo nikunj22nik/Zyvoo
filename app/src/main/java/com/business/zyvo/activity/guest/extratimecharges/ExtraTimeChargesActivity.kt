@@ -47,6 +47,7 @@ import com.business.zyvo.databinding.ActivityExtraTimeChargesBinding
 import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.addHours
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
 import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
@@ -301,29 +302,46 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 messageSend = userInput
             }
             if (!messageSend.equals("other")  ){
-                propertyData?.let {
-                    var propertyid = it.property_id
-                    var hostId = it.host_id
-                    var userId = SessionManager(this).getUserId()
-                    var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                propertyData?.let  { pro->
+                    bookingId?.let {
+                        var propertyid = it
+                        var hostId = pro.host_id
+                        var userId = SessionManager(this).getUserId()
+                        var channelName = if (userId!! < hostId) {
+                            "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
+                        } else {
+                            "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyid
+                        }
 
-                    Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+                        Log.d(
+                            "TESTING_IDS",
+                            "PropertyId :- " + propertyid.toString() + " Hostid" + hostId
+                        )
 
-                    callingJoinChannelApi(messageSend)
+                        callingJoinChannelApi(messageSend)
+                    }
 
                 }
             }else{
                 if (userInput.trim().isNotEmpty()){
-                    propertyData?.let {
-                        var propertyid = it.property_id
-                        var hostId = it.host_id
-                        var userId = SessionManager(this).getUserId()
-                        var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                    propertyData?.let  { pro->
+                        bookingId?.let {
+                            var propertyid = it
+                            var hostId = pro.host_id
+                            var userId = SessionManager(this).getUserId()
+                            var channelName = if (userId!! < hostId) {
+                                "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
+                            } else {
+                                "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyid
+                            }
 
-                        Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
+                            Log.d(
+                                "TESTING_IDS",
+                                "PropertyId :- " + propertyid.toString() + " Hostid" + hostId
+                            )
 
-                        callingJoinChannelApi(messageSend)
-
+                            callingJoinChannelApi(messageSend)
+                        }
                     }
                 }else{
                     binding.etShareMessage.error ="Please Enter something"
@@ -345,9 +363,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     LoadingUtils.showDialog(this@ExtraTimeChargesActivity, true)
                     var channelName: String = ""
                     if (userId < Integer.parseInt(hostId)) {
-                        channelName = "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyId
+                        channelName = "ZYVOOPROJ_" + userId + "_" + hostId + "_" + bookingId
                     } else {
-                        channelName = "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyId
+                        channelName = "ZYVOOPROJ_" + hostId + "_" + userId + "_" + bookingId
                     }
                     extraTimeChargeViewModel.joinChatChannel(
                         userId,
@@ -497,9 +515,14 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 date?.let {
                     binding.tvDate.text = date
                 }
-                stTime?.let { resp ->
+              /*  stTime?.let { resp ->
                     edTime?.let {
-                        binding.tvTiming.text = "From $resp to $it"
+                        binding.tvTiming.text = "From $it to ${addHours(it,hour)}"
+                    }
+                }*/
+                hour?.let { resp ->
+                    edTime?.let {
+                        binding.tvTiming.text = "From $it to ${addHours(it,resp.toInt())}"
                     }
                 }
                 propertyData?.parking_rules?.let {

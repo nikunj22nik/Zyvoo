@@ -109,6 +109,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         askNotificationPermission()
         handlingDeepLink()
 
+
     }
 
     private fun handlingDeepLink() {
@@ -117,10 +118,12 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         if (intent.extras!=null){
             val propertyId = intent?.extras?.getString("propertyId")
             val propertyMile = intent?.extras?.getString("propertyMile")
+            if (propertyId!=null && propertyMile!=null){
             val intent = Intent(this, RestaurantDetailActivity::class.java)
                 intent.putExtra("propertyId",propertyId)
                 intent.putExtra("propertyMile",propertyMile)
                 startActivity(intent)
+            }
         }
 
     }
@@ -197,15 +200,16 @@ class GuesMain : AppCompatActivity(), OnClickListener,
     }
     override fun onResume() {
         super.onResume()
-        Log.d("TESTING_ZYVO", "I am in the on resume")
+        Log.d(ErrorDialog.TAG, "I am in the on resume")
         if (intent != null) {
-            val status: String = intent.getStringExtra("key_name").toString()
-            Log.d("TESTING_ZYVO12", "I" + status)
-            if (status.equals("12345")) {
+            val status: String = intent?.extras?.getString("key_name").toString()
+            if (status!=null && status.equals("12345")) {
+                Log.d(ErrorDialog.TAG, "I" + status)
                 intent.removeExtra("key_name")
                 bookingResume()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
             }
+
         }
         callingGetChatUser()
     }
@@ -442,7 +446,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
     }
 
-    private fun getTotalUnreadMessages(){
+ /*   private fun getTotalUnreadMessages(){
         var totalUnreadCount:Long = 0
         runOnUiThread {
             try {
@@ -474,7 +478,55 @@ class GuesMain : AppCompatActivity(), OnClickListener,
                 Log.d("******","msg :- "+e.message)
             }
         }
+    }*/
+
+    private fun getTotalUnreadMessages() {
+        val conversations = quickstartConversationsManager?.conversationsClient?.myConversations
+
+        if (conversations.isNullOrEmpty()) {
+            Log.d("******", "No conversations found")
+            binding.tvChatNumber.text = "0"
+            return
+        }
+
+        var totalUnreadCount: Long = 0
+        var completed = 0
+        val relevantConversations = conversations.filter { map.containsKey(it.uniqueName) }
+
+        if (relevantConversations.isEmpty()) {
+            Log.d("******", "No relevant conversations in map")
+            binding.tvChatNumber.text = "0"
+            return
+        }
+
+        for (conv in relevantConversations) {
+            try {
+                conv.getUnreadMessagesCount { count ->
+                    if (count != null) {
+                        totalUnreadCount += count
+                    }
+                    completed++
+
+                    if (completed == relevantConversations.size) {
+                        // Safely update UI once all async calls complete
+                        runOnUiThread {
+                            Log.d("******", "Final total unread: $totalUnreadCount")
+                            binding.tvChatNumber.text = "$totalUnreadCount"
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                Log.e("******", "Error while getting unread count: ${e.message}")
+                completed++
+                if (completed == relevantConversations.size) {
+                    runOnUiThread {
+                        binding.tvChatNumber.text = "$totalUnreadCount"
+                    }
+                }
+            }
+        }
     }
+
 
     override fun showError() {
 

@@ -56,6 +56,7 @@ import com.business.zyvo.utils.ErrorDialog.showToast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.skydoves.powerspinner.PowerSpinnerView
+import com.twilio.conversations.Message
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -117,7 +118,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             providertoken = sessionManagement.getChatToken().toString()
             userId = intent?.extras?.getInt(AppConstant.USER_ID).toString()
             groupName = intent?.extras?.getString(AppConstant.CHANNEL_NAME).toString()
-            Log.d("TESTING_Group_NAME",groupName)
+            Log.d(ErrorDialog.TAG,groupName)
             friendId = intent?.extras?.getString(AppConstant.FRIEND_ID).toString()
             friendprofileimage = intent?.extras?.getString("friend_img","")?:""
             friend_name = intent?.extras?.getString("friend_name","")?:""
@@ -164,7 +165,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
         if (NetworkMonitorCheck._isConnected.value) {
-        //    LoadingUtils.showDialog(this,false)
+            LoadingUtils.showDialog(this,false)
 
           /*  quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
             quickstartConversationsManager.setListener(this)*/
@@ -224,7 +225,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
         binding.imgFile.setOnClickListener {
             if (is_blocked==2){
-                LoadingUtils.showErrorDialog(this, "You are blocked by $friend_name.")
+                showErrorDialog(this, "You are blocked by $friend_name.")
             }else {
                 browsePicture()
             }
@@ -232,7 +233,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
         binding.sendBtn.setOnClickListener {
             if (is_blocked==2){
-                LoadingUtils.showErrorDialog(this, "You are blocked by $friend_name.")
+                showErrorDialog(this, "You are blocked by $friend_name.")
             }else {
                 if (NetworkMonitorCheck._isConnected.value) {
                     if (binding.etmassage.text.toString().trim().isNotEmpty()) {
@@ -352,7 +353,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                 Log.d("TESTING","RECEIVE NEW MESSAGE 1")
                 loadRecyclerview(quickstartConversationsManager)
             } else {
-                Log.d("TESTING","RECEIVE NEW MESSAGE 2")
+                Log.d("TESTING","RECEIVE NEW MESSAGE 2${quickstartConversationsManager.messages.size}")
                 if (adapter!=null) {
                     adapter?.notifyItemRangeChanged(quickstartConversationsManager.messages.size, 1)
                     binding.rvChatting.scrollToPosition(quickstartConversationsManager.messages.size - 1)
@@ -364,6 +365,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
     private fun loadRecyclerview(quickstartConversationsManager: QuickstartConversationsManagerOneTowOne) {
+        Log.d("TESTING","RECEIVE NEW MESSAGE 1")
         adapter = ChatDetailsAdapter(this, quickstartConversationsManager, userId.toString(),profileImage,friendprofileimage,friend_name,userName)
         binding.rvChatting.adapter = adapter
         binding.rvChatting.scrollToPosition(quickstartConversationsManager.messages.size - 1)
@@ -380,28 +382,29 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
     override fun reloadMessages() {
-        Log.d("ZYVOO-TESTING","reloadLastMessages")
+        Log.d(ErrorDialog.TAG,"reloadLastMessages")
         LoadingUtils.hideDialog()
         runOnUiThread {
             if (quickstartConversationsManager.messages.size > 0) {
                 loadRecyclerview(quickstartConversationsManager)
                 if(previousScreenMessage.length > 0) {
                     quickstartConversationsManager.sendMessage(previousScreenMessage)
+                    Log.d(ErrorDialog.TAG,previousScreenMessage+" massage found")
                 }
-                Log.d("ZYVOO-TESTING",previousScreenMessage+" massage found")
+              //  Log.d(ErrorDialog.TAG,previousScreenMessage+" massage found")
             } else {
                 if(previousScreenMessage.length > 0) {
                     quickstartConversationsManager.sendMessage(previousScreenMessage)
                 }
-                Log.d("ZYVOO-TESTING","not massage found")
+                Log.d(ErrorDialog.TAG,"not massage found")
             }
         }
     }
 
     override fun reloadLastMessages() {
         LoadingUtils.hideDialog()
-        Log.d("ZYVOO-TESTING","reloadLastMessages")
-        Log.d("ZYVOO-TESTING",previousScreenMessage+" Previous Screen message")
+        Log.d(ErrorDialog.TAG,"reloadLastMessages")
+        Log.d(ErrorDialog.TAG,previousScreenMessage+" Previous Screen message")
        /* if(previousScreenMessage!= null && previousScreenMessage.length >0) {
             quickstartConversationsManager.sendMessage(previousScreenMessage)
         }*/
@@ -920,9 +923,10 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
     private fun sendChatNotification() {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch {
+                val userId: Int? = sessionManagement.getUserId()
                 userId?.let { senderId->
                     friendId?.let { friendId->
-                        viewModel.sendChatNotification(senderId,friendId).collect {
+                        viewModel.sendChatNotification(senderId.toString(),friendId).collect {
                             when (it) {
                                 is NetworkResult.Success -> {
                                     it.data?.let {

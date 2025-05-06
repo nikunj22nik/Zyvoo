@@ -33,6 +33,7 @@ import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
 import com.business.zyvo.databinding.ActivityHostMainBinding
 import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.GuestMainActivityModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -341,39 +342,92 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver)
     }
 
-    private fun getTotalUnreadMessages(){
+    /*private fun getTotalUnreadMessages(){
         var totalUnreadCount:Long = 0
         runOnUiThread {
             try {
-                quickstartConversationsManager?.conversationsClient?.myConversations!!.forEach {
-                    Log.d("*******","m 8888"+it.friendlyName +" M "+it.uniqueName)
-                }
+                val conversations =
+                    quickstartConversationsManager?.conversationsClient?.myConversations
+                if (!conversations.isNullOrEmpty()) {
+                    Log.d(ErrorDialog.TAG, "No conversations found.")
+                    quickstartConversationsManager?.conversationsClient?.myConversations!!.forEach {
+                        //  Log.d(ErrorDialog.TAG,"m 8888"+it.friendlyName +" M "+it.uniqueName)
+                    }
 
-                if (quickstartConversationsManager?.conversationsClient?.myConversations!!.size > 0) {
-                    for (i in quickstartConversationsManager?.conversationsClient?.myConversations!!) {
-                        try {
-                            if (map.containsKey(i.uniqueName)) {
-                                Log.d("*******","m 8888"+i.friendlyName +" M "+i.uniqueName)
-                                i.getUnreadMessagesCount { re->
-                                    if (re!=null) {
-                                        Log.d("*******", re.toString())
-                                        totalUnreadCount += re
-                                        Log.d("*******", "total " + totalUnreadCount.toString())
-                                        binding.tvbabadge.text = "$totalUnreadCount"
+                    if (quickstartConversationsManager?.conversationsClient?.myConversations!!.size > 0) {
+                        for (i in quickstartConversationsManager?.conversationsClient?.myConversations!!) {
+                            try {
+                                if (map.containsKey(i.uniqueName)) {
+                                    //  Log.d(ErrorDialog.TAG,"m 8888"+i.friendlyName +" M "+i.uniqueName)
+                                    i.getUnreadMessagesCount { re ->
+                                        if (re != null) {
+                                            Log.d(ErrorDialog.TAG, re.toString())
+                                            totalUnreadCount += re
+                                            Log.d(
+                                                ErrorDialog.TAG,
+                                                "total " + totalUnreadCount.toString()
+                                            )
+                                            binding.tvbabadge.text = "$totalUnreadCount"
+                                        }
                                     }
                                 }
+                            } catch (e: Exception) {
+                                Log.d(ErrorDialog.TAG, "data :-" + e.message)
                             }
-                        } catch (e: Exception) {
-                            Log.d("massage error", "data :-" + e.message)
+                        }
+                        //  binding.tvbabadge.text = "$totalUnreadCount"
+                    }
+                }
+                } catch (e:Exception){
+                    Log.d(ErrorDialog.TAG, "msg :- " + e.message)
+                }
+        }
+    }*/
+    private fun getTotalUnreadMessages() {
+        var totalUnreadCount: Long = 0
+        val conversations = quickstartConversationsManager?.conversationsClient?.myConversations
+
+        if (conversations.isNullOrEmpty()) {
+            Log.d(ErrorDialog.TAG, "No conversations found.")
+            return
+        }
+
+        val filtered = conversations.filter { map.containsKey(it.uniqueName) }
+
+        if (filtered.isEmpty()) {
+            Log.d(ErrorDialog.TAG, "No matched conversations.")
+            runOnUiThread {
+                binding.tvbabadge.text = "0"
+            }
+            return
+        }
+
+        var completedCount = 0
+        val totalCount = filtered.size
+
+        for (conversation in filtered) {
+            try {
+                conversation.getUnreadMessagesCount { count ->
+                    if (count != null) {
+                        totalUnreadCount += count
+                    }
+
+                    completedCount++
+                    if (completedCount == totalCount) {
+                        runOnUiThread {
+                            binding.tvbabadge.text = "$totalUnreadCount"
+                            Log.d(ErrorDialog.TAG, "Total unread: $totalUnreadCount")
                         }
                     }
-                    //  binding.tvbabadge.text = "$totalUnreadCount"
                 }
-            }catch (e:Exception){
-                Log.d("******","msg :- "+e.message)
+            } catch (e: Exception) {
+                Log.e(ErrorDialog.TAG, "Error in getUnreadMessagesCount: ${e.message}")
             }
         }
     }
+
+
+
 
     override fun onResume() {
         super.onResume()
@@ -426,7 +480,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
     }
 
     override fun receivedNewMessage() {
-        Log.d("*******","receivedNewMessage gdsg")
+        Log.d(ErrorDialog.TAG,"receivedNewMessage gdsg")
         getTotalUnreadMessages()
     }
 

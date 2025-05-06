@@ -191,11 +191,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
 
         binding.textMessageTheHostButton.setOnClickListener {
-            val bundle = Bundle()
-            val sessionManager = SessionManager(requireContext())
-
-//           sessionManager.getUserId()?.let { it1 -> bundle.putInt(AppConstant.USER_ID, it1) }
-
             callingJoinChannelApi()
         }
 
@@ -422,9 +417,9 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         adapterIncludeInBooking.updateAdapter(data.amenities)
 
         if (data.guest_id < data.host_id) {
-            channelName = "ZYVOOPROJ_" + data.guest_id + "_" + data.host_id + "_" + propertyId
+            channelName = "ZYVOOPROJ_" + data.guest_id + "_" + data.host_id + "_" + bookingId
         } else {
-            channelName = "ZYVOOPROJ_" + data.host_id + "_" + data.guest_id + "_" + propertyId
+            channelName = "ZYVOOPROJ_" + data.host_id + "_" + data.guest_id + "_" + bookingId
         }
 
         data.cleaning_fee?.let {

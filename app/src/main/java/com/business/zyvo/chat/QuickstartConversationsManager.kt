@@ -339,14 +339,16 @@ class QuickstartConversationsManager {
         override fun onConversationAdded(conversation: Conversation) {}
 
         override fun onConversationUpdated(conversation: Conversation, updateReason: Conversation.UpdateReason) {
-            if (conversation.lastMessageIndex != null) {
-                conversation.getMessageByIndex(
-                    conversation.lastMessageIndex.toInt().toLong()
-                ) { result ->
-                    Log.d("*******", "onConversationUpdated")
-                   // messages.add(result!!)
-                    if (conversationsManagerListener != null) {
-                        conversationsManagerListener!!.receivedNewMessage()
+            // Only proceed if the conversation is already synchronized
+            if (conversation.synchronizationStatus == Conversation.SynchronizationStatus.ALL) {
+                if (conversation.lastMessageIndex != null) {
+                    conversation.getMessageByIndex(
+                        conversation.lastMessageIndex.toInt().toLong()
+                    ) { result ->
+                        Log.d("*******", "onConversationUpdated")
+                        if (conversationsManagerListener != null) {
+                            conversationsManagerListener!!.receivedNewMessage()
+                        }
                     }
                 }
             }

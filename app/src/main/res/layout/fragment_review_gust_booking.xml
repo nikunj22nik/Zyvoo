@@ -231,7 +231,7 @@
                         android:textSize="@dimen/_12ssp" />
 
                     <TextView
-                        android:id="@+id/textMessageTheHostButton"
+                        android:id="@+id/textCancelTheHostButton"
                         android:layout_width="00dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_10sdp"
@@ -240,10 +240,158 @@
                         android:background="@drawable/bg_four_corner_light_black"
                         android:paddingHorizontal="@dimen/_15sdp"
                         android:paddingVertical="@dimen/_7sdp"
-                        android:text="Message the host"
+                        android:text="Cancel Booking"
                         android:fontFamily="@font/poppins"
                         android:textColor="#000000"
                         android:textSize="@dimen/_12ssp" />
+
+
+                    <LinearLayout
+                        android:layout_width="00dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_margin="@dimen/_10sdp"
+                        android:orientation="horizontal">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/textMessageTheHostButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAlignment="center"
+                                android:background="@drawable/bg_four_corner_light_black"
+                                android:paddingHorizontal="@dimen/_15sdp"
+                                android:paddingVertical="@dimen/_7sdp"
+                                android:text="Message the host"
+                                android:fontFamily="@font/poppins"
+                                android:textColor="#000000"
+                                android:textSize="@dimen/_12ssp" />
+                            <LinearLayout
+                                android:id="@+id/ll_msg_host"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_3sdp"
+                                android:background="@drawable/bg_four_side_grey_corner"
+                                android:orientation="vertical"
+                                android:visibility="gone">
+
+                                <RelativeLayout
+                                    android:id="@+id/doubt"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginHorizontal="@dimen/_6sdp"
+                                    android:layout_marginTop="@dimen/_6sdp"
+                                    android:background="@drawable/bg_four_side_corner_msg_box"
+                                    android:paddingHorizontal="@dimen/_6sdp"
+                                    android:paddingVertical="@dimen/_6sdp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+
+                                        android:fontFamily="@font/poppins"
+                                        android:text="I have a doubt"
+                                        android:textSize="@dimen/_11ssp"
+                                        android:textColor="#000" />
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/tv_available_day"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/doubt"
+                                    android:layout_marginHorizontal="@dimen/_6sdp"
+                                    android:layout_marginTop="@dimen/_6sdp"
+                                    android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+                                    android:paddingHorizontal="@dimen/_6sdp"
+                                    android:paddingVertical="@dimen/_6sdp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+
+                                        android:fontFamily="@font/poppins"
+                                        android:text="Available days"
+                                        android:textSize="@dimen/_11ssp"
+                                        android:textColor="#000" />
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/tv_other_reason"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_below="@id/doubt"
+                                    android:layout_marginHorizontal="@dimen/_6sdp"
+                                    android:layout_marginTop="@dimen/_6sdp"
+                                    android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+                                    android:paddingHorizontal="@dimen/_6sdp"
+                                    android:layout_marginBottom="@dimen/_5sdp"
+                                    android:visibility="visible"
+                                    android:paddingVertical="@dimen/_6sdp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="#000"
+                                        android:fontFamily="@font/poppins"
+                                        android:text="Other reason"
+                                        android:textSize="@dimen/_10ssp"
+                                        />
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/tv_share_message"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/_100sdp"
+                                    android:layout_below="@id/doubt"
+                                    android:layout_marginHorizontal="@dimen/_6sdp"
+                                    android:layout_marginTop="@dimen/_6sdp"
+                                    android:layout_marginBottom="@dimen/_10sdp"
+                                    android:visibility="gone"
+                                    android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+                                    android:paddingHorizontal="@dimen/_6sdp"
+                                    android:paddingVertical="@dimen/_6sdp">
+
+                                    <EditText
+                                        android:id="@+id/etShareMessage"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerHorizontal="true"
+                                        android:background="@null"
+                                        android:fontFamily="@font/poppins"
+
+                                        android:textColorHint="#000"
+                                        android:hint="Share a message"
+                                        android:textSize="@dimen/_9ssp" />
+
+                                </RelativeLayout>
+
+                                <RelativeLayout
+                                    android:id="@+id/rl_submit_message"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/_33sdp"
+                                    android:layout_marginHorizontal="@dimen/_10sdp"
+                                    android:layout_marginBottom="@dimen/_10sdp"
+                                    android:background="@drawable/bg_save_button">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerInParent="true"
+                                        android:text="Message Host"
+                                        android:textColor="@color/white"
+                                        android:textSize="@dimen/_12sdp" />
+                                </RelativeLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                    </LinearLayout>
 
 
                 </LinearLayout>
@@ -530,8 +678,8 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
+                                android:textSize="@dimen/_13ssp"
                                 android:text="@string/discount"
-                                android:textSize="@dimen/_12sdp"
                                 />
 
 
@@ -539,11 +687,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignParentEnd="true"
-                                android:text="$0"
                                 android:id="@+id/tvDiscount"
-                                android:textColorHint="@color/black"
                                 android:fontFamily="@font/poppins"
-                                android:textColor="@color/black"/> />
+                                android:text="$0"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_13ssp"/>
 
                         </RelativeLayout>
 

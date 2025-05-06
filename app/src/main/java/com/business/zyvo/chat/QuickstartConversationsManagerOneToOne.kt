@@ -54,7 +54,7 @@ class QuickstartConversationsManagerOneTowOne {
 
     private  var DEFAULT_CONVERSATION_NAME = "general"
 
-    val messages: ArrayList<Message> = ArrayList()
+    var messages: ArrayList<Message> = ArrayList()
 
     var conversationsClient: ConversationsClient? = null
      var conversation: Conversation? = null
@@ -105,14 +105,14 @@ class QuickstartConversationsManagerOneTowOne {
             for (data in conversations) {
                 val lastMessageIndex = data.lastMessageIndex
                 if (lastMessageIndex != null && lastMessageIndex >= 0) {
-                Log.d("*******", "list ${data.uniqueName}")
+                Log.d(TAG, "list ${data.uniqueName}")
                 data.getLastMessages(data.lastMessageIndex.toInt()) { result ->
                     try {
                         messages.addAll(result)
                         conversationsManagerListener?.reloadLastMessages()
                     } catch (e: Exception) {
                         conversationsManagerListener?.reloadLastMessages()
-                        Log.e("*******", "Failed to process messages: ${e.message}")
+                        Log.e(TAG, "Failed to process messages: ${e.message}")
                     }
                 }
                     }
@@ -129,8 +129,8 @@ class QuickstartConversationsManagerOneTowOne {
             this.identity = identity
             this.userid = userid
             this.DEFAULT_CONVERSATION_NAME = groupId
+            messages.clear()
             if (conversationsClient==null){
-                messages.clear()
                 Log.d(TAG, "Loaded conversation: $DEFAULT_CONVERSATION_NAME")
                 conversationsManagerListener?.notInit()
             }else{
@@ -236,7 +236,9 @@ class QuickstartConversationsManagerOneTowOne {
 
 
     fun sendMessage(messageBody: String) {
+        Log.d(TAG,"Null")
         if (conversation != null) {
+            Log.d(TAG,"Not Null")
             val options = Message.options().withBody(messageBody)
             options.withAttributes(conversation!!.attributes)
             conversation!!.sendMessage(options) {
@@ -382,16 +384,19 @@ class QuickstartConversationsManagerOneTowOne {
             ) { result ->
                 messages.clear()
                 messages.addAll(result)
-                Log.d("*******", "${messages.size}")
+                Log.d(TAG, "${messages.size}")
                 conversation.setAllMessagesRead {
                     conversationsManagerListener?.reloadMessages()
                 }
             }
         }else{
+            Log.d(TAG, "NO message")
             conversationsManagerListener?.reloadMessages()
         }
+
         conversationsClient?.let { client->
             identity?.let {
+                Log.d(TAG,identity.toString())
                 subscribeToUserStatus(client,it)
             }
 
@@ -470,7 +475,9 @@ class QuickstartConversationsManagerOneTowOne {
             Log.d(TAG, "Message added")
             messages.add(message)
             if (message.author == userid) {
-                conversation!!.setAllMessagesRead { }
+                conversation!!.setAllMessagesRead {
+
+                }
             }
             if (conversationsManagerListener != null) {
                 conversationsManagerListener!!.receivedNewMessage()
@@ -479,7 +486,9 @@ class QuickstartConversationsManagerOneTowOne {
         }
 
         override fun onMessageUpdated(message: Message, updateReason: Message.UpdateReason) {
-            conversation!!.setAllMessagesRead { }
+            conversation!!.setAllMessagesRead {
+
+            }
         }
 
         override fun onMessageDeleted(message: Message) {
@@ -542,6 +551,13 @@ class QuickstartConversationsManagerOneTowOne {
           }
 
       })
+    }
+
+    fun readConversation() {
+        conversation?.setAllMessagesRead { result ->
+            // result: Long (number of messages marked as read)
+            // Handle success here if needed
+        }
     }
 
 

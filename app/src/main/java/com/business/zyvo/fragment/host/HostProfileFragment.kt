@@ -449,14 +449,21 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             if (!it.city.isNullOrEmpty()&&
                                 !it.state.isNullOrEmpty()&&
                                 !it.zipCode.isNullOrEmpty()){
-                                binding.streetEditText.setText(place.name ?: "")
+                                var street = ""
+                                if (it.streetAddress.isNullOrEmpty()){
+                                    binding.streetEditText.setText(place.name ?: "")
+                                    street = place.name ?: ""
+                                }else{
+                                    binding.streetEditText.setText(it.streetAddress ?: "")
+                                    street = it.streetAddress ?: ""
+                                }
                                 binding.cityET.setText(it.city)
                                 binding.stateEt.setText(it.state)
                                 binding.zipEt.setText(it.zipCode)
                                 binding.streetEditText.isEnabled = false
                                 binding.imageEditStreetAddress.visibility = View.VISIBLE
                                 binding.imageStreetCheckedButton.visibility = GONE
-                                updateAddStreetAddress(place.name ?: "")
+                                updateAddStreetAddress(street ?: "")
                                 updateStateAddress(AppConstant.profileType)
                                 updateZipCode(it.zipCode,AppConstant.profileType)
                                 updateCityAddress(it.city,AppConstant.profileType)

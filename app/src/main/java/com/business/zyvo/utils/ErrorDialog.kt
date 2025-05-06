@@ -165,6 +165,17 @@ object ErrorDialog {
         }
     }
 
+    fun addHours(timeStr: String, hoursToAdd: Int): String {
+        val format = SimpleDateFormat("hh:mm a", Locale.US)
+        val date = format.parse(timeStr) ?: return "Invalid time"
+
+        val calendar = Calendar.getInstance()
+        calendar.time = date
+        calendar.add(Calendar.HOUR_OF_DAY, hoursToAdd)
+
+        return format.format(calendar.time)
+    }
+
     fun showToast(context: Context?,string: String?){
         Toast.makeText(context,string, Toast.LENGTH_SHORT).show()
     }
@@ -385,6 +396,7 @@ object ErrorDialog {
                 val result = if (!addresses.isNullOrEmpty()) {
                     val address = addresses[0]
                     LocationDetails(
+                        streetAddress = address.getAddressLine(0),
                         city = address.locality,
                         state = address.adminArea,
                         zipCode = address.postalCode

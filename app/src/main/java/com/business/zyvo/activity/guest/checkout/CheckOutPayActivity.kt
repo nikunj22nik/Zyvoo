@@ -1285,6 +1285,12 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 }
             }
             propertyData?.cleaning_fee?.toDoubleOrNull()?.let {
+              //  Cleaning Fees: Set by hosts based on property size and cleaning requirements.
+                //  (Should be set by host while creating a listing and the Zyvo platform should further
+                //  deduct 3% from this cleaning fee per booking).
+
+              //  val taxAmount = calculatePercentage(it,3.0)
+               // val totalclean = taxAmount+it
                 binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(it.toString())}"
                 totalPrice += it
             }
