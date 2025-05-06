@@ -34,6 +34,10 @@ android{
             val STRIPE_KEY = project.property("STRIPE_KEY")
             buildConfigField("String", "STRIPE_KEY", "${STRIPE_KEY}")
 
+            val templateID = project.property("templateID")
+            buildConfigField("String", "templateID", "${templateID}")
+
+
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
 
@@ -50,6 +54,9 @@ android{
 
             val STRIPE_KEY = project.property("STRIPE_KEY")
             buildConfigField("String", "STRIPE_KEY", "${STRIPE_KEY}")
+            
+            val templateID = project.property("templateID")
+            buildConfigField("String", "templateID", "${templateID}")
         }
     }
 

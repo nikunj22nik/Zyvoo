@@ -64,6 +64,7 @@ import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.guest.FiltersActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
+import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.sorryresult.SorryActivity
 import com.business.zyvo.adapter.LoggedScreenAdapter
 import com.business.zyvo.databinding.FragmentLoggedScreenBinding
@@ -150,6 +151,18 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
     }
+
+    private val activityResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val showDialog = result.data?.getBooleanExtra("SHOW_DIALOG", false) ?: false
+            if (showDialog) {
+                dialogLogin(requireContext()) // Open your dialog
+            }
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -566,7 +579,16 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         adapter.setOnItemClickListener(object : LoggedScreenAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
                 Log.d("TESTING_ZYVOO", "I AM HERE IN DEVELOPMENT")
-                dialogLogin(requireContext())
+               // dialogLogin(requireContext())
+
+                Log.d(ErrorDialog.TAG,"I AM HERE IN DEVELOPMENT")
+                Log.d("checkPropertyId",homePropertyData?.get(position)?.property_id.toString())
+                val intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
+                intent.putExtra("LoginType","NotLogging")
+                intent.putExtra("propertyId",homePropertyData?.get(position)?.property_id.toString())
+                intent.putExtra("propertyMile",homePropertyData?.get(position)?.distance_miles.toString())
+
+                activityResultLauncher.launch(intent)
             }
         })
     }

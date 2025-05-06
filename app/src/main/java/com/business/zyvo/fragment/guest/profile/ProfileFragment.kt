@@ -468,7 +468,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     }
 
     private fun launchVerifyIdentity() {
-        val TEMPLATE_ID = "itmpl_yEu1QvFA5fJ1zZ9RbUo1yroGahx2"
+        val TEMPLATE_ID = BuildConfig.templateID
 
         val inquiry = Inquiry.fromTemplate(TEMPLATE_ID)
             .environment(Environment.SANDBOX) // Use Environment.PRODUCTION for live verification
