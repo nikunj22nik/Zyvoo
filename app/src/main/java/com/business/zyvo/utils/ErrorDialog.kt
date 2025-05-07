@@ -416,6 +416,10 @@ object ErrorDialog {
         }.start()
     }
 
+    fun convertHoursToDays(hours: Int): Int {
+        return hours / 24
+    }
+
 
 
 

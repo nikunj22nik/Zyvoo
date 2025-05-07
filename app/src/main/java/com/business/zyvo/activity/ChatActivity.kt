@@ -50,13 +50,18 @@ import java.io.File
 import java.io.FileNotFoundException
 import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
 import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
+import com.business.zyvo.fragment.host.QuickstartConversationsManager
 import com.business.zyvo.model.ChannelListModel
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.skydoves.powerspinner.PowerSpinnerView
+import com.twilio.conversations.CallbackListener
+import com.twilio.conversations.Conversation
+import com.twilio.conversations.ErrorInfo
 import com.twilio.conversations.Message
+import com.twilio.conversations.StatusListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -520,6 +525,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
             popupWindow.dismiss()
+            deleteConvertion()
 
         }
         // Find the "block" item inside the popup
@@ -626,6 +632,49 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             yOffset,
             Gravity.END
         )  // Adjust the Y offset dynamically
+    }
+
+    private fun deleteConvertion() {
+        if (groupName.isNullOrBlank()) {
+            Log.e("TESTING", "Group name is null or empty.")
+            return
+        }
+
+        val manager = quickstartConversationsManager
+        val client = manager?.conversationsClient
+
+        if (client == null) {
+            Log.e("TESTING", "Conversations client is not initialized.")
+            return
+        }
+        try {
+            client.getConversation(
+                groupName,
+                object : CallbackListener<Conversation> {
+                    override fun onSuccess(conversation: Conversation) {
+                        conversation.leave(object : StatusListener {
+                            override fun onSuccess() {
+                                Log.d("TESTING", "Delete Chat here")
+                                finish()
+                            }
+
+                            override fun onError(errorInfo: ErrorInfo) {
+                                Log.e("TESTING", "Error deleting conversation: ${errorInfo.message}")
+                            }
+                        })
+
+                    }
+
+                    override fun onError(errorInfo: ErrorInfo) {
+                        Log.e(
+                            QuickstartConversationsManager.TAG,
+                            "Error retrieving conversation: " + errorInfo.message
+                        )
+                    }
+                })
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
     private fun dialogReportIssue() {
@@ -926,7 +975,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                 val userId: Int? = sessionManagement.getUserId()
                 userId?.let { senderId->
                     friendId?.let { friendId->
-                        viewModel.sendChatNotification(senderId.toString(),friendId).collect {
+                        viewModel.sendChatNotification(senderId.toString(),friendId,groupName).collect {
                             when (it) {
                                 is NetworkResult.Success -> {
                                     it.data?.let {

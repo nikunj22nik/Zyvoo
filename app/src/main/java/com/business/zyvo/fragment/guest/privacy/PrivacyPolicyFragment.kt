@@ -98,8 +98,6 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
 
                     is NetworkResult.Success -> {
                         try {
-
-
                         if (it.data != null){
                             Log.d("checkDataPrivacy",it.data.first)
                             if (it.data.second != null){
@@ -128,7 +126,9 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
                         it.message?.let { it1 -> showErrorDialog(requireContext(), it1) }
 
                     }
+
                     is NetworkResult.Loading -> {}
+
 
                 }
             }

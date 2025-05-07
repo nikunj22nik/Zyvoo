@@ -5277,10 +5277,11 @@ import javax.inject.Inject
      override suspend fun sendChatNotification(
          senderId :String,
          receiverId :String,
+         group_channel:String
      ): Flow<NetworkResult<JsonObject>> =
          flow {
              try {
-                 api.sendChatNotification(senderId,receiverId).apply {
+                 api.sendChatNotification(senderId,receiverId,group_channel).apply {
                      if (isSuccessful) {
                          body()?.let { resp ->
                              if (resp.has("success") && resp.get("success").asBoolean) {

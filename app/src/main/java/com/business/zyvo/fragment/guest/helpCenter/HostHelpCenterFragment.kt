@@ -175,7 +175,7 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
 
             R.id.textBrowseAllArticle -> {
                 val bundle = Bundle()
-                bundle.putString(AppConstant.article, "Article")
+                bundle.putString(AppConstant.type, "Article")
                 findNavController().navigate(R.id.browse_article_host, bundle)
             }
         }

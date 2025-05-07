@@ -51,8 +51,9 @@ class ChatDetailsViewModel @Inject constructor(private var repository: ZyvoRepos
         }
     }
 
-        suspend fun sendChatNotification(senderId: String,receiverId:String) : Flow<NetworkResult<JsonObject>> {
-            return repository.sendChatNotification(senderId,receiverId).onEach {
+        suspend fun sendChatNotification(senderId: String,receiverId:String, group_channel :String,) : Flow<NetworkResult<JsonObject>> {
+            return repository.sendChatNotification(senderId,receiverId,
+                group_channel).onEach {
                 when (it) {
                     is NetworkResult.Loading -> {
                     } is NetworkResult.Success -> {

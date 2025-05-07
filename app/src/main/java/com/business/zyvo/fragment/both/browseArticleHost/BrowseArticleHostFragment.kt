@@ -59,13 +59,14 @@ class BrowseArticleHostFragment : Fragment() {
 
         arguments?.let {
             if (it.containsKey(AppConstant.type)) {
-                Log.d("TESTING_ANDROID", "I am on Type")
                 if (it.getString(AppConstant.type).equals("Article")) {
                     type = "article"
                     binding.tvViewTitle.setText("Browse all Articles")
+                    binding.textLabel.setText("Articles for Guides")
                 } else {
                     type = "guides"
                     binding.tvViewTitle.setText("Browse all Guides")
+                    binding.textLabel.setText("Guides for Guests")
                 }
             }
         }

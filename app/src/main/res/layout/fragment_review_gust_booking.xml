@@ -265,6 +265,7 @@
                                 android:paddingHorizontal="@dimen/_15sdp"
                                 android:paddingVertical="@dimen/_7sdp"
                                 android:text="Message the host"
+                                android:singleLine="true"
                                 android:fontFamily="@font/poppins"
                                 android:textColor="#000000"
                                 android:textSize="@dimen/_12ssp" />
@@ -554,7 +555,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="2"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <TextView
                                 android:id="@+id/Htime"
@@ -564,7 +565,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="Hours"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <View
                                 android:layout_width="0dp"
@@ -578,7 +579,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="$0"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
                         </LinearLayout>
 
 
@@ -596,7 +597,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="Cleaning Fee"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <TextView
                                 android:id="@+id/tv_cleaning_fee"
@@ -605,7 +606,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="$0"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <!-- Additional fees here -->
 
@@ -624,7 +625,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="Zyvo Service Fee"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <TextView
                                 android:id="@+id/tv_service_fee"
@@ -633,7 +634,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="$0"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <!-- Additional fees here -->
 
@@ -652,7 +653,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="Taxes"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <TextView
                                 android:id="@+id/tv_taxes"
@@ -661,7 +662,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="$0"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <!-- Additional fees here -->
 
@@ -678,7 +679,7 @@
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp"
+                                android:textSize="@dimen/_12sdp"
                                 android:text="@string/discount"
                                 />
 
@@ -691,7 +692,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="$0"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp"/>
+                                android:textSize="@dimen/_12sdp"/>
 
                         </RelativeLayout>
 
@@ -708,7 +709,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="Add-on"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <TextView
                                 android:id="@+id/tv_add_on"
@@ -717,7 +718,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="$0"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
 
                         </LinearLayout>
@@ -741,7 +742,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="Total"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
                             <TextView
                                 android:id="@+id/tv_total_price"
@@ -750,7 +751,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="$0"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="@dimen/_12sdp" />
 
 
                         </LinearLayout>
@@ -775,7 +776,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Cabin in Peshastin"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13ssp"
+                        android:textSize="@dimen/_12sdp"
                         android:textStyle="normal" />
 
                     <!-- Status Badge -->
@@ -792,7 +793,7 @@
                         android:text=""
                         android:fontFamily="@font/poppins"
                         android:textColor="#3A4B4C"
-                        android:textSize="@dimen/_11ssp" />
+                        android:textSize="@dimen/_12sdp" />
                 </LinearLayout>
 
                 <!-- Action Icons -->
@@ -825,7 +826,7 @@
                             android:fontFamily="@font/poppins"
                             android:text="Share"
                             android:textColor="#000"
-                            android:textSize="@dimen/_10ssp" />
+                            android:textSize="@dimen/_12sdp" />
                     </LinearLayout>
 
                     <!-- Favorite Icon -->
@@ -851,7 +852,7 @@
                             android:fontFamily="@font/poppins"
                             android:text="Favorite"
                             android:textColor="#000"
-                            android:textSize="@dimen/_10ssp" />
+                            android:textSize="@dimen/_12sdp" />
                     </LinearLayout>
                 </LinearLayout>
 
