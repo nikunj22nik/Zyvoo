@@ -110,12 +110,12 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.9.1")
 
     //OTP Dependency
-    implementation ("com.github.aabhasr1:OtpView:v1.1.2")
+   implementation ("com.github.aabhasr1:OtpView:v1.1.2")
 
 
     implementation ("com.airbnb.android:lottie:3.4.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
-    implementation ("com.github.ozcanalasalvar:otpview:2.0.1")
+   // implementation ("com.github.ozcanalasalvar:otpview:2.0.1")
     //Image Picker
     implementation(libs.imagepicker)
     implementation(libs.glide)
@@ -125,13 +125,13 @@ dependencies {
     implementation("com.google.android.libraries.places:places:2.4.0")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
-    implementation("com.google.android.material:material:1.11.0") // Check for the latest version
-    implementation("de.hdodenhof:circleimageview:3.1.0")
+   // implementation("com.google.android.material:material:1.11.0") // Check for the latest version
+    //implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.colourmoon:readmore-textview:v1.0.2")
     //Spinner
     implementation("com.github.skydoves:powerspinner:1.2.7")
 // Paging library
-    implementation("androidx.paging:paging-runtime:3.1.0")
+   // implementation("androidx.paging:paging-runtime:3.1.0")
 
     //persona API
     implementation (libs.sdk2.inquiry)
@@ -142,9 +142,9 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.1.1")
     implementation("com.twilio:conversations-android:1.4.1")
     implementation("com.getkeepsafe.relinker:relinker:1.4.4") // Explicitly include Relinker
-    implementation ("com.github.barteksc:pdfium-android:1.9.0")
+   // implementation ("com.github.barteksc:pdfium-android:1.9.0")
     //Pdf lib.
-    implementation ("com.github.barteksc:pdfium-android:1.9.0")
+   // implementation ("com.github.barteksc:pdfium-android:1.9.0")
 
 
     implementation("com.github.jaiselrahman:FilePicker:1.3.2")

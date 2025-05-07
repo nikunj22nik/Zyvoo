@@ -126,12 +126,10 @@ class TermsServicesFragment : Fragment() ,OnClickListener{
 
                     }
                     is NetworkResult.Error -> {
-                        showErrorDialog(requireContext(),it.message!!)
+                        it.message?.let { it1 -> showErrorDialog(requireContext(), it1) }
 
                     }
-                    else ->{
-
-                    }
+                    is NetworkResult.Loading -> {}
 
                 }
             }

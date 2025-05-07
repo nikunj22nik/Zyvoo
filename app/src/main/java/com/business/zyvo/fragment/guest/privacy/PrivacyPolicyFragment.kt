@@ -125,12 +125,10 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
 
                     }
                     is NetworkResult.Error -> {
-                        showErrorDialog(requireContext(),it.message!!)
+                        it.message?.let { it1 -> showErrorDialog(requireContext(), it1) }
 
                     }
-                    else ->{
-                        showErrorDialog(requireContext(),it.message!!)
-                    }
+                    is NetworkResult.Loading -> {}
 
                 }
             }
@@ -141,7 +139,6 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-
         _binding = null
     }
 
@@ -153,8 +150,6 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
                 } else {
                     findNavController().navigate(R.id.hostProfileFragment)
                 }
-
-
             }
         }
     }
