@@ -857,7 +857,8 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun sendChatNotification(
         @Field("sender_id") sender_id :String,
-        @Field("receiver_id") receiver_id :String
+        @Field("receiver_id") receiver_id :String,
+        @Field("group_channel") group_channel :String
     ) : Response<JsonObject>
 
     @POST("mute_chat")

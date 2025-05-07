@@ -129,23 +129,23 @@ class WhereTimeActivity : AppCompatActivity() {
                 try {
                     hour = progress
 
-                    var selectedTime = binding.text1.text
+                   // var selectedTime = binding.text1.text
 
-                    // Define the time formatter (12-hour format with AM/PM)
-                    val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
-                    } else {
-                        TODO("VERSION.SDK_INT < O")
-                    }
-                    Log.d(ErrorDialog.TAG,selectedTime.toString())
-                    // Parse the start time string into a LocalTime object
-                    val startTime = LocalTime.parse(selectedTime, formatter)
-
-                    val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
-                        .toLong())
-                    // Format the end time back to a string
-                    val formattedEndTime = endTime.format(formatter)
-                    binding.text2.text = formattedEndTime.uppercase()
+//                    // Define the time formatter (12-hour format with AM/PM)
+//                    val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+//                    } else {
+//                        TODO("VERSION.SDK_INT < O")
+//                    }
+//                    Log.d(ErrorDialog.TAG,selectedTime.toString())
+//                    // Parse the start time string into a LocalTime object
+//                    val startTime = LocalTime.parse(selectedTime, formatter)
+//
+//                    val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
+//                        .toLong())
+//                    // Format the end time back to a string
+//                    val formattedEndTime = endTime.format(formatter)
+//                    binding.text2.text = formattedEndTime.uppercase()
 
                 }catch (e:Exception){
                     Log.d(ErrorDialog.TAG,e.message!!)
@@ -305,18 +305,22 @@ class WhereTimeActivity : AppCompatActivity() {
                     // Parse the start time string into a LocalTime object
                     val startTime = LocalTime.parse(selectedTime, formatter)
                     // Add 2 hours to get the end time
-                    val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
-                        .toLong())
-                    // Format the end time back to a string
-                    val formattedEndTime = endTime.format(formatter)
-                    binding.text2.text = formattedEndTime.uppercase()
+                    Log.d(ErrorDialog.TAG,binding.textTime.text.toString())
+                    if (binding.textTime.text.toString().isNotEmpty()){
+                        val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
+                            .toLong())
+                        // Format the end time back to a string
+                        val formattedEndTime = endTime.format(formatter)
+                        binding.text2.text = formattedEndTime.uppercase()
+                    }
                 }
         }
         binding.rlView2.setOnClickListener {
-//                DateManager(this).showTimePickerDialog1(this) { selectedTime ->
-//                    binding.text2.setText(selectedTime)
-//                }
+            DateManager(this).showTimePickerDialog1(this) { selectedTime ->
+                binding.text2.setText(selectedTime)
+            }
         }
+
     }
 
     private fun bydefaultOpenScreen(){
@@ -402,6 +406,8 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.calendarLayout.visibility = View.VISIBLE
             binding.layoutFlexible.visibility = View.GONE
             binding.cv1.visibility = View.GONE
+        //    updateCalendar()
+       //     updateCalendar1()
 
         }
         binding.tvHourly.setOnClickListener {
@@ -423,6 +429,8 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.calendarLayout.visibility = View.GONE
             binding.layoutFlexible.visibility = View.VISIBLE
             binding.cv1.visibility = View.GONE
+        //    updateCalendar()
+        //    updateCalendar1()
         }
         binding.rlActivity.setOnClickListener {
             if(binding.rlActivityRecy.visibility == View.VISIBLE){

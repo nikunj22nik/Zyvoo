@@ -186,31 +186,42 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                     when (type) {
                         AppConstant.DELETE ->{
                                 Log.d("TESTING", data.group_name.toString())
-                                quickstartConversationsManager.conversationsClient?.getConversation(
-                                    data.group_name,
-                                    object : CallbackListener<Conversation> {
-                                        override fun onSuccess(conversation: Conversation) {
-                                            conversation.leave(object : StatusListener {
-                                                override fun onSuccess() {
-                                                    Log.d("TESTING", "Delete Chat here")
-                                                    chatList.remove(data)
-                                                    adapterChatList.updateItem(chatList)
-                                                }
+                            try {
+                                val manager = quickstartConversationsManager
+                                val client = manager?.conversationsClient
+                                if (client!=null) {
+                                    client.getConversation(
+                                        data.group_name,
+                                        object : CallbackListener<Conversation> {
+                                            override fun onSuccess(conversation: Conversation) {
+                                                conversation.leave(object : StatusListener {
+                                                    override fun onSuccess() {
+                                                        Log.d("TESTING", "Delete Chat here")
+                                                        chatList.remove(data)
+                                                        adapterChatList.updateItem(chatList)
+                                                    }
 
-                                                override fun onError(errorInfo: ErrorInfo) {
-                                                    Log.e("TESTING", "Error deleting conversation: ${errorInfo.message}")
-                                                }
-                                            })
+                                                    override fun onError(errorInfo: ErrorInfo) {
+                                                        Log.e(
+                                                            "TESTING",
+                                                            "Error deleting conversation: ${errorInfo.message}"
+                                                        )
+                                                    }
+                                                })
 
-                                        }
+                                            }
 
-                                        override fun onError(errorInfo: ErrorInfo) {
-                                            Log.e(
-                                                QuickstartConversationsManager.TAG,
-                                                "Error retrieving conversation: " + errorInfo.message
-                                            )
-                                        }
-                                    })
+                                            override fun onError(errorInfo: ErrorInfo) {
+                                                Log.e(
+                                                    QuickstartConversationsManager.TAG,
+                                                    "Error retrieving conversation: " + errorInfo.message
+                                                )
+                                            }
+                                        })
+                                }
+                            }catch (e:Exception){
+                                e.printStackTrace()
+                            }
                         }
                         AppConstant.BLOCK -> {
                             Log.d("TESTING", "Blocking user for group: ${data.group_name}")
@@ -284,6 +295,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
         })
     }
+
 
     private fun dialogReportIssue(data: ChannelListModel) {
         var reportReasonsMap: HashMap<String, Int> = HashMap()
@@ -636,83 +648,18 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
-            chatList.sortWith { o1, o2 ->
-                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
-            }
-            adapterChatList.updateItem(chatList)
             popupWindow.dismiss()
+            getAllConversation()
         }
 
         popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
-            Log.d("TESTING_ZYVOO","here in a  item Archeived")
-            val localtchat:MutableList<ChannelListModel> =  mutableListOf()
-
-            chatList.forEach {
-                if(it.is_archived ==1){
-                    localtchat.add(it)
-                }
-            }
-           // val filteredChats = chatList.filter { it.is_archived == 1 }
-          //  localtchat.addAll(filteredChats)
-            localtchat.sortWith { o1, o2 ->
-                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
-            }
-
-            adapterChatList.updateItem(localtchat)
             popupWindow.dismiss()
-            Log.d("TESTING_ZYVOO","here in a  item Archeived")
+            getArchived()
+
         }
-//        popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
-//            val localtchat:MutableList<ChannelListModel> =  mutableListOf()
-//            popupWindow.dismiss()
-//            val filteredChats = chatList.filter { it.is_archived == 1 }
-//            localtchat.addAll(filteredChats)
-//            localtchat.sortWith { o1, o2 ->
-//                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
-//            }
-//
-//            adapterChatList.updateItem(localtchat)
-//        }
         popupView.findViewById<TextView>(R.id.itemUnread).setOnClickListener {
             popupWindow.dismiss()
-            quickstartConversationsManager.let { quick ->
-                quick.conversationsClient?.let {
-                    try {
-                    LoadingUtils.showDialog(requireContext(),false)
-                    quick.getUnreadConversations(it
-                    ) { unreadConversations ->
-                        LoadingUtils.hideDialog()
-                        if (unreadConversations == null) {
-                            Log.e("******", "Unread conversations are null")
-                            return@getUnreadConversations
-                        }
-                        Log.d("******", "Unread conversations count: " + unreadConversations.size)
-                        val localtchat:MutableList<ChannelListModel> =  mutableListOf()
-                        for (conversation in unreadConversations) {
-                            try {
-                                Log.d("******", "Unread conversation: " + conversation.uniqueName)
-                                if (map.containsKey(conversation.uniqueName)) {
-                                    val filteredChats =
-                                        chatList.filter { it.group_name == conversation.uniqueName }
-                                    localtchat.addAll(filteredChats)
-                                }
-                            }catch (e: Exception) {
-                                Log.e("******", "Error processing conversation: ${e.message}")
-                            }
-                        }
-                        localtchat.sortWith { o1, o2 ->
-                            if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
-                        }
-
-                        adapterChatList.updateItem(localtchat)
-                    }
-                }  catch (e: Exception) {
-                LoadingUtils.hideDialog()
-                Log.e("******", "Failed to load unread conversations: ${e.message}")
-            }
-                    }
-            }
-
+            getReadUnRead()
         }
 
 
@@ -756,6 +703,79 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+    }
+
+    private fun getReadUnRead() {
+        try {
+            quickstartConversationsManager.let { quick ->
+                quick.conversationsClient?.let {
+                    try {
+                        LoadingUtils.showDialog(requireContext(),false)
+                        quick.getUnreadConversations(it
+                        ) { unreadConversations ->
+                            LoadingUtils.hideDialog()
+                            if (unreadConversations == null) {
+                                Log.e("******", "Unread conversations are null")
+                                return@getUnreadConversations
+                            }
+                            Log.d("******", "Unread conversations count: " + unreadConversations.size)
+                            val localtchat:MutableList<ChannelListModel> =  mutableListOf()
+                            for (conversation in unreadConversations) {
+                                try {
+                                    Log.d("******", "Unread conversation: " + conversation.uniqueName)
+                                    if (map.containsKey(conversation.uniqueName)) {
+                                        val filteredChats =
+                                            chatList.filter { it.group_name == conversation.uniqueName }
+                                        localtchat.addAll(filteredChats)
+                                    }
+                                }catch (e: Exception) {
+                                    Log.e("******", "Error processing conversation: ${e.message}")
+                                }
+                            }
+                            localtchat.sortWith { o1, o2 ->
+                                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
+                            }
+
+                            adapterChatList.updateItem(localtchat)
+                        }
+                    }  catch (e: Exception) {
+                        LoadingUtils.hideDialog()
+                        Log.e("******", "Failed to load unread conversations: ${e.message}")
+                    }
+                }
+
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+    private fun getArchived() {
+        try {
+            val localtchat:MutableList<ChannelListModel> =  mutableListOf()
+            chatList.forEach {
+                if(it.is_archived ==1){
+                    localtchat.add(it)
+                }
+            }
+            localtchat.sortWith { o1, o2 ->
+                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
+            }
+            adapterChatList.updateItem(localtchat)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
+    }
+
+    private fun getAllConversation() {
+        try {
+            chatList.sortWith { o1, o2 ->
+                if (o1?.date == null || o2?.date == null) 0 else o2.date.compareTo(o1.date)
+            }
+            adapterChatList.updateItem(chatList)
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
     override fun onDestroyView() {

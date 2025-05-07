@@ -737,7 +737,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_7sdp"
-                            android:src="@drawable/ic_clock_new" />
+                            android:src="@drawable/ic_doler_icon" />
 
                         <TextView
                             android:id="@+id/textPrice"

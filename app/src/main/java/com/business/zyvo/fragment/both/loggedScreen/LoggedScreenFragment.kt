@@ -1880,6 +1880,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             if (checkBox != null && checkBox.isChecked) {
                                 session.setUserSession(true)
                             }
+                            session?.setLoginType("emailAddress")
                             dialogSuccess(context, dialogtext, Gson().toJson(resp), number, type)
                         }
                         dialog.dismiss()
@@ -2067,6 +2068,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             if (checkBox != null && checkBox.isChecked) {
                                 session.setUserSession(true)
                             }
+                            session.setLoginType("mobileNumber")
                             dialogSuccess(
                                 context, dialogtext, Gson().toJson(resp),
                                 number, type

@@ -74,6 +74,7 @@ import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.convertHoursToDays
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.showToast
@@ -128,13 +129,15 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         enableEdgeToEdge()
         intent.extras?.let {
             Log.d("getPropertyId",intent.extras?.getString("propertyId")?: "")
-            propertyId = intent.extras?.getString("propertyId")!!
+            /*propertyId = intent.extras?.getString("propertyId")!!
             propertyMile = intent.extras?.getString("propertyMile")!!
-            checkLoginType = intent.extras?.getString("LoginType")!!
+            checkLoginType = intent.extras?.getString("LoginType")!!*/
+             propertyId = intent.extras?.getString("propertyId") ?: ""
+             propertyMile = intent.extras?.getString("propertyMile") ?: ""
+             checkLoginType = intent.extras?.getString("LoginType") ?: ""
           //var status: String = intent.getStringExtra("key_name").toString()
          // Log.d(ErrorDialog.TAG, status)
         }
-        Log.d(ErrorDialog.TAG, "I am in Restaurent Details")
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         session = SessionManager(this)
@@ -183,7 +186,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.tvWishlist.setOnClickListener {
-            if (!checkLoginType.equals("NotLogging")) {
+            if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
                 showAddWishlistDialog(propertyId, -1)
             }
         }
@@ -449,7 +452,14 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 it.cancellation_time?.let {
-                    binding.tvcancelTime.text = "Cancel for free within $it hours"
+                    if (it==24){
+                        binding.tvcancelTime.text = "Cancel for free within $it hours"
+                    }else{
+                        val day = convertHoursToDays(it)
+                        day?.let {
+                            binding.tvcancelTime.text = "Cancel for free within $it days"
+                        }
+                    }
                 }
 
             }
@@ -672,7 +682,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.proNoWishLists.setOnClickListener {
-            if (!checkLoginType.equals("NotLogging")) {
+            if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
                 showAddWishlistDialog()
             }
         }
@@ -1023,7 +1033,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
          */
         binding.startBooking.setOnClickListener {
-            if (!checkLoginType.equals("NotLogging")) {
+            if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
                 if (binding.tvBookingTxt.text.toString().equals("Start Booking")) {
                     binding.tvBookingTxt.setText("Proceed to Checkout")
                     binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)

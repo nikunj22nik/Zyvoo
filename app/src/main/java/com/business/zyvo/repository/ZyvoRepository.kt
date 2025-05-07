@@ -677,6 +677,7 @@ interface ZyvoRepository {
     suspend fun sendChatNotification(
         senderId :String,
         receiverId :String,
+        group_channel :String,
     ) :Flow<NetworkResult<JsonObject>>
 
     suspend fun muteChat(
