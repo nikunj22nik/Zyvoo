@@ -21,6 +21,7 @@ import com.business.zyvo.databinding.FragmentBrowseAllGuidesAndArticlesBinding
 import com.business.zyvo.databinding.FragmentBrowseArticleHostBinding
 import com.business.zyvo.fragment.both.browseArticleHost.model.BrowseArticleModel
 import com.business.zyvo.fragment.both.browseArticleHost.viewModel.BrowseArticleHostViewModel
+import com.business.zyvo.session.SessionManager
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -37,7 +38,7 @@ class BrowseArticleHostFragment : Fragment() {
         ViewModelProvider(this)[BrowseArticleHostViewModel::class.java]
     }
     var type: String? = null
-
+lateinit var sessionManager : SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -56,17 +57,18 @@ class BrowseArticleHostFragment : Fragment() {
         binding.tvContactUs.setOnClickListener {
             findNavController().navigate(R.id.contact_us)
         }
+        sessionManager = SessionManager(requireContext())
 
         arguments?.let {
             if (it.containsKey(AppConstant.type)) {
                 if (it.getString(AppConstant.type).equals("Article")) {
                     type = "article"
                     binding.tvViewTitle.setText("Browse all Articles")
-                    binding.textLabel.setText("Articles for Guides")
+                    binding.textLabel.setText("Articles for "+sessionManager.getUserType())
                 } else {
                     type = "guides"
                     binding.tvViewTitle.setText("Browse all Guides")
-                    binding.textLabel.setText("Guides for Guests")
+                    binding.textLabel.setText("Guides for "+sessionManager.getUserType())
                 }
             }
         }

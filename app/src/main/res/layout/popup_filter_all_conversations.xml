@@ -15,7 +15,6 @@
         android:padding="@dimen/_7sdp"
         android:layout_marginBottom="@dimen/_5sdp"
         android:text="All Conversations"
-        android:background="#0D3F3D56"
         android:textColor="@color/black"
         android:textSize="@dimen/_11ssp"
         android:textStyle="bold"/>

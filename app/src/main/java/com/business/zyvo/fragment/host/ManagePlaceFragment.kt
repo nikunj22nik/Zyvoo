@@ -741,9 +741,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvShowMore.setOnClickListener {
             isExpanded = !isExpanded
             amenitiesAdapter.toggleExpand()
-
+            val showText = if (isExpanded) "Show Less" else "Show More"
+            val content = SpannableString(showText)
+            content.setSpan(UnderlineSpan(), 0, content.length, 0)
+            binding.tvShowMore.text = content
             // Update button text
-            binding.tvShowMore.text = if (isExpanded) "Show Less" else "Show More"
+           // binding.tvShowMore.text = if (isExpanded) "Show Less" else "Show More"
         }
     }
 

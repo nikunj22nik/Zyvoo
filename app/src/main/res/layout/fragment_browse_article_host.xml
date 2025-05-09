@@ -45,6 +45,7 @@
                 android:layout_marginStart="@dimen/_9sdp"
                 android:background="@null"
                 android:hint="Search.."
+                android:maxLines="1"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black" />
 
@@ -54,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_centerVertical="true"
                 android:src="@drawable/ic_search_bar_icon" />
         </RelativeLayout>
 

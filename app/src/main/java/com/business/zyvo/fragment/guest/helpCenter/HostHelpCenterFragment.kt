@@ -99,6 +99,7 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
         }
+        binding.textGuidesForGuests.setText("Guides for "+ (session?.getUserType() ?: ""))
         lifecycleScope.launch {
             viewModel.networkMonitor.isConnected
                 .distinctUntilChanged()

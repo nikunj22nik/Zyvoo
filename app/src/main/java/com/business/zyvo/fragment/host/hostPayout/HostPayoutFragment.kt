@@ -12,11 +12,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.OpenableColumns
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,6 +63,7 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
+import java.util.Objects
 
 @AndroidEntryPoint
 class HostPayoutFragment : Fragment() {
@@ -135,6 +139,7 @@ class HostPayoutFragment : Fragment() {
     private var cityListStrCard: MutableList<String> = mutableListOf()
     private var imgtypeCard: String = ""
 
+private var cardNumberString : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -207,6 +212,50 @@ class HostPayoutFragment : Fragment() {
             permissions(),
             REQUEST_CODE_STORAGE_PERMISSION
         )
+
+
+        binding.etCardNumber.addTextChangedListener(object : TextWatcher {
+            private var isFormatting: Boolean = false
+            private var previousText: String = ""
+
+            override fun beforeTextChanged(
+                s: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+                previousText = s.toString()
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (isFormatting) return
+
+                isFormatting = true
+
+                val digitsOnly = s.toString().replace(" ", "")
+                val formatted = StringBuilder()
+
+                for (i in digitsOnly.indices) {
+                    formatted.append(digitsOnly[i])
+                    if ((i + 1) % 4 == 0 && i != digitsOnly.length - 1) {
+                        formatted.append(" ")
+                    }
+                }
+
+                if (formatted.toString() != s.toString()) {
+                    binding.etCardNumber.setText(formatted.toString())
+                    binding.etCardNumber.setSelection(formatted.length)
+                }
+
+                isFormatting = false
+            }
+        })
+
+
+
+
         toggleBankAccountAndDebitCard()
         clickListener()
         spinners()
@@ -1281,6 +1330,10 @@ class HostPayoutFragment : Fragment() {
 
     private fun setUpCardEvent() {
         binding.textAddCardDebitCard.setOnClickListener {
+
+            cardNumberString = Objects.requireNonNull(binding.etCardNumber.text.toString().replace(" ", "").trim())
+                .toString()
+            Log.d("checkCardNumber",cardNumberString)
             lifecycleScope.launch {
                 viewModel.networkMonitor.isConnected
                     .distinctUntilChanged()
@@ -1293,7 +1346,7 @@ class HostPayoutFragment : Fragment() {
                         } else {
 
                             if (isValidationCard()) {
-                                val cNumber = binding.etCardNumber.text.toString().trim()
+                                val cNumber = cardNumberString.trim()
                                 val monthName = binding.etMonth.text.toString().trim()
                                 val month = getMonthNumber(monthName)
                                 val year = binding.etYear.text.toString().trim()
@@ -1577,10 +1630,10 @@ class HostPayoutFragment : Fragment() {
         } else if (binding.etPostalCodeDebitCard.text?.trim().toString().isEmpty()) {
             LoadingUtils.showErrorDialog(requireContext(), AppConstant.postalCodeError)
             return false
-        } else if (binding.etCardNumber.text?.trim().toString().isEmpty()) {
+        } else if (cardNumberString.trim().toString().isEmpty()) {
             LoadingUtils.showErrorDialog(requireContext(), "Card number cannot be empty")
             return false
-        } else if (!isValidCardNumber(binding.etCardNumber.text?.trim().toString())) {
+        } else if (!isValidCardNumber(cardNumberString.trim())) {
             LoadingUtils.showErrorDialog(
                 requireContext(),
                 "Invalid card number. Please enter a valid card number."
@@ -1591,7 +1644,7 @@ class HostPayoutFragment : Fragment() {
             return false
         } else if (!isValidCVV(
                 binding.etCVVNumber.text?.trim().toString(),
-                binding.etCardNumber.text?.trim().toString()
+                cardNumberString.trim()
             )
         ) {
             LoadingUtils.showErrorDialog(requireContext(), "Invalid CVV. Please enter a valid CVV.")

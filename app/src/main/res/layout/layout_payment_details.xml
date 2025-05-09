@@ -79,11 +79,11 @@
         android:layout_below="@+id/textStartNumber"
 
         android:layout_centerVertical="true"
-        android:layout_marginStart="@dimen/_10ssp"
+        android:layout_marginStart="@dimen/_5ssp"
         android:layout_marginEnd="@dimen/_8sdp"
         android:fontFamily="@font/poppins"
        android:layout_marginTop="@dimen/_8sdp"
-        android:text=""
+        android:text="sfdsfds"
         android:singleLine="true"
         android:textColor="#FFF"
         android:textSize="@dimen/_11ssp"
