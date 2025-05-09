@@ -21,6 +21,7 @@ import com.business.zyvo.databinding.FragmentBrowseAllGuidesAndArticlesBinding
 import com.business.zyvo.databinding.FragmentBrowseArticleHostBinding
 import com.business.zyvo.fragment.both.browseArticleHost.model.BrowseArticleModel
 import com.business.zyvo.fragment.both.browseArticleHost.viewModel.BrowseArticleHostViewModel
+import com.business.zyvo.session.SessionManager
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -154,13 +155,13 @@ class BrowseArticleHostFragment : Fragment() {
 
 
     private fun getGuideList(text: String) {
+        val sessionManager = SessionManager(requireContext())
+        val usertype = sessionManager.getUserType()?:""
         lifecycleScope.launch {
-            viewModel.getGuideList(text).collect {
+            viewModel.getGuideList(text,usertype).collect {
                 when (it) {
-
                     is NetworkResult.Success -> {
                         val model = Gson().fromJson(it.data, BrowseArticleModel::class.java)
-
                         Log.d("checkDataList",model.data.toString())
                             if (!model.data.isNullOrEmpty()){
                                 binding.textNoDataFound.visibility = View.GONE
@@ -170,13 +171,10 @@ class BrowseArticleHostFragment : Fragment() {
                                 binding.textNoDataFound.visibility = View.VISIBLE
                                 binding.recyclerNewArticles.visibility = View.GONE
                             }
-
-
                     }
 
                     is NetworkResult.Error -> {
                         showErrorDialog(requireContext(), it.message!!)
-
                     }
 
                     else -> {
@@ -192,8 +190,10 @@ class BrowseArticleHostFragment : Fragment() {
 
 
     private fun getArticleList(text: String) {
+        val sessionManager = SessionManager(requireContext())
+        val usertype = sessionManager.getUserType()?:""
         lifecycleScope.launch {
-            viewModel.getArticleList(text).collect {
+            viewModel.getArticleList(text,usertype).collect {
                 when (it) {
 
                     is NetworkResult.Success -> {

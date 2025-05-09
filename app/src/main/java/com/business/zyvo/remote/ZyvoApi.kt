@@ -504,11 +504,13 @@ interface ZyvoApi {
 
     @POST("get_article_list")
     @FormUrlEncoded
-    suspend fun getArticleList(@Field("search_term") search_term : String):Response<JsonObject>
+    suspend fun getArticleList(@Field("search_term") search_term : String,
+                               @Field("user_type") user_type : String):Response<JsonObject>
 
     @POST("get_guide_list")
     @FormUrlEncoded
-    suspend fun getGuideList(@Field("search_term") search_term : String):Response<JsonObject>
+    suspend fun getGuideList(@Field("search_term") search_term : String,
+                             @Field("user_type") user_type : String):Response<JsonObject>
 
 
     @POST("host_report_violation")
@@ -897,7 +899,7 @@ interface ZyvoApi {
     suspend fun reportChat(
         @Field("reporter_id") reporter_id :String,
         @Field("reported_user_id") reported_user_id :String,
-        @Field("reason") reason :String,
+        @Field("report_reasons_id") reason :String,
         @Field("message") message :String,
         @Field("group_channel") group_channel :String,
     ) : Response<JsonObject>
@@ -925,6 +927,14 @@ interface ZyvoApi {
         @Field("longitude") longitude :String,
         @Field("filter") filter: String,
         @Field("page") page :String
+    ) : Response<JsonObject>
+
+    @POST("delete_chat")
+    @FormUrlEncoded
+    suspend fun deleteChat(
+        @Field("user_id") user_id :String,
+        @Field("user_type") user_type :String,
+        @Field("group_channel") group_channel :String
     ) : Response<JsonObject>
 
 }

@@ -379,9 +379,9 @@ interface ZyvoRepository {
     ): Flow<NetworkResult<Pair<String, String>>>
 
 
-    suspend fun getArticleList(search_term: String): Flow<NetworkResult<JsonObject>>
+    suspend fun getArticleList(search_term: String,user_type:String): Flow<NetworkResult<JsonObject>>
 
-    suspend fun getGuideList(search_term: String): Flow<NetworkResult<JsonObject>>
+    suspend fun getGuideList(search_term: String,user_type:String): Flow<NetworkResult<JsonObject>>
 
     suspend fun hostReportViolationSend(userId :Int,
                                          bookingId :Int,
@@ -714,6 +714,12 @@ interface ZyvoRepository {
         filter: String,
         page:String
     ) :Flow<NetworkResult<Pair<JsonArray, JsonObject>>>
+
+    suspend fun deleteChat(
+        user_id :String,
+        user_type :String,
+        group_channel :String
+    ) :Flow<NetworkResult<JsonObject>>
 
 }
 

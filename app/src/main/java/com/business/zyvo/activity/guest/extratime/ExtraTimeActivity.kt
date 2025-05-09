@@ -295,7 +295,6 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                                 LoadingUtils.hideDialog()
                                 var loggedInId = SessionManager(this@ExtraTimeActivity).getUserId()
                                 if(it.data?.receiver_id?.toInt() == loggedInId){
-
                                     var userImage :String =  it.data?.receiver_avatar.toString()
                                     Log.d("TESTING_PROFILE_HOST",userImage)
                                     var friendImage :String = it.data?.sender_avatar.toString()

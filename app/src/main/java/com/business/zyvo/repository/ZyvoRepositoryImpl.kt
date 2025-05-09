@@ -3311,11 +3311,12 @@ import javax.inject.Inject
         }
     }
 
-    override suspend fun getArticleList(search_term: String): Flow<NetworkResult<JsonObject>> =
+    override suspend fun getArticleList(search_term: String,
+                                        user_type:String): Flow<NetworkResult<JsonObject>> =
         flow {
             emit(NetworkResult.Loading())
             try {
-                api.getArticleList(search_term).apply {
+                api.getArticleList(search_term,user_type).apply {
                     if (isSuccessful) {
                         body()?.let { resp ->
                             if (resp.has("success") && resp.get("success").asBoolean) {
@@ -3350,10 +3351,10 @@ import javax.inject.Inject
             }
         }
 
-    override suspend fun getGuideList(search_term: String): Flow<NetworkResult<JsonObject>> = flow {
+    override suspend fun getGuideList(search_term: String,user_type:String): Flow<NetworkResult<JsonObject>> = flow {
         emit(NetworkResult.Loading())
         try {
-            api.getGuideList(search_term).apply {
+            api.getGuideList(search_term,user_type).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success") && resp.get("success").asBoolean) {
@@ -5588,5 +5589,51 @@ import javax.inject.Inject
              emit(NetworkResult.Error(ErrorHandler.emitError(e)))
          }
      }
+
+
+     override suspend fun deleteChat(
+         user_id :String,
+         user_type :String,
+         group_channel:String
+     ): Flow<NetworkResult<JsonObject>> =
+         flow {
+             try {
+                 api.deleteChat(user_id,user_type, group_channel).apply {
+                     if (isSuccessful) {
+                         body()?.let { resp ->
+                             if (resp.has("success") && resp.get("success").asBoolean) {
+                                 emit(NetworkResult.Success(resp))
+                             } else {
+                                 emit(NetworkResult.Error(resp.get("message").asString))
+                             }
+                         }
+                             ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                     } else {
+                         try {
+                             val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                             emit(
+                                 NetworkResult.Error(
+                                     jsonObj?.getString("message")
+                                         ?: AppConstant.unKnownError
+                                 )
+                             )
+                         } catch (e: JSONException) {
+                             e.printStackTrace()
+                             emit(NetworkResult.Error(AppConstant.unKnownError))
+                         }
+                     }
+                 }
+             } catch (e: HttpException) {
+                 Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: IOException) {
+                 Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+                 emit(NetworkResult.Error(e.message!!))
+             } catch (e: Exception) {
+                 Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+                 emit(NetworkResult.Error(e.message!!))
+             }
+
+         }
  }
 

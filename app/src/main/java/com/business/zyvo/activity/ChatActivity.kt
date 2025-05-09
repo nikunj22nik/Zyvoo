@@ -659,7 +659,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                         conversation.leave(object : StatusListener {
                             override fun onSuccess() {
                                 Log.d("TESTING", "Delete Chat here")
-                                finish()
+                                deleteChat(groupName)
                             }
 
                             override fun onError(errorInfo: ErrorInfo) {
@@ -679,6 +679,47 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         }catch (e:Exception){
             e.printStackTrace()
         }
+    }
+
+    private fun deleteChat(group_channel:String) {
+        val sessionManager = SessionManager(this)
+        val usertype = sessionManager.getUserType()?:""
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                LoadingUtils.showDialog(this@ChatActivity, false)
+                userId?.let { id->
+                    viewModel.deleteChat(id.toString(),usertype,
+                        group_channel).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    finish()
+                                    showToast(this@ChatActivity, it.get("message").asString)
+                                }
+                            }
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(
+                                    this@ChatActivity,
+                                    it.message.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }else{
+            showErrorDialog(this,
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
     }
 
     private fun dialogReportIssue() {
@@ -735,7 +776,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             lifecycleScope.launch {
                 LoadingUtils.showDialog(this@ChatActivity, false)
                 userId?.let { id->
-                    viewModel.reportChat(id.toString(),reported_user_id,
+                    viewModel.reportChat(id,reported_user_id,
                         reason,message,groupName).collect {
                         when (it) {
                             is NetworkResult.Success -> {
