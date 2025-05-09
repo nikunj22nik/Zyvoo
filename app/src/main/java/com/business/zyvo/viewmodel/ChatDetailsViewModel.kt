@@ -124,4 +124,20 @@ class ChatDetailsViewModel @Inject constructor(private var repository: ZyvoRepos
         }
     }
 
+    suspend fun deleteChat(user_id :String,
+                           user_type :String,
+                           group_channel :String) :Flow<NetworkResult<JsonObject>> {
+        return repository.deleteChat(user_id,user_type, group_channel).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
 }

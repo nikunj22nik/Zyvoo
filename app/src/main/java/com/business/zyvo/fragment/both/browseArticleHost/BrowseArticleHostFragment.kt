@@ -156,13 +156,13 @@ lateinit var sessionManager : SessionManager
 
 
     private fun getGuideList(text: String) {
+        val sessionManager = SessionManager(requireContext())
+        val usertype = sessionManager.getUserType()?:""
         lifecycleScope.launch {
-            viewModel.getGuideList(text).collect {
+            viewModel.getGuideList(text,usertype).collect {
                 when (it) {
-
                     is NetworkResult.Success -> {
                         val model = Gson().fromJson(it.data, BrowseArticleModel::class.java)
-
                         Log.d("checkDataList",model.data.toString())
                             if (!model.data.isNullOrEmpty()){
                                 binding.textNoDataFound.visibility = View.GONE
@@ -172,13 +172,10 @@ lateinit var sessionManager : SessionManager
                                 binding.textNoDataFound.visibility = View.VISIBLE
                                 binding.recyclerNewArticles.visibility = View.GONE
                             }
-
-
                     }
 
                     is NetworkResult.Error -> {
                         showErrorDialog(requireContext(), it.message!!)
-
                     }
 
                     else -> {
@@ -194,8 +191,10 @@ lateinit var sessionManager : SessionManager
 
 
     private fun getArticleList(text: String) {
+        val sessionManager = SessionManager(requireContext())
+        val usertype = sessionManager.getUserType()?:""
         lifecycleScope.launch {
-            viewModel.getArticleList(text).collect {
+            viewModel.getArticleList(text,usertype).collect {
                 when (it) {
 
                     is NetworkResult.Success -> {

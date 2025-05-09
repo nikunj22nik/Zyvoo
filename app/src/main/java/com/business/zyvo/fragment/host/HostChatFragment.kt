@@ -185,43 +185,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                 try {
                     when (type) {
                         AppConstant.DELETE ->{
-                                Log.d("TESTING", data.group_name.toString())
-                            try {
-                                val manager = quickstartConversationsManager
-                                val client = manager?.conversationsClient
-                                if (client!=null) {
-                                    client.getConversation(
-                                        data.group_name,
-                                        object : CallbackListener<Conversation> {
-                                            override fun onSuccess(conversation: Conversation) {
-                                                conversation.leave(object : StatusListener {
-                                                    override fun onSuccess() {
-                                                        Log.d("TESTING", "Delete Chat here")
-                                                        chatList.remove(data)
-                                                        adapterChatList.updateItem(chatList)
-                                                    }
-
-                                                    override fun onError(errorInfo: ErrorInfo) {
-                                                        Log.e(
-                                                            "TESTING",
-                                                            "Error deleting conversation: ${errorInfo.message}"
-                                                        )
-                                                    }
-                                                })
-
-                                            }
-
-                                            override fun onError(errorInfo: ErrorInfo) {
-                                                Log.e(
-                                                    QuickstartConversationsManager.TAG,
-                                                    "Error retrieving conversation: " + errorInfo.message
-                                                )
-                                            }
-                                        })
-                                }
-                            }catch (e:Exception){
-                                e.printStackTrace()
-                            }
+                            deleteConvertion(data)
                         }
                         AppConstant.BLOCK -> {
                             Log.d("TESTING", "Blocking user for group: ${data.group_name}")
@@ -292,6 +256,41 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             }
 
         })
+    }
+
+    private fun deleteConvertion(data: ChannelListModel) {
+        try {
+            val manager = quickstartConversationsManager
+            val client = manager?.conversationsClient
+            if (client!=null) {
+                client.getConversation(
+                    data.group_name,
+                    object : CallbackListener<Conversation> {
+                        override fun onSuccess(conversation: Conversation) {
+                            conversation.leave(object : StatusListener {
+                                override fun onSuccess() {
+                                    deleteChat(data,group_channel = data.group_name?:"")
+                                }
+                                override fun onError(errorInfo: ErrorInfo) {
+                                    Log.e(
+                                        "TESTING",
+                                        "Error deleting conversation: ${errorInfo.message}"
+                                    )
+                                }
+                            })
+
+                        }
+                        override fun onError(errorInfo: ErrorInfo) {
+                            Log.e(
+                                QuickstartConversationsManager.TAG,
+                                "Error retrieving conversation: " + errorInfo.message
+                            )
+                        }
+                    })
+            }
+        }catch (e:Exception){
+            e.printStackTrace()
+        }
     }
 
 
@@ -588,6 +587,48 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
     }
 
+    private fun deleteChat(data: ChannelListModel,group_channel:String) {
+        val sessionManager = SessionManager(requireContext())
+        val usertype = sessionManager.getUserType()?:""
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch {
+                LoadingUtils.showDialog(requireContext(), false)
+                userId?.let { id->
+                    viewModel.deleteChat(id.toString(),usertype,
+                        group_channel).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let {
+                                    chatList.remove(data)
+                                    adapterChatList.updateItem(chatList)
+                                    showToast(requireContext(), it.get("message").asString)
+                                }
+                            }
+                            is NetworkResult.Error -> {
+                                LoadingUtils.hideDialog()
+                                Toast.makeText(
+                                    requireContext(),
+                                    it.message.toString(),
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+
+                            else -> {
+
+                            }
+                        }
+                    }
+
+                }
+
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+
+    }
+
     private fun reportChat(reported_user_id: String, reason: String,
                            message: String, dialog: Dialog,group_channel:String) {
         if (NetworkMonitorCheck._isConnected.value) {
@@ -631,6 +672,8 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         }
 
     }
+
+
 
     private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
