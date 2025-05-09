@@ -210,7 +210,7 @@ class CircularSeekBar @JvmOverloads constructor(
 //            invalidate()
         }
 
-    var endHours: Float = 2f
+    var endHours: Float = 0f
         set(value) {
           //  field = value.coerceIn(0f, 24f)
             field = if (is24HR) value % 24 else value % 12

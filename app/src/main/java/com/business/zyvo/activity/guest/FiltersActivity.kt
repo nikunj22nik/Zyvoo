@@ -75,9 +75,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     private var bedroomCount: String = ""
     private var parkingCount: String = ""
     private var bathroomCount: String = ""
-    private var instantBookingCount = 0
-    private var selfCheckIn = 0
-    private var petCheckIn = 0
+    private var instantBookingCount = ""
+    private var selfCheckIn = ""
+    private var petCheckIn = ""
     private var selectedAmenities = mutableListOf<String>()
     private var selectedActivities = mutableListOf<ActivityModel>()
     private var selectedActivityName = mutableListOf<String>()
@@ -281,20 +281,20 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 amenitiesAdapter.updateAdapter(amenitiesList.subList(0, 6))
 
                 //Set Booking Value
-                instantBookingCount = it.instant_booking.toInt()
-                if (instantBookingCount==0){
+                instantBookingCount = it.instant_booking
+                if (instantBookingCount.equals("")||instantBookingCount.equals("0")){
                     binding.instantBookingSwitch.isChecked = false
                 }else{
                     binding.instantBookingSwitch.isChecked = true
                 }
-                selfCheckIn = it.self_check_in.toInt()
-                if (selfCheckIn==0){
+                selfCheckIn = it.self_check_in
+                if (selfCheckIn.equals("")||selfCheckIn.equals("0")){
                     binding.selfCheckinToggle.isChecked = false
                 }else{
                     binding.selfCheckinToggle.isChecked = true
                 }
-                petCheckIn = it.allows_pets.toInt()
-                if (petCheckIn==0){
+                petCheckIn = it.allows_pets
+                if (petCheckIn.equals("")||petCheckIn.equals("0")){
                     binding.petToggle.isChecked = false
                 }else{
                     binding.petToggle.isChecked = true
@@ -1066,31 +1066,17 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
             }
 
-            instantBookingSwitch.setOnCheckedChangeListener { _, isChecked ->
-                instantBookingCount = if (isChecked){
-                    1
-                }else{
-                    0
-                }
+            instantBookingSwitch.setOnClickListener {
+                instantBookingCount = if (instantBookingSwitch.isChecked) "1" else "0"
             }
 
-            selfCheckinToggle.setOnCheckedChangeListener { _, isChecked ->
-                selfCheckIn = if (isChecked){
-                    1
-                }else{
-                    0
-                }
+            selfCheckinToggle.setOnClickListener {
+                selfCheckIn = if (selfCheckinToggle.isChecked) "1" else "0"
             }
 
-            petToggle.setOnCheckedChangeListener { _, isChecked ->
-                petCheckIn = if (isChecked){
-                    1
-                }else{
-                    0
-                }
+            petToggle.setOnClickListener {
+                petCheckIn = if (petToggle.isChecked) "1" else "0"
             }
-
-
         }
     }
 

@@ -396,6 +396,7 @@
                                 android:hint="5.0"
                                 android:textColorHint="@color/black"
                                 android:id="@+id/tvRating"
+                                android:textSize="@dimen/_12sdp"
                                 android:fontFamily="@font/poppins"
                                 android:textColor="#FCA800" />
 
@@ -406,6 +407,7 @@
                                 android:hint="(1k+)"
                                 android:textColorHint="@color/black"
                                 android:id="@+id/tvTotalReview"
+                                android:textSize="@dimen/_12sdp"
                                 android:fontFamily="@font/poppins"
                                 android:textColor="#A4A4A4" />
                         </LinearLayout>
@@ -426,6 +428,7 @@
                                 android:layout_marginStart="@dimen/_7sdp"
                                 android:hint="0 miles away"
                                 android:id="@+id/tvMiles"
+                                android:textSize="@dimen/_12sdp"
                                 android:fontFamily="@font/poppins"
                                 android:textColorHint="@color/a4a4a4"
                                 android:textColor="@color/a4a4a4" />
@@ -1278,6 +1281,7 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_12sdp"
                 android:text="Show More" />
 
             <View
@@ -1349,7 +1353,7 @@
                     android:text="Credit or Debit Card"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_12ssp" />
 
 
                 <ImageView
@@ -1432,7 +1436,7 @@
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:textColor="#000000"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_12ssp" />
 
             <View
                 android:layout_width="match_parent"
@@ -1477,7 +1481,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:text="Parking"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12ssp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -1530,7 +1534,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:text="Host rules"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12ssp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"

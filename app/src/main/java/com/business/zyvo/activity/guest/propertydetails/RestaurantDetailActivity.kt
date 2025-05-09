@@ -267,7 +267,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 propertyData?.min_booking_hours?.let {
 
                                     binding.minTimeTxt.setText(it.toDouble().toInt().toString() +"hr minimum")
-                                    binding.circularSeekBar.endHours = it.toString().toFloat()
+                                    binding.circularSeekBar.endHours = it.toFloat()
                                 }
 
                                 if(pagination == null){
@@ -715,28 +715,30 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             @SuppressLint("SetTextI18n")
             override fun onProgressChanged(progress: String) {
                 try {
-                    binding.textHr.text = "$progress hour"
-                    propertyData?.hourly_rate?.let {
-                        val totalPrice = progress.toInt()* it.toFloat()
-                        binding.textPrice.text = totalPrice.toDouble().toInt().toString()
-                        var selectedTime = binding.textstart.text
+                        binding.textHr.text = "$progress hour"
+                        propertyData?.hourly_rate?.let {
+                            val totalPrice = progress.toInt() * it.toFloat()
+                            binding.textPrice.text = totalPrice.toDouble().toInt().toString()
+                            var selectedTime = binding.textstart.text
 
-                        // Define the time formatter (12-hour format with AM/PM)
-                        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
-                        } else {
-                            TODO("VERSION.SDK_INT < O")
+                            // Define the time formatter (12-hour format with AM/PM)
+                            val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+                            } else {
+                                TODO("VERSION.SDK_INT < O")
+                            }
+                            Log.d(ErrorDialog.TAG, selectedTime.toString())
+                            // Parse the start time string into a LocalTime object
+                            val startTime = LocalTime.parse(selectedTime, formatter)
+
+                            val endTime = startTime.plusHours(
+                                binding.textHr.text.toString().replace(" hour", "")
+                                    .toLong()
+                            )
+                            // Format the end time back to a string
+                            val formattedEndTime = endTime.format(formatter)
+                            binding.textend.text = formattedEndTime.uppercase()
                         }
-                        Log.d(ErrorDialog.TAG,selectedTime.toString())
-                        // Parse the start time string into a LocalTime object
-                        val startTime = LocalTime.parse(selectedTime, formatter)
-
-                        val endTime = startTime.plusHours(binding.textHr.text.toString().replace(" hour","")
-                            .toLong())
-                        // Format the end time back to a string
-                        val formattedEndTime = endTime.format(formatter)
-                        binding.textend.text = formattedEndTime.uppercase()
-                    }
                 }catch (e:Exception){
                     Log.d(ErrorDialog.TAG,e.message!!)
                 }
@@ -901,6 +903,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 resources.getString(R.string.no_internet_dialog_msg))
         }
     }
+
     private fun getWisList(dialogAdapter: WishlistAdapter) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {

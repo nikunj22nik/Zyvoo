@@ -88,9 +88,10 @@ class ChatListHostViewModel @Inject constructor(private val repository: ZyvoRepo
      suspend fun reportChat( reporter_id :String,
                              reported_user_id :String,
                              reason :String,
-                             message :String) :Flow<NetworkResult<JsonObject>> {
+                             message :String,
+                             group_channel:String) :Flow<NetworkResult<JsonObject>> {
          return repository.reportChat(reporter_id,reported_user_id,
-             reason,message).onEach {
+             reason,message,group_channel).onEach {
              when (it) {
                  is NetworkResult.Loading -> {
                      isLoading.value = true

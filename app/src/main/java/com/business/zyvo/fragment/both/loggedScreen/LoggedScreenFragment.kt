@@ -341,8 +341,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     filterRequest.latitude, filterRequest.longitude,
                     filterRequest.date,
                     filterRequest.hour,
-                    ErrorDialog.convertToTimeFormat(filterRequest.start_time),
-                    ErrorDialog.convertToTimeFormat(filterRequest.end_time),
+                    ErrorDialog.convertDateToTimeFormat(filterRequest.start_time),
+                    ErrorDialog.convertDateToTimeFormat(filterRequest.end_time),
                     filterRequest.activity,
                 ).collect {
                     when (it) {

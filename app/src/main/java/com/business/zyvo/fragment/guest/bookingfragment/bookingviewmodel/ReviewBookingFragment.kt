@@ -22,6 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.RatingBar
@@ -37,6 +38,7 @@ import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.appsflyer.share.LinkGenerator
 import com.appsflyer.share.ShareInviteHelper
 import com.bumptech.glide.Glide
@@ -45,6 +47,7 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
+import com.business.zyvo.OnClickListener
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -58,13 +61,16 @@ import com.business.zyvo.activity.guest.propertydetails.model.Pagination
 import com.business.zyvo.activity.guest.propertydetails.model.Review
 import com.business.zyvo.adapter.AdapterAddOn
 import com.business.zyvo.adapter.BookingIncludeAdapter
+import com.business.zyvo.adapter.WishlistAdapter
 import com.business.zyvo.adapter.guest.AdapterProReview
 import com.business.zyvo.adapter.guest.PropertyIncludedAdapter
 import com.business.zyvo.databinding.FragmentReviewGustBookingBinding
 import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
+import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.google.android.material.imageview.ShapeableImageView
@@ -100,6 +106,8 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
     var pagination:Pagination?=null
     var filter = "highest_review"
     private var hostId :String ="-1"
+
+    private var wishlistItem: MutableList<WishlistItem> = mutableListOf()
 
 
 
@@ -154,9 +162,252 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
             cancelScreen()
         }
 
+        binding.proNoWishLists.setOnClickListener {
+                showAddWishlistDialog()
+        }
+        binding.proAddWishLists.setOnClickListener {
+            removeItemFromWishlist(propertyId.toString())
+        }
+
         getBookingDetailsListAPI()
 
         return binding.root
+    }
+
+
+    private fun removeItemFromWishlist(property_id: String) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                bookingViewModel.removeItemFromWishlist(sessionManager?.getUserId().toString(),
+                    property_id).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                showToast(requireContext(),resp.first)
+                                binding.proAddWishLists.visibility = View.GONE
+                                binding.proNoWishLists.visibility = View.VISIBLE
+
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireActivity(), it.message?:"")
+                        }
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireActivity(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    private fun showAddWishlistDialog() {
+        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_add_wishlist)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            val dialogAdapter = WishlistAdapter(requireContext(),
+                true, wishlistItem,false,object:
+                    OnClickListener {
+                    override fun itemClick(obj: Int) {
+
+                    }
+
+                })
+
+            dialogAdapter.setOnItemClickListener(object : WishlistAdapter.onItemClickListener{
+                override fun onItemClick(position: Int, wish: WishlistItem) {
+                    saveItemInWishlist(propertyId.toString(), position,wish.wishlist_id.toString(),
+                        dialog)
+                }
+
+            })
+
+            val rvWishList: RecyclerView = findViewById<RecyclerView>(R.id.rvWishList)
+            rvWishList.adapter = dialogAdapter
+
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+            findViewById<TextView>(R.id.textCreateWishList).setOnClickListener {
+                createWishListDialog()
+                dismiss()
+            }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+            getWisList(dialogAdapter)
+        }
+    }
+
+    private fun saveItemInWishlist(property_id: String,pos: Int,
+                                   wishlist_id: String,dialog: Dialog) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                bookingViewModel.saveItemInWishlist(sessionManager?.getUserId().toString(),
+                    property_id,
+                    wishlist_id).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                showToast(requireContext(),resp.first)
+                                dialog.dismiss()
+
+
+                                binding.proAddWishLists.visibility = View.VISIBLE
+                                binding.proNoWishLists.visibility = View.GONE
+
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireContext(), it.message!!)
+                        }
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    private fun createWishListDialog() {
+        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_create_wishlist)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+            val etDescription = findViewById<EditText>(R.id.etDescription)
+
+            val tvMaxCount = findViewById<TextView>(R.id.textMaxCount)
+            setupCharacterCountListener(etDescription, tvMaxCount, 50)
+            val etName =    findViewById<EditText>(R.id.etName)
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+            findViewById<TextView>(R.id.textCreate).setOnClickListener {
+                if (etName.text.isEmpty()){
+                    etName.error = AppConstant.name
+                    etName.requestFocus()
+                    showToast(requireContext(),AppConstant.name)
+                }else if (etDescription.text.isEmpty()){
+                    etDescription.error = AppConstant.description
+                    etDescription.requestFocus()
+                    showToast(requireContext(),AppConstant.description)
+                }else{
+                    createWishlist(etName.text.toString(),etDescription.text.toString(),
+                        propertyId.toString(),dialog)
+                }
+            }
+            findViewById<TextView>(R.id.textClear).setOnClickListener {
+                dismiss()
+            }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
+
+    private fun createWishlist(name: String,
+                               description: String,
+                               property_id: String,
+                               dialog: Dialog) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                bookingViewModel.createWishlist(sessionManager?.getUserId().toString(),
+                    name,description,property_id).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                showToast(requireActivity(),resp.first)
+                                binding.proAddWishLists.visibility = View.VISIBLE
+                                binding.proNoWishLists.visibility = View.GONE
+                                dialog.dismiss()
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireActivity(), it?.message?:"")
+                        }
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireActivity(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+    private fun getWisList(dialogAdapter: WishlistAdapter) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                bookingViewModel.getWisList(sessionManager?.getUserId().toString()).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                val listType = object : TypeToken<List<WishlistItem>>() {}.type
+                                val wish: MutableList<WishlistItem> = Gson().fromJson(resp, listType)
+                                wishlistItem = wish
+                                if (wishlistItem.isNotEmpty()) {
+                                    dialogAdapter.updateItem(wishlistItem)
+                                }
+                            }
+                        }
+                        is NetworkResult.Error -> {
+                            showErrorDialog(requireActivity(), it?.message?:"")
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        }else{
+            showErrorDialog(requireActivity(),
+                resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+
+
+    private fun setupCharacterCountListener(
+        editText: EditText,
+        textView: TextView,
+        maxLength: Int
+    ) {
+        editText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            @SuppressLint("SetTextI18n")
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val remainingChars = maxLength - (s?.length ?: 0)
+                textView.text = "max $remainingChars characters"
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
     }
 
     private fun cancelScreen(){
@@ -545,6 +796,16 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                         }else{
                                             binding.llHotelViews.visibility = View.GONE
                                         }
+                                    }
+                                }
+
+                                data?.is_in_wishlist?.let {
+                                    if (it==1){
+                                        binding.proAddWishLists.visibility = View.VISIBLE
+                                        binding.proNoWishLists.visibility = View.GONE
+                                    }else{
+                                        binding.proAddWishLists.visibility = View.GONE
+                                        binding.proNoWishLists.visibility = View.VISIBLE
                                     }
                                 }
                                 // Safe parsing of latitude & longitude

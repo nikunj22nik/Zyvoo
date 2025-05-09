@@ -272,7 +272,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         }
 
 
-
         return binding.root
     }
 

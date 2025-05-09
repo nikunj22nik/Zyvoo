@@ -898,7 +898,8 @@ interface ZyvoApi {
         @Field("reporter_id") reporter_id :String,
         @Field("reported_user_id") reported_user_id :String,
         @Field("reason") reason :String,
-        @Field("message") message :String
+        @Field("message") message :String,
+        @Field("group_channel") group_channel :String,
     ) : Response<JsonObject>
 
     @POST("otp_reset_password")

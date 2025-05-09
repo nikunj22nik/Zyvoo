@@ -696,7 +696,8 @@ interface ZyvoRepository {
         reporter_id :String,
         reported_user_id :String,
         reason :String,
-        message :String
+        message :String,
+        group_channel:String
     ) :Flow<NetworkResult<JsonObject>>
 
 

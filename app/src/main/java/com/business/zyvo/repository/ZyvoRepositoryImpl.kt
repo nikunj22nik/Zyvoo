@@ -5107,6 +5107,7 @@ import javax.inject.Inject
          }
      }
 
+
      override  suspend fun otpVerifyUpdateEmail(
           userId :Int,
          otp :String
@@ -5414,12 +5415,13 @@ import javax.inject.Inject
          reporter_id :String,
          reported_user_id :String,
          reason :String,
-         message :String
+         message :String,
+         group_channel:String
      ): Flow<NetworkResult<JsonObject>> =
          flow {
              try {
                  api.reportChat(reporter_id,reported_user_id,
-                     reason,message).apply {
+                     reason,message,group_channel).apply {
                      if (isSuccessful) {
                          body()?.let { resp ->
                              if (resp.has("success") && resp.get("success").asBoolean) {

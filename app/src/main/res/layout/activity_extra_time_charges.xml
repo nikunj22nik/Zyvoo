@@ -426,6 +426,7 @@ android:textColor="@color/black"
                                 android:hint="5.0"
                                 android:id="@+id/tvRating"
                                 android:fontFamily="@font/poppins"
+                                android:textSize="@dimen/_12sdp"
                                 android:textColorHint="@color/fca800"
                                 android:textColor="@color/fca800" />
 
@@ -435,6 +436,7 @@ android:textColor="@color/black"
                                 android:layout_marginStart="@dimen/_4sdp"
                                 android:hint="(1k+)"
                                 android:fontFamily="@font/poppins"
+                                android:textSize="@dimen/_12sdp"
                                 android:id="@+id/tvTotalReview"
                                 android:textColorHint="@color/a4a4a4"
                                 android:textColor="@color/a4a4a4" />
@@ -454,9 +456,10 @@ android:textColor="@color/black"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_7sdp"
-                                android:hint="37 miles away"
+                                android:hint="0 miles away"
                                 android:id="@+id/tvMiles"
                                 android:fontFamily="@font/poppins"
+                                android:textSize="@dimen/_12sdp"
                                 android:textColor="@color/a4a4a4" />
 
                         </LinearLayout>
@@ -497,6 +500,7 @@ android:textColor="@color/black"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:hint="$0"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
@@ -527,6 +531,7 @@ android:textColor="@color/black"
                         android:layout_alignParentEnd="true"
                         android:hint="$0"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:id="@+id/tvCleaningFee"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"/>
@@ -554,6 +559,7 @@ android:textColor="@color/black"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:hint="$0"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
@@ -583,6 +589,7 @@ android:textColor="@color/black"
                         android:hint="$0"
                         android:id="@+id/tvTaxesPrice"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"/>
 
@@ -613,6 +620,7 @@ android:textColor="@color/black"
                         android:id="@+id/tvDiscount"
                         android:textColorHint="@color/black"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:textColor="@color/black"/>/>
 
                 </RelativeLayout>
@@ -640,6 +648,7 @@ android:textColor="@color/black"
                         android:hint="$0"
                         android:id="@+id/tvAddOnPrice"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black" />
 
@@ -675,6 +684,7 @@ android:textColor="@color/black"
                         android:layout_alignParentEnd="true"
                         android:hint="$0"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:textColor="@color/black"
                         android:id="@+id/tvTotalPrice"
                         android:textColorHint="@color/black"/>
@@ -914,7 +924,7 @@ android:textColor="@color/black"
                     android:text="Credit or Debit Card"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
                 <ImageView
                     android:id="@+id/imageDropDown"
@@ -994,7 +1004,7 @@ android:textColor="@color/black"
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:textColor="#000000"
 
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_12sdp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
@@ -1037,8 +1047,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_toRightOf="@id/img_parking"
                     android:text="Parking"
                     android:fontFamily="@font/poppins"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -1061,6 +1070,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_height="wrap_content"
                     android:id="@+id/proParkingRule"
                     android:fontFamily="@font/poppins"
+                    android:textSize="@dimen/_12sdp"
                     android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
                     android:padding="@dimen/_10sdp" />
 
@@ -1089,7 +1099,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_toRightOf="@id/img_host_rule"
                     android:fontFamily="@font/poppins"
                     android:text="Host rules"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -1113,6 +1123,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
                     android:padding="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
+                    android:textSize="@dimen/_12sdp"
                     android:id="@+id/proHostRule"
                     />
 

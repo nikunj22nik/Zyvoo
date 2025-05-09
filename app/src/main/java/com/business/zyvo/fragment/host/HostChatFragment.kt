@@ -258,7 +258,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                                 intent.putExtra("user_img", data.receiver_image).toString()
                                 SessionManager(requireContext()).getUserId()
                                     ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
-                                Log.d("TESTING", "REVIEW HOST" + channelName)
                                 intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
                                 intent.putExtra(AppConstant.FRIEND_ID, data.sender_id)
                                 intent.putExtra("friend_img", data.sender_profile).toString()
@@ -272,7 +271,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                                 intent.putExtra("user_img", data.sender_profile).toString()
                                 SessionManager(requireContext()).getUserId()
                                     ?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1) }
-                                Log.d("TESTING", "REVIEW HOST" + channelName)
                                 intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
                                 intent.putExtra(AppConstant.FRIEND_ID, data.receiver_id)
                                 intent.putExtra("friend_img", data.receiver_image).toString()
@@ -309,15 +307,15 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             val et_addiotnal_detail : EditText = findViewById(R.id.et_addiotnal_detail)
             val powerSpinner : PowerSpinnerView = findViewById(R.id.spinnerView1)
             submit.setOnClickListener {
-                if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
+                /*if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
                     txtSubmit.text = "Submitted"
-                }else if(et_addiotnal_detail.text.isEmpty()){
+                }else*/ if(et_addiotnal_detail.text.isEmpty()){
                     showToast(requireActivity(),AppConstant.additional)
                 } else{
                     data.receiver_id?.let {
                         reportChat(it,
                             reportReasonsMap.get(powerSpinner.text.toString()).toString(),
-                            et_addiotnal_detail.text.toString(),dialog)
+                            et_addiotnal_detail.text.toString(),dialog,data?.group_name?:"")
                     }
                 }
             }
@@ -590,13 +588,14 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
     }
 
-    private fun reportChat(reported_user_id: String, reason: String, message: String, dialog: Dialog) {
+    private fun reportChat(reported_user_id: String, reason: String,
+                           message: String, dialog: Dialog,group_channel:String) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch {
                 LoadingUtils.showDialog(requireContext(), false)
                 userId?.let { id->
                         viewModel.reportChat(id.toString(),reported_user_id,
-                            reason,message).collect {
+                            reason,message,group_channel).collect {
                             when (it) {
                                 is NetworkResult.Success -> {
                                     it.data?.let {

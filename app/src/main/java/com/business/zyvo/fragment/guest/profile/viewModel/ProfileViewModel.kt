@@ -144,6 +144,51 @@ class ProfileViewModel @Inject constructor(
     }
 
 
+    suspend fun phoneVerificationProfile(userId :String,code :String,number:String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.phoneVerification(userId, code,number).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun otpVerifyPhoneVerificationProfile(userId :String,otp :String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.otpVerifyPhoneVerification(userId, otp).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+    suspend fun otpVerifyEmailVerificationProfile(userId :String,otp :String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.otpVerifyEmailVerification(userId, otp).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+
     suspend fun otpVerifyUpdateEmail(
         userId: Int,
         otp: String
@@ -510,6 +555,20 @@ class ProfileViewModel @Inject constructor(
                 else -> {
                     isLoading.value = false
                 }
+            }
+        }
+    }
+    suspend fun emailVerificationProfile(userId: String,email :String):
+            Flow<NetworkResult<Pair<String,String>>> {
+        return repository.emailVerification(userId, email).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
             }
         }
     }
