@@ -993,7 +993,7 @@
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imageSelectBankProofTypeIcon"
-                                android:text="SelectBankProofType" />
+                                android:text="Select Bank Proof Type" />
 
                             <ImageView
                                 android:id="@+id/imageSelectBankProofTypeIcon"

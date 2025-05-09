@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_light"
         android:padding="@dimen/_7sdp"
-        android:text="Waiting payment"
+        android:text="Awaiting payment"
         android:textColor="@color/black"
         android:textSize="@dimen/_11ssp"
         android:textStyle="bold"/>

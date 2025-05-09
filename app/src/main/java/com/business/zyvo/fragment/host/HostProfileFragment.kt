@@ -1270,8 +1270,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     override fun onResume() {
         super.onResume()
         (activity as? GuesMain)?.profileColor()
+
     }
 
+    override fun onPause() {
+        super.onPause()
+        firstTime = true
+    }
 
     fun dialogLogin(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -3594,12 +3599,14 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         var dateManager = DateManager(requireContext())
         val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog.apply {
-            setCancelable(true)
+
             setContentView(R.layout.dialog_add_card_details)
+            setCancelable(true)
+            setCanceledOnTouchOutside(true)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                width = WindowManager.LayoutParams.WRAP_CONTENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
             val textMonth: TextView = findViewById(R.id.textMonth)
             val textYear: TextView = findViewById(R.id.textYear)

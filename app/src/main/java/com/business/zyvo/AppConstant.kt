@@ -21,6 +21,7 @@ class AppConstant {
         val CHAT_TOKEN: String? = "chat_token"
         val PENDING: String = "pending"
         val WAITING_PAYMENT = "waiting_payment"
+        val WAITING_PAYMENT1 = "Awaiting payment"
         val CONFIRMED = "confirmed"
         val CANCEL = "cancelled"
         val FINISHED = "finished"

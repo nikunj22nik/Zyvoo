@@ -141,7 +141,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
     private var _binding: FragmentManagePlaceBinding? = null
-    private  val binding get() = _binding!!
+    private val binding get() = _binding!!
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var activityList: MutableList<ActivityModel>
     private lateinit var amenitiesList: MutableList<Pair<String, Boolean>>
@@ -200,7 +200,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         imagePermissionInitialization()
         val newWork = AddOnModel("Unknown Location", "0")
 
-        addOnList.add( newWork)
+        addOnList.add(newWork)
         swictchChangeListener()
         galleryTextField()
         return binding.root
@@ -357,7 +357,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         requestBody.activities = resultActivityList
         requestBody.amenities = amenitiesListResult
         if (!addOnList.isEmpty()) {
-          //  requestBody.add_ons = addOnList.subList(1, addOnList.size);
+            //  requestBody.add_ons = addOnList.subList(1, addOnList.size);
             val validAddOns = addOnList.filter { addOn ->
                 !addOn.name.isNullOrBlank() &&
                         addOn.price != null &&
@@ -1224,25 +1224,33 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 //                    }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
-                        Log.d("nikunjcheckPosition",position.toString())
+                        Log.d("nikunjcheckPosition", position.toString())
                         context?.let {
-                            if (position <= 5){
+                            if (position <= 5) {
                                 openGallery()
-                            }else{
-                                Toast.makeText(requireContext(), "You can only add 5 images to one property.", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "You can only add 5 images to one property.",
+                                    Toast.LENGTH_LONG
+                                ).show();
 
                             }
 
                         }
                     } else {
                         if (hasPermissions(requireContext(), *permissions())) {
-                            Log.d("nikunjcheckPosition",position.toString())
+                            Log.d("nikunjcheckPosition", position.toString())
                             //Do our task
                             context?.let {
-                                if (position <= 5){
+                                if (position <= 5) {
                                     openGallery()
-                                }else{
-                                    Toast.makeText(requireContext(), "You can only add 5 images to one property.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "You can only add 5 images to one property.",
+                                        Toast.LENGTH_LONG
+                                    ).show();
 
                                 }
                             }
@@ -1484,18 +1492,18 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         adapterActivity = ActivitiesAdapter(requireContext(), activityList.subList(0, 3))
 
-        adapterActivity.setOnItemClickListener { adapterActivity, Int,status ->
+        adapterActivity.setOnItemClickListener { adapterActivity, Int, status ->
             run {
-                savingActivityBackground(adapterActivity,status)
+                savingActivityBackground(adapterActivity, status)
             }
         }
 
         adapterActivity2 =
             ActivitiesAdapter(requireContext(), activityList.subList(3, activityList.size))
 
-        adapterActivity2.setOnItemClickListener { adapterActivity, Int,status ->
+        adapterActivity2.setOnItemClickListener { adapterActivity, Int, status ->
             run {
-                savingActivityBackground(adapterActivity,status)
+                savingActivityBackground(adapterActivity, status)
             }
         }
 
@@ -1555,12 +1563,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
         }
     }*/
-    private fun savingActivityBackground(adapterActivity: String,status:Boolean) {
+    private fun savingActivityBackground(adapterActivity: String, status: Boolean) {
         CoroutineScope(Dispatchers.IO).launch {
             if (status) {
                 activityListResult.add(adapterActivity)
-            }else{
-                if (activityListResult.contains(adapterActivity)){
+            } else {
+                if (activityListResult.contains(adapterActivity)) {
                     activityListResult.remove(adapterActivity)
                 }
             }
@@ -1760,7 +1768,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
 
     private fun settingBackgroundTaskToBedroom() {
-        binding.tvAnyBedrooms.setOnClickListener {
+        binding.tvAnyBathroom.setOnClickListener {
             bathRoomAnySelect()
         }
 
@@ -1809,7 +1817,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                bathroomCount = finalText.toInt()
+                bathroomCount = if(finalText.isNotEmpty()) finalText.toInt() else 0
                 clearBathRommBackground()
             }
         })
@@ -2041,7 +2049,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                badroomCount = finalText.toInt()
+                badroomCount = if(finalText.isNotEmpty()) finalText.toInt() else 0
                 badRoomClearBackground()
             }
         })
@@ -2195,8 +2203,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                propertySize = finalText.toInt()
-                clearPropertyBackground()
+                propertySize = if(finalText.isNotEmpty()) finalText.toInt() else 0
+                 clearPropertyBackground()
             }
         })
     }
@@ -2314,7 +2322,16 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                peopleCount = finalText.toInt()
+//                var finalText1 = "0"
+//                if (finalText.isNotEmpty()) {
+//                    finalText1 =   finalText
+//                } else {
+//                    finalText1 = "0"
+//                    propertyRoomAnySelect()
+//                }
+               peopleCount = if (finalText.isNotEmpty()) finalText.toInt() else 0
+               // peopleCount =  finalText1.toInt()
+
                 clearPeopleCountBackground()
             }
         })
@@ -2432,7 +2449,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                     addOnList.removeAt(obj)
 //                    addonlist.removeAt(obj)
                     //vipin check later
-                //    addonPrice.removeAt(obj)
+                    //    addonPrice.removeAt(obj)
                     addOnAdapter.updateAddOn(addOnList)
 
                 }
@@ -2481,12 +2498,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 if (itemName.isNotEmpty() && itemPrice.isNotEmpty()) {
                     val newAddOn = AddOnModel(itemName, itemPrice)
                     addOnList.add(0, newAddOn)
-                   // addonlist.add(itemName)
-                //    addonPrice.add(itemPrice)
-                    Log.d("checkAddonData",addOnList.toString())
-                    Log.d("checkAddonData",addonPrice.toString())
+                    // addonlist.add(itemName)
+                    //    addonPrice.add(itemPrice)
+                    Log.d("checkAddonData", addOnList.toString())
+                    Log.d("checkAddonData", addonPrice.toString())
                     addOnAdapter.updateAddOn(addOnList)
-                  //  addOnAdapter.notifyDataSetChanged()
+                    //  addOnAdapter.notifyDataSetChanged()
                     addOnAdapter.notifyItemInserted(0)
                     dialog.dismiss()
                 } else {
@@ -2976,7 +2993,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                         minimumHourValue = selectedIndex + 2;
                     } else if (type.equals(AppConstant.PRICE)) {
                         priceIndex = selectedIndex
-                       // hourlyPrice = (selectedIndex + 1) * 10
+                        // hourlyPrice = (selectedIndex + 1) * 10
                         //Vipin
                         hourlyPrice = (selectedIndex + 2) * 10
                     } else if (type.equals(AppConstant.DISCOUNT)) {
@@ -2986,7 +3003,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                         bulkDiscountPrice = (selectedIndex + 2) * 10
                     } else if (type.equals(AppConstant.BULK_HOUR)) {
                         discountHourIndex = selectedIndex
-                       // bulkDiscountHour = (selectedIndex + 1)
+                        // bulkDiscountHour = (selectedIndex + 1)
                         //Vipin
                         bulkDiscountHour = (selectedIndex + 2)
                     }

@@ -37,6 +37,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
+
+
 @AndroidEntryPoint
 class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListener {
 
@@ -54,8 +56,6 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-
-
         }
     }
 
@@ -68,9 +68,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    )
-            : View? {
-
+    ): View? {
         _binding = FragmentBookingScreenHostBinding.inflate(
             LayoutInflater.from(requireContext()),
             container,
@@ -144,6 +142,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                                             requireContext(),
                                             it.message.toString()
                                         )
+                                        callingBookingData()
                                     }
 
                                     else -> {

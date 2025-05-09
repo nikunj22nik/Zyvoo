@@ -79,6 +79,8 @@ import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.datacla
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.host.ReviewerProfileModel
 import com.google.gson.Gson
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 
 
@@ -96,6 +98,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     lateinit var navController: NavController
     lateinit var adapterIncludeInBooking: AdapterIncludeInBooking
+    private var autoOpenDialog2Job: Job? = null
 
     var latitude: Double = 0.00
     var longitude: Double = 0.00
@@ -242,23 +245,29 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                     when (it) {
                         is NetworkResult.Success -> {
                             LoadingUtils.hideDialog()
-
-                            var userImage: String = it.data?.sender_avatar.toString()
+                             Log.d("checkDataResponse",it.data?.receiver_name.toString()+it.data?.sender_name.toString())
+                         //   var userImage: String = it.data?.sender_avatar.toString()
+                            var userImage: String = it.data?.receiver_avatar.toString()
 
                             Log.d("TESTING_PROFILE_HOST", userImage)
 
-                            var friendImage: String = it.data?.receiver_avatar.toString()
+                           // var friendImage: String = it.data?.receiver_avatar.toString()
+                            var friendImage: String = it.data?.sender_avatar.toString()
 
                             Log.d("TESTING_PROFILE_HOST", friendImage)
 
                             var friendName: String = ""
 
-                            if (it.data?.receiver_name != null) {
-                                friendName = it.data.receiver_name
+//                            if (it.data?.receiver_name != null) {
+//                                friendName = it.data.receiver_name
+//                            }
+                            if (it.data?.sender_name != null) {
+                                friendName = it.data.sender_name
                             }
                             var userName = ""
 
-                            userName = it.data?.sender_name.toString()
+                          //  userName = it.data?.sender_name.toString()
+                            userName = it.data?.receiver_name.toString()
 
                             val intent = Intent(requireContext(), ChatActivity::class.java)
 
@@ -282,6 +291,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                             intent.putExtra("friend_name", friendName).toString()
 
                             intent.putExtra("user_name", userName)
+                            intent.putExtra("sender_id", it.data?.sender_id)
 
                             startActivity(intent)
                         }
@@ -760,13 +770,13 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
-            var ratingbar = findViewById<RatingBar>(R.id.ratingbar)
-            var ratingbar2 = findViewById<RatingBar>(R.id.ratingbar2)
-            var ratingbar3 = findViewById<RatingBar>(R.id.ratingbar3)
-            var textPublishReview = findViewById<TextView>(R.id.textPublishReview)
-            var etMessage = findViewById<TextView>(R.id.etMessage)
+            val ratingbar = findViewById<RatingBar>(R.id.ratingbar)
+            val ratingbar2 = findViewById<RatingBar>(R.id.ratingbar2)
+            val ratingbar3 = findViewById<RatingBar>(R.id.ratingbar3)
+            val textPublishReview = findViewById<TextView>(R.id.textPublishReview)
+            val etMessage = findViewById<TextView>(R.id.etMessage)
             var message: String = ""
             etMessage.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
@@ -996,17 +1006,24 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
+            autoOpenDialog2Job = viewLifecycleOwner.lifecycleScope.launch {
+                delay(3000) // 3 seconds
+                dismiss()
+                openDialogSuccess()
+            }
+
 
             var cross: ImageView = findViewById<ImageView>(com.business.zyvo.R.id.img_cross)
             var okBtn: RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
-            okBtn.setOnClickListener {
-                dialog.dismiss()
-            }
+//            okBtn.setOnClickListener {
+//                dialog.dismiss()
+//            }
             cross.setOnClickListener {
                 dialog.dismiss()
             }
 
             okBtn.setOnClickListener {
+                autoOpenDialog2Job?.cancel()
                 openDialogSuccess()
                 dialog.dismiss()
             }
@@ -1275,7 +1292,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
 
             val tvShareMessage: EditText = findViewById(R.id.tvShareMessage)
@@ -1304,7 +1321,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
             val tvShareMessage: EditText = findViewById(R.id.tvShareMessage1)
             val doubt: RelativeLayout = findViewById(R.id.doubt)
@@ -1318,6 +1335,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                 reason = "I'm overbooked"
                 doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
                 tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+                tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             }
             otherReasonEt.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
@@ -1337,6 +1355,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                     reason = charSequence.toString()
                     doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
                     tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+                    tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
                 }
 
                 override fun afterTextChanged(editable: Editable) {}
@@ -1345,6 +1364,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             tvAvailableDay.setOnClickListener {
                 reason = "Maintenance day"
                 doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
+                tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
                 tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             }
 

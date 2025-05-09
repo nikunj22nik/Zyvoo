@@ -24,8 +24,8 @@
     </style>
     <style name="RoundedCornerImageThree" parent="ShapeAppearance.MaterialComponents.SmallComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">@dimen/_15ssp</item>
-        <item name="cornerSizeBottomRight">@dimen/_15ssp</item> <!-- More rounded -->
+        <item name="cornerSizeTopRight">15dp</item>
+        <item name="cornerSizeBottomRight">15dp</item> <!-- More rounded -->
         <item name="cornerSizeBottomLeft">0dp</item>
         <item name="cornerSizeTopLeft">0dp</item> <!-- More rounded -->
     </style>
@@ -42,10 +42,10 @@
 
     <style name="RoundedCornerImageOne" parent="ShapeAppearance.MaterialComponents.SmallComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSizeTopRight">15dp</item>
-        <item name="cornerSizeBottomRight">15dp</item> <!-- More rounded -->
-        <item name="cornerSizeBottomLeft">15dp</item>
-        <item name="cornerSizeTopLeft">15dp</item> <!-- More rounded -->
+        <item name="cornerSizeTopRight">20dp</item>
+        <item name="cornerSizeBottomRight">20dp</item> <!-- More rounded -->
+        <item name="cornerSizeBottomLeft">20dp</item>
+        <item name="cornerSizeTopLeft">20dp</item> <!-- More rounded -->
     </style>
 
     <style name="roundedImageView" parent="">

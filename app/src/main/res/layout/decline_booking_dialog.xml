@@ -66,12 +66,11 @@
 
     <EditText
         android:id="@+id/other_reason_et"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
         android:hint="Other reason.."
         android:background="@null"
-        android:textColor="#663F3D56"
         android:textSize="@dimen/_10ssp"
         android:textStyle="bold" />
 

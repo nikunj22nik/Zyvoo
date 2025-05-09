@@ -235,7 +235,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
             val spinner = findViewById<Spinner>(R.id.spinner)
 
             val customList = arrayListOf(
-                SpinnerModel("Standard (3 to 5 business days", 0),
+                SpinnerModel("Standard (3 to 5 business days )", 0),
                 SpinnerModel("Instant (Fee 2%)", R.drawable.lightning_icon)
 
             )
