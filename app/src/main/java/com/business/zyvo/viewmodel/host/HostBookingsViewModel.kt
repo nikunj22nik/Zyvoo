@@ -99,7 +99,7 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
                            AppConstant.PENDING ->{
                              pendingList.add(it)
                            }
-                            AppConstant.WAITING_PAYMENT ->{
+                            AppConstant.WAITING_PAYMENT1 ->{
                                 waitingPaymentList.add(it)
                             }
                             AppConstant.CONFIRMED ->{

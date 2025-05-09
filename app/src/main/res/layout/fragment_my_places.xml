@@ -208,7 +208,7 @@
                 android:src="@drawable/ic_add_icon_green"
                 android:layout_gravity="end|bottom"
                  android:layout_marginHorizontal="@dimen/_15sdp"
-
+android:visibility="gone"
                 android:layout_marginBottom="@dimen/_75sdp"/>
         </LinearLayout>
     </ScrollView>

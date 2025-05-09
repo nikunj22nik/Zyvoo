@@ -930,10 +930,12 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
     }
 
     private fun markFavoriteChat(groupName: String,value:Int) {
+        Log.d("checkDetails","sender_id "+sender_id.toString()+" groupName"+groupName +" value"+value)
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch {
                 sender_id?.let {
                     LoadingUtils.showDialog(this@ChatActivity, false)
+
                     viewModel.markFavoriteChat(it.toInt(), groupName, value).collect {
                         when (it) {
                             is NetworkResult.Success -> {

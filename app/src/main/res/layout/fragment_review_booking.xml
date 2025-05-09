@@ -742,6 +742,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_155sdp"
                             android:src="@drawable/ic_dummy_img_1"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageBigThree"
                             android:scaleType="fitXY"
                             />
                     </androidx.cardview.widget.CardView>
@@ -768,6 +769,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/_72sdp"
                                 android:src="@drawable/ic_dummy_img_2"
+                                app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
                                 android:scaleType="fitXY"
                                 />
 
@@ -786,6 +788,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="@dimen/_75sdp"
                                 android:src="@drawable/ic_dummy_img_3"
+                                app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
                                 android:scaleType="fitXY"
                                 />
                         </androidx.cardview.widget.CardView>
@@ -807,14 +810,15 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.45"
+                        android:layout_weight="0.49"
                         >
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/shapeableImageView_2_1"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_155sdp"
-                            android:src="@drawable/ic_dummy_img_1"
                             android:scaleType="fitXY"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageBigThree"
+                            android:src="@drawable/ic_dummy_img_1"
                             />
                     </LinearLayout>
 
@@ -836,9 +840,7 @@
                             android:layout_height="@dimen/_155sdp"
                             android:src="@drawable/ic_dummy_img_1"
                             android:scaleType="fitXY"
-
-                            android:layout_marginEnd="@dimen/_10sdp"
-                            app:shapeAppearanceOverlay="@style/RoundedCorners"
+                            app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
                             />
                     </LinearLayout>
 
@@ -848,17 +850,28 @@
                     android:id="@+id/ll_single_img"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="vertical"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     >
 
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/shapeableImageView_1_1"
+                    <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_155sdp"
-                        android:src="@drawable/ic_dummy_img_1"
-                        android:scaleType="fitXY"
-                        />
+                        app:cardCornerRadius="@dimen/_15sdp">
+
+
+                        <com.google.android.material.imageview.ShapeableImageView
+                            android:id="@+id/shapeableImageView_1_1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/ic_dummy_img_1"
+                            android:visibility="visible"
+                            android:scaleType="fitXY"
+
+                            />
+                    </com.google.android.material.card.MaterialCardView>
+
 
                 </LinearLayout>
 
@@ -874,8 +887,9 @@
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_12ssp"
                     android:text="Booking Details"
-                    android:textColor="#000"
                     android:textSize="@dimen/_16sdp"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <!-- Date and Duration -->
@@ -994,9 +1008,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_13sdp"
                     android:text="Included in your booking"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp"
                     android:layout_marginTop="@dimen/_20sdp"
+                    android:textSize="@dimen/_14sdp"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
 
@@ -1021,8 +1036,9 @@
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:text="Rules"
-                    android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp"
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <RelativeLayout
@@ -1187,7 +1203,10 @@
                     android:layout_marginTop="@dimen/_15sdp"
                     android:text="Address &amp; Location"
                     android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold" />
+                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    />
 
                 <TextView
                     android:id="@+id/tv_location_name"

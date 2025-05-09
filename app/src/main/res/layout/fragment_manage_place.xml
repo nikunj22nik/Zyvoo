@@ -76,7 +76,7 @@
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Setup places, avaxilability, prices and more."
+                android:text="Setup places, availability, prices and more."
                 android:textColor="#000000"
                 android:textSize="@dimen/_13sdp"
 
@@ -105,7 +105,7 @@
                     android:paddingVertical="8dp"
                     android:text="Home Setup"
                     android:textColor="#3F3D56"
-                    android:textSize="@dimen/_9ssp" />
+                    android:textSize="@dimen/_10ssp" />
 
                 <TextView
                     android:id="@+id/tv_gallery"
@@ -117,7 +117,7 @@
                     android:paddingVertical="8dp"
                     android:text="Gallery &amp; Location"
                     android:textColor="#3F3D56"
-                    android:textSize="@dimen/_9sdp" />
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/tv_availability"
@@ -130,7 +130,7 @@
                     android:paddingVertical="8dp"
                     android:text="Availability"
                     android:textColor="#3F3D56"
-                    android:textSize="@dimen/_9ssp" />
+                    android:textSize="@dimen/_10ssp" />
             </LinearLayout>
 
             <View
@@ -876,7 +876,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_14sdp"
-                    android:text="Show More" />
+                    android:text="@string/show_more" />
 
                 <View
                     android:layout_width="match_parent"
@@ -892,6 +892,7 @@
                     android:layout_marginTop="@dimen/_13sdp"
                     android:fontFamily="@font/poppins"
                     android:text="Booking"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
 
@@ -1112,6 +1113,7 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
                     android:text="Gallery"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13ssp" />
 
@@ -1303,6 +1305,7 @@
                         android:layout_marginVertical="@dimen/_5sdp"
                         android:background="@null"
                         android:hint="City"
+                        android:textSize="@dimen/_14sdp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
                 </RelativeLayout>

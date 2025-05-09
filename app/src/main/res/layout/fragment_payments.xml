@@ -188,6 +188,7 @@
                         android:background="@drawable/bg_four_side_corner_grey_slight_more"
                         android:elevation="4dp"
                         android:orientation="vertical"
+                        android:layout_marginStart="@dimen/_10sdp"
                         app:layout_constraintBottom_toTopOf="@+id/rcvPaymentCard"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
