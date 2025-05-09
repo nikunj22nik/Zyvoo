@@ -695,10 +695,12 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             submit.setOnClickListener {
                /* if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
                     txtSubmit.text = "Submitted"
-                }else*/ if(et_addiotnal_detail.text.isEmpty()){
-                    showToast(this@ChatActivity,AppConstant.additional)
-                }
-                else if(powerSpinner.text.toString().isEmpty()){
+                }else*/
+//                if(et_addiotnal_detail.text.isEmpty()){
+//                    showToast(this@ChatActivity,AppConstant.additional)
+//                }
+//                else
+                    if(powerSpinner.text.toString().isEmpty()){
                     showToast(this@ChatActivity,AppConstant.spinner)
                 }
                 else{

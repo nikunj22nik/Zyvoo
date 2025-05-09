@@ -50,14 +50,21 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
     ): View {
         _binding = FragmentNotificationBinding.inflate(inflater, container, false)
         // Set up RecyclerView and Adapter
+
             adapterNotificationScreen =
                 AdapterNotificationScreen(requireContext(), arrayListOf(), this)
-            binding.recyclerView.adapter = adapterNotificationScreen  // Ensure the RecyclerView ID is correct
+           // binding.recyclerView.adapter = adapterNotificationScreen  // Ensure the RecyclerView ID is correct
 
             adapterGuestNotification = GuestNotificationAdapter(requireContext(), arrayListOf(), this)
-            binding.recyclerView.adapter = adapterGuestNotification
+         //   binding.recyclerView.adapter = adapterGuestNotification
 
         sessionManager = SessionManager(requireContext())
+        if (sessionManager.getUserType() == AppConstant.Guest) {
+            binding.recyclerView.adapter = adapterGuestNotification
+        } else {
+            binding.recyclerView.adapter = adapterNotificationScreen
+        }
+
 
         // Bind the ViewModel to the layout
         binding.viewModel = viewModel
@@ -118,6 +125,7 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
 
                             if (list.isNotEmpty()) {
                                 notificationId = list.first().notification_id
+                                Log.d("checkDataList",list.toString())
                                 adapterGuestNotification.updateItem(list.toMutableList())
                             } else {
                                 notificationId = 0
@@ -259,10 +267,13 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                     when (it) {
                         is NetworkResult.Success -> {
                             Log.d("Testing", "list here is " + it.data?.size)
+                            if (it.data != null){
+                                Log.d("checkDataList",it.data.toString())
+                                adapterNotificationScreen.updateItem(it.data)
 
-                            it.data?.let { it1 -> adapterNotificationScreen.updateItem(it1) }
+                                list = it.data
 
-                            list = it.data!!
+                            }
 
                             LoadingUtils.hideDialog()
                         }

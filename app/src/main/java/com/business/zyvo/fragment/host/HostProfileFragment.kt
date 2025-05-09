@@ -764,7 +764,14 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     addLanguageApi(newLanguage.name)
                     // Add the new language to the list
                     Log.d("laguageListSize",languageList.size.toString())
-                    languageList.add(languageList.size - 1, newLanguage)
+                    Log.d("laguageListSize",languageList.toString())
+                    if (languageList.size <3){
+                        if (!languageList.contains(newLanguage)){
+                            languageList.add(languageList.size - 1, newLanguage)
+                        }
+                        }
+
+                    Log.d("laguageListSize",languageList.toString())
                     addLanguageSpeakAdapter.updateLanguage(languageList)
                     //addLanguageSpeakAdapter.notifyItemInserted(0)
 

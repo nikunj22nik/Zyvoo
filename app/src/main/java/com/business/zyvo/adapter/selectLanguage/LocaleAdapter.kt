@@ -1,5 +1,6 @@
 package com.business.zyvo.adapter.selectLanguage
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,6 +29,7 @@ class LocaleAdapter(
         var languageName = locale.name
 
         holder.countryName.visibility = View.VISIBLE
+Log.d("checkLanguagesName",thirdList.toString())
 
         if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
             holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)
@@ -40,8 +42,8 @@ class LocaleAdapter(
 
         holder.ll1.setOnClickListener {
            if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
-                  SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context,languageName)
-                   holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
+//                  SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context,languageName)
+//                   holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
            }
            else {
                var list1 = SessionManager(holder.itemView.context).getLanguages((holder.itemView.context)).toMutableList()
