@@ -135,12 +135,12 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             userName = intent?.extras?.getString("user_name","")?:""
             sender_id = intent?.extras?.getString("sender_id","")?:""
             binding.tvStatus.setText(friend_name)
+            Log.d(ErrorDialog.TAG,"$friend_name $userName $friendId $userId $groupName")
             if(intent?.extras?.containsKey("message") == true){
                 Log.d("ZYVOO-TESTING"," Message Send in CHAT SCREEN")
                 previousScreenMessage = intent?.extras?.getString("message").toString()
 
             }
-
             if (is_blocked==1){
                 binding.rvChatting1.visibility = View.GONE
                 binding.rvChattingblock.visibility = View.VISIBLE
@@ -215,6 +215,10 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         }
         binding.imageUnFavourite.setOnClickListener {
             markFavoriteChat(groupName,1)
+        }
+
+        binding.imageFavourite.setOnClickListener {
+            markFavoriteChat(groupName,0)
         }
 
         initialize()
@@ -689,9 +693,9 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             val et_addiotnal_detail : EditText = findViewById(R.id.et_addiotnal_detail)
             val powerSpinner : PowerSpinnerView = findViewById(R.id.spinnerView1)
             submit.setOnClickListener {
-                if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
+               /* if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
                     txtSubmit.text = "Submitted"
-                }else if(et_addiotnal_detail.text.isEmpty()){
+                }else*/ if(et_addiotnal_detail.text.isEmpty()){
                     showToast(this@ChatActivity,AppConstant.additional)
                 }
                 else if(powerSpinner.text.toString().isEmpty()){
@@ -732,7 +736,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                 LoadingUtils.showDialog(this@ChatActivity, false)
                 userId?.let { id->
                     viewModel.reportChat(id.toString(),reported_user_id,
-                        reason,message).collect {
+                        reason,message,groupName).collect {
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let {
@@ -940,8 +944,15 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                                 it.data?.let {
                                     Log.d("******", "ChatUserBlock")
                                     is_favorite = value
-                                    binding.imageUnFavourite.visibility = View.GONE
-                                    binding.imageFavourite.visibility = View.VISIBLE
+                                    if (is_favorite==1){
+                                        binding.imageUnFavourite.visibility = View.GONE
+                                        binding.imageFavourite.visibility = View.VISIBLE
+                                    }else{
+                                        binding.imageUnFavourite.visibility = View.VISIBLE
+                                        binding.imageFavourite.visibility = View.GONE
+                                    }
+                                  //  binding.imageUnFavourite.visibility = View.GONE
+                                  //  binding.imageFavourite.visibility = View.VISIBLE
 
                                 }
                             }

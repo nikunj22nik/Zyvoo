@@ -67,7 +67,17 @@ class WishListsViewModel @Inject constructor(
         userId: Int, wishListId: Int
     ): Flow<NetworkResult<JsonObject>> {
         return repository.getSavedItemWishList(userId, wishListId).onEach {
-
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                }
+                is NetworkResult.Success -> {
+                    isLoading.value = false
+                }
+                else -> {
+                    isLoading.value = false
+                }
+            }
 
         }
 
@@ -78,7 +88,17 @@ class WishListsViewModel @Inject constructor(
         property_id: String
     ): Flow<NetworkResult<Pair<String, String>>>{
         return repository.removeItemFromWishlist(userId,property_id).onEach {
-
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                }
+                is NetworkResult.Success -> {
+                    isLoading.value = false
+                }
+                else -> {
+                    isLoading.value = false
+                }
+            }
         }
     }
 

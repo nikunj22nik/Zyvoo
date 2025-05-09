@@ -488,7 +488,7 @@
                                     android:fontFamily="@font/inter"
                                     android:text="5.0"
                                     android:textColor="#FFBB00"
-                                    android:textSize="@dimen/_13ssp" />
+                                    android:textSize="@dimen/_12sdp" />
 
                                 <TextView
                                     android:id="@+id/textK"
@@ -498,7 +498,7 @@
                                     android:fontFamily="@font/poppins"
                                     android:text=" (0)"
                                     android:textColor="#666"
-                                    android:textSize="@dimen/_13ssp" />
+                                    android:textSize="@dimen/_12sdp" />
 
                                 <ImageView
                                     android:id="@+id/imageMilesIcon"
@@ -520,7 +520,7 @@
                                     android:fontFamily="@font/poppins"
                                     android:text="0 miles away"
                                     android:textColor="#A4A4A4"
-                                    android:textSize="@dimen/_11ssp"
+                                    android:textSize="@dimen/_12sdp"
                                     app:layout_constraintEnd_toEndOf="parent" />
                                 <!-- Distance -->
 
@@ -764,7 +764,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -834,7 +833,7 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:layout_marginHorizontal="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:orientation="horizontal">
@@ -843,7 +842,17 @@
                         <ImageView
                             android:layout_width="@dimen/_17sdp"
                             android:layout_height="@dimen/_17sdp"
+                            android:id="@+id/proNoWishLists"
+                            android:visibility="visible"
                             android:src="@drawable/ic_favourite_icon" />
+
+                        <ImageView
+                            android:layout_width="@dimen/_17sdp"
+                            android:layout_height="@dimen/_17sdp"
+                            android:visibility="gone"
+                            android:id="@+id/proAddWishLists"
+                            android:src="@drawable/wishlistfull"
+                            />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -1112,7 +1121,7 @@
                     android:text="Booking Details"
                     android:fontFamily="@font/poppins"
                     android:textColor="#000"
-                    android:textSize="@dimen/_16sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
 
                 <!-- Date and Duration -->
@@ -1150,7 +1159,7 @@
                             android:text="October 22, 2023"
                             android:fontFamily="@font/poppins"
                             android:textColor="#000"
-                            android:textSize="@dimen/_13ssp" />
+                            android:textSize="@dimen/_12sdp" />
                     </LinearLayout>
                     <!-- Date Icon and Text -->
 
@@ -1184,7 +1193,7 @@
                             android:layout_marginStart="@dimen/_3sdp"
                             android:textColor="#000"
                             android:fontFamily="@font/poppins"
-                            android:textSize="@dimen/_13ssp" />
+                            android:textSize="@dimen/_12sdp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -1216,7 +1225,7 @@
                         android:layout_marginStart="@dimen/_3sdp"
                         android:textColor="#000"
                         android:fontFamily="@font/poppins"
-                        android:textSize="@dimen/_13ssp" />
+                        android:textSize="@dimen/_12sdp" />
                 </LinearLayout>
 
 
@@ -1236,7 +1245,7 @@
                     android:text="Included in your booking"
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:textStyle="bold" />
 
@@ -1266,7 +1275,7 @@
                     android:text="Rules"
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
 
                 <RelativeLayout
@@ -1293,7 +1302,7 @@
                         android:layout_toRightOf="@id/img_parking"
                         android:fontFamily="@font/poppins"
                         android:text="Parking"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
                     <ImageView
                         android:layout_width="@dimen/_12sdp"
@@ -1316,6 +1325,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
                         android:padding="@dimen/_10sdp"
                         />
@@ -1345,7 +1355,7 @@
                         android:layout_toRightOf="@id/img_host_rule"
                         android:fontFamily="@font/poppins"
                         android:text="Host rules"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
                     <ImageView
                         android:layout_width="@dimen/_12sdp"
@@ -1368,6 +1378,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
                         android:padding="@dimen/_10sdp"
                         />
@@ -1436,7 +1447,7 @@
                     android:layout_marginTop="@dimen/_15sdp"
                     android:text="Address &amp; Location"
                     android:fontFamily="@font/poppins"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -1446,6 +1457,7 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
+                    android:textSize="@dimen/_12sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:text=""
                     android:textColor="@color/black" />
@@ -1474,7 +1486,7 @@
                     android:fontFamily="@font/poppins"
                     android:text="Reviews"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
 
                 <RelativeLayout

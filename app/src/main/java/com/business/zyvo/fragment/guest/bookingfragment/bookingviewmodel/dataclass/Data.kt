@@ -24,5 +24,6 @@ data class Data(
     val refund_policies: List<Any>? = emptyList(),
     val reviews: MutableList<Review>? = mutableListOf(),
     val status: String? = "",
+    var is_in_wishlist: Int = 0,
     val total_rating: String? = "0"
 )

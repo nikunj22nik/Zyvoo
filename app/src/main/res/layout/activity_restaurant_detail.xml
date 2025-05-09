@@ -496,14 +496,13 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center">
-
+                        <!--app:cc_endHour="2"-->
                         <com.business.zyvo.CircularSeekBar
                             android:id="@+id/circularSeekBar"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_centerInParent="true"
                             app:cc_borderWidth="@dimen/_42sdp"
-                            app:cc_endHour="2"
                             app:cc_endIconResource="@drawable/oval_white"
                             app:cc_fillColor="#4AEAB1"
                             app:cc_metricMode="clock"

@@ -994,6 +994,11 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             tvNewAmount.text = "Your new total amount is $$hourlTotal"
             submit.setOnClickListener {
                 this@ExtraTimeChargesActivity.hour = hour
+                hour?.let { resp ->
+                    edTime?.let {
+                        binding.tvTiming.text = "From $it to ${addHours(it,resp.toInt())}"
+                    }
+                }
                 calculatePrice()
                 dialog.dismiss()
             }

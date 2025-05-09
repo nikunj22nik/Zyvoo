@@ -155,16 +155,6 @@ class WhereTimeActivity : AppCompatActivity() {
         })
 
         binding.imgSearch.setOnClickListener {
-          /*  count++;
-
-            if(count %2==1) {
-                val dialog = FullScreenDialogFragment()
-                dialog.show(supportFragmentManager, "FullScreenDialog")
-            }
-
-            else{
-                onBackPressed()
-            }*/
             if (!binding.text1.text.toString().equals("00:00 PM")){
                 start_time   = binding.text1.text.toString()
                 start_time = "$date $start_time"
