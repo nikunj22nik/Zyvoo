@@ -397,7 +397,8 @@ interface ZyvoApi {
     @POST("host_booking_details")
     @FormUrlEncoded
     suspend fun hostBookingDetails(@Field("booking_id") bookingId:Int, @Field("latitude")latitude :String?,
-                                   @Field("longitude") longitude :String?) : Response<JsonObject>
+                                   @Field("longitude") longitude :String?,
+                                   @Field("extension_id") extension_id:String?) : Response<JsonObject>
 
     @POST("contact_us")
     @FormUrlEncoded

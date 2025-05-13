@@ -315,7 +315,8 @@ interface ZyvoRepository {
 
 
 
-    suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?) :  Flow<NetworkResult<Pair<String,HostDetailModel>>>
+    suspend fun hostBookingDetails(bookingId:Int,latitude :String?,longitude :String?,
+                                   extensionId: String?) :  Flow<NetworkResult<Pair<String,HostDetailModel>>>
 
     suspend fun contactUs(user_id : String,name : String,email: String,message: String) : Flow<NetworkResult<String>>
 

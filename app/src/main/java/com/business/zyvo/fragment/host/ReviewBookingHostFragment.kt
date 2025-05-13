@@ -78,6 +78,7 @@ import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.datacla
 import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.ReviewModel
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.host.ReviewerProfileModel
+import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -111,12 +112,14 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     var friendImage: String = ""
     var currentLatitude: String = "37.0902"
     var currentLongitude: String = "95.7129"
+    private var extensioId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             if (it.containsKey(AppConstant.BOOKING_ID)) {
                 bookingId = it.getInt(AppConstant.BOOKING_ID)
+                extensioId = it.getString(AppConstant.EXTENSION_ID)?:""
             }
         }
 
@@ -357,7 +360,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             var longitude = sessionManager.getLongitude()
             LoadingUtils.showDialog(requireContext(), false)
             if (latitude.equals("") || longitude.equals("")) {
-                viewModel.hostBookingDetails(bookingId, null, null).collect {
+                viewModel.hostBookingDetails(bookingId, null, null,
+                    extensioId).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.second?.let { it1 ->
@@ -385,7 +389,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                     }
                 }
             } else {
-                viewModel.hostBookingDetails(bookingId, latitude, longitude).collect {
+                viewModel.hostBookingDetails(bookingId, latitude, longitude,
+                    extensioId).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             LoadingUtils.hideDialog()
@@ -415,11 +420,12 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun showingDataToUi(data: HostDetailModel) {
 
         binding.tvNamePlace.setText(data.property_title)
-        binding.textRatingStar.setText(data.guest_rating)
-        binding.textK.setText(" ( " + data.reviews_total_rating + " )")
+        binding.textRatingStar.setText(data.reviews_total_rating)
+        binding.textK.setText(" ( " + formatConvertCount(data?.reviews_total_rating?:"") + " )")
         binding.textMiles.setText(data.distance_miles + " miles away")
         binding.time.setText(data.booking_hour)
         binding.money.setText("$" + data.booking_amount)
@@ -625,14 +631,23 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             mMap?.addMarker(MarkerOptions().position(newYork).title(data.property_title))
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
 
+        }
+        data?.extension_details?.let {
+            binding.llbookingExt.visibility = View.VISIBLE
+            it.extension_date?.let {
+                binding.tvExtBookingDate.text = it
+            }
+            it.extension_hours?.let {
+                binding.tvBookingExtTotalTime.text = "$it Hours"
+            }
+            it.extension_amount?.let {
+                binding.tvExtTotalPrice.text = "$it"
+            }
+            binding.bookingExtFromTo.text =
+                "From " + it.extension_start_time + " to " + it.extension_end_time
 
-//            val location = data.longitude?.let { it1 -> LatLng(data.latitude.toDouble(), it1.toDouble()) }
-//            mMap?.clear()
-//
-//            Log.d("TESTING","inside api LATITUDE IS "+latitude +"Map Ready LONGITUDE "+longitude)
-//            // Add a marker on the map at the given location
-//            location?.let { it1 -> MarkerOptions().position(it1).title("Marker in San Francisco") }
-//                ?.let { it2 -> mMap?.addMarker(it2) }
+        }?:run {
+            binding.llbookingExt.visibility = View.GONE
         }
 
     }

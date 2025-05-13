@@ -3057,10 +3057,11 @@ import javax.inject.Inject
     override suspend fun hostBookingDetails(
         bookingId: Int,
         latitude: String?,
-        longitude: String?
+        longitude: String?,
+        extensionId: String?
     ): Flow<NetworkResult<Pair<String, HostDetailModel>>> = flow {
         try {
-            api.hostBookingDetails(bookingId, latitude, longitude).apply {
+            api.hostBookingDetails(bookingId, latitude, longitude,extensionId).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success") && resp.get("success").asBoolean) {

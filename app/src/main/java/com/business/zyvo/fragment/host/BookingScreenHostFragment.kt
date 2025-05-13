@@ -29,6 +29,7 @@ import com.business.zyvo.adapter.host.HostBookingsAdapter
 import com.business.zyvo.databinding.FragmentBookingScreenHostBinding
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.host.HostBookingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -47,10 +48,6 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     private var adapterMyBookingsAdapter: HostBookingsAdapter? = null
     private lateinit var viewModel: HostBookingsViewModel
     private var list: MutableList<MyBookingsModel> = mutableListOf()
-    private val LOCATION_PERMISSION_REQUEST_CODE = 1000
-    private lateinit var quickstartConversationsManager: QuickstartConversationsManager
-
-    private var mListener: BookingRemoveListener? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,10 +56,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         }
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
 
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -111,13 +105,15 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         adapterMyBookingsAdapter?.setOnItemClickListener(object :
             HostBookingsAdapter.onItemClickListener {
             override fun onItemClick(
-                bookingId: Int, status: String, message: String, reason: String
+                bookingId: Int, status: String, message: String, reason: String,extension_id:String
             ) {
                 lifecycleScope.launch {
                     LoadingUtils.showDialog(requireContext(), false)
                     if (status.equals("-11")) {
                         val bundle = Bundle()
                         bundle.putInt(AppConstant.BOOKING_ID, bookingId)
+                        bundle.putString(AppConstant.EXTENSION_ID,extension_id)
+                        Log.d(ErrorDialog.TAG,"$bookingId $extension_id")
                         findNavController().navigate(R.id.reviewBookingHostFragment, bundle)
                     } else {
                         viewModel.approveDeclineBooking(bookingId, status, message, reason)

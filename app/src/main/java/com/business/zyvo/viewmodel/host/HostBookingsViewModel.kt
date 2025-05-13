@@ -132,9 +132,11 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     suspend fun hostBookingDetails(
         bookingId: Int,
         latitude: String?,
-        longitude: String?
+        longitude: String?,
+        extensionId: String?
     ): Flow<NetworkResult<Pair<String, HostDetailModel>>> {
-        return repository.hostBookingDetails(bookingId, latitude, longitude).onEach {
+        return repository.hostBookingDetails(bookingId, latitude, longitude,
+            extensionId).onEach {
 
         }
     }

@@ -26,6 +26,7 @@ class AppConstant {
         val CANCEL = "cancelled"
         val FINISHED = "finished"
         val BOOKING_ID: String? = "Booking_id"
+        val EXTENSION_ID: String? = "Extension_id"
         val PROPERTY_ID: String? = "property_id"
         val DISCOUNT: String = "Discount"
         val BULK_HOUR: String = "Bulk_Hour"
