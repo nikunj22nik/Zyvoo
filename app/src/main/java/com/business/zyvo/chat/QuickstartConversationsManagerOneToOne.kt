@@ -243,7 +243,11 @@ class QuickstartConversationsManagerOneTowOne {
             options.withAttributes(conversation!!.attributes)
             conversation!!.sendMessage(options) {
                 if (conversationsManagerListener != null) {
-                    conversationsManagerListener!!.messageSentCallback()
+                    if (conversation != null) {
+                        conversation!!.setAllMessagesRead {
+                            conversationsManagerListener!!.messageSentCallback()
+                        }
+                    }
                 }
             }
         }
@@ -536,7 +540,9 @@ class QuickstartConversationsManagerOneTowOne {
 
     fun readConversastion() {
         if (conversation != null) {
-            conversation!!.setAllMessagesRead { }
+            conversation!!.setAllMessagesRead {
+
+            }
         }
     }
 
@@ -553,12 +559,6 @@ class QuickstartConversationsManagerOneTowOne {
       })
     }
 
-    fun readConversation() {
-        conversation?.setAllMessagesRead { result ->
-            // result: Long (number of messages marked as read)
-            // Handle success here if needed
-        }
-    }
 
 
 

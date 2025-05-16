@@ -1078,6 +1078,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 if (resp.has("user_id")) {
                                     if (checkBox != null && checkBox.isChecked) {
                                         session.setUserSession(true)
+                                    }else{
+                                        session.setUserSession(false)
                                     }
                                     session.setUserId(resp.get("user_id").asInt)
                                     session.setAuthToken(resp.get("token").asString)
@@ -1097,6 +1099,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             } else {
                                 if (checkBox != null && checkBox.isChecked) {
                                     session.setUserSession(true)
+                                }else{
+                                    session.setUserSession(false)
                                 }
                                 Log.d("Testing", "Response Token is " + resp.get("token").asString)
                                 session.setUserId(resp.get("user_id").asInt)
@@ -1879,6 +1883,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             val session = SessionManager(requireActivity())
                             if (checkBox != null && checkBox.isChecked) {
                                 session.setUserSession(true)
+                            }else{
+                                session.setUserSession(false)
                             }
                             session?.setLoginType("emailAddress")
                             dialogSuccess(context, dialogtext, Gson().toJson(resp), number, type)
@@ -1961,6 +1967,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 if (resp.has("user_id")) {
                                     if (checkBox != null && checkBox.isChecked) {
                                         session.setUserSession(true)
+                                    }else{
+                                        session.setUserSession(false)
                                     }
                                     session.setUserId(resp.get("user_id").asInt)
                                     session.setAuthToken(resp.get("token").asString)
@@ -1973,6 +1981,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             } else {
                                 if (checkBox != null && checkBox.isChecked) {
                                     session.setUserSession(true)
+                                }else{
+                                    session.setUserSession(false)
                                 }
                                 session.setUserId(resp.get("user_id").asInt)
                                 session.setAuthToken(resp.get("token").asString)
@@ -2067,6 +2077,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             val session = SessionManager(requireActivity())
                             if (checkBox != null && checkBox.isChecked) {
                                 session.setUserSession(true)
+                            }else{
+                                session.setUserSession(false)
                             }
                             session.setLoginType("mobileNumber")
                             dialogSuccess(

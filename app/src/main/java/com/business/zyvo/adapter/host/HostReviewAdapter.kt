@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.databinding.AdapterReviewsBinding
 import com.business.zyvo.model.host.HostReviewModel
 
@@ -26,7 +27,7 @@ class HostReviewAdapter : PagingDataAdapter<HostReviewModel, HostReviewAdapter.H
 
         fun bind(item: HostReviewModel) {
             // Bind the HostReviewModel data to the view
-            Glide.with(binding.root.context).load(AppConstant.BASE_URL+item.profile_image).into(binding.circleImageView)
+            Glide.with(binding.root.context).load(BuildConfig.MEDIA_URL+item.profile_image).into(binding.circleImageView)
             binding.txtName.setText(item.reviewer_name)
             item.review_rating?.let {
                 binding.ratingbar.rating = it.toFloat()

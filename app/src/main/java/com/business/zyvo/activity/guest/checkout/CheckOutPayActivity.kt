@@ -402,7 +402,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             propertyData?.let {
                 Log.d("TESTING_DATE_TIME","DATE "+date +" Hours"+hour+" StartTime"+stTime +" EndTime"+edTime)
                 propertyData?.host_profile_image?.let {
-                    Glide.with(this@CheckOutPayActivity).load(AppConstant.BASE_URL + it).into(binding.profileImageHost)
+                    Glide.with(this@CheckOutPayActivity).load(BuildConfig.MEDIA_URL + it).into(binding.profileImageHost)
                 }
                 propertyData?.hosted_by?.let {
                     binding.tvHostName.text = it
@@ -420,7 +420,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 }*/
                 propertyData?.images?.let {
                     if (it.isNotEmpty()) {
-                        Glide.with(this@CheckOutPayActivity).load(AppConstant.BASE_URL + it.get(0))
+                        Glide.with(this@CheckOutPayActivity).load(BuildConfig.MEDIA_URL + it.get(0))
                             .into(binding.ivProImage)
                     }
                 }
@@ -1309,11 +1309,17 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
 
                 }
             }
-            addOnList?.let {
+            addOnList.let {
                 if (it.isNotEmpty()){
+                    binding.rladdOn.visibility = View.VISIBLE
                     val total = calculateTotalPrice(addOnList)
+                    if (total==0.0){
+                        binding.rladdOn.visibility = View.GONE
+                    }
                     binding.tvAddOnPrice.text = "$${truncateToTwoDecimalPlaces(total.toString())}"
                     totalPrice += total
+                }else{
+                    binding.rladdOn.visibility = View.GONE
                 }
             }
             // Apply Discount if Hours Exceed Discount Hour

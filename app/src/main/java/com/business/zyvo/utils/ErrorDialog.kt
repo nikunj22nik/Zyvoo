@@ -166,6 +166,7 @@ object ErrorDialog {
     }
 
     fun addHours(timeStr: String, hoursToAdd: Int): String {
+
         val format = SimpleDateFormat("hh:mm a", Locale.US)
         val date = format.parse(timeStr) ?: return "Invalid time"
 
@@ -184,7 +185,13 @@ object ErrorDialog {
         return try {
             val hours = timeInHours.toInt() // Get whole hours
             val minutes = ((timeInHours - hours) * 60).toInt() // Convert decimal part to minutes
-            "$hours hr $minutes min"
+           // "$hours hr $minutes min"
+            when {
+                hours > 0 && minutes > 0 -> "$hours hr $minutes min"
+                hours > 0 -> "$hours hr"
+                minutes > 0 -> "$minutes min"
+                else -> "0 min"
+            }
         } catch (e: Exception) {
             Log.e("TimeConversion", "Error converting time: ${e.message}")
             "Invalid input"
@@ -419,6 +426,45 @@ object ErrorDialog {
     fun convertHoursToDays(hours: Int): Int {
         return hours / 24
     }
+
+    fun isWithin24Hours(startTimeStr: String, endTimeStr: String): Boolean {
+        return try {
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+            val startTime = format.parse(startTimeStr)
+            val endTime = format.parse(endTimeStr)
+
+            if (startTime != null && endTime != null) {
+                val calendarStart = Calendar.getInstance().apply { time = startTime }
+                val calendarEnd = Calendar.getInstance().apply { time = endTime }
+
+                // If end time is before start time, assume it's the next day
+                if (calendarEnd.before(calendarStart)) {
+                    calendarEnd.add(Calendar.DATE, 1)
+                }
+
+                val diffMillis = calendarEnd.timeInMillis - calendarStart.timeInMillis
+                val hoursDiff = diffMillis / (1000 * 60 * 60)
+
+                hoursDiff <= 24
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun convertTo12HourFormat(time24: String): String {
+        val inputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+        val outputFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+
+        val time = LocalTime.parse(time24, inputFormatter)
+        return time.format(outputFormatter)
+    }
+
 
 
 

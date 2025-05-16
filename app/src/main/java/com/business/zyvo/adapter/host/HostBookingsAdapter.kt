@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutHostBookingBinding
@@ -123,8 +124,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
 
                 textStatus = binding.textStatus
 
-                Glide.with(context).load(AppConstant.BASE_URL+currentItem.guest_avatar).into( binding.imagePicture)
-               Log.d("TESTING_URL",AppConstant.BASE_URL+currentItem.guest_avatar )
+                Glide.with(context).load(BuildConfig.MEDIA_URL+currentItem.guest_avatar).into( binding.imagePicture)
                 if(currentItem.booking_status.equals("pending")){
                     binding.llApproveAndDecline.visibility = View.VISIBLE
                     binding.textStatus.visibility = View.GONE
@@ -140,7 +140,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
 
                 //    "waiting payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
 
-                    "Awaiting payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                    "Awaiting Payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
 
                     "cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
                     else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback

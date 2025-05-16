@@ -3,10 +3,8 @@ package com.business.zyvo.fragment.host.hostPayout
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -18,14 +16,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -45,12 +38,7 @@ import com.business.zyvo.fragment.host.hostPayout.viewmodel.HostPayoutViewModel
 import com.business.zyvo.model.StateModel
 import com.business.zyvo.model.host.CountryModel
 import com.business.zyvo.session.SessionManager
-import com.business.zyvo.utils.CompressImage
-import com.business.zyvo.utils.MultipartUtils
 import com.github.dhaval2404.imagepicker.ImagePicker
-import com.jaiselrahman.filepicker.activity.FilePickerActivity
-import com.jaiselrahman.filepicker.config.Configurations
-import com.jaiselrahman.filepicker.model.MediaFile
 import com.stripe.android.ApiResultCallback
 import com.stripe.android.Stripe
 import com.stripe.android.model.CardParams
@@ -104,8 +92,6 @@ class HostPayoutFragment : Fragment() {
     private lateinit var dateManager: DateManager
 
     lateinit var navController: NavController
-    private val mediaFiles: ArrayList<MediaFile?> = ArrayList()
-    private val REQUEST_Folder = 2
     private val REQUEST_CODE_STORAGE_PERMISSION = 1
     private var filefrontid: String = "No"
     private var filebackid: String = "No"
@@ -113,8 +99,6 @@ class HostPayoutFragment : Fragment() {
     private var filefront: File? = null
     private var fileback: File? = null
     private var bankuploadfile: File? = null
-    private val REQUEST_CODE = 11
-    private var bankuploadMultipart: MultipartBody.Part? = null
     private var countriesList: MutableList<CountryModel> = mutableListOf()
     private var countriesListStr: MutableList<String> = mutableListOf()
     private var countryCode: String = ""
@@ -128,15 +112,6 @@ class HostPayoutFragment : Fragment() {
     private var filebackCardid: String = "No"
     private var filefrontCard: File? = null
     private var filebackCard: File? = null
-
-    private var countriesListCard: MutableList<CountryModel> = mutableListOf()
-    private var countriesListStrCard: MutableList<String> = mutableListOf()
-    private var countryCodeCard: String = ""
-    private var statetCodeCard: String = ""
-    private var cityCodeCard: String = ""
-    private var stateListCard: MutableList<StateModel> = mutableListOf()
-    private var stateListStrCard: MutableList<String> = mutableListOf()
-    private var cityListStrCard: MutableList<String> = mutableListOf()
     private var imgtypeCard: String = ""
 
 private var cardNumberString : String = ""
@@ -152,7 +127,7 @@ private var cardNumberString : String = ""
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentHostPayoutBinding.inflate(
             LayoutInflater.from(requireContext()),
@@ -401,26 +376,6 @@ private var cardNumberString : String = ""
 
     }
 
-    private fun openFilePicker() {
-//        val intent = Intent(Intent.ACTION_GET_CONTENT)
-//        intent.type = "*/*"
-//        startActivityForResult(Intent.createChooser(intent, "Select File"), PICK_FILE_REQUEST_CODE)
-//
-        val intent = Intent(Intent.ACTION_GET_CONTENT)
-        // Allow only specific MIME types for documents
-        intent.type = "application/*"
-        intent.putExtra(
-            Intent.EXTRA_MIME_TYPES,
-            arrayOf(
-                "application/pdf"
-            )
-        )
-        startActivityForResult(Intent.createChooser(intent, "Select File"), PICK_FILE_REQUEST_CODE)
-
-
-    }
-
-
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -428,14 +383,12 @@ private var cardNumberString : String = ""
             if (data?.data != null) {
                 if (imgtype.equals("front", true)) {
                     val uri = data.data!!
-                    val paramName = "event_image[]"
                     filefront = BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
                     filefrontid = "Yes"
                     binding.textChooseVerificationDocument.text = filefront.toString()
                 }
                 if (imgtype.equals("back", true)) {
                     val uri = data.data!!
-                    val paramName = "event_image[]"
                     fileback = BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
                     filebackid = "Yes"
                     binding.textChooseVerificationDocumentBack.text = fileback.toString()
@@ -565,24 +518,7 @@ private var cardNumberString : String = ""
         }
     }
 
-    fun getFileNameFromUri(context: Context, uri: Uri): String? {
-        try {
-            var fileName: String? = null
-            val cursor = context.contentResolver.query(uri, null, null, null, null)
-            cursor?.use {
-                if (it.moveToFirst()) {
-                    val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    if (nameIndex != -1) {
-                        fileName = it.getString(nameIndex)
-                    }
-                }
-            }
-            return fileName
-        } catch (e: Exception) {
-            e.printStackTrace()
-            return ""
-        }
-    }
+
 
     private fun isValidMimeType(mimeType: String?): Boolean {
         return mimeType == "application/pdf" ||
@@ -842,7 +778,7 @@ private var cardNumberString : String = ""
                     .distinctUntilChanged()
                     .collect { isConn ->
                         if (!isConn) {
-                            LoadingUtils.showErrorDialog(
+                            showErrorDialog(
                                 requireContext(),
                                 resources.getString(R.string.no_internet_dialog_msg)
                             )
@@ -1252,76 +1188,76 @@ private var cardNumberString : String = ""
 
     private fun isValidation(): Boolean {
         if (binding.etFirstName.text.trim().toString().trim().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.firstNameError)
+            showErrorDialog(requireContext(), AppConstant.firstNameError)
             return false
         } else if (binding.etLastName.text?.trim().toString().trim().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.lastNameError)
+            showErrorDialog(requireContext(), AppConstant.lastNameError)
             return false
         } else if (binding.etEmail.text?.trim().toString().trim().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.emailError)
+            showErrorDialog(requireContext(), AppConstant.emailError)
             return false
         } else if (!binding.etEmail.text?.trim().toString().contains("@")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.validEmail)
+            showErrorDialog(requireContext(), AppConstant.validEmail)
             return false
         } else if (binding.etPhoneNumber.text?.trim().toString().trim().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.phoneError)
+            showErrorDialog(requireContext(), AppConstant.phoneError)
             return false
         } else if (binding.etPhoneNumber.text?.trim().toString().length != 10) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
+            showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
             return false
         } else if (binding.etDOB.text?.toString().equals("MM/DD/YYYY")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.dobError)
+            showErrorDialog(requireContext(), AppConstant.dobError)
             return false
         } else if (binding.spinnerSelectIDType.text?.toString().equals("Select ID type")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.selectIdTypeError)
+            showErrorDialog(requireContext(), AppConstant.selectIdTypeError)
             return false
         } else if (binding.etPersonalIdentificationNumber.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.pINError)
+            showErrorDialog(requireContext(), AppConstant.pINError)
             return false
         } else if (binding.etSSN.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.SNNError)
+            showErrorDialog(requireContext(), AppConstant.SNNError)
             return false
         } else if (binding.etSSN.text?.trim().toString().length != 4) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.SNNValidError)
+            showErrorDialog(requireContext(), AppConstant.SNNValidError)
             return false
         } else if (binding.etAddress.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.addressError)
+            showErrorDialog(requireContext(), AppConstant.addressError)
             return false
         } else if (binding.spinnerSelectCountry.text?.toString().equals("Select Country")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.countryError)
+            showErrorDialog(requireContext(), AppConstant.countryError)
             return false
         } else if (binding.spinnerSelectState.text?.toString().equals("Select State")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.stateError)
+            showErrorDialog(requireContext(), AppConstant.stateError)
             return false
         } else if (binding.spinnerSelectCity.text?.toString().equals("Select City")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.cityError)
+            showErrorDialog(requireContext(), AppConstant.cityError)
             return false
         } else if (binding.etPostalCode.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.postalCodeError)
+            showErrorDialog(requireContext(), AppConstant.postalCodeError)
             return false
         } else if (binding.etBankName.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.bankNameError)
+            showErrorDialog(requireContext(), AppConstant.bankNameError)
             return false
         } else if (binding.etAccountHolderName.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.cardholderError)
+            showErrorDialog(requireContext(), AppConstant.cardholderError)
             return false
         } else if (binding.etBankAccountNumber.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.accountNumberError)
+            showErrorDialog(requireContext(), AppConstant.accountNumberError)
             return false
         } else if (binding.etConfirmAccountNumber.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.cAccountNumberError)
+            showErrorDialog(requireContext(), AppConstant.cAccountNumberError)
             return false
         } else if (binding.etRoutingNumber.text.toString().trim().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.routingNumberError)
+            showErrorDialog(requireContext(), AppConstant.routingNumberError)
             return false
         } else if (filebankid.equals("No", true)) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.proofofbanError)
+            showErrorDialog(requireContext(), AppConstant.proofofbanError)
             return false
         } else if (filefrontid.equals("No", true)) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.frontimageError)
+            showErrorDialog(requireContext(), AppConstant.frontimageError)
             return false
         } else if (filebackid.equals("No", true)) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.backimageError)
+            showErrorDialog(requireContext(), AppConstant.backimageError)
             return false
         }
 
@@ -1339,7 +1275,7 @@ private var cardNumberString : String = ""
                     .distinctUntilChanged()
                     .collect { isConn ->
                         if (!isConn) {
-                            LoadingUtils.showErrorDialog(
+                            showErrorDialog(
                                 requireContext(),
                                 resources.getString(R.string.no_internet_dialog_msg)
                             )
@@ -1382,8 +1318,7 @@ private var cardNumberString : String = ""
 
                                     override fun onSuccess(result: Token) {
                                         val token = result.id
-                                        Log.d("Token payment :-", "$token")
-
+                                        Log.d("Token payment :-", token)
                                         addCardApi(token)
                                     }
                                 })
@@ -1579,87 +1514,87 @@ private var cardNumberString : String = ""
 
     private fun isValidationCard(): Boolean {
         if (binding.etFirstNameDebitCard.text.trim().toString().trim().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.firstNameError)
+            showErrorDialog(requireContext(), AppConstant.firstNameError)
             return false
         } else if (binding.etLastNameDebitCard.text?.trim().toString().trim().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.lastNameError)
+            showErrorDialog(requireContext(), AppConstant.lastNameError)
             return false
         } else if (binding.etEmailDebitCard.text?.trim().toString().trim().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.emailError)
+            showErrorDialog(requireContext(), AppConstant.emailError)
             return false
         } else if (!binding.etEmailDebitCard.text?.trim().toString().contains("@")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.validEmail)
+            showErrorDialog(requireContext(), AppConstant.validEmail)
             return false
         } else if (binding.etPhoneNumberDebitCard.text?.trim().toString().trim().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.phoneError)
+            showErrorDialog(requireContext(), AppConstant.phoneError)
             return false
         } else if (binding.etPhoneNumberDebitCard.text?.trim().toString().length != 10) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
+            showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
             return false
         } else if (binding.etDOBDebitCard.text?.toString().equals("MM/DD/YYYY")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.dobError)
+            showErrorDialog(requireContext(), AppConstant.dobError)
             return false
         } else if (binding.spinnerSelectIDTypeDebitCard.text?.toString().equals("Select ID type")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.selectIdTypeError)
+            showErrorDialog(requireContext(), AppConstant.selectIdTypeError)
             return false
         } else if (binding.etPersonalIdentificationNumberDebitCard.text?.trim().toString()
                 .isEmpty()
         ) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.pINError)
+            showErrorDialog(requireContext(), AppConstant.pINError)
             return false
         } else if (binding.etSSNDebitCard.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.SNNError)
+            showErrorDialog(requireContext(), AppConstant.SNNError)
             return false
         } else if (binding.etSSNDebitCard.text?.trim().toString().length != 4) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.SNNValidError)
+            showErrorDialog(requireContext(), AppConstant.SNNValidError)
             return false
         } else if (binding.etAddressDebitCard.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.addressError)
+            showErrorDialog(requireContext(), AppConstant.addressError)
             return false
         } else if (binding.spinnerSelectCountryDebitCard.text?.toString()
                 .equals("Select Country")
         ) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.countryError)
+            showErrorDialog(requireContext(), AppConstant.countryError)
             return false
         } else if (binding.spinnerSelectStateDebitCard.text?.toString().equals("Select State")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.stateError)
+            showErrorDialog(requireContext(), AppConstant.stateError)
             return false
         } else if (binding.spinnerSelectCityDebitCard.text?.toString().equals("Select City")) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.cityError)
+            showErrorDialog(requireContext(), AppConstant.cityError)
             return false
         } else if (binding.etPostalCodeDebitCard.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.postalCodeError)
+            showErrorDialog(requireContext(), AppConstant.postalCodeError)
             return false
-        } else if (cardNumberString.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), "Card number cannot be empty")
+        } else if (cardNumberString.trim().isEmpty()) {
+            showErrorDialog(requireContext(), "Card number cannot be empty")
             return false
         } else if (!isValidCardNumber(cardNumberString.trim())) {
-            LoadingUtils.showErrorDialog(
+            showErrorDialog(
                 requireContext(),
                 "Invalid card number. Please enter a valid card number."
             )
             return false
         } else if (binding.etCVVNumber.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), "CVV cannot be empty")
+            showErrorDialog(requireContext(), "CVV cannot be empty")
             return false
         } else if (!isValidCVV(
                 binding.etCVVNumber.text?.trim().toString(),
                 cardNumberString.trim()
             )
         ) {
-            LoadingUtils.showErrorDialog(requireContext(), "Invalid CVV. Please enter a valid CVV.")
+            showErrorDialog(requireContext(), "Invalid CVV. Please enter a valid CVV.")
             return false
         } else if (binding.etMonth.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.postalCodeError)
+            showErrorDialog(requireContext(), AppConstant.postalCodeError)
             return false
         } else if (binding.etYear.text?.trim().toString().isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.postalCodeError)
+            showErrorDialog(requireContext(), AppConstant.postalCodeError)
             return false
         } else if (filefrontCardid.equals("No", true)) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.frontimageError)
+            showErrorDialog(requireContext(), AppConstant.frontimageError)
             return false
         } else if (filebackCardid.equals("No", true)) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.backimageError)
+            showErrorDialog(requireContext(), AppConstant.backimageError)
             return false
         }
 

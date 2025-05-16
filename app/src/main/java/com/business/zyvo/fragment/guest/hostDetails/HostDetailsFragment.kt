@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -250,7 +251,7 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                             Log.d("modelResponse", model.toString())
                             model.let {
                                 Glide.with(requireContext())
-                                    .load(AppConstant.BASE_URL + it.host?.profile_picture)
+                                    .load(BuildConfig.MEDIA_URL + it.host?.profile_picture)
                                     .error(R.drawable.ic_circular_img_user)
                                     .into(binding.imageProfilePicture)
 

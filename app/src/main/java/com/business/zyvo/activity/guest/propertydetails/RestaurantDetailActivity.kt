@@ -1,4 +1,5 @@
 package com.business.zyvo.activity.guest.propertydetails
+
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
@@ -44,6 +45,7 @@ import com.appsflyer.share.ShareInviteHelper
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.CircularSeekBar.OnSeekBarChangeListener
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -104,13 +106,14 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private var mMap: GoogleMap? = null
     private var propertyId = ""
     private var propertyMile = ""
-    var session: SessionManager?=null
-    var propertyData:PropertyData?=null
-    var pagination:Pagination?=null
+    var session: SessionManager? = null
+    var propertyData: PropertyData? = null
+    var pagination: Pagination? = null
     var reviewList: MutableList<Review> = mutableListOf()
     var addOnList: MutableList<AddOn> = mutableListOf()
     var filter = "highest_review"
     private var wishlistItem: MutableList<WishlistItem> = mutableListOf()
+
     @RequiresApi(Build.VERSION_CODES.O)
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         YearMonth.now()
@@ -128,15 +131,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         intent.extras?.let {
-            Log.d("getPropertyId",intent.extras?.getString("propertyId")?: "")
-            /*propertyId = intent.extras?.getString("propertyId")!!
-            propertyMile = intent.extras?.getString("propertyMile")!!
-            checkLoginType = intent.extras?.getString("LoginType")!!*/
-             propertyId = intent.extras?.getString("propertyId") ?: ""
-             propertyMile = intent.extras?.getString("propertyMile") ?: ""
-             checkLoginType = intent.extras?.getString("LoginType") ?: ""
-          //var status: String = intent.getStringExtra("key_name").toString()
-         // Log.d(ErrorDialog.TAG, status)
+            propertyId = intent.extras?.getString("propertyId") ?: ""
+            propertyMile = intent.extras?.getString("propertyMile") ?: ""
+            checkLoginType = intent.extras?.getString("LoginType") ?: ""
+            //var status: String = intent.getStringExtra("key_name").toString()
+            // Log.d(ErrorDialog.TAG, status)
         }
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
@@ -165,7 +164,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         initialization()
-        //share()
         updateCalendar()
         clickListeners1()
 
@@ -182,12 +180,18 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.rlTextReviewClick.setOnClickListener {
-            showPopupWindow(it,0)
+            showPopupWindow(it, 0)
         }
 
         binding.tvWishlist.setOnClickListener {
             if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
                 showAddWishlistDialog(propertyId, -1)
+            } else {
+                val resultIntent = Intent().apply {
+                    putExtra("SHOW_DIALOG", true)
+                }
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish() // Return to Fragment1
             }
         }
 
@@ -195,9 +199,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-
-
-    private fun showAddWishlistDialog(property_id: String,pos: Int) {
+    private fun showAddWishlistDialog(property_id: String, pos: Int) {
         val dialog = Dialog(this, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(false)
@@ -207,28 +209,30 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-            val dialogAdapter = WishlistAdapter(this@RestaurantDetailActivity,true,
+            val dialogAdapter = WishlistAdapter(this@RestaurantDetailActivity, true,
                 wishlistItem,
                 false,
-                object: OnClickListener{
-                override fun itemClick(obj: Int) {
+                object : OnClickListener {
+                    override fun itemClick(obj: Int) {
 
-                }
+                    }
 
-            })
+                })
 
-            dialogAdapter.setOnItemClickListener(object:WishlistAdapter.onItemClickListener{
+            dialogAdapter.setOnItemClickListener(object : WishlistAdapter.onItemClickListener {
                 override fun onItemClick(position: Int, wish: WishlistItem) {
                     try {
-                        saveItemInWishlist(property_id, position,wish.wishlist_id.toString(),
-                            dialog)
-                    }catch (e:Exception){
+                        saveItemInWishlist(
+                            property_id, position, wish.wishlist_id.toString(),
+                            dialog
+                        )
+                    } catch (e: Exception) {
                         e.message
                     }
                 }
 
             })
-            val rvWishList : RecyclerView =  findViewById(R.id.rvWishList)
+            val rvWishList: RecyclerView = findViewById(R.id.rvWishList)
             rvWishList.adapter = dialogAdapter
             findViewById<ImageView>(R.id.imageCross).setOnClickListener {
                 dismiss()
@@ -245,7 +249,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
 
-
     @SuppressLint("SetTextI18n")
     private fun getHomePropertyDetails() {
         if (NetworkMonitorCheck._isConnected.value) {
@@ -254,41 +257,63 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 userIdCheck = session?.getUserId().toString()
             }
             lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.getHomePropertyDetails(userIdCheck,
-                    propertyId).collect {
+                viewModel.getHomePropertyDetails(
+                    userIdCheck,
+                    propertyId
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                propertyData = Gson().fromJson(resp.first.getAsJsonObject("data"), PropertyData::class.java)
+                                propertyData = Gson().fromJson(
+                                    resp.first.getAsJsonObject("data"),
+                                    PropertyData::class.java
+                                )
 
-                                pagination = Gson().fromJson(resp.first.getAsJsonObject("pagination") , Pagination::class.java)
+                                pagination = Gson().fromJson(
+                                    resp.second.getAsJsonObject("pagination"),
+                                    Pagination::class.java
+                                )
 
 
                                 propertyData?.min_booking_hours?.let {
 
-                                    binding.minTimeTxt.setText(it.toDouble().toInt().toString() +"hr minimum")
+                                    binding.minTimeTxt.setText(
+                                        it.toDouble().toInt().toString() + "hr minimum"
+                                    )
                                     binding.circularSeekBar.endHours = it.toFloat()
                                 }
 
-                                if(pagination == null){
+                                if (pagination == null) {
                                     binding.showMoreReview.visibility = View.GONE
                                 }
-                                if(propertyData?.reviews_total_count.equals("0")) binding.showMoreReview.visibility = View.GONE
+                                if (propertyData?.reviews_total_count.equals("0")) binding.showMoreReview.visibility =
+                                    View.GONE
 
                                 pagination?.let {
-                                    Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total +" "+"Current Pages:- "+ it.current_page)
+                                    Log.d(
+                                        "PAGES_TOTAL",
+                                        "TOTAL PAGES :- " + it.total + " " + "Current Pages:- " + it.current_page
+                                    )
 
-                                    if (it.total <= it.current_page) {
+                                    /* if (it.total <= it.current_page) {
+                                         binding.showMoreReview.visibility = View.GONE
+                                     }*/
+
+                                    if (it.current_page == it.total_pages) {
                                         binding.showMoreReview.visibility = View.GONE
+                                    } else {
+                                        binding.showMoreReview.visibility = View.VISIBLE
                                     }
 
                                 }
 
                                 val listType = object : TypeToken<List<Review>>() {}.type
-                                reviewList = Gson().fromJson(resp.second.getAsJsonArray("data"), listType)
+                                reviewList =
+                                    Gson().fromJson(resp.second.getAsJsonArray("data"), listType)
                                 setPropertyData()
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@RestaurantDetailActivity, it.message!!)
                         }
@@ -299,9 +324,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -317,8 +344,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.proTotalrating.text = it.trim()
                 }
                 propertyData?.reviews_total_count?.let {
-                    binding.proreviewCount.text = "("+ formatConvertCount(it).trim() +" reviews)"
-                    binding.proTotalReview.text = "Reviews "+"("+formatConvertCount(it).trim() +")"
+                    binding.proreviewCount.text = "(" + formatConvertCount(it).trim() + " reviews)"
+                    binding.proTotalReview.text =
+                        "Reviews " + "(" + formatConvertCount(it).trim() + ")"
                 }
                 propertyData?.min_booking_hours?.let {
                     binding.proBookingMin.text = convertHoursToHrMin(it.toDouble())
@@ -327,63 +355,76 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.proSqr.text = "$it sqft"
                 }
                 propertyData?.is_in_wishlist?.let {
-                    if (it==1){
+                    if (it == 1) {
                         binding.proAddWishLists.visibility = View.VISIBLE
                         binding.proNoWishLists.visibility = View.GONE
-                    }else{
+                    } else {
                         binding.proAddWishLists.visibility = View.GONE
                         binding.proNoWishLists.visibility = View.VISIBLE
                     }
                 }
 
                 propertyData?.images?.let {
-                    if (it.isNotEmpty()){
-                        if (it.size==1){
+                    if (it.isNotEmpty()) {
+                        if (it.size == 1) {
                             binding.cvTwoAndThreeImage.visibility = View.GONE
                             binding.cvOneImage.visibility = View.VISIBLE
                             binding.llThreeImage.visibility = View.GONE
                             binding.llTwoImage.visibility = View.GONE
                             binding.proImageMore.visibility = View.GONE
-                            Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewOne)
+                            Glide.with(this@RestaurantDetailActivity)
+                                .load(BuildConfig.MEDIA_URL + it.get(0))
+                                .into(binding.proImageViewOne)
                         }
-                        if (it.size==2){
+                        if (it.size == 2) {
                             binding.cvTwoAndThreeImage.visibility = View.VISIBLE
                             binding.cvOneImage.visibility = View.GONE
                             binding.llThreeImage.visibility = View.GONE
                             binding.llTwoImage.visibility = View.VISIBLE
                             binding.proImageMore.visibility = View.GONE
-                            Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
-                            Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(1)).into(binding.proImageTwo)
+                            Glide.with(this@RestaurantDetailActivity)
+                                .load(BuildConfig.MEDIA_URL + it.get(0))
+                                .into(binding.proImageViewTwoAndThree)
+                            Glide.with(this@RestaurantDetailActivity)
+                                .load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.proImageTwo)
                         }
-                        if (it.size==3){
+                        if (it.size == 3) {
                             binding.cvTwoAndThreeImage.visibility = View.VISIBLE
                             binding.cvOneImage.visibility = View.GONE
                             binding.llThreeImage.visibility = View.VISIBLE
                             binding.llTwoImage.visibility = View.GONE
                             binding.proImageMore.visibility = View.GONE
-                            Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
-                            Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(1)).into(binding.prImageTwo)
-                            Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(2)).into(binding.prImageThree)
+                            Glide.with(this@RestaurantDetailActivity)
+                                .load(BuildConfig.MEDIA_URL + it.get(0))
+                                .into(binding.proImageViewTwoAndThree)
+                            Glide.with(this@RestaurantDetailActivity)
+                                .load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.prImageTwo)
+                            Glide.with(this@RestaurantDetailActivity)
+                                .load(BuildConfig.MEDIA_URL + it.get(2)).into(binding.prImageThree)
                         }
-                        if (it.size>=4){
+                        if (it.size >= 4) {
                             binding.cvTwoAndThreeImage.visibility = View.VISIBLE
                             binding.cvOneImage.visibility = View.GONE
                             binding.llThreeImage.visibility = View.VISIBLE
                             binding.llTwoImage.visibility = View.GONE
                             binding.proImageMore.visibility = View.VISIBLE
-                            Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
-                            Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(1)).into(binding.prImageTwo)
-                            Glide.with(this@RestaurantDetailActivity).load(AppConstant.BASE_URL + it.get(2)).into(binding.prImageThree)
+                            Glide.with(this@RestaurantDetailActivity)
+                                .load(BuildConfig.MEDIA_URL + it.get(0))
+                                .into(binding.proImageViewTwoAndThree)
+                            Glide.with(this@RestaurantDetailActivity)
+                                .load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.prImageTwo)
+                            Glide.with(this@RestaurantDetailActivity)
+                                .load(BuildConfig.MEDIA_URL + it.get(2)).into(binding.prImageThree)
                         }
                     }
                 }
                 propertyData?.hourly_rate?.let {
-                   // binding.proPriceHr.text = "$it/hr"
+                    // binding.proPriceHr.text = "$it/hr"
                     val formatted = it.toDouble().toInt().toString()
                     binding.proPriceHr.text = "$formatted/hr"
                     binding.textPrice.text = it
-                    val totalPrice = binding.textHr.text.toString().replace(" hour","")
-                        .toInt()* it.toFloat()
+                    val totalPrice = binding.textHr.text.toString().replace(" hour", "")
+                        .toInt() * it.toFloat()
                     binding.textPrice.text = totalPrice.toString()
 
                 }
@@ -397,7 +438,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 propertyData?.property_description?.let {
                     binding.tvReadMoreLess.apply {
-                        text =it
+                        text = it
                         post {
                             setTrimLength(20) // Set max character length before collapsing
                             setCollapsedText("Read More") // Text for collapsed state
@@ -423,38 +464,43 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     if (it.isNotEmpty()) {
                         addOnList = it.toMutableList()
                         adapterAddon.updateAdapter(addOnList)
-                        Log.d("CheckAddOn",addOnList.toString())
+                        Log.d("CheckAddOn", addOnList.toString())
                     }
                 }
                 propertyData?.address?.let {
                     binding.tvLocationName.text = it
                 }
                 // Add a marker in New York and move the camera
-                    if (!propertyData?.latitude.equals("") && !propertyData?.longitude.equals("")){
-                        val newYork = LatLng(propertyData?.latitude!!.toDouble(),
-                            propertyData?.longitude!!.toDouble())
-                        mMap?.addMarker(MarkerOptions().position(newYork).title("Marker in ${propertyData?.address}"))
-                        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 12f))
-                        //    mMap?.clear()
-                        // Apply custom style to the map
-                        val success: Boolean = mMap!!.setMapStyle(
-                            MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style)
-                        )
-                        if (!success) {
-                            Log.e(ErrorDialog.TAG, "Style parsing failed.")
-                        }
+                if (!propertyData?.latitude.equals("") && !propertyData?.longitude.equals("")) {
+                    val newYork = LatLng(
+                        propertyData?.latitude!!.toDouble(),
+                        propertyData?.longitude!!.toDouble()
+                    )
+                    mMap?.addMarker(
+                        MarkerOptions().position(newYork)
+                            .title("Marker in ${propertyData?.address}")
+                    )
+                    mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 12f))
+                    //    mMap?.clear()
+                    // Apply custom style to the map
+                    val success: Boolean = mMap!!.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style)
+                    )
+                    if (!success) {
+                        Log.e(ErrorDialog.TAG, "Style parsing failed.")
                     }
+                }
 
                 reviewList?.let {
-                    if (it.isNotEmpty()){
+                    if (it.isNotEmpty()) {
                         adapterReview.updateAdapter(it)
                     }
                 }
 
                 it.cancellation_time?.let {
-                    if (it==24){
+                    if (it == 24) {
                         binding.tvcancelTime.text = "Cancel for free within $it hours"
-                    }else{
+                    } else {
                         val day = convertHoursToDays(it)
                         day?.let {
                             binding.tvcancelTime.text = "Cancel for free within $it days"
@@ -463,12 +509,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
             }
-        }catch (e:Exception){
-            Log.d(ErrorDialog.TAG,e.message.toString())
+        } catch (e: Exception) {
+            Log.d(ErrorDialog.TAG, e.message.toString())
         }
 
     }
-
 
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
@@ -488,17 +533,20 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemHighestReview).setOnClickListener {
 
-            binding.textReviewClick?.text ="Sort by: Highest Review"
+            binding.textReviewClick?.text =
+                getString(R.string.sort_by_highest_review)//"Sort by: Highest Review"
             sortReviewsBy("Highest")
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemLowestReview).setOnClickListener {
-            binding.textReviewClick?.text ="Sort by: Lowest Review"
+            binding.textReviewClick?.text =
+                getString(R.string.sort_by_lowest_review)//"Sort by: Lowest Review"
             sortReviewsBy("Lowest")
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemRecentReview).setOnClickListener {
-            binding.textReviewClick?.text ="Sort by: Recent Review"
+            binding.textReviewClick?.text =
+                getString(R.string.sort_by_recent_review)//"Sort by: Recent Review"
             sortReviewsBy("Recent")
             popupWindow.dismiss()
         }
@@ -543,7 +591,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+        popupWindow.showAsDropDown(
+            anchorView,
+            xOffset,
+            yOffset,
+            Gravity.END
+        )  // Adjust the Y offset dynamically
     }
 
     private fun generateDeepLink() {
@@ -554,7 +607,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Prepare the deep link values
         val deepLink = "zyvoo://property?propertyId=$propertyId"
-        val webLink = "https://https://zyvo.tgastaging.com/property/$propertyId" // Web fallback link
+        val webLink =
+            "https://https://zyvo.tgastaging.com/property/$propertyId" // Web fallback link
 
         // Create the link generator
         val linkGenerator = ShareInviteHelper.generateInviteUrl(this)
@@ -570,11 +624,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 Log.d(ErrorDialog.TAG, s)
                 // Example share message with the generated link
                 val message = "Check out this property: $s"
-                if (propertyData?.images.isNullOrEmpty()){
+                if (propertyData?.images.isNullOrEmpty()) {
                     propertyData?.images?.firstOrNull()?.let { imageUrl ->
                         shareLinkWithImage(message, imageUrl)
                     }
-                }else {
+                } else {
                     shareLink(message)
                 }
             }
@@ -595,7 +649,10 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     resource: Bitmap,
                     transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
                 ) {
-                    val imageFile = File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), "property_share.jpg")
+                    val imageFile = File(
+                        getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                        "property_share.jpg"
+                    )
                     val outputStream = FileOutputStream(imageFile)
                     resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
                     outputStream.flush()
@@ -684,19 +741,33 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.proNoWishLists.setOnClickListener {
             if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
                 showAddWishlistDialog()
+            } else {
+                val resultIntent = Intent().apply {
+                    putExtra("SHOW_DIALOG", true)
+                }
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish() // Return to Fragment1
             }
         }
 
         binding.proAddWishLists.setOnClickListener {
-            removeItemFromWishlist(propertyId)
+            if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
+                removeItemFromWishlist(propertyId)
+            } else {
+                val resultIntent = Intent().apply {
+                    putExtra("SHOW_DIALOG", true)
+                }
+                setResult(Activity.RESULT_OK, resultIntent)
+                finish() // Return to Fragment1
+            }
         }
         binding.llHotelViews.setOnClickListener {
             val dialogFragment = ViewImageDialogFragment()
             propertyData?.images.let {
                 val bundle = Bundle().apply {
-                    putStringArrayList("image_list",java.util.ArrayList(it))
+                    putStringArrayList("image_list", java.util.ArrayList(it))
                 }
-                dialogFragment.arguments =bundle
+                dialogFragment.arguments = bundle
                 dialogFragment.show(supportFragmentManager, "exampleDialog")
             }
         }
@@ -704,43 +775,42 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             val dialogFragment = ViewImageDialogFragment()
             propertyData?.images.let {
                 val bundle = Bundle().apply {
-                    putStringArrayList("image_list",java.util.ArrayList( it))
+                    putStringArrayList("image_list", java.util.ArrayList(it))
                 }
-                dialogFragment.arguments =bundle
+                dialogFragment.arguments = bundle
                 dialogFragment.show(supportFragmentManager, "exampleDialog")
             }
         }
-        binding.circularSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener
-        {
+        binding.circularSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             @SuppressLint("SetTextI18n")
             override fun onProgressChanged(progress: String) {
                 try {
-                        binding.textHr.text = "$progress hour"
-                        propertyData?.hourly_rate?.let {
-                            val totalPrice = progress.toInt() * it.toFloat()
-                            binding.textPrice.text = totalPrice.toDouble().toInt().toString()
-                            var selectedTime = binding.textstart.text
+                    binding.textHr.text = "$progress hour"
+                    propertyData?.hourly_rate?.let {
+                        val totalPrice = progress.toInt() * it.toFloat()
+                        binding.textPrice.text = totalPrice.toDouble().toInt().toString()
+                        var selectedTime = binding.textstart.text
 
-                            // Define the time formatter (12-hour format with AM/PM)
-                            val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
-                            } else {
-                                TODO("VERSION.SDK_INT < O")
-                            }
-                            Log.d(ErrorDialog.TAG, selectedTime.toString())
-                            // Parse the start time string into a LocalTime object
-                            val startTime = LocalTime.parse(selectedTime, formatter)
-
-                            val endTime = startTime.plusHours(
-                                binding.textHr.text.toString().replace(" hour", "")
-                                    .toLong()
-                            )
-                            // Format the end time back to a string
-                            val formattedEndTime = endTime.format(formatter)
-                            binding.textend.text = formattedEndTime.uppercase()
+                        // Define the time formatter (12-hour format with AM/PM)
+                        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+                        } else {
+                            TODO("VERSION.SDK_INT < O")
                         }
-                }catch (e:Exception){
-                    Log.d(ErrorDialog.TAG,e.message!!)
+                        Log.d(ErrorDialog.TAG, selectedTime.toString())
+                        // Parse the start time string into a LocalTime object
+                        val startTime = LocalTime.parse(selectedTime, formatter)
+
+                        val endTime = startTime.plusHours(
+                            binding.textHr.text.toString().replace(" hour", "")
+                                .toLong()
+                        )
+                        // Format the end time back to a string
+                        val formattedEndTime = endTime.format(formatter)
+                        binding.textend.text = formattedEndTime.uppercase()
+                    }
+                } catch (e: Exception) {
+                    Log.d(ErrorDialog.TAG, e.message!!)
                 }
             }
 
@@ -759,18 +829,20 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
             val dialogAdapter = WishlistAdapter(this@RestaurantDetailActivity,
-                true, wishlistItem,false,object:
-                OnClickListener {
-                override fun itemClick(obj: Int) {
+                true, wishlistItem, false, object :
+                    OnClickListener {
+                    override fun itemClick(obj: Int) {
 
-                }
+                    }
 
-            })
+                })
 
-            dialogAdapter.setOnItemClickListener(object :WishlistAdapter.onItemClickListener{
+            dialogAdapter.setOnItemClickListener(object : WishlistAdapter.onItemClickListener {
                 override fun onItemClick(position: Int, wish: WishlistItem) {
-                    saveItemInWishlist(propertyId, position,wish.wishlist_id.toString(),
-                        dialog)
+                    saveItemInWishlist(
+                        propertyId, position, wish.wishlist_id.toString(),
+                        dialog
+                    )
                 }
 
             })
@@ -792,17 +864,21 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun saveItemInWishlist(property_id: String,pos: Int,
-                                   wishlist_id: String,dialog: Dialog) {
+    private fun saveItemInWishlist(
+        property_id: String, pos: Int,
+        wishlist_id: String, dialog: Dialog
+    ) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.saveItemInWishlist(session?.getUserId().toString(),
+                viewModel.saveItemInWishlist(
+                    session?.getUserId().toString(),
                     property_id,
-                    wishlist_id).collect {
+                    wishlist_id
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                showToast(this@RestaurantDetailActivity,resp.first)
+                                showToast(this@RestaurantDetailActivity, resp.first)
                                 dialog.dismiss()
 
 
@@ -811,18 +887,22 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@RestaurantDetailActivity, it.message!!)
                         }
+
                         else -> {
                             Log.v(ErrorDialog.TAG, "error::" + it.message)
                         }
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -845,22 +925,24 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
             val tvMaxCount = findViewById<TextView>(R.id.textMaxCount)
             setupCharacterCountListener(etDescription, tvMaxCount, 50)
-            val etName =    findViewById<EditText>(R.id.etName)
+            val etName = findViewById<EditText>(R.id.etName)
             findViewById<ImageView>(R.id.imageCross).setOnClickListener {
                 dismiss()
             }
             findViewById<TextView>(R.id.textCreate).setOnClickListener {
-                if (etName.text.isEmpty()){
+                if (etName.text.isEmpty()) {
                     etName.error = AppConstant.name
                     etName.requestFocus()
-                    showToast(this@RestaurantDetailActivity,AppConstant.name)
-                }else if (etDescription.text.isEmpty()){
+                    showToast(this@RestaurantDetailActivity, AppConstant.name)
+                } else if (etDescription.text.isEmpty()) {
                     etDescription.error = AppConstant.description
                     etDescription.requestFocus()
-                    showToast(this@RestaurantDetailActivity,AppConstant.description)
-                }else{
-                    createWishlist(etName.text.toString(),etDescription.text.toString(),
-                        propertyId,dialog)
+                    showToast(this@RestaurantDetailActivity, AppConstant.description)
+                } else {
+                    createWishlist(
+                        etName.text.toString(), etDescription.text.toString(),
+                        propertyId, dialog
+                    )
                 }
             }
             findViewById<TextView>(R.id.textClear).setOnClickListener {
@@ -872,35 +954,43 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun createWishlist(name: String,
-                               description: String,
-                               property_id: String,
-                               dialog: Dialog) {
+    private fun createWishlist(
+        name: String,
+        description: String,
+        property_id: String,
+        dialog: Dialog
+    ) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.createWishlist(session?.getUserId().toString(),
-                    name,description,property_id).collect {
+                viewModel.createWishlist(
+                    session?.getUserId().toString(),
+                    name, description, property_id
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                showToast(this@RestaurantDetailActivity,resp.first)
+                                showToast(this@RestaurantDetailActivity, resp.first)
                                 binding.proAddWishLists.visibility = View.VISIBLE
                                 binding.proNoWishLists.visibility = View.GONE
                                 dialog.dismiss()
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@RestaurantDetailActivity, it.message!!)
                         }
+
                         else -> {
                             Log.v(ErrorDialog.TAG, "error::" + it.message)
                         }
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -912,13 +1002,15 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 val listType = object : TypeToken<List<WishlistItem>>() {}.type
-                                val wish: MutableList<WishlistItem> = Gson().fromJson(resp, listType)
+                                val wish: MutableList<WishlistItem> =
+                                    Gson().fromJson(resp, listType)
                                 wishlistItem = wish
                                 if (wishlistItem.isNotEmpty()) {
                                     dialogAdapter.updateItem(wishlistItem)
                                 }
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@RestaurantDetailActivity, it.message!!)
                         }
@@ -929,9 +1021,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -972,7 +1066,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     fun initialization() {
-        adapterAddon = AdapterProAddOn(this, addOnList,object: onItemClickListener{
+        adapterAddon = AdapterProAddOn(this, addOnList, object : onItemClickListener {
             override fun onItemClick(list: MutableList<AddOn>, position: Int) {
             }
 
@@ -993,14 +1087,13 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.tvShowMore.setOnClickListener {
             adapterAddon.toggleList()
 
-            if (binding.tvShowMore.text.equals("Show More")){
-                binding.tvShowMore.text ="Show Less"
-            }
-            else{
+            if (binding.tvShowMore.text.equals("Show More")) {
+                binding.tvShowMore.text = "Show Less"
+            } else {
                 binding.tvShowMore.text = "Show More"
             }
 
-          //  binding.tvShowMore.text = if (adapterAddon.itemCount == addOnList.size) "Show Less" else "Show More"
+            //  binding.tvShowMore.text = if (adapterAddon.itemCount == addOnList.size) "Show Less" else "Show More"
         }
         /*
         binding.startBooking.setOnClickListener {
@@ -1056,16 +1149,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 } else if (binding.textend.text.isEmpty()) {
                     showToast(this, AppConstant.edTime)
                 } else {
-                    val intent =
-                        Intent(this@RestaurantDetailActivity, CheckOutPayActivity::class.java)
-                    intent.putExtra("hour", binding.textHr.text.toString().replace(" hour", ""))
-                    intent.putExtra("price", binding.textPrice.text.toString())
-                    intent.putExtra("stTime", binding.textstart.text.toString())
-                    intent.putExtra("edTime", binding.textend.text.toString())
-                    intent.putExtra("propertyData", Gson().toJson(propertyData))
-                    intent.putExtra("propertyMile", propertyMile)
-                    intent.putExtra("date", selectedDate.toString())
-                    startActivity(intent)
+                    val startTime: String =
+                        selectedDate.toString() + " " + ErrorDialog.convertToTimeFormat(binding.textstart.text.toString())
+                    val endTime: String =
+                        selectedDate.toString() + " " + ErrorDialog.convertToTimeFormat(binding.textend.text.toString())
+                    checkHostPropertyAvailability(propertyId, startTime, endTime)
+
                 }
             } else {
                 val resultIntent = Intent().apply {
@@ -1079,46 +1168,104 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         selectTime()
     }
 
-/*
-    fun selectTime() {
-        binding.rlView1.setOnClickListener {
-                DateManager(this).showTimePickerDialog(this) { selectedTime ->
-                    try {
-                        binding.textstart.setText(selectedTime)
-                        // Define the time formatter (12-hour format with AM/PM)
-                        val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
-                        } else {
-                            TODO("VERSION.SDK_INT < O")
+    /*
+        fun selectTime() {
+            binding.rlView1.setOnClickListener {
+                    DateManager(this).showTimePickerDialog(this) { selectedTime ->
+                        try {
+                            binding.textstart.setText(selectedTime)
+                            // Define the time formatter (12-hour format with AM/PM)
+                            val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+                            } else {
+                                TODO("VERSION.SDK_INT < O")
+                            }
+                            Log.d(ErrorDialog.TAG,selectedTime)
+                            // Parse the start time string into a LocalTime object
+                            val startTime = LocalTime.parse(selectedTime, formatter)
+                            // Add 2 hours to get the end time
+                            val endTime = startTime.plusHours(binding.textHr.text.toString().replace(" hour","")
+                                .toLong())
+                            // Format the end time back to a string
+                            val formattedEndTime = endTime.format(formatter)
+                            binding.textend.text = formattedEndTime.uppercase()
+                        }catch (e:Exception){
+                            Log.d(ErrorDialog.TAG,e.message!!)
                         }
-                        Log.d(ErrorDialog.TAG,selectedTime)
-                        // Parse the start time string into a LocalTime object
-                        val startTime = LocalTime.parse(selectedTime, formatter)
-                        // Add 2 hours to get the end time
-                        val endTime = startTime.plusHours(binding.textHr.text.toString().replace(" hour","")
-                            .toLong())
-                        // Format the end time back to a string
-                        val formattedEndTime = endTime.format(formatter)
-                        binding.textend.text = formattedEndTime.uppercase()
-                    }catch (e:Exception){
-                        Log.d(ErrorDialog.TAG,e.message!!)
+                    }
+            }
+    //        binding.rlView2.setOnClickListener {
+    //                DateManager(this).showTimePickerDialog(this) { selectedTime ->
+    //                    binding.textend.setText(selectedTime)
+    //                }
+    //        }
+        }
+
+     */
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun checkHostPropertyAvailability(
+        property_id: String, startTime: String,
+        endTime: String
+    ) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                viewModel.checkHostPropertyAvailability(
+                    property_id,
+                    startTime,
+                    endTime
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                if (resp.has("is_available") && resp.get("is_available").asBoolean) {
+                                    val intent =
+                                        Intent(
+                                            this@RestaurantDetailActivity,
+                                            CheckOutPayActivity::class.java
+                                        )
+                                    intent.putExtra(
+                                        "hour",
+                                        binding.textHr.text.toString().replace(" hour", "")
+                                    )
+                                    intent.putExtra("price", binding.textPrice.text.toString())
+                                    intent.putExtra("stTime", binding.textstart.text.toString())
+                                    intent.putExtra("edTime", binding.textend.text.toString())
+                                    intent.putExtra("propertyData", Gson().toJson(propertyData))
+                                    intent.putExtra("propertyMile", propertyMile)
+                                    intent.putExtra("date", selectedDate.toString())
+                                    startActivity(intent)
+                                } else {
+                                    showErrorDialog(this@RestaurantDetailActivity, it.message ?: "")
+                                }
+                            }
+                        }
+
+                        is NetworkResult.Error -> {
+                            showErrorDialog(this@RestaurantDetailActivity, it.message ?: "")
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
                     }
                 }
+            }
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
-//        binding.rlView2.setOnClickListener {
-//                DateManager(this).showTimePickerDialog(this) { selectedTime ->
-//                    binding.textend.setText(selectedTime)
-//                }
-//        }
     }
 
- */
 
-    fun selectTime() {
+    private fun selectTime() {
         binding.rlView1.setOnClickListener {
             DateManager(this).showTimePickerDialog1(this) { selectedTime ->
                 try {
-                    Log.d("checkSelectedTime",selectedTime.toString())
+                    Log.d("checkSelectedTime", selectedTime.toString())
                     binding.textstart.setText(selectedTime)
                     // Define the time formatter (12-hour format with AM/PM)
                     val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -1126,30 +1273,23 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     } else {
                         TODO("VERSION.SDK_INT < O")
                     }
-                    Log.d(ErrorDialog.TAG,selectedTime)
+                    Log.d(ErrorDialog.TAG, selectedTime)
                     // Parse the start time string into a LocalTime object
                     val startTime = LocalTime.parse(selectedTime, formatter)
                     // Add 2 hours to get the end time
-                    val endTime = startTime.plusHours(binding.textHr.text.toString().replace(" hour","")
-                        .toLong())
+                    val endTime = startTime.plusHours(
+                        binding.textHr.text.toString().replace(" hour", "")
+                            .toLong()
+                    )
                     // Format the end time back to a string
                     val formattedEndTime = endTime.format(formatter)
                     binding.textend.text = formattedEndTime.uppercase()
-                }catch (e:Exception){
-                    Log.d(ErrorDialog.TAG,e.message!!)
+                } catch (e: Exception) {
+                    Log.d(ErrorDialog.TAG, e.message!!)
                 }
             }
         }
-//        binding.rlView2.setOnClickListener {
-//                DateManager(this).showTimePickerDialog(this) { selectedTime ->
-//                    binding.textend.setText(selectedTime)
-//                }
-//        }
     }
-
-
-
-
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -1184,8 +1324,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         binding.showMoreReview.setOnClickListener {
             pagination?.let {
-                if (it.current_page!=it.total_pages && it.current_page<it.total_pages) {
-                    loadMoreReview(filter,(it.current_page+1).toString())
+                if (it.current_page != it.total_pages && it.current_page < it.total_pages) {
+                    loadMoreReview(filter, (it.current_page + 1).toString())
                 }
             }
         }
@@ -1215,43 +1355,59 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    private fun loadMoreReview(filter :String,
-                               page :String) {
-        if (NetworkMonitorCheck._isConnected.value)   {
+    private fun loadMoreReview(
+        filter: String,
+        page: String
+    ) {
+        if (NetworkMonitorCheck._isConnected.value) {
 
             lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.filterPropertyReviews(propertyId,
-                    filter,page).collect {
+                viewModel.filterPropertyReviews(
+                    propertyId,
+                    filter, page
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 val listType = object : TypeToken<List<Review>>() {}.type
-                                val localreviewList:MutableList<Review> = Gson().fromJson(resp.first, listType)
-                                pagination = Gson().fromJson(resp.second,
-                                    Pagination::class.java)
+                                val localreviewList: MutableList<Review> =
+                                    Gson().fromJson(resp.first, listType)
+                                pagination = Gson().fromJson(
+                                    resp.second,
+                                    Pagination::class.java
+                                )
                                 pagination?.let {
-                                    Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total +" "+"Current Pages:- "+ it.current_page)
+                                    Log.d(
+                                        "PAGES_TOTAL",
+                                        "TOTAL PAGES :- " + it.total + " " + "Current Pages:- " + it.current_page
+                                    )
                                 }
-                                if(pagination == null){
+                                if (pagination == null) {
                                     binding.reviewMoreView.visibility = View.GONE
                                 }
 
                                 pagination?.let {
-                                    if(it.total <= it.current_page){
-                                        binding.reviewMoreView.visibility = View.GONE
+                                    /*  if(it.total <= it.current_page){
+                                          binding.reviewMoreView.visibility = View.GONE
+                                      }*/
+                                    if (it.current_page == it.total_pages) {
+                                        binding.showMoreReview.visibility = View.GONE
+                                    } else {
+                                        binding.showMoreReview.visibility = View.VISIBLE
                                     }
                                 }
                                 reviewList.addAll(localreviewList)
                                 reviewList?.let {
-                                    if (it.isNotEmpty()){
+                                    if (it.isNotEmpty()) {
                                         adapterReview.updateAdapter(it)
-                                        binding.proreviewCount.text = "("+ formatConvertCount(reviewList.size.toString()) +" reviews)"
-                                        binding.proTotalReview.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
+                                        // binding.proreviewCount.text = "("+ formatConvertCount(reviewList.size.toString()) +" reviews)"
+                                        //   binding.proTotalReview.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
                                     }
                                 }
 
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@RestaurantDetailActivity, it.message!!)
                         }
@@ -1262,9 +1418,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
 
 
@@ -1273,39 +1431,38 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun removeItemFromWishlist(property_id: String) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.removeItemFromWishlist(session?.getUserId().toString(),
-                    property_id).collect {
+                viewModel.removeItemFromWishlist(
+                    session?.getUserId().toString(),
+                    property_id
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                showToast(this@RestaurantDetailActivity,resp.first)
+                                showToast(this@RestaurantDetailActivity, resp.first)
                                 binding.proAddWishLists.visibility = View.GONE
                                 binding.proNoWishLists.visibility = View.VISIBLE
 
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(this@RestaurantDetailActivity, it.message!!)
                         }
+
                         else -> {
                             Log.v(ErrorDialog.TAG, "error::" + it.message)
                         }
                     }
                 }
             }
-        }else{
-            showErrorDialog(this,
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
-
-    private fun shareText(text: String) {
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.setType("text/plain")
-        shareIntent.putExtra(Intent.EXTRA_TEXT, text)
-        startActivity(Intent.createChooser(shareIntent, "Share via"))
-    }
 
     override fun onResume() {
         super.onResume()
@@ -1396,28 +1553,29 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 val dateView =
                     layoutInflater.inflate(R.layout.calendar_day, weekLayout, false) as TextView
                 if (date != null) {
+                    val today = LocalDate.now()
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         // dateView.text = date.dayOfMonth.toString()
                         dateView.text = date.dayOfMonth.toString().padStart(2, '0')
                     }
-                    dateView.setOnClickListener {
-                        selectedDate = date
-                        if(!SessionManager(this).isDateGreaterOrEqual(selectedDate.toString())){
-                            LoadingUtils.showErrorDialog(this@RestaurantDetailActivity,
-                                "You cannot select a past date from the calendar.")
-                            return@setOnClickListener
+                    if (date.isBefore(today)) {
+                        dateView.setTextColor(Color.LTGRAY) // Grey out past dates
+                        dateView.isEnabled = false          // Disable clicks
+                    }else {
+                        dateView.setOnClickListener {
+                            selectedDate = date
+                          /*  if (!SessionManager(this).isDateGreaterOrEqual(selectedDate.toString())) {
+                                showErrorDialog(
+                                    this@RestaurantDetailActivity,
+                                    "You cannot select a past date from the calendar."
+                                )
+                                return@setOnClickListener
+                            }*/
+                            updateCalendar()
+                            // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
                         }
-                        updateCalendar()
-                        // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                        when (date) {
-//                            LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
-//                          //  selectedDate -> dateView.setBackgroundResource(R.drawable.selected_bg)
-//
-//                            else -> dateView.setBackgroundResource(android.R.color.transparent)
-//                        }
-
                         when (date) {
                             //LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
                             selectedDate -> dateView.setBackgroundResource(R.drawable.current_bg_date)

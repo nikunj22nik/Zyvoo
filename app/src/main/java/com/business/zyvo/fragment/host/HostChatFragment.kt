@@ -308,9 +308,12 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             submit.setOnClickListener {
                 /*if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
                     txtSubmit.text = "Submitted"
-                }else*/ if(et_addiotnal_detail.text.isEmpty()){
-                    showToast(requireActivity(),AppConstant.additional)
-                } else{
+                }else*/  if(powerSpinner.text.toString().isEmpty()){
+                showToast(requireActivity(),AppConstant.spinner)
+            }else if (et_addiotnal_detail.text.isEmpty()){
+                showToast(requireActivity(),AppConstant.additional)
+            }
+            else{
                     data.receiver_id?.let {
                         reportChat(it,
                             reportReasonsMap.get(powerSpinner.text.toString()).toString(),
@@ -453,7 +456,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch {
                 LoadingUtils.showDialog(requireContext(), false)
-                val id = data.sender_id?.toInt()
+                val id = loggedInUserId//data.sender_id?.toInt()
                 val group_name = data.group_name
                 val block = if (data.is_blocked == 0) 1 else 0
                 if (id != null && group_name != null) {

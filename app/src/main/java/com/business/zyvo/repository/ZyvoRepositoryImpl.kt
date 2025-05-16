@@ -2977,10 +2977,11 @@ import javax.inject.Inject
         bookingId: Int,
         status: String,
         message: String,
-        reason: String
+        reason: String,
+        extensionId:String
     ): Flow<NetworkResult<String>> = flow {
         try {
-            api.approveDeclineBooking(bookingId, status, message, reason).apply {
+            api.approveDeclineBooking(bookingId, status, message, reason,extensionId).apply {
                 if (isSuccessful) {
                     body()?.let { resp ->
                         if (resp.has("success") && resp.get("success").asBoolean) {
@@ -5636,5 +5637,53 @@ import javax.inject.Inject
              }
 
          }
+
+     override suspend fun checkHostPropertyAvailability(
+         propertyId: String,
+         startTime: String,
+         endTime: String
+     ): Flow<NetworkResult<JsonObject>>  = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.checkHostPropertyAvailability(
+                 propertyId, startTime, endTime
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") &&
+                             resp.get("success").asBoolean
+                         ) {
+                             emit(AuthTask.processData(resp))
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+                     try {
+                         val jsonObj = this.errorBody()?.string()?.let { JSONObject(it) }
+                         emit(
+                             NetworkResult.Error(
+                                 jsonObj?.getString("message") ?: AppConstant.unKnownError
+                             )
+                         )
+                     } catch (e: JSONException) {
+                         e.printStackTrace()
+                         emit(NetworkResult.Error(AppConstant.unKnownError))
+                     }
+                 }
+             }
+         } catch (e: HttpException) {
+             Log.e(ErrorDialog.TAG, "http exception - ${e.message}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: IOException) {
+             Log.e(ErrorDialog.TAG, "io exception - ${e.message} :: ${e.localizedMessage}")
+             emit(NetworkResult.Error(e.message!!))
+         } catch (e: Exception) {
+             Log.e(ErrorDialog.TAG, "exception - ${e.message} :: \n ${e.stackTraceToString()}")
+             emit(NetworkResult.Error(e.message!!))
+         }
+     }
+
+
  }
 

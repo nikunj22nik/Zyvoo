@@ -411,7 +411,6 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                     if (count != null) {
                         totalUnreadCount += count
                     }
-
                     completedCount++
                     if (completedCount == totalCount) {
                         runOnUiThread {
@@ -431,16 +430,21 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
 
     override fun onResume() {
         super.onResume()
+        Log.d(ErrorDialog.TAG,"onResume")
         callingGetChatUser()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d(ErrorDialog.TAG,"onPause")
     }
 
     private fun callingGetChatUser() {
         lifecycleScope.launch {
-            var sessionManager = SessionManager(this@HostMainActivity)
-            var userId = sessionManager.getUserId()
+            val sessionManager = SessionManager(this@HostMainActivity)
+            val userId = sessionManager.getUserId()
             if (userId != null) {
-                var sessionManager = SessionManager(this@HostMainActivity)
-                var type = sessionManager.getUserType()
+                val type = sessionManager.getUserType()
                 if (type != null) {
                     guestViewModel.getChatUserChannelList(userId,type).collect {
                         when (it) {

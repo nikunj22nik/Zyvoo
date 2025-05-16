@@ -124,9 +124,11 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
 
     suspend fun approveDeclineBooking(
         bookingId: Int, status: String, message: String,
-        reason: String
+        reason: String,
+        extensionId:String
     ): Flow<NetworkResult<String>> {
-        return repository.approveDeclineBooking(bookingId, status, message, reason).onEach { }
+        return repository.approveDeclineBooking(bookingId, status, message, reason,
+            extensionId).onEach { }
     }
 
     suspend fun hostBookingDetails(

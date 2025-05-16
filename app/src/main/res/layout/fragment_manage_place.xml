@@ -1231,7 +1231,8 @@
                     android:fontFamily="@font/poppins"
                     android:text="Host rules"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13ssp" />
+                    android:textSize="@dimen/_13ssp"
+                    android:textStyle="bold" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -1266,7 +1267,8 @@
                     android:fontFamily="@font/poppins"
                     android:text="Address"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13ssp" />
+                    android:textSize="@dimen/_13ssp"
+                    android:textStyle="bold"/>
 
 
                 <RelativeLayout
@@ -2132,7 +2134,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="06:00 Am"
+                            android:text="Start Time"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 
@@ -2170,7 +2172,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="06:00 Am"
+                            android:text="End Time"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 

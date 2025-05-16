@@ -91,6 +91,7 @@ import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculateDifferenceInSeconds
 import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
+import com.business.zyvo.utils.ErrorDialog.convertTo12HourFormat
 import com.business.zyvo.utils.ErrorDialog.getCurrentDateTime
 import com.business.zyvo.utils.ErrorDialog.getMinutesPassed
 import com.business.zyvo.utils.ErrorDialog.isAfterOrSame
@@ -297,6 +298,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
             override fun onFinish() {
                 session?.setNeedMore(false)
+                binding.clTimeLeftProgressBar.visibility = View.GONE
             }
         }.start()
     }
@@ -415,7 +417,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     override fun onMapReady(mp: GoogleMap) {
         try {
             googleMap = mp
-            // Add a marker in New York and move the camera
             googleMap.setOnMarkerClickListener(this)
         } catch (e: Resources.NotFoundException) {
             Log.e("MapsActivity", "Can't find style. Error: ", e)
@@ -1226,8 +1227,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                         binding.customProgressBar.setProgress(elapsedTimeMinutes) // Update progress
                         handler.postDelayed(this, 1000*60) // Update every minute
                         Log.e(ErrorDialog.TAG, "Update: $elapsedTimeMinutes min")
-                      //  session?.setNeedMore(false)
-                      //  dialogNeedMore()
+                       // session?.setNeedMore(false)
                         if (remainingNow<=30){
                             if (!session?.getNeedMore()!!){
                                 dialogNeedMore()
@@ -1265,7 +1265,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             rl_yes.setOnClickListener {
                 var dialog1 = SelectHourFragmentDialog()
                 dialog1.setDialogListener(object : DialogListener{
+                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onSubmitClicked(hour: String) {
+                        Log.d(ErrorDialog.TAG,hour)
                         property?.hourly_rate?.toDoubleOrNull()?.let { resp ->
                             hour?.let {
                                 val hourlyTotal = (resp * it.toDouble())
@@ -1287,7 +1289,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         }
     }
 
-    fun openNewDialog(hourlTotal:Double,hour: String){
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun openNewDialog(hourlTotal:Double, hour: String){
         val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(true)
@@ -1302,26 +1305,32 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
             submit.setOnClickListener {
                 dialog.dismiss()
-                 bookings?.let { bookings: Bookings ->
-                    property?.let {
-                        val intent = Intent(requireContext(), ExtraTimeChargesActivity::class.java)
-                        //  intent.putExtra(AppConstant.TIME, AppConstant.TIME)
-                        intent.putExtra("price",hourlTotal)
-                        intent.putExtra("stTime",bookings.booking_start.split(" ")[1])
-                        intent.putExtra("edTime",bookings.final_booking_end.split(" ")[1])
-                        val add:List<AddOn> = bookings.selected_add_ons!!
-                        // Updating the item where name == "Bacon"
-                        val updatedList = add.map {it.copy(checked = true)}
-                        it.add_ons = updatedList
-                        intent.putExtra("propertyData",Gson().toJson(it))
-                        intent.putExtra("propertyMile","")
-                        intent.putExtra("date",bookings.booking_date)
-                        intent.putExtra("hour",hour)
-                        intent.putExtra("type","Booking")
-                        intent.putExtra("bookingId",bookings.booking_id.toString())
-                        startActivity(intent)
+                try {
+                    bookings?.let { bookings: Bookings ->
+                        property?.let {
+                            val intent = Intent(requireContext(), ExtraTimeChargesActivity::class.java)
+                            intent.putExtra("price",hourlTotal)
+                            val stTime = bookings.booking_start.split(" ")[1]
+                            intent.putExtra("stTime",convertTo12HourFormat(stTime))
+                            val edTime = bookings.final_booking_end.split(" ")[1]
+                            intent.putExtra("edTime",convertTo12HourFormat(edTime))
+                            val add:List<AddOn> = bookings.selected_add_ons!!
+                            // Updating the item where name == "Bacon"
+                            val updatedList = add.map {it.copy(checked = true)}
+                            it.add_ons = updatedList
+                            intent.putExtra("propertyData",Gson().toJson(it))
+                            intent.putExtra("propertyMile","")
+                            intent.putExtra("date",bookings.booking_date)
+                            intent.putExtra("hour",hour)
+                            intent.putExtra("type","Booking")
+                            intent.putExtra("bookingId",bookings.booking_id.toString())
+                            startActivity(intent)
+                        }
                     }
+                }catch (e:Exception){
+                    Log.d(ErrorDialog.TAG,e.message?:"")
                 }
+
             }
 
             crossButton.setOnClickListener {

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.adapter.guest.AdapterReview
 import com.business.zyvo.adapter.guest.AdapterReview.ViewHolder
 import com.business.zyvo.databinding.AdapterReviewsBinding
@@ -35,7 +36,7 @@ class AdapterReviewHost (
         holder.binding.ratingbar.rating = (list.get(position).review_rating?.toFloat()?:0.0).toFloat()
         holder.binding.txtReviews.text = list.get(position).review_message
         holder.binding.tvDate.text = list.get(position).review_date
-        Glide.with(context).load(AppConstant.BASE_URL+list.get(position).profile_image).into(holder.binding.circleImageView)
+        Glide.with(context).load(BuildConfig.MEDIA_URL+list.get(position).profile_image).into(holder.binding.circleImageView)
 
         if(position == list.size -1){
             holder.binding.v1.visibility = View.GONE

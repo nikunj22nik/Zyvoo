@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
@@ -279,7 +280,7 @@ class PlaceOpenFragment : Fragment() {
         if (propertyImages != "") {
             Glide
                 .with(this)
-                .load(AppConstant.BASE_URL + propertyImages)
+                .load(BuildConfig.MEDIA_URL + propertyImages)
                 .centerCrop()
                 .placeholder(R.drawable.ic_img_not_found)
                 .into(binding.imageProfile)

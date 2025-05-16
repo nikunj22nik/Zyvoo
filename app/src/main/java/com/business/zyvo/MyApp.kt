@@ -12,6 +12,7 @@ import com.business.zyvo.di.ConversationsManagerSingleton.instanceMain
 import com.business.zyvo.di.ConversationsManagerSingleton.instanceOneToOne
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.AppContextProvider
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitor
 import com.business.zyvo.utils.NetworkMonitorCheck
 import dagger.hilt.android.HiltAndroidApp
@@ -49,7 +50,7 @@ class MyApp :Application() {
         AppsFlyerLib.getInstance().start(this)
     }
 
-     fun initializeTwilioClient(token:String) {
+   /*  fun initializeTwilioClient(token:String) {
          conversationsManager=QuickstartConversationsManager()
          conversationsManagerOneTowOne=QuickstartConversationsManagerOneTowOne()
          conversationsManagerFragment= com.business.zyvo.fragment.host.QuickstartConversationsManager()
@@ -60,7 +61,31 @@ class MyApp :Application() {
                  "general", "")
              Log.d("******" ,"Chat token initialization")
          }
-    }
+    }*/
+   fun initializeTwilioClient(token: String) {
+       if (conversationsManager != null &&
+           conversationsManagerOneTowOne != null &&
+           conversationsManagerFragment != null
+       ) {
+           Log.d(ErrorDialog.TAG, "Twilio clients already initialized")
+           return
+       }
+
+       conversationsManager = QuickstartConversationsManager().apply {
+           initializeWithAccessTokenBase(this@MyApp, token)
+       }
+
+       conversationsManagerOneTowOne = QuickstartConversationsManagerOneTowOne().apply {
+           initializeWithAccessTokenBase(this@MyApp, token)
+       }
+
+       conversationsManagerFragment = com.business.zyvo.fragment.host.QuickstartConversationsManager().apply {
+           initializeWithAccessToken(this@MyApp, token, "general", "")
+       }
+
+       Log.d("TwilioInit", "Chat token initialization successful")
+   }
+
 
     fun clearInstance() { // Reset instance if needed
         conversationsManager = null

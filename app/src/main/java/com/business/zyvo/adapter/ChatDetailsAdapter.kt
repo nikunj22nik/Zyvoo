@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.R
 import com.business.zyvo.chat.QuickstartConversationsManager
 import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
@@ -52,7 +53,7 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
 
         val message = quickstartConversationsManager.messages[position]
 
-     //   quickstartConversationsManager?.readConversastion()
+        quickstartConversationsManager?.readConversastion()
 
         Log.d(ErrorDialog.TAG,message.messageBody.toString())
 
@@ -61,13 +62,13 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
 
         if(message.author.equals(userId,true)){
             if (message.conversationSid==quickstartConversationsManager?.conversation?.sid) {
-                Glide.with(context).load(AppConstant.BASE_URL + profile_image)
+                Glide.with(context).load(BuildConfig.MEDIA_URL + profile_image)
                     .into(holder.binding.imageProfilePicture)
                 holder.binding.textUserName.text = userName
             }
          } else{
             if (message.conversationSid==quickstartConversationsManager?.conversation?.sid) {
-                Glide.with(context).load(AppConstant.BASE_URL + friend_profile_image)
+                Glide.with(context).load(BuildConfig.MEDIA_URL + friend_profile_image)
                     .into(holder.binding.imageProfilePicture)
                 holder.binding.textUserName.text = friend_name
             }

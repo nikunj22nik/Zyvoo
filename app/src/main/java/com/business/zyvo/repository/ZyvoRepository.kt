@@ -164,7 +164,8 @@ interface ZyvoRepository {
         bookingId: Int,
         status: String,
         message: String,
-        reason: String
+        reason: String,
+        extensionId:String
     ): Flow<NetworkResult<String>>
 
     suspend fun deleteLivePlace(
@@ -720,6 +721,12 @@ interface ZyvoRepository {
         user_id :String,
         user_type :String,
         group_channel :String
+    ) :Flow<NetworkResult<JsonObject>>
+
+    suspend fun checkHostPropertyAvailability(
+        propertyId :String,
+        startTime :String,
+        endTime :String
     ) :Flow<NetworkResult<JsonObject>>
 
 }

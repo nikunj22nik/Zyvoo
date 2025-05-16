@@ -47,6 +47,8 @@
                 android:hint="Search.."
                 android:maxLines="1"
                 android:textColor="@color/black"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
                 android:textColorHint="@color/black" />
 
             <ImageView

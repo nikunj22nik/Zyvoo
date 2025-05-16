@@ -124,4 +124,24 @@ class PropertyDetailsViewModel @Inject constructor(private var repository: ZyvoR
         }
     }
 
+
+    suspend fun checkHostPropertyAvailability(propertyId :String,
+                                              startTime :String,
+                                              endTime :String):
+            Flow<NetworkResult<JsonObject>> {
+        return repository.checkHostPropertyAvailability(propertyId,
+            startTime,
+            endTime).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
 }

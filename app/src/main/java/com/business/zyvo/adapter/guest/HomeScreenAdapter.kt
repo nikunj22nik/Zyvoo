@@ -15,6 +15,7 @@ import com.business.zyvo.fragment.guest.home.model.HomePropertyData
 import com.business.zyvo.fragment.guest.home.model.OnViewPagerImageClickListener
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 
 class HomeScreenAdapter(
     private val context: Context, private var list: MutableList<HomePropertyData>,
@@ -89,7 +90,7 @@ class HomeScreenAdapter(
             holder.binding.textMiles.text = "$it miles away"
         }*/
         currentItem.hourly_rate?.let {
-            holder.binding.textPricePerHours.text = "$it/h"
+            holder.binding.textPricePerHours.text = "${truncateToTwoDecimalPlaces(it)}/h"
         }
 
         currentItem.is_instant_book?.let {

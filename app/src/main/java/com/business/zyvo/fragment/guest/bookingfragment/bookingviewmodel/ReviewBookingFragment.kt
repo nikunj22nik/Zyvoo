@@ -44,6 +44,7 @@ import com.appsflyer.share.ShareInviteHelper
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -733,14 +734,14 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
                                 //image loading from glide
                                 Glide.with(requireContext())
-                                    .load(AppConstant.BASE_URL + data.host_profile_image)
+                                    .load(BuildConfig.MEDIA_URL + data.host_profile_image)
                                     .error(R.drawable.ic_circular_img_user)
                                     .into(binding.imageProfilePicture)
 
                                 data?.first_property_image?.let {
                                     //image loading from glide
                                     Glide.with(requireContext())
-                                        .load(AppConstant.BASE_URL + it)
+                                        .load(BuildConfig.MEDIA_URL + it)
                                         .error(R.drawable.ic_circular_img_user)
                                         .into(binding.imgProfileHotel)
                                 }
@@ -762,7 +763,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                                 binding.llThreeImage.visibility = View.GONE
                                                 binding.llTwoImage.visibility = View.GONE
                                                 binding.proImageMore.visibility = View.GONE
-                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewOne)
+                                                Glide.with(requireActivity()).load(BuildConfig.MEDIA_URL + it.get(0)).into(binding.proImageViewOne)
                                             }
                                             if (it.size==2){
                                                 binding.cvTwoAndThreeImage.visibility = View.VISIBLE
@@ -770,8 +771,8 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                                 binding.llThreeImage.visibility = View.GONE
                                                 binding.llTwoImage.visibility = View.VISIBLE
                                                 binding.proImageMore.visibility = View.GONE
-                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
-                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(1)).into(binding.proImageTwo)
+                                                Glide.with(requireActivity()).load(BuildConfig.MEDIA_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
+                                                Glide.with(requireActivity()).load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.proImageTwo)
                                             }
                                             if (it.size==3){
                                                 binding.cvTwoAndThreeImage.visibility = View.VISIBLE
@@ -779,19 +780,19 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                                 binding.llThreeImage.visibility = View.VISIBLE
                                                 binding.llTwoImage.visibility = View.GONE
                                                 binding.proImageMore.visibility = View.GONE
-                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
-                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(1)).into(binding.prImageTwo)
-                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(2)).into(binding.prImageThree)
+                                                Glide.with(requireActivity()).load(BuildConfig.MEDIA_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
+                                                Glide.with(requireActivity()).load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.prImageTwo)
+                                                Glide.with(requireActivity()).load(BuildConfig.MEDIA_URL + it.get(2)).into(binding.prImageThree)
                                             }
-                                            if (it.size==4){
+                                            if (it.size>=4){
                                                 binding.cvTwoAndThreeImage.visibility = View.VISIBLE
                                                 binding.cvOneImage.visibility = View.GONE
                                                 binding.llThreeImage.visibility = View.VISIBLE
                                                 binding.llTwoImage.visibility = View.GONE
                                                 binding.proImageMore.visibility = View.VISIBLE
-                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
-                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(1)).into(binding.prImageTwo)
-                                                Glide.with(requireActivity()).load(AppConstant.BASE_URL + it.get(2)).into(binding.prImageThree)
+                                                Glide.with(requireActivity()).load(BuildConfig.MEDIA_URL + it.get(0)).into(binding.proImageViewTwoAndThree)
+                                                Glide.with(requireActivity()).load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.prImageTwo)
+                                                Glide.with(requireActivity()).load(BuildConfig.MEDIA_URL + it.get(2)).into(binding.prImageThree)
                                             }
                                         }else{
                                             binding.llHotelViews.visibility = View.GONE
@@ -822,10 +823,10 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 }
                                 pagination?.let {
                                     Log.d("TESTING_PAGINATION", "Total :- "+ pagination!!.total +" Current Page:- "+pagination!!.current_page)
-                                    if (pagination!!.total <= pagination!!.current_page) {
+                                  /*  if (pagination!!.total <= pagination!!.current_page) {
                                         binding.showMoreReview.visibility = View.GONE
-                                    }
-                                    if (pagination!!.count < 4){
+                                    }*/
+                                    if (it.current_page==it.total_pages){
                                         binding.showMoreReview.visibility = View.GONE
                                     }else{
                                         binding.showMoreReview.visibility = View.VISIBLE
@@ -1151,10 +1152,10 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 }
                                 pagination?.let {
                                     Log.d("TESTING_PAGINATION", "Total :- "+ pagination!!.total +" Current Page:- "+pagination!!.current_page)
-                                    if (pagination!!.total <= pagination!!.current_page) {
+                                   /* if (pagination!!.total <= pagination!!.current_page) {
                                         binding.showMoreReview.visibility = View.GONE
-                                    }
-                                    if (pagination!!.count < 4){
+                                    }*/
+                                    if (pagination!!.current_page ==pagination?.total_pages){
                                         binding.showMoreReview.visibility = View.GONE
                                     }else{
                                         binding.showMoreReview.visibility = View.VISIBLE
@@ -1163,8 +1164,8 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 reviewList?.let {
                                     if (it.isNotEmpty()){
                                         adapterReview.updateAdapter(it)
-                                        binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +" )"
-                                        binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
+                                      //  binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +" )"
+                                     //   binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
                                     }
                                 }
 

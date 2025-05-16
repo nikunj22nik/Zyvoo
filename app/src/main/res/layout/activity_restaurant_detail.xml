@@ -87,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:layout_marginTop="@dimen/_7sdp"
-                    android:hint="5.0"
+                    android:hint="0.0"
                     android:id="@+id/proRating"
                     android:textColorHint="@color/fca800"
                     android:textColor="@color/fca800"
@@ -1276,7 +1276,7 @@
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Reviews (30)"
+                android:text="Reviews (0)"
                 android:id="@+id/proTotal_Review"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
@@ -1304,7 +1304,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_8sdp"
-                        android:text="4.9"
+                        android:text="0.0"
                         android:id="@+id/proTotalrating"
                         android:textColor="#FCA800"
                         android:textSize="@dimen/_12sdp" />
@@ -1334,7 +1334,7 @@
                         android:layout_height="wrap_content"
                         android:layout_toStartOf="@+id/imageDropDown"
                         android:fontFamily="@font/poppins"
-                        android:text="Sort by: Highest Review"
+                        android:text="@string/sort_by_highest_review"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12sdp" />
 
