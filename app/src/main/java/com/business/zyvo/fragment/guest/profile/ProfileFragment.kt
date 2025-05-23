@@ -971,16 +971,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             var textSubmitButton =  findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener{
                 toggleLoginButtonEnabled(false, textSubmitButton)
-                lifecycleScope.launch {
-                    profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(
-                                    requireContext(),resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textSubmitButton)
-                            } else {
+                if (NetworkMonitorCheck._isConnected.value) {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
                                         etEmail.error = "Email Address required"
@@ -995,10 +986,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                             etEmail.text.toString(),dialog,textSubmitButton)
                                     }
                                 }
-                            }
-                        }
+                            }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg))
                 }
-            }
+                        }
             imageCross.setOnClickListener{
                 dismiss()
             }
@@ -1131,16 +1123,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             textSubmitButton.setOnClickListener{
                 toggleLoginButtonEnabled(false, textSubmitButton)
-                lifecycleScope.launch {
-                    profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged()
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(
-                                    requireContext(),resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textSubmitButton)
-                            } else {
+                if (NetworkMonitorCheck._isConnected.value) {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (findViewById<EditText>(R.id.otp_digit1).text.toString().isEmpty()&&
                                         findViewById<EditText>(R.id.otp_digit2).text.toString().isEmpty()&&
@@ -1161,25 +1144,18 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         }
                                     }
                                 }
-                            }
-                        }
+                            }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg))
                 }
-            }
+                        }
 
             textResend.setOnClickListener{
                 findViewById<EditText>(R.id.otp_digit1).text.clear()
                 findViewById<EditText>(R.id.otp_digit2).text.clear()
                 findViewById<EditText>(R.id.otp_digit3).text.clear()
                 findViewById<EditText>(R.id.otp_digit4).text.clear()
-                lifecycleScope.launch {
-                    profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(
-                                    requireContext(),resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                            } else {
+                if (NetworkMonitorCheck._isConnected.value) {
                                 if ("email".equals(type)){
                                     if (resendEnabled) {
                                         resendEmailVerificationProfile(userId,number,textResend,
@@ -1191,10 +1167,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         rlResendLine,incorrectOtp,textTimeResend)
                                 }
 
-                            }
-                        }
+                            }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg))
                 }
-            }
+                        }
             imageCross.setOnClickListener{
                 dismiss()
             }
@@ -1332,16 +1309,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     }
 
     private fun updateAddStreetAddress(streetAddress: String) {
-        lifecycleScope.launch {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConn ->
-                    if (!isConn) {
-                        showErrorDialog(
-                            requireContext(),
-                            resources.getString(R.string.no_internet_dialog_msg)
-                        )
-                    } else {
+        if (NetworkMonitorCheck._isConnected.value) {
                         lifecycleScope.launch(Dispatchers.Main) {
                             lifecycleScope.launch {
                                 profileViewModel.addStreetAddressApi(
@@ -1370,22 +1338,14 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 }
                             }
                         }
-                    }
-                }
+                    }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
-    }
+                }
 
     private fun updateCityAddress(cityName: String, type: String) {
-        lifecycleScope.launch {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConn ->
-                    if (!isConn) {
-                        showErrorDialog(
-                            requireContext(),
-                            resources.getString(R.string.no_internet_dialog_msg)
-                        )
-                    } else {
+        if (NetworkMonitorCheck._isConnected.value) {
                         lifecycleScope.launch(Dispatchers.Main) {
                             lifecycleScope.launch {
                                 profileViewModel.addCityApi(
@@ -1416,22 +1376,14 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 }
                             }
                         }
-                    }
-                }
+                    }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
-    }
+                }
 
     private fun updateStateAddress(type: String) {
-        lifecycleScope.launch {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConn ->
-                    if (!isConn) {
-                        showErrorDialog(
-                            requireContext(),
-                            resources.getString(R.string.no_internet_dialog_msg)
-                        )
-                    } else {
+        if (NetworkMonitorCheck._isConnected.value) {
                         lifecycleScope.launch(Dispatchers.Main) {
                             lifecycleScope.launch {
                                 profileViewModel.addStateApi(
@@ -1462,22 +1414,15 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 }
                             }
                         }
-                    }
-                }
+                    }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
-    }
+                }
+
 
     private fun updateZipCode(zipCode: String, type: String) {
-        lifecycleScope.launch {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConn ->
-                    if (!isConn) {
-                        showErrorDialog(
-                            requireContext(),
-                            resources.getString(R.string.no_internet_dialog_msg)
-                        )
-                    } else {
+        if (NetworkMonitorCheck._isConnected.value) {
                         lifecycleScope.launch(Dispatchers.Main) {
                             lifecycleScope.launch {
                                 profileViewModel.addZipCodeApi(
@@ -1508,53 +1453,46 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 }
                             }
                         }
-                    }
-                }
+                    }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
-    }
+                }
 
 
     private fun addMyWork(work: String) {
-        lifecycleScope.launch {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConn ->
-                    if (!isConn) {
-                        showErrorDialog(
-                            requireContext(),
-                            resources.getString(R.string.no_internet_dialog_msg)
-                        )
-                    } else {
-                        lifecycleScope.launch(Dispatchers.Main) {
-                            lifecycleScope.launch {
-                                profileViewModel.addMyWorkApi(
-                                    session?.getUserId().toString(),
-                                    work
-                                ).collect {
-                                    when (it) {
-                                        is NetworkResult.Success -> {
-                                            it.data?.let { resp ->
-                                                Toast.makeText(
-                                                    requireContext(),
-                                                    resp.first,
-                                                    Toast.LENGTH_SHORT
-                                                ).show()
-                                            }
-                                        }
-
-                                        is NetworkResult.Error -> {
-                                            showErrorDialog(requireContext(), it.message!!)
-                                        }
-
-                                        else -> {
-                                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-                                        }
-                                    }
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                lifecycleScope.launch {
+                    profileViewModel.addMyWorkApi(
+                        session?.getUserId().toString(),
+                        work
+                    ).collect {
+                        when (it) {
+                            is NetworkResult.Success -> {
+                                it.data?.let { resp ->
+                                    Toast.makeText(
+                                        requireContext(),
+                                        resp.first,
+                                        Toast.LENGTH_SHORT
+                                    ).show()
                                 }
+                            }
+
+                            is NetworkResult.Error -> {
+                                showErrorDialog(requireContext(), it.message!!)
+                            }
+
+                            else -> {
+                                Log.v(ErrorDialog.TAG, "error::" + it.message)
                             }
                         }
                     }
                 }
+            }
+        }else{
+            showErrorDialog(requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 
@@ -1779,6 +1717,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
+                                                locationList.removeAt(index)
+                                                addLocationAdapter.updateLocations(locationList)
                                                 Log.d("checkResponse", resp.toString())
                                                 Toast.makeText(
                                                     requireContext(),
@@ -1824,6 +1764,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
+                                                workList.removeAt(index)
+                                                addWorkAdapter.updateWork(workList)
                                                 Toast.makeText(
                                                     requireContext(),
                                                     resp.first,
@@ -1912,6 +1854,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
+                                                languageList.removeAt(index)
+                                                addLanguageSpeakAdapter.updateLanguage(languageList)
                                                 Toast.makeText(
                                                     requireContext(),
                                                     resp.first,
@@ -2000,6 +1944,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
+                                                hobbiesList.removeAt(index)
+                                                addHobbiesAdapter.updateHobbies(hobbiesList)
                                                 Toast.makeText(
                                                     requireContext(),
                                                     resp.first,
@@ -2090,6 +2036,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
+                                                petsList.removeAt(index)
+                                                addPetsAdapter.updatePets(petsList)
                                                 Toast.makeText(
                                                     requireContext(),
                                                     resp.first,
@@ -2521,7 +2469,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             textEnterYourEmail.text = textHeaderOfOtpVerfication
 
-            otpDigits = arrayOf<EditText>(
+            otpDigits = arrayOf(
                 findViewById(R.id.otp_digit1),
                 findViewById(R.id.otp_digit2),
                 findViewById(R.id.otp_digit3),
@@ -2869,17 +2817,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
             textSubmitButton.setOnClickListener{
-                toggleLoginButtonEnabled(false, textSubmitButton)
-                lifecycleScope.launch {
-                    profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(
-                                    requireContext(),resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textSubmitButton)
-                            } else {
+                if (NetworkMonitorCheck._isConnected.value) {
+                    toggleLoginButtonEnabled(false, textSubmitButton)
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etMobileNumber.text!!.isEmpty()) {
                                         etMobileNumber.error = "Mobile required"
@@ -2894,10 +2833,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         phoneVerificationProfile(session?.getUserId().toString(),countryCode, phoneNumber ,dialog,textSubmitButton)
                                     }
                                 }
-                            }
-                        }
+                            }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg))
                 }
-            }
+                        }
             imageCross.setOnClickListener{
                 dismiss()
             }
@@ -2921,18 +2861,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
           //  etMobileNumber.setText(binding.etPhoneNUMBER.text.toString())
             textSubmitButton.setOnClickListener {
-                toggleLoginButtonEnabled(false, textSubmitButton)
-                lifecycleScope.launch {
-                    profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(
-                                    requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textSubmitButton)
-                            } else {
+                if (NetworkMonitorCheck._isConnected.value) {
+                    toggleLoginButtonEnabled(false, textSubmitButton)
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etMobileNumber.text!!.isEmpty()) {
                                         etMobileNumber.error = "Mobile required"
@@ -2952,10 +2882,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         )
                                     }
                                 }
-                            }
-                        }
+                            }else{
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg))
                 }
-            }
+                        }
             imageCross.setOnClickListener {
                 dismiss()
             }
@@ -3060,17 +2991,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
-                lifecycleScope.launch {
-                    profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(
-                                    requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textSubmitButton)
-                            } else {
+                if (NetworkMonitorCheck._isConnected.value) {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
                                         etEmail.error = "Email Address required"
@@ -3089,10 +3010,12 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         )
                                     }
                                 }
-                            }
-                        }
+                            }else{
+                    toggleLoginButtonEnabled(true, textSubmitButton)
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg))
                 }
-            }
+                        }
             imageCross.setOnClickListener {
                 dismiss()
             }
@@ -3201,17 +3124,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
-                lifecycleScope.launch {
-                    profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(
-                                    requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                                toggleLoginButtonEnabled(true, textSubmitButton)
-                            } else {
+                if (NetworkMonitorCheck._isConnected.value) {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (findViewById<EditText>(R.id.otp_digit1).text.toString()
                                             .isEmpty() &&
@@ -3250,43 +3163,38 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         }
                                     }
                                 }
-                            }
-                        }
+                            }else{
+                    toggleLoginButtonEnabled(true, textSubmitButton)
+                    showErrorDialog(requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg))
                 }
-            }
-
+                        }
             textResend.setOnClickListener {
                 findViewById<EditText>(R.id.otp_digit1).text.clear()
                 findViewById<EditText>(R.id.otp_digit2).text.clear()
                 findViewById<EditText>(R.id.otp_digit3).text.clear()
                 findViewById<EditText>(R.id.otp_digit4).text.clear()
                 lifecycleScope.launch {
-                    profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged() // Ignore duplicate consecutive values
-                        .collect { isConn ->
-                            if (!isConn) {
-                                showErrorDialog(
-                                    requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
+                    if (NetworkMonitorCheck._isConnected.value) {
+                        if ("email".equals(type)) {
+                            if (resendEnabled) {
+                                resendEmailVerification(
+                                    userId, number, textResend,
+                                    rlResendLine, incorrectOtp, textTimeResend
                                 )
-                            } else {
-                                if ("email".equals(type)) {
-                                    if (resendEnabled) {
-                                        resendEmailVerification(
-                                            userId, number, textResend,
-                                            rlResendLine, incorrectOtp, textTimeResend
-                                        )
-                                    }
-                                }
-                                if ("mobile".equals(type)) {
-                                    resendPhoneVerification(
-                                        userId, code, number, textResend,
-                                        rlResendLine, incorrectOtp, textTimeResend
-                                    )
-                                }
-
                             }
                         }
+                        if ("mobile".equals(type)) {
+                            resendPhoneVerification(
+                                userId, code, number, textResend,
+                                rlResendLine, incorrectOtp, textTimeResend
+                            )
+                        }
+
+                    }else{
+                        showErrorDialog(requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg))
+                    }
                 }
             }
             imageCross.setOnClickListener {
@@ -3429,26 +3337,15 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             findViewById<RelativeLayout>(R.id.rlYes).setOnClickListener {
                 lifecycleScope.launch {
-                    profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged()
-                        .collect { isConn ->
-                            if (!isConn) {
-                                LoadingUtils.showErrorDialog(
-                                    requireContext(),
-                                    resources.getString(R.string.no_internet_dialog_msg)
-                                )
-                            } else {
-                                logout()
-                            }
+                    if (NetworkMonitorCheck._isConnected.value) {
+                        dismiss()
+                        logout()
+                    }else{
+                        showErrorDialog(requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg))
+                    }
 
-                        }
                 }
-//                val sessionManager = SessionManager(context)
-//                sessionManager.setUserId(-1)
-//                val intent = Intent(context, AuthActivity::class.java)
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-//                context.startActivity(intent)
-                dismiss()
             }
 
             findViewById<RelativeLayout>(R.id.rlCancel).setOnClickListener {
@@ -3968,32 +3865,28 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             "location" -> {
                 if (obj < locationList.size) {
                     deleteLivePlace(obj)
-                    locationList.removeAt(obj)
-                    addLocationAdapter.updateLocations(locationList)
+
                 }
             }
 
             "work" -> {
                 if (obj < workList.size - 1) {
                     deleteMyWork(obj)
-                    workList.removeAt(obj)
-                    addWorkAdapter.updateWork(workList)
+
                 }
             }
 
             "language" -> {
                 if (obj < languageList.size - 1) {
                     deleteLanguageApi(obj)
-                    languageList.removeAt(obj)
-                    addLanguageSpeakAdapter.updateLanguage(languageList)
+
                 }
             }
 
             "Hobbies" -> {
                 if (obj < hobbiesList.size - 1) {
                     deleteHobbiesApi(obj)
-                    hobbiesList.removeAt(obj)
-                    addHobbiesAdapter.updateHobbies(hobbiesList)
+
                 }
 
             }
@@ -4001,8 +3894,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             "Pets" -> {
                 if (obj < petsList.size - 1) {
                     deletePetsApi(obj)
-                    petsList.removeAt(obj)
-                    addPetsAdapter.updatePets(petsList)
+
                 }
             }
         }

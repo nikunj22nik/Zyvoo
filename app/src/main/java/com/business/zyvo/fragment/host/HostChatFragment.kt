@@ -46,6 +46,7 @@ import com.skydoves.powerspinner.PowerSpinnerView
 import com.twilio.conversations.CallbackListener
 import com.twilio.conversations.Conversation
 import com.twilio.conversations.ErrorInfo
+import com.twilio.conversations.Message
 import com.twilio.conversations.StatusListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -895,33 +896,49 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             try {
                 chatList.clear()
                 Log.d("*******", ""+quickstartConversationsManager.messages.size + " SIZE OF MESSAGE")
-                if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
-
-                    quickstartConversationsManager.messages.forEach {
+              //  if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
+                   /* quickstartConversationsManager.messages.forEach {
                         Log.d("*******","m 8888"+it.messageBody)
                       //  Log.d("*******","j 8888"+it.participant.conversation.state)
                         Log.d("*******","u 88888"+it.conversation.uniqueName)
-                    }
+                    }*/
                     for (conversation  in quickstartConversationsManager.conversationsClient?.myConversations!!) {
                         try {
                             if (map.containsKey(conversation.uniqueName)) {
-                                var obj = map.get(conversation.uniqueName)
-                             //   obj?.lastMessage ="hello" //i.messageBody
-                                obj?.lastMessageTime = TimeUtils.updateLastMsgTime(conversation.dateCreated)
-                                obj?.isOnline = false
-                                obj?.date=conversation.dateCreated
+                                val lastMessageIndex = conversation.lastMessageIndex
+                                if (lastMessageIndex != null) {
+                                    conversation.getLastMessages(0
+                                    ) { result: List<Message?>? ->
+                                        if (result!=null && result.isNotEmpty()) {
+                                            val message = result[0]
+                                            val obj = map.get(conversation.uniqueName)
+                                            obj?.lastMessage = result[0]?.messageBody?:"No messages yet"
+                                            message?.dateUpdated?.let { dateUpdated ->
+                                                obj?.lastMessageTime =
+                                                    TimeUtils.updateLastMsgTime(dateUpdated)
+                                                obj?.date = dateUpdated
+                                            }
+                                           /* obj?.lastMessageTime =
+                                                TimeUtils.updateLastMsgTime(conversation.dateCreated)*/
+                                            obj?.isOnline = false
+                                          //  obj?.date = conversation.dateCreated
 
-                                if (obj != null) {
-                                    chatList.add(obj)
-                                    map.put(conversation.uniqueName,obj)
+                                            if (obj != null) {
+                                                chatList.add(obj)
+                                                map.put(conversation.uniqueName, obj)
+                                            }
+                                        }
+                                    }
+
                                 }
+
                             }
                         } catch (e: Exception) {
                             Log.d("*******", "data :-" + e.message)
                         }
 
                     }
-                }
+            //    }
             }catch (e:Exception){
                 Log.d("******","msg :- "+e.message)
             }
@@ -938,7 +955,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         requireActivity().runOnUiThread {
             try {
                 chatList.clear()
-                Log.d("*******", "${chatList.size}")
                 quickstartConversationsManager.messages?.takeIf { it.isNotEmpty() }?.forEach { message ->
                     try {
                         map.let { map ->
@@ -967,30 +983,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                         Log.e("*******", "Error processing message: ${e.message}", e)
                     }
                 }
-              /*  if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
-                    for (i in quickstartConversationsManager.messages) {
-                        try {
-                            if (map.containsKey(i.conversation.uniqueName)) {
-                                var obj = map.get(i.conversation.uniqueName)
-                                obj?.lastMessage = i.messageBody
-                                obj?.lastMessageTime = TimeUtils.updateLastMsgTime(i.dateCreated)
-                                obj?.isOnline = false
-                                obj?.date=i.dateCreated
-                                // Fetch user identity (assuming it's in i.conversation)
-                                if (obj != null && i.conversation.uniqueName !in addedConversations) {
-                                    chatList.add(obj)
-                                    map.put(i.conversation.uniqueName, obj)
-                                    addedConversations.add(i.conversation.uniqueName) // Mark as added
-                                    Log.d("*******", "" + TextUtils.join(",",addedConversations))
-                                    Log.d("*******", "" + chatList.size)
-                                }
-                            }
-                        } catch (e: Exception) {
-                            Log.d("*******", "data :-" + e.message)
-                        }
-
-                    }
-                }*/
             }catch (e:Exception){
                 Log.d("******","msg :- "+e.message)
             }
@@ -1005,10 +997,10 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
     override fun reloadMessages() {
         Log.d("*******", "reloadMessages" )
         LoadingUtils.hideDialog()
-      //  updateAdapter()
-        updateNewCode()
-    }
+        //updateAdapter()
+         updateNewCode()
 
+    }
     override fun showError(message: String?) {
         if (message != null && isAdded && !requireActivity().isFinishing) {
             LoadingUtils.hideDialog()

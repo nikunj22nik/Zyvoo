@@ -608,7 +608,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         // Prepare the deep link values
         val deepLink = "zyvoo://property?propertyId=$propertyId"
         val webLink =
-            "https://https://zyvo.tgastaging.com/property/$propertyId" // Web fallback link
+            "https://zyvo.tgastaging.com/property/$propertyId" // Web fallback link
 
         // Create the link generator
         val linkGenerator = ShareInviteHelper.generateInviteUrl(this)

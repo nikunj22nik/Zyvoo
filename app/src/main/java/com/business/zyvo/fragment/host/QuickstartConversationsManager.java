@@ -188,7 +188,7 @@ public class QuickstartConversationsManager {
             Log.d("******", "list" + data.getUniqueName().toString());
             try {
                 if (data.getLastMessageIndex()!=null){
-                    data.getLastMessages(0, result -> {
+                    data.getLastMessages(1, result -> {
                         messages.addAll(result);
                         if (conversationsManagerListener != null) {
                             conversationsManagerListener.reloadMessages();
@@ -209,6 +209,8 @@ public class QuickstartConversationsManager {
         }
         return conversationsClient.getMyConversations();
     }
+
+
 
     private final ConversationsClientListener mConversationsClientListener = new ConversationsClientListener() {
 
