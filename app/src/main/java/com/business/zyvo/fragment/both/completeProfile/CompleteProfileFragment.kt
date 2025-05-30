@@ -86,6 +86,7 @@ import com.business.zyvo.utils.ErrorDialog.customDialog
 import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.business.zyvo.utils.PrepareData
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.hbb20.CountryCodePicker
@@ -398,20 +399,28 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
             // Set the adapter for RecyclerView
             localeAdapter = LocaleAdapter(locales, object : OnLocalListener{
-                override fun onItemClick(local: String) {
+                override fun onItemClick(local: String,type: String) {
                     val newLanguage = AddLanguageModel(local)
 
                     // Add the new location to the list and notify the adapter
                   //  languageList.add(0, newLanguage)
                     //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
-                    languageList.add(languageList.size - 1, newLanguage)
-                    addLanguageSpeakAdapter.updateLanguage(languageList)
-                    callingLanguageApi(local)
+                    if (type == "add") {
+                        languageList.add(languageList.size - 1, newLanguage)
+                        addLanguageSpeakAdapter.updateLanguage(languageList)
+                        callingLanguageApi(local)
+                    }else{
+                        val index = languageList.indexOfFirst { it.name == local }
+                        val removedLang = languageList[index].name
+                        deleteLanguageApi(index)
+                        languageList.removeAt(index)
+                        SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
+                    }
                     //  addLocationAdapter.notifyItemInserted(locationList.size - 1)
                     dismiss()
                 }
 
-            })
+            }, PrepareData.languagesWithRegions, languageList)
             recyclerViewLanguages?.adapter = localeAdapter
 
             imageCross?.setOnClickListener { dismiss() }

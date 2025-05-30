@@ -106,6 +106,7 @@ import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.viewmodel.PaymentViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
@@ -759,17 +760,29 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             // Set the adapter for RecyclerView
             localeAdapter = LocaleAdapter(locales, object : OnLocalListener {
-                override fun onItemClick(local: String) {
+
+                override fun onItemClick(local: String,type: String) {
                     val newLanguage = AddLanguageModel(local)
-                    addLanguageApi(newLanguage.name)
+
                     // Add the new language to the list
                     Log.d("laguageListSize",languageList.size.toString())
                     Log.d("laguageListSize",languageList.toString())
-                    if (languageList.size <3){
-                        if (!languageList.contains(newLanguage)){
-                            languageList.add(languageList.size - 1, newLanguage)
+                    if (type == "add") {
+                        if (languageList.size < 3) {
+
+                            addLanguageApi(newLanguage.name)
+                            if (!languageList.contains(newLanguage)) {
+                                languageList.add(languageList.size - 1, newLanguage)
+                            }
                         }
-                        }
+                    }else{
+                        val index = languageList.indexOfFirst { it.name == local }
+                        val removedLang = languageList[index].name
+                        deleteLanguageApi(index)
+                        languageList.removeAt(index)
+                        SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
+                    }
+
 
                     Log.d("laguageListSize",languageList.toString())
                     addLanguageSpeakAdapter.updateLanguage(languageList)
@@ -781,7 +794,12 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                     // 200ms delay ensures smooth UI transition
                 }
-            })
+
+
+
+
+
+            }, PrepareData.languagesWithRegions, languageList)
 
             recyclerViewLanguages?.adapter = localeAdapter
 
@@ -3128,8 +3146,10 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             "language" -> {
                 if (obj < languageList.size - 1) {
+                    val removedLang = languageList[obj].name
                     deleteLanguageApi(obj)
                     languageList.removeAt(obj)
+                    SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
                     addLanguageSpeakAdapter.updateLanguage(languageList)
                 }
             }
@@ -3840,7 +3860,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             payoutData.bankAccounts?.let { bankList ->
                                 if (bankList.isNotEmpty()) {
                                     bankNameAdapterPayout.addItems(bankList)
-                                   // bankNameAdapterPayout.addItems(bankListPayout)
+                                    bankNameAdapterPayout.notifyDataSetChanged()
                                     binding.recyclerViewPaymentCardListPayOut.visibility = View.VISIBLE
                                     binding.textBankNoDataFound.visibility = View.GONE
                                 }else{
@@ -3852,8 +3872,10 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             payoutData.cards?.let { cardList ->
                                 if (cardList.isNotEmpty()) {
                                     cardNumberAdapterPayout.addItems(cardList)
+                                    cardNumberAdapterPayout.notifyDataSetChanged()
                                     binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
                                     binding.textCardNoDataFound.visibility = View.GONE
+                                    Log.d("cardList","cardListImhere")
                                 }else{
                                     binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
                                     binding.textCardNoDataFound.visibility = View.VISIBLE
@@ -3919,10 +3941,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         showErrorDialog(requireContext(), it.message!!)
 
                     }
-
-                    else -> {
-
-                    }
+                    is NetworkResult.Loading->{}
 
                 }
             }
