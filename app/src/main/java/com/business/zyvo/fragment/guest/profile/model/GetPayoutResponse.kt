@@ -19,7 +19,7 @@ data class BankAccountPayout(
     @SerializedName("bank_name") val bankName: String?,
     @SerializedName("last_four_digits") val lastFourDigits: String?,
     @SerializedName("currency") val currency: String?,
-    @SerializedName("default_for_currency") val defaultForCurrency: Boolean,
+    @SerializedName("default_for_currency") var defaultForCurrency: Boolean,
     @SerializedName("account_holder_name") val accountHolderName: String?,
     @SerializedName("account_holder_type") val accountHolderType: String?,
     @SerializedName("status") val status: String?
@@ -31,7 +31,7 @@ data class CardPayout(
     @SerializedName("last_four_digits") val lastFourDigits: String?,
     @SerializedName("exp_month") val expMonth: Int,
     @SerializedName("exp_year") val expYear: Int,
-    @SerializedName("default_for_currency") val defaultForCurrency: Boolean,
+    @SerializedName("default_for_currency") var defaultForCurrency: Boolean,
     @SerializedName("currency") val currency: String?,
     @SerializedName("card_holder_name") val cardHolderName: String?
 )

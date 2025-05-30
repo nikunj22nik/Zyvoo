@@ -1,5 +1,5 @@
 package com.business.zyvo
 
 interface OnLocalListener {
-    fun onItemClick(local : String)
+    fun onItemClick(local : String/*,type : String*/)
 }
