@@ -691,13 +691,13 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
                                 //Set background based on booking status
                                 when (data.status) {
-                                    "confirmed" -> binding.tvStatus.setBackgroundResource(R.drawable.blue_button_bg)
-                                    "waiting payment" -> binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-                                    "cancelled" -> binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                                    "Confirmed" -> binding.tvStatus.setBackgroundResource(R.drawable.blue_button_bg)
+                                    "Waiting Payment" -> binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                                    "Cancelled" -> binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
                                     else -> binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
                                 }
 
-                                if (data.status=="finished"){
+                                if (data.status=="Finished"){
                                     binding.textReviewBookingButton.visibility = View.VISIBLE
                                     binding.textCancelTheHostButton.visibility = View.GONE
                                 }else{

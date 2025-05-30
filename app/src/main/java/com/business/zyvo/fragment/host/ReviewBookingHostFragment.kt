@@ -495,14 +495,12 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         data.booking_status?.let {
             binding.tvStatus.setText(it.replaceFirstChar { it.uppercase() })
             when (data.booking_status) {
-                "confirmed" ->  binding.tvStatus.setBackgroundResource(R.drawable.blue_button_bg)
-
+                "Confirmed" ->  binding.tvStatus.setBackgroundResource(R.drawable.blue_button_bg)
                 "Awaiting Payment" -> binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-
-                "cancelled" -> binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                "Cancelled" -> binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
                 else -> binding.tvStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback
             }
-            if (it.equals("pending")) {
+            if (it.equals("Pending")) {
                 binding.llTopButtons.visibility = View.GONE
                 binding.llTopButtons1.visibility = View.VISIBLE
                 binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)

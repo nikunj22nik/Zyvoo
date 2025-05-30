@@ -123,7 +123,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                 textStatus = binding.textStatus
 
                 Glide.with(context).load(BuildConfig.MEDIA_URL+currentItem.guest_avatar).into( binding.imagePicture)
-                if(currentItem.booking_status.equals("pending")){
+                if(currentItem.booking_status.equals("Pending")){
                     binding.llApproveAndDecline.visibility = View.VISIBLE
                     binding.textStatus.visibility = View.GONE
                     binding.fl.visibility = View.VISIBLE
@@ -134,11 +134,11 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     binding.fl.visibility = View.VISIBLE
                 }
                 when (filteredList.get(position).booking_status) {
-                    "confirmed" ->  binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
+                    "Confirmed" ->  binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
 
                     "Awaiting Payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
 
-                    "cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                    "Cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
 
                     else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback
                 }
