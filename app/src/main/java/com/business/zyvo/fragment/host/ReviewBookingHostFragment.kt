@@ -1506,9 +1506,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                     when (it) {
                         is NetworkResult.Success -> {
                             LoadingUtils.hideDialog()
-                            if (status.equals("decline")) {
 
-                            }
                             callingBookingDetailApi()
                             LoadingUtils.showSuccessDialog(
                                 requireContext(),

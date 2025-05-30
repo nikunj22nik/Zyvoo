@@ -88,6 +88,7 @@ import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.business.zyvo.utils.PrepareData
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -734,12 +735,27 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             // Set the adapter for RecyclerView
             localeAdapter = LocaleAdapter(locales, object : OnLocalListener {
-                override fun onItemClick(local: String) {
+                override fun onItemClick(local: String,type: String) {
                     val newLanguage = AddLanguageModel(local)
-                    addLanguageApi(newLanguage.name)
                     // Add the new language to the list
                     Log.d("laguageListSize", languageList.size.toString())
-                    languageList.add(languageList.size - 1, newLanguage)
+
+                 //   languageList.add(languageList.size - 1, newLanguage)
+                    if (type == "add") {
+                        if (languageList.size < 3) {
+
+                            addLanguageApi(newLanguage.name)
+                            if (!languageList.contains(newLanguage)) {
+                                languageList.add(languageList.size - 1, newLanguage)
+                            }
+                        }
+                    }else{
+                        val index = languageList.indexOfFirst { it.name == local }
+                        val removedLang = languageList[index].name
+                        deleteLanguageApi(index)
+                        languageList.removeAt(index)
+                        SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
+                    }
                     addLanguageSpeakAdapter.updateLanguage(languageList)
                     //addLanguageSpeakAdapter.notifyItemInserted(0)
 
@@ -748,7 +764,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         dialog.dismiss()
                     }, 200) // 200ms delay ensures smooth UI transition
                 }
-            })
+            }, PrepareData.languagesWithRegions, languageList)
 
             recyclerViewLanguages?.adapter = localeAdapter
 
@@ -3878,7 +3894,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             "language" -> {
                 if (obj < languageList.size - 1) {
+                    val removedLang = languageList[obj].name
                     deleteLanguageApi(obj)
+                    languageList.removeAt(obj)
+                    SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
+                    addLanguageSpeakAdapter.updateLanguage(languageList)
 
                 }
             }

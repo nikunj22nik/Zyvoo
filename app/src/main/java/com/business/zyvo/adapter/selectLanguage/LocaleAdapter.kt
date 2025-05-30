@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.OnLocalListener
 import com.business.zyvo.R
@@ -15,13 +16,15 @@ import com.business.zyvo.utils.PrepareData
 import java.util.Locale
 
 class LocaleAdapter(
-    private val locales: List<Locale>, var listner: OnLocalListener, var thirdList: MutableList<AddLanguageModel> = PrepareData.languagesWithRegions
+    private val locales: List<Locale>, var listner: OnLocalListener, var thirdList: MutableList<AddLanguageModel> = PrepareData.languagesWithRegions,
+    var languageList: MutableList<AddLanguageModel>
 ) : RecyclerView.Adapter<LocaleAdapter.LocaleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocaleViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_language, parent, false)
         return LocaleViewHolder(view)
     }
+
 
     override fun onBindViewHolder(holder: LocaleViewHolder, position: Int) {
 
@@ -39,11 +42,11 @@ class LocaleAdapter(
         }
 
         holder.countryName.setText(locale.country)
-
+/*
         holder.ll1.setOnClickListener {
            if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
-//                  SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context,languageName)
-//                   holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
+                  SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context,languageName)
+                   holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
            }
            else {
                var list1 = SessionManager(holder.itemView.context).getLanguages((holder.itemView.context)).toMutableList()
@@ -56,8 +59,33 @@ class LocaleAdapter(
            listner.onItemClick(languageName)
         }
 
+ */
+        holder.ll1.setOnClickListener {
+            if (SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context, languageName)) {
+//                SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context, languageName)
+//               holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
+
+                listner.onItemClick(languageName,"delete")
+            } else {
+                if (languageList.size >= 3) {
+                    // Show a toast or prevent action
+                    Toast.makeText(holder.itemView.context, "You can select up to 2 languages only", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
+                val list1 = SessionManager(holder.itemView.context).getLanguages(holder.itemView.context).toMutableList()
+                list1.add(locale)
+                SessionManager(holder.itemView.context).saveLanguages(holder.itemView.context, list1)
+
+                holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)
+                listner.onItemClick(languageName, "add")
+            }
+        }
+
+
         holder.languageTitle.text = languageName
     }
+
 
     override fun getItemCount(): Int {
         return thirdList.size
