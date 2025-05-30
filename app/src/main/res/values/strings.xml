@@ -141,4 +141,8 @@
     <string name="turn_on_notifications">Turn on Notifications</string>
     <string name="show_more"><u>Show More</u></string>
     <string name="booking_time_extension_bte">Booking time extension (BTE)</string>
+    <string name="review_guest">Review Guest</string>
+    <string name="sort_by_highest_review">Sort by: Highest Review</string>
+    <string name="sort_by_lowest_review">Sort by: Lowest Review</string>
+    <string name="sort_by_recent_review">Sort by: Recent Review</string>
 </resources>

@@ -302,7 +302,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         adapterInitialize()
         paymentOpenCloseDropDown()
         payoutOpenCloseDropDown()
-        getPayoutMethods()
+        //getPayoutMethods()
         // Initialize Places API if not already initialized
         if (!Places.isInitialized()) {
             Places.initialize(requireActivity(), apiKey)
@@ -889,7 +889,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 R.drawable.ic_dropdown_close
             }
             if (isDropdownOpenpayout) {
-
+                getPayoutApi()
                 binding.rlBankNameAndCardNamePayOut.visibility = View.VISIBLE
 
             } else if (!isDropdownOpenpayout) {
@@ -1801,8 +1801,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             setContentView(R.layout.dialog_change_names)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                width = WindowManager.LayoutParams.WRAP_CONTENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
             val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
             if (imageBytes.isNotEmpty()) {
@@ -3845,6 +3845,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getPayoutApi(){
         lifecycleScope.launch {
             profileViewModel.getPayoutMethods(session?.getUserId().toString()).collect {
@@ -3863,6 +3864,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     bankNameAdapterPayout.notifyDataSetChanged()
                                     binding.recyclerViewPaymentCardListPayOut.visibility = View.VISIBLE
                                     binding.textBankNoDataFound.visibility = View.GONE
+                                    if (bankNameAdapterPayout!=null) {
+                                        bankNameAdapterPayout.notifyDataSetChanged()
+                                    }
                                 }else{
                                     binding.recyclerViewPaymentCardListPayOut.visibility = View.GONE
                                     binding.textBankNoDataFound.visibility = View.VISIBLE
@@ -3875,7 +3879,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     cardNumberAdapterPayout.notifyDataSetChanged()
                                     binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
                                     binding.textCardNoDataFound.visibility = View.GONE
+
                                     Log.d("cardList","cardListImhere")
+
+                                    if (cardNumberAdapterPayout!=null){
+                                        bankNameAdapterPayout.notifyDataSetChanged()
+                                    }
+
                                 }else{
                                     binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
                                     binding.textCardNoDataFound.visibility = View.VISIBLE

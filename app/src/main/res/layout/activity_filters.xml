@@ -765,6 +765,7 @@
                 android:text="Parking space capacity"
                 android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
+                android:visibility="gone"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
@@ -773,6 +774,7 @@
                 android:layout_height="@dimen/_34sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
+                android:visibility="gone"
                 android:background="@drawable/bg_outer_manage_place"
                 android:paddingHorizontal="@dimen/_4sdp"
                 android:weightSum="9">

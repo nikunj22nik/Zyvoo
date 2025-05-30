@@ -352,7 +352,8 @@ interface ZyvoApi {
         @Field("booking_id") bookingId :Int,
         @Field("status") status :String,
         @Field("host_message") message :String,
-        @Field("declined_reason") declineReason :String
+        @Field("declined_reason") declineReason :String,
+        @Field("extension_id") extension_id :String
     ) : Response<JsonObject>
 
 
@@ -936,6 +937,15 @@ interface ZyvoApi {
         @Field("user_id") user_id :String,
         @Field("user_type") user_type :String,
         @Field("group_channel") group_channel :String
+    ) : Response<JsonObject>
+
+
+    @POST("check_host_property_availability")
+    @FormUrlEncoded
+    suspend fun checkHostPropertyAvailability(
+        @Field("property_id") property_id :String,
+        @Field("start_time") start_time :String,
+        @Field("end_time") end_time :String
     ) : Response<JsonObject>
 
 }

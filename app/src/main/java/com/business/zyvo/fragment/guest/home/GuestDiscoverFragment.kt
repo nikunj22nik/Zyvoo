@@ -56,8 +56,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.AppConstant
-import com.business.zyvo.BuildConfig
-import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -80,17 +78,15 @@ import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.business.zyvo.fragment.guest.SelectHourFragmentDialog.DialogListener
 import com.business.zyvo.fragment.guest.home.model.Bookings
 import com.business.zyvo.fragment.guest.home.model.HomePropertyData
-import com.business.zyvo.fragment.guest.home.model.Property
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
 import com.business.zyvo.model.FilterRequest
-import com.business.zyvo.model.Location
 import com.business.zyvo.model.SearchFilterRequest
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculateDifferenceInSeconds
-import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
+import com.business.zyvo.utils.ErrorDialog.convertTo12HourFormat
 import com.business.zyvo.utils.ErrorDialog.getCurrentDateTime
 import com.business.zyvo.utils.ErrorDialog.getMinutesPassed
 import com.business.zyvo.utils.ErrorDialog.isAfterOrSame
@@ -109,18 +105,12 @@ import com.google.android.gms.location.LocationSettingsResult
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
 import com.google.android.gms.maps.model.Marker
-import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
-import com.stripe.android.ApiResultCallback
-import com.stripe.android.Stripe
-import com.stripe.android.model.CardParams
-import com.stripe.android.model.Token
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Objects
 
 @AndroidEntryPoint
 class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback,OnMarkerClickListener,
@@ -180,11 +170,11 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 if (result.resultCode == Activity.RESULT_OK) {
                     val data = result.data
                     if (data!=null) {
-                        if (data?.extras?.getString("type").equals("filter")) {
+                        if (data.extras?.getString("type").equals("filter")) {
                             val value: FilterRequest = Gson().fromJson(
-                                data?.extras?.getString("requestData"), FilterRequest::class.java
+                                data.extras?.getString("requestData"), FilterRequest::class.java
                             )
-                            value?.let {
+                            value.let {
                                 Log.d(ErrorDialog.TAG, Gson().toJson(value))
                                 filteredDataAPI(it)
                             }
@@ -204,12 +194,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     val data = result.data
                                   // Handle the resultl
                     if (data!=null) {
-                        if (data?.extras?.getString("type").equals("filter")) {
+                        if (data.extras?.getString("type").equals("filter")) {
                             val value: SearchFilterRequest = Gson().fromJson(
-                                data?.extras?.getString("SearchrequestData"),
+                                data.extras?.getString("SearchrequestData"),
                                 SearchFilterRequest::class.java
                             )
-                            value?.let {
+                            value.let {
                                 Log.d(ErrorDialog.TAG, Gson().toJson(value))
                                 getHomeDataSearchFilter(it)
                             }
@@ -230,7 +220,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         adapter = HomeScreenAdapter(requireContext(), homePropertyData,
             this,this)
 
-        setRetainInstance(true);
+        setRetainInstance(true)
 
         binding.recyclerViewBooking.adapter = adapter
 
@@ -297,10 +287,12 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
             override fun onFinish() {
                 session?.setNeedMore(false)
+                binding.clTimeLeftProgressBar.visibility = View.GONE
             }
         }.start()
     }
 
+    @SuppressLint("SetTextI18n")
     fun formatTime(seconds: Int) {
         try {
             val hours = seconds / 3600
@@ -339,24 +331,24 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     binding.clSearch.visibility = View.GONE
                     if (homePropertyData.isNotEmpty()) {
                         for (location in homePropertyData) {
-                          location.latitude?.let {
-                              location.longitude?.let {
-                                  val customMarkerBitmap =
-                                      createCustomMarker(requireContext(), "$${location.hourly_rate.toDouble().toInt()}/h")
-                                  val markerOptions = MarkerOptions()
-                                      .position(LatLng(location.latitude.toDouble(), location.longitude.toDouble()))
-                                      .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
-                                      .title("$${location.hourly_rate.toDouble().toInt()}/h")
-                                  val marker = googleMap?.addMarker(markerOptions)
-                                  marker?.tag = location.property_id  // 🔑 Save property_id in tag
-                                  // Move and zoom the camera to the first location
-                                      googleMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                          LatLng(location.latitude.toDouble(), location.longitude.toDouble()), 12f))
-                              }
-                          }
+                            location.latitude.let {
+                                location.longitude.let {
+                                    val customMarkerBitmap =
+                                        createCustomMarker(requireContext(), "$${location.hourly_rate.toDouble().toInt()}/h")
+                                    val markerOptions = MarkerOptions()
+                                        .position(LatLng(location.latitude.toDouble(), location.longitude.toDouble()))
+                                        .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
+                                        .title("$${location.hourly_rate.toDouble().toInt()}/h")
+                                    val marker = googleMap.addMarker(markerOptions)
+                                    marker?.tag = location.property_id  // 🔑 Save property_id in tag
+                                    // Move and zoom the camera to the first location
+                                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                        LatLng(location.latitude.toDouble(), location.longitude.toDouble()), 12f))
+                                }
+                            }
                         }
                         // Apply custom style to the map
-                        val success: Boolean = googleMap!!.setMapStyle(
+                        val success: Boolean = googleMap.setMapStyle(
                             MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
                         )
                         if (!success) {
@@ -415,7 +407,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     override fun onMapReady(mp: GoogleMap) {
         try {
             googleMap = mp
-            // Add a marker in New York and move the camera
             googleMap.setOnMarkerClickListener(this)
         } catch (e: Resources.NotFoundException) {
             Log.e("MapsActivity", "Can't find style. Error: ", e)
@@ -1226,8 +1217,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                         binding.customProgressBar.setProgress(elapsedTimeMinutes) // Update progress
                         handler.postDelayed(this, 1000*60) // Update every minute
                         Log.e(ErrorDialog.TAG, "Update: $elapsedTimeMinutes min")
-                      //  session?.setNeedMore(false)
-                      //  dialogNeedMore()
                         if (remainingNow<=30){
                             if (!session?.getNeedMore()!!){
                                 dialogNeedMore()
@@ -1265,7 +1254,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             rl_yes.setOnClickListener {
                 var dialog1 = SelectHourFragmentDialog()
                 dialog1.setDialogListener(object : DialogListener{
+                    @RequiresApi(Build.VERSION_CODES.O)
                     override fun onSubmitClicked(hour: String) {
+                        Log.d(ErrorDialog.TAG,hour)
                         property?.hourly_rate?.toDoubleOrNull()?.let { resp ->
                             hour?.let {
                                 val hourlyTotal = (resp * it.toDouble())
@@ -1287,7 +1278,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         }
     }
 
-    fun openNewDialog(hourlTotal:Double,hour: String){
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun openNewDialog(hourlTotal:Double, hour: String){
         val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(true)
@@ -1302,26 +1294,32 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
             submit.setOnClickListener {
                 dialog.dismiss()
-                 bookings?.let { bookings: Bookings ->
-                    property?.let {
-                        val intent = Intent(requireContext(), ExtraTimeChargesActivity::class.java)
-                        //  intent.putExtra(AppConstant.TIME, AppConstant.TIME)
-                        intent.putExtra("price",hourlTotal)
-                        intent.putExtra("stTime",bookings.booking_start.split(" ")[1])
-                        intent.putExtra("edTime",bookings.final_booking_end.split(" ")[1])
-                        val add:List<AddOn> = bookings.selected_add_ons!!
-                        // Updating the item where name == "Bacon"
-                        val updatedList = add.map {it.copy(checked = true)}
-                        it.add_ons = updatedList
-                        intent.putExtra("propertyData",Gson().toJson(it))
-                        intent.putExtra("propertyMile","")
-                        intent.putExtra("date",bookings.booking_date)
-                        intent.putExtra("hour",hour)
-                        intent.putExtra("type","Booking")
-                        intent.putExtra("bookingId",bookings.booking_id.toString())
-                        startActivity(intent)
+                try {
+                    bookings?.let { bookings: Bookings ->
+                        property?.let {
+                            val intent = Intent(requireContext(), ExtraTimeChargesActivity::class.java)
+                            intent.putExtra("price",hourlTotal)
+                            val stTime = bookings.booking_start.split(" ")[1]
+                            intent.putExtra("stTime",convertTo12HourFormat(stTime))
+                            val edTime = bookings.final_booking_end.split(" ")[1]
+                            intent.putExtra("edTime",convertTo12HourFormat(edTime))
+                            val add:List<AddOn> = bookings.selected_add_ons!!
+                            // Updating the item where name == "Bacon"
+                            val updatedList = add.map {it.copy(checked = true)}
+                            it.add_ons = updatedList
+                            intent.putExtra("propertyData",Gson().toJson(it))
+                            intent.putExtra("propertyMile","")
+                            intent.putExtra("date",bookings.booking_date)
+                            intent.putExtra("hour",hour)
+                            intent.putExtra("type","Booking")
+                            intent.putExtra("bookingId",bookings.booking_id.toString())
+                            startActivity(intent)
+                        }
                     }
+                }catch (e:Exception){
+                    Log.d(ErrorDialog.TAG,e.message?:"")
                 }
+
             }
 
             crossButton.setOnClickListener {

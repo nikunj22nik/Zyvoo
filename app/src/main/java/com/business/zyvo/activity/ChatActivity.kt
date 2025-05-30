@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.MyApp
@@ -159,7 +160,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             }
 
 
-            Glide.with(this).load(AppConstant.BASE_URL+ friendprofileimage).error(R.drawable.ic_img_not_found).into(binding.imageProfilePicture)
+            Glide.with(this).load(BuildConfig.MEDIA_URL+ friendprofileimage).error(R.drawable.ic_img_not_found).into(binding.imageProfilePicture)
 
         }
 
@@ -734,16 +735,11 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             val et_addiotnal_detail : EditText = findViewById(R.id.et_addiotnal_detail)
             val powerSpinner : PowerSpinnerView = findViewById(R.id.spinnerView1)
             submit.setOnClickListener {
-               /* if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
-                    txtSubmit.text = "Submitted"
-                }else*/
-//                if(et_addiotnal_detail.text.isEmpty()){
-//                    showToast(this@ChatActivity,AppConstant.additional)
-//                }
-//                else
                     if(powerSpinner.text.toString().isEmpty()){
                     showToast(this@ChatActivity,AppConstant.spinner)
-                }
+                }else if (et_addiotnal_detail.text.isEmpty()){
+                        showToast(this@ChatActivity,AppConstant.additional)
+                    }
                 else{
                    friendId?.let {
                         reportChat(it,
@@ -856,7 +852,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
     private fun chatUserBlock(groupName: String,value:Int) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch {
-                sender_id?.let {
+                userId?.let {
                     LoadingUtils.showDialog(this@ChatActivity, false)
                     viewModel.blockUser(it.toInt(), groupName,value).collect {
                         when (it) {

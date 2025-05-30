@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.activity.guest.propertydetails.model.Review
 import com.business.zyvo.databinding.AdapterReviewsBinding
@@ -32,7 +33,7 @@ RecyclerView.Adapter<AdapterProReview.ViewHolder>() {
         val currentItem = list?.get(position)
 
         currentItem?.profile_image?.let {
-            Glide.with(context).load(AppConstant.BASE_URL + it).into(holder.binding.circleImageView)
+            Glide.with(context).load(BuildConfig.MEDIA_URL + it).into(holder.binding.circleImageView)
         }
         currentItem?.reviewer_name?.let {
             holder.binding.txtName.text = it

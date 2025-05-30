@@ -53,6 +53,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
@@ -73,6 +74,8 @@ import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.model.host.ItemRadio
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog.isWithin24Hours
+import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.viewmodel.host.CreatePropertyViewModel
 import com.google.android.libraries.places.api.Places
@@ -102,7 +105,6 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     var toHour: String = "00:00"
     var days = "all"
     var cleaningCharges: String = ""
-    var addonlist: MutableList<String> = mutableListOf()
     var addonPrice: MutableList<String> = mutableListOf()
     var deleteImage: MutableList<Int> = mutableListOf()
 
@@ -278,8 +280,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 binding.llAvailability.visibility = View.VISIBLE
                 binding.textSaveAndContinueButton.text = "Publish Now"
             } else if (binding.llAvailability.isVisible == true) {
+
                 callingPublishNowApi()
-                //findNavController().navigate(R.id.host_fragment_properties)
             }
         }
         arguments?.let {
@@ -448,6 +450,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
         if (!checkingAvailabilityData()) {
             return false
+        }else if (binding.tvHours.text.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireActivity(), AppConstant.stTime)
+        } else if (binding.tvHours1.text.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireActivity(), AppConstant.edTime)
+        } else  if (!isWithin24Hours(fromHour,toHour)){
+            LoadingUtils.showErrorDialog(requireActivity(), AppConstant.avabilty)
         }
         return true
     }
@@ -550,7 +558,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             if (it.available_day.equals("working_days")) {
                 onlyWorkingDay()
                 days = "working_days"
-            } else if (it.available_month.equals("all")) {
+            } else if (it.available_day.equals("all")) {
                 anyWeekSelect()
                 days = "all"
             } else {
@@ -663,11 +671,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         galleryListId.clear()
 
         data?.property_images?.forEach {
-            val str = AppConstant.BASE_URL + it.image_url
+            val str = BuildConfig.MEDIA_URL + it.image_url
             val uri = Uri.parse(str)
             galleryListId.add(it.id)
             galleryList.add(Pair<String, Boolean>(str, false))
-            Log.d("TESTING_URL", uri.toString())
             resultList.add(uri)
         }
 
@@ -2951,7 +2958,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         binding.llAvailabilityFromHours.setOnClickListener {
             DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
-                binding.tvHours.setText(selectedHour.toString())
+                binding.tvHours.setText(selectedHour)
                 fromHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
                 Log.d("TESTING_ZYVOO", "From " + fromHour)
             }
@@ -2959,7 +2966,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         binding.llAvailabilityEndHours.setOnClickListener {
             DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
-                binding.tvHours1.setText(selectedHour.toString())
+                binding.tvHours1.setText(selectedHour)
                 toHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
                 Log.d("TESTING_ZYVOO", "To " + toHour)
             }

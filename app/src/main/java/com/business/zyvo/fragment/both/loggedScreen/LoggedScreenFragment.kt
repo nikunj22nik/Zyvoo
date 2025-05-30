@@ -581,12 +581,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 Log.d("TESTING_ZYVOO", "I AM HERE IN DEVELOPMENT")
                // dialogLogin(requireContext())
 
-                Log.d(ErrorDialog.TAG,"I AM HERE IN DEVELOPMENT")
-                Log.d("checkPropertyId",homePropertyData?.get(position)?.property_id.toString())
+                Log.d(TAG,"I AM HERE IN DEVELOPMENT")
+                Log.d("checkPropertyId", homePropertyData.get(position)?.property_id.toString())
                 val intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
                 intent.putExtra("LoginType","NotLogging")
-                intent.putExtra("propertyId",homePropertyData?.get(position)?.property_id.toString())
-                intent.putExtra("propertyMile",homePropertyData?.get(position)?.distance_miles.toString())
+                intent.putExtra("propertyId", homePropertyData.get(position)?.property_id.toString())
+                intent.putExtra("propertyMile", homePropertyData.get(position)?.distance_miles.toString())
 
                 activityResultLauncher.launch(intent)
             }
@@ -1045,14 +1045,14 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private fun validationEmailPassword(email: String, password: String): Boolean {
 
         if (!SessionManager(requireContext()).isValidEmailOrPhone(email)) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.VALID_EMAIL)
-            return false;
+            showErrorDialog(requireContext(), AppConstant.VALID_EMAIL)
+            return false
         } else if (!SessionManager(requireContext()).isValidPassword(password)) {
-            LoadingUtils.showErrorDialog(requireContext(), AppConstant.VALID_PASSWORD)
-            return false;
+            showErrorDialog(requireContext(), AppConstant.VALID_PASSWORD)
+            return false
         }
 
-        return true;
+        return true
     }
 
     private fun loginEmail(
@@ -1078,6 +1078,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 if (resp.has("user_id")) {
                                     if (checkBox != null && checkBox.isChecked) {
                                         session.setUserSession(true)
+                                    }else{
+                                        session.setUserSession(false)
                                     }
                                     session.setUserId(resp.get("user_id").asInt)
                                     session.setAuthToken(resp.get("token").asString)
@@ -1097,6 +1099,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             } else {
                                 if (checkBox != null && checkBox.isChecked) {
                                     session.setUserSession(true)
+                                }else{
+                                    session.setUserSession(false)
                                 }
                                 Log.d("Testing", "Response Token is " + resp.get("token").asString)
                                 session.setUserId(resp.get("user_id").asInt)
@@ -1531,11 +1535,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
             textSubmitButton.setOnClickListener {
                 //   toggleLoginButtonEnabled(false, textSubmitButton)
-                if (textTimeResend.text.toString() == "${"00"}:${"00"} sec") {
+              /*  if (textTimeResend.text.toString() == "${"00"}:${"00"} sec") {
                     resendEnabled = true
                     textResend.setTextColor(
-                        ContextCompat.getColor(context, R.color.scroll_bar_color)
-                    )
+                        ContextCompat.getColor(context, R.color.scroll_bar_color))*/
 
                     if (text == "Your password has been changed\n successfully.") {
                         if (NetworkMonitorCheck._isConnected.value) {
@@ -1567,7 +1570,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                             text
                                         )
                                     } else {
-                                        LoadingUtils.showErrorDialog(
+                                        showErrorDialog(
                                             requireContext(),
                                             "Please enter the complete OTP."
                                         )
@@ -1582,7 +1585,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             )
                             toggleLoginButtonEnabled(true, textSubmitButton)
                         }
-                    } else if (text.equals("Login Successful")) {
+                    }
+                    else if (text.equals("Login Successful")) {
                         if (NetworkMonitorCheck._isConnected.value) {
                             lifecycleScope.launch(Dispatchers.Main) {
                                 if (findViewById<EditText>(R.id.otp_digit1).text.toString()
@@ -1611,7 +1615,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                             number
                                         )
                                     } else {
-                                        LoadingUtils.showErrorDialog(
+                                        showErrorDialog(
                                             requireContext(),
                                             "Please enter the complete OTP."
                                         )
@@ -1669,7 +1673,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                                 "email"
                                             )
                                         } else {
-                                            LoadingUtils.showErrorDialog(
+                                            showErrorDialog(
                                                 requireContext(),
                                                 "Please enter the complete OTP."
                                             )
@@ -1688,7 +1692,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     }
 
                 }
-            }
+         //   }
 
             textResend.setOnClickListener {
                 findViewById<EditText>(R.id.otp_digit1).text.clear()
@@ -1879,8 +1883,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             val session = SessionManager(requireActivity())
                             if (checkBox != null && checkBox.isChecked) {
                                 session.setUserSession(true)
+                            }else{
+                                session.setUserSession(false)
                             }
-                            session?.setLoginType("emailAddress")
+                            session.setLoginType("emailAddress")
                             dialogSuccess(context, dialogtext, Gson().toJson(resp), number, type)
                         }
                         dialog.dismiss()
@@ -1961,6 +1967,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 if (resp.has("user_id")) {
                                     if (checkBox != null && checkBox.isChecked) {
                                         session.setUserSession(true)
+                                    }else{
+                                        session.setUserSession(false)
                                     }
                                     session.setUserId(resp.get("user_id").asInt)
                                     session.setAuthToken(resp.get("token").asString)
@@ -1973,6 +1981,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             } else {
                                 if (checkBox != null && checkBox.isChecked) {
                                     session.setUserSession(true)
+                                }else{
+                                    session.setUserSession(false)
                                 }
                                 session.setUserId(resp.get("user_id").asInt)
                                 session.setAuthToken(resp.get("token").asString)
@@ -2067,6 +2077,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             val session = SessionManager(requireActivity())
                             if (checkBox != null && checkBox.isChecked) {
                                 session.setUserSession(true)
+                            }else{
+                                session.setUserSession(false)
                             }
                             session.setLoginType("mobileNumber")
                             dialogSuccess(
@@ -2517,6 +2529,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         lifecycleScope.launch(Dispatchers.Main) {
             try {
                 text.isEnabled = isEnabled
+                //text.isEnabled = true
             } catch (e: Exception) {
                 Log.e(TAG, "exception toggleLoginButtonEnabled ${e.message}")
             }

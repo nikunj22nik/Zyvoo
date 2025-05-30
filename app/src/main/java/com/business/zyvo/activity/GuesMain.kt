@@ -1,9 +1,9 @@
 package com.business.zyvo.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -103,7 +103,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
             }
         }
         observeButtonState()
-        var sessionManager = SessionManager(this)
+        val sessionManager = SessionManager(this)
         sessionManager.setUserType(AppConstant.Guest)
         callingGetUserToken()
         askNotificationPermission()
@@ -112,6 +112,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun handlingDeepLink() {
         // Get the intent that started this activity
         // Check if the intent contains a URI (deep link)
@@ -133,11 +134,9 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         val userId = sessionManager.getUserId()
         userId?.let {
             lifecycleScope.launch {
-                Log.d("TESTING_TOKEN", "HERE INSISE THE TOKEN")
                 guestViewModel.getChatToken1(it, "guest").collect {
                     when (it) {
                         is NetworkResult.Success -> {
-                            Log.d("TESTING_TOKEN", "HERE SUCEESS THE TOKEN" +it.data)
                             sessionManager.setChatToken(it.data.toString())
                            val app = application as MyApp
                             if (app?.conversationsManager==null) {
@@ -230,7 +229,6 @@ class GuesMain : AppCompatActivity(), OnClickListener,
                                     it.forEach {
                                         map.put(it.group_name.toString(),it)
                                     }
-                                    Log.d("*******",map.size.toString() +" Map Size is ")
                                     if (quickstartConversationsManager.conversationsClient==null){
                                         quickstartConversationsManager.initializeWithAccessTokenBase(this@GuesMain
                                             ,sessionManager.getChatToken().toString())
@@ -498,7 +496,6 @@ class GuesMain : AppCompatActivity(), OnClickListener,
             binding.tvChatNumber.text = "0"
             return
         }
-
         for (conv in relevantConversations) {
             try {
                 conv.getUnreadMessagesCount { count ->

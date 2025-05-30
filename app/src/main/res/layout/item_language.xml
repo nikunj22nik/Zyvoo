@@ -33,6 +33,7 @@
         android:textSize="@dimen/_10ssp"
         android:textColor="#555555"
         android:visibility="visible"
+        android:textAlignment="center"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/languageTitle"
         />

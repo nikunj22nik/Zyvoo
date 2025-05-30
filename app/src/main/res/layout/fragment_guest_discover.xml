@@ -203,8 +203,6 @@
             android:elevation="@dimen/_8sdp"
             app:endIcon="@drawable/ic_pin_icon_progress_bar7"
             app:endIconSize="40dp"
-
-
             app:layout_constraintTop_toTopOf="parent">
 
         </com.business.zyvo.SemiCircleProgressBar>

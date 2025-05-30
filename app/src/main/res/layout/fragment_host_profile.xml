@@ -98,18 +98,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:hint="Lorem ddddddddddddddddIpsum is simply dummy text of the printin  and typesetting industry. Lorem Ipsum has been g "
+                    android:hint="Lorem ddddddddddddddddIpsum is simply dummy text of the printin  and typesetting industry. Lorem Ipsum has been g"
                     android:textColor="@color/black"
                     android:text="@{user.about_me != null ? user.about_me : ``}"
                     android:fontFamily="@font/poppins"
                     android:enabled="false"
                     android:textSize="@dimen/_11ssp"
-                    android:maxLines="3"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_2sdp"
-                    app:layout_constraintTop_toBottomOf="@id/rl_edit"
-
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/rl_edit" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -1604,7 +1601,6 @@
                 android:id="@+id/textLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
                 android:layout_marginTop="@dimen/_20sdp"
                 android:drawableStart="@drawable/ic_logout_icon"
                 android:drawablePadding="@dimen/_10ssp"
@@ -1614,6 +1610,7 @@
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="normal"
                 android:layout_marginStart="@dimen/_15sdp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewPrivacy" />
 

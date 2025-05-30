@@ -116,7 +116,8 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                         Log.d(ErrorDialog.TAG,"$bookingId $extension_id")
                         findNavController().navigate(R.id.reviewBookingHostFragment, bundle)
                     } else {
-                        viewModel.approveDeclineBooking(bookingId, status, message, reason)
+                        viewModel.approveDeclineBooking(bookingId, status, message, reason,
+                            extension_id)
                             .collect {
                                 when (it) {
                                     is NetworkResult.Success -> {

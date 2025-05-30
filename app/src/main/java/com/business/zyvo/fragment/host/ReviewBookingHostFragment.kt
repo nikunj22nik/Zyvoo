@@ -70,6 +70,7 @@ import com.skydoves.powerspinner.PowerSpinnerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import android.widget.LinearLayout.LayoutParams
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.adapter.host.AdapterReviewHost
 import com.business.zyvo.fragment.both.MapDialogFragment
@@ -79,6 +80,8 @@ import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.datacla
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.host.ReviewerProfileModel
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.showToast
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -87,6 +90,7 @@ import kotlinx.coroutines.flow.Flow
 
 @AndroidEntryPoint
 class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
+
 
     private var _binding: FragmentReviewBookingBinding? = null
     private val binding get() = _binding!!
@@ -428,7 +432,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         binding.textK.setText(" ( " + formatConvertCount(data?.reviews_total_rating?:"") + " )")
         binding.textMiles.setText(data.distance_miles + " miles away")
         binding.time.setText(data.booking_hour)
-        binding.money.setText("$" + data.booking_amount)
+        binding.money.setText("$" + truncateToTwoDecimalPlaces(data.booking_amount?:"0"))
 
         adapterIncludeInBooking.updateAdapter(data.amenities)
 
@@ -440,40 +444,40 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         data.cleaning_fee?.let {
             if (it != "") {
-                binding.tvCleaningFee.setText("$" + it)
+                binding.tvCleaningFee.setText("$" + truncateToTwoDecimalPlaces(it))
             } else {
-                binding.tvCleaningFee.setText("$" + "0.00")
+                binding.tvCleaningFee.setText("$" + "0")
             }
 
-        } ?: binding.tvCleaningFee.setText("$0.00")
+        } ?: binding.tvCleaningFee.setText("$0")
 
-        data.service_fee?.let { binding.tvServiceFee.setText("$" + it) }
-            ?: binding.tvServiceFee.setText("$0.00")
+        data.service_fee?.let { binding.tvServiceFee.setText("$" + truncateToTwoDecimalPlaces(it)) }
+            ?: binding.tvServiceFee.setText("$0")
 
 
         data.guest_avatar?.let {
-            friendImage = AppConstant.BASE_URL + it
+            friendImage = BuildConfig.MEDIA_URL + it
             Glide.with(requireContext()).load(friendImage).into(binding.imageProfilePicture)
         }
 
         data.tax?.let {
-            binding.tvTaxes.setText("$" + it)
-        } ?: binding.tvTaxes.setText("$0.00")
+            binding.tvTaxes.setText("$" + truncateToTwoDecimalPlaces(it))
+        } ?: binding.tvTaxes.setText("$0")
 
         data.add_on_total?.let {
             if (it != "") {
-                binding.tvAddOn.setText("$" + it)
+                binding.tvAddOn.setText("$" + truncateToTwoDecimalPlaces(it))
             } else {
-                binding.tvAddOn.setText("$" + "0.00")
+                binding.tvAddOn.setText("$" + "0")
             }
 
-        } ?: binding.tvAddOn.setText("$0.00")
+        } ?: binding.tvAddOn.setText("$0")
 
 
         data.booking_total_amount?.takeIf { it.isNotEmpty() }?.let {
-            binding.tvTotalPrice.text = "$$it"
+            binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(it)}"
         } ?: run {
-            binding.tvTotalPrice.text = "$0.00"
+            binding.tvTotalPrice.text = "$0"
         }
 
         data.guest_name?.let {
@@ -490,6 +494,14 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         data.booking_status?.let {
             binding.tvStatus.setText(it.replaceFirstChar { it.uppercase() })
+            when (data.booking_status) {
+                "confirmed" ->  binding.tvStatus.setBackgroundResource(R.drawable.blue_button_bg)
+
+                "Awaiting Payment" -> binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+
+                "cancelled" -> binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                else -> binding.tvStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback
+            }
             if (it.equals("pending")) {
                 binding.llTopButtons.visibility = View.GONE
                 binding.llTopButtons1.visibility = View.VISIBLE
@@ -531,7 +543,82 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             binding.tvHostContent.setText(it)
         }
 
-        data.images?.let {
+        binding.llHotelViews.setOnClickListener {
+            val dialogFragment = ViewImageDialogFragment()
+            data?.images.let {
+                val bundle = Bundle().apply {
+                    putStringArrayList("image_list", java.util.ArrayList(it))
+                }
+                dialogFragment.arguments = bundle
+                dialogFragment.show(requireActivity().supportFragmentManager, "exampleDialog")
+            }
+        }
+        binding.proImageMore.setOnClickListener {
+            val dialogFragment = ViewImageDialogFragment()
+            data?.images.let {
+                val bundle = Bundle().apply {
+                    putStringArrayList("image_list", java.util.ArrayList(it))
+                }
+                dialogFragment.arguments = bundle
+                dialogFragment.show(requireActivity().supportFragmentManager, "exampleDialog")
+            }
+        }
+
+        data?.images?.let {
+            if (it.isNotEmpty()) {
+                if (it.size == 1) {
+                    binding.cvTwoAndThreeImage.visibility = View.GONE
+                    binding.cvOneImage.visibility = View.VISIBLE
+                    binding.llThreeImage.visibility = View.GONE
+                    binding.llTwoImage.visibility = View.GONE
+                    binding.proImageMore.visibility = View.GONE
+                    Glide.with(requireActivity())
+                        .load(BuildConfig.MEDIA_URL + it.get(0))
+                        .into(binding.proImageViewOne)
+                }
+                if (it.size == 2) {
+                    binding.cvTwoAndThreeImage.visibility = View.VISIBLE
+                    binding.cvOneImage.visibility = View.GONE
+                    binding.llThreeImage.visibility = View.GONE
+                    binding.llTwoImage.visibility = View.VISIBLE
+                    binding.proImageMore.visibility = View.GONE
+                    Glide.with(requireActivity())
+                        .load(BuildConfig.MEDIA_URL + it.get(0))
+                        .into(binding.proImageViewTwoAndThree)
+                    Glide.with(requireActivity())
+                        .load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.proImageTwo)
+                }
+                if (it.size == 3) {
+                    binding.cvTwoAndThreeImage.visibility = View.VISIBLE
+                    binding.cvOneImage.visibility = View.GONE
+                    binding.llThreeImage.visibility = View.VISIBLE
+                    binding.llTwoImage.visibility = View.GONE
+                    binding.proImageMore.visibility = View.GONE
+                    Glide.with(requireActivity())
+                        .load(BuildConfig.MEDIA_URL + it.get(0))
+                        .into(binding.proImageViewTwoAndThree)
+                    Glide.with(requireActivity())
+                        .load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.prImageTwo)
+                    Glide.with(requireActivity())
+                        .load(BuildConfig.MEDIA_URL + it.get(2)).into(binding.prImageThree)
+                }
+                if (it.size >= 4) {
+                    binding.cvTwoAndThreeImage.visibility = View.VISIBLE
+                    binding.cvOneImage.visibility = View.GONE
+                    binding.llThreeImage.visibility = View.VISIBLE
+                    binding.llTwoImage.visibility = View.GONE
+                    binding.proImageMore.visibility = View.VISIBLE
+                    Glide.with(requireActivity())
+                        .load(BuildConfig.MEDIA_URL + it.get(0))
+                        .into(binding.proImageViewTwoAndThree)
+                    Glide.with(requireActivity())
+                        .load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.prImageTwo)
+                    Glide.with(requireActivity())
+                        .load(BuildConfig.MEDIA_URL + it.get(2)).into(binding.prImageThree)
+                }
+            }
+        }
+        /*data.images?.let {
 
             binding.llHotelViews.setOnClickListener {
                 openImageDialog(data.images)
@@ -546,34 +633,35 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             }
 
             if (it.size >= 3) {
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it[0])
+                Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it[0])
                     .into(binding.imgProfileHotel)
                 binding.llHotelViews.visibility = View.VISIBLE
                 binding.llTwoImgView.visibility = View.GONE
                 binding.llSingleImg.visibility = View.GONE
                 shapeTopBottomLeftCorner(binding.shapeableImageView)
 
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(0)).apply(
+                Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.get(0)).apply(
                     RequestOptions()
                         .placeholder(R.drawable.ic_img_not_found) // Placeholder image
                         .error(R.drawable.ic_img_not_found) // Error image
                 )
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(binding.shapeableImageView)
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(1)).apply(
+                Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.get(1)).apply(
                     RequestOptions()
                         .placeholder(R.drawable.ic_img_not_found) // Placeholder image
                         .error(R.drawable.ic_img_not_found) // Error image
                 )
                     .transition(DrawableTransitionOptions.withCrossFade()).into(binding.img1)
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(2)).apply(
+                Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.get(2)).apply(
                     RequestOptions()
                         .placeholder(R.drawable.ic_img_not_found) // Placeholder image
                         .error(R.drawable.ic_img_not_found) // Error image
                 )
                     .transition(DrawableTransitionOptions.withCrossFade()).into(binding.img2)
-            } else if (it.size == 2) {
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(0))
+            }
+            else if (it.size == 2) {
+                Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.get(0))
                     .into(binding.imgProfileHotel)
 
                 binding.llHotelViews.visibility = View.GONE
@@ -581,39 +669,41 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                 binding.llSingleImg.visibility = View.GONE
                 shapeTopBottomLeftCorner(binding.shapeableImageView21)
                 shapeTopBottomRightCorners(binding.shapeableImageView22)
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(0)).apply(
+                Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.get(0)).apply(
                     RequestOptions()
                         .placeholder(R.drawable.ic_img_not_found) // Placeholder image
                         .error(R.drawable.ic_img_not_found) // Error image
                 )
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(binding.shapeableImageView21)
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(1)).apply(
+                Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.get(1)).apply(
                     RequestOptions()
                         .placeholder(R.drawable.ic_img_not_found) // Placeholder image
                         .error(R.drawable.ic_img_not_found) // Error image
                 )
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(binding.shapeableImageView22)
-            } else if (it.size == 1) {
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(0))
+            }
+            else if (it.size == 1) {
+                Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.get(0))
                     .into(binding.imgProfileHotel)
 
                 binding.llHotelViews.visibility = View.GONE
                 binding.llTwoImgView.visibility = View.GONE
                 binding.llSingleImg.visibility = View.VISIBLE
                 shapeTopBottomRightLeftCorners(binding.shapeableImageView11)
-                Glide.with(requireContext()).load(AppConstant.BASE_URL + it.get(0)).apply(
+                Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.get(0)).apply(
                     RequestOptions()
                         .placeholder(R.drawable.ic_img_not_found) // Placeholder image
                         .error(R.drawable.ic_img_not_found) // Error image
                 )
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .into(binding.shapeableImageView11)
-            } else {
+            }
+            else {
                 binding.shapeableImageView11.visibility = View.GONE
             }
-        }
+        }*/
 
         data.latitude?.let {
             latitude = it.toDouble()
@@ -839,7 +929,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                                         LoadingUtils.hideDialog()
                                         LoadingUtils.showSuccessDialog(
                                             requireContext(),
-                                            it.data.toString()
+                                            it.message.toString()
                                         )
                                     }
 
@@ -847,7 +937,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                                         LoadingUtils.hideDialog()
                                         LoadingUtils.showErrorDialog(
                                             requireContext(),
-                                            it.data.toString()
+                                            it.message.toString()
                                         )
                                     }
 
@@ -942,10 +1032,12 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
 
             submit.setOnClickListener {
-
                 if (selectedPosition == -1) {
                     Toast.makeText(requireContext(), "Please Select reason", Toast.LENGTH_LONG)
                         .show()
+                    return@setOnClickListener
+                }else if (additionalDetail.text.isEmpty()){
+                    showToast(requireActivity(),AppConstant.additional)
                     return@setOnClickListener
                 }
                 lifecycleScope.launch {
@@ -1315,7 +1407,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
             rlAcceptRequestBtn.setOnClickListener {
                 val msg = tvShareMessage.text.toString()
-                setUpAdapterMyBookings(bookingId,"approve",msg,"")
+                setUpAdapterMyBookings(bookingId,"approve",msg,"",
+                    extensioId)
                 dialog.dismiss()
             }
 //            window?.setLayout(
@@ -1386,7 +1479,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             rlDeclineRequestBtn.setOnClickListener {
                 val msg = tvShareMessage.text.toString()
 
-                setUpAdapterMyBookings(bookingId,"decline",msg,reason)
+                setUpAdapterMyBookings(bookingId,"decline",msg,reason,
+                    extensioId)
                 dialog.dismiss()
             }
             window?.setBackgroundDrawableResource(android.R.color.transparent)
@@ -1399,13 +1493,15 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         bookingId: Int,
         status: String,
         message: String,
-        reason: String
+        reason: String,
+        extensioId:String
     ) {
 
         lifecycleScope.launch {
             LoadingUtils.showDialog(requireContext(), false)
 
-            viewModel.approveDeclineBooking(bookingId, status, message, reason)
+            viewModel.approveDeclineBooking(bookingId, status, message, reason,
+                extensioId)
                 .collect {
                     when (it) {
                         is NetworkResult.Success -> {

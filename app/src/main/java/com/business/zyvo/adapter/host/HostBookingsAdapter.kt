@@ -13,7 +13,7 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutHostBookingBinding
@@ -26,7 +26,6 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
 
 
         private lateinit var mListener: onItemClickListener
-        private var declineReason :String =""
         private var filteredList: List<MyBookingsModel> = list
 
         interface onItemClickListener {
@@ -34,7 +33,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                             extension_id : String)
         }
 
-       fun setOnItemClickListener(listener: HostBookingsAdapter.onItemClickListener) {
+       fun setOnItemClickListener(listener: onItemClickListener) {
             mListener = listener
        }
 
@@ -73,7 +72,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     binding.llDeclineRequest.visibility = View.GONE
                     binding.llAcceptRequest.visibility = View.GONE
                 }
-                var reason :String ="other"
+                var reason ="other"
 
                 binding.doubt.setOnClickListener {
                    reason = "I'm overbooked"
@@ -90,7 +89,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     }
 
                     override fun afterTextChanged(editable: Editable) {  }
-                });
+                })
 
                 binding.tvAvailableDay.setOnClickListener {
                     reason ="Maintenance day"
@@ -123,8 +122,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
 
                 textStatus = binding.textStatus
 
-                Glide.with(context).load(AppConstant.BASE_URL+currentItem.guest_avatar).into( binding.imagePicture)
-               Log.d("TESTING_URL",AppConstant.BASE_URL+currentItem.guest_avatar )
+                Glide.with(context).load(BuildConfig.MEDIA_URL+currentItem.guest_avatar).into( binding.imagePicture)
                 if(currentItem.booking_status.equals("pending")){
                     binding.llApproveAndDecline.visibility = View.VISIBLE
                     binding.textStatus.visibility = View.GONE
@@ -138,11 +136,10 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                 when (filteredList.get(position).booking_status) {
                     "confirmed" ->  binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
 
-                //    "waiting payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-
-                    "Awaiting payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                    "Awaiting Payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
 
                     "cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
+
                     else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback
                 }
                 binding.clMain.setOnClickListener{

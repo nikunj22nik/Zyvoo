@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.OnItemAdapterClick
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutAllBookingsBinding
@@ -22,7 +23,7 @@ class MyBookingsAdapter(
 
         fun bind(currentItem: BookingModel) {
 
-            Glide.with(context).load(AppConstant.BASE_URL+currentItem.property_image).placeholder(R.drawable.image_hotel).
+            Glide.with(context).load(BuildConfig.MEDIA_URL+currentItem.property_image).placeholder(R.drawable.image_hotel).
             error(R.drawable.image_hotel).into(binding.imagePicture)
 
             binding.textName.text = currentItem.property_name

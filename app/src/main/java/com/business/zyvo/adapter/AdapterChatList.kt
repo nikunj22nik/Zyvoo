@@ -14,6 +14,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
@@ -51,16 +52,16 @@ class AdapterChatList(
                 var userID = sessionManager.getUserId()
                 if(userID.toString().equals(currentItem.sender_id)){
                 Glide.with(context).
-                load(AppConstant.BASE_URL+"/"+currentItem.receiver_image).into(binding.imageProfilePicture)
+                load(BuildConfig.MEDIA_URL+"/"+currentItem.receiver_image).into(binding.imageProfilePicture)
                 binding.textTime.setText(currentItem.lastMessageTime)
                 binding.textUserName.setText(currentItem.receiver_name +"\n"+ "( "+currentItem.property_title+" )")
                 binding.textDescription.setText(currentItem.lastMessage)
-                Log.d("TESTING_PROFILE",AppConstant.BASE_URL+"/"+currentItem.receiver_image)
+                Log.d("TESTING_PROFILE", BuildConfig.MEDIA_URL+"/"+currentItem.receiver_image)
             }
             else{
                 Glide.with(context).
-                load(AppConstant.BASE_URL+"/"+currentItem.sender_profile).into(binding.imageProfilePicture)
-               Log.d("TESTING_PROFILE",AppConstant.BASE_URL+currentItem.sender_profile)
+                load(BuildConfig.MEDIA_URL+"/"+currentItem.sender_profile).into(binding.imageProfilePicture)
+               Log.d("TESTING_PROFILE",BuildConfig.MEDIA_URL+currentItem.sender_profile)
                 binding.textTime.setText(currentItem.lastMessageTime)
                 binding.textUserName.setText(currentItem.sender_name + "\n"+ "( "+currentItem.property_title+" )")
                 binding.textDescription.setText(currentItem.lastMessage)

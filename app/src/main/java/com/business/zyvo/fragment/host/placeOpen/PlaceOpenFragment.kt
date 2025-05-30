@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
@@ -87,11 +88,7 @@ class PlaceOpenFragment : Fragment() {
             property_status = it.getString(AppConstant.property_status).toString()
             property_review_count = it.getString(AppConstant.property_review_count).toString()
             distanceMiles = it.getString(AppConstant.distance_miles).toString()
-            title = it.getString(AppConstant.title).toString()
-
-
-
-
+            title = it.getString(AppConstant.title).toString()git 
         }
     }
 
@@ -279,7 +276,7 @@ class PlaceOpenFragment : Fragment() {
         if (propertyImages != "") {
             Glide
                 .with(this)
-                .load(AppConstant.BASE_URL + propertyImages)
+                .load(BuildConfig.MEDIA_URL + propertyImages)
                 .centerCrop()
                 .placeholder(R.drawable.ic_img_not_found)
                 .into(binding.imageProfile)

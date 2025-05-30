@@ -3,6 +3,7 @@ package com.business.zyvo.chat
 import android.content.Context
 import android.util.Log
 import android.widget.TextView
+import com.business.zyvo.utils.ErrorDialog
 import com.google.gson.Gson
 import com.twilio.conversations.Attributes
 import com.twilio.conversations.CallbackListener
@@ -157,87 +158,6 @@ class QuickstartConversationsManager {
     }
 
 
-
-
-    private fun retrieveToken(listener: AccessTokenListenerOneTowOne) {
-      /*  val client = OkHttpClient()
-        val request = Request.Builder().url(tokenURL).build()
-
-        try {
-            client.newCall(request).execute().use { response ->
-                val responseBody = response.body?.string() ?: ""
-                Log.d(TAG, "Response from server: $responseBody")
-                val tokenResponse = Gson().fromJson(responseBody, TokenResponse::class.java)
-                val accessToken = tokenResponse.token
-                Log.d(TAG, "Retrieved access token from server: $accessToken")
-                listener.receivedAccessToken(accessToken, null)
-            }
-        } catch (ex: IOException) {
-            Log.e(TAG, ex.localizedMessage, ex)
-            listener.receivedAccessToken(null, ex)
-        }*/
-    }
-
-    fun sendMessage(messageBody: String) {
-        if (conversation != null) {
-            val options = Message.options().withBody(messageBody)
-            options.withAttributes(conversation!!.attributes)
-            conversation!!.sendMessage(options) {
-                if (conversationsManagerListener != null) {
-                    conversationsManagerListener!!.messageSentCallback()
-                }
-            }
-        }
-    }
-
-    @Throws(FileNotFoundException::class)
-    fun sendMessageImage(messageBody: String?, file: File) {
-        if (conversation != null) {
-            val options = Message.options().withMedia(FileInputStream(messageBody), "jpg/png")
-                .withMediaFileName(file.name)
-                .withMediaProgressListener(object : ProgressListener {
-                    override fun onStarted() {
-                    }
-
-                    override fun onProgress(bytes: Long) {
-                    }
-
-                    override fun onCompleted(mediaSid: String) {
-                    }
-                })
-            conversation!!.sendMessage(options) {
-                if (conversationsManagerListener != null) {
-                    conversationsManagerListener!!.messageSentCallback()
-                }
-            }
-        }
-    }
-
-    @Throws(FileNotFoundException::class)
-    fun sendMessagefile(messageBody: String?, file: File) {
-        if (conversation != null) {
-            val options =
-                Message.options().withMedia(FileInputStream(messageBody), "application/pdf")
-                    .withMediaFileName(file.name)
-                    .withMediaProgressListener(object : ProgressListener {
-                        override fun onStarted() {
-                        }
-
-                        override fun onProgress(bytes: Long) {
-                        }
-
-                        override fun onCompleted(mediaSid: String) {
-
-                        }
-                    })
-            conversation!!.sendMessage(options) {
-                if (conversationsManagerListener != null) {
-                    conversationsManagerListener!!.messageSentCallback()
-                }
-            }
-        }
-    }
-
     private fun loadChannels() {
         val client = conversationsClient ?: return
         client.getConversation(DEFAULT_CONVERSATION_NAME, object : CallbackListener<Conversation> {
@@ -345,7 +265,7 @@ class QuickstartConversationsManager {
                     conversation.getMessageByIndex(
                         conversation.lastMessageIndex.toInt().toLong()
                     ) { result ->
-                        Log.d("*******", "onConversationUpdated")
+                        Log.d(ErrorDialog.TAG, "onConversationUpdated")
                         if (conversationsManagerListener != null) {
                             conversationsManagerListener!!.receivedNewMessage()
                         }
@@ -465,13 +385,5 @@ class QuickstartConversationsManager {
     fun setListener(listener: QuickstartConversationsManagerListener) {
         this.conversationsManagerListener = listener
     }
-
-    fun readConversastion() {
-        if (conversation != null) {
-            conversation!!.setAllMessagesRead { }
-        }
-    }
-
-
 
 }

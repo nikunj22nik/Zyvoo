@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.databinding.LayoutImageBinding
 import com.business.zyvo.fragment.guest.home.model.OnViewPagerImageClickListener
 
@@ -24,8 +25,7 @@ class GuestViewPagerAdapter(private var list: MutableList<String>, var context: 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = list[position]
 
-        Log.d("TESTING_ZYVOO",AppConstant.BASE_URL + currentItem)
-        Glide.with(context).load(AppConstant.BASE_URL + currentItem).into(holder.binding.image)
+        Glide.with(context).load(BuildConfig.MEDIA_URL + currentItem).into(holder.binding.image)
 
         holder.itemView.setOnClickListener {
             listner?.itemClick(position)

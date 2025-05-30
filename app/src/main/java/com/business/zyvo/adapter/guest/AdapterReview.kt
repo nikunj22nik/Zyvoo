@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.R
 import com.business.zyvo.databinding.AdapterReviewsBinding
 import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.Review
@@ -38,7 +39,7 @@ class AdapterReview(
         holder.binding.tvDate.text = review.date
 
         Glide.with(context)
-            .load(AppConstant.BASE_URL + review.image)
+            .load(BuildConfig.MEDIA_URL + review.image)
             .error(R.drawable.ic_circular_img_user)
             .into(holder.binding.circleImageView)
 

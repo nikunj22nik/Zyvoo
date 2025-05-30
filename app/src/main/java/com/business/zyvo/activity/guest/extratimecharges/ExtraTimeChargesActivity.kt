@@ -52,6 +52,7 @@ import com.business.zyvo.utils.ErrorDialog.calculatePercentage
 import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.formatDateyyyyMMddToMMMMddyyyy
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
@@ -122,6 +123,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 bookingId = it.getString("bookingId")
                 propertyId = propertyData?.property_id.toString()
                 hostId = propertyData?.host_id.toString()
+                Log.d(ErrorDialog.TAG,date.toString())
             }
         }
         // Observe the isLoading state
@@ -476,7 +478,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         try {
             propertyData?.let {
                 propertyData?.host_profile_image?.let {
-                    Glide.with(this@ExtraTimeChargesActivity).load(AppConstant.BASE_URL + it)
+                    Glide.with(this@ExtraTimeChargesActivity).load(BuildConfig.MEDIA_URL + it)
                         .into(binding.profileImage1)
                 }
                 propertyData?.hosted_by?.let {
@@ -496,7 +498,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 propertyData?.images?.let {
                     if (it.isNotEmpty()) {
                         Glide.with(this@ExtraTimeChargesActivity)
-                            .load(AppConstant.BASE_URL + it.get(0))
+                            .load(BuildConfig.MEDIA_URL + it.get(0))
                             .into(binding.ivProImage)
                     }
                 }
@@ -513,7 +515,10 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     binding.tvMiles.text = "$it miles away"
                 }
                 date?.let {
-                    binding.tvDate.text = date
+                    Log.d(ErrorDialog.TAG,it)
+                    var dummyData = formatDateyyyyMMddToMMMMddyyyy(it)
+                    binding.tvDate.text = dummyData
+                 //   binding.tvDate.text = date
                 }
               /*  stTime?.let { resp ->
                     edTime?.let {
@@ -580,9 +585,15 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             }
             addOnList?.let {
                 if (it.isNotEmpty()){
+                    binding.rladdOn.visibility = View.VISIBLE
                     val total = calculateTotalPrice(addOnList)
+                    if (total==0.0){
+                        binding.rladdOn.visibility = View.GONE
+                    }
                     binding.tvAddOnPrice.text = "$${truncateToTwoDecimalPlaces(total.toString())}"
                     totalPrice += total
+                }else{
+                    binding.rladdOn.visibility = View.GONE
                 }
             }
             // Apply Discount if Hours Exceed Discount Hour

@@ -32,7 +32,7 @@ class LocaleAdapter(
         var languageName = locale.name
 
         holder.countryName.visibility = View.VISIBLE
-Log.d("checkLanguagesName",thirdList.toString())
+        Log.d("checkLanguagesName",thirdList.toString())
 
         if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
             holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)

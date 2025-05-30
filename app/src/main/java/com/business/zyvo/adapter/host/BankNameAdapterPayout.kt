@@ -86,12 +86,8 @@ class BankNameAdapterPayout(private val context: Context, private var list: Muta
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
             dialogDelete(position ,id)
-
-
             popupWindow.dismiss()
         }
-
-
 
         // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)
