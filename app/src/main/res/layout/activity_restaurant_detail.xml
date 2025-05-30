@@ -713,6 +713,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
+                            android:visibility="gone"
                             android:layout_marginEnd="@dimen/_10sdp"
                             android:src="@drawable/ic_drop_down" />
 
@@ -757,6 +758,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
+                            android:visibility="gone"
                             android:layout_marginEnd="@dimen/_10sdp"
                             android:src="@drawable/ic_drop_down" />
                     </RelativeLayout>
