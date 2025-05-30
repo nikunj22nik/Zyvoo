@@ -88,7 +88,7 @@ class PlaceOpenFragment : Fragment() {
             property_status = it.getString(AppConstant.property_status).toString()
             property_review_count = it.getString(AppConstant.property_review_count).toString()
             distanceMiles = it.getString(AppConstant.distance_miles).toString()
-            title = it.getString(AppConstant.title).toString()git 
+            title = it.getString(AppConstant.title).toString()
         }
     }
 
