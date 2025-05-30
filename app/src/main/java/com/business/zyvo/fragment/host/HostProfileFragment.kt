@@ -3129,8 +3129,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             "language" -> {
                 if (obj < languageList.size - 1) {
                     deleteLanguageApi(obj)
-                    languageList.removeAt(obj)
-                    addLanguageSpeakAdapter.updateLanguage(languageList)
                 }
             }
 
@@ -3389,6 +3387,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
+                                                SessionManager(requireContext()).removeLanguage(requireActivity(),languageList.get(index).name)
+                                                  languageList.removeAt(index)
+                                                addLanguageSpeakAdapter.updateLanguage(languageList)
                                                 Toast.makeText(
                                                     requireContext(),
                                                     resp.first,
