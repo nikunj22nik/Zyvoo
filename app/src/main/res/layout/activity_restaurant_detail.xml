@@ -694,6 +694,8 @@
                             android:layout_marginStart="@dimen/_7sdp"
                             android:src="@drawable/ic_clock_new" />
 
+
+                        
                         <TextView
                             android:id="@+id/textHr"
                             android:layout_width="wrap_content"
