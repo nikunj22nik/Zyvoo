@@ -36,7 +36,8 @@ class AdapterProAddOn(var context: Context, var list : MutableList<AddOn>,
            holder.binding.tvName.text = it
         }
         displayList.get(position)?.price.let {
-            holder.binding.tvPrice.text = "$$it / Item"
+            val rPrice = it?.toDouble()?.toInt().toString()
+            holder.binding.tvPrice.text = "$$rPrice / Item"
         }
         if(list.get(position).checked){
             holder.binding.laypout.setBackgroundResource(R.drawable.bg_four_side_selected_blue)

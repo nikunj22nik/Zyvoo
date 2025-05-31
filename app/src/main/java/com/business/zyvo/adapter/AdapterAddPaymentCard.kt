@@ -26,6 +26,7 @@ class AdapterAddPaymentCard(var context : Context, var list: MutableList<UserCar
                 val icon: Int = CardBrand.valueOf(currentItem.brand!!).icon
                 binding.textCardNumber.setCompoundDrawablesWithIntrinsicBounds(context.getDrawable(icon), null, null, null)
             }catch (e:java.lang.Exception){
+
             }
 
             if (currentItem.is_preferred){
@@ -33,10 +34,14 @@ class AdapterAddPaymentCard(var context : Context, var list: MutableList<UserCar
             }else{
                 binding.textPreferred.visibility = View.GONE
             }
-
-            binding.root.setOnClickListener {
-                setpreferred.set(position)
+            if (currentItem.is_preferred) {
+                binding.root.setOnClickListener(null) // remove click listener
+            } else {
+                binding.root.setOnClickListener {
+                    setpreferred.set(position)
+                }
             }
+
 
         }
 

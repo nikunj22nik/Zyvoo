@@ -51,14 +51,8 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
     override fun onBindViewHolder(holder: ViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currentItem = list[position]
 
-        holder.binding.cl1.setOnClickListener {
-            //  listener.itemClick(position)
-//            mListener.onItemClick(position)
-            Log.d("Adapter", "cl1 clicked at position $position")
-        }
-
         Log.d("TESTING_ID","Here in a adapter "+list.get(position).property_id.toString())
-
+//is_instant_book
        var commonAuthWorkUtils = CommonAuthWorkUtils(context,null)
 
         if(!commonAuthWorkUtils.isScreenLarge(context)){
@@ -66,18 +60,30 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         }
 
         if (position == 1 || position == 3){
-            holder.binding.textInstantBook.visibility = View.GONE
             holder.binding.imageReward.visibility = View.GONE
         }
         else{
-            holder.binding.textInstantBook.visibility = View.GONE
             holder.binding.imageReward.visibility = View.GONE
+        }
+
+        if (currentItem.is_instant_book == 0){
+            holder.binding.textInstantBook.visibility = View.GONE
+        }
+        else{
+            holder.binding.textInstantBook.visibility = View.VISIBLE
         }
         // Setup ViewPager and its adapter
         val viewPagerAdapter = ViewPagerAdapter(mutableListOf(),context, object : OnLogClickListener {
             override fun itemClick(items: MutableList<ViewpagerModel>) {
                 //  listener.itemClick(position)
 //                mListener.onItemClick(position)
+
+
+            }
+        })
+        viewPagerAdapter.setOnItemClickListener(object :ViewPagerAdapter.onItemClickListener{
+            override fun onItemClick() {
+                mListener.onItemClick(list.get(position),AppConstant.placeOpenActivity)
             }
         })
 
@@ -108,6 +114,11 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         holder.binding.imageAddWish.setOnClickListener {
             showPopupWindow(holder.binding.imageAddWish,position)
         }
+
+        holder.binding.cl1.setOnClickListener {
+            Log.d("Testing","Inside of onclick listener")
+            mListener.onItemClick(list.get(position),AppConstant.placeOpenActivity)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -134,8 +145,6 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
             dialogDelete(position)
-
-
             popupWindow.dismiss()
         }
 

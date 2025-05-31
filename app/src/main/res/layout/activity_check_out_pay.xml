@@ -129,7 +129,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_4ssp"
-                            android:id="@+id/ivInsta"
+                            android:id="@+id/ivStar"
                             android:src="@drawable/ic_badge_img" />
 
                     </LinearLayout>
@@ -172,6 +172,7 @@
                         android:layout_marginTop="@dimen/_8ssp"
                         android:layout_marginEnd="@dimen/_15sdp"
                         android:layout_marginStart="@dimen/_15sdp"
+                        android:visibility="gone"
                         android:background="@drawable/bg_four_corner_light_black">
 
                         <TextView
@@ -180,7 +181,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/_5sdp"
                             android:text="Message the host"
-                           android:fontFamily="@font/poppins"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"/>
 
@@ -251,7 +252,9 @@
                             android:paddingVertical="@dimen/_6sdp"
                             android:layout_below="@id/doubt"
                             android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginBottom="@dimen/_5sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:visibility="visible"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             >
 
@@ -276,10 +279,12 @@
                             android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
+                            android:visibility="gone"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             >
 
                             <EditText
+                                android:id="@+id/et_share_message"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Share a message"
@@ -293,6 +298,7 @@
 
                         </RelativeLayout>
                         <RelativeLayout
+                            android:id="@+id/rl_submit_message"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_33sdp"
                             android:background="@drawable/bg_save_button"
@@ -329,17 +335,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:weightSum="1"
+                    android:weightSum="1">
 
-                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_65sdp"
+                        android:layout_marginVertical="@dimen/_10sdp"
+                        android:layout_weight="0.3"
+                        app:cardCornerRadius="@dimen/_7sdp">
 
-                    <com.google.android.material.imageview.ShapeableImageView
+                        <!-- Image Placeholder -->
+                        <ImageView
+                            android:id="@+id/ivProImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/image_hotel" />
+                    </androidx.cardview.widget.CardView>
+                    <!--<com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_65sdp"
                         android:layout_marginVertical="@dimen/_10sdp"
                         android:layout_weight="0.3"
                         android:id="@+id/ivProImage"
-                        android:src="@drawable/ic_img_check_out_pay" />
+                        android:src="@drawable/ic_img_check_out_pay" />-->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -377,6 +396,8 @@
                                 android:hint="5.0"
                                 android:textColorHint="@color/black"
                                 android:id="@+id/tvRating"
+                                android:textSize="@dimen/_12sdp"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="#FCA800" />
 
                             <TextView
@@ -386,6 +407,8 @@
                                 android:hint="(1k+)"
                                 android:textColorHint="@color/black"
                                 android:id="@+id/tvTotalReview"
+                                android:textSize="@dimen/_12sdp"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="#A4A4A4" />
                         </LinearLayout>
 
@@ -405,6 +428,8 @@
                                 android:layout_marginStart="@dimen/_7sdp"
                                 android:hint="0 miles away"
                                 android:id="@+id/tvMiles"
+                                android:textSize="@dimen/_12sdp"
+                                android:fontFamily="@font/poppins"
                                 android:textColorHint="@color/a4a4a4"
                                 android:textColor="@color/a4a4a4" />
 
@@ -510,8 +535,7 @@
                         android:id="@+id/tvZyvoServiceFee"
                         android:fontFamily="@font/poppins"
                         android:textColorHint="@color/black"
-                        android:textColor="@color/black"/>
-" />
+                        android:textColor="@color/black"/>" />
 
                 </RelativeLayout>
 
@@ -519,9 +543,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-
-                    >
+                    android:layout_marginTop="@dimen/_8sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -541,18 +563,17 @@
                         android:id="@+id/tvTaxesPrice"
                         android:fontFamily="@font/poppins"
                         android:textColorHint="@color/black"
-                        android:textColor="@color/black"/>
-" />
+                        android:textColor="@color/black"/>" />
 
                 </RelativeLayout>
+                <!--android:layout_marginBottom="@dimen/_10sdp"-->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:id="@+id/llDiscountLabel"
-                    android:visibility="gone"
-                    android:layout_marginBottom="@dimen/_10sdp">
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -568,20 +589,19 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:hint="$0"
+                        android:text="$0"
                         android:id="@+id/tvDiscount"
                         android:textColorHint="@color/black"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"/>
-                    " />
+                        android:textColor="@color/black"/> />
 
                 </RelativeLayout>
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:layout_marginBottom="@dimen/_10sdp">
+                    android:id="@+id/rladdOn"
+                    android:layout_marginTop="@dimen/_8sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -602,7 +622,7 @@
                         android:textColorHint="@color/black"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/black"/>
-" />
+                     />
 
                 </RelativeLayout>
 
@@ -698,6 +718,7 @@
                             android:layout_toRightOf="@id/img_calendar"
                             android:text="October 22, 2023"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black" />
 
                         <ImageView
@@ -737,6 +758,7 @@
                             android:layout_toRightOf="@id/clock_1"
                             android:hint="2 Hours"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
                             android:textColorHint="@color/black"
                             android:textColor="@color/black" />
 
@@ -768,6 +790,7 @@
                             android:layout_toRightOf="@id/clock_old"
                             android:text="From 01pm to 03pm"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black" />
 
                         <ImageView
@@ -1097,7 +1120,7 @@
                                         android:background="@drawable/bg_four_side_grey_corner"
                                         >
                                         <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/spinnerLanguage"
+                                            android:id="@+id/spinnerDate"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
@@ -1130,7 +1153,7 @@
                                         >
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/spinnermonth"
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="@dimen/_80sdp"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textSize = "@dimen/_10ssp"
@@ -1258,6 +1281,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_14sdp"
+                android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_12sdp"
                 android:text="Show More" />
 
             <View
@@ -1276,7 +1301,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-
                     android:text="Payment Method"
                     android:textSize="@dimen/_14sdp"
                     android:fontFamily="@font/poppins"
@@ -1328,8 +1352,9 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Credit or Debit Card"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_12ssp" />
 
 
                 <ImageView
@@ -1376,6 +1401,7 @@
                         android:layout_marginHorizontal="@dimen/_12sdp"
                         android:text="Add New Card"
                         android:textSize="@dimen/_13sdp"
+                        android:fontFamily="@font/poppins"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -1411,7 +1437,7 @@
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:textColor="#000000"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_12ssp" />
 
             <View
                 android:layout_width="match_parent"
@@ -1456,7 +1482,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:text="Parking"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12ssp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -1509,7 +1535,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:text="Host rules"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12ssp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -1561,6 +1587,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:text="Confirm &amp; Pay"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/poppins"
                     android:textStyle="bold" />
 
             </RelativeLayout>

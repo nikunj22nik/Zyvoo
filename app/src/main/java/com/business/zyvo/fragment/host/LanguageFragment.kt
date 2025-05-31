@@ -16,7 +16,8 @@ import com.business.zyvo.databinding.FragmentLanguageBinding
 
 class LanguageFragment : Fragment() {
 
-    lateinit var binding :FragmentLanguageBinding
+    private var _binding :FragmentLanguageBinding? = null
+    private val binding get() =  _binding!!
     lateinit var adapterLanguage :LanguageAdapter
 
 
@@ -28,7 +29,7 @@ class LanguageFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-         binding = FragmentLanguageBinding.inflate(LayoutInflater.from(requireContext()), container, false)
+        _binding = FragmentLanguageBinding.inflate(LayoutInflater.from(requireContext()), container, false)
          adapterLanguage =LanguageAdapter(requireContext(),AppConstant.countriesAndLanguages)
         val screenWidth = getScreenWidth()
         val columns = if (screenWidth < 500) {
@@ -57,4 +58,8 @@ class LanguageFragment : Fragment() {
         return metrics.widthPixels
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 }

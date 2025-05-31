@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.databinding.LayoutRecentViewBinding
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
@@ -25,7 +26,7 @@ class RecentViewAdapter(
         RecyclerView.ViewHolder(binding.root) {
         fun bind(currentItem: WishlistItem) {
             currentItem.last_saved_property_image.let {
-                Glide.with(context).load(AppConstant.BASE_URL + it).into( binding.imageWishList)
+                Glide.with(context).load(BuildConfig.MEDIA_URL + it).into( binding.imageWishList)
             }
             currentItem.wishlist_name.let {
                 binding.textTitle.setText(it)

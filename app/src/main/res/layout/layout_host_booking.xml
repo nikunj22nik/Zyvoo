@@ -20,24 +20,27 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imagePicture"
+            android:layout_width="@dimen/_75sdp"
+            android:layout_height="@dimen/_75sdp"
+            android:background="@drawable/profle_picture_ring"
+            android:padding="@dimen/_15sdp"
+            android:src="@drawable/ic_img_girl_dumm"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imagePicture"
-                android:layout_width="@dimen/_75sdp"
-                android:layout_height="@dimen/_75sdp"
-                android:background="@drawable/profle_picture_ring"
-                android:padding="@dimen/_15sdp"
-
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@drawable/ic_img_girl_dumm"
-                />
-
-
-
-
+        <ImageView
+            android:id="@+id/imageOverlay"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_marginEnd="@dimen/_15ssp"
+            android:layout_marginBottom="@dimen/_10ssp"
+            android:src="@drawable/icon_bte"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/imagePicture"
+            app:layout_constraintEnd_toEndOf="@id/imagePicture" />
 
         <ImageView
             android:id="@+id/imageThreeDots"
@@ -62,61 +65,24 @@
             android:maxLines="1"
             android:text="Katelyn Francy"
             android:textColor="@color/black"
-            android:textSize="@dimen/_13ssp"
+            android:textSize="@dimen/_14ssp"
+            android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@id/imagePicture"
             app:layout_constraintTop_toTopOf="parent" />
-
-
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/fl"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:alignItems="center"
-            app:flexDirection="row"
-            app:flexWrap="wrap"
-            app:justifyContent="flex_start"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/imagePicture"
-            app:layout_constraintTop_toBottomOf="@+id/textName">
-
-            <TextView
-                android:id="@+id/textStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10ssp"
-                android:background="@drawable/button_bg"
-                android:fontFamily="@font/poppins"
-                android:maxLines="1"
-                android:paddingHorizontal="@dimen/_10ssp"
-                android:paddingVertical="@dimen/_3sdp"
-                android:text="Finished"
-                android:textColor="#3A4B4C"
-                android:textSize="@dimen/_11ssp" />
-
-            <TextView
-                android:id="@+id/textDate"
-                android:layout_width="@dimen/_120sdp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_12ssp"
-                android:fontFamily="@font/poppins"
-                android:maxWidth="@dimen/_173sdp"
-                android:maxLines="1"
-                android:text="October 22, 2023"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp" />
-        </com.google.android.flexbox.FlexboxLayout>
-
 
         <LinearLayout
             android:id="@+id/llApproveAndDecline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_10sdp"
             android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/fl"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/imagePicture"
-            app:layout_constraintTop_toBottomOf="@+id/fl">
+
+            app:layout_constraintTop_toBottomOf="@id/textName">
 
 
             <TextView
@@ -142,17 +108,57 @@
 
         </LinearLayout>
 
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/fl"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="@dimen/_5sdp"
+            android:visibility="visible"
+            app:alignItems="center"
+            app:flexDirection="row"
+            app:flexWrap="wrap"
+            app:justifyContent="flex_start"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imagePicture"
+            app:layout_constraintTop_toBottomOf="@+id/llApproveAndDecline">
+
+            <TextView
+                android:id="@+id/textStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10ssp"
+                android:background="@drawable/button_bg"
+                android:fontFamily="@font/poppins"
+                android:maxLines="1"
+                android:paddingHorizontal="@dimen/_10ssp"
+                android:paddingVertical="@dimen/_3sdp"
+                android:text="Finished"
+                android:textColor="#3A4B4C"
+                android:textSize="@dimen/_11ssp" />
+
+            <TextView
+                android:id="@+id/textDate"
+                android:layout_width="@dimen/_120sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12ssp"
+                android:fontFamily="@font/poppins"
+                android:maxWidth="@dimen/_173sdp"
+                android:maxLines="1"
+                android:text="October 22, 2023"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
+        </com.google.android.flexbox.FlexboxLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
 
     <View
         android:id="@+id/view"
         android:layout_width="@dimen/_85sdp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/clMain"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clMain" />
 
     <LinearLayout
         android:id="@+id/llDeclineRequest"
@@ -224,11 +230,11 @@
 
             <EditText
                 android:id="@+id/other_reason_et"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@null"
                 android:fontFamily="@font/poppins"
                 android:hint="Other reason.."
-                android:background="@null"
                 android:textColor="#663F3D56"
                 android:textSize="@dimen/_10ssp"
                 android:textStyle="bold" />
@@ -287,7 +293,6 @@
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toEndOf="@+id/view"
         app:layout_constraintTop_toBottomOf="@+id/clMain">
-
 
 
         <EditText

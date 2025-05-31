@@ -20,6 +20,11 @@
         android:label="fragment_terms_services"
         tools:layout="@layout/fragment_terms_services" />
 
+    <fragment
+        android:id="@+id/chatDetailsFragment"
+        android:name="com.business.zyvo.fragment.guest.ChatDetailsFragment"
+        android:label="fragment_chat_details"
+        tools:layout="@layout/fragment_chat_details" />
 
     <fragment android:id="@+id/host_manage_property_frag"
         android:name="com.business.zyvo.fragment.host.ManagePlaceFragment"
@@ -58,7 +63,7 @@
     </fragment>
 
     <fragment android:id="@+id/hostPaymentFragment"
-        android:name="com.business.zyvo.fragment.host.PaymentsFragment"
+        android:name="com.business.zyvo.fragment.host.payments.PaymentsFragment"
         android:label="host_payment"
         />
 
@@ -80,7 +85,7 @@
 
     <fragment
         android:id="@+id/notificationFragment"
-        android:name="com.business.zyvo.fragment.both.NotificationFragment"
+        android:name="com.business.zyvo.fragment.both.notificationfragment.NotificationFragment"
         android:label="NotificationFragment" />
 
     <fragment
@@ -108,5 +113,20 @@
         android:name="com.business.zyvo.fragment.host.PayoutFragment"
         android:label="fragment_payout"
         tools:layout="@layout/fragment_payout" />
+    <fragment
+        android:id="@+id/placeOpenFragment"
+        android:name="com.business.zyvo.fragment.host.placeOpen.PlaceOpenFragment"
+        android:label="fragment_place_open"
+        tools:layout="@layout/fragment_place_open" />
+    <fragment
+        android:id="@+id/hostPayoutFragment"
+        android:name="com.business.zyvo.fragment.host.hostPayout.HostPayoutFragment"
+        android:label="fragment_host_payout"
+        tools:layout="@layout/fragment_host_payout" />
+    <fragment
+        android:id="@+id/filterPaymentStatusFragment"
+        android:name="com.business.zyvo.fragment.host.FilterPaymentStatusFragment"
+        android:label="fragment_filter_payment_status"
+        tools:layout="@layout/fragment_filter_payment_status" />
 
 </navigation>

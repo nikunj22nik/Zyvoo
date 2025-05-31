@@ -12,7 +12,6 @@
         android:id="@+id/fragmentContainerView_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         app:layout_constraintBottom_toTopOf="@id/lay1"
         app:navGraph="@navigation/guest_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
@@ -96,16 +95,19 @@ android:textStyle="bold"
                    />
 
                 <RelativeLayout
+                    android:id="@+id/rl_chat_number"
                     android:layout_width="@dimen/_14sdp"
                     android:layout_height="@dimen/_14sdp"
                     android:background="@drawable/circular_green"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/_15sdp"
+                    android:visibility="visible"
                     >
                     <TextView
+                        android:id="@+id/tv_chat_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="3"
+                        android:text="0"
                        android:layout_centerInParent="true"
                         android:textSize="@dimen/_8sdp"
                         />
@@ -161,8 +163,10 @@ android:textStyle="bold"
                     android:background="@drawable/circular_green"
                     android:layout_toRightOf="@id/imageBooking"
                     android:layout_marginStart="-15dp"
+                    android:visibility="gone"
                     >
                     <TextView
+                        android:id="@+id/tv_booking_number"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2"

@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
@@ -27,8 +29,10 @@ import java.util.regex.Pattern
 @AndroidEntryPoint
 class ContactUsFragment : Fragment() , OnMapReadyCallback {
 
-    lateinit var binding :FragmentContactUsBinding
+    private var _binding :FragmentContactUsBinding? = null
+    private val binding get() = _binding!!
     private lateinit var googleMap: GoogleMap
+    lateinit var navController: NavController
     private val viewModel : ContactUsViewModel by lazy {
      ViewModelProvider(this)[ContactUsViewModel::class.java]
     }
@@ -40,7 +44,7 @@ class ContactUsFragment : Fragment() , OnMapReadyCallback {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        binding = FragmentContactUsBinding.inflate(inflater, container, false)
+        _binding = FragmentContactUsBinding.inflate(inflater, container, false)
         session = SessionManager(requireContext())
         val mapView = binding.map
         mapView.onCreate(savedInstanceState)
@@ -51,7 +55,7 @@ class ContactUsFragment : Fragment() , OnMapReadyCallback {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        navController = Navigation.findNavController(view)
 
         lifecycleScope.launch {
             viewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
@@ -78,7 +82,9 @@ class ContactUsFragment : Fragment() , OnMapReadyCallback {
             }
         }
 
-
+        binding.imageBackIcon.setOnClickListener {
+            navController.navigateUp()
+        }
     }
     private fun isValidEmail(email: String): Boolean {
         val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"
@@ -93,6 +99,9 @@ class ContactUsFragment : Fragment() , OnMapReadyCallback {
                     is NetworkResult.Success -> {
                         if (it.data != null){
                             LoadingUtils.showSuccessDialog(requireContext(),it.data)
+                            binding.etName.text.clear()
+                            binding.etEmail.text.clear()
+                            binding.etMessage.text.clear()
                         }
                     }
                     is NetworkResult.Error -> {
@@ -118,7 +127,11 @@ class ContactUsFragment : Fragment() , OnMapReadyCallback {
         }else if (binding.etEmail.text.isEmpty()){
             showErrorDialog(requireContext(), AppConstant.email)
             return false
-        }else if (binding.etMessage.text.isEmpty()){
+        }else if (!isValidEmail(binding.etEmail.text.toString())){
+            showErrorDialog(requireContext(),AppConstant.invalideemail)
+            return false
+        }
+        else if (binding.etMessage.text.isEmpty()){
             showErrorDialog(requireContext(), AppConstant.message)
             return false
         }else if (!isValidEmail(binding.etEmail.text.toString().trim())){
@@ -141,5 +154,10 @@ class ContactUsFragment : Fragment() , OnMapReadyCallback {
 
     }
 
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
 
 }

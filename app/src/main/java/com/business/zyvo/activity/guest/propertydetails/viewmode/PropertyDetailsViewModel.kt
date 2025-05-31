@@ -38,20 +38,17 @@ class PropertyDetailsViewModel @Inject constructor(private var repository: ZyvoR
         }
     }
 
-    suspend fun filterPropertyReviews(propertyId :String,
-                                      filter :String,
-                                      page :String):
+    suspend fun filterPropertyReviews(propertyId :String, filter :String, page :String):
             Flow<NetworkResult<Pair<JsonArray, JsonObject>>> {
-        return repository.filterPropertyReviews(propertyId,
-            filter,page).onEach {
+        return repository.filterPropertyReviews(propertyId, filter, page).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true
                 } is NetworkResult.Success -> {
-                isLoading.value = false
-            } else -> {
-                isLoading.value = false
-            }
+                    isLoading.value = false
+                 } else -> {
+                    isLoading.value = false
+              }
             }
         }
     }
@@ -115,6 +112,26 @@ class PropertyDetailsViewModel @Inject constructor(private var repository: ZyvoR
         return repository.saveItemInWishlist(userId,
             property_id,
             wishlist_id).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+
+    suspend fun checkHostPropertyAvailability(propertyId :String,
+                                              startTime :String,
+                                              endTime :String):
+            Flow<NetworkResult<JsonObject>> {
+        return repository.checkHostPropertyAvailability(propertyId,
+            startTime,
+            endTime).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true

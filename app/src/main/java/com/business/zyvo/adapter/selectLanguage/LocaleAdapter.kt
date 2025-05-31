@@ -1,47 +1,72 @@
 package com.business.zyvo.adapter.selectLanguage
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.OnLocalListener
 import com.business.zyvo.R
+import com.business.zyvo.model.AddLanguageModel
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.PrepareData
 import java.util.Locale
 
-class LocaleAdapter(private val locales: List<Locale>,var listner : OnLocalListener) :
-    RecyclerView.Adapter<LocaleAdapter.LocaleViewHolder>() {
+class LocaleAdapter(
+    private val locales: List<Locale>, var listner: OnLocalListener, var thirdList: MutableList<AddLanguageModel> = PrepareData.languagesWithRegions
+) : RecyclerView.Adapter<LocaleAdapter.LocaleViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): LocaleViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_language, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_language, parent, false)
         return LocaleViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: LocaleViewHolder, position: Int) {
-        val locale = locales[position]
 
+        val locale = thirdList[position]
+        var languageName = locale.name
 
-        // Get language and region names from the Locale
-        var languageName = locale.getDisplayLanguage(locale) ?: "Unknown Language"
-        val regionName = locale.getDisplayCountry(locale) ?: "Unknown Region"
+        holder.countryName.visibility = View.VISIBLE
+        Log.d("checkLanguagesName",thirdList.toString())
 
-holder.ll1.setOnClickListener {
-    listner.onItemClick(languageName)
+        if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
+            holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)
+        }
+        else{
+            holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
+        }
 
-}
+        holder.countryName.setText(locale.country)
+
+        holder.ll1.setOnClickListener {
+           if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
+//                  SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context,languageName)
+//                   holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
+           }
+           else {
+               var list1 = SessionManager(holder.itemView.context).getLanguages((holder.itemView.context)).toMutableList()
+
+               list1.add(locale)
+
+               SessionManager(holder.itemView.context).saveLanguages(holder.itemView.context,list1)
+               holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)
+           }
+           listner.onItemClick(languageName)
+        }
+
         holder.languageTitle.text = languageName
-        holder.countryName.text = regionName
     }
 
     override fun getItemCount(): Int {
-        return locales.size
+        return thirdList.size
     }
 
     class LocaleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val languageTitle: TextView = itemView.findViewById(R.id.languageTitle)
         val countryName: TextView = itemView.findViewById(R.id.countryName)
-        val ll1: LinearLayout = itemView.findViewById(R.id.ll1)
+        val ll1: RelativeLayout = itemView.findViewById(R.id.ll1)
     }
+
 }

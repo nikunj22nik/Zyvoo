@@ -2,12 +2,14 @@ package com.business.zyvo.adapter.guest
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.activity.guest.propertydetails.model.Review
 import com.business.zyvo.databinding.AdapterReviewsBinding
@@ -29,20 +31,21 @@ RecyclerView.Adapter<AdapterProReview.ViewHolder>() {
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = list?.get(position)
+
         currentItem?.profile_image?.let {
-            Glide.with(context).load(AppConstant.BASE_URL + currentItem).into(holder.binding.circleImageView)
+            Glide.with(context).load(BuildConfig.MEDIA_URL + it).into(holder.binding.circleImageView)
         }
         currentItem?.reviewer_name?.let {
-            holder.binding.tvReviewName.text = it
+            holder.binding.txtName.text = it
         }
         currentItem?.review_message?.let {
-            holder.binding.tvHostDetail.text = it
+            holder.binding.txtReviews.text = it
         }
         currentItem?.review_rating?.let {
-            holder.binding.reviewratingbar.rating = it.toFloat()
+            holder.binding.ratingbar.rating = it.toFloat()
         }
         currentItem?.review_date?.let {
-            holder.binding.tvReviewDate.text = it
+            holder.binding.tvDate.text = it
         }
     }
 

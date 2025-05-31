@@ -25,6 +25,7 @@ pagingRuntimeKtx = "3.3.6"
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.2.0"
 firebaseMessagingKtx = "24.1.0"
+annotations = "15.0"
 
 
 [libraries]
@@ -52,6 +53,7 @@ androidx-paging-runtime-ktx = { group = "androidx.paging", name = "paging-runtim
 
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+annotations = { group = "org.jetbrains", name = "annotations", version.ref = "annotations" }
 
 
 [plugins]

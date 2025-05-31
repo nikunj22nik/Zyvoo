@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="301d48d9-fab3-4bf1-9dcf-8d8940fdb0f9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/business/zyvo/MyApp.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/business/zyvo/MyApp.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/business/zyvo/activity/GuesMain.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/business/zyvo/activity/GuesMain.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/business/zyvo/activity/guest/FiltersActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/business/zyvo/activity/guest/FiltersActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/business/zyvo/activity/guest/propertydetails/RestaurantDetailActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/business/zyvo/activity/guest/propertydetails/RestaurantDetailActivity.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/business/zyvo/adapter/guest/ActivitiesAdapter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/business/zyvo/adapter/guest/ActivitiesAdapter.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/business/zyvo/fragment/guest/home/GuestDiscoverFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/business/zyvo/fragment/guest/home/GuestDiscoverFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/business/zyvo/fragment/host/ManagePlaceFragment.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/business/zyvo/fragment/host/ManagePlaceFragment.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/business/zyvo/repository/ZyvoRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/business/zyvo/repository/ZyvoRepositoryImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/activity_filters.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/activity_filters.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2w7HtLyFnEhGLpuEGlD13xFn22p" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "android.gradle.sync.needed": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="301d48d9-fab3-4bf1-9dcf-8d8940fdb0f9" name="Changes" comment="" />
+      <created>1745385905749</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1745385905749</updated>
+    </task>
+    <servers />
+  </component>
+</project>

@@ -48,16 +48,16 @@ class PaymentViewModel @Inject constructor(private var repository: ZyvoRepositor
 
         _list.value = transactions
 
-        val cards = ArrayList<PaymentCardModel>().apply {
-            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-            add(PaymentCardModel("Indian Bank","1243","1243","James Bond"))
-            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-        }
+//        val cards = ArrayList<PaymentCardModel>().apply {
+//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
+//            add(PaymentCardModel("Indian Bank","1243","1243","James Bond"))
+//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
+//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
+//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
+//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
+//        }
 
-        _paymentCardList.value = cards
+      //  _paymentCardList.value = cards
 
     }
 

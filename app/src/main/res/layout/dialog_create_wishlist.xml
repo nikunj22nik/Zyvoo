@@ -99,7 +99,7 @@
         android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:fontFamily="@font/poppins"
-        android:text="max 50 characters"
+        android:text="Max 50 characters"
         android:textColor="#80000000"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etDescription" />

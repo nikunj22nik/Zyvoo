@@ -31,7 +31,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener1 {
-    lateinit var binding: FragmentHostHelpCenterBinding
+    private var _binding: FragmentHostHelpCenterBinding? = null
+    private  val binding get() = _binding!!
     private val viewModel: HelpCenterViewModel by lazy {
         ViewModelProvider(this)[HelpCenterViewModel::class.java]
     }
@@ -42,18 +43,12 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
     var session: SessionManager? = null
     var type: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentHostHelpCenterBinding.inflate(
+        _binding = FragmentHostHelpCenterBinding.inflate(
             LayoutInflater.from(requireActivity()),
             container,
             false
@@ -78,7 +73,6 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
                     .equals(AppConstant.Guest)
             ) {
                 binding.radioGuest.isChecked = true
-
                 binding.radioHost.isChecked = false
                 type = "guest"
                 Log.d("TESTING_ANDROID", "Guest")
@@ -105,6 +99,7 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
         }
+        binding.textGuidesForGuests.setText("Guides for "+ (session?.getUserType() ?: ""))
         lifecycleScope.launch {
             viewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -181,7 +176,7 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
 
             R.id.textBrowseAllArticle -> {
                 val bundle = Bundle()
-                bundle.putString(AppConstant.article, "Article")
+                bundle.putString(AppConstant.type, "Article")
                 findNavController().navigate(R.id.browse_article_host, bundle)
             }
         }
@@ -194,6 +189,11 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
         bundle.putString(AppConstant.Id,obj.toString())
         bundle.putString(AppConstant.textType,text)
         findNavController().navigate(R.id.browse_aricle_details,bundle)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 }

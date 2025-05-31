@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginBottom="@dimen/_10sdp"
     android:weightSum="1">
 
@@ -50,7 +51,7 @@
         android:id="@+id/rlThreeDot"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.1"
+        android:layout_weight="0.15"
         android:layout_marginTop="10dp"
         >
         <ImageView
@@ -59,7 +60,31 @@
             android:src="@drawable/ic_three_dots"
             android:layout_gravity="end"
             android:layout_alignParentEnd="true"
-            android:layout_marginEnd="5sp"
+            android:layout_marginEnd="20dp"
+            />
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_preferred"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_two_side_corners_green"
+        android:paddingHorizontal="@dimen/_10sdp"
+        android:paddingVertical="@dimen/_6sdp"
+        android:layout_weight="0.15"
+        android:layout_marginEnd="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:visibility="gone"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preferred"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="@dimen/_8sdp"
+            android:fontFamily="@font/poppins"
             />
     </RelativeLayout>
 

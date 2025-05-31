@@ -20,7 +20,7 @@ class TermsViewModel @Inject constructor(
     val isLoading = MutableLiveData<Boolean>()
 
     suspend fun getTermCondition():
-            Flow<NetworkResult<String>> {
+            Flow<NetworkResult<Pair<String,String>>> {
         return repository.getTermCondition().onEach {
             when (it) {
                 is NetworkResult.Loading -> {

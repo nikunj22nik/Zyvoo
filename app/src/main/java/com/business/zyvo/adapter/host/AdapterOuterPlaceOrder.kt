@@ -10,6 +10,8 @@ import com.business.zyvo.databinding.AdapterOuterPlaceOrderBinding
 
 class AdapterOuterPlaceOrder(private var context : Context, private var list: MutableList<Pair<String, List<String>>>) :
     RecyclerView.Adapter<AdapterOuterPlaceOrder.ViewHolder>() {
+    private var scrollPosition = 0
+
 
     class ViewHolder(var binding: AdapterOuterPlaceOrderBinding) : RecyclerView.ViewHolder(binding.root) {}
 
@@ -26,21 +28,21 @@ class AdapterOuterPlaceOrder(private var context : Context, private var list: Mu
     override fun onBindViewHolder(holder: AdapterOuterPlaceOrder.ViewHolder, position: Int) {
        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
       //  val layoutManager = NoHorizontalScrollLayoutManager(context)
-        holder.binding.recyclerInnerPlaceOrder.layoutManager = layoutManager
-
-        var adapter = AdapterInnerPlaceOrder(list.get(position).second)
+//        holder.binding.recyclerInnerPlaceOrder.layoutManager = layoutManager
+//
+//        var adapter = AdapterInnerPlaceOrder(list.get(position).second)
        if(position ==0){
            holder.binding.tvTime.visibility = View.INVISIBLE
-            adapter.firstRow = true
+          //  adapter.firstRow = true
        }
         else {
            holder.binding.tvTime.visibility = View.VISIBLE
            holder.binding.tvTime.setText(list.get(position).first)
-           adapter.firstRow = false
+           //adapter.firstRow = false
        }
 
-        holder.binding.recyclerInnerPlaceOrder.adapter = adapter
-    }
 
+
+    }
 
 }

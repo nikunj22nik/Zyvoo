@@ -240,7 +240,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_maximum"
                         android:layout_marginStart="@dimen/_10sdp"
-                        android:text="$100"
+                        android:text="$2000"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_14sdp"
                         android:textStyle="bold" />
@@ -273,18 +273,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+
                         android:layout_marginStart="@dimen/_10sdp"
                         android:src="@drawable/ic_location_line" />
 
                     <AutoCompleteTextView
                         android:id="@+id/autocomplete_location"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/_7sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
+
                         android:background="@null"
                         android:hint="Location"
                         android:singleLine="true"
+                        android:gravity="center_vertical"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 
@@ -321,7 +323,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_7sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
-                        android:text="Date"
+                        android:hint="Date"
+                        android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
 
@@ -441,7 +444,8 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_7sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
-                        android:text="Time"
+                        android:hint="Time"
+                        android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
 
@@ -761,6 +765,7 @@
                 android:text="Parking space capacity"
                 android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
+                android:visibility="gone"
                 android:textSize="@dimen/_12sdp"
                 android:textStyle="bold" />
 
@@ -769,6 +774,7 @@
                 android:layout_height="@dimen/_34sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
+                android:visibility="gone"
                 android:background="@drawable/bg_outer_manage_place"
                 android:paddingHorizontal="@dimen/_4sdp"
                 android:weightSum="9">
@@ -899,6 +905,7 @@
                         android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@null"
+                        android:id="@+id/etParking"
                         android:hint="Type.."
                         android:textColor="#3F3D56" />
 
@@ -918,6 +925,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bedrooms"
+                android:id="@+id/tvbadroom"
                 android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
@@ -930,6 +938,7 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/bg_outer_manage_place"
                 android:paddingHorizontal="@dimen/_4sdp"
+                android:id="@+id/llbadrooms"
                 android:weightSum="9">
 
                 <TextView

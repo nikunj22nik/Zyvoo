@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/_260sdp"
-
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:background="@drawable/dialog_bg">
@@ -64,12 +63,13 @@
         android:hint="Card Number"
         android:inputType="number"
         android:maxLines="1"
-        android:maxLength="16"
+        android:maxLength="19"
         android:paddingHorizontal="@dimen/_10ssp"
         android:paddingVertical="@dimen/_4sdp"
         android:textColor="#000"
         android:textColorHint="#000"
         android:textSize="@dimen/_11ssp"
+
         app:layout_constraintTop_toBottomOf="@id/etCardHolderName" />
 
     <TextView
@@ -120,9 +120,10 @@
         android:autofillHints="creditCardNumber"
         android:background="@drawable/button_grey_line_bg"
         android:fontFamily="@font/poppins"
-        android:hint="Card Cvv"
+        android:hint="Card CVV"
         android:inputType="number"
         android:maxLines="1"
+        android:maxLength="4"
         android:paddingHorizontal="@dimen/_10ssp"
         android:paddingVertical="@dimen/_4sdp"
         android:textColor="#000"
@@ -174,6 +175,7 @@
         android:paddingHorizontal="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
         android:textColor="#000"
+        android:singleLine="true"
         android:textSize="@dimen/_11ssp"
         android:background="@drawable/button_grey_line_bg"
         app:layout_constraintTop_toBottomOf="@id/checkBox"
@@ -193,6 +195,7 @@
         android:layout_marginTop="@dimen/_10ssp"
         android:paddingHorizontal="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
+        android:singleLine="true"
         android:textColor="#000"
         android:textSize="@dimen/_11ssp"
         android:background="@drawable/button_grey_line_bg"
@@ -214,6 +217,7 @@
         android:layout_marginTop="@dimen/_10ssp"
         android:paddingHorizontal="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
+        android:singleLine="true"
         android:textColor="#000"
         android:textSize="@dimen/_11ssp"
         android:background="@drawable/button_grey_line_bg"
@@ -235,6 +239,7 @@
         android:layout_marginTop="@dimen/_10ssp"
         android:paddingHorizontal="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
+        android:singleLine="true"
         android:textColor="#000"
         android:textSize="@dimen/_11ssp"
         android:background="@drawable/button_grey_line_bg"
@@ -264,7 +269,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:textColor="@color/black"
         android:paddingHorizontal="@dimen/_40sdp"
-        android:paddingVertical="@dimen/_8ssp"/>
+        android:paddingVertical="@dimen/_10ssp"/>
 
 
 

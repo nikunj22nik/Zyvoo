@@ -7,6 +7,7 @@ import com.business.zyvo.NetworkResult
 import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.model.AddPaymentCardModel
+import com.business.zyvo.model.host.ChannelModel
 import com.business.zyvo.repository.ZyvoRepository
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,6 +24,14 @@ class CheckOutPayViewModel  @Inject constructor(private val repository: ZyvoRepo
 
     init {
         loadPaymentDetail()
+    }
+
+    suspend fun joinChatChannel(
+        senderId :Int, receiverId :Int, groupChannel :String, user_type: String
+    ) : Flow<NetworkResult<ChannelModel>>{
+        return repository.joinChatChannel(senderId, receiverId, groupChannel, user_type).onEach {
+
+        }
     }
 
 
@@ -108,11 +117,12 @@ class CheckOutPayViewModel  @Inject constructor(private val repository: ZyvoRepo
 
     suspend fun bookProperty(
         userId : String, property_id : String, booking_date : String, booking_start : String, booking_end : String,
-        booking_amount : String, total_amount : String, customer_id : String, card_id : String, addons: Map<String, String>
+        booking_amount : String, total_amount : String, customer_id : String, card_id : String,
+        addons: Map<String, String>, service_fee : String, tax : String, discount_amount : String
     ):  Flow<NetworkResult<JsonObject>>{
         return repository.bookProperty(
             userId, property_id, booking_date, booking_start, booking_end, booking_amount, total_amount,
-            customer_id, card_id, addons
+            customer_id, card_id, addons,service_fee,tax,discount_amount
         ).onEach {
             when(it){
                 is NetworkResult.Loading -> {

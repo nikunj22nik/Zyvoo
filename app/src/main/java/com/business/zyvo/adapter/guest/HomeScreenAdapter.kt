@@ -15,6 +15,7 @@ import com.business.zyvo.fragment.guest.home.model.HomePropertyData
 import com.business.zyvo.fragment.guest.home.model.OnViewPagerImageClickListener
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 
 class HomeScreenAdapter(
     private val context: Context, private var list: MutableList<HomePropertyData>,
@@ -52,6 +53,8 @@ class HomeScreenAdapter(
         }
         // Setup ViewPager and its adapter
         currentItem.images.let {
+            Log.d("checkImageSize", currentItem.images.toMutableList().size.toString())
+            if (currentItem.images.toMutableList().size == 1 ) holder.binding.tabLayoutForIndicator.visibility = View.GONE else holder.binding.tabLayoutForIndicator.visibility = View.VISIBLE
             val viewPagerAdapter = GuestViewPagerAdapter(
                 currentItem.images.toMutableList(),
                 context,
@@ -77,19 +80,30 @@ class HomeScreenAdapter(
             holder.binding.textTotal.text = "("+formatConvertCount(it)+")"
         }
 
-        currentItem.distance_miles?.let {
-            holder.binding.textMiles.text = "$it miles away"
+        if (currentItem.distance_miles.isNullOrBlank()) {
+            holder.binding.textMiles.visibility = View.GONE
+        } else {
+            holder.binding.textMiles.text = "${currentItem.distance_miles} miles away"
+            holder.binding.textMiles.visibility = View.VISIBLE
         }
+      /*  currentItem.distance_miles?.let {
+            holder.binding.textMiles.text = "$it miles away"
+        }*/
         currentItem.hourly_rate?.let {
-            holder.binding.textPricePerHours.text = "$it/h"
+            holder.binding.textPricePerHours.text = "${truncateToTwoDecimalPlaces(it)}/h"
         }
 
         currentItem.is_instant_book?.let {
             if (it==1){
                 holder.binding.textInstantBook.visibility = View.VISIBLE
-                holder.binding.imageReward.visibility = View.VISIBLE
             }else{
                 holder.binding.textInstantBook.visibility = View.GONE
+            }
+        }
+        currentItem.is_star_host?.let {
+            if (it=="true"){
+                holder.binding.imageReward.visibility = View.VISIBLE
+            }else{
                 holder.binding.imageReward.visibility = View.GONE
             }
         }

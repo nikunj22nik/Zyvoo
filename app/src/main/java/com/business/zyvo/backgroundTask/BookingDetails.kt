@@ -38,6 +38,7 @@ object BookingDetails {
             result.add(notificationModel)
         }
         Log.d("TESTING","Size of the result "+result.size.toString())
+        Log.d("TESTING","Size of the result "+result.toString())
         NetworkResult.Success(result)
     }
 

@@ -18,7 +18,7 @@ import javax.inject.Inject
         val isLoading = MutableLiveData<Boolean>()
 
         suspend fun getPrivacyPolicy():
-                Flow<NetworkResult<String>> {
+                Flow<NetworkResult<Pair<String,String>>> {
             return repository.getPrivacyPolicy().onEach {
                 when(it){
                     is NetworkResult.Loading -> {

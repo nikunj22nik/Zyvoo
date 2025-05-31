@@ -3,33 +3,141 @@ package com.business.zyvo.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.model.ChatMessageModel
 import com.business.zyvo.repository.ZyvoRepository
+import com.google.gson.JsonArray
+import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
 class ChatDetailsViewModel @Inject constructor(private var repository: ZyvoRepository): ViewModel() {
+    val isLoading = MutableLiveData<Boolean>()
 
-private  var _list = MutableLiveData<MutableList<ChatMessageModel>>()
-      val list : LiveData<MutableList<ChatMessageModel>> get() =  _list
-
-    init {
-        load()
+    suspend fun blockUser(senderId: Int,group_channel:String,blockUnblock:Int) : Flow<NetworkResult<JsonObject>> {
+        return repository.blockUser(senderId,group_channel,blockUnblock).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
     }
 
-    private fun load() {
-      val listItem = mutableListOf<ChatMessageModel>(
-          ChatMessageModel(R.drawable.ic_mia_pic,"Mia","Jul 20, 2023, 11:32 AM","Hi welcome to our house!"),
-          ChatMessageModel(R.drawable.ic_mia_pic,"Mia","Jul 20, 2023, 11:32 AM","Hi welcome to our house!"),
-          ChatMessageModel(R.drawable.ic_mia_pic,"Mia","Jul 20, 2023, 11:32 AM","Hi welcome to our house!"),
-          ChatMessageModel(R.drawable.ic_mia_pic,"Mia","Jul 20, 2023, 11:32 AM","Hi welcome to our house!"),
-          ChatMessageModel(R.drawable.ic_mia_pic,"Mia","Jul 20, 2023, 11:32 AM","Hi welcome to our house!"),
-          ChatMessageModel(R.drawable.ic_mia_pic,"Mia","Jul 20, 2023, 11:32 AM","Hi welcome to our house!"),
-      )
-        _list.value = listItem
+
+    suspend fun markFavoriteChat(senderId: Int,group_channel:String,favorite:Int) : Flow<NetworkResult<JsonObject>> {
+        return repository.markFavoriteChat(senderId, group_channel, favorite).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                }
+
+                is NetworkResult.Success -> {
+                    isLoading.value = false
+                }
+
+                else -> {
+                    isLoading.value = false
+                }
+            }
+        }
     }
 
+        suspend fun sendChatNotification(senderId: String,receiverId:String, group_channel :String,) : Flow<NetworkResult<JsonObject>> {
+            return repository.sendChatNotification(senderId,receiverId,
+                group_channel).onEach {
+                when (it) {
+                    is NetworkResult.Loading -> {
+                    } is NetworkResult.Success -> {
+                } else -> {
+                }
+                }
+            }
+    }
+    suspend fun muteChat(userId: Int,group_channel:String,mute:Int) :Flow<NetworkResult<JsonObject>> {
+        return repository.muteChat(userId,group_channel,mute).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun toggleArchiveUnarchive(userId: Int,group_channel:String) :Flow<NetworkResult<JsonObject>> {
+        return repository.toggleArchiveUnarchive(userId,group_channel).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun reportChat( reporter_id :String,
+                            reported_user_id :String,
+                            reason :String,
+                            message :String,
+                            group_channel:String) :Flow<NetworkResult<JsonObject>> {
+        return repository.reportChat(reporter_id,reported_user_id,
+            reason,message,group_channel).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun listReportReasons( ):
+            Flow<NetworkResult<JsonArray>>{
+        return repository.listReportReasons().onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+    suspend fun deleteChat(user_id :String,
+                           user_type :String,
+                           group_channel :String) :Flow<NetworkResult<JsonObject>> {
+        return repository.deleteChat(user_id,user_type, group_channel).onEach {
+            when (it) {
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
 
 }

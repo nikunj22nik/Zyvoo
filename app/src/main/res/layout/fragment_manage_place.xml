@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -75,7 +76,7 @@
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Setup places, avaxilability, prices and more."
+                android:text="Setup places, availability, prices and more."
                 android:textColor="#000000"
                 android:textSize="@dimen/_13sdp"
 
@@ -104,7 +105,7 @@
                     android:paddingVertical="8dp"
                     android:text="Home Setup"
                     android:textColor="#3F3D56"
-                    android:textSize="@dimen/_9ssp" />
+                    android:textSize="@dimen/_10ssp" />
 
                 <TextView
                     android:id="@+id/tv_gallery"
@@ -116,7 +117,7 @@
                     android:paddingVertical="8dp"
                     android:text="Gallery &amp; Location"
                     android:textColor="#3F3D56"
-                    android:textSize="@dimen/_9sdp" />
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/tv_availability"
@@ -129,7 +130,7 @@
                     android:paddingVertical="8dp"
                     android:text="Availability"
                     android:textColor="#3F3D56"
-                    android:textSize="@dimen/_9ssp" />
+                    android:textSize="@dimen/_10ssp" />
             </LinearLayout>
 
             <View
@@ -335,6 +336,7 @@
                             android:layout_marginTop="@dimen/_3sdp"
                             android:background="@null"
                             android:hint="Type.."
+                            android:maxLength="4"
                             android:inputType="number"
                             android:textColor="#3F3D56" />
 
@@ -462,6 +464,7 @@
                             android:layout_marginTop="@dimen/_3sdp"
                             android:background="@null"
                             android:hint="Type.."
+                            android:maxLength="4"
                             android:inputType="number"
                             android:textColor="#3F3D56" />
 
@@ -615,6 +618,7 @@
                             android:layout_marginTop="@dimen/_3sdp"
                             android:background="@null"
                             android:hint="Type.."
+                            android:maxLength="4"
                             android:inputType="number"
                             android:textColor="#3F3D56" />
 
@@ -768,6 +772,7 @@
                             android:layout_marginTop="@dimen/_3sdp"
                             android:background="@null"
                             android:hint="Type.."
+                            android:maxLength="4"
                             android:inputType="number"
                             android:textColor="#3F3D56" />
 
@@ -865,6 +870,14 @@
                     android:layout_marginTop="@dimen/_8sdp"
                     android:layout_marginEnd="@dimen/_7sdp" />
 
+                <TextView
+                    android:id="@+id/tv_show_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:text="@string/show_more" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
@@ -879,6 +892,7 @@
                     android:layout_marginTop="@dimen/_13sdp"
                     android:fontFamily="@font/poppins"
                     android:text="Booking"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp"
                     android:textStyle="bold" />
 
@@ -1099,6 +1113,7 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
                     android:text="Gallery"
+                    android:textStyle="bold"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_13ssp" />
 
@@ -1216,7 +1231,8 @@
                     android:fontFamily="@font/poppins"
                     android:text="Host rules"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13ssp" />
+                    android:textSize="@dimen/_13ssp"
+                    android:textStyle="bold" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -1251,7 +1267,8 @@
                     android:fontFamily="@font/poppins"
                     android:text="Address"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13ssp" />
+                    android:textSize="@dimen/_13ssp"
+                    android:textStyle="bold"/>
 
 
                 <RelativeLayout
@@ -1290,6 +1307,7 @@
                         android:layout_marginVertical="@dimen/_5sdp"
                         android:background="@null"
                         android:hint="City"
+                        android:textSize="@dimen/_14sdp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
                 </RelativeLayout>
@@ -1415,7 +1433,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="1 hour minimum"
+                            android:text="2 hour minimum"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 
@@ -1516,7 +1534,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="1 hour minimum"
+                            android:text="2 hour minimum"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 
@@ -1553,7 +1571,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="$10 per hour"
+                            android:text="5% Discount"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 
@@ -1688,7 +1706,9 @@
                             android:layout_toEndOf="@id/textDollar1"
                             android:background="@null"
                             android:fontFamily="@font/poppins"
-                            android:hint="20"
+                            android:hint="00"
+                            android:maxLength="4"
+                            android:inputType="number"
                             android:maxWidth="@dimen/_110sdp"
 
                             android:maxLines="1"
@@ -1939,8 +1959,8 @@
                             android:layout_below="@+id/tvJun"
                             android:layout_gravity="center"
                             android:layout_marginVertical="2dp"
-                            android:layout_toEndOf="@+id/tvOct"
-                            android:layout_weight="1"
+                            android:layout_toEndOf = "@+id/tvOct"
+                            android:layout_weight = "1"
                             android:fontFamily="@font/poppins"
                             android:gravity="center"
                             android:paddingVertical="8dp"
@@ -2114,7 +2134,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="06:00 Am"
+                            android:text="Start Time"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 
@@ -2152,7 +2172,7 @@
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:fontFamily="@font/inter"
-                            android:text="06:00 Am"
+                            android:text="End Time"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_11sdp" />
 

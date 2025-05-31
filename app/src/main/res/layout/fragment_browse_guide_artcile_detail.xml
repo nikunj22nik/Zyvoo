@@ -144,24 +144,7 @@
                 android:layout_marginTop="@dimen/_4sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 >
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_clock_dot_new"
-                    android:background="@drawable/ic_clock_dot_new_white"
-                    android:backgroundTint="@color/white"
-                    app:tint="@color/white"
-                    />
-                <TextView
-                    android:id="@+id/textTimeRequired"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="3 min read"
-                    android:layout_marginStart="@dimen/_5sdp"
-                    android:textColor="@color/white"
-                    android:fontFamily="@font/poppins"
-                    android:textStyle="bold"
-                    />
+
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -170,7 +153,7 @@
                     android:background="@drawable/ic_calendar_white"
                     android:backgroundTint="@color/white"
                     app:tint="@color/white"
-                    android:layout_marginStart="@dimen/_25sdp"
+
                     />
                 <TextView
                     android:id="@+id/textDate"
@@ -183,6 +166,25 @@
                     android:textStyle="bold"
                     />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_clock_dot_new"
+                    android:background="@drawable/ic_clock_dot_new_white"
+                    android:backgroundTint="@color/white"
+                    android:layout_marginStart="@dimen/_25sdp"
+                    app:tint="@color/white"
+                    />
+                <TextView
+                    android:id="@+id/textTimeRequired"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 min read"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:textColor="@color/white"
+                    android:fontFamily="@font/poppins"
+                    android:textStyle="bold"
+                    />
 
             </LinearLayout>
 

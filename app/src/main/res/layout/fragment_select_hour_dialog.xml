@@ -1,153 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-app:cardCornerRadius="@dimen/_20sdp"
-    app:cardBackgroundColor="#E6FFFFFF"
     android:layout_gravity="center"
     android:layout_marginHorizontal="@dimen/_22sdp"
+    app:cardBackgroundColor="#E6FFFFFF"
+    app:cardCornerRadius="@dimen/_20sdp"
     tools:context=".fragment.guest.SelectHourFragmentDialog">
 
 
-<RelativeLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-    android:background="#E6FFFFFF"
-    android:layout_gravity="center">
-
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv1"
-        android:layout_width="@dimen/_165sdp"
-        android:layout_height="@dimen/_165sdp"
-        app:cardCornerRadius="@dimen/_165sdp"
-        app:cardElevation="@dimen/_20sdp"
         android:layout_gravity="center"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/_30sdp"
-        android:elevation="@dimen/_200sdp">
+        android:background="#E6FFFFFF">
 
 
-        <RelativeLayout
-            android:id="@+id/rl_circular_progress"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-
-
-            android:gravity="center"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv1"
+            android:layout_width="@dimen/_165sdp"
+            android:layout_height="@dimen/_165sdp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/_30sdp"
             android:elevation="@dimen/_200sdp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <com.business.zyvo.CircularSeekBar
-                android:id="@+id/circularSeekBar"
-                android:layout_width="@dimen/_165sdp"
-                android:layout_height="@dimen/_165sdp"
-                android:layout_centerInParent="true"
-                app:cc_endHour="2"
-                app:cc_borderWidth="@dimen/_30sdp"
-                app:cc_endIconResource="@drawable/oval_white"
-                app:cc_fillColor="#4AEAB1"
-                app:cc_metricMode="clock"
-                app:cc_startHour="0"
-                app:cc_tickTextColor="?android:attr/textColorPrimary"
-                >
+            app:cardCornerRadius="@dimen/_165sdp"
+            app:cardElevation="@dimen/_20sdp">
 
 
-            </com.business.zyvo.CircularSeekBar>
+            <RelativeLayout
+                android:id="@+id/rl_circular_progress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="@dimen/_105sdp"
-                android:layout_height="@dimen/_105sdp"
-                app:cardElevation="@dimen/_15sdp"
-                android:layout_centerInParent="true"
-                android:backgroundTint="@color/white"
                 android:elevation="@dimen/_200sdp"
-                app:cardCornerRadius="@dimen/_170sdp">
+                android:gravity="center"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.business.zyvo.CircularSeekBar
+                    android:id="@+id/circularSeekBar"
+                    android:layout_width="@dimen/_165sdp"
+                    android:layout_height="@dimen/_165sdp"
+                    android:layout_centerInParent="true"
+                    app:cc_borderWidth="@dimen/_30sdp"
+                    app:cc_endHour="2"
+                    app:cc_endIconResource="@drawable/oval_white"
+                    app:cc_fillColor="#4AEAB1"
+                    app:cc_metricMode="clock"
+                    app:cc_startHour="0"
+                    app:cc_tickTextColor="?android:attr/textColorPrimary">
 
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/textTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_10sdp"
-                        android:fontFamily="@font/poppins"
-                        android:gravity="center"
-                        android:text="4"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_35ssp"
-                        android:textStyle="bold"
-                        app:layout_constraintBottom_toBottomOf="parent"
-
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/textHours"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:gravity="center"
-                        android:text="Hours"
-                        android:layout_marginTop="-15dp"
-                        android:textAlignment="center"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textTime" />
+                </com.business.zyvo.CircularSeekBar>
 
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.cardview.widget.CardView
+                    android:layout_width="@dimen/_105sdp"
+                    android:layout_height="@dimen/_105sdp"
+                    android:layout_centerInParent="true"
+                    android:backgroundTint="@color/white"
+                    android:elevation="@dimen/_200sdp"
+                    app:cardCornerRadius="@dimen/_170sdp"
+                    app:cardElevation="@dimen/_15sdp">
 
 
-            </androidx.cardview.widget.CardView>
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-        </RelativeLayout>
+                        <TextView
+                            android:id="@+id/textTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:fontFamily="@font/poppins"
+                            android:gravity="center"
+                            android:text=""
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_35ssp"
+                            android:textStyle="bold"
+                            app:layout_constraintBottom_toBottomOf="parent"
 
-    </androidx.cardview.widget.CardView>
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/textHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="-15dp"
+                            android:gravity="center"
+                            android:text="Hours"
+                            android:textAlignment="center"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/textTime" />
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
 
 
         <TextView
             android:id="@+id/textOr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/cv1"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/poppins"
             android:text="Or"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/cv1"
-            android:layout_gravity="center_horizontal"
             android:textColor="@color/black"
             android:textSize="@dimen/_17sdp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
+            app:layout_constraintStart_toStartOf="parent" />
 
 
         <RelativeLayout
             android:id="@+id/rlSelectHour"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
+            android:layout_below="@id/textOr"
             android:layout_marginHorizontal="@dimen/_20sdp"
             android:layout_marginTop="@dimen/_15sdp"
-            android:background="@drawable/text_bg"
-            android:layout_below="@id/textOr">
+            android:background="@drawable/text_bg">
 
 
             <TextView
@@ -176,6 +172,7 @@ app:cardCornerRadius="@dimen/_20sdp"
             android:id="@+id/textSaveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/rlSelectHour"
             android:layout_marginHorizontal="@dimen/_15sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_30sdp"
@@ -184,7 +181,6 @@ app:cardCornerRadius="@dimen/_20sdp"
             android:fontFamily="@font/poppins"
             android:paddingVertical="@dimen/_7sdp"
             android:text="Save Changes"
-            android:layout_below="@+id/rlSelectHour"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textStyle="bold"

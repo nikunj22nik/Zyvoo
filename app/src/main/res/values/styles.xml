@@ -11,8 +11,47 @@
         <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 
+    <style name="RoundedCorners">
+        <item name="shapeAppearanceOverlay">@style/RoundedRightCorners</item>
+    </style>
+
+    <style name="RoundedRightCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">60dp</item>
+        <item name="cornerSizeBottomRight">60dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+    </style>
+    <style name="RoundedCornerImageThree" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">15dp</item>
+        <item name="cornerSizeBottomRight">15dp</item> <!-- More rounded -->
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeTopLeft">0dp</item> <!-- More rounded -->
+    </style>
+
+    <style name="RoundedCornerImageBigThree" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item> <!-- More rounded -->
+        <item name="cornerSizeBottomLeft">15dp</item>
+        <item name="cornerSizeTopLeft">15dp</item> <!-- More rounded -->
+    </style>
 
 
+
+    <style name="RoundedCornerImageOne" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">20dp</item>
+        <item name="cornerSizeBottomRight">20dp</item> <!-- More rounded -->
+        <item name="cornerSizeBottomLeft">20dp</item>
+        <item name="cornerSizeTopLeft">20dp</item> <!-- More rounded -->
+    </style>
+
+    <style name="roundedImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10%</item>
+    </style>
 
 
 </resources>

@@ -88,6 +88,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:text="Hosted by"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp" />
 
@@ -113,6 +114,7 @@
                                 android:hint="Mia J."
                                 android:textColor="@color/black"
                                 android:id="@+id/tvHostName"
+                                android:fontFamily="@font/poppins"
                                 android:textColorHint="@color/black"
                                 android:textSize="@dimen/_12sdp" />
 
@@ -120,7 +122,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_4ssp"
-                                android:id="@+id/ivInsta"
+                                android:id="@+id/ivStar"
                                 android:src="@drawable/ic_badge_img" />
 
                         </LinearLayout>
@@ -153,6 +155,7 @@
                         android:hint="Respond within 1 hr"
                         android:textColor="@color/black"
                         android:id="@+id/tvResponseTime"
+                        android:fontFamily="@font/poppins"
                         android:textColorHint="@color/black"
                         android:textSize="@dimen/_12sdp" />
 
@@ -171,6 +174,8 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/_5sdp"
                             android:text="Message the host"
+                            android:textAlignment="center"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp" />
 
@@ -238,6 +243,8 @@
                             android:layout_marginTop="@dimen/_6sdp"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             android:paddingHorizontal="@dimen/_6sdp"
+                            android:layout_marginBottom="@dimen/_5sdp"
+                            android:visibility="visible"
                             android:paddingVertical="@dimen/_6sdp">
 
                             <TextView
@@ -259,11 +266,13 @@
                             android:layout_marginHorizontal="@dimen/_6sdp"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
+                            android:visibility="gone"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             android:paddingHorizontal="@dimen/_6sdp"
                             android:paddingVertical="@dimen/_6sdp">
 
                             <EditText
+                                android:id="@+id/etShareMessage"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_centerHorizontal="true"
@@ -277,6 +286,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_submit_message"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_33sdp"
                             android:layout_marginHorizontal="@dimen/_10sdp"
@@ -320,6 +330,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/_12sdp"
                         android:text="Cancel Booking" />
 
                 </RelativeLayout>
@@ -337,6 +350,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:text="Report an Issue" />
 
                 </RelativeLayout>
@@ -355,17 +370,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:weightSum="1"
+                    android:weightSum="1">
 
-                    >
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_65sdp"
+                        android:layout_marginVertical="@dimen/_10sdp"
+                        android:layout_weight="0.3"
+                        app:cardCornerRadius="@dimen/_7sdp">
 
-                    <com.google.android.material.imageview.ShapeableImageView
+                        <!-- Image Placeholder -->
+                        <ImageView
+                            android:id="@+id/ivProImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/image_hotel" />
+                    </androidx.cardview.widget.CardView>
+                   <!-- <com.google.android.material.imageview.ShapeableImageView
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_65sdp"
                         android:layout_marginVertical="@dimen/_10sdp"
                         android:layout_weight="0.3"
                         android:id="@+id/ivProImage"
-                        android:src="@drawable/ic_img_check_out_pay" />
+                        android:src="@drawable/ic_img_check_out_pay" />-->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -400,7 +428,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:hint="5.0"
+                                android:textSize="@dimen/_12sdp"
                                 android:id="@+id/tvRating"
+                                android:fontFamily="@font/poppins"
                                 android:textColorHint="@color/fca800"
                                 android:textColor="@color/fca800" />
 
@@ -411,6 +441,8 @@
                                 android:hint="(1k+)"
                                 android:textColorHint="@color/a4a4a4"
                                 android:id="@+id/tvTotalReview"
+                                android:textSize="@dimen/_12sdp"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/a4a4a4" />
                         </LinearLayout>
 
@@ -428,8 +460,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_7sdp"
-                                android:hint="37 miles away"
+                                android:hint="0 miles away"
                                 android:id="@+id/tvMiles"
+                                android:textSize="@dimen/_12sdp"
+                                android:fontFamily="@font/poppins"
                                 android:textColorHint="@color/a4a4a4"
                                 android:textColor="@color/a4a4a4" />
 
@@ -460,8 +494,8 @@
                         android:fontFamily="@font/poppins"
                         android:text="2 Hours"
                         android:id="@+id/tvTotalHours"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
 
 
                     <TextView
@@ -470,7 +504,9 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvPrice"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins" />
 
                 </RelativeLayout>
 
@@ -488,8 +524,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:text="Cleaning Fee"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
 
 
                     <TextView
@@ -498,7 +534,9 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvCleaningFee"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins" />
 
                 </RelativeLayout>
 
@@ -514,9 +552,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:text="Zyvoo Service Fee"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:text="Zyvo Service Fee"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
 
 
                     <TextView
@@ -525,7 +563,9 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvZyvoServiceFee"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins" />
 
                 </RelativeLayout>
 
@@ -542,8 +582,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:text="Taxes"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
 
 
                     <TextView
@@ -552,7 +592,9 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvTaxesPrice"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        android:fontFamily="@font/poppins" />
 
                 </RelativeLayout>
 
@@ -569,8 +611,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
                         android:text="@string/discount"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/_12sdp"
                         />
 
@@ -581,9 +623,9 @@
                         android:layout_alignParentEnd="true"
                         android:hint="$0"
                         android:id="@+id/tvDiscount"
-                        android:textColorHint="@color/black"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"/>
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
+                        android:fontFamily="@font/poppins" />
                     " />
 
                 </RelativeLayout>
@@ -591,6 +633,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:id="@+id/rladdOn"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_8sdp"
                     android:layout_marginBottom="@dimen/_10sdp">
@@ -600,8 +643,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:text="Add-on"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
 
 
                     <TextView
@@ -610,7 +653,9 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvAddOnPrice"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins" />
 
                 </RelativeLayout>
 
@@ -635,7 +680,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Total"
                         android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black" />
 
 
                     <TextView
@@ -644,7 +689,9 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvTotalPrice"
-                        android:textStyle="bold" />
+                        android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/black" />
 
                 </RelativeLayout>
 
@@ -694,6 +741,7 @@
                             android:layout_toRightOf="@id/img_calendar"
                             android:hint="October 22, 2023"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
                             android:layout_marginEnd="@dimen/_7sdp"
                             android:textColor="@color/black"
                             android:textColorHint="@color/black"/>
@@ -726,6 +774,7 @@
                             android:layout_toRightOf="@id/clock_1"
                             android:hint="2 Hours"
                             android:id="@+id/tvHours"
+                            android:fontFamily="@font/poppins"
                             android:textSize="@dimen/_12ssp"
                             android:textColor="@color/black"
                             android:textColorHint="@color/black"/>
@@ -758,6 +807,7 @@
                             android:layout_toRightOf="@id/clock_old"
                             android:text="From 01pm to 03pm"
                             android:layout_marginEnd="@dimen/_7sdp"
+                            android:fontFamily="@font/poppins"
                             android:textSize="@dimen/_12ssp"
                             android:textColor="@color/black" />
                     </RelativeLayout>
@@ -786,6 +836,7 @@
                             android:layout_marginStart="@dimen/_7sdp"
                             android:layout_toRightOf="@id/add_more"
                             android:text="Add more time"
+                            android:fontFamily="@font/poppins"
                             android:textSize="@dimen/_12ssp"
                             android:textColor="@color/black" />
 
@@ -830,8 +881,7 @@
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:textColor="#000000"
-
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_12sdp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
@@ -873,8 +923,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_toRightOf="@id/img_parking"
                     android:text="Parking"
                     android:fontFamily="@font/poppins"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -898,6 +947,8 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_height="wrap_content"
                     android:id="@+id/proParkingRule"
                     android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
+                    android:fontFamily="@font/poppins"
+                    android:textSize="@dimen/_12sdp"
                     android:padding="@dimen/_10sdp" />
 
             </RelativeLayout>
@@ -925,7 +976,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_toRightOf="@id/img_host_rule"
                     android:fontFamily="@font/poppins"
                     android:text="Host rules"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -948,6 +999,8 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_height="wrap_content"
                     android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
                     android:padding="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
+                    android:textSize="@dimen/_12sdp"
                     android:id="@+id/proHostRule"
                     />
 
@@ -973,6 +1026,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_centerVertical="true"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:text="My Bookings"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                      />
 
