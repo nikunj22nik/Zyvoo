@@ -617,9 +617,9 @@ class CheckOutPayActivity : AppCompatActivity(),SetPreferred {
                     }
                 }
             }
-            submitButton.setOnClickListener {
-                if (etCardHolderName.text.isEmpty()){
-                    showToast(this@CheckOutPayActivity,AppConstant.cardName)
+                if (etCardHolderName.text.isEmpty()){            submitButton.setOnClickListener {
+
+                showToast(this@CheckOutPayActivity,AppConstant.cardName)
                 }else if (textMonth.text.isEmpty()){
                     showToast(this@CheckOutPayActivity,AppConstant.cardMonth)
                 }else if (textYear.text.isEmpty()){
