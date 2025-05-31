@@ -41,18 +41,16 @@ class LocaleAdapter(
         holder.countryName.setText(locale.country)
 
         holder.ll1.setOnClickListener {
-           if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
-//                  SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context,languageName)
-//                   holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
+         /*  if(SessionManager(holder.itemView.context).isLanguageStored(holder.itemView.context,languageName)){
+                //  SessionManager(holder.itemView.context).removeLanguage(holder.itemView.context,languageName)
+              //     holder.ll1.setBackgroundResource(R.drawable.button_grey_line_bg)
            }
            else {
                var list1 = SessionManager(holder.itemView.context).getLanguages((holder.itemView.context)).toMutableList()
-
                list1.add(locale)
-
-               SessionManager(holder.itemView.context).saveLanguages(holder.itemView.context,list1)
+               SessionManager(holder.itemView.context).saveLanguages(holder.itemView.context,list1)*/
                holder.ll1.setBackgroundResource(R.drawable.blue_button_bg)
-           }
+         //  }
            listner.onItemClick(languageName)
         }
 

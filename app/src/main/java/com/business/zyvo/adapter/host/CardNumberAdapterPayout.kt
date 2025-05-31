@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -49,9 +50,11 @@ class CardNumberAdapterPayout(private val context: Context, private var list: Mu
     @SuppressLint("SuspiciousIndentation")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = list[position]
+      Log.d("defaultForCurrency","position.toString()")
         if(currentItem.defaultForCurrency) {
             holder.binding.rlPreferred.visibility = View.VISIBLE
             holder.binding.rlThreeDot.visibility = View.GONE
+            Log.d("defaultForCurrency",position.toString())
         }else{
             holder.binding.rlPreferred.visibility = View.GONE
             holder.binding.rlThreeDot.visibility = View.VISIBLE
