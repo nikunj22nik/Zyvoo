@@ -406,7 +406,8 @@ object ErrorDialog {
                         streetAddress = address.getAddressLine(0),
                         city = address.locality,
                         state = address.adminArea,
-                        zipCode = address.postalCode
+                        zipCode = address.postalCode,
+                        country = address.countryName
                     )
                 } else null
 

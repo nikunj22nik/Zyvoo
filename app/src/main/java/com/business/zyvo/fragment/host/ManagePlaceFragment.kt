@@ -27,12 +27,14 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -74,6 +76,8 @@ import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.model.host.ItemRadio
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.getLocationDetails
 import com.business.zyvo.utils.ErrorDialog.isWithin24Hours
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.PrepareData
@@ -1107,6 +1111,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
         })
 
+
         binding.etAddress.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(
                 charSequence: CharSequence?,
@@ -1131,6 +1136,65 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
         })
 
+    }
+
+    // For handling the result of the Autocomplete Activity
+    private val startStreertAutocomplete =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
+            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+                result.data?.let { intent ->
+                    val place = Autocomplete.getPlaceFromIntent(intent)
+                    val latLng = place.latLng
+                    getLocationDetails(requireContext(), latLng) { locationDetails ->
+                        // Use city, state, zipCode here
+                        locationDetails?.let {
+                            Log.d(
+                                ErrorDialog.TAG,
+                                "Street: ${it.streetAddress},City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}")
+                            if (!it.city.isNullOrEmpty()&&
+                                !it.state.isNullOrEmpty()&&
+                                !it.zipCode.isNullOrEmpty()&&
+                                !it.country.isNullOrEmpty()){
+
+                                if (it.streetAddress.isNullOrEmpty()){
+                                    binding.etAddress.setText(place.name ?: "")
+                                    street = place.name ?: ""
+                                }else{
+                                    binding.etAddress.setText(it.streetAddress ?: "")
+                                    street = it.streetAddress ?: ""
+                                }
+                                if (it.city.isNullOrEmpty()){
+                                    binding.etCity.setText(it.city)
+                                    city = it.city?:""
+                                }
+                                if (it.state.isNullOrEmpty()){
+                                    binding.state.setText(it.state)
+                                    state = it.state?:""
+                                }
+                                if (it.zipCode.isNullOrEmpty()){
+                                    binding.zipcode.setText(it.zipCode)
+                                    zipcode = it.zipCode?:""
+                                }
+                                if (it.country.isNullOrEmpty()){
+                                    binding.country.setText(it.country)
+                                    country = it.country?:""
+                                }
+                            }
+                        }
+                    }
+                }
+            } else if (result.resultCode == Activity.RESULT_CANCELED) {
+                Log.i(ErrorDialog.TAG, "User canceled autocomplete")
+            }
+        }
+
+
+    // Function to start the location picker using Autocomplete
+    private fun startStreetLocationPicker() {
+        val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
+            .build(requireContext())
+        startStreertAutocomplete.launch(intent)
     }
 
     private fun checkingGalleryValidation(): Boolean {
@@ -1177,7 +1241,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
     fun locationSelection() {
-        binding.etCity.setOnClickListener {
+        binding.etAddress.setOnClickListener {
 
             val apiKey = getString(R.string.api_key_location)
             if (!Places.isInitialized()) {
@@ -1195,6 +1259,26 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
                     .build(activity)
             startActivityForResult(intent, 103)
+        }
+
+        binding.etAddress.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val apiKey = getString(R.string.api_key_location)
+                if (!Places.isInitialized()) {
+                    Places.initialize(context, apiKey)
+                }
+                val fields: List<Place.Field> = Arrays.asList<Place.Field>(
+                    Place.Field.ID,
+                    Place.Field.NAME,
+                    Place.Field.ADDRESS,
+                    Place.Field.LAT_LNG
+                )
+
+                val intent: Intent =
+                    Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                        .build(activity)
+                startActivityForResult(intent, 103)
+            }
         }
 
     }
@@ -1424,7 +1508,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
                 // Add a marker at that location
                 mMap?.addMarker(MarkerOptions().position(location))
-                fetchAddressDetails(latitude.toDouble(), longitude.toDouble())
+                fetchAddressDetails(address,latitude.toDouble(), longitude.toDouble())
                 binding.etCity.isEnabled = true
                 if (latitude == null) {
                     latitude = "0.0001"
@@ -1449,17 +1533,20 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
     }
 
-    private fun fetchAddressDetails(latitude: Double, longitude: Double) {
+    private fun fetchAddressDetails(address:String,latitude: Double, longitude: Double) {
         // Launching a coroutine to run the geocoding task in the background
         lifecycleScope.launch {
             try {
                 val addressDetails = withContext(Dispatchers.IO) {
                     LocationManager(requireContext()).getAddressFromCoordinates(latitude, longitude)
                 }
+                binding.etAddress.setText(address)
+                binding.etAddress.setSelection(binding.etAddress.text.length)
                 binding.etCity.setText(addressDetails.city)
                 binding.zipcode.setText(addressDetails.postalCode)
                 binding.country.setText(addressDetails.country)
                 binding.state.setText(addressDetails.state)
+                binding.country.setText(addressDetails.country)
 
 
             } catch (e: Exception) {

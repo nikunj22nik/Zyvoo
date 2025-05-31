@@ -221,7 +221,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                                     binding.floatingIcon.visibility = View.VISIBLE
                                 }
                                 binding.rlPrice.visibility = View.VISIBLE
-                                binding.tvTxt.setText(it1.second.toString())
+                                binding.tvTxt.setText("$"+ it1.second)
                                 adapter.updateData(it1.first)
                                 LoadingUtils.hideDialog()
                             }

@@ -1298,7 +1298,7 @@
                     android:layout_marginTop="@dimen/_12sdp"
                     android:background="@drawable/bg_two_side_corner">
 
-                    <TextView
+                    <EditText
                         android:id="@+id/et_city"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -1307,7 +1307,6 @@
                         android:layout_marginVertical="@dimen/_5sdp"
                         android:background="@null"
                         android:hint="City"
-                        android:textSize="@dimen/_14sdp"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
                 </RelativeLayout>

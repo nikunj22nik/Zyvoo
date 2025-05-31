@@ -421,7 +421,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 propertyData?.hourly_rate?.let {
                     // binding.proPriceHr.text = "$it/hr"
                     val formatted = it.toDouble().toInt().toString()
-                    binding.proPriceHr.text = "$formatted/hr"
+                    binding.proPriceHr.text = "$$formatted/hr"
                     binding.textPrice.text = it
                     val totalPrice = binding.textHr.text.toString().replace(" hour", "")
                         .toInt() * it.toFloat()
