@@ -30,8 +30,8 @@ import kotlinx.coroutines.launch
 class FrequentlyAskedQuestionsFragment : Fragment() {
     private var _binding : FragmentFrequentlyAskedQuestionsBinding? = null
     private val binding get() = _binding!!
-private lateinit var adapter : FaqAdapter
-private var list : MutableList<FaqModel> = mutableListOf()
+    private lateinit var adapter : FaqAdapter
+    private var list : MutableList<FaqModel> = mutableListOf()
     lateinit var navController: NavController
     private val viewModel : FaqViewModel by lazy {
         ViewModelProvider(this)[FaqViewModel::class.java]
@@ -115,6 +115,11 @@ private var list : MutableList<FaqModel> = mutableListOf()
 
 
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

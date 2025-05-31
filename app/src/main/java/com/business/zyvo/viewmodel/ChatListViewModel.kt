@@ -26,8 +26,8 @@ class ChatListViewModel @Inject constructor(private val repository: ZyvoReposito
            ChatListModel(R.drawable.ic_mia_pic,"Host by Mia","3 minutes ago","Hello can we talk aboutsfdfsdf"),
            ChatListModel(R.drawable.ic_mia_pic,"Host by Mia","3 minutes ago","Hello can we talk aboutsfdfsdf"),
            ChatListModel(R.drawable.ic_mia_pic,"Host by Mia","3 minutes ago","Hello can we talk aboutsfdfsdf"),
-           ChatListModel(R.drawable.ic_mia_pic,"Host by Mia","3 minutes ago","Hello can we talk aboutsfdfsdf"),
-           ChatListModel(R.drawable.ic_support_team_image,"Support Team","3 minutes ago","Hello can we talk aboutsfdfsdf")
+           ChatListModel(R.drawable.ic_mia_pic,"Host by Mia","3 minutes ago","Hello can we talk aboutsfdfsdf")
+         //  ChatListModel(R.drawable.ic_support_team_image,"Support Team","3 minutes ago","Hello can we talk aboutsfdfsdf")
        )
         _list.value = listItem
     }

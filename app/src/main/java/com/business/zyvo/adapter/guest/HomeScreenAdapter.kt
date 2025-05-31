@@ -10,28 +10,22 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import com.business.zyvo.OnClickListener1
-import com.business.zyvo.OnLogClickListener
-import com.business.zyvo.adapter.ViewPagerAdapter
 import com.business.zyvo.databinding.LayoutLoggedRecyclerviewBinding
 import com.business.zyvo.fragment.guest.home.model.HomePropertyData
-import com.business.zyvo.model.ViewpagerModel
+import com.business.zyvo.fragment.guest.home.model.OnViewPagerImageClickListener
+import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 
 class HomeScreenAdapter(
     private val context: Context, private var list: MutableList<HomePropertyData>,
-    private val listener2: OnClickListener1
+    private val listener2: OnClickListener1,private val mListener:onItemClickListener
 ) : RecyclerView.Adapter<HomeScreenAdapter.LoggedViewHolder>() {
 
-    private lateinit var mListener: onItemClickListener
 
     interface onItemClickListener {
         fun onItemClick(position: Int)
     }
-
-    fun setOnItemClickListener(listener: onItemClickListener) {
-        mListener = listener
-    }
-
 
     inner class LoggedViewHolder(val binding: LayoutLoggedRecyclerviewBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -55,16 +49,17 @@ class HomeScreenAdapter(
 
         holder.binding.cl1.setOnClickListener {
             mListener.onItemClick(position)
-            Log.d("Adapter", "cl1 clicked at position $position")
+            Log.d(ErrorDialog.TAG, "cl1 clicked at position $position")
         }
         // Setup ViewPager and its adapter
         currentItem.images.let {
-            val viewPagerAdapter = ViewPagerAdapter(
+            Log.d("checkImageSize", currentItem.images.toMutableList().size.toString())
+            if (currentItem.images.toMutableList().size == 1 ) holder.binding.tabLayoutForIndicator.visibility = View.GONE else holder.binding.tabLayoutForIndicator.visibility = View.VISIBLE
+            val viewPagerAdapter = GuestViewPagerAdapter(
                 currentItem.images.toMutableList(),
                 context,
-                object : OnLogClickListener {
-                    override fun itemClick(items: MutableList<ViewpagerModel>) {
-                        //  listener.itemClick(position)
+                object : OnViewPagerImageClickListener {
+                    override fun itemClick(items: Int) {
                         mListener.onItemClick(position)
                     }
                 })
@@ -85,19 +80,30 @@ class HomeScreenAdapter(
             holder.binding.textTotal.text = "("+formatConvertCount(it)+")"
         }
 
-        currentItem.distance_miles?.let {
-            holder.binding.textMiles.text = "$it miles away"
+        if (currentItem.distance_miles.isNullOrBlank()) {
+            holder.binding.textMiles.visibility = View.GONE
+        } else {
+            holder.binding.textMiles.text = "${currentItem.distance_miles} miles away"
+            holder.binding.textMiles.visibility = View.VISIBLE
         }
+      /*  currentItem.distance_miles?.let {
+            holder.binding.textMiles.text = "$it miles away"
+        }*/
         currentItem.hourly_rate?.let {
-            holder.binding.textPricePerHours.text = "$it/h"
+            holder.binding.textPricePerHours.text = "${truncateToTwoDecimalPlaces(it)}/h"
         }
 
         currentItem.is_instant_book?.let {
             if (it==1){
                 holder.binding.textInstantBook.visibility = View.VISIBLE
-                holder.binding.imageReward.visibility = View.VISIBLE
             }else{
                 holder.binding.textInstantBook.visibility = View.GONE
+            }
+        }
+        currentItem.is_star_host?.let {
+            if (it=="true"){
+                holder.binding.imageReward.visibility = View.VISIBLE
+            }else{
                 holder.binding.imageReward.visibility = View.GONE
             }
         }

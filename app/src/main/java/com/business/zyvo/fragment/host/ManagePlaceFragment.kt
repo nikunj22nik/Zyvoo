@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -18,7 +19,10 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Editable
+import android.text.SpannableString
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.UnderlineSpan
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -38,6 +42,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,6 +53,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
@@ -68,7 +74,8 @@ import com.business.zyvo.model.host.GetPropertyDetail
 import com.business.zyvo.model.host.ItemRadio
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.session.SessionManager
-import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.isWithin24Hours
+import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.viewmodel.host.CreatePropertyViewModel
 import com.google.android.libraries.places.api.Places
@@ -87,71 +94,71 @@ import java.util.Arrays
 @AndroidEntryPoint
 class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
-        // variables for availability
+    // variables for availability
 
-        var minimumHourValue = 1;
-        var hourlyPrice = 10;
-        var bulkDiscountHour = 1;
-        var bulkDiscountPrice =10;
-        var availableMonth :String ="00"
-        var fromHour :String ="00:00"
-        var toHour :String ="00:00"
-        var days ="all"
-        var cleaningCharges :String= ""
-        var addonlist :MutableList<String> = mutableListOf()
-        var addonPrice :MutableList<String> = mutableListOf()
-        var deleteImage :MutableList<Int> = mutableListOf()
+    var minimumHourValue = 2;
+    var hourlyPrice = 10;
+    var bulkDiscountHour = 2;
+    var bulkDiscountPrice = 0;
+    var availableMonth: String = "00"
+    var fromHour: String = "00:00"
+    var toHour: String = "00:00"
+    var days = "all"
+    var cleaningCharges: String = ""
+    var addonPrice: MutableList<String> = mutableListOf()
+    var deleteImage: MutableList<Int> = mutableListOf()
 
-        // variables for homeSetup
+    // variables for homeSetup
 
-        var spaceType : String = "entire_home"
-        var propertySize :Int =0
-        var peopleCount :Int =0
-        var badroomCount=0;
-        var bathroomCount =0;
-        var activityListResult = mutableSetOf<String>()
-        var amenitiesListResult = mutableListOf<String>()
-        var instantBookingCheck = 0;
-        var selfCheckIn =0;
-        var allowsPets =0;
-        var cancellationDays :String = "00"
+    var spaceType: String = "entire_home"
+    var propertySize: Int = 0
+    var peopleCount: Int = 0
+    var badroomCount = 0;
+    var bathroomCount = 0;
+    var activityListResult = mutableSetOf<String>()
+    var amenitiesListResult = mutableListOf<String>()
+    var instantBookingCheck = 0;
+    var selfCheckIn = 0;
+    var allowsPets = 0;
+    var cancellationDays: String = "00"
 
-      // variables for Gallery and location
-        var galleryList = mutableListOf<Pair<String,Boolean>>()
-        var titleResult : String =""
-        var descriptionResult : String =""
-        var parkingRule :String =""
-        var hostRule :String =""
-        var street :String =""
-        var city :String =""
-        var zipcode :String =""
-        var country :String =""
-        var state : String =""
-        var latitude :String ="0.00"
-        var longitude :String ="0.00"
-
+    // variables for Gallery and location
+    var galleryList = mutableListOf<Pair<String, Boolean>>()
+    var titleResult: String = ""
+    var descriptionResult: String = ""
+    var parkingRule: String = ""
+    var hostRule: String = ""
+    var street: String = ""
+    var city: String = ""
+    var zipcode: String = ""
+    var country: String = ""
+    var state: String = ""
+    var latitude: String = "0.00"
+    var longitude: String = "0.00"
+    var isExpanded = false
 
     var galleryListId = mutableListOf<Int>()
     private val viewModel: CreatePropertyViewModel by lazy {
         ViewModelProvider(this)[CreatePropertyViewModel::class.java]
     }
 
-    lateinit var binding: FragmentManagePlaceBinding
+    private var _binding: FragmentManagePlaceBinding? = null
+    private val binding get() = _binding!!
     private lateinit var permissionLauncher: ActivityResultLauncher<String>
     private lateinit var activityList: MutableList<ActivityModel>
-    private lateinit var amenitiesList: MutableList<Pair<String,Boolean>>
+    private lateinit var amenitiesList: MutableList<Pair<String, Boolean>>
     private lateinit var adapterActivity: ActivitiesAdapter
     private lateinit var adapterActivity2: ActivitiesAdapter
     private lateinit var amenitiesAdapter: AmenitiesAdapter
     private lateinit var mapView: MapView
     private lateinit var imageList: MutableList<Uri>
-    private var propertyId :Int =-1
+    private var propertyId: Int = -1
 
     private var PICK_IMAGES_REQUEST = 210
-    private  var minimumHourIndex = 0
-    private var priceIndex =0
-    private var discountHourIndex =0;
-    private var discountPriceIndex =0;
+    private var minimumHourIndex = 0
+    private var priceIndex = 0
+    private var discountHourIndex = 0;
+    private var discountPriceIndex = 0;
     private lateinit var galleryAdapter: GallaryAdapter
     private var mMap: GoogleMap? = null
     private val REQUEST_CODE_STORAGE_PERMISSION = 1
@@ -163,6 +170,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
         Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE
     )
+
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     var storage_permissions_33 = arrayOf<String>(
         Manifest.permission.READ_MEDIA_IMAGES,
@@ -175,10 +183,18 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?):View? {
-        binding = FragmentManagePlaceBinding.inflate(inflater, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentManagePlaceBinding.inflate(inflater, container, false)
         settingDataToActivityModel()
-        ActivityCompat.requestPermissions(requireActivity(), permissions(), REQUEST_CODE_STORAGE_PERMISSION)
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            permissions(),
+            REQUEST_CODE_STORAGE_PERMISSION
+        )
         initialization()
         setUpRecyclerView()
         locationSelection()
@@ -192,8 +208,6 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         return binding.root
     }
 
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -201,11 +215,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         settingBackgroundAllWeek()
         settingBackgroundAllMonth()
         onClickDialogOpenner()
+        showingMoreText()
+        var session: SessionManager = SessionManager(requireContext())
 
-        var session : SessionManager = SessionManager(requireContext())
-
-        Log.d("TESTING","Auth Token is "+session.getAuthToken().toString())
-        Log.d("TESTING","User Id Is "+session.getUserId().toString())
+        Log.d("TESTING", "Auth Token is " + session.getAuthToken().toString())
+        Log.d("TESTING", "User Id Is " + session.getUserId().toString())
 
         binding.imageBackButton.setOnClickListener {
             if (binding.llHomeSetup.isVisible == true) {
@@ -231,18 +245,21 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
         binding.textSaveAndContinueButton.setOnClickListener {
             if (binding.llHomeSetup.isVisible == true) {
-                Log.d("TESTING","ActivityList size "+activityListResult.size)
-                Log.d("TESTING","AmenitiesList Size"+amenitiesList.size)
-                if(activityListResult.size==0){
-                    LoadingUtils.showErrorDialog(requireContext(),"Please Select Activity")
+                Log.d("TESTING", "ActivityList size " + activityListResult.size)
+                Log.d("TESTING", "AmenitiesList Size" + amenitiesList.size)
+                if (activityListResult.size == 0) {
+                    LoadingUtils.showErrorDialog(requireContext(), "Please Select Activity")
                     return@setOnClickListener
                 }
-                if(amenitiesListResult.size ==0){
-                    LoadingUtils.showErrorDialog(requireContext(),"Please Select Aminities")
+                if (amenitiesListResult.size == 0) {
+                    LoadingUtils.showErrorDialog(requireContext(), "Please Select Aminities")
                     return@setOnClickListener
                 }
-                if(cancellationDays.equals("00")){
-                    LoadingUtils.showErrorDialog(requireContext(),"Please Select Cancellation Time")
+                if (cancellationDays.equals("00")) {
+                    LoadingUtils.showErrorDialog(
+                        requireContext(),
+                        "Please Select Cancellation Time"
+                    )
                     return@setOnClickListener
                 }
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -251,9 +268,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 binding.llHomeSetup.visibility = View.GONE
                 binding.llGalleryLocation.visibility = View.VISIBLE
                 binding.llAvailability.visibility = View.GONE
-            }
-            else if (binding.llGalleryLocation.isVisible == true) {
-                if(!checkingGalleryValidation()){
+            } else if (binding.llGalleryLocation.isVisible == true) {
+                if (!checkingGalleryValidation()) {
                     return@setOnClickListener
                 }
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -263,14 +279,13 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 binding.llGalleryLocation.visibility = View.GONE
                 binding.llAvailability.visibility = View.VISIBLE
                 binding.textSaveAndContinueButton.text = "Publish Now"
-            }
-            else if (binding.llAvailability.isVisible == true) {
+            } else if (binding.llAvailability.isVisible == true) {
+
                 callingPublishNowApi()
-                //findNavController().navigate(R.id.host_fragment_properties)
             }
         }
         arguments?.let {
-            if(it.containsKey(AppConstant.PROPERTY_ID)){
+            if (it.containsKey(AppConstant.PROPERTY_ID)) {
                 propertyId = it.getInt(AppConstant.PROPERTY_ID)
                 callingPropertyDetailApi(propertyId)
             }
@@ -278,169 +293,190 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     }
 
-     @RequiresApi(Build.VERSION_CODES.O)
-     fun callingPublishNowApi(){
-         var requestBody = PropertyDetailsSave()
-         var resultActivityList = mutableListOf<String>()
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun callingPublishNowApi() {
+        var requestBody = PropertyDetailsSave()
+        Log.d("dataPropertyDetails", requestBody.toString())
+        var resultActivityList = mutableListOf<String>()
 
-         activityListResult.forEach {
-             resultActivityList.add(it)
-         }
+        activityListResult.forEach {
+            resultActivityList.add(it)
+        }
 
-         if(!validation()){
-             Log.d("TESTING","Inside of Validation")
-             return
-         }
+        if (!validation()) {
+            Log.d("TESTING", "Inside of Validation")
+            return
+        }
 
-         Log.d("TESTING","sIZE IS "+resultActivityList.size)
+        Log.d("TESTING", "sIZE IS " + resultActivityList.size)
 
-         val newGalleryList = mutableListOf<String>()
+        val newGalleryList = mutableListOf<String>()
 
-         galleryList.forEach {
-             if(it.second){
-                 newGalleryList.add(it.first)
-             }
-         }
-
-
-         val session : SessionManager = SessionManager(requireContext())
-         requestBody.user_id = session.getUserId()!!
-
-         Log.d("TESTING", "User Id is "+session.getUserId())
-
-         requestBody.title = titleResult
-         requestBody.space_type = spaceType
-         requestBody.property_size = propertySize
-         requestBody.max_guest_count = peopleCount
-         requestBody.bedroom_count = badroomCount
-         requestBody.bathroom_count = bathroomCount
-         requestBody.is_instant_book = if(instantBookingCheck==1)true else false
-         requestBody.has_self_checkin = if(selfCheckIn == 1) true else false
-         requestBody.allows_pets = if(allowsPets ==1) true else false
-         requestBody.cancellation_duration = cancellationDays.toInt()
-         requestBody.description = descriptionResult
-         requestBody.parking_rules = parkingRule
-         requestBody.host_rules = hostRule
-         requestBody.street_address = street
-         requestBody.city = city
-         requestBody.zip_code = zipcode
-         requestBody.country = country
-         requestBody.state = state
-         requestBody.latitude = latitude.toFloat()
-         requestBody.longitude = longitude.toFloat()
-         requestBody.min_booking_hours = minimumHourValue
-         requestBody.hourly_rate = hourlyPrice
-         requestBody.bulk_discount_hour = bulkDiscountHour
-         requestBody.bulk_discount_rate = bulkDiscountPrice
-         requestBody.cleaning_fee=if(cleaningCharges.toString().length ==0)0.0f else cleaningCharges.toFloat();   ///need to correct
-         requestBody.available_month = availableMonth
-         requestBody.available_day = days
-         requestBody.available_from = fromHour
-         requestBody.available_to = toHour
-         requestBody.images = newGalleryList
-         requestBody.country = country
-         requestBody.activities = resultActivityList
-         requestBody.amenities = amenitiesListResult
-         requestBody.add_ons = addOnList
-
-         lifecycleScope.launch {
+        galleryList.forEach {
+            if (it.second) {
+                newGalleryList.add(it.first)
+            }
+        }
 
 
-             if(propertyId ==-1) {
-                 if(newGalleryList.size ==0){
-                     LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images")
-                     return@launch
-                 }
-                 LoadingUtils.showDialog(requireContext(),false)
-                 viewModel.addProperty(requestBody).collect {
-                     when (it) {
-                         is NetworkResult.Success -> {
-                             LoadingUtils.hideDialog()
+        val session: SessionManager = SessionManager(requireContext())
+        requestBody.user_id = session.getUserId()!!
 
-                             LoadingUtils.showSuccessDialog(requireContext(),"Property Updated Succesfully")
-                         }
+        Log.d("TESTING", "User Id is " + session.getUserId())
 
-                         is NetworkResult.Error -> {
-                             LoadingUtils.hideDialog()
-                             Toast.makeText(
-                                 requireContext(),
-                                 it.message.toString(),
-                                 Toast.LENGTH_LONG
-                             ).show()
-                         }
+        requestBody.title = titleResult
+        requestBody.space_type = spaceType
+        requestBody.property_size = propertySize
+        requestBody.max_guest_count = peopleCount
+        requestBody.bedroom_count = badroomCount
+        requestBody.bathroom_count = bathroomCount
+        requestBody.is_instant_book = if (instantBookingCheck == 1) true else false
+        requestBody.has_self_checkin = if (selfCheckIn == 1) true else false
+        requestBody.allows_pets = if (allowsPets == 1) true else false
+        requestBody.cancellation_duration = cancellationDays.toInt()
+        requestBody.description = descriptionResult
+        requestBody.parking_rules = parkingRule
+        requestBody.host_rules = hostRule
+        requestBody.street_address = street
+        requestBody.city = city
+        requestBody.zip_code = zipcode
+        requestBody.country = country
+        requestBody.state = state
+        requestBody.latitude = latitude.toFloat()
+        requestBody.longitude = longitude.toFloat()
+        requestBody.min_booking_hours = minimumHourValue
+        requestBody.hourly_rate = hourlyPrice
+        requestBody.bulk_discount_hour = bulkDiscountHour
+        requestBody.bulk_discount_rate = bulkDiscountPrice
+        requestBody.cleaning_fee =
+            if (cleaningCharges.toString().length == 0) 0.0f else cleaningCharges.toFloat();   ///need to correct
+        requestBody.available_month = availableMonth
+        requestBody.available_day = days
+        requestBody.available_from = fromHour
+        requestBody.available_to = toHour
+        requestBody.images = newGalleryList
+        requestBody.country = country
+        requestBody.activities = resultActivityList
+        requestBody.amenities = amenitiesListResult
+        if (!addOnList.isEmpty()) {
+            //  requestBody.add_ons = addOnList.subList(1, addOnList.size);
+            val validAddOns = addOnList.filter { addOn ->
+                !addOn.name.isNullOrBlank() &&
+                        addOn.price != null &&
+                        addOn.price!!.toDouble() > 0
+            }
 
-                         else -> {
-                             LoadingUtils.hideDialog()
-                         }
-                     }
-                 }
-             }
-             else{
-                 requestBody.property_id = propertyId
-                 requestBody.delete_images = deleteImage
+            requestBody.add_ons = validAddOns.toMutableList()
 
-                 if(newGalleryList.size ==0 && imageList.size ==0){
-                     LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images")
-                     return@launch
-                 }
-                 LoadingUtils.showDialog(requireContext(),true)
-                 viewModel.updateProperty(requestBody).collect{
-                     when(it){
-                         is NetworkResult.Success ->{
-                             LoadingUtils.hideDialog()
-                             LoadingUtils.showSuccessDialog(requireContext(),it.data.toString())
-                         }
-                         is NetworkResult.Error ->{
-                             LoadingUtils.hideDialog()
-                              LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
-                         }
-                         is NetworkResult.Loading ->{
+        }
+        Log.d("dataPropertyDetails", requestBody.toString())
+        lifecycleScope.launch {
 
-                         }
-                     }
-                 }
-             }
-         }
-     }
+
+            if (propertyId == -1) {
+                if (newGalleryList.size == 0) {
+                    LoadingUtils.showErrorDialog(requireContext(), "Please Upload Images")
+                    return@launch
+                }
+                LoadingUtils.showDialog(requireContext(), false)
+                viewModel.addProperty(requestBody).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            LoadingUtils.hideDialog()
+                            LoadingUtils.showSuccessDialog(
+                                requireContext(),
+                                "Property Updated Succesfully"
+                            )
+                            findNavController().navigateUp()
+                        }
+
+                        is NetworkResult.Error -> {
+                            LoadingUtils.hideDialog()
+                            LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
+                        }
+
+                        else -> {
+                            LoadingUtils.hideDialog()
+                        }
+                    }
+                }
+            } else {
+                requestBody.property_id = propertyId
+                requestBody.delete_images = deleteImage
+
+                if (newGalleryList.size == 0 && imageList.size == 0) {
+                    LoadingUtils.showErrorDialog(requireContext(), "Please Upload Images")
+                    return@launch
+                }
+                LoadingUtils.showDialog(requireContext(), true)
+                viewModel.updateProperty(requestBody).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            LoadingUtils.hideDialog()
+                            LoadingUtils.showSuccessDialog(requireContext(), it.data.toString())
+                            findNavController().navigateUp()
+                        }
+
+                        is NetworkResult.Error -> {
+                            LoadingUtils.hideDialog()
+                            LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
+                        }
+
+                        is NetworkResult.Loading -> {
+
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun validation() : Boolean{
-        if(activityListResult.size==0){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Select Activity")
+    private fun validation(): Boolean {
+        if (activityListResult.size == 0) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Select Activity")
             return false
         }
-        if(amenitiesListResult.size ==0){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Select Amenities")
+        if (amenitiesListResult.size == 0) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Select Amenities")
             return false
         }
-        if(cancellationDays.equals("00")){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Select Cancellation Time")
+        if (cancellationDays.equals("00")) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Select Cancellation Time")
             return false
         }
-        if(!checkingGalleryValidation()){
+        if (!checkingGalleryValidation()) {
             return false
         }
-        if(!checkingAvailabilityData()){
+        if (!checkingAvailabilityData()) {
             return false
+        }else if (binding.tvHours.text.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireActivity(), AppConstant.stTime)
+        } else if (binding.tvHours1.text.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireActivity(), AppConstant.edTime)
+        } else  if (!isWithin24Hours(fromHour,toHour)){
+            LoadingUtils.showErrorDialog(requireActivity(), AppConstant.avabilty)
         }
         return true
     }
 
 
-    private fun callingPropertyDetailApi(propertyId :Int){
-       LoadingUtils.showDialog(requireContext(),false)
+    private fun callingPropertyDetailApi(propertyId: Int) {
+        LoadingUtils.showDialog(requireContext(), false)
 
         lifecycleScope.launch {
-            viewModel.propertyDetail(propertyId).collect{
-                when(it){
-                    is NetworkResult.Success ->{
+            viewModel.propertyDetail(propertyId).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
                         LoadingUtils.hideDialog()
                         detailsDataSetToUi(it.data)
                     }
-                    is NetworkResult.Error ->{
+
+                    is NetworkResult.Error -> {
                         LoadingUtils.hideDialog()
                     }
-                    else ->{
+
+                    else -> {
 
                     }
                 }
@@ -452,10 +488,9 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     private fun detailsDataSetToUi(data: GetPropertyDetail?) {
         data?.let {
             //first Screen Work
-            if(it.space_type.equals("entire_home")){
+            if (it.space_type.equals("entire_home")) {
                 homeSelectTask()
-            }
-            else{
+            } else {
                 privateRoomSelectTask()
             }
             checkChangeWork(it)
@@ -469,116 +504,117 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             //Second Screen Work
             galleryLocationScreenTask(it)
 
-           // third Screen Work
+            // third Screen Work
             availabilityScreenTask(it)
         }
     }
 
-    private fun availabilityScreenTask(data: GetPropertyDetail?){
-              data?.let {
-                  if(it.available_month.equals("00")){
-                      availableMonth ="00"
-                      anyMonth()
-                  }
-                  else if(it.available_month.equals("01")){
-                      availableMonth ="01"
-                      janSelect()
-                  }else if(it.available_month.equals("02")){
-                      availableMonth ="02"
-                      febSelect()
-                  }else if(it.available_month.equals("03")){
-                      availableMonth ="03"
-                      marchSelect()
-                  }else if(it.available_month.equals("04")){
-                      availableMonth ="04"
-                      aprilSelect()
-                  }else if(it.available_month.equals("05")){
-                      availableMonth ="05"
-                      maySelect()
-                  }else if(it.available_month.equals("06")){
-                      availableMonth ="06"
-                      juneSelect()
-                  }
-                  else if(it.available_month.equals("07")){
-                      availableMonth ="07"
-                      julySelect()
-                  }else if(it.available_month.equals("08")){
-                      availableMonth ="08"
-                      augustSelect()
-                  }else if(it.available_month.equals("09")){
-                      availableMonth ="09"
-                      septemberSelect()
-                  }else if(it.available_month.equals("10")){
-                      availableMonth ="10"
-                      octoberSelect()
-                  }else if(it.available_month.equals("11")){
-                      availableMonth ="11"
-                      novemberSelect()
-                  }else if(it.available_month.equals("12")){
-                       decSelect()
-                      availableMonth ="12"
-                  }
+    private fun availabilityScreenTask(data: GetPropertyDetail?) {
+        data?.let {
+            if (it.available_month.equals("00")) {
+                availableMonth = "00"
+                anyMonth()
+            } else if (it.available_month.equals("01")) {
+                availableMonth = "01"
+                janSelect()
+            } else if (it.available_month.equals("02")) {
+                availableMonth = "02"
+                febSelect()
+            } else if (it.available_month.equals("03")) {
+                availableMonth = "03"
+                marchSelect()
+            } else if (it.available_month.equals("04")) {
+                availableMonth = "04"
+                aprilSelect()
+            } else if (it.available_month.equals("05")) {
+                availableMonth = "05"
+                maySelect()
+            } else if (it.available_month.equals("06")) {
+                availableMonth = "06"
+                juneSelect()
+            } else if (it.available_month.equals("07")) {
+                availableMonth = "07"
+                julySelect()
+            } else if (it.available_month.equals("08")) {
+                availableMonth = "08"
+                augustSelect()
+            } else if (it.available_month.equals("09")) {
+                availableMonth = "09"
+                septemberSelect()
+            } else if (it.available_month.equals("10")) {
+                availableMonth = "10"
+                octoberSelect()
+            } else if (it.available_month.equals("11")) {
+                availableMonth = "11"
+                novemberSelect()
+            } else if (it.available_month.equals("12")) {
+                decSelect()
+                availableMonth = "12"
+            }
 
-                  binding.etType.setText(it.cleaning_fee)
-                  cleaningCharges = it.cleaning_fee
+            binding.textType.setText(it.cleaning_fee)
+            cleaningCharges = it.cleaning_fee
 
-                  if(it.available_day.equals("working_days")){
-                      onlyWorkingDay()
-                      days = "working_days"
-                  }
-                  else if(it.available_month.equals("all")){
-                      anyWeekSelect()
-                      days ="all"
-                  }else{
-                      onlyWeekend()
-                      days = "weekends"
-                  }
-                  it.available_to =DateManager(requireContext()).getHoursAndMinutes(it.available_to)
-                  it.available_from = DateManager(requireContext()).getHoursAndMinutes(it.available_from)
-                  var fromHour = DateManager(requireContext()).convert24HourToAMPM(it.available_from)
-                  var toHour = DateManager(requireContext()).convert24HourToAMPM(it.available_to)
-                  binding.tvHours.setText(fromHour)
-                  binding.tvHours1.setText(toHour)
-                  Log.d("TESTING_ZYvoo", "Available From "+ it.available_from +" Available To "+ it.available_to)
-                  this.fromHour = it.available_from
-                  this.toHour = it.available_to
+            if (it.available_day.equals("working_days")) {
+                onlyWorkingDay()
+                days = "working_days"
+            } else if (it.available_day.equals("all")) {
+                anyWeekSelect()
+                days = "all"
+            } else {
+                onlyWeekend()
+                days = "weekends"
+            }
+            it.available_to = DateManager(requireContext()).getHoursAndMinutes(it.available_to)
+            it.available_from = DateManager(requireContext()).getHoursAndMinutes(it.available_from)
+            var fromHour = DateManager(requireContext()).convert24HourToAMPM(it.available_from)
+            var toHour = DateManager(requireContext()).convert24HourToAMPM(it.available_to)
+            binding.tvHours.setText(fromHour)
+            binding.tvHours1.setText(toHour)
+            Log.d(
+                "TESTING_ZYvoo",
+                "Available From " + it.available_from + " Available To " + it.available_to
+            )
+            this.fromHour = it.available_from
+            this.toHour = it.available_to
 
-                  val minHour = it.min_booking_hours.toDouble()
-                  minimumHourValue = minHour.toInt()
-                  binding.tvHoursSelect.setText(minimumHourValue.toString()+" hour minimum")
+            val minHour = it.min_booking_hours.toDouble()
+            minimumHourValue = minHour.toInt()
+            binding.tvHoursSelect.setText(minimumHourValue.toString() + " hour minimum")
 
-                  var hPrice = it.hourly_rate.toDouble()
-                  hourlyPrice = hPrice.toInt()
-                  binding.tvHoursRupeesSelect.setText("$"+hourlyPrice.toString())
-
-
-                  var discountHour = it.bulk_discount_hour.toDouble()
-                  bulkDiscountHour= discountHour.toInt()
-                  binding.tvHoursBulkSelect.setText(bulkDiscountHour.toString()+" hour minimum")
+            var hPrice = it.hourly_rate.toDouble()
+            hourlyPrice = hPrice.toInt()
+            binding.tvHoursRupeesSelect.setText("$" + hourlyPrice.toString())
 
 
-
-                  val disCountPrice = it.bulk_discount_rate.toDouble()
-                  val disPrice = disCountPrice.toInt()
-                  bulkDiscountPrice = disPrice
-                  binding.tvDiscountSelect.setText(bulkDiscountPrice.toString()+"%  Discount")
+            var discountHour = it.bulk_discount_hour.toDouble()
+            bulkDiscountHour = discountHour.toInt()
+            binding.tvHoursBulkSelect.setText(bulkDiscountHour.toString() + " hour minimum")
 
 
+            val disCountPrice = it.bulk_discount_rate.toDouble()
+            val disPrice = disCountPrice.toInt()
+            bulkDiscountPrice = disPrice
+            binding.tvDiscountSelect.setText(bulkDiscountPrice.toString() + "%  Discount")
 
-                  addOnList = it.add_ons.toMutableList()
-                  addOnAdapter.updateAddOn(addOnList)
-              }
+
+
+            addOnList = it.add_ons.toMutableList()
+            addOnList.add(AddOnModel("Unknown Location", "0"))
+            Log.d("checkAddOnDataNew", it.add_ons.toMutableList().toString())
+            addOnAdapter.updateAddOn(addOnList)
+        }
     }
 
-    private fun galleryLocationScreenTask(data: GetPropertyDetail?){
+    private fun galleryLocationScreenTask(data: GetPropertyDetail?) {
         binding.etTitle.setText(data?.title)
         titleResult = data?.title.toString()
 
-        if(data?.latitude != null){
+        if (data?.latitude != null) {
             latitude = data.latitude
         }
 
-        if(data?.longitude != null){
+        if (data?.longitude != null) {
             longitude = data.longitude
         }
 
@@ -621,8 +657,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             state = it.toString()
         }
 
-        if(!latitude.equals("00") && !longitude.equals("00")) {
-            Log.d("TESTING_LATITUDE",latitude.toString() +" "+longitude.toString())
+        if (!latitude.equals("00") && !longitude.equals("00")) {
+            Log.d("TESTING_LATITUDE", latitude.toString() + " " + longitude.toString())
             val location = LatLng(latitude.toDouble(), longitude.toDouble())
             // Move the camera to the specified location
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
@@ -635,11 +671,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         galleryListId.clear()
 
         data?.property_images?.forEach {
-            val str = AppConstant.BASE_URL + it.image_url
+            val str = BuildConfig.MEDIA_URL + it.image_url
             val uri = Uri.parse(str)
             galleryListId.add(it.id)
-            galleryList.add(Pair<String,Boolean>(str,false))
-            Log.d("TESTING_URL", uri.toString())
+            galleryList.add(Pair<String, Boolean>(str, false))
             resultList.add(uri)
         }
 
@@ -648,185 +683,171 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         galleryAdapter.updateAdapter(resultList)
     }
 
-    private fun checkChangeWork(data: GetPropertyDetail?){
+    private fun checkChangeWork(data: GetPropertyDetail?) {
         data?.let {
-            if(it.is_instant_book == 1){
+            if (it.is_instant_book == 1) {
                 binding.listBookSwitch.isChecked = true
-                instantBookingCheck =1
-            }else{
+                instantBookingCheck = 1
+            } else {
                 binding.listBookSwitch.isChecked = false
-                instantBookingCheck =0
+                instantBookingCheck = 0
             }
 
-            if(it.has_self_checkin ==1){
+            if (it.has_self_checkin == 1) {
                 binding.selfCheckIn.isChecked = true
-                selfCheckIn =1
-            }else{
+                selfCheckIn = 1
+            } else {
                 binding.selfCheckIn.isChecked = false
-                selfCheckIn =0
+                selfCheckIn = 0
             }
 
-            if(it.allows_pets ==1){
+            if (it.allows_pets == 1) {
                 binding.allowPetsSwitch.isChecked = true
-                allowsPets =1
-            }else{
+                allowsPets = 1
+            } else {
                 binding.allowPetsSwitch.isChecked = false
-                allowsPets =0
+                allowsPets = 0
             }
 
             cancellationDays = it.cancellation_duration.toString()
 
-            if(cancellationDays.equals("24")){
+            if (cancellationDays.equals("24")) {
                 binding.endHour.selectItemByIndex(0)
-            }
-            else if(cancellationDays.equals("72")){
+            } else if (cancellationDays.equals("72")) {
                 binding.endHour.selectItemByIndex(1)
-            }
-            else if(cancellationDays.equals("168")){
+            } else if (cancellationDays.equals("168")) {
                 binding.endHour.selectItemByIndex(2)
-            }
-            else if(cancellationDays.equals("360")){
+            } else if (cancellationDays.equals("360")) {
                 binding.endHour.selectItemByIndex(3)
-            }
-            else if(cancellationDays.equals("720")){
+            } else if (cancellationDays.equals("720")) {
                 binding.endHour.selectItemByIndex(4)
             }
         }
 
     }
 
-    private fun amenitiesAdapter(list :List<String>){
+    private fun amenitiesAdapter(list: List<String>) {
         val dataTmp = PrepareData.getOnlyAmenitiesList()
-        var count =0
+        var count = 0
 
         amenitiesListResult.clear()
 
         dataTmp.forEach {
-          if(list.contains(it.first)){
-              Log.d("TESTING_RESULT","Inside Truth")
-              val pair = Pair(it.first, true)
-              dataTmp.set(count,pair)
-              amenitiesListResult.add(it.first)
-          }
+            if (list.contains(it.first)) {
+                Log.d("TESTING_RESULT", "Inside Truth")
+                val pair = Pair(it.first, true)
+                dataTmp.set(count, pair)
+                amenitiesListResult.add(it.first)
+            }
             count++
         }
         amenitiesAdapter.updateAdapter(dataTmp)
     }
 
+    private fun showingMoreText() {
+        binding.tvShowMore.setOnClickListener {
+            isExpanded = !isExpanded
+            amenitiesAdapter.toggleExpand()
+            val showText = if (isExpanded) "Show Less" else "Show More"
+            val content = SpannableString(showText)
+            content.setSpan(UnderlineSpan(), 0, content.length, 0)
+            binding.tvShowMore.text = content
+            // Update button text
+           // binding.tvShowMore.text = if (isExpanded) "Show Less" else "Show More"
+        }
+    }
 
-    private fun activitiesSetDataToUi(list :List<String>){
+    private fun activitiesSetDataToUi(list: List<String>) {
         val dataTmp = PrepareData.getAmenitiesList()
         val dataFirst = dataTmp.first
-        var count =0
+        var count = 0
         activityListResult.clear()
         dataFirst.forEach {
-           if(list.contains(it.name.trim())){
-               var newFormed = it
-               newFormed.checked = true
-               dataFirst.set(count,newFormed)
-               activityListResult.add(it.name)
-           }
+            if (list.contains(it.name.trim())) {
+                var newFormed = it
+                newFormed.checked = true
+                dataFirst.set(count, newFormed)
+                activityListResult.add(it.name)
+            }
             count++
         }
-        adapterActivity.updateAdapter(dataFirst.subList(0,3))
-        adapterActivity2.updateAdapter(dataFirst.subList(3,dataFirst.size))
+        adapterActivity.updateAdapter(dataFirst.subList(0, 3))
+        adapterActivity2.updateAdapter(dataFirst.subList(3, dataFirst.size))
 
     }
 
-    private fun BathRoomSetDataToUi(count:Int){
-        if(count ==0){
+    private fun BathRoomSetDataToUi(count: Int) {
+        if (count == 0) {
             bathRoomAnySelect()
-        }
-        else if(viewModel.numberSelectMap.containsKey(count)){
-            if(count ==1){
+        } else if (viewModel.numberSelectMap.containsKey(count)) {
+            if (count == 1) {
                 bathRoomFirstSelect()
-            }
-            else if(count ==2){
+            } else if (count == 2) {
                 bathRoomSecondSelect()
-            }
-            else if(count ==3){
+            } else if (count == 3) {
                 bathRoomThirdSelect()
-            }
-            else if(count ==4){
+            } else if (count == 4) {
                 bathRoomFourthSelect()
-            }
-            else if(count ==5){
+            } else if (count == 5) {
                 bathRoomFifthSelect()
-            }
-            else if(count ==7){
+            } else if (count == 7) {
                 bathroom7Select()
-            }
-            else if(count ==8){
+            } else if (count == 8) {
                 bathRoom8Select()
             }
-        }
-
-        else{
+        } else {
             binding.etBathroom.setText(count.toString())
             bathroomCount = count
             clearBathRommBackground()
         }
     }
 
-    private fun bedRoomSetDataToUi(count: Int){
-        if(count==0){
+    private fun bedRoomSetDataToUi(count: Int) {
+        if (count == 0) {
             bedRoomAnySelect()
-        }
-        else if(viewModel.numberSelectMap.containsKey(count)){
-            if(count==1){
+        } else if (viewModel.numberSelectMap.containsKey(count)) {
+            if (count == 1) {
                 bedRoomFirstSelect()
-            }
-            else if(count ==2){
+            } else if (count == 2) {
                 bedRoomSecondSelect()
-            }
-            else if(count ==3){
+            } else if (count == 3) {
                 bedRoomThirdSelect()
-            }
-            else if(count ==4){
+            } else if (count == 4) {
                 bedRoomFourthSelect()
-            }else if(count ==5){
+            } else if (count == 5) {
                 bedRoomFifthSelect()
-            }
-            else if(count ==7){
+            } else if (count == 7) {
                 bedroom7Select()
-            }else if(count ==8) {
+            } else if (count == 8) {
                 bedRoom8Select()
             }
-        }
-        else{
-           binding.etBedRoomCount.setText(count.toString())
+        } else {
+            binding.etBedRoomCount.setText(count.toString())
             badroomCount = count
             badRoomClearBackground()
         }
     }
 
-    private fun numberOfPeopleSetDataToUi(count:Int){
-        if(count==6){
-            peopleCount =6
+    private fun numberOfPeopleSetDataToUi(count: Int) {
+        if (count == 6) {
+            peopleCount = 6
             binding.peopleCount.setText(peopleCount.toString())
-        }
-        else if(viewModel.numberSelectMap.containsKey(count)){
-           if(count==1){
-              onePeopleCount()
-           }
-            else if(count ==2){
+        } else if (viewModel.numberSelectMap.containsKey(count)) {
+            if (count == 1) {
+                onePeopleCount()
+            } else if (count == 2) {
                 twoPeopleCount()
-           }
-            else if(count==3){
+            } else if (count == 3) {
                 peopleCount3()
-           }
-            else if(count ==5){
+            } else if (count == 5) {
                 peopleCount5()
-           }
-            else if(count == 7){
+            } else if (count == 7) {
                 peopleCount7()
-           }
-        }
-        else if( count == 0 ){
-               anyPeopleCount()
-        }
-        else{
-            peopleCount =count
+            }
+        } else if (count == 0) {
+            anyPeopleCount()
+        } else {
+            peopleCount = count
             binding.peopleCount.setText(peopleCount.toString())
             clearPeopleCountBackground()
         }
@@ -834,31 +855,26 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
-    private fun propertySetDataToUi(propertySize: Int){
-        if(viewModel.propertyMap.containsKey(propertySize)){
-                if(propertySize == 250){
-                    propertyRoomFirstSelect()
-                } else if(propertySize == 350){
-                    propertySecondSelect()
-                }
-                else if(propertySize == 450){
-                    propertyThirdSelect()
-                }
-                 else if(propertySize == 550){
-                     propertyFourthSelect()
-                }else if(propertySize == 650){
-                    propertyFifthSelect()
-                }
-            else if(propertySize == 750){
+    private fun propertySetDataToUi(propertySize: Int) {
+        if (viewModel.propertyMap.containsKey(propertySize)) {
+            if (propertySize == 250) {
+                propertyRoomFirstSelect()
+            } else if (propertySize == 350) {
+                propertySecondSelect()
+            } else if (propertySize == 450) {
+                propertyThirdSelect()
+            } else if (propertySize == 550) {
+                propertyFourthSelect()
+            } else if (propertySize == 650) {
+                propertyFifthSelect()
+            } else if (propertySize == 750) {
                 property7Select()
-                }
+            }
 
-        }
-        else if(propertySize == 0){
+        } else if (propertySize == 0) {
             propertyRoomAnySelect()
-        }
-        else{
-           binding.etPropertySize.setText(propertySize.toString())
+        } else {
+            binding.etPropertySize.setText(propertySize.toString())
             this.propertySize = propertySize
             clearPropertyBackground()
         }
@@ -866,32 +882,53 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun checkingAvailabilityData() : Boolean{
+    private fun checkingAvailabilityData(): Boolean {
 
-          if(addOnList.size ==0){
-              LoadingUtils.showErrorDialog(requireContext(),"Please Select Add-on")
-              return false
-          }
-          if(fromHour.equals("00::00") && toHour.equals("00:00")){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Select Availability Hours")
+        if (addOnList.size == 0) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Select Add-on")
             return false
-          }
-       //   var value =DateManager(requireContext()).isFromTimeLessThanToTime(fromHour,toHour)
-         //  if(!value){
-           // LoadingUtils.showErrorDialog(requireContext(),"The 'from' time ($fromHour) is NOT earlier than the 'to' time ($toHour).")
-           // return false
+        }
+
+        if (fromHour.equals(toHour)) {
+            LoadingUtils.showErrorDialog(
+                requireContext(),
+                "Start time and end time should be different"
+            )
+            return false
+        }
+
+        if (fromHour.equals("00::00") && toHour.equals("00:00")) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Select Availability Hours")
+            return false
+        }
+        //   var value =DateManager(requireContext()).isFromTimeLessThanToTime(fromHour,toHour)
+        //  if(!value){
+        // LoadingUtils.showErrorDialog(requireContext(),"The 'from' time ($fromHour) is NOT earlier than the 'to' time ($toHour).")
+        // return false
 
 
-         return true
+        return true
     }
 
 
-    private fun galleryTextField(){
+    private fun galleryTextField() {
         binding.textType.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     cleaningCharges = editable.toString()
@@ -901,10 +938,22 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
 
         binding.etCity.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     city = editable.toString()
@@ -913,10 +962,22 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         })
 
         binding.zipcode.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     zipcode = editable.toString()
@@ -927,10 +988,22 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
 
         binding.state.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     state = editable.toString()
@@ -939,22 +1012,46 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         })
 
         binding.etTitle.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
-                   titleResult = editable.toString()
+                    titleResult = editable.toString()
                 }
             }
         })
 
         binding.etDescription.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     descriptionResult = editable.toString()
@@ -963,10 +1060,22 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         })
 
         binding.etParkingRule.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     parkingRule = editable.toString()
@@ -975,10 +1084,22 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         })
 
         binding.etHostRule.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     hostRule = editable.toString()
@@ -987,11 +1108,23 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         })
 
         binding.etAddress.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
             }
-            override fun afterTextChanged(editable: Editable?)   {
+
+            override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     street = editable.toString()
                 }
@@ -1000,69 +1133,69 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     }
 
-    private fun checkingGalleryValidation():Boolean{
+    private fun checkingGalleryValidation(): Boolean {
 
-        if(galleryList.size ==0){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Upload Images of location")
+        if (galleryList.size == 0) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Upload location Images")
             return false
         }
 
-        if(titleResult.isEmpty()){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Title of Space")
+        if (titleResult.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Title of Space")
             return false
         }
 
-        if(descriptionResult.isEmpty()){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Description of Space")
+        if (descriptionResult.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Description of Space")
             return false
         }
 
-       if(street.isEmpty()){
-           LoadingUtils.showErrorDialog(requireContext(),"Please Enter Street")
-           return false
-       }
-
-        if(city.isEmpty()){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Enter City Name")
+        if (street.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Street")
             return false
         }
 
-        if(zipcode.isEmpty()){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Zip Code")
+        if (city.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Enter City Name")
             return false
         }
 
-        if(country.isEmpty()){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Country")
+        if (zipcode.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Zip Code")
             return false
         }
-        if(state.isEmpty()){
-            LoadingUtils.showErrorDialog(requireContext(),"Please Enter Country")
+
+        if (country.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Country")
+            return false
+        }
+        if (state.isEmpty()) {
+            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Country")
             return false
         }
         return true
     }
 
     fun locationSelection() {
-       binding.etCity.setOnClickListener {
+        binding.etCity.setOnClickListener {
 
-           val apiKey = getString(R.string.api_key_location)
-           if (!Places.isInitialized()) {
-               Places.initialize(context, apiKey)
-           }
+            val apiKey = getString(R.string.api_key_location)
+            if (!Places.isInitialized()) {
+                Places.initialize(context, apiKey)
+            }
 
-               val fields: List<Place.Field> = Arrays.asList<Place.Field>(
-                   Place.Field.ID,
-                   Place.Field.NAME,
-                   Place.Field.ADDRESS,
-                   Place.Field.LAT_LNG
-               )
+            val fields: List<Place.Field> = Arrays.asList<Place.Field>(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.ADDRESS,
+                Place.Field.LAT_LNG
+            )
 
-               val intent: Intent =
-                   Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
-                       .build(activity)
-               startActivityForResult(intent, 103)
-           }
+            val intent: Intent =
+                Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(activity)
+            startActivityForResult(intent, 103)
+        }
 
     }
 
@@ -1086,8 +1219,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
                     imageList.removeAt(position)
                     galleryList.removeAt(position)
-                    deleteImage.add(galleryListId.get(position))
-                    galleryListId.removeAt(position)
+                    if (galleryListId.size - 1 >= position) {
+                        deleteImage.add(galleryListId.get(position))
+                        galleryListId.removeAt(position)
+                    }
                     galleryAdapter.updateAdapter(imageList)
 
 
@@ -1099,11 +1234,36 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 //                    }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
-                        context?.let { openGallery() }
+                        Log.d("nikunjcheckPosition", position.toString())
+                        context?.let {
+                            if (position <= 5) {
+                                openGallery()
+                            } else {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "You can only add 5 images to one property.",
+                                    Toast.LENGTH_LONG
+                                ).show();
+
+                            }
+
+                        }
                     } else {
                         if (hasPermissions(requireContext(), *permissions())) {
+                            Log.d("nikunjcheckPosition", position.toString())
                             //Do our task
-                            context?.let { openGallery() }
+                            context?.let {
+                                if (position <= 5) {
+                                    openGallery()
+                                } else {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "You can only add 5 images to one property.",
+                                        Toast.LENGTH_LONG
+                                    ).show();
+
+                                }
+                            }
                         } else {
                             requestPermission();
                         }
@@ -1208,15 +1368,16 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             // Handle multiple image selection
             if (data?.clipData != null) {
                 val count = data.clipData!!.itemCount
-                Log.d("TESTING_ZYVOO","Counting is "+count)
+                Log.d("TESTING_ZYVOO", "Counting is " + count)
 
                 for (i in 0 until count) {
                     val imageUri = data.clipData!!.getItemAt(i).uri
-                      var bitmapString = PrepareData.uriToBase64(imageUri,requireContext().contentResolver)
+                    val bitmapString =
+                        PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
 
                     imageList.add(0, imageUri)
                     if (bitmapString != null) {
-                        galleryList.add(0,Pair<String,Boolean>(bitmapString,true))
+                        galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
                     }
                 }
                 galleryAdapter.updateAdapter(imageList)
@@ -1225,14 +1386,27 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             } else if (data?.data != null) {
                 // Single image selected
                 val imageUri = data.data
+
                 imageUris.add(imageUri!!)
-                Toast.makeText(requireContext(), "1 image selected", Toast.LENGTH_SHORT).show()
+                Log.d("ImageDataVipin", imageUri.toString())
+                // Toast.makeText(requireContext(), "1 image selectedd", Toast.LENGTH_SHORT).show()
+
+                val bitmapString =
+                    PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
+
+                imageList.add(0, imageUri)
+                if (bitmapString != null) {
+                    galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
+                }
+
+
+                galleryAdapter.updateAdapter(imageList)
+                Toast.makeText(requireContext(), "1 images selected", Toast.LENGTH_SHORT)
+                    .show()
             }
 
             // You can now handle the selected image URIs in the imageUris list
-        }
-
-        else if (requestCode == 103) {
+        } else if (requestCode == 103) {
 
             if (resultCode == Activity.RESULT_OK) {
                 val place = Autocomplete.getPlaceFromIntent(data)
@@ -1250,7 +1424,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
                 // Add a marker at that location
                 mMap?.addMarker(MarkerOptions().position(location))
-                fetchAddressDetails(latitude.toDouble(),longitude.toDouble())
+                fetchAddressDetails(latitude.toDouble(), longitude.toDouble())
                 binding.etCity.isEnabled = true
                 if (latitude == null) {
                     latitude = "0.0001"
@@ -1290,26 +1464,30 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             } catch (e: Exception) {
                 Log.e("Geocoder", "Error fetching address: ${e.message}")
-                Toast.makeText(requireContext(), "Unable to fetch address details", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Unable to fetch address details",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
 
-    private fun swictchChangeListener(){
+    private fun swictchChangeListener() {
         binding.listBookSwitch.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-              instantBookingCheck =1
+                instantBookingCheck = 1
             } else {
-                instantBookingCheck =0
+                instantBookingCheck = 0
             }
         }
 
         binding.selfCheckIn.setOnCheckedChangeListener { compoundButton, b ->
-            if(b) selfCheckIn=1 else selfCheckIn =0
+            if (b) selfCheckIn = 1 else selfCheckIn = 0
         }
 
         binding.allowPetsSwitch.setOnCheckedChangeListener { compoundButton, b ->
-            if(b) allowsPets =1 else allowsPets =0
+            if (b) allowsPets = 1 else allowsPets = 0
         }
 
     }
@@ -1324,17 +1502,18 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         adapterActivity = ActivitiesAdapter(requireContext(), activityList.subList(0, 3))
 
-        adapterActivity.setOnItemClickListener{ adapterActivity,Int->
+        adapterActivity.setOnItemClickListener { adapterActivity, Int, status ->
             run {
-                savingActivityBackground(adapterActivity)
+                savingActivityBackground(adapterActivity, status)
             }
         }
 
-        adapterActivity2 = ActivitiesAdapter(requireContext(), activityList.subList(3, activityList.size))
+        adapterActivity2 =
+            ActivitiesAdapter(requireContext(), activityList.subList(3, activityList.size))
 
-        adapterActivity2.setOnItemClickListener { adapterActivity, Int ->
+        adapterActivity2.setOnItemClickListener { adapterActivity, Int, status ->
             run {
-                savingActivityBackground(adapterActivity)
+                savingActivityBackground(adapterActivity, status)
             }
         }
 
@@ -1345,21 +1524,17 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.endHour.setItems(hoursList)
 
         binding.endHour.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newText ->
-            if(newIndex ==0){
-                cancellationDays="24"
-            }
-            else if(newIndex ==1){
-                cancellationDays="72"
+            if (newIndex == 0) {
+                cancellationDays = "24"
+            } else if (newIndex == 1) {
+                cancellationDays = "72"
 
-            }
-            else if(newIndex ==2){
-                cancellationDays ="168"
-            }
-            else if(newIndex ==3){
-                cancellationDays ="360"
-            }
-            else if(newIndex ==4){
-                cancellationDays="720"
+            } else if (newIndex == 2) {
+                cancellationDays = "168"
+            } else if (newIndex == 3) {
+                cancellationDays = "360"
+            } else if (newIndex == 4) {
+                cancellationDays = "720"
             }
 
         }
@@ -1388,24 +1563,35 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         settingClickListenertoSpaceManagePlace()
     }
 
-    private fun savingActivityBackground(adapterActivity:MutableList<ActivityModel>){
+    /*private fun savingActivityBackground(adapterActivity: MutableList<ActivityModel>) {
         CoroutineScope(Dispatchers.IO).launch {
             adapterActivity.forEach {
-                if(it.checked){
-                    Log.d("TESTING","cHECKING nAME IS "+ it.name)
+                if (it.checked) {
+                    Log.d("TESTING", "cHECKING nAME IS " + it.name)
                     activityListResult.add(it.name)
+                }
+            }
+        }
+    }*/
+    private fun savingActivityBackground(adapterActivity: String, status: Boolean) {
+        CoroutineScope(Dispatchers.IO).launch {
+            if (status) {
+                activityListResult.add(adapterActivity)
+            } else {
+                if (activityListResult.contains(adapterActivity)) {
+                    activityListResult.remove(adapterActivity)
                 }
             }
         }
     }
 
-    private fun homeSelectTask(){
+    private fun homeSelectTask() {
         binding.tvHome.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvPrivateRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         spaceType = "entire_home"
     }
 
-    private fun privateRoomSelectTask(){
+    private fun privateRoomSelectTask() {
         binding.tvPrivateRoom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
         spaceType = "private_room"
@@ -1413,10 +1599,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     private fun settingClickListenertoSpaceManagePlace() {
         binding.tvHome.setOnClickListener {
-          homeSelectTask()
+            homeSelectTask()
         }
         binding.tvPrivateRoom.setOnClickListener {
-         privateRoomSelectTask()
+            privateRoomSelectTask()
         }
 
         binding.tvHomeSetup.setOnClickListener {
@@ -1482,7 +1668,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
-    private fun clearBathRommBackground(){
+    private fun clearBathRommBackground() {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1494,7 +1680,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
-    private fun bathRoomAnySelect(){
+    private fun bathRoomAnySelect() {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1503,10 +1689,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        bathroomCount =0
+        bathroomCount = 0
     }
 
-    private fun bathRoomFirstSelect(){
+    private fun bathRoomFirstSelect() {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1515,10 +1701,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        bathroomCount =1
+        bathroomCount = 1
     }
 
-    private fun bathRoomSecondSelect(){
+    private fun bathRoomSecondSelect() {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -1527,10 +1713,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        bathroomCount =2
+        bathroomCount = 2
     }
 
-    private fun bathRoomThirdSelect(){
+    private fun bathRoomThirdSelect() {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1539,10 +1725,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        bathroomCount =3
+        bathroomCount = 3
     }
 
-    private fun bathRoomFourthSelect(){
+    private fun bathRoomFourthSelect() {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1554,7 +1740,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         bathroomCount = 4
     }
 
-    private fun bathRoomFifthSelect(){
+    private fun bathRoomFifthSelect() {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1566,7 +1752,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         bathroomCount = 5
     }
 
-    private fun bathroom7Select(){
+    private fun bathroom7Select() {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1575,10 +1761,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        bathroomCount =7
+        bathroomCount = 7
     }
 
-    private fun bathRoom8Select(){
+    private fun bathRoom8Select() {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1592,7 +1778,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
 
     private fun settingBackgroundTaskToBedroom() {
-        binding.tvAnyBedrooms.setOnClickListener {
+        binding.tvAnyBathroom.setOnClickListener {
             bathRoomAnySelect()
         }
 
@@ -1622,26 +1808,48 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             bathRoom8Select()
         }
         binding.etBathroom.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
 
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 val newText = charSequence.toString()
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                bathroomCount = finalText.toInt()
+                bathroomCount = if(finalText.isNotEmpty()) finalText.toInt() else 0
                 clearBathRommBackground()
             }
         })
 
         binding.etCity.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
 
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 val newText = charSequence.toString()
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
                 city = finalText.toString()
@@ -1649,12 +1857,23 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         })
 
         binding.country.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
 
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 val newText = charSequence.toString()
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
                 country = finalText.toString()
@@ -1662,12 +1881,23 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         })
 
         binding.state.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
 
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 val newText = charSequence.toString()
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
                 state = finalText.toString()
@@ -1676,8 +1906,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
-
-    private fun bedRoomAnySelect(){
+    private fun bedRoomAnySelect() {
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1686,11 +1915,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        badroomCount =0
+        badroomCount = 0
     }
 
 
-    private fun bedRoomFirstSelect(){
+    private fun bedRoomFirstSelect() {
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1699,10 +1928,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        badroomCount =1
+        badroomCount = 1
     }
 
-    private fun bedRoomSecondSelect(){
+    private fun bedRoomSecondSelect() {
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -1711,10 +1940,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        badroomCount =2
+        badroomCount = 2
     }
 
-    private fun bedRoomThirdSelect(){
+    private fun bedRoomThirdSelect() {
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1723,10 +1952,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        badroomCount =3
+        badroomCount = 3
     }
 
-    private fun bedRoomFourthSelect(){
+    private fun bedRoomFourthSelect() {
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1735,10 +1964,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        badroomCount =4
+        badroomCount = 4
     }
 
-    private fun bedRoomFifthSelect(){
+    private fun bedRoomFifthSelect() {
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1747,10 +1976,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        badroomCount =5
+        badroomCount = 5
     }
 
-    private fun bedroom7Select(){
+    private fun bedroom7Select() {
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1759,10 +1988,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        badroomCount =7
+        badroomCount = 7
     }
 
-    private fun bedRoom8Select(){
+    private fun bedRoom8Select() {
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1771,9 +2000,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
-        badroomCount =  8
+        badroomCount = 8
     }
-
 
 
     private fun settingBackgroundTaskToBathroom() {
@@ -1804,7 +2032,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
 
         binding.tv7Bedroom.setOnClickListener {
-          bedroom7Select()
+            bedroom7Select()
         }
 
         binding.tv8Bedroom.setOnClickListener {
@@ -1812,21 +2040,32 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
 
         binding.etBedRoomCount.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
 
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 val newText = charSequence.toString()
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                badroomCount = finalText.toInt()
+                badroomCount = if(finalText.isNotEmpty()) finalText.toInt() else 0
                 badRoomClearBackground()
             }
         })
     }
 
-    private fun badRoomClearBackground(){
+    private fun badRoomClearBackground() {
         binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1838,7 +2077,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
-    private fun propertyRoomAnySelect(){
+    private fun propertyRoomAnySelect() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1846,11 +2085,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        propertySize =0
+        propertySize = 0
     }
 
 
-    private fun propertyRoomFirstSelect(){
+    private fun propertyRoomFirstSelect() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv250.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1858,11 +2097,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tv550.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv650.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv750.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        propertySize =250
+        propertySize = 250
 
     }
 
-    private fun propertySecondSelect(){
+    private fun propertySecondSelect() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv350.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -1873,7 +2112,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         propertySize = 350
     }
 
-    private fun propertyThirdSelect(){
+    private fun propertyThirdSelect() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1884,7 +2123,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         propertySize = 450
     }
 
-    private fun clearPropertyBackground(){
+    private fun clearPropertyBackground() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1896,7 +2135,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
-    private fun propertyFourthSelect(){
+    private fun propertyFourthSelect() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1907,7 +2146,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         propertySize = 550
     }
 
-    private fun propertyFifthSelect(){
+    private fun propertyFifthSelect() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1918,7 +2157,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         propertySize = 650
     }
 
-    private fun property7Select(){
+    private fun property7Select() {
         binding.tvAny.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv250.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv350.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1955,16 +2194,27 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
 
         binding.etPropertySize.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
 
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 val newText = charSequence.toString()
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                propertySize = finalText.toInt()
-                clearPropertyBackground()
+                propertySize = if(finalText.isNotEmpty()) finalText.toInt() else 0
+                 clearPropertyBackground()
             }
         })
     }
@@ -1976,27 +2226,27 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
     }
 
-    private fun anyPeopleCount(){
+    private fun anyPeopleCount() {
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        peopleCount =0
+        peopleCount = 0
     }
 
-    private fun onePeopleCount(){
+    private fun onePeopleCount() {
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        peopleCount =1
+        peopleCount = 1
     }
 
-    private fun twoPeopleCount(){
+    private fun twoPeopleCount() {
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -2006,40 +2256,40 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         peopleCount = 2
     }
 
-    private fun peopleCount3(){
+    private fun peopleCount3() {
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        peopleCount =3
+        peopleCount = 3
     }
 
-    private fun peopleCount5(){
+    private fun peopleCount5() {
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        peopleCount =5
+        peopleCount = 5
     }
 
-    private fun peopleCount7(){
+    private fun peopleCount7() {
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_inner_select_white)
-        peopleCount =7
+        peopleCount = 7
     }
 
     private fun settingBackgroundTaskToPeople() {
         //No of people
         binding.tvAnyPeople.setOnClickListener {
-          anyPeopleCount()
+            anyPeopleCount()
         }
 
 
@@ -2051,7 +2301,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
 
         binding.tv3.setOnClickListener {
-         peopleCount3()
+            peopleCount3()
         }
 
         binding.tv5.setOnClickListener {
@@ -2059,25 +2309,45 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
 
         binding.tv7.setOnClickListener {
-          peopleCount7()
+            peopleCount7()
         }
 
         binding.peopleCount.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
             }
 
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
                 val newText = charSequence.toString()
             }
+
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                peopleCount = finalText.toInt()
+//                var finalText1 = "0"
+//                if (finalText.isNotEmpty()) {
+//                    finalText1 =   finalText
+//                } else {
+//                    finalText1 = "0"
+//                    propertyRoomAnySelect()
+//                }
+               peopleCount = if (finalText.isNotEmpty()) finalText.toInt() else 0
+               // peopleCount =  finalText1.toInt()
+
                 clearPeopleCountBackground()
             }
         })
     }
 
-    fun clearPeopleCountBackground(){
+    fun clearPeopleCountBackground() {
         binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2093,7 +2363,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
     fun setUpRecyclerView() {
-        galleryAdapter = GallaryAdapter(imageList,requireContext())
+        galleryAdapter = GallaryAdapter(imageList, requireContext())
         galleryAdapter.updateAdapter(imageList)
 
 
@@ -2126,10 +2396,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         amenitiesAdapter.updateAdapter(amenitiesList)
 
-        amenitiesAdapter.setOnItemClickListener(object:AmenitiesAdapter.onItemClickListener{
+        amenitiesAdapter.setOnItemClickListener(object : AmenitiesAdapter.onItemClickListener {
             override fun onItemClick(list: MutableList<Pair<String, Boolean>>) {
-               amenitiesList = list
-               changingAmenitiesList(amenitiesList)
+                amenitiesList = list
+                changingAmenitiesList(amenitiesList)
             }
         })
 
@@ -2139,10 +2409,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     private fun changingAmenitiesList(amenitiesList: MutableList<Pair<String, Boolean>>) {
 
         CoroutineScope(Dispatchers.IO).launch {
-          amenitiesListResult.clear()
+            amenitiesListResult.clear()
 
             amenitiesList.forEach {
-                if(it.second)amenitiesListResult.add(it.first)
+                if (it.second) amenitiesListResult.add(it.first)
             }
 
         }
@@ -2181,13 +2451,15 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             "add On" -> {
                 showAddOnDialog()
             }
+
             "add On Cross" -> {
                 if (obj == addOnList.size - 1) {
                     //  dialogSelectLanguage()
                 } else {
                     addOnList.removeAt(obj)
-                    addonlist.removeAt(obj)
-                    addonPrice.removeAt(obj)
+//                    addonlist.removeAt(obj)
+                    //vipin check later
+                    //    addonPrice.removeAt(obj)
                     addOnAdapter.updateAddOn(addOnList)
 
                 }
@@ -2202,9 +2474,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     @SuppressLint("MissingInflatedId", "ClickableViewAccessibility")
     fun showAddOnDialog() {
+
         val dialog = context?.let {
             Dialog(it, R.style.BottomSheetDialog)
         }
+
         dialog?.apply {
             setCancelable(true)
             setCanceledOnTouchOutside(true)
@@ -2212,18 +2486,13 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
 
-
             val recyclerView: RecyclerView = findViewById(R.id.rcy)
-
             val etItemName: EditText = findViewById(R.id.etAdd)
-
             val etItemPrice: EditText = findViewById(R.id.etRupees)
-
             val btnSubmit: TextView = findViewById(R.id.textAddButton)
-
             val itemList = getItemList()
             var selectedItem: String? = null
 
@@ -2239,13 +2508,20 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 if (itemName.isNotEmpty() && itemPrice.isNotEmpty()) {
                     val newAddOn = AddOnModel(itemName, itemPrice)
                     addOnList.add(0, newAddOn)
-                    addonlist.add(itemName)
-                    addonPrice.add(itemPrice)
+                    // addonlist.add(itemName)
+                    //    addonPrice.add(itemPrice)
+                    Log.d("checkAddonData", addOnList.toString())
+                    Log.d("checkAddonData", addonPrice.toString())
                     addOnAdapter.updateAddOn(addOnList)
+                    //  addOnAdapter.notifyDataSetChanged()
                     addOnAdapter.notifyItemInserted(0)
                     dialog.dismiss()
                 } else {
-                    Toast.makeText(requireContext(), "Please enter valid details", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Please enter valid details",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -2254,7 +2530,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
-    private fun anyMonth(){
+    private fun anyMonth() {
         binding.tvAll.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvFeb.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2268,11 +2544,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvOct.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvNov.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        availableMonth="00"
+        availableMonth = "00"
     }
 
-    private fun janSelect(){
-        availableMonth="01"
+    private fun janSelect() {
+        availableMonth = "01"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -2290,8 +2566,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun febSelect(){
-        availableMonth="02"
+    private fun febSelect() {
+        availableMonth = "02"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2311,8 +2587,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
-    private fun marchSelect(){
-        availableMonth="03"
+    private fun marchSelect() {
+        availableMonth = "03"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2331,8 +2607,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun aprilSelect(){
-        availableMonth="04"
+    private fun aprilSelect() {
+        availableMonth = "04"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2351,8 +2627,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun maySelect(){
-        availableMonth="05"
+    private fun maySelect() {
+        availableMonth = "05"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2371,8 +2647,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun juneSelect(){
-        availableMonth="06"
+    private fun juneSelect() {
+        availableMonth = "06"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2391,8 +2667,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun julySelect(){
-        availableMonth="07"
+    private fun julySelect() {
+        availableMonth = "07"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2411,8 +2687,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun augustSelect(){
-        availableMonth="08"
+    private fun augustSelect() {
+        availableMonth = "08"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2431,8 +2707,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun septemberSelect(){
-        availableMonth="09"
+    private fun septemberSelect() {
+        availableMonth = "09"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2451,8 +2727,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun octoberSelect(){
-        availableMonth="10"
+    private fun octoberSelect() {
+        availableMonth = "10"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2471,8 +2747,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun novemberSelect(){
-        availableMonth="11"
+    private fun novemberSelect() {
+        availableMonth = "11"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2507,11 +2783,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
 
         binding.tvMar.setOnClickListener {
-           marchSelect()
+            marchSelect()
         }
 
         binding.tvApr.setOnClickListener {
-           aprilSelect()
+            aprilSelect()
         }
 
         binding.tvMay.setOnClickListener {
@@ -2521,29 +2797,29 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             juneSelect()
         }
         binding.tvJul.setOnClickListener {
-           julySelect()
+            julySelect()
         }
         binding.tvAug.setOnClickListener {
             augustSelect()
         }
         binding.tvSep.setOnClickListener {
-          septemberSelect()
+            septemberSelect()
         }
         binding.tvOct.setOnClickListener {
             octoberSelect()
         }
         binding.tvNov.setOnClickListener {
-          novemberSelect()
+            novemberSelect()
         }
         binding.tvDec.setOnClickListener {
-         decSelect()
+            decSelect()
         }
 
 
     }
 
-    private fun decSelect(){
-        availableMonth="12"
+    private fun decSelect() {
+        availableMonth = "12"
 
         binding.tvAll.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvJan.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -2562,20 +2838,21 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.tvDec.setBackgroundResource(R.drawable.bg_inner_select_white)
     }
 
-    private fun anyWeekSelect(){
+    private fun anyWeekSelect() {
         binding.tvAllDays.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
         days = "all"
     }
 
-    fun onlyWorkingDay(){
+    fun onlyWorkingDay() {
         binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_outer_manage_place)
         days = "working_days"
     }
-     fun onlyWeekend(){
+
+    fun onlyWeekend() {
         binding.tvAllDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvOnlyWorkingDays.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tvOnlyWeekends.setBackgroundResource(R.drawable.bg_inner_select_white)
@@ -2617,7 +2894,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
     private fun getItemListForRadioPerHoursBulkText(): MutableList<ItemRadio> {
-        val items = PrepareData.getPriceAndHourList()
+        val items = PrepareData.getHourMinimumList()
 
         // Restore the previously selected item's state
         if (discountHourIndex != -1 && discountHourIndex < items.size) {
@@ -2639,46 +2916,71 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     fun onClickDialogOpenner() {
         binding.llHours.setOnClickListener {
             val items = getItemListForRadioHoursText()
-            showSelectedDialog(requireContext(), items, binding.tvHoursSelect,AppConstant.MINIMUM_HOUR)
+            showSelectedDialog(
+                requireContext(),
+                items,
+                binding.tvHoursSelect,
+                AppConstant.MINIMUM_HOUR
+            )
         }
 
         binding.llHoursRupees.setOnClickListener {
             val items = getItemListForRadioPerHoursRuppesText()
 
-            showSelectedDialog(requireContext(), items, binding.tvHoursRupeesSelect,AppConstant.PRICE)
+            showSelectedDialog(
+                requireContext(),
+                items,
+                binding.tvHoursRupeesSelect,
+                AppConstant.PRICE
+            )
 
         }
         binding.llHoursBulk.setOnClickListener {
             val items = getItemListForRadioPerHoursBulkText()
-            showSelectedDialog(requireContext(), items, binding.tvHoursBulkSelect,AppConstant.BULK_HOUR)
+            showSelectedDialog(
+                requireContext(),
+                items,
+                binding.tvHoursBulkSelect,
+                AppConstant.BULK_HOUR
+            )
         }
 
 
         binding.llDiscount.setOnClickListener {
             val items = getItemListForRadioPerHoursDiscountText()
-            showSelectedDialog(requireContext(), items, binding.tvDiscountSelect,AppConstant.DISCOUNT)
+            showSelectedDialog(
+                requireContext(),
+                items,
+                binding.tvDiscountSelect,
+                AppConstant.DISCOUNT
+            )
         }
 
         binding.llAvailabilityFromHours.setOnClickListener {
-            DateManager(requireContext()).showTimePickerDialog(requireContext()) { selectedHour ->
-                binding.tvHours.setText(selectedHour.toString())
-                 fromHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
-                Log.d("TESTING_ZYVOO", "From "+fromHour)
+            DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
+                binding.tvHours.setText(selectedHour)
+                fromHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
+                Log.d("TESTING_ZYVOO", "From " + fromHour)
             }
         }
 
         binding.llAvailabilityEndHours.setOnClickListener {
-            DateManager(requireContext()).showTimePickerDialog(requireContext()) { selectedHour ->
-                binding.tvHours1.setText(selectedHour.toString())
+            DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
+                binding.tvHours1.setText(selectedHour)
                 toHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
-                Log.d("TESTING_ZYVOO","To "+toHour)
+                Log.d("TESTING_ZYVOO", "To " + toHour)
             }
 
         }
 
     }
 
-    fun showSelectedDialog(context: Context, items: MutableList<ItemRadio>, text: TextView,type:String) {
+    fun showSelectedDialog(
+        context: Context,
+        items: MutableList<ItemRadio>,
+        text: TextView,
+        type: String
+    ) {
         val dialog = Dialog(context, R.style.BottomSheetDialog)
         dialog.apply {
             setCancelable(true)
@@ -2694,22 +2996,27 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             recyclerView.layoutManager = LinearLayoutManager(context)
             val adapter = RadioTextAdapter(items, object : OnClickListener {
                 override fun itemClick(selectedIndex: Int) {
-                     if(type.equals(AppConstant.MINIMUM_HOUR)){
-                         minimumHourIndex = selectedIndex
-                         minimumHourValue = selectedIndex+1;
-                       }
-                    else if(type.equals(AppConstant.PRICE)){
+                    if (type.equals(AppConstant.MINIMUM_HOUR)) {
+                        minimumHourIndex = selectedIndex
+                        //minimumHourValue = selectedIndex + 1;
+                        //Vipin
+                        minimumHourValue = selectedIndex + 2;
+                    } else if (type.equals(AppConstant.PRICE)) {
                         priceIndex = selectedIndex
-                         hourlyPrice = (selectedIndex+1)*10
-                     }
-                    else if(type.equals(AppConstant.DISCOUNT)){
+                        // hourlyPrice = (selectedIndex + 1) * 10
+                        //Vipin
+                        hourlyPrice = (selectedIndex + 2) * 10
+                    } else if (type.equals(AppConstant.DISCOUNT)) {
                         discountPriceIndex = selectedIndex
-                         bulkDiscountPrice = (selectedIndex+1)*10
-                     }
-                    else if(type.equals(AppConstant.BULK_HOUR)){
+                        // bulkDiscountPrice = (selectedIndex + 1) * 10
+                        //Vipin
+                        bulkDiscountPrice = (selectedIndex + 2) * 10
+                    } else if (type.equals(AppConstant.BULK_HOUR)) {
                         discountHourIndex = selectedIndex
-                         bulkDiscountHour = (selectedIndex+1)
-                     }
+                        // bulkDiscountHour = (selectedIndex + 1)
+                        //Vipin
+                        bulkDiscountHour = (selectedIndex + 2)
+                    }
                 }
             }) { selectedText ->
                 // Update TextView with the selected text
@@ -2724,4 +3031,9 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
     }
 
-  }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+}

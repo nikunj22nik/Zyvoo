@@ -8,16 +8,23 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutTransactionBinding
+import com.business.zyvo.fragment.host.payments.model.GetBookingList
 import com.business.zyvo.model.TransactionModel
 
 
-class TransactionAdapter(var context: Context,private var transactionsList: ArrayList<TransactionModel>) :
+class TransactionAdapter(
+    var context: Context,
+    private var transactionsList: MutableList<GetBookingList>
+) :
     RecyclerView.Adapter<TransactionAdapter.TransactionViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TransactionViewHolder {
-        val itemView = LayoutTransactionBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val itemView =
+            LayoutTransactionBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TransactionViewHolder(itemView)
     }
 
@@ -46,35 +53,73 @@ class TransactionAdapter(var context: Context,private var transactionsList: Arra
 
                 binding.tvAmount.text = "Amount"
                 binding.tvStatus.text = "Status"
+                binding.tvStatus.setBackgroundResource(android.R.color.transparent)
                 binding.tvGuestName.text = "Guest Name"
                 binding.tvDate.text = "Date"
             }
 
-        }
-        else {
+        } else {
             val modal = transactionsList[rowPos - 1]
             holder.binding.profileImage.visibility = View.VISIBLE
 
             holder.apply {
                 setContentBg(binding.rlMain)
 
-                binding.tvAmount.text = modal.amount.toString()
-                binding.tvStatus.text = modal.status
-                binding.tvGuestName.text = modal.guestName.toString()
-                binding.tvDate.text = modal.date.toString()
+                if (modal.booking_amount != null) {
+                    binding.tvAmount.text = "$" + modal.booking_amount
+                }
+
+                var status = ""
+                if (modal.status != null) {
+                    status = modal.status.uppercase()
+                    if (modal.status == "finished"){
+                        binding.tvStatus.text = "COMPLETED"
+                    }else{
+                        binding.tvStatus.text = status
+                    }
+
+                }
+
+                if (modal.guest_name != null) {
+                    binding.tvGuestName.text = modal.guest_name
+                }
+
+                if (modal.booking_date != null) {
+                    binding.tvDate.text = modal.booking_date
+                }
+
+
+                if (modal.guest_profile_image != null){
+                    Glide.with(context)
+                        .load(BuildConfig.MEDIA_URL + modal.guest_profile_image)
+                        .centerCrop()
+                        .error(R.drawable.ic_img_not_found)
+                        .placeholder(R.drawable.ic_img_not_found)
+                        .into(binding.profileImage)
+                }
+
 
 
             }
-
-
-
-            when (modal.status) {
-                "Pending" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-                "Completed" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
-                "Canceled" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
-                "Status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
-                else ->  holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+            if (rowPos != 0){
+                when (modal.status) {
+                    "pending" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                    "completed" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
+                    "canceled" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                    "finished" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
+                    "confirmed" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
+                    "Status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                    "status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                    else -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                }
+            }else{
+                when (modal.status) {
+                    "Status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                    "status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                    else -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                }
             }
+
 
         }
     }
@@ -84,12 +129,15 @@ class TransactionAdapter(var context: Context,private var transactionsList: Arra
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateItem(newList : ArrayList<TransactionModel>){
-         this.transactionsList = newList
-         notifyDataSetChanged()
+    fun updateItem(newList: MutableList<GetBookingList>) {
+        this.transactionsList.clear()
+        this.transactionsList.addAll(newList)
+        //   this.transactionsList = newList
+        notifyDataSetChanged()
     }
 
-    inner class TransactionViewHolder(var binding : LayoutTransactionBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class TransactionViewHolder(var binding: LayoutTransactionBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
     }
 }

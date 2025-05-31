@@ -89,8 +89,8 @@
             <com.hbb20.CountryCodePicker
                 android:id="@+id/countyCodePicker"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_height="@dimen/_25ssp"
+                android:layout_marginStart="@dimen/_12ssp"
                 android:background="@android:color/white"
                 android:backgroundTint="@color/white"
                 android:layoutDirection="ltr"
@@ -105,9 +105,8 @@
                 app:ccp_defaultNameCode="US"
                 app:ccp_showNameCode="false"
                 app:ccp_textGravity="RIGHT"
-                app:ccp_textSize="10.5sp"
+                app:ccp_textSize="12.5sp"
                 app:layout_constraintTop_toTopOf="parent"
-
                 />
         </LinearLayout>
 
@@ -128,6 +127,7 @@
             android:layout_centerVertical="true"
             android:layout_toEndOf="@+id/viewNumber"
             android:background="@null"
+            android:layout_marginEnd="@dimen/_15sdp"
             android:hint="@string/enter_your_number_here"
             android:inputType="phone"
             android:maxLength="10"
@@ -161,7 +161,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/button_bg"
         android:layout_marginTop="@dimen/_10sdp"
-        android:paddingHorizontal="@dimen/_80sdp"
+        android:paddingHorizontal="@dimen/_90sdp"
         android:paddingVertical="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
@@ -173,13 +173,12 @@
         android:id="@+id/rlCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginHorizontal="@dimen/_30sdp"
         app:layout_constraintTop_toBottomOf="@+id/textContinueButton">
         <com.google.android.material.checkbox.MaterialCheckBox
             android:id="@+id/checkBox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             app:buttonTint="#4AEAB1"/>
 
         <TextView
@@ -247,7 +246,7 @@
             android:layout_width="@dimen/_25sdp"
             android:layout_height="@dimen/_25sdp"
             android:src="@drawable/ic_google_icon"
-
+            android:id="@+id/googleRegLogin"
             android:layout_weight="1"/>
 
         <ImageView

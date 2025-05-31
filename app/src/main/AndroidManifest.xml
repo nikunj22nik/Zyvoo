@@ -6,15 +6,22 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+   <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK">
+    </uses-permission>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />-->
+
+
 
     <application
-        android:name="com.business.zyvo.MyApp"
+        android:name=".MyApp"
         android:allowBackup="true"
-        android:dataExtractionRules="@xml/data_extraction_rules"
-        android:fullBackupContent="@xml/backup_rules"
+        tools:replace="android:allowBackup"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -22,40 +29,69 @@
         android:theme="@style/Theme.ZYVO"
         tools:targetApi="31">
         <activity
-            android:name="com.business.zyvo.activity.PlaceOpenActivity"
-            android:exported="false" />
-        <activity
-            android:name="com.business.zyvo.activity.HostMainActivity"
+            android:name=".activity.ChatActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity android:name=".activity.guest.sorryresult.SorryActivity"
+            android:exported="false">
+
+        </activity>
         <activity
-            android:name="com.business.zyvo.activity.guest.ExtraTimeChargesActivity"
+            android:name=".activity.PlaceOpenActivity"
             android:exported="false" />
         <activity
-            android:name="com.business.zyvo.activity.guest.ExtraTimeActivity"
-            android:exported="false" />
-        <activity
-            android:name="com.business.zyvo.activity.CheckOutPayActivity"
-            android:exported="false" />
-        <activity
-            android:name="com.business.zyvo.activity.guest.RestaurantDetailActivity"
-            android:exported="false" /> <!-- <activity -->
-        <!-- android:name=".activity.guest.RestaurentDeatilActivity" -->
-        <!-- android:exported="false" -->
-        <!-- android:theme="@style/Theme.ZYVO" /> -->
-        <activity
-            android:name="com.business.zyvo.activity.guest.WhereTimeActivity"
-            android:exported="false" />
-        <activity
-            android:name="com.business.zyvo.activity.guest.FiltersActivity"
+            android:name=".activity.HostMainActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.business.zyvo.activity.GuesMain"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:name="com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivity"
+            android:exported="false" />
+
         <activity
-            android:name="com.business.zyvo.activity.AuthActivity"
+            android:name="com.business.zyvo.activity.guest.extratime.ExtraTimeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.guest.checkout.CheckOutPayActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.guest.propertydetails.RestaurantDetailActivity"
+            android:exported="false">
+        </activity>
+        <!-- <activity -->
+        <!-- android:name=".activity.guest.RestaurentDeatilActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:theme="@style/Theme.ZYVO" /> -->
+
+        <activity
+            android:name=".activity.guest.WhereTimeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activity.guest.FiltersActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+
+        <activity
+            android:name=".activity.GuesMain"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan"
+            tools:ignore="AppLinkUrlError">
+         <!--   <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="zyvoo" android:host="property" />
+                &lt;!&ndash;<data
+                    android:scheme="https"
+                    android:host="zyvobusiness.onelink.me"
+                    android:pathPrefix="/scFp" />&ndash;&gt;
+            </intent-filter>-->
+        </activity>
+
+        <activity
+            android:name=".activity.AuthActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
@@ -63,10 +99,19 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+
+            </intent-filter>
+
+                <!--DeepLink-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="zyvoo" android:host="property" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.business.zyvo.activity.MainActivity"
+            android:name=".activity.MainActivity"
             android:exported="false" />
 
         <meta-data
@@ -78,6 +123,24 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key" />
+
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+
+      <!--  <service
+            android:name=".service.CountdownService"
+            android:exported="false"
+            android:foregroundServiceType="mediaPlayback"
+            tools:ignore="Instantiatable" />
+
+        <receiver android:name=".service.ReminderReceiver" android:exported="false" />-->
+
     </application>
 
 </manifest>

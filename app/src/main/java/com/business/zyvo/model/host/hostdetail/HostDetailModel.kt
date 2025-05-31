@@ -32,5 +32,15 @@ data class HostDetailModel(
     val reviews_total_count: String?,
     val reviews_total_rating: String?,
     val service_fee: String?,
-    val tax: String?
+    val tax: String?,
+    val extension_details:ExtensionDetails
+)
+data class ExtensionDetails(
+    val id: Int?,
+    val extension_hours:Int?,
+    val extension_date: String?,
+    val extension_amount: String?,
+    val extension_start_time: String?,
+    val extension_end_time: String?,
+    val extension_status: String?
 )

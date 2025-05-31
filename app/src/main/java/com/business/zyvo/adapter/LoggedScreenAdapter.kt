@@ -14,16 +14,20 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.OnLogClickListener
+import com.business.zyvo.adapter.guest.GuestViewPagerAdapter
 import com.business.zyvo.databinding.LayoutLoggedRecyclerviewBinding
+import com.business.zyvo.fragment.guest.home.model.HomePropertyData
+import com.business.zyvo.fragment.guest.home.model.OnViewPagerImageClickListener
 import com.business.zyvo.model.LogModel
 import com.business.zyvo.model.ViewpagerModel
+import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.viewmodel.ImagePopViewModel
 
 class LoggedScreenAdapter(
-    private val context: Context, private var list: MutableList<LogModel>
+    private val context: Context, private var list: MutableList<HomePropertyData>
     , private val listener: OnClickListener,
-    private val lifecycleOwner: LifecycleOwner,
-    private val imagePopViewModel: ImagePopViewModel,
     private val listener2: OnClickListener1
 ) : RecyclerView.Adapter<LoggedScreenAdapter.LoggedViewHolder>() {
 
@@ -51,52 +55,78 @@ class LoggedScreenAdapter(
     override fun onBindViewHolder(holder: LoggedViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val currentItem = list[position]
 
-            holder.binding.imageAddWish.setOnClickListener{
-                listener2.itemClick(position,"Add Wish")
-            }
+        holder.binding.imageAddWish.setOnClickListener{
+            listener2.itemClick(position,"Add Wish")
+        }
+        holder.binding.imageWishFull.setOnClickListener{
+            listener2.itemClick(position,"Remove Wish")
+        }
 
         holder.binding.cl1.setOnClickListener {
-          //  listener.itemClick(position)
             mListener.onItemClick(position)
-            Log.d("Adapter", "cl1 clicked at position $position")
+            Log.d(ErrorDialog.TAG, "cl1 clicked at position $position")
         }
-
-        if (position == 1 || position == 3){
-            holder.binding.textInstantBook.visibility = View.VISIBLE
-            holder.binding.imageReward.visibility = View.VISIBLE
-        }
-        else{
-            holder.binding.textInstantBook.visibility = View.GONE
-            holder.binding.imageReward.visibility = View.GONE
-        }
-
         // Setup ViewPager and its adapter
-        val viewPagerAdapter = ViewPagerAdapter(mutableListOf(),context, object : OnLogClickListener {
-            override fun itemClick(items: MutableList<ViewpagerModel>) {
-              //  listener.itemClick(position)
-              mListener.onItemClick(position)
-            }
-        })
-
-        holder.binding.viewpager2.adapter = viewPagerAdapter
-        holder.binding.viewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
-        // Observe ViewModel inside fragment and update adapter with images
-        imagePopViewModel.imageList.observe(lifecycleOwner, Observer { images ->
-           // viewPagerAdapter.updateItem(images)
-        })
-        // Tab layout mediator (no need to re-bind it every time)
-        TabLayoutMediator(holder.binding.tabLayoutForIndicator, holder.binding.viewpager2) { _, _ -> }.attach()
+        currentItem.images.let {
+            val viewPagerAdapter = GuestViewPagerAdapter(
+                currentItem.images.toMutableList(),
+                context,
+                object : OnViewPagerImageClickListener {
+                    override fun itemClick(items: Int) {
+                        mListener.onItemClick(position)
+                    }
+                })
+            holder.binding.viewpager2.adapter = viewPagerAdapter
+            holder.binding.viewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            TabLayoutMediator(holder.binding.tabLayoutForIndicator, holder.binding.viewpager2) { _, _ -> }.attach()
+        }
         // Set TextView data
-        holder.binding.textHotelName.text = currentItem.textHotelName
-        holder.binding.textRating.text = currentItem.textRating
-        holder.binding.textTotal.text = currentItem.textTotal
-        holder.binding.textMiles.text = currentItem.textMiles
-        holder.binding.textPricePerHours.text = currentItem.textPricePerHours
+        currentItem.title?.let {
+            holder.binding.textHotelName.text = it
+        }
+
+        currentItem.rating?.let {
+            holder.binding.textRating.text = it
+        }
+        currentItem.review_count?.let {
+            holder.binding.textTotal.text = "("+ formatConvertCount(it) +")"
+        }
+
+        currentItem.distance_miles?.let {
+            holder.binding.textMiles.text = "$it miles away"
+        }
+        currentItem.hourly_rate?.let {
+            holder.binding.textPricePerHours.text = "${truncateToTwoDecimalPlaces(it)}/h"
+        }
+
+        currentItem.is_instant_book?.let {
+            if (it==1){
+                holder.binding.textInstantBook.visibility = View.VISIBLE
+            }else{
+                holder.binding.textInstantBook.visibility = View.GONE
+            }
+        }
+        currentItem.is_star_host?.let {
+            if (it=="true"){
+                holder.binding.imageReward.visibility = View.VISIBLE
+            }else{
+                holder.binding.imageReward.visibility = View.GONE
+            }
+        }
+
+        currentItem.is_in_wishlist?.let {
+            if (it==1){
+                holder.binding.imageAddWish.visibility = View.GONE
+                holder.binding.imageWishFull.visibility = View.VISIBLE
+            }else{
+                holder.binding.imageAddWish.visibility = View.VISIBLE
+                holder.binding.imageWishFull.visibility = View.GONE
+            }
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateData(newList: MutableList<LogModel>) {
+    fun updateData(newList: MutableList<HomePropertyData>) {
         this.list = newList
         notifyDataSetChanged()
     }

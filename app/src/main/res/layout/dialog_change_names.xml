@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/_200sdp"
+    android:layout_width="@dimen/_240sdp"
 
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -15,12 +15,15 @@
         android:layout_height="@dimen/_75sdp"
         android:background="@drawable/profle_picture_ring"
         android:padding="@dimen/_15sdp"
-        android:src="@drawable/image_hotel"
+
+        android:src="@drawable/ic_img_not_found"
 
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
     <ImageView
         android:id="@+id/imageEditPicture"
         android:layout_width="@dimen/_14sdp"
@@ -30,12 +33,9 @@
         app:layout_constraintStart_toStartOf="@id/imageProfilePicture"
         app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
 
-
-
-
-<EditText
+    <EditText
     android:id="@+id/editTextFirstName"
-    android:layout_width="@dimen/_90sdp"
+    android:layout_width="@dimen/_110sdp"
     android:layout_height="wrap_content"
     android:maxLines="1"
     android:hint="First name*"
@@ -44,15 +44,16 @@
     android:textColorHint="@color/black"
     android:fontFamily="@font/poppins"
     android:textSize="@dimen/_10ssp"
-    android:textAlignment="center"
+    android:paddingStart="@dimen/_8sdp"
     android:layout_marginStart="@dimen/_7sdp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toBottomOf="@id/imageProfilePicture"
-    android:background="@drawable/edit_name_bg"/>
+    android:background="@drawable/edit_name_bg"
+    />
 
     <EditText
         android:id="@+id/editTextLastName"
-        android:layout_width="@dimen/_90sdp"
+        android:layout_width="@dimen/_110sdp"
         android:layout_height="wrap_content"
         android:maxLines="1"
         android:hint="Last name*"
@@ -61,11 +62,14 @@
         android:textColorHint="@color/black"
         android:fontFamily="@font/poppins"
         android:textSize="@dimen/_10ssp"
-        android:textAlignment="center"
+        android:textAlignment="viewStart"
+        android:paddingStart="@dimen/_7sdp"
         android:layout_marginEnd="@dimen/_7sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageProfilePicture"
-        android:background="@drawable/edit_name_bg"/>
+        android:background="@drawable/edit_name_bg"
+
+        />
 
     <TextView
         android:id="@+id/textSaveChangesButton"

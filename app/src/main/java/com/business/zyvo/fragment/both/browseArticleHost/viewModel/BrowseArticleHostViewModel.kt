@@ -29,9 +29,9 @@ import javax.inject.Inject
 
         val isLoading = MutableLiveData<Boolean>()
 
-        suspend fun getGuideList(search_term: String):
+        suspend fun getGuideList(search_term: String,user_type:String):
                 Flow<NetworkResult<JsonObject>> {
-            return repository.getGuideList(search_term).onEach {
+            return repository.getGuideList(search_term,user_type).onEach {
                 when (it) {
                     is NetworkResult.Loading -> {
                         isLoading.value = true
@@ -48,9 +48,9 @@ import javax.inject.Inject
             }
         }
 
-        suspend fun getArticleList(search_term : String):
+        suspend fun getArticleList(search_term : String,user_type: String):
                 Flow<NetworkResult<JsonObject>> {
-            return repository.getArticleList(search_term).onEach {
+            return repository.getArticleList(search_term,user_type).onEach {
                 when (it) {
                     is NetworkResult.Loading -> {
                         isLoading.value = true

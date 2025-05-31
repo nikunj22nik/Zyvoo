@@ -30,7 +30,8 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class BrowseGuideArtcileDetailFragment : Fragment() {
 
-    lateinit var binding: FragmentBrowseGuideArtcileDetailBinding
+    private var _binding: FragmentBrowseGuideArtcileDetailBinding? = null
+    private val binding get() =  _binding!!
     val viewModel: BrowseGuideArtcileDetailViewModel by lazy {
         ViewModelProvider(this)[BrowseGuideArtcileDetailViewModel::class.java]
     }
@@ -48,7 +49,7 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentBrowseGuideArtcileDetailBinding.inflate(
+        _binding = FragmentBrowseGuideArtcileDetailBinding.inflate(
             LayoutInflater.from(requireActivity()),
             container,
             false
@@ -218,6 +219,11 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
 
 
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
 

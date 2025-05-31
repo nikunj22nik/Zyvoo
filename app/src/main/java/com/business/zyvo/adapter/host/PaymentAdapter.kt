@@ -1,21 +1,29 @@
 package com.business.zyvo.adapter.host
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
+import android.widget.ImageView
 import android.widget.PopupWindow
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutPaymentDetailsBinding
 import com.business.zyvo.model.PaymentCardModel
+import com.business.zyvo.onItemClickData
 
 class PaymentAdapter(
     var context: Context,
-    var list: MutableList<PaymentCardModel>
+    var list: MutableList<PaymentCardModel>, private var listner : onItemClickData
 ) : RecyclerView.Adapter<PaymentAdapter.PaymentViewHolder>() {
 
 
@@ -36,46 +44,87 @@ class PaymentAdapter(
 
     override fun onBindViewHolder(holder: PaymentViewHolder, position: Int) {
         val currentItem = list.get(position)
-        with(holder) {
-            binding.textCardHolderName.text = currentItem.cardHolderName
-            binding.textBankAccount.text = currentItem.bankName
-            binding.textStartNumber.text = currentItem.cardFirstNumber
-            binding.textEndNumber.text = currentItem.cardEndNumber
+        with(holder.binding) {
+//            binding.textCardHolderName.text = currentItem.cardHolderName
+//            binding.textBankAccount.text = currentItem.bankName
+//            binding.textStartNumber.text = currentItem.cardFirstNumber
+//            binding.textEndNumber.text = currentItem.cardEndNumber
 
-            binding.imageThreeDots.setOnClickListener {
-                showPopupWindow(it, position)
+            if (currentItem.isBankAccount) {
+                textCardHolderName.visibility = View.VISIBLE  // Hide cardholder name for bank accounts
+                textBankAccount.visibility = View.VISIBLE
+                textBankAccount.text = currentItem.bankName
+                if (currentItem.defaultForCurrency){
+                    imagePrimaryIcon.visibility = View.VISIBLE
+                }else{
+                    imagePrimaryIcon.visibility = View.INVISIBLE
+                }
+                textStartNumber.text = currentItem.cardFirstNumber
+                textEndNumber.text = currentItem.cardEndNumber
+                textCardHolderName.text = currentItem.accountHolderName
+
+                Log.d("textStartNumber1",currentItem.cardFirstNumber.toString())
+                Log.d("textStartNumber2",textStartNumber.text.toString())
+                if (textStartNumber.text.toString().trim().isEmpty()){
+                    imageFirstFourDots.visibility = View.VISIBLE
+                }else{
+                    imageFirstFourDots.visibility = View.GONE
+                }
+            } else {
+                textCardHolderName.visibility = View.VISIBLE
+                textCardHolderName.text = currentItem.cardHolderName
+                textBankAccount.visibility = View.GONE
+                if (currentItem.defaultForCurrency){
+                    imagePrimaryIcon.visibility = View.VISIBLE
+                }else{
+                    imagePrimaryIcon.visibility = View.INVISIBLE
+                }
+                textStartNumber.text = currentItem.cardFirstNumber
+                textEndNumber.text = currentItem.cardEndNumber
+            }
+            Log.d("textStartNumber3",currentItem.cardFirstNumber.toString())
+            Log.d("textStartNumber4",textStartNumber.text.toString())
+            if (textStartNumber.text.toString().trim().isEmpty()){
+                imageFirstFourDots.visibility = View.VISIBLE
+            }else{
+                imageFirstFourDots.visibility = View.GONE
+            }
+            imageThreeDots.setOnClickListener {
+                currentItem.id?.let { it1 -> showPopupWindow(holder.binding.imageThreeDots,position, it1) }
+
             }
 
 
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItem(list: MutableList<PaymentCardModel>) {
+        this.list.clear()
+        this.list.addAll(list)
+        notifyDataSetChanged()
+    }
 
-    private fun showPopupWindow(anchorView: View, position: Int) {
+    private fun showPopupWindow(anchorView: View,position: Int, id: String) {
         // Inflate the custom layout for the popup menu
         val popupView =
-            LayoutInflater.from(context).inflate(R.layout.dialog_set_primary, null)
+            LayoutInflater.from(context).inflate(R.layout.popup_primary_delete, null)
 
         // Create PopupWindow with the custom layout
-        val popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
+        val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
 
         // Set click listeners for each menu item in the popup layout
-        popupView.findViewById<TextView>(R.id.textSetPrimaryCard).setOnClickListener {
-            // Handle mute action
-            // listner.onMute(position)
+        popupView.findViewById<TextView>(R.id.itemSetPrimary).setOnClickListener {
+            listner.itemClick(position ,"setPrimary",  id)
             popupWindow.dismiss()
         }
-        popupView.findViewById<TextView>(R.id.textDeleteCard).setOnClickListener {
-            // Handle report action
-            // listner.onReport(position)
-            removeItem(position)
+        popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
+            dialogDelete(position ,id)
+
+
             popupWindow.dismiss()
         }
+
 
 
         // Get the location of the anchor view (three-dot icon)
@@ -86,11 +135,11 @@ class PaymentAdapter(
         popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         val popupHeight = popupView.measuredHeight
         val popupWeight = popupView.measuredWidth
-        val screenWidht = context.resources.displayMetrics.widthPixels
+        val screenWidht = context?.resources?.displayMetrics?.widthPixels
         val anchorX = location[1]
-        val spaceEnd = screenWidht - (anchorX + anchorView.width)
+        val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
 
-        val xOffset = if (popupWeight > spaceEnd) {
+        val xOffset = if (popupWeight > spaceEnd!!) {
             // If there is not enough space below, show it above
             -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
         } else {
@@ -99,15 +148,15 @@ class PaymentAdapter(
             -(popupWeight + 20)
         }
         // Calculate the Y offset to make the popup appear above the three-dot icon
-        val screenHeight = context.resources.displayMetrics.heightPixels
+        val screenHeight = context?.resources?.displayMetrics?.heightPixels
         val anchorY = location[1]
 
         // Calculate the available space above the anchorView
         val spaceAbove = anchorY
-        val spaceBelow = screenHeight - (anchorY + anchorView.height)
+        val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
 
         // Determine the Y offset
-        val yOffset = if (popupHeight > spaceBelow) {
+        val yOffset = if (popupHeight > spaceBelow!!) {
             // If there is not enough space below, show it above
             -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
         } else {
@@ -117,14 +166,38 @@ class PaymentAdapter(
 
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(
-            anchorView,
-            xOffset,
-            yOffset,
-            Gravity.END
-        )  // Adjust the Y offset dynamically
+        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
 
+    fun dialogDelete(position: Int,id : String) {
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_delete_property)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            findViewById<ImageView>(R.id.imgCross).setOnClickListener {
+                dismiss()
+            }
+
+
+            findViewById<RelativeLayout>(R.id.yes_btn).setOnClickListener {
+                listner.itemClick(position,"delete",id)
+                dismiss()
+            }
+            findViewById<RelativeLayout>(R.id.rl_cancel_btn).setOnClickListener {
+
+                dismiss()
+            }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
+        }
+    }
 
     private fun removeItem(position: Int) {
         if (position >= 0 && position < list.size) {
@@ -134,10 +207,4 @@ class PaymentAdapter(
         }
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    fun updateItem(list: MutableList<PaymentCardModel>) {
-        this.list = list
-
-        notifyDataSetChanged()
-    }
 }

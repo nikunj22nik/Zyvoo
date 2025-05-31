@@ -1,9 +1,14 @@
 package com.business.zyvo.model
 
 data class PaymentCardModel(
-    var bankName : String,
-    var cardFirstNumber: String,
-    var cardEndNumber: String,
-    var cardHolderName: String
+    val id: String?,
+    val bankName: String? = null,
+    val cardHolderName: String? = null,
+    val accountHolderName: String? = null,
+    val cardFirstNumber: String? = null,
+    val cardEndNumber: String? = null,
+    val isBankAccount: Boolean  ,
+    val defaultForCurrency: Boolean
+
 
 )

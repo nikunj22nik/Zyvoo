@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activity.CheckOutPayActivity">
+    tools:context=".activity.guest.checkout.CheckOutPayActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -106,7 +106,7 @@
                         android:layout_marginTop="@dimen/_10sdp">
 
                         <de.hdodenhof.circleimageview.CircleImageView
-                            android:id="@+id/profile_image_1"
+                            android:id="@+id/profile_image_host"
                             android:layout_width="@dimen/_21sdp"
                             android:layout_height="@dimen/_21sdp"
                             android:src="@drawable/ic_img_girl_dumm"
@@ -118,16 +118,18 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_7sdp"
-                            android:text="Mia J."
+                            android:hint="Mia J."
+                            android:id="@+id/tvHostName"
                             android:fontFamily="@font/poppins"
                             android:textColor="@color/black"
-
+                            android:textColorHint="@color/black"
                             android:textSize="@dimen/_12sdp" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_4ssp"
+                            android:id="@+id/ivStar"
                             android:src="@drawable/ic_badge_img" />
 
                     </LinearLayout>
@@ -148,7 +150,6 @@
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_marginVertical="@dimen/_12sdp"
                     android:layout_marginStart="@dimen/_5sdp"
-
                     android:orientation="vertical">
 
                     <TextView
@@ -156,8 +157,10 @@
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/ic_clock_dot_new"
                         android:drawablePadding="@dimen/_2sdp"
-                        android:text="Respond within 1 hr"
+                        android:hint="Respond within 1 hr"
+                        android:id="@+id/tvResponseTime"
                         android:textColor="@color/black"
+                        android:textColorHint="@color/black"
                         android:fontFamily="@font/poppins"
                         android:textSize="@dimen/_12sdp"
                         android:layout_gravity="center_horizontal"/>
@@ -169,6 +172,7 @@
                         android:layout_marginTop="@dimen/_8ssp"
                         android:layout_marginEnd="@dimen/_15sdp"
                         android:layout_marginStart="@dimen/_15sdp"
+                        android:visibility="gone"
                         android:background="@drawable/bg_four_corner_light_black">
 
                         <TextView
@@ -177,7 +181,7 @@
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/_5sdp"
                             android:text="Message the host"
-                           android:fontFamily="@font/poppins"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"/>
 
@@ -248,7 +252,9 @@
                             android:paddingVertical="@dimen/_6sdp"
                             android:layout_below="@id/doubt"
                             android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginBottom="@dimen/_5sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:visibility="visible"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             >
 
@@ -273,10 +279,12 @@
                             android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
+                            android:visibility="gone"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             >
 
                             <EditText
+                                android:id="@+id/et_share_message"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Share a message"
@@ -290,6 +298,7 @@
 
                         </RelativeLayout>
                         <RelativeLayout
+                            android:id="@+id/rl_submit_message"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_33sdp"
                             android:background="@drawable/bg_save_button"
@@ -326,16 +335,30 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:weightSum="1"
+                    android:weightSum="1">
 
-                    >
-
-                    <com.google.android.material.imageview.ShapeableImageView
+                    <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_65sdp"
                         android:layout_marginVertical="@dimen/_10sdp"
                         android:layout_weight="0.3"
-                        android:src="@drawable/ic_img_check_out_pay" />
+                        app:cardCornerRadius="@dimen/_7sdp">
+
+                        <!-- Image Placeholder -->
+                        <ImageView
+                            android:id="@+id/ivProImage"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/image_hotel" />
+                    </androidx.cardview.widget.CardView>
+                    <!--<com.google.android.material.imageview.ShapeableImageView
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_65sdp"
+                        android:layout_marginVertical="@dimen/_10sdp"
+                        android:layout_weight="0.3"
+                        android:id="@+id/ivProImage"
+                        android:src="@drawable/ic_img_check_out_pay" />-->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -348,9 +371,11 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                             android:text="Cabin in Peshastin"
+                             android:hint="Cabin in Peshastin"
                             android:fontFamily="@font/poppins"
+                            android:id="@+id/tvProName"
                             android:textColor="@color/black"
+                            android:textColorHint="@color/black"
                             android:textSize="@dimen/_13sdp"
                             android:textStyle="bold" />
 
@@ -368,14 +393,22 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_5sdp"
-                                android:text="5.0"
+                                android:hint="5.0"
+                                android:textColorHint="@color/black"
+                                android:id="@+id/tvRating"
+                                android:textSize="@dimen/_12sdp"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="#FCA800" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_4sdp"
-                                android:text="(1k+)"
+                                android:hint="(1k+)"
+                                android:textColorHint="@color/black"
+                                android:id="@+id/tvTotalReview"
+                                android:textSize="@dimen/_12sdp"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="#A4A4A4" />
                         </LinearLayout>
 
@@ -393,8 +426,12 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_7sdp"
-                                android:text="37 miles away"
-                                android:textColor="#A4A4A4" />
+                                android:hint="0 miles away"
+                                android:id="@+id/tvMiles"
+                                android:textSize="@dimen/_12sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textColorHint="@color/a4a4a4"
+                                android:textColor="@color/a4a4a4" />
 
                         </LinearLayout>
 
@@ -421,7 +458,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:text="2 Hours"
+                        android:hint="2 Hours"
+                        android:id="@+id/tvTotalHours"
+                        android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_12sdp"
                         />
@@ -431,8 +470,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="$300"
+                        android:hint="$0"
+                        android:id="@+id/tvPrice"
                         android:fontFamily="@font/poppins"
+                        android:textColorHint="@color/black"
                         android:textColor="@color/black" />
 
                 </RelativeLayout>
@@ -450,7 +491,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:text="Cleaning Fee"
+                        android:text="@string/cleaning_fee"
                         android:textSize="@dimen/_12sdp"
                         android:textColor="@color/black"
                        />
@@ -460,8 +501,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="$20"
+                        android:hint="$0"
+                        android:id="@+id/tvCleaningFee"
                         android:fontFamily="@font/poppins"
+                        android:textColorHint="@color/black"
                         android:textColor="@color/black"/>
 
 
@@ -478,11 +521,67 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-                        android:text="Zyvoo Service Fee"
+                        android:text="@string/zyvoo_service_fee"
                         android:textSize="@dimen/_12sdp"
                         android:fontFamily="@font/poppins"
+                        android:textColor="@color/black" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:hint="$0"
+                        android:id="@+id/tvZyvoServiceFee"
+                        android:fontFamily="@font/poppins"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"/>" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_8sdp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
                         android:textColor="@color/black"
+                        android:text="@string/taxes"
+                        android:textSize="@dimen/_12sdp"
+                         />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:hint="$0"
+                        android:id="@+id/tvTaxesPrice"
+                        android:fontFamily="@font/poppins"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black"/>" />
+
+                </RelativeLayout>
+                <!--android:layout_marginBottom="@dimen/_10sdp"-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:id="@+id/llDiscountLabel"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"
+                        android:text="@string/discount"
+                        android:textSize="@dimen/_12sdp"
                         />
 
 
@@ -490,27 +589,26 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="$2"
+                        android:text="$0"
+                        android:id="@+id/tvDiscount"
+                        android:textColorHint="@color/black"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"/>
-" />
+                        android:textColor="@color/black"/> />
 
                 </RelativeLayout>
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-
-                    >
+                    android:id="@+id/rladdOn"
+                    android:layout_marginTop="@dimen/_8sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/black"
-                        android:text="Taxes"
+                        android:text="@string/add_on"
                         android:textSize="@dimen/_12sdp"
                          />
 
@@ -519,38 +617,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="$10"
+                        android:hint="$0"
+                        android:id="@+id/tvAddOnPrice"
+                        android:textColorHint="@color/black"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/black"/>
-" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:layout_marginBottom="@dimen/_10sdp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
-                        android:text="Add-on"
-                        android:textSize="@dimen/_12sdp"
-                         />
-
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:text="$300"
-                        android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"/>
-" />
+                     />
 
                 </RelativeLayout>
 
@@ -583,7 +655,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="$320"
+                        android:text="$0"
+                        android:id="@+id/tvTotalPrice"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/black"/>
 " />
@@ -645,6 +718,7 @@
                             android:layout_toRightOf="@id/img_calendar"
                             android:text="October 22, 2023"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black" />
 
                         <ImageView
@@ -682,8 +756,10 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_9sdp"
                             android:layout_toRightOf="@id/clock_1"
-                            android:text="2 Hours"
+                            android:hint="2 Hours"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
+                            android:textColorHint="@color/black"
                             android:textColor="@color/black" />
 
                     </RelativeLayout>
@@ -714,6 +790,7 @@
                             android:layout_toRightOf="@id/clock_old"
                             android:text="From 01pm to 03pm"
                             android:textSize="@dimen/_12ssp"
+                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black" />
 
                         <ImageView
@@ -782,7 +859,7 @@
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textSize = "@dimen/_9ssp"
                                             android:padding = "0dp"
-                                            android:text="22"
+                                            android:text="1"
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
                                             android:paddingStart = "8dp"
@@ -814,12 +891,11 @@
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textSize = "@dimen/_10ssp"
                                             android:padding = "0dp"
-                                            android:text="30"
+                                            android:text="0"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
                                             android:paddingStart = "8dp"
                                             android:paddingEnd = "8dp"
                                             android:paddingTop = "6dp"
-
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
                                             android:paddingBottom = "6dp"
                                             android:textAlignment = "center"
@@ -898,8 +974,7 @@
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textSize = "@dimen/_9ssp"
                                             android:padding = "0dp"
-                                            android:text="22"
-
+                                            android:text="2"
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
                                             android:paddingStart = "8dp"
@@ -930,7 +1005,7 @@
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textSize = "@dimen/_10ssp"
                                             android:padding = "0dp"
-                                            android:text="30"
+                                            android:text="0"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
                                             android:paddingStart = "8dp"
 
@@ -1045,7 +1120,7 @@
                                         android:background="@drawable/bg_four_side_grey_corner"
                                         >
                                         <com.skydoves.powerspinner.PowerSpinnerView
-                                            android:id="@+id/spinnerLanguage"
+                                            android:id="@+id/spinnerDate"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
@@ -1078,7 +1153,7 @@
                                         >
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/spinnermonth"
-                                            android:layout_width="wrap_content"
+                                            android:layout_width="@dimen/_80sdp"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
                                             android:textSize = "@dimen/_10ssp"
@@ -1206,6 +1281,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_14sdp"
+                android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_12sdp"
                 android:text="Show More" />
 
             <View
@@ -1224,7 +1301,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-
                     android:text="Payment Method"
                     android:textSize="@dimen/_14sdp"
                     android:fontFamily="@font/poppins"
@@ -1276,8 +1352,9 @@
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Credit or Debit Card"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="@dimen/_12ssp" />
 
 
                 <ImageView
@@ -1324,6 +1401,7 @@
                         android:layout_marginHorizontal="@dimen/_12sdp"
                         android:text="Add New Card"
                         android:textSize="@dimen/_13sdp"
+                        android:fontFamily="@font/poppins"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -1359,7 +1437,7 @@
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:textColor="#000000"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_12ssp" />
 
             <View
                 android:layout_width="match_parent"
@@ -1401,11 +1479,10 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_toRightOf="@id/img_parking"
-
                     android:text="Parking"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12ssp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -1420,16 +1497,16 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:id="@+id/tv_parking_rule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_four_side_grey_corner"
+                android:background="@drawable/rounded_bottom_corners"
                 android:layout_marginHorizontal="@dimen/_16sdp"
                 android:visibility="gone"
                 >
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:id="@+id/proParkingRule"
                     android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
-                    android:padding="@dimen/_10sdp"
-                    />
+                    android:padding="@dimen/_10sdp" />
 
             </RelativeLayout>
 
@@ -1458,7 +1535,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
                     android:text="Host rules"
-                    android:textSize="@dimen/_13sdp" />
+                    android:textSize="@dimen/_12ssp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -1481,6 +1558,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
+                    android:id="@+id/proHostRule"
                     android:padding="@dimen/_10sdp"
                     />
 
@@ -1509,6 +1587,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:text="Confirm &amp; Pay"
                     android:textColor="@color/black"
+                    android:fontFamily="@font/poppins"
                     android:textStyle="bold" />
 
             </RelativeLayout>

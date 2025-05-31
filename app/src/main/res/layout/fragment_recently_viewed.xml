@@ -31,6 +31,7 @@
     android:text="@string/edit"
     android:fontFamily="@font/poppins"
     android:textSize="@dimen/_15ssp"
+    android:visibility="gone"
     android:textColor="@color/black"
     android:layout_marginEnd="@dimen/_20sdp"
     android:layout_alignParentEnd="true"
@@ -59,20 +60,18 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
         app:layout_constraintTop_toBottomOf="@+id/textHeader"
-
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:background="#33000000"/>
-
+    <!--app:spanCount="2"
+    android:layout_weight="1"-->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWishList"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        android:layout_weight="1"
         android:orientation="vertical"
         android:layout_marginEnd="@dimen/_10sdp"
-        tools:listitem="@layout/layout_wishlist"
+        tools:listitem="@layout/layout_logged_recyclerview"
         android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@+id/viewTop"
         app:layout_constraintBottom_toBottomOf="parent"

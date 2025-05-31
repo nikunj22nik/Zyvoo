@@ -1,7 +1,9 @@
 package com.business.zyvo.activity.guest
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
@@ -27,14 +29,24 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.business.zyvo.AppConstant
+import com.business.zyvo.CircularSeekBar.OnSeekBarChangeListener
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.R
 import com.business.zyvo.adapter.AdapterActivityText
 import com.business.zyvo.adapter.AdapterLocationSearch
 import com.business.zyvo.databinding.ActivityWhereTimeBinding
 import com.business.zyvo.fragment.guest.FullScreenDialogFragment
+import com.business.zyvo.model.FilterRequest
+import com.business.zyvo.model.SearchFilterRequest
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
+import com.google.gson.Gson
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.format.DateTimeFormatter
+import java.util.Locale
+import java.time.LocalTime
 
 class WhereTimeActivity : AppCompatActivity() {
 
@@ -47,6 +59,16 @@ class WhereTimeActivity : AppCompatActivity() {
     private lateinit var adapterActivitivity : AdapterActivityText
     private lateinit var placesClient: PlacesClient
     private lateinit  var actList : MutableList<String>
+    private lateinit var sessionManager: SessionManager
+    private var selectedLatitude: Double = 0.0
+    private var selectedLongitude: Double = 0.0
+    private var date = ""
+    private var hour = ""
+    private var start_time = ""
+    private var end_time = ""
+    private var activity = ""
+    private var selectdate = false
+    private lateinit var appLocationManager: com.business.zyvo.locationManager.LocationManager
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         YearMonth.now()
     } else {
@@ -57,7 +79,7 @@ class WhereTimeActivity : AppCompatActivity() {
     private var selectedDate: LocalDate? = LocalDate.now()
 
 
-
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -66,6 +88,7 @@ class WhereTimeActivity : AppCompatActivity() {
         Places.initialize(applicationContext, "AIzaSyC9NuN_f-wESHh3kihTvpbvdrmKlTQurxw")
         placesClient = Places.createClient(applicationContext)
         actList = mutableListOf()
+        sessionManager = SessionManager(this)
         adapterIntialization()
 
 
@@ -82,14 +105,6 @@ class WhereTimeActivity : AppCompatActivity() {
             showEditText()
         }
 
-   // Optional: Handle when the EditText loses focus
-   //        editText.setOnFocusChangeListener { _, hasFocus ->
-   //            if (!hasFocus) {
-    //                handleEditTextInput()
-    //            }
-    //
-   //
-   //        }
 
         binding.imageBack.setOnClickListener {
             onBackPressed()
@@ -98,24 +113,118 @@ class WhereTimeActivity : AppCompatActivity() {
         binding.rlTiming.setOnClickListener {
             if(binding.llTime.visibility == View.GONE){
                 binding.llTime.visibility = View.VISIBLE
+                selectdate = true
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    date = selectedDate.toString()
+                }
             }
             else{
                 binding.llTime.visibility = View.GONE
             }
         }
+        binding.circularSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener
+        {
+            @SuppressLint("SetTextI18n")
+            override fun onProgressChanged(progress: String) {
+                try {
+                    hour = progress
 
+                   // var selectedTime = binding.text1.text
+
+//                    // Define the time formatter (12-hour format with AM/PM)
+//                    val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                        DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+//                    } else {
+//                        TODO("VERSION.SDK_INT < O")
+//                    }
+//                    Log.d(ErrorDialog.TAG,selectedTime.toString())
+//                    // Parse the start time string into a LocalTime object
+//                    val startTime = LocalTime.parse(selectedTime, formatter)
+//
+//                    val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
+//                        .toLong())
+//                    // Format the end time back to a string
+//                    val formattedEndTime = endTime.format(formatter)
+//                    binding.text2.text = formattedEndTime.uppercase()
+
+                }catch (e:Exception){
+                    Log.d(ErrorDialog.TAG,e.message!!)
+                }
+            }
+
+        })
 
         binding.imgSearch.setOnClickListener {
-            count++;
-
-            if(count %2==1) {
-                val dialog = FullScreenDialogFragment()
-                dialog.show(supportFragmentManager, "FullScreenDialog")
+            if (!binding.text1.text.toString().equals("00:00 PM")){
+                start_time   = binding.text1.text.toString()
+                start_time = "$date $start_time"
+            }else{
+                start_time = ""
             }
-
-            else{
-                onBackPressed()
+            if (!binding.text2.text.toString().equals("00:00 PM")){
+                end_time   = binding.text2.text.toString()
+                end_time = "$date $end_time"
+            }else{
+                end_time = ""
             }
+            if (!selectdate){
+                date = ""
+            }
+            val requestData = SearchFilterRequest(
+                user_id = sessionManager.getUserId().toString(),
+                latitude = selectedLatitude.toString(),
+                longitude = selectedLongitude.toString(),
+                date = date,
+                hour = hour,
+                start_time = start_time,
+                end_time = end_time,
+                location = binding.etSearchLocation.text.toString(),
+                activity = activity)
+            sessionManager.setSearchFilterRequest(Gson().toJson(requestData))
+            val intent = Intent()
+            intent.putExtra("type","filter")
+            intent.putExtra("SearchrequestData",Gson().toJson(requestData))
+            setResult(Activity.RESULT_OK, intent)
+            finish() // Close the activity
+        }
+
+        binding.clearAllBtn.setOnClickListener {
+            val requestData = SearchFilterRequest(
+                user_id = sessionManager.getUserId().toString(),
+                latitude = "",
+                longitude = "",
+                date = "",
+                hour = "",
+                start_time = "",
+                end_time = "",
+                location = "",
+                activity = "")
+            sessionManager.setSearchFilterRequest(Gson().toJson(requestData))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                selectedDate = LocalDate.now()
+            }
+            updateCalendar()
+            updateCalendar1()
+             selectedLatitude = 0.0
+             selectedLongitude = 0.0
+               date = ""
+               hour = ""
+              start_time = ""
+              end_time = ""
+             activity = ""
+            binding.circularSeekBar.endHours = 2f
+            binding.text1.text = "00:00 PM"
+            binding.text2.text = "00:00 PM"
+            binding.etSearchLocation.post {
+                binding.etSearchLocation.text.clear()
+            }
+            binding.tvActivityName.text = "Activity"
+            sessionManager.setSearchFilterRequest(Gson().toJson(requestData))
+            val intent = Intent()
+            intent.putExtra("type","clearAllBtn")
+            setResult(Activity.RESULT_OK, intent)
+            finish() // Close the activity
+
         }
 
         updateCalendar()
@@ -124,37 +233,95 @@ class WhereTimeActivity : AppCompatActivity() {
         bydefaultSelect()
         bydefaultOpenScreen()
         selectTime()
+        try {
+            setSearchFilterData()
+        }catch (e:Exception){
+            Log.e(ErrorDialog.TAG,e.message!!)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun setSearchFilterData() {
+        val filterdata = sessionManager.getSearchFilterRequest()
+        if (!filterdata.equals("")){
+            val value:SearchFilterRequest = Gson().fromJson(filterdata,SearchFilterRequest::class.java)
+            value?.let {
+                Log.d(ErrorDialog.TAG,Gson().toJson(value))
+                // Set Location values
+                binding.textLocationName.setText(it.location)
+                binding.etSearchLocation.post {
+                    binding.etSearchLocation.setText(it.location)
+                }
+                selectedLatitude = it.latitude.toDouble()
+                selectedLongitude = it.longitude.toDouble()
+                if (!it.date.equals("")){
+                    val dateString = it.date
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        selectedDate = LocalDate.parse(dateString, DateTimeFormatter.ISO_DATE)
+                        updateCalendar()
+                        updateCalendar1()
+                    }
+                }
+                if (!it.hour.equals("")){
+                    hour = it.hour
+                    binding.circularSeekBar.endHours = it.hour.toFloat()
+                }
+                if (!it.start_time.equals("")){
+                    start_time = it.start_time
+                    binding.text1.text = ErrorDialog.convertDateToTimeFormat(start_time)
+                }
+                if (!it.end_time.equals("")){
+                    end_time = it.end_time
+                    binding.text2.text = ErrorDialog.convertDateToTimeFormat(end_time)
+                }
+                if (!it.activity.equals("")){
+                    activity = it.activity
+                    binding.tvActivityName.text = activity
+                }
+            }
+        }
     }
 
     fun selectTime(){
         binding.rlView1.setOnClickListener {
-            if(binding.text1.text.toString().equals("3 hour")){
-                DateManager(this).showHourSelectionDialog(this) { selectedHour ->
-                    binding.text1.setText(selectedHour.toString())
+                DateManager(this).showTimePickerDialog1(this) { selectedTime ->
+                    binding.text1.setText(selectedTime)
+                    val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+                    } else {
+                        TODO("VERSION.SDK_INT < O")
+                    }
+                    Log.d(ErrorDialog.TAG,selectedTime)
+                    // Parse the start time string into a LocalTime object
+                    val startTime = LocalTime.parse(selectedTime, formatter)
+                    // Add 2 hours to get the end time
+                    Log.d(ErrorDialog.TAG,binding.textTime.text.toString())
+                    if (binding.textTime.text.toString().isNotEmpty()){
+                        val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
+                            .toLong())
+                        // Format the end time back to a string
+                        val formattedEndTime = endTime.format(formatter)
+                        binding.text2.text = formattedEndTime.uppercase()
+                    }
                 }
-            }
-            else{
-                DateManager(this).showTimePickerDialog(this) { selectedTime ->
-                    binding.text1.setText(selectedTime.toString())
-                }
-            }
         }
         binding.rlView2.setOnClickListener {
-            if(binding.text2.text.toString().equals("$30")){
-
-            }else{
-                DateManager(this).showTimePickerDialog(this) { selectedTime ->
-                    binding.text2.setText(selectedTime.toString())
-                }
+            DateManager(this).showTimePickerDialog1(this) { selectedTime ->
+                binding.text2.setText(selectedTime)
             }
         }
+
     }
 
     private fun bydefaultOpenScreen(){
         intent?.let {
             if(it.hasExtra(AppConstant.TIME)){
                 binding.llTime.visibility = View.VISIBLE
+                selectdate = true
                 binding.rlActivityRecy.visibility = View.GONE
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    date = selectedDate.toString()
+                }
             }
             else if(it.hasExtra(AppConstant.WHERE)){
                 binding.llTime.visibility = View.GONE
@@ -191,6 +358,7 @@ class WhereTimeActivity : AppCompatActivity() {
         adapterActivitivity.setOnItemClickListener(object : AdapterActivityText.onItemClickListener{
             override fun onItemClick(position: Int) {
                 binding.tvActivityName.setText(actList.get(position))
+                activity = actList.get(position)
                binding.rlActivityRecy.visibility = View.GONE
             }
         })
@@ -228,10 +396,12 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.calendarLayout.visibility = View.VISIBLE
             binding.layoutFlexible.visibility = View.GONE
             binding.cv1.visibility = View.GONE
+        //    updateCalendar()
+       //     updateCalendar1()
 
         }
         binding.tvHourly.setOnClickListener {
-
+            hour = "2"
             binding.tvDate.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvHourly.setBackgroundResource(R.drawable.bg_inner_manage_place)
             binding.tvFlexible.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -249,10 +419,10 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.calendarLayout.visibility = View.GONE
             binding.layoutFlexible.visibility = View.VISIBLE
             binding.cv1.visibility = View.GONE
+        //    updateCalendar()
+        //    updateCalendar1()
         }
         binding.rlActivity.setOnClickListener {
-//            adapterActivitivity.updateAdapter(getActivityData())
-//            adapterActivitivity.notifyDataSetChanged()
             if(binding.rlActivityRecy.visibility == View.VISIBLE){
                 binding.rlActivityRecy.visibility = View.GONE
             } else if(binding.rlActivityRecy.visibility == View.GONE) {
@@ -288,7 +458,7 @@ class WhereTimeActivity : AppCompatActivity() {
 
 
     private fun callingWhereSeach() {
-        binding.etSearchLocation.addTextChangedListener(object : TextWatcher {
+       /* binding.etSearchLocation.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
 
@@ -309,7 +479,22 @@ class WhereTimeActivity : AppCompatActivity() {
 
             override fun afterTextChanged(p0: Editable?) {
             }
-        })
+        })*/
+
+        appLocationManager = com.business.zyvo.locationManager.LocationManager(this, this)
+
+        appLocationManager.autoCompleteLocationWork(binding.etSearchLocation)
+
+        binding.etSearchLocation.setOnItemClickListener { parent, _, position, _ ->
+            val selectedLocation = parent.getItemAtPosition(position) as String
+
+            // Fetch location details
+            appLocationManager.fetchPlaceDetails(selectedLocation) { latitude, longitude ->
+                selectedLatitude = latitude
+                selectedLongitude = longitude
+                Log.d("FilterActivity", "Selected Location: Lat=$latitude, Lng=$longitude")
+            }
+        }
     }
 
     private fun fetchAutocompleteSuggestions(query: String, context: Context) {
@@ -333,7 +518,7 @@ class WhereTimeActivity : AppCompatActivity() {
                 binding.rlLocation.visibility = View.GONE
                 binding.rlTypingView.visibility =View.GONE
                 binding.rlWhere.visibility =View.VISIBLE
-binding.etSearchLocation.clearFocus()
+                binding.etSearchLocation.clearFocus()
                 binding.etSearchLocation.setText("")
             }
             //adapter.notifyDataSetChanged()
@@ -454,37 +639,39 @@ binding.etSearchLocation.clearFocus()
         val weeks = generateCalendarWeeks(yearMonth)
         weeks.forEach { week ->
             val weekLayout = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
-            week.forEach { date ->
+            week.forEach { date1 ->
                 val dateView = layoutInflater.inflate(R.layout.calendar_day, weekLayout, false) as TextView
-                if (date != null) {
+                if (date1 != null) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         // dateView.text = date.dayOfMonth.toString()
-                        dateView.text = date.dayOfMonth.toString().padStart(2, '0')
+                        dateView.text = date1.dayOfMonth.toString().padStart(2, '0')
 
                     }
                     dateView.setOnClickListener {
-                        selectedDate = date
+                        selectedDate = date1
+                        if(!SessionManager(this).isDateGreaterOrEqual(selectedDate.toString())){
+                           LoadingUtils.showErrorDialog(this@WhereTimeActivity,"You cannot select a past date from the calendar.")
+                           return@setOnClickListener
+                        }
+
+                        Log.d("TESTING_DATE",selectedDate.toString())
+
                         updateCalendar()
                         updateCalendar1()
                         // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                        when (date) {
-//                            LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
-//                          //  selectedDate -> dateView.setBackgroundResource(R.drawable.selected_bg)
-//
-//                            else -> dateView.setBackgroundResource(android.R.color.transparent)
-//                        }
-
-                        when (date) {
-                            //LocalDate.now() -> dateView.setBackgroundResource(R.drawable.current_bg_date)
-                            selectedDate -> dateView.setBackgroundResource(R.drawable.current_bg_date)
+                        when (date1) {
+                            selectedDate -> {
+                                dateView.setBackgroundResource(R.drawable.current_bg_date)
+                                date = selectedDate.toString()
+                            }
                             else -> dateView.setBackgroundResource(R.drawable.date_bg)
                         }
                     }
                     dateView.setTextColor(
                         if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                date.month == yearMonth.month
+                                date1.month == yearMonth.month
                             } else {
                                 TODO("VERSION.SDK_INT < O")
                             }
@@ -569,6 +756,8 @@ binding.etSearchLocation.clearFocus()
 
         return actList
     }
+
+
 
 
 }

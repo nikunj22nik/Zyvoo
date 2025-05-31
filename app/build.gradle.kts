@@ -3,6 +3,10 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     id ("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    alias(libs.plugins.google.gms.google.services)
+    // Add the Crashlytics Gradle plugin
+    id("com.google.firebase.crashlytics")
+    id ("kotlin-parcelize")
 }
 
 android{
@@ -21,22 +25,38 @@ android{
 
     buildTypes {
         debug {
-           val BASE_URL = project.property("BASE_URL")
-            buildConfigField("String", "BASE_URL", "${BASE_URL}")
-
-            val MEDIA_URL = project.property("MEDIA_URL")
-            buildConfigField("String", "MEDIA_URL", "${MEDIA_URL}")
-
-        }
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             val BASE_URL = project.property("BASE_URL")
             buildConfigField("String", "BASE_URL", "${BASE_URL}")
 
             val MEDIA_URL = project.property("MEDIA_URL")
             buildConfigField("String", "MEDIA_URL", "${MEDIA_URL}")
+
+            val STRIPE_KEY = project.property("STRIPE_KEY")
+            buildConfigField("String", "STRIPE_KEY", "${STRIPE_KEY}")
+
+            val templateID = project.property("templateID")
+            buildConfigField("String", "templateID", "${templateID}")
+
+
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+        }
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+
+            val BASE_URL = project.property("BASE_URL")
+            buildConfigField("String", "BASE_URL", "${BASE_URL}")
+
+            val MEDIA_URL = project.property("MEDIA_URL")
+            buildConfigField("String", "MEDIA_URL", "${MEDIA_URL}")
+
+            val STRIPE_KEY = project.property("STRIPE_KEY")
+            buildConfigField("String", "STRIPE_KEY", "${STRIPE_KEY}")
+            
+            val templateID = project.property("templateID")
+            buildConfigField("String", "templateID", "${templateID}")
         }
     }
 
@@ -68,11 +88,12 @@ dependencies {
     implementation("androidx.viewpager2:viewpager2:1.1.0")
     implementation(libs.places)
     implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.annotations)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("com.github.bumptech.glide:glide:4.8.0")
-    annotationProcessor("com.github.bumptech.glide:compiler:4.8.0")
+ //   implementation("com.github.bumptech.glide:glide:4.8.0")  //By Shrawan
+  //  annotationProcessor("com.github.bumptech.glide:compiler:4.8.0")  //By Shrawan
     //sdp and ssp
     implementation(libs.ssp.android)
     implementation(libs.sdp.android)
@@ -89,27 +110,54 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.9.1")
 
     //OTP Dependency
-    implementation ("com.github.aabhasr1:OtpView:v1.1.2")
+   implementation ("com.github.aabhasr1:OtpView:v1.1.2")
 
 
     implementation ("com.airbnb.android:lottie:3.4.0")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
-    implementation ("com.github.ozcanalasalvar:otpview:2.0.1")
+   // implementation ("com.github.ozcanalasalvar:otpview:2.0.1")
     //Image Picker
     implementation(libs.imagepicker)
     implementation(libs.glide)
-    api("com.github.PhilJay:MPAndroidChart:v3.1.0")
+   // api("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.github.stfalcon-studio:StfalconPriceRangeBar-android:v1.5")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
     implementation("com.google.android.libraries.places:places:2.4.0")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.flexbox:flexbox:3.0.0")
-    implementation("com.google.android.material:material:1.11.0") // Check for the latest version
-    implementation("de.hdodenhof:circleimageview:3.1.0")
+   // implementation("com.google.android.material:material:1.11.0") // Check for the latest version
+    //implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.github.colourmoon:readmore-textview:v1.0.2")
     //Spinner
     implementation("com.github.skydoves:powerspinner:1.2.7")
 // Paging library
-    implementation("androidx.paging:paging-runtime:3.1.0")
+   // implementation("androidx.paging:paging-runtime:3.1.0")
+
+    //persona API
+    implementation (libs.sdk2.inquiry)
+    //firebase BOM
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-messaging")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
+    implementation("com.twilio:conversations-android:1.4.1")
+    implementation("com.getkeepsafe.relinker:relinker:1.4.4") // Explicitly include Relinker
+   // implementation ("com.github.barteksc:pdfium-android:1.9.0")
+    //Pdf lib.
+   // implementation ("com.github.barteksc:pdfium-android:1.9.0")
+
+
+    implementation("com.github.jaiselrahman:FilePicker:1.3.2")
+
+    // Add the dependencies for the Crashlytics and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+    //Stripe SDK
+    implementation("com.stripe:stripe-android:16.3.0")
+
+    implementation ("com.appsflyer:af-android-sdk:6.12.1")
+
 
 }

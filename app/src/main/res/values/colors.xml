@@ -41,6 +41,9 @@
     <!-- colors.xml -->
     <color name="selected_item_background">#ECECED</color>
     <color name="grey">#636363</color>
+    <color name="fca800">#FCA800</color>
+    <color name="a4a4a4">#A4A4A4</color>
+    <color name="all_conversation_color">#0D3F3D56</color>
 
 
 </resources>

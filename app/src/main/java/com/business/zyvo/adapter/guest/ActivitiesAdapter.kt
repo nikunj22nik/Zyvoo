@@ -14,10 +14,10 @@ import com.business.zyvo.model.ActivityModel
 class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var onItemClickListener: ((list: MutableList<ActivityModel>, Int) -> Unit)? = null
+    private var onItemClickListener: ((list: String/*MutableList<ActivityModel>*/, Int,Boolean) -> Unit)? = null
 
 
-    fun setOnItemClickListener(listener: (list: MutableList<ActivityModel>, Int) -> Unit) {
+    fun setOnItemClickListener(listener: (list: String/*MutableList<ActivityModel>*/, Int,Boolean) -> Unit) {
         onItemClickListener = listener
     }
 
@@ -50,25 +50,27 @@ class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityMode
                 holder.bind(list[position].name, list[position].image)
                 var laypout = holder.itemView.findViewById<LinearLayout>(R.id.layout)
 
-                if(list.get(position).checked){
+                if(list[position].checked){
                     laypout.setBackgroundResource(R.drawable.bg_four_side_selected_blue)
                 }else{
                     laypout.setBackgroundResource(R.drawable.bg_four_side_grey_corner)
                 }
                 laypout.setOnClickListener {
-                    if (!list.get(position).checked) {
+                    if (!list[position].checked) {
                         laypout.setBackgroundResource(R.drawable.bg_four_side_selected_blue)
-                       var pair = list.get(position)
+                       var pair = list[position]
                         pair.checked = true
-                        list.set(position,pair)
-                        onItemClickListener?.invoke(list,position)
+                        list[position] = pair
+                        //onItemClickListener?.invoke(list,position,true)
+                        onItemClickListener?.invoke(pair.name,position,true)
                     }
                     else{
                       laypout.setBackgroundResource(R.drawable.bg_four_side_grey_corner)
-                        var pair = list.get(position)
+                        var pair = list[position]
                         pair.checked = false
-                        list.set(position,pair)
-                        onItemClickListener?.invoke(list,position)
+                        list[position] = pair
+                        //onItemClickListener?.invoke(list,position,false)
+                        onItemClickListener?.invoke(pair.name,position,false)
                     }
                 }
             }

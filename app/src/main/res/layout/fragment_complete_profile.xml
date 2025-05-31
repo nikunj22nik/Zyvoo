@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="user"
+            type="com.business.zyvo.fragment.guest.profile.model.UserProfile" />
+    </data>
+
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -32,14 +40,16 @@
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:background="@drawable/button_grey_line_bg"
             app:layout_constraintTop_toBottomOf="@+id/textTitle">
-
+            <!--android:src="@drawable/image_hotel"-->
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageProfilePicture"
                 android:layout_width="@dimen/_75sdp"
                 android:layout_height="@dimen/_75sdp"
                 android:background="@drawable/profle_picture_ring"
                 android:padding="@dimen/_15sdp"
-                android:src="@drawable/image_hotel"
+
+                android:src="@drawable/ic_img_not_found"
+
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -60,11 +70,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:fontFamily="@font/poppins"
-                android:hint="Hey James"
+                android:hint="Hey Guest"
+
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textColorHint="@color/black"
                 android:textSize="@dimen/_11sdp"
+                android:text="@{user.name != null ? user.name : `Enter Your Name`}"
                 app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
                 app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
 
@@ -117,10 +129,12 @@
                 android:fontFamily="@font/poppins"
                 android:padding="@dimen/_4sdp"
                 android:textColor="@color/black"
-                android:text="Before you can book or host  on the platform the\n name on Id must match verification documents."
-                android:textSize="@dimen/_7ssp"
+                android:text="Before you can book or host  on the platform the name on Id must match verification documents."
+                android:textSize="@dimen/_9ssp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_margin="@dimen/_5sdp"
+
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.cardview.widget.CardView>
@@ -248,14 +262,16 @@
                 android:id="@+id/imageIdentity"
                 android:layout_width="@dimen/_75sdp"
                 android:layout_height="@dimen/_65sdp"
+                android:layout_margin="@dimen/_10sdp"
                 android:layout_marginVertical="@dimen/_10sdp"
                 android:background="@drawable/button_grey_line_bg"
                 android:backgroundTint="#1AFFFFFF"
-                android:padding="@dimen/_22sdp"
-                android:src="@drawable/big_phone_icon"
+                android:padding="@dimen/_17sdp"
+                android:src="@drawable/ic_author_profile_icon"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imagePhone"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="#fff" />
 
             <TextView
                 android:id="@+id/textIdentity"
@@ -331,8 +347,13 @@
             android:background="@drawable/button_grey_line_bg"
             android:fontFamily="@font/poppins"
             android:inputType="textMultiLine"
+
+            android:enabled="false"
+
+            android:gravity="top|start"
+
             android:padding="@dimen/_10sdp"
-            android:hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
+            android:hint="Describe yourself"
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:textSize="@dimen/_10ssp"
@@ -598,3 +619,5 @@
 
 
 </ScrollView>
+
+</layout>

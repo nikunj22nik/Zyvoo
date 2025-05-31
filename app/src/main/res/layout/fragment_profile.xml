@@ -17,7 +17,6 @@
             android:id="@+id/clHead"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
             android:background="@color/white"
             tools:context=".fragment.guest.profile.ProfileFragment">
 
@@ -29,18 +28,17 @@
                 android:layout_marginTop="@dimen/_20sdp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintTop_toTopOf="parent">
-
+                <!--android:src="@drawable/ic_women_image"-->
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageProfilePicture"
                     android:layout_width="@dimen/_100sdp"
                     android:layout_height="@dimen/_100sdp"
                     android:background="@drawable/profle_picture_ring"
                     android:padding="@dimen/_17sdp"
-                    android:src="@drawable/ic_women_image"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-                    app:layout_constraintTop_toTopOf="parent" />
+
 
                 <ImageView
                     android:id="@+id/imageEditPicture"
@@ -58,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_25sdp"
                     android:fontFamily="@font/poppins"
-                    android:hint="Hey Katelyn!"
+                    android:hint="Hey Guest!"
                     android:text="@{user.name != null ? user.name : ``}"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black"
@@ -308,7 +306,7 @@
                         android:text="@string/confirm_now"
                         android:textColor="#80FFFFFF"
                         android:textSize="@dimen/_9sdp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="@+id/textIdentity"
                         app:layout_constraintStart_toStartOf="@id/textIdentity"
 
@@ -323,7 +321,7 @@
                         android:text="Verified"
                         android:textColor="#E6FFFFFF"
                         android:textSize="@dimen/_9sdp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:drawableEndCompat="@drawable/ic_verified_tick"
                         app:layout_constraintEnd_toEndOf="@+id/textIdentity"
                         app:layout_constraintStart_toStartOf="@id/textIdentity"
@@ -382,7 +380,7 @@
             <EditText
                 android:id="@+id/etAboutMe"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_60sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_17sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/button_grey_line_bg"
@@ -390,6 +388,7 @@
                 android:inputType="textMultiLine"
                 android:padding="@dimen/_10sdp"
                 android:enabled="false"
+                android:gravity="top|start"
                 android:hint="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
                 android:textColorHint="@color/black"
                 android:textColor="@color/black"
@@ -630,13 +629,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/textEmail">
 
                 <EditText
+                    android:id="@+id/etEmail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginEnd="@dimen/_25sdp"
                     android:background="@null"
                     android:fontFamily="@font/poppins"
-                    android:hint="Katelyncris@email.com"
+                    android:hint=""
                     android:maxLines="1"
                     android:text="@{user.email != null ? user.email : ``}"
                     android:textColor="@color/black"
@@ -650,7 +650,6 @@
                     android:id="@+id/imageEditEmail"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-
                     android:layout_alignParentEnd="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:src="@drawable/ic_edit_icon"
@@ -694,13 +693,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/textPhoneNumberTitle">
 
                 <EditText
+                    android:id="@+id/etPhoneNUMBER"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginEnd="@dimen/_25sdp"
                     android:background="@null"
                     android:fontFamily="@font/poppins"
-                    android:hint="1555522333"
+                    android:hint=""
                     android:inputType="numberDecimal"
                     android:maxLines="1"
                     android:textColor="@color/black"
@@ -872,7 +872,7 @@
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintStart_toEndOf="@+id/rlMailingStreetTitle"
-
+app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textMailingAddressTitle">
 
                 <EditText
@@ -978,7 +978,7 @@
                 android:layout_marginVertical="@dimen/_10ssp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintStart_toEndOf="@+id/rlMailingStreetTitle"
-
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rlMailingCityTitle">
 
                 <EditText

@@ -14,7 +14,6 @@
         android:layout_height="@dimen/_75sdp"
         android:background="@drawable/profle_picture_ring"
         android:padding="@dimen/_15sdp"
-
         android:src="@drawable/ic_img_girl_dumm"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +25,7 @@
         android:layout_height="@dimen/_20sdp"
         android:layout_margin="@dimen/_46sdp"
         android:src="@drawable/ic_live_icon_green_dot"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/imageProfilePicture"
         app:layout_constraintTop_toTopOf="@+id/imageProfilePicture" />
 
@@ -41,17 +41,17 @@
         android:layout_marginEnd="@dimen/_10ssp"/>
     <TextView
         android:id="@+id/textUserName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Host by Mia"
-        android:maxLines="1"
-        android:maxWidth="@dimen/_150sdp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
-        android:textSize="@dimen/_15ssp"
+        android:textSize="@dimen/_12ssp"
         android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toEndOf="@id/imageProfilePicture"/>
+        app:layout_constraintStart_toEndOf="@id/imageProfilePicture"
+        app:layout_constraintEnd_toStartOf="@id/imageThreeDots"
+        app:layout_constraintBottom_toTopOf="@id/textTime"/>
 
     <TextView
         android:id="@+id/textTime"
@@ -59,11 +59,12 @@
         android:layout_height="wrap_content"
         android:text="3 minutes ago"
         android:maxLines="1"
+
         android:textColor="#999999"
         android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_13ssp"
-        android:layout_marginTop="@dimen/_20sdp"
-        app:layout_constraintTop_toTopOf="@id/textUserName"
+        android:textSize="@dimen/_11ssp"
+
+        app:layout_constraintTop_toBottomOf="@id/textUserName"
         app:layout_constraintStart_toEndOf="@id/imageProfilePicture"/>
 
     <TextView
@@ -79,7 +80,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="@dimen/_10sdp"
         android:singleLine="true"
-        android:textSize="@dimen/_14ssp"
+        android:textSize="@dimen/_10ssp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"/>
 
@@ -90,6 +91,7 @@
         android:src="@drawable/ic_badge_img"
         app:layout_constraintStart_toEndOf="@+id/textUserName"
         android:layout_marginTop="@dimen/_10sdp"
+        android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginStart="@dimen/_8sdp"/>
 

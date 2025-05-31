@@ -2,42 +2,77 @@ package com.business.zyvo.adapter
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutChatListBinding
-import com.business.zyvo.model.ChatListModel
+import com.business.zyvo.model.ChannelListModel
+import com.business.zyvo.session.SessionManager
 
 class AdapterChatList(
-    var context: Context,
-    var list: MutableList<ChatListModel>,
-    var listener: OnClickListener, var listener1: OnClickListener1?
-) : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>() {
+    var context: Context, var list: MutableList<ChannelListModel>, var listener: OnClickListener,
+    var listener1: OnClickListener1?)
+    : RecyclerView.Adapter<AdapterChatList.ChatListViewHolder>(), Filterable {
     // Track the selected position
+    private lateinit var  sessionManager: SessionManager
+    private lateinit var mListener: onItemClickListener
+    private var filteredList: List<ChannelListModel> = list
+
+    interface onItemClickListener {
+        fun onItemClick(data:ChannelListModel , index:Int,type:String)
+    }
+
+    fun setOnItemClickListener(listener: AdapterChatList.onItemClickListener) {
+        mListener = listener
+    }
+
+    init {
+         sessionManager = SessionManager(context)
+    }
 
     private var selectedPosition = -1
 
     inner class ChatListViewHolder(var binding: LayoutChatListBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(currentItem: ChatListModel) {
-            binding.imageProfilePicture.setImageResource(currentItem.image)
-            binding.textTime.setText(currentItem.textTime)
-            binding.textUserName.setText(currentItem.textUserName)
-            binding.textDescription.setText(currentItem.textDescription)
-
-            binding.imageProfilePicture.setOnClickListener {
-                listener1?.itemClick(position,"image")
+            fun bind(currentItem: ChannelListModel) {
+                var userID = sessionManager.getUserId()
+                if(userID.toString().equals(currentItem.sender_id)){
+                Glide.with(context).
+                load(BuildConfig.MEDIA_URL+"/"+currentItem.receiver_image).into(binding.imageProfilePicture)
+                binding.textTime.setText(currentItem.lastMessageTime)
+                binding.textUserName.setText(currentItem.receiver_name +"\n"+ "( "+currentItem.property_title+" )")
+                binding.textDescription.setText(currentItem.lastMessage)
+                Log.d("TESTING_PROFILE", BuildConfig.MEDIA_URL+"/"+currentItem.receiver_image)
+            }
+            else{
+                Glide.with(context).
+                load(BuildConfig.MEDIA_URL+"/"+currentItem.sender_profile).into(binding.imageProfilePicture)
+               Log.d("TESTING_PROFILE",BuildConfig.MEDIA_URL+currentItem.sender_profile)
+                binding.textTime.setText(currentItem.lastMessageTime)
+                binding.textUserName.setText(currentItem.sender_name + "\n"+ "( "+currentItem.property_title+" )")
+                binding.textDescription.setText(currentItem.lastMessage)
             }
 
-            // Change the background color based on selectedPosition
+
+            binding.imageProfilePicture.setOnClickListener {
+                mListener.onItemClick(currentItem,position,AppConstant.Image)
+            }
+
+                // Change the background color based on selectedPosition
             if (position == selectedPosition) {
                 // Set the selected background color
                 binding.clMain.setBackgroundResource(R.drawable.chat_list_bg)
@@ -49,15 +84,8 @@ class AdapterChatList(
             // Set click listener to change selected position
             binding.root.setOnClickListener {
                 // Update selected position
-                val previousPosition = selectedPosition
-                selectedPosition = position
-
-                // Notify adapter to update both old and new selected items
-                notifyItemChanged(previousPosition) // Reset old selection
-                notifyItemChanged(selectedPosition) // Highlight new selection
-
                 // Optional: Trigger any listener action
-                listener.itemClick(position)
+                mListener.onItemClick(currentItem,position,AppConstant.MOVE)
             }
         }
 
@@ -69,26 +97,26 @@ class AdapterChatList(
         return ChatListViewHolder(binding)
     }
 
-    override fun getItemCount() = list.size
+    override fun getItemCount() = filteredList.size
 
     override fun onBindViewHolder(holder: ChatListViewHolder, position: Int) {
-        val currentItem = list[position]
+        val currentItem = filteredList[position]
 
 
         holder.binding.imageThreeDots.setOnClickListener {
 
-            showPopupWindow(it, position)
+            showPopupWindow(it, position,currentItem)
 
         }
         holder.binding.clMain.setOnClickListener{
-
+              mListener.onItemClick(currentItem,position,AppConstant.MOVE)
         }
 
         holder.bind(currentItem)
     }
 
 
-    private fun showPopupWindow(anchorView: View, position: Int) {
+    private fun showPopupWindow(anchorView: View, position: Int, currentItem: ChannelListModel) {
         // Inflate the custom layout for the popup menu
         val popupView =
             LayoutInflater.from(context).inflate(R.layout.layout_custom_popup_menu, null)
@@ -109,20 +137,81 @@ class AdapterChatList(
         }
         popupView.findViewById<TextView>(R.id.itemReport).setOnClickListener {
             // Handle report action
-            // listner.onReport(position)
+            mListener.onItemClick(currentItem,position,AppConstant.REPORT)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
             // Handle delete action
             // listner.onDelete(position)
-            removeItem(position)
             popupWindow.dismiss()
+        mListener.onItemClick(currentItem,position,AppConstant.DELETE)
         }
-        popupView.findViewById<TextView>(R.id.itemBlock).setOnClickListener {
-            // Handle block action
-            // listner.onBlock(position)
+        // Find the "block" item inside the popup
+        val blockItem = popupView.findViewById<View>(R.id.itemBlock)
+        val unblockItem = popupView.findViewById<View>(R.id.itemUnBlock)
+        val itemMute = popupView.findViewById<View>(R.id.itemMute)
+        val itemunMute = popupView.findViewById<View>(R.id.itemunMute)
+
+        val itemArchived = popupView.findViewById<View>(R.id.itemArchived)
+        val itemUnArchived = popupView.findViewById<View>(R.id.itemUnArchived)
+
+        if (currentItem.is_blocked==1){
+            blockItem.visibility = View.GONE
+            unblockItem.visibility = View.VISIBLE
+        }else{
+            blockItem.visibility = View.VISIBLE
+            unblockItem.visibility = View.GONE
+        }
+        if (currentItem.is_muted==1){
+            itemMute.visibility = View.GONE
+            itemunMute.visibility = View.VISIBLE
+        }else{
+            itemMute.visibility = View.VISIBLE
+            itemunMute.visibility = View.GONE
+        }
+
+        if (currentItem.is_archived==1){
+            itemArchived.visibility = View.GONE
+            itemUnArchived.visibility = View.VISIBLE
+        }else{
+            itemArchived.visibility = View.VISIBLE
+            itemUnArchived.visibility = View.GONE
+        }
+        blockItem.setOnClickListener {
+            mListener.onItemClick(currentItem,position,AppConstant.BLOCK)
             popupWindow.dismiss()
+
         }
+
+        unblockItem.setOnClickListener {
+            mListener.onItemClick(currentItem,position,AppConstant.BLOCK)
+            popupWindow.dismiss()
+
+        }
+
+        itemMute.setOnClickListener {
+            mListener.onItemClick(currentItem,position,AppConstant.MUTE)
+            popupWindow.dismiss()
+
+        }
+
+        itemunMute.setOnClickListener {
+            mListener.onItemClick(currentItem,position,AppConstant.MUTE)
+            popupWindow.dismiss()
+
+        }
+
+        itemArchived.setOnClickListener {
+            popupWindow.dismiss()
+            mListener.onItemClick(currentItem,position,AppConstant.ARCHIVED)
+        }
+
+        itemUnArchived.setOnClickListener {
+            popupWindow.dismiss()
+            mListener.onItemClick(currentItem,position,AppConstant.ARCHIVED)
+        }
+
+
 
         // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)
@@ -187,17 +276,41 @@ class AdapterChatList(
 
     private fun removeItem(position: Int) {
         if (position >= 0 && position < list.size) {
-            list.removeAt(position)            // Remove item from list
-            notifyItemRemoved(position)        // Notify adapter about item removal
-            notifyItemRangeChanged(position, list.size) // Optional: refresh range
+         //  mListener.onItemClick(list.get(position),position,"Delete");
         }
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateItem(list: MutableList<ChatListModel>) {
+    fun updateItem(list: MutableList<ChannelListModel>) {
         this.list = list
+        this.filteredList = list
         selectedPosition = -1
         notifyDataSetChanged()
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val query = constraint?.toString()?.toLowerCase()
+
+                val results = FilterResults()
+                if (query.isNullOrBlank()) {
+                    results.values = list
+                } else {
+                    val filteredItems = list.filter {
+                        it.receiver_name?.toLowerCase()?.contains(query) == true || it.sender_name?.toLowerCase()?.contains(query) == true
+                    }
+                    results.values = filteredItems
+                }
+                return results
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                filteredList = results?.values as List<ChannelListModel>
+                notifyDataSetChanged()
+            }
+        }
     }
 
 }

@@ -41,6 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_15sdp"
+                    android:id="@+id/clearAllBtn"
                     android:src="@drawable/ic_clear_all" />
 
                 <ImageView
@@ -76,11 +77,12 @@
                     <TextView
                         android:id="@+id/textLocationName"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
-                        android:text="Where"
-                        android:textSize="@dimen/_10sdp"
+                        android:hint="Where"
+                      android:gravity="center"
+                        android:textSize="@dimen/_11sdp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -104,11 +106,22 @@
                     android:layout_marginVertical="@dimen/_7sdp"
                     android:visibility="gone">
 
-                    <EditText
+                    <AutoCompleteTextView
+                        android:id="@+id/et_search_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_7sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@null"
+                        android:singleLine="true"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+
+                  <!--  <EditText
                         android:id="@+id/et_search_location"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@null" />
+                        android:background="@null" />-->
 
                 </RelativeLayout>
 
@@ -200,6 +213,7 @@
                         android:fontFamily="@font/poppins"
                         android:gravity="center"
                         android:text="Dates"
+                        android:layout_marginStart="@dimen/_5sdp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
 
@@ -226,7 +240,7 @@
                         android:fontFamily="@font/poppins"
                         android:gravity="center"
                         android:text="Flexible"
-
+                        android:layout_marginEnd="@dimen/_5sdp"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
 
@@ -460,7 +474,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_toRightOf="@id/ic_clock_1"
-                                android:text="01:00 PM"
+                                android:text="00:00 PM"
                                 android:textSize="@dimen/_13sdp"
                                 android:textStyle="bold" />
 
@@ -504,7 +518,7 @@
                                 android:layout_gravity="center_vertical"
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_toRightOf="@id/ic_clock_2"
-                                android:text="03:00 PM"
+                                android:text="00:00 PM"
                                 android:textSize="@dimen/_13sdp"
                                 android:textStyle="bold" />
 

@@ -1,0 +1,32 @@
+package com.business.zyvo.activity.guest.propertydetails.model
+
+data class PropertyData(var property_id: Int = 0,  // Use default value or make nullable
+                        var host_id: Int = 0,
+                        var property_title: String? = null,  // Nullable
+                        var min_booking_hours: String? = null,
+                        var property_size: Int = 0,
+                        var is_in_wishlist: Int = 0,
+                        var hourly_rate: String? = null,
+                        var bulk_discount_hour: Int = 0,
+                        var bulk_discount_rate: String? = null,
+                        var is_instant_book: Int = 0,
+                        var cancellation_time: Int = 0,
+                        var is_star_host: String = "",
+                        var images: List<String> = emptyList(),  // Empty list instead of null
+                        var hosted_by: String? = null,
+                        var host_profile_image: String? = null,
+                        var property_description: String? = null,
+                        var activities: List<String> = emptyList(),
+                        var amenities: List<String> = emptyList(),
+                        var parking_rules: String? = null,
+                        var host_rules: String? = null,
+                        var cleaning_fee: String? = null,
+                        var service_fee: String? = null,
+                        var tax: String? = null,
+                        var add_ons: List<AddOn>? = null,
+                        var address: String = "",
+                        var latitude: String = "",
+                        var longitude: String = "",
+                        var reviews_total_rating: String? = null,
+                        var reviews_total_count: String? = null,
+                        var reviews: List<Review> = emptyList())

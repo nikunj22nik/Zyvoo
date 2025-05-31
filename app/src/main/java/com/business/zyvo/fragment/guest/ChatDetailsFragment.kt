@@ -1,11 +1,14 @@
 package com.business.zyvo.fragment.guest
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.fragment.app.viewModels
@@ -13,22 +16,40 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.business.zyvo.AppConstant
+import com.business.zyvo.LoadingUtils
 
 import com.business.zyvo.R
+import com.business.zyvo.activity.GuesMain
+import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.adapter.ChatDetailsAdapter
+
 import com.business.zyvo.databinding.FragmentChatDetailsBinding
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.ChatDetailsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 
-class ChatDetailsFragment : Fragment(), View.OnClickListener {
+class ChatDetailsFragment : Fragment(), View.OnClickListener{
+
     private var _binding: FragmentChatDetailsBinding? = null
+
+
     private val binding get() = _binding!!
     private var chatDetailsAdapter: ChatDetailsAdapter? = null
     private val viewModel: ChatDetailsViewModel by viewModels()
-
+    var channelName :String=""
+    var userId :Int =-1
+    var friendId :Int =-1
     lateinit var navController : NavController
+    var profileImage :String =""
+    var providertoken :String =""
+    var groupName :String =""
+    var friendprofileimage :String =""
+    private lateinit var linearLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,35 +59,87 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        _binding = FragmentChatDetailsBinding.inflate(
-            LayoutInflater.from(requireContext()),
-            container,
-            false
-        )
+        _binding = FragmentChatDetailsBinding.inflate(LayoutInflater.from(requireContext()), container, false)
         // requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
 
-
-        binding.viewModel = viewModel
+    //    binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-        chatDetailsAdapter = ChatDetailsAdapter(requireContext(), mutableListOf())
-        binding.rvChatting.adapter = chatDetailsAdapter
-        viewModel.list.observe(viewLifecycleOwner, Observer {
-            chatDetailsAdapter!!.updateItem(it)
-        })
+
+     //   var context: Context, var quickstartConversationsManager: QuickstartConversationsManager, var user_id: String, var profile_image:String, var friend_profile_image:String, var typelogin:String
+
+        val session :SessionManager = SessionManager(requireContext())
+
+        arguments?.let {
+            profileImage = it.getString("user_img").toString()
+            providertoken = session.getChatToken().toString()
+            userId = it.getInt(AppConstant.USER_ID)
+            groupName = it.getString(AppConstant.CHANNEL_NAME).toString()
+            friendId = it.getInt(AppConstant.FRIEND_ID)
+            friendprofileimage = it.getString("friend_img").toString()
+        }
+
+
+        val sessionManager = SessionManager(requireContext())
+        val userType = sessionManager.getUserId()
+        if(userType?.equals(AppConstant.Host) == true) {
+            val rootView = inflater.inflate(R.layout.activity_host_main, container, false)
+            linearLayout = rootView.findViewById(R.id.lay1)
+        }
+        else{
+            val rootView = inflater.inflate(R.layout.activity_gues_main, container, false)
+            linearLayout = rootView.findViewById(R.id.lay1)
+        }
+
+        if (NetworkMonitorCheck._isConnected.value) {
+
+          //  quickstartConversationsManager.initializeWithAccessToken(requireContext(), providertoken, groupName, friendId.toString(), userId.toString())
+        }
+
+        else{
+            LoadingUtils.showErrorDialog(requireContext(), "Something Went Wrong!!")
+        }
+
+        binding.sendBtn.setOnClickListener{
+//            if(binding.etMsg.text.toString().length >0){
+//                if (NetworkMonitorCheck._isConnected.value) {
+//                    quickstartConversationsManager.sendMessage(binding.etMsg.text.toString())
+//                    binding.etMsg.text.clear()
+//                }
+//            }
+//            else{
+//                LoadingUtils.showErrorDialog(requireContext(),"Please Check Your Internet Connection")
+//            }
+        }
+
         return binding.getRoot()
     }
 
+
+
+    override fun onStart() {
+        super.onStart()
+        var session = SessionManager(requireContext())
+    }
+
+    override fun onPause() {
+        super.onPause()
+        var session = SessionManager(requireContext())
+
+        if(session.getUserType().equals(AppConstant.Host)) {
+            (activity as? HostMainActivity)?.showView()
+        }else{
+            (activity as? GuesMain)?.showView()
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.imageThreeDots.setOnClickListener(this)
        // binding.imageFilter.setOnClickListener(this)
 
-
         navController = Navigation.findNavController(view)
+
         binding.imgBack.setOnClickListener{
             navController.navigateUp()
         }
@@ -264,6 +337,4 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener {
         }
 
     }
-
-
 }

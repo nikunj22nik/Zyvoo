@@ -26,15 +26,15 @@
 
 
     <string-array name="day">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
+        <item>01</item>
+        <item>02</item>
+        <item>03</item>
+        <item>04</item>
+        <item>05</item>
+        <item>06</item>
+        <item>07</item>
+        <item>08</item>
+        <item>09</item>
         <item>10</item>
         <item>11</item>
         <item>12</item>
@@ -126,5 +126,23 @@
     <string name="no_internet_dialog_msg">Check your internet connection and try again.</string>
     <string name="enter_your_email_here">Enter your Email here</string>
     <string name="api_key_location">AIzaSyAI8v81ijt2sXkMwcPWeVSEGqB2rxXFHiA</string>
-
+    <string name="see_more">See More</string>
+    <string name="cleaning_fee">Cleaning Fee</string>
+    <string name="zyvoo_service_fee">Zyvo Service Fee</string>
+    <string name="taxes">Taxes</string>
+    <string name="add_on">Add-on</string>
+    <string name="discount">Discount</string>
+    <string name="all_bookings">All Bookings</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="pending">Pending</string>
+    <string name="finished">Finished</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="sorry_we">Sorry, we couldn’t find \n any results.</string>
+    <string name="turn_on_notifications">Turn on Notifications</string>
+    <string name="show_more"><u>Show More</u></string>
+    <string name="booking_time_extension_bte">Booking time extension (BTE)</string>
+    <string name="review_guest">Review Guest</string>
+    <string name="sort_by_highest_review">Sort by: Highest Review</string>
+    <string name="sort_by_lowest_review">Sort by: Lowest Review</string>
+    <string name="sort_by_recent_review">Sort by: Recent Review</string>
 </resources>
