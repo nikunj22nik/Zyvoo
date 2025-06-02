@@ -319,36 +319,38 @@ object PrepareData {
         model5.image = R.drawable.ic_party
         activityList.add(model5)
 
-
         var model6 = ActivityModel()
-        model6.name = "Film Shoot"
-        model6.image = R.drawable.ic_film_shoot
+        model6.name = "Pool"
+        model6.image = R.drawable.pool_water
         activityList.add(model6)
 
+
         var model7 = ActivityModel()
-        model7.name = "Performance"
-        model7.image = R.drawable.ic_performance
+        model7.name = "Film Shoot"
+        model7.image = R.drawable.ic_film_shoot
         activityList.add(model7)
 
         var model8 = ActivityModel()
-        model8.name = "Workshop"
-        model8.image = R.drawable.ic_workshop
+        model8.name = "Performance"
+        model8.image = R.drawable.ic_performance
         activityList.add(model8)
 
         var model9 = ActivityModel()
-        model9.name = "Corporate Event"
-        model9.image = R.drawable.ic_corporate_event
+        model9.name = "Workshop"
+        model9.image = R.drawable.ic_workshop
         activityList.add(model9)
 
         var model10 = ActivityModel()
-        model10.name = "Wedding"
-        model10.image = R.drawable.ic_weding
+        model10.name = "Corporate Event"
+        model10.image = R.drawable.ic_corporate_event
         activityList.add(model10)
 
         var model11 = ActivityModel()
-        model11.name = "Dinner"
-        model11.image = R.drawable.ic_dinner
+        model11.name = "Wedding"
+        model11.image = R.drawable.ic_weding
         activityList.add(model11)
+
+
 
         var model12 = ActivityModel()
         model12.name = "Retreat"
@@ -375,6 +377,11 @@ object PrepareData {
         model16.name = "Audio Recording"
         model16.image = R.drawable.ic_audio_recording
         activityList.add(model16)
+
+        var model17 = ActivityModel()
+        model17.name = "Dinner"
+        model17.image = R.drawable.ic_dinner
+        activityList.add(model17)
 
         return Pair(activityList,amenitiesList)
     }

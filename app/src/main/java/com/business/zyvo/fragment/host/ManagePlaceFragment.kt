@@ -28,6 +28,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
 import android.widget.PopupWindow
+import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
@@ -58,6 +59,7 @@ import com.business.zyvo.adapter.guest.AmenitiesAdapter
 import com.business.zyvo.adapter.host.AddOnAdapter
 import com.business.zyvo.adapter.host.AddOnItemAdapter
 import com.business.zyvo.adapter.host.DropDownTextAdapter
+import com.business.zyvo.adapter.host.DropDownTextAdapter2
 import com.business.zyvo.adapter.host.GallaryAdapter
 import com.business.zyvo.adapter.host.RadioTextAdapter
 import com.business.zyvo.databinding.FragmentManagePlaceBinding
@@ -73,8 +75,6 @@ import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.getLocationDetails
 import com.business.zyvo.utils.ErrorDialog.isWithin24Hours
 import com.business.zyvo.utils.PrepareData
-import com.business.zyvo.utils.PrepareData.getHourMinimumList
-import com.business.zyvo.utils.PrepareData.getNewDiscountList
 import com.business.zyvo.utils.PrepareData.getNewHourMinimumList
 import com.business.zyvo.viewmodel.host.CreatePropertyViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -1443,7 +1443,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
     }
-
+/*
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -1533,6 +1533,106 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
         }
     }
+
+ */
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGES_REQUEST) {
+            val imageUris: ArrayList<Uri> = ArrayList()
+
+            // Handle multiple image selection
+            if (data?.clipData != null) {
+                val clipData = data.clipData!!
+                val count = clipData.itemCount
+
+                // Check if more than 5 images are selected
+                if (count > 5) {
+                    Toast.makeText(requireContext(), "You can only select 5 images", Toast.LENGTH_SHORT).show()
+
+                    // Only take the first 5 images
+                    for (i in 0 until 5) {
+                        val imageUri = clipData.getItemAt(i).uri
+                        val bitmapString = PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
+
+                        imageList.add(0, imageUri)
+                        if (bitmapString != null) {
+                            galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
+                        }
+                    }
+                    galleryAdapter.updateAdapter(imageList)
+                } else {
+                    // If 5 or less images are selected, process all of them
+                    for (i in 0 until count) {
+                        val imageUri = clipData.getItemAt(i).uri
+                        val bitmapString = PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
+
+                        imageList.add(0, imageUri)
+                        if (bitmapString != null) {
+                            galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
+                        }
+                    }
+                    galleryAdapter.updateAdapter(imageList)
+                    Toast.makeText(requireContext(), "$count images selected", Toast.LENGTH_SHORT).show()
+                }
+            } else if (data?.data != null) {
+                // Single image selected
+                val imageUri = data.data
+                val bitmapString = PrepareData.uriToBase64(imageUri!!, requireContext().contentResolver)
+
+                imageList.add(0, imageUri)
+                if (bitmapString != null) {
+                    galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
+                }
+                galleryAdapter.updateAdapter(imageList)
+                Toast.makeText(requireContext(), "1 image selected", Toast.LENGTH_SHORT).show()
+            }
+        } else if (requestCode == 103) {
+
+            if (resultCode == Activity.RESULT_OK) {
+                val place = Autocomplete.getPlaceFromIntent(data)
+                //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
+                val addressComponents = place.addressComponents?.asList()
+                var address: String = place.address
+                // do query with address
+
+                val latLng = place.latLng
+
+                latitude = latLng.latitude.toString()
+                longitude = latLng.longitude.toString()
+                val location = LatLng(latitude.toDouble(), longitude.toDouble())
+                // Move the camera to the specified location
+                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+                // Add a marker at that location
+                mMap?.addMarker(MarkerOptions().position(location))
+                fetchAddressDetails(address,latitude.toDouble(), longitude.toDouble())
+                binding.etCity.isEnabled = true
+                if (latitude == null) {
+                    latitude = "0.0001"
+                }
+
+                if (longitude == null) {
+                    longitude = "0.0001"
+                }
+
+
+                var add = address
+//                setmarkeronMAp(latitude,longitude);
+                //  setmarkeronMAp(latitude,longitude,0);
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                binding.etCity.isEnabled = true
+                // TODO: Handle the error.
+                val status = Autocomplete.getStatusFromIntent(data)
+                Toast.makeText(activity, "Error: " + status.statusMessage, Toast.LENGTH_LONG)
+                    .show()
+//                Log.i(TAG, status.getStatusMessage());
+            }
+        }
+    }
+
+
+
 
     private fun fetchAddressDetails(address:String,latitude: Double, longitude: Double) {
         // Launching a coroutine to run the geocoding task in the background
@@ -3016,7 +3116,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
 
         binding.llHoursRupees.setOnClickListener {
-            val items = getItemListForRadioPerHoursRuppesText()
+           /* val items = getItemListForRadioPerHoursRuppesText()
 
             showSelectedDialog(
                 requireContext(),
@@ -3025,26 +3125,39 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 AppConstant.PRICE
             )
 
+
+            */
+            val items = getItemListForRadioPerHoursRuppesText()
+            createDropdown1(items,AppConstant.MINIMUM_HOUR,binding.tvHoursRupeesSelect,binding.llHoursRupees)
+
         }
         binding.llHoursBulk.setOnClickListener {
-            val items = getItemListForRadioPerHoursBulkText()
+         /*   val items = getItemListForRadioPerHoursBulkText()
             showSelectedDialog(
                 requireContext(),
                 items,
                 binding.tvHoursBulkSelect,
                 AppConstant.BULK_HOUR
             )
+
+          */
+            val items = getItemListForRadioPerHoursBulkText()
+            createDropdown1(items,AppConstant.BULK_HOUR,binding.tvHoursBulkSelect,binding.llHoursBulk)
         }
 
 
         binding.llDiscount.setOnClickListener {
-            val items = getItemListForRadioPerHoursDiscountText()
+      /*      val items = getItemListForRadioPerHoursDiscountText()
             showSelectedDialog(
                 requireContext(),
                 items,
                 binding.tvDiscountSelect,
                 AppConstant.DISCOUNT
             )
+
+       */
+            val items = getItemListForRadioPerHoursDiscountText()
+            createDropdown1(items,AppConstant.DISCOUNT,binding.tvDiscountSelect,binding.llDiscount)
         }
 
         binding.llAvailabilityFromHours.setOnClickListener {
@@ -3111,6 +3224,56 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
         recyclerView.adapter = adapter
         popupWindow.showAsDropDown(binding.llHours)
+    }
+    private fun createDropdown1(
+        items: MutableList<ItemRadio>,
+        type: String,
+        tvSelect: TextView,
+        llSelect: RelativeLayout) {
+        val inflater = layoutInflater
+        val view = inflater.inflate(R.layout.popup_menu_layout, null)
+
+        val popupWindow = PopupWindow(view, WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            true)
+        popupWindow.elevation = 10f
+        popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        popupWindow.isOutsideTouchable = true
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        val adapter = DropDownTextAdapter2(items, object : OnClickListener {
+            override fun itemClick(selectedIndex: Int) {
+                if (type.equals(AppConstant.MINIMUM_HOUR)) {
+                    minimumHourIndex = selectedIndex
+                    //minimumHourValue = selectedIndex + 1;
+                    //Vipin
+                    minimumHourValue = selectedIndex + 2;
+                } else if (type.equals(AppConstant.PRICE)) {
+                    priceIndex = selectedIndex
+                    // hourlyPrice = (selectedIndex + 1) * 10
+                    //Vipin
+                    hourlyPrice = (selectedIndex + 2) * 10
+                } else if (type.equals(AppConstant.DISCOUNT)) {
+                    discountPriceIndex = selectedIndex
+                    // bulkDiscountPrice = (selectedIndex + 1) * 10
+                    //Vipin
+                    bulkDiscountPrice = (selectedIndex + 2) * 10
+                } else if (type.equals(AppConstant.BULK_HOUR)) {
+                    discountHourIndex = selectedIndex
+                    // bulkDiscountHour = (selectedIndex + 1)
+                    //Vipin
+                    bulkDiscountHour = (selectedIndex + 2)
+                }
+            }
+        }) { selectedText ->
+            // Update TextView with the selected text
+            tvSelect.text =selectedText
+            popupWindow.dismiss()
+        }
+        recyclerView.adapter = adapter
+        popupWindow.showAsDropDown(llSelect)
     }
 
     fun showSelectedDialog(

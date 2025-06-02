@@ -1645,15 +1645,15 @@
                         android:padding="@dimen/_7sdp"
                         android:visibility="visible">
 
-                        <TextView
-                            android:id="@+id/textDollar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_3sdp"
-                            android:fontFamily="@font/inter"
-                            android:text="$"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_10ssp" />
+<!--                        <TextView-->
+<!--                            android:id="@+id/textDollar"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginStart="@dimen/_3sdp"-->
+<!--                            android:fontFamily="@font/inter"-->
+<!--                            android:text="$"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textSize="@dimen/_10ssp" />-->
 
 
                         <EditText
@@ -1663,7 +1663,7 @@
                             android:layout_marginHorizontal="@dimen/_3sdp"
                             android:layout_marginStart="@dimen/_5sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
-                            android:layout_toEndOf="@id/textDollar"
+
                             android:background="@null"
                             android:editable="false"
                             android:fontFamily="@font/poppins"
@@ -1675,20 +1675,6 @@
                             android:textSize="@dimen/_10ssp"
                             tools:ignore="NotSibling" />
 
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/rlEnterData2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_10sdp"
-
-                        android:layout_toEndOf="@+id/rlEnterData"
-                        android:background="@drawable/button_grey_line_bg"
-                        android:padding="@dimen/_7sdp"
-                        android:visibility="visible">
-
                         <TextView
                             android:id="@+id/textDollar1"
                             android:layout_width="wrap_content"
@@ -1696,6 +1682,7 @@
                             android:layout_marginStart="@dimen/_3sdp"
                             android:fontFamily="@font/inter"
                             android:text="$"
+                            android:layout_toEndOf="@+id/etType"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10ssp" />
 
@@ -1705,7 +1692,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="@dimen/_3sdp"
-                            android:layout_marginStart="@dimen/_15sdp"
+                            android:layout_marginStart="@dimen/_5sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_toEndOf="@id/textDollar1"
                             android:background="@null"
@@ -1723,6 +1710,52 @@
 
 
                     </RelativeLayout>
+
+<!--                    <RelativeLayout-->
+<!--                        android:id="@+id/rlEnterData2"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_margin="@dimen/_10sdp"-->
+
+<!--                        android:layout_toEndOf="@+id/rlEnterData"-->
+<!--                        android:background="@drawable/button_grey_line_bg"-->
+<!--                        android:padding="@dimen/_7sdp"-->
+<!--                        android:visibility="gone">-->
+
+<!--                        <TextView-->
+<!--                            android:id="@+id/textDollar1"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginStart="@dimen/_3sdp"-->
+<!--                            android:fontFamily="@font/inter"-->
+<!--                            android:text="$"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textSize="@dimen/_10ssp" />-->
+
+
+<!--                        <EditText-->
+<!--                            android:id="@+id/textType"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_marginHorizontal="@dimen/_3sdp"-->
+<!--                            android:layout_marginStart="@dimen/_15sdp"-->
+<!--                            android:layout_marginEnd="@dimen/_5sdp"-->
+<!--                            android:layout_toEndOf="@id/textDollar1"-->
+<!--                            android:background="@null"-->
+<!--                            android:fontFamily="@font/poppins"-->
+<!--                            android:hint="00"-->
+<!--                            android:maxLength="4"-->
+<!--                            android:inputType="number"-->
+<!--                            android:maxWidth="@dimen/_110sdp"-->
+
+<!--                            android:maxLines="1"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            android:textColorHint="@color/black"-->
+<!--                            android:textSize="@dimen/_10ssp"-->
+<!--                            tools:ignore="NotSibling" />-->
+
+
+<!--                    </RelativeLayout>-->
 
 
                 </RelativeLayout>
