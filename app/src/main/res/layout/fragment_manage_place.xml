@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".fragment.host.ManagePlaceFragment">
 
     <ScrollView
@@ -1286,6 +1287,7 @@
                         android:layout_marginHorizontal="@dimen/_15sdp"
                         android:layout_marginVertical="@dimen/_5sdp"
                         android:background="@null"
+                        android:singleLine="true"
                         android:hint="Street"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
@@ -1410,6 +1412,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:orientation="horizontal">
+                    <!--android:layout_height="@dimen/_33sdp"-->
 
                     <RelativeLayout
                         android:id="@+id/llHours"
@@ -1423,11 +1426,12 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/ll_location">
 
-
                         <TextView
                             android:id="@+id/tvHoursSelect"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:visibility="visible"
+                            android:background="@color/white"
                             android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
@@ -1441,6 +1445,7 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
+                            android:visibility="visible"
                             android:layout_gravity="center_vertical"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_12sdp"

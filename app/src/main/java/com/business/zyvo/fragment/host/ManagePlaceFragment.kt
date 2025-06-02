@@ -9,7 +9,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
@@ -20,14 +19,11 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.text.Editable
 import android.text.SpannableString
-import android.text.Spanned
 import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.GONE
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
@@ -40,6 +36,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -48,12 +45,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
@@ -66,6 +57,7 @@ import com.business.zyvo.adapter.guest.ActivitiesAdapter
 import com.business.zyvo.adapter.guest.AmenitiesAdapter
 import com.business.zyvo.adapter.host.AddOnAdapter
 import com.business.zyvo.adapter.host.AddOnItemAdapter
+import com.business.zyvo.adapter.host.DropDownTextAdapter
 import com.business.zyvo.adapter.host.GallaryAdapter
 import com.business.zyvo.adapter.host.RadioTextAdapter
 import com.business.zyvo.databinding.FragmentManagePlaceBinding
@@ -73,15 +65,24 @@ import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.model.ActivityModel
 import com.business.zyvo.model.host.AddOnModel
 import com.business.zyvo.model.host.GetPropertyDetail
+import com.business.zyvo.model.host.ItemDropDown
 import com.business.zyvo.model.host.ItemRadio
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.getLocationDetails
 import com.business.zyvo.utils.ErrorDialog.isWithin24Hours
-import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.PrepareData
+import com.business.zyvo.utils.PrepareData.getHourMinimumList
+import com.business.zyvo.utils.PrepareData.getNewDiscountList
+import com.business.zyvo.utils.PrepareData.getNewHourMinimumList
 import com.business.zyvo.viewmodel.host.CreatePropertyViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
@@ -100,10 +101,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     // variables for availability
 
-    var minimumHourValue = 2;
-    var hourlyPrice = 10;
-    var bulkDiscountHour = 2;
-    var bulkDiscountPrice = 0;
+    var minimumHourValue = 2
+    var hourlyPrice = 10
+    var bulkDiscountHour = 2
+    var bulkDiscountPrice = 0
     var availableMonth: String = "00"
     var fromHour: String = "00:00"
     var toHour: String = "00:00"
@@ -2971,6 +2972,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         return items
     }
 
+
     private fun getItemListForRadioPerHoursRuppesText(): MutableList<ItemRadio> {
         val items = PrepareData.getPriceAndHourList()
         // Restore the previously selected item's state
@@ -3002,13 +3004,15 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     fun onClickDialogOpenner() {
         binding.llHours.setOnClickListener {
-            val items = getItemListForRadioHoursText()
+           /* val items = getItemListForRadioHoursText()
             showSelectedDialog(
                 requireContext(),
                 items,
                 binding.tvHoursSelect,
                 AppConstant.MINIMUM_HOUR
-            )
+            )*/
+            val items = getNewHourMinimumList()
+            createDropdown(items,AppConstant.MINIMUM_HOUR)
         }
 
         binding.llHoursRupees.setOnClickListener {
@@ -3060,6 +3064,53 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         }
 
+    }
+
+    private fun createDropdown(items: MutableList<ItemDropDown>, type: String) {
+        val inflater = layoutInflater
+        val view = inflater.inflate(R.layout.popup_menu_layout, null)
+
+        val popupWindow = PopupWindow(view, WindowManager.LayoutParams.WRAP_CONTENT,
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            true)
+        popupWindow.elevation = 10f
+        popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        popupWindow.isOutsideTouchable = true
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        val adapter = DropDownTextAdapter(items, object : OnClickListener {
+            override fun itemClick(selectedIndex: Int) {
+                if (type.equals(AppConstant.MINIMUM_HOUR)) {
+                    minimumHourIndex = selectedIndex
+                    //minimumHourValue = selectedIndex + 1;
+                    //Vipin
+                    minimumHourValue = selectedIndex + 2;
+                } else if (type.equals(AppConstant.PRICE)) {
+                    priceIndex = selectedIndex
+                    // hourlyPrice = (selectedIndex + 1) * 10
+                    //Vipin
+                    hourlyPrice = (selectedIndex + 2) * 10
+                } else if (type.equals(AppConstant.DISCOUNT)) {
+                    discountPriceIndex = selectedIndex
+                    // bulkDiscountPrice = (selectedIndex + 1) * 10
+                    //Vipin
+                    bulkDiscountPrice = (selectedIndex + 2) * 10
+                } else if (type.equals(AppConstant.BULK_HOUR)) {
+                    discountHourIndex = selectedIndex
+                    // bulkDiscountHour = (selectedIndex + 1)
+                    //Vipin
+                    bulkDiscountHour = (selectedIndex + 2)
+                }
+            }
+        }) { selectedText ->
+            // Update TextView with the selected text
+            binding.tvHoursSelect.text =selectedText
+            popupWindow.dismiss()
+        }
+        recyclerView.adapter = adapter
+        popupWindow.showAsDropDown(binding.llHours)
     }
 
     fun showSelectedDialog(

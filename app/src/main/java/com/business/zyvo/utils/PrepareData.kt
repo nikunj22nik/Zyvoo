@@ -18,6 +18,7 @@ import com.business.zyvo.R
 import com.business.zyvo.model.ActivityModel
 import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.TimeDetails
+import com.business.zyvo.model.host.ItemDropDown
 import com.business.zyvo.model.host.ItemRadio
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -427,6 +428,31 @@ object PrepareData {
            // ItemRadio("24 hour minimum", false)
         )
     }
+    fun getNewHourMinimumList(): MutableList<ItemDropDown> {
+        return mutableListOf(
+            ItemDropDown("2 hour minimum"),
+            ItemDropDown("3 hour minimum"),
+            ItemDropDown("4 hour minimum"),
+            ItemDropDown("5 hour minimum"),
+            ItemDropDown("6 hour minimum"),
+            ItemDropDown("7 hour minimum"),
+            ItemDropDown("9 hour minimum"),
+            ItemDropDown("10 hour minimum"),
+            ItemDropDown("11 hour minimum"),
+            ItemDropDown("12 hour minimum"),
+            ItemDropDown("13 hour minimum"),
+            ItemDropDown("14 hour minimum"),
+            ItemDropDown("15 hour minimum"),
+            ItemDropDown("16 hour minimum"),
+            ItemDropDown("17 hour minimum"),
+            ItemDropDown("18 hour minimum"),
+            ItemDropDown("19 hour minimum"),
+            ItemDropDown("20 hour minimum"),
+            ItemDropDown("21 hour minimum"),
+            ItemDropDown("22 hour minimum"),
+            ItemDropDown("23 hour minimum")
+        )
+    }
 
     fun getDiscountList(): MutableList<ItemRadio> {
         return mutableListOf(
@@ -441,6 +467,22 @@ object PrepareData {
             ItemRadio("45% Discount", false),
             ItemRadio("50% Discount", false),
             ItemRadio("75% Discount", false)
+        )
+    }
+
+    fun getNewDiscountList(): MutableList<ItemDropDown> {
+        return mutableListOf(
+            ItemDropDown("5% Discount"),
+            ItemDropDown("10% Discount"),
+            ItemDropDown("15% Discount"),
+            ItemDropDown("20% Discount"),
+            ItemDropDown("25% Discount"),
+            ItemDropDown("30% Discount"),
+            ItemDropDown("35% Discount"),
+            ItemDropDown("40% Discount"),
+            ItemDropDown("45% Discount"),
+            ItemDropDown("50% Discount"),
+            ItemDropDown("75% Discount")
         )
     }
 
@@ -459,17 +501,26 @@ object PrepareData {
             ItemRadio("$110 per hour", false),
             ItemRadio("$120 per hour", false),
             ItemRadio("$130 per hour", false)
-//            ItemRadio("14 hour minimum", false),
-//            ItemRadio("15 hour minimum", false),
-//            ItemRadio("16 hour minimum", false),
-//            ItemRadio("17 hour minimum", false),
-//            ItemRadio("18 hour minimum", false),
-//            ItemRadio("19 hour minimum", false),
-//            ItemRadio("20 hour minimum", false),
-//            ItemRadio("21 hour minimum", false),
-//            ItemRadio("22 hour minimum", false),
-//            ItemRadio("23 hour minimum", false),
-//            ItemRadio("24 hour minimum", false)
+
+        )
+    }
+
+    fun getNewPriceAndHourList(): MutableList<ItemDropDown> {
+        return mutableListOf(
+            ItemDropDown("$10 per hour"),
+            ItemDropDown("$20 per hour"),
+            ItemDropDown("$30 per hour"),
+            ItemDropDown("$40 per hour"),
+            ItemDropDown("$50 per hour"),
+            ItemDropDown("$60 per hour"),
+            ItemDropDown("$70 per hour"),
+            ItemDropDown("$80 per hour"),
+            ItemDropDown("$90 per hour"),
+            ItemDropDown("$100 per hour"),
+            ItemDropDown("$110 per hour"),
+            ItemDropDown("$120 per hour"),
+            ItemDropDown("$130 per hour")
+
         )
     }
 

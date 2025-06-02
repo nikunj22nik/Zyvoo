@@ -16,7 +16,6 @@ android:layout_gravity="center_vertical"
         android:layout_marginVertical="@dimen/_15sdp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
-
         tools:listitem="@layout/layout_text_with_radio"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHeight_max="@dimen/_250sdp"/>
