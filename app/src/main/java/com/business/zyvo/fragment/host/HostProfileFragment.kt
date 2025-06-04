@@ -1034,14 +1034,14 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             R.id.textConfirmNow -> {
                 dialogEmailVerificationProfile(requireContext())
-                binding.textConfirmNow.visibility = View.GONE
-                binding.textVerified.visibility = View.VISIBLE
+//                binding.textConfirmNow.visibility = View.GONE
+//                binding.textVerified.visibility = View.VISIBLE
             }
 
             R.id.textConfirmNow1 -> {
                 dialogNumberVerification(requireContext())
-                binding.textConfirmNow1.visibility = View.GONE
-                binding.textVerified1.visibility = View.VISIBLE
+//                binding.textConfirmNow1.visibility = View.GONE
+//                binding.textVerified1.visibility = View.VISIBLE
             }
 
             R.id.textSaveButton -> {
@@ -1485,6 +1485,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         R.color.scroll_bar_color
                     )
                 )
+                textResend.isClickable = true
+                textResend.isEnabled = true
             } else {
                 textResend.setTextColor(
                     ContextCompat.getColor(
@@ -1492,6 +1494,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         R.color.grey
                     )
                 )
+                textResend.isClickable = false
+                textResend.isEnabled = false
             }
 
             textSubmitButton.setOnClickListener {
@@ -1530,6 +1534,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             R.color.grey
                         )
                     )
+                    textResend.isClickable = false
+                    textResend.isEnabled = false
                 }
             }
             imageCross.setOnClickListener {
@@ -2001,6 +2007,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         R.color.scroll_bar_color
                     )
                 )
+                textResend.isClickable = true
+                textResend.isEnabled = true
             }
             else {
                 textResend.setTextColor(
@@ -2009,6 +2017,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         R.color.grey
                     )
                 )
+                textResend.isClickable = false
+                textResend.isEnabled = false
             }
 
             textSubmitButton.setOnClickListener{
@@ -2181,6 +2191,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     R.color.grey
                                 )
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textTimeResend)
                     }
@@ -2223,6 +2235,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     R.color.grey
                                 )
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textResend)
                     }
@@ -2482,6 +2496,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         R.color.scroll_bar_color
                     )
                 )
+                textResend.isClickable = true
+                textResend.isEnabled = true
             } else {
                 textResend.setTextColor(
                     ContextCompat.getColor(
@@ -2489,6 +2505,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         R.color.grey
                     )
                 )
+                textResend.isClickable = false
+                textResend.isEnabled = false
             }
 
             textSubmitButton.setOnClickListener {
@@ -2695,6 +2713,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     R.color.grey
                                 )
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textTimeResend)
                     }
@@ -2734,6 +2754,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             textResend.setTextColor(
                                 ContextCompat.getColor(requireContext(), R.color.grey)
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textResend)
 
@@ -2774,6 +2796,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 if (textTimeResend.text == "00:00") {
                     resendEnabled = true
                     textResend.setTextColor(ContextCompat.getColor(context, R.color.scroll_bar_color))
+                    textResend.isClickable = true
+                    textResend.isEnabled = true
                 } else {
                     textResend.setTextColor(
                         ContextCompat.getColor(
@@ -2781,6 +2805,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             R.color.grey
                         )
                     )
+                    textResend.isClickable = false
+                    textResend.isEnabled = false
                 }
             }
         }
@@ -2933,9 +2959,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 textResend.setTextColor(
                     ContextCompat.getColor(context, R.color.scroll_bar_color)
                 )
+                textResend.isClickable = true
+                textResend.isEnabled = true
             }
             else {
                 textResend.setTextColor(ContextCompat.getColor(context, R.color.grey))
+                textResend.isClickable = false
+                textResend.isEnabled = false
             }
 
             textSubmitButton.setOnClickListener {

@@ -399,6 +399,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
             // Set the adapter for RecyclerView
             localeAdapter = LocaleAdapter(locales, object : OnLocalListener{
+                @SuppressLint("SuspiciousIndentation")
                 override fun onItemClick(local: String/*,type: String*/) {
                     val newLanguage = AddLanguageModel(local)
 
@@ -1074,6 +1075,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                         R.color.scroll_bar_color
                     )
                 )
+                textResend.isClickable = true
+                textResend.isEnabled = true
             }
             else {
                 textResend.setTextColor(
@@ -1082,6 +1085,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                         R.color.grey
                     )
                 )
+                textResend.isClickable = false
+                textResend.isEnabled = false
             }
 
             textSubmitButton.setOnClickListener{
@@ -1255,6 +1260,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                     R.color.grey
                                 )
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textTimeResend)
                     }
@@ -1297,6 +1304,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                     R.color.grey
                                 )
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textResend)
                     }
@@ -1337,6 +1346,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                             R.color.scroll_bar_color
                         )
                     )
+                    textResend.isClickable = true
+                    textResend.isEnabled = true
                 } else {
                     textResend.setTextColor(
                         ContextCompat.getColor(
@@ -1344,6 +1355,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                             R.color.grey
                         )
                     )
+                    textResend.isClickable = false
+                    textResend.isEnabled = false
                 }
             }
         }

@@ -1047,7 +1047,7 @@ Log.d("checkDataTotalPage",it.total_pages.toString())
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val remainingChars = maxLength - (s?.length ?: 0)
-                textView.text = "max $remainingChars characters"
+                textView.text = "Max $remainingChars characters"
             }
 
             override fun afterTextChanged(s: Editable?) {}

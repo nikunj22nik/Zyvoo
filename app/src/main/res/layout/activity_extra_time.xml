@@ -112,6 +112,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_7sdp"
                                 android:hint="Mia J."
+                                android:maxWidth="@dimen/_140sdp"
+                                android:singleLine="true"
                                 android:textColor="@color/black"
                                 android:id="@+id/tvHostName"
                                 android:fontFamily="@font/poppins"
@@ -152,7 +154,7 @@
                         android:layout_gravity="center_horizontal"
                         android:drawableStart="@drawable/ic_clock_dot_new"
                         android:drawablePadding="@dimen/_2sdp"
-                        android:hint="Respond within 1 hr"
+                        android:hint="Respond within 2 hr"
                         android:textColor="@color/black"
                         android:id="@+id/tvResponseTime"
                         android:fontFamily="@font/poppins"
@@ -1016,7 +1018,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:background="@drawable/bg_green_add_card">
 

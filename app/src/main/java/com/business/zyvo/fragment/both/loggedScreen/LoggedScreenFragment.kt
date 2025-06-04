@@ -2944,7 +2944,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             lifecycleScope.launch(Dispatchers.Main) {
                 loggedScreenViewModel.getHomeData(
                     "",
-                    latitude, longitude
+                    "50.45036", "30.524502"
                 ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
