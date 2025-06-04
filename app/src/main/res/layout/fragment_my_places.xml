@@ -98,7 +98,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
                     android:layout_marginTop="@dimen/_5sdp"
-                    android:background="@color/grey" />
+                    android:background="@color/light_grey" />
 
                 <RelativeLayout
                     android:id="@+id/no_data_view"
