@@ -74,20 +74,27 @@
                     android:textStyle="bold"
 
                     />
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:id="@+id/imageStar"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:src="@drawable/ic_start_new" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginStart="@dimen/_2sdp"
                     android:layout_marginTop="@dimen/_7sdp"
                     android:hint="0.0"
+                   android:textAlignment="textEnd"
+                    android:layout_toEndOf="@+id/imageStar"
                     android:id="@+id/proRating"
                     android:textColorHint="@color/fca800"
                     android:textColor="@color/fca800"
@@ -97,41 +104,70 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_6sdp"
                     android:layout_marginTop="@dimen/_7sdp"
+                    android:layout_marginStart="@dimen/_5sdp"
                     android:id="@+id/proreviewCount"
-                    android:hint="(30 reviews)" />
-
+                    android:hint="(30 reviews)"
+                    android:layout_toEndOf="@+id/proRating"/>
+</RelativeLayout>
             </com.google.android.flexbox.FlexboxLayout>
 
-            <com.google.android.flexbox.FlexboxLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_15sdp"
-                app:alignItems="center"
-                app:flexWrap="wrap"
-                app:justifyContent="flex_start">
+<!--            <com.google.android.flexbox.FlexboxLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginHorizontal="@dimen/_15sdp"-->
+<!--                app:alignItems="center"-->
+<!--                app:flexWrap="wrap"-->
+<!--                app:justifyContent="flex_start">-->
 
-                <ImageView
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
+                    >
+
+
+                <LinearLayout
+                    android:id="@+id/ll1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/ic_clock_dot_new" />
+                    android:orientation="horizontal"
+                    android:layout_centerVertical="true">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_clock_dot_new" />
 
-                <TextView
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:fontFamily="@font/poppins"
+                        android:hint="2 hr"
+                        android:textAlignment="textStart"
+                        android:id="@+id/proBookingMin"
+                        android:textColorHint="@color/black"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/ll2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_toEndOf="@+id/ll1"
+                    android:orientation="horizontal"
+                    android:layout_centerVertical="true">
+
+
+
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_4sdp"
-                    android:fontFamily="@font/poppins"
-                    android:hint="2 hr 5 min"
-                    android:id="@+id/proBookingMin"
-                    android:textColorHint="@color/black"
-                    android:textColor="@color/black" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_11sdp"
                     android:layout_marginEnd="@dimen/_4sdp"
                     android:src="@drawable/ic_sqrt_feet_small" />
 
@@ -143,11 +179,15 @@
                     android:id="@+id/proSqr"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_share"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@+id/tv_wishlist"
+                    android:layout_toEndOf="@+id/ll2"
+                    android:gravity="center">
 
                     <ImageView
                         android:id="@+id/imageShare"
@@ -170,6 +210,7 @@
                     android:id="@+id/tv_wishlist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/_4sdp"
 
                     >
@@ -199,8 +240,8 @@
                         android:text="Wishlist"
                         android:textColor="@color/black" />
                 </LinearLayout>
-
-            </com.google.android.flexbox.FlexboxLayout>
+                </RelativeLayout>
+<!--            </com.google.android.flexbox.FlexboxLayout>-->
 
             <LinearLayout
                 android:id="@+id/ll_hotel_views"
@@ -385,6 +426,7 @@
                         android:drawablePadding="@dimen/_3ssp"
                         android:fontFamily="@font/poppins"
                         android:hint="4+ hour discount"
+                        android:layout_marginTop="@dimen/_4sdp"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_11sdp"
@@ -393,13 +435,13 @@
 
                     <ImageView
                         android:id="@+id/imageInfo1"
-                        android:layout_width="@dimen/_15sdp"
-                        android:layout_height="@dimen/_15sdp"
+                        android:layout_width="@dimen/_18sdp"
+                        android:layout_height="@dimen/_18sdp"
                         android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_2sdp"
                         android:layout_toEndOf="@+id/textHourDiscount"
                         android:padding="2dp"
-                        android:src="@drawable/ic_info_icon" />
+                        android:src="@drawable/information_icon" />
 
 
                     <TextView
@@ -612,14 +654,14 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10ssp" />
 
-                        <ImageView
-                            android:id="@+id/ic_drop_down_1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/_10sdp"
-                            android:src="@drawable/ic_drop_down" />
+<!--                        <ImageView-->
+<!--                            android:id="@+id/ic_drop_down_1"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:layout_centerVertical="true"-->
+<!--                            android:layout_marginEnd="@dimen/_10sdp"-->
+<!--                            android:src="@drawable/ic_drop_down" />-->
 
                     </RelativeLayout>
 
@@ -632,7 +674,7 @@
                         android:id="@+id/rl_view2"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_weight="0.43"
+                        android:layout_weight="0.46"
                         android:background="@drawable/bg_two_side_corner">
 
                         <ImageView
@@ -656,14 +698,14 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/_10ssp" />
 
-                        <ImageView
-                            android:id="@+id/ic_drop_down_2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/_10sdp"
-                            android:src="@drawable/ic_drop_down" />
+<!--                        <ImageView-->
+<!--                            android:id="@+id/ic_drop_down_2"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_alignParentEnd="true"-->
+<!--                            android:layout_centerVertical="true"-->
+<!--                            android:layout_marginEnd="@dimen/_10sdp"-->
+<!--                            android:src="@drawable/ic_drop_down" />-->
                     </RelativeLayout>
 
 
@@ -672,7 +714,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_24sdp"
+                    android:layout_marginHorizontal="@dimen/_19sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:id="@+id/llHr"
                     android:visibility="visible"
@@ -730,7 +772,7 @@
                         android:id="@+id/rl_view4"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_weight="0.43"
+                        android:layout_weight="0.45"
                         android:background="@drawable/bg_two_side_corner">
 
                         <ImageView
@@ -1386,7 +1428,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Show more reviews" />
+                    android:text="Show More Reviews" />
 
 
             </RelativeLayout>

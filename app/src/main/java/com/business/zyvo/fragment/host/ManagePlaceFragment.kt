@@ -455,11 +455,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
         if (!checkingAvailabilityData()) {
             return false
-        }else if (binding.tvHours.text.isEmpty()) {
+        } else if (binding.tvHours.text.isEmpty()) {
             LoadingUtils.showErrorDialog(requireActivity(), AppConstant.stTime)
         } else if (binding.tvHours1.text.isEmpty()) {
             LoadingUtils.showErrorDialog(requireActivity(), AppConstant.edTime)
-        } else  if (!isWithin24Hours(fromHour,toHour)){
+        } else if (!isWithin24Hours(fromHour, toHour)) {
             LoadingUtils.showErrorDialog(requireActivity(), AppConstant.avabilty)
         }
         return true
@@ -758,7 +758,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             content.setSpan(UnderlineSpan(), 0, content.length, 0)
             binding.tvShowMore.text = content
             // Update button text
-           // binding.tvShowMore.text = if (isExpanded) "Show Less" else "Show More"
+            // binding.tvShowMore.text = if (isExpanded) "Show Less" else "Show More"
         }
     }
 
@@ -1151,34 +1151,36 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                         locationDetails?.let {
                             Log.d(
                                 ErrorDialog.TAG,
-                                "Street: ${it.streetAddress},City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}")
-                            if (!it.city.isNullOrEmpty()&&
-                                !it.state.isNullOrEmpty()&&
-                                !it.zipCode.isNullOrEmpty()&&
-                                !it.country.isNullOrEmpty()){
+                                "Street: ${it.streetAddress},City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}"
+                            )
+                            if (!it.city.isNullOrEmpty() &&
+                                !it.state.isNullOrEmpty() &&
+                                !it.zipCode.isNullOrEmpty() &&
+                                !it.country.isNullOrEmpty()
+                            ) {
 
-                                if (it.streetAddress.isNullOrEmpty()){
+                                if (it.streetAddress.isNullOrEmpty()) {
                                     binding.etAddress.setText(place.name ?: "")
                                     street = place.name ?: ""
-                                }else{
+                                } else {
                                     binding.etAddress.setText(it.streetAddress ?: "")
                                     street = it.streetAddress ?: ""
                                 }
-                                if (it.city.isNullOrEmpty()){
+                                if (it.city.isNullOrEmpty()) {
                                     binding.etCity.setText(it.city)
-                                    city = it.city?:""
+                                    city = it.city ?: ""
                                 }
-                                if (it.state.isNullOrEmpty()){
+                                if (it.state.isNullOrEmpty()) {
                                     binding.state.setText(it.state)
-                                    state = it.state?:""
+                                    state = it.state ?: ""
                                 }
-                                if (it.zipCode.isNullOrEmpty()){
+                                if (it.zipCode.isNullOrEmpty()) {
                                     binding.zipcode.setText(it.zipCode)
-                                    zipcode = it.zipCode?:""
+                                    zipcode = it.zipCode ?: ""
                                 }
-                                if (it.country.isNullOrEmpty()){
+                                if (it.country.isNullOrEmpty()) {
                                     binding.country.setText(it.country)
-                                    country = it.country?:""
+                                    country = it.country ?: ""
                                 }
                             }
                         }
@@ -1443,20 +1445,39 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
     }
-/*
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    /*
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            super.onActivityResult(requestCode, resultCode, data)
 
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGES_REQUEST) {
-            val imageUris: ArrayList<Uri> = ArrayList()
+            if (resultCode == RESULT_OK && requestCode == PICK_IMAGES_REQUEST) {
+                val imageUris: ArrayList<Uri> = ArrayList()
 
-            // Handle multiple image selection
-            if (data?.clipData != null) {
-                val count = data.clipData!!.itemCount
-                Log.d("TESTING_ZYVOO", "Counting is " + count)
+                // Handle multiple image selection
+                if (data?.clipData != null) {
+                    val count = data.clipData!!.itemCount
+                    Log.d("TESTING_ZYVOO", "Counting is " + count)
 
-                for (i in 0 until count) {
-                    val imageUri = data.clipData!!.getItemAt(i).uri
+                    for (i in 0 until count) {
+                        val imageUri = data.clipData!!.getItemAt(i).uri
+                        val bitmapString =
+                            PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
+
+                        imageList.add(0, imageUri)
+                        if (bitmapString != null) {
+                            galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
+                        }
+                    }
+                    galleryAdapter.updateAdapter(imageList)
+                    Toast.makeText(requireContext(), "$count images selected", Toast.LENGTH_SHORT)
+                        .show()
+                } else if (data?.data != null) {
+                    // Single image selected
+                    val imageUri = data.data
+
+                    imageUris.add(imageUri!!)
+                    Log.d("ImageDataVipin", imageUri.toString())
+                    // Toast.makeText(requireContext(), "1 image selectedd", Toast.LENGTH_SHORT).show()
+
                     val bitmapString =
                         PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
 
@@ -1464,77 +1485,58 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                     if (bitmapString != null) {
                         galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
                     }
-                }
-                galleryAdapter.updateAdapter(imageList)
-                Toast.makeText(requireContext(), "$count images selected", Toast.LENGTH_SHORT)
-                    .show()
-            } else if (data?.data != null) {
-                // Single image selected
-                val imageUri = data.data
 
-                imageUris.add(imageUri!!)
-                Log.d("ImageDataVipin", imageUri.toString())
-                // Toast.makeText(requireContext(), "1 image selectedd", Toast.LENGTH_SHORT).show()
 
-                val bitmapString =
-                    PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
-
-                imageList.add(0, imageUri)
-                if (bitmapString != null) {
-                    galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
+                    galleryAdapter.updateAdapter(imageList)
+                    Toast.makeText(requireContext(), "1 images selected", Toast.LENGTH_SHORT)
+                        .show()
                 }
 
+                // You can now handle the selected image URIs in the imageUris list
+            } else if (requestCode == 103) {
 
-                galleryAdapter.updateAdapter(imageList)
-                Toast.makeText(requireContext(), "1 images selected", Toast.LENGTH_SHORT)
-                    .show()
-            }
+                if (resultCode == Activity.RESULT_OK) {
+                    val place = Autocomplete.getPlaceFromIntent(data)
+                    //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
+                    val addressComponents = place.addressComponents?.asList()
+                    var address: String = place.address
+                    // do query with address
 
-            // You can now handle the selected image URIs in the imageUris list
-        } else if (requestCode == 103) {
+                    val latLng = place.latLng
 
-            if (resultCode == Activity.RESULT_OK) {
-                val place = Autocomplete.getPlaceFromIntent(data)
-                //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
-                val addressComponents = place.addressComponents?.asList()
-                var address: String = place.address
-                // do query with address
+                    latitude = latLng.latitude.toString()
+                    longitude = latLng.longitude.toString()
+                    val location = LatLng(latitude.toDouble(), longitude.toDouble())
+                    // Move the camera to the specified location
+                    mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
+                    // Add a marker at that location
+                    mMap?.addMarker(MarkerOptions().position(location))
+                    fetchAddressDetails(address,latitude.toDouble(), longitude.toDouble())
+                    binding.etCity.isEnabled = true
+                    if (latitude == null) {
+                        latitude = "0.0001"
+                    }
 
-                val latLng = place.latLng
+                    if (longitude == null) {
+                        longitude = "0.0001"
+                    }
 
-                latitude = latLng.latitude.toString()
-                longitude = latLng.longitude.toString()
-                val location = LatLng(latitude.toDouble(), longitude.toDouble())
-                // Move the camera to the specified location
-                mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
-                // Add a marker at that location
-                mMap?.addMarker(MarkerOptions().position(location))
-                fetchAddressDetails(address,latitude.toDouble(), longitude.toDouble())
-                binding.etCity.isEnabled = true
-                if (latitude == null) {
-                    latitude = "0.0001"
+
+                    var add = address
+    //                setmarkeronMAp(latitude,longitude);
+                    //  setmarkeronMAp(latitude,longitude,0);
+                } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                    binding.etCity.isEnabled = true
+                    // TODO: Handle the error.
+                    val status = Autocomplete.getStatusFromIntent(data)
+                    Toast.makeText(activity, "Error: " + status.statusMessage, Toast.LENGTH_LONG)
+                        .show()
+    //                Log.i(TAG, status.getStatusMessage());
                 }
-
-                if (longitude == null) {
-                    longitude = "0.0001"
-                }
-
-
-                var add = address
-//                setmarkeronMAp(latitude,longitude);
-                //  setmarkeronMAp(latitude,longitude,0);
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                binding.etCity.isEnabled = true
-                // TODO: Handle the error.
-                val status = Autocomplete.getStatusFromIntent(data)
-                Toast.makeText(activity, "Error: " + status.statusMessage, Toast.LENGTH_LONG)
-                    .show()
-//                Log.i(TAG, status.getStatusMessage());
             }
         }
-    }
 
- */
+     */
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -1549,12 +1551,17 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
                 // Check if more than 5 images are selected
                 if (count > 5) {
-                    Toast.makeText(requireContext(), "You can only select 5 images", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "You can only select 5 images",
+                        Toast.LENGTH_SHORT
+                    ).show()
 
                     // Only take the first 5 images
                     for (i in 0 until 5) {
                         val imageUri = clipData.getItemAt(i).uri
-                        val bitmapString = PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
+                        val bitmapString =
+                            PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
 
                         imageList.add(0, imageUri)
                         if (bitmapString != null) {
@@ -1566,7 +1573,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                     // If 5 or less images are selected, process all of them
                     for (i in 0 until count) {
                         val imageUri = clipData.getItemAt(i).uri
-                        val bitmapString = PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
+                        val bitmapString =
+                            PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
 
                         imageList.add(0, imageUri)
                         if (bitmapString != null) {
@@ -1574,12 +1582,14 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                         }
                     }
                     galleryAdapter.updateAdapter(imageList)
-                    Toast.makeText(requireContext(), "$count images selected", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "$count images selected", Toast.LENGTH_SHORT)
+                        .show()
                 }
             } else if (data?.data != null) {
                 // Single image selected
                 val imageUri = data.data
-                val bitmapString = PrepareData.uriToBase64(imageUri!!, requireContext().contentResolver)
+                val bitmapString =
+                    PrepareData.uriToBase64(imageUri!!, requireContext().contentResolver)
 
                 imageList.add(0, imageUri)
                 if (bitmapString != null) {
@@ -1606,7 +1616,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
                 // Add a marker at that location
                 mMap?.addMarker(MarkerOptions().position(location))
-                fetchAddressDetails(address,latitude.toDouble(), longitude.toDouble())
+                fetchAddressDetails(address, latitude.toDouble(), longitude.toDouble())
                 binding.etCity.isEnabled = true
                 if (latitude == null) {
                     latitude = "0.0001"
@@ -1632,9 +1642,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
 
-
-
-    private fun fetchAddressDetails(address:String,latitude: Double, longitude: Double) {
+    private fun fetchAddressDetails(address: String, latitude: Double, longitude: Double) {
         // Launching a coroutine to run the geocoding task in the background
         lifecycleScope.launch {
             try {
@@ -2015,7 +2023,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                bathroomCount = if(finalText.isNotEmpty()) finalText.toInt() else 0
+                bathroomCount = if (finalText.isNotEmpty()) finalText.toInt() else 0
                 clearBathRommBackground()
             }
         })
@@ -2247,7 +2255,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                badroomCount = if(finalText.isNotEmpty()) finalText.toInt() else 0
+                badroomCount = if (finalText.isNotEmpty()) finalText.toInt() else 0
                 badRoomClearBackground()
             }
         })
@@ -2401,8 +2409,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-                propertySize = if(finalText.isNotEmpty()) finalText.toInt() else 0
-                 clearPropertyBackground()
+                propertySize = if (finalText.isNotEmpty()) finalText.toInt() else 0
+                clearPropertyBackground()
             }
         })
     }
@@ -2527,8 +2535,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 //                    finalText1 = "0"
 //                    propertyRoomAnySelect()
 //                }
-               peopleCount = if (finalText.isNotEmpty()) finalText.toInt() else 0
-               // peopleCount =  finalText1.toInt()
+                peopleCount = if (finalText.isNotEmpty()) finalText.toInt() else 0
+                // peopleCount =  finalText1.toInt()
 
                 clearPeopleCountBackground()
             }
@@ -3103,61 +3111,25 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     }
 
     fun onClickDialogOpenner() {
-        binding.llHours.setOnClickListener {
-           /* val items = getItemListForRadioHoursText()
-            showSelectedDialog(
-                requireContext(),
-                items,
-                binding.tvHoursSelect,
-                AppConstant.MINIMUM_HOUR
-            )*/
-            val items = getNewHourMinimumList()
-            createDropdown(items,AppConstant.MINIMUM_HOUR)
+        binding.llHours.setOnClickListener {     /* val items = getItemListForRadioHoursText()      showSelectedDialog(          requireContext(),          items,          binding.tvHoursSelect,          AppConstant.MINIMUM_HOUR      )*/
+            val items =
+                getNewHourMinimumList()
+            createDropdown (items, AppConstant.MINIMUM_HOUR, binding.llHours)
         }
-
-        binding.llHoursRupees.setOnClickListener {
-           /* val items = getItemListForRadioPerHoursRuppesText()
-
-            showSelectedDialog(
-                requireContext(),
-                items,
-                binding.tvHoursRupeesSelect,
-                AppConstant.PRICE
-            )
-
-
-            */
-            val items = getItemListForRadioPerHoursRuppesText()
-            createDropdown1(items,AppConstant.MINIMUM_HOUR,binding.tvHoursRupeesSelect,binding.llHoursRupees)
-
+        binding.llHoursRupees . setOnClickListener {     /* val items = getItemListForRadioPerHoursRuppesText()      showSelectedDialog(          requireContext(),          items,          binding.tvHoursRupeesSelect,          AppConstant.PRICE      )      */
+            val items =
+                getItemListForRadioPerHoursRuppesText()
+            createDropdown1 (items, AppConstant.PRICE, binding.tvHoursRupeesSelect, binding.llHoursRupees)
         }
-        binding.llHoursBulk.setOnClickListener {
-         /*   val items = getItemListForRadioPerHoursBulkText()
-            showSelectedDialog(
-                requireContext(),
-                items,
-                binding.tvHoursBulkSelect,
-                AppConstant.BULK_HOUR
-            )
-
-          */
-            val items = getItemListForRadioPerHoursBulkText()
-            createDropdown1(items,AppConstant.BULK_HOUR,binding.tvHoursBulkSelect,binding.llHoursBulk)
+        binding . llHoursBulk . setOnClickListener {   /*   val items = getItemListForRadioPerHoursBulkText()      showSelectedDialog(          requireContext(),          items,          binding.tvHoursBulkSelect,          AppConstant.BULK_HOUR      )    */
+            val items =
+                getItemListForRadioPerHoursBulkText()
+            createDropdown1 (items, AppConstant.BULK_HOUR, binding.tvHoursBulkSelect, binding.llHoursBulk)
         }
-
-
-        binding.llDiscount.setOnClickListener {
-      /*      val items = getItemListForRadioPerHoursDiscountText()
-            showSelectedDialog(
-                requireContext(),
-                items,
-                binding.tvDiscountSelect,
-                AppConstant.DISCOUNT
-            )
-
-       */
-            val items = getItemListForRadioPerHoursDiscountText()
-            createDropdown1(items,AppConstant.DISCOUNT,binding.tvDiscountSelect,binding.llDiscount)
+        binding.llDiscount.setOnClickListener {/*      val items = getItemListForRadioPerHoursDiscountText()      showSelectedDialog(          requireContext(),          items,          binding.tvDiscountSelect,          AppConstant.DISCOUNT      ) */
+            val items =
+                getItemListForRadioPerHoursDiscountText()
+            createDropdown1 (items, AppConstant.DISCOUNT, binding.tvDiscountSelect, binding.llDiscount)
         }
 
         binding.llAvailabilityFromHours.setOnClickListener {
@@ -3179,38 +3151,55 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     }
 
-    private fun createDropdown(items: MutableList<ItemDropDown>, type: String) {
+    private fun createDropdown(
+        items: MutableList<ItemDropDown>,
+        type: String,
+        llHours: RelativeLayout
+    ) {
         val inflater = layoutInflater
         val view = inflater.inflate(R.layout.popup_menu_layout, null)
 
-        val popupWindow = PopupWindow(view, WindowManager.LayoutParams.WRAP_CONTENT,
+        // Setup your RecyclerView adapter here
+        val popupWindow = PopupWindow(
+            view,
+            llHours.width, // Match width of the anchor view
             WindowManager.LayoutParams.WRAP_CONTENT,
-            true)
-        popupWindow.elevation = 10f
-        popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            true
+        )
+
         popupWindow.isOutsideTouchable = true
+        popupWindow.elevation = 10f
+
+// Show popup below llHours
+        popupWindow.showAsDropDown(llHours, 0, 0)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
         val adapter = DropDownTextAdapter(items, object : OnClickListener {
             override fun itemClick(selectedIndex: Int) {
-                if (type.equals(AppConstant.MINIMUM_HOUR)) {
+                if (type.equals(AppConstant.MINIMUM_HOUR, true)) {
                     minimumHourIndex = selectedIndex
                     //minimumHourValue = selectedIndex + 1;
                     //Vipin
-                    minimumHourValue = selectedIndex + 2;
-                } else if (type.equals(AppConstant.PRICE)) {
+                    minimumHourValue = selectedIndex + 2
+                } else if (type.equals(AppConstant.PRICE, true)) {
                     priceIndex = selectedIndex
                     // hourlyPrice = (selectedIndex + 1) * 10
                     //Vipin
-                    hourlyPrice = (selectedIndex + 2) * 10
-                } else if (type.equals(AppConstant.DISCOUNT)) {
+                    hourlyPrice = (selectedIndex + 1) * 10
+                } else if (type.equals(AppConstant.DISCOUNT, true)) {
                     discountPriceIndex = selectedIndex
                     // bulkDiscountPrice = (selectedIndex + 1) * 10
                     //Vipin
-                    bulkDiscountPrice = (selectedIndex + 2) * 10
-                } else if (type.equals(AppConstant.BULK_HOUR)) {
+//                    bulkDiscountPrice = (selectedIndex +1) * 5
+
+                    if (selectedIndex != 10) {
+                        bulkDiscountPrice = (selectedIndex + 1) * 5
+                    } else {
+                        bulkDiscountPrice = (15) * 5
+                    }
+                } else if (type.equals(AppConstant.BULK_HOUR, true)) {
                     discountHourIndex = selectedIndex
                     // bulkDiscountHour = (selectedIndex + 1)
                     //Vipin
@@ -3219,48 +3208,62 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
         }) { selectedText ->
             // Update TextView with the selected text
-            binding.tvHoursSelect.text =selectedText
+            binding.tvHoursSelect.text = selectedText
             popupWindow.dismiss()
         }
         recyclerView.adapter = adapter
         popupWindow.showAsDropDown(binding.llHours)
     }
+
     private fun createDropdown1(
         items: MutableList<ItemRadio>,
         type: String,
         tvSelect: TextView,
-        llSelect: RelativeLayout) {
+        llSelect: RelativeLayout
+    ) {
         val inflater = layoutInflater
         val view = inflater.inflate(R.layout.popup_menu_layout, null)
 
-        val popupWindow = PopupWindow(view, WindowManager.LayoutParams.WRAP_CONTENT,
+        // Setup your RecyclerView adapter here
+        val popupWindow = PopupWindow(
+            view,
+            llSelect.width, // Match width of the anchor view
             WindowManager.LayoutParams.WRAP_CONTENT,
-            true)
-        popupWindow.elevation = 10f
-        popupWindow.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            true
+        )
+
         popupWindow.isOutsideTouchable = true
+        popupWindow.elevation = 10f
+
+// Show popup below llHours
+        popupWindow.showAsDropDown(llSelect, 0, 0)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
 
         recyclerView.layoutManager = LinearLayoutManager(context)
         val adapter = DropDownTextAdapter2(items, object : OnClickListener {
             override fun itemClick(selectedIndex: Int) {
-                if (type.equals(AppConstant.MINIMUM_HOUR)) {
+                if (type.equals(AppConstant.MINIMUM_HOUR, true)) {
                     minimumHourIndex = selectedIndex
                     //minimumHourValue = selectedIndex + 1;
                     //Vipin
-                    minimumHourValue = selectedIndex + 2;
-                } else if (type.equals(AppConstant.PRICE)) {
+                    minimumHourValue = selectedIndex + 2
+                } else if (type.equals(AppConstant.PRICE, true)) {
                     priceIndex = selectedIndex
                     // hourlyPrice = (selectedIndex + 1) * 10
                     //Vipin
-                    hourlyPrice = (selectedIndex + 2) * 10
-                } else if (type.equals(AppConstant.DISCOUNT)) {
+                    hourlyPrice = (selectedIndex + 1) * 10
+                } else if (type.equals(AppConstant.DISCOUNT, true)) {
                     discountPriceIndex = selectedIndex
                     // bulkDiscountPrice = (selectedIndex + 1) * 10
                     //Vipin
-                    bulkDiscountPrice = (selectedIndex + 2) * 10
-                } else if (type.equals(AppConstant.BULK_HOUR)) {
+                    if (selectedIndex != 10) {
+                        bulkDiscountPrice = (selectedIndex + 1) * 5
+                    } else {
+                        bulkDiscountPrice = (15) * 5
+                    }
+
+                } else if (type.equals(AppConstant.BULK_HOUR, true)) {
                     discountHourIndex = selectedIndex
                     // bulkDiscountHour = (selectedIndex + 1)
                     //Vipin
@@ -3269,7 +3272,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
         }) { selectedText ->
             // Update TextView with the selected text
-            tvSelect.text =selectedText
+            tvSelect.text = selectedText
             popupWindow.dismiss()
         }
         recyclerView.adapter = adapter

@@ -31,6 +31,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
@@ -54,6 +55,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
+import com.business.zyvo.AppConstant.Companion.passwordMustConsist
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -146,7 +148,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private var locationManager: LocationManager? = null
     var session: SessionManager? = null
     private var homePropertyData: MutableList<HomePropertyData> = mutableListOf()
-
+    private var loginDialog: Dialog? = null
 
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
@@ -666,8 +668,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
     @SuppressLint("MissingInflatedId")
     fun dialogLogin(context: Context?) {
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
+        if (loginDialog?.isShowing == true) {
+            return // Dialog is already showing, don't open another one
+        }
+        loginDialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        loginDialog?.apply {
             setCancelable(true)
             setContentView(R.layout.dialog_login)
             window?.attributes = WindowManager.LayoutParams().apply {
@@ -686,6 +691,20 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val textDontHaveAnAccount = findViewById<TextView>(R.id.textDontHaveAnAccount)
             val textRegister = findViewById<TextView>(R.id.textRegister)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
+            // Set IME options for password field
+            etMobileNumber.imeOptions = EditorInfo.IME_ACTION_DONE
+            etMobileNumber.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
+
+            // Handle keyboard "Done" action
+            etMobileNumber.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Perform the same action as login button click
+                    textContinueButton.performClick()
+                    true
+                } else {
+                    false
+                }
+            }
             textRegister.setOnClickListener {
                 dialogRegister(context)
                 dismiss()
@@ -714,7 +733,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 countyCodePicker.selectedCountryCodeWithPlus
                             Log.d(TAG, countryCode)
                             submitLogin(
-                                countryCode, phoneNumber, dialog, textContinueButton, checkBox
+                                countryCode, phoneNumber,
+                                loginDialog!!, textContinueButton, checkBox
                             )
                         }
                     }
@@ -820,6 +840,21 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val textLoginButton = findViewById<TextView>(R.id.textLoginButton)
 
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
+
+
+            etMobileNumber.imeOptions = EditorInfo.IME_ACTION_DONE
+            etMobileNumber.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
+
+            // Handle keyboard "Done" action
+            etMobileNumber.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Perform the same action as login button click
+                    textContinueButton.performClick()
+                    true
+                } else {
+                    false
+                }
+            }
 
             textLoginButton.setOnClickListener {
                 dialogLogin(context)
@@ -988,6 +1023,21 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
             val etLoginEmail = findViewById<EditText>(R.id.etLoginEmail)
             val etLoginPassword = findViewById<EditText>(R.id.etLoginPassword)
+
+            // Set IME options for password field
+            etLoginPassword.imeOptions = EditorInfo.IME_ACTION_DONE
+            etLoginPassword.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
+
+            // Handle keyboard "Done" action
+            etLoginPassword.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Perform the same action as login button click
+                    textLoginButton.performClick()
+                    true
+                } else {
+                    false
+                }
+            }
             eyeHideShow(imgHidePass, imgShowPass, etLoginPassword)
 
             textRegister.setOnClickListener {
@@ -1015,6 +1065,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             etLoginPassword.error = "Password required"
                             showErrorDialog(requireContext(), AppConstant.password)
                             toggleLoginButtonEnabled(true, textLoginButton)
+                        }else if (!checkPasswordValidity(etLoginPassword.text.toString())) {
+                            toggleLoginButtonEnabled(true, textLoginButton)
+                            return@launch
                         } else {
                             loginEmail(
                                 etLoginEmail.text.toString(),
@@ -1174,6 +1227,39 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
             val imgHidePass = findViewById<ImageView>(R.id.imgHidePass)
             val imgShowPass = findViewById<ImageView>(R.id.imgShowPass)
+            val imgCorrect = findViewById<ImageView>(R.id.imgCorrect)
+            val imgWrong = findViewById<ImageView>(R.id.imgWrong)
+            etRegisterPassword.imeOptions = EditorInfo.IME_ACTION_DONE
+            etRegisterPassword.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
+
+            // Handle keyboard "Done" action
+            etRegisterPassword.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Perform the same action as login button click
+                    textCreateAccountButton.performClick()
+                    true
+                } else {
+                    false
+                }
+            }
+
+            etRegisterPassword.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+                override fun afterTextChanged(s: Editable?) {
+                    val password = s.toString()
+                    if (checkPasswordValidity1(password)) {
+                        // Show correct icon and hide wrong icon
+                        imgCorrect.visibility = View.VISIBLE
+                        imgWrong.visibility = View.GONE
+                    } else {
+                        // Show wrong icon and hide correct icon
+                        imgCorrect.visibility = View.GONE
+                        imgWrong.visibility = View.VISIBLE
+                    }
+                }
+            })
 
             eyeHideShow(imgHidePass, imgShowPass, etRegisterPassword)
 
@@ -1197,7 +1283,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             etRegisterPassword.error = "Password required"
                             showErrorDialog(requireContext(), AppConstant.password)
                             toggleLoginButtonEnabled(true, textCreateAccountButton)
-                        } else {
+                        } else if (!checkPasswordValidity(etRegisterPassword.text.toString())) {
+                            toggleLoginButtonEnabled(true, textCreateAccountButton)
+                            return@launch
+                        }  else {
                             signupEmail(
                                 etRegisterEmail.text.toString(),
                                 etRegisterPassword.text.toString(),
@@ -1287,6 +1376,21 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val imageCross = findViewById<ImageView>(R.id.imageCross)
             val etEmail = findViewById<EditText>(R.id.etEmail)
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+
+            // Set IME options for password field
+            etEmail.imeOptions = EditorInfo.IME_ACTION_DONE
+            etEmail.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
+
+            // Handle keyboard "Done" action
+            etEmail.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // Perform the same action as login button click
+                    textSubmitButton.performClick()
+                    true
+                } else {
+                    false
+                }
+            }
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 if (NetworkMonitorCheck._isConnected.value) {
@@ -1344,6 +1448,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
             val imageCross = findViewById<ImageView>(R.id.imageCross)
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+
             textSubmitButton.setOnClickListener {
 
                 val text = "Your Phone has been Verified\n  successfully."
@@ -1459,6 +1564,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 findViewById(R.id.otp_digit4)
             )
 
+            otpDigits[3].imeOptions = EditorInfo.IME_ACTION_DONE
+            otpDigits[3].setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    textSubmitButton.performClick()
+                    true
+                } else {
+                    false
+                }
+            }
 
             for (i in 0 until otpDigits.size) {
                 val index = i
@@ -1517,6 +1631,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     override fun afterTextChanged(s: Editable) {}
                 })
             }
+
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
 
@@ -2259,6 +2374,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val imgCorrectSign1 = findViewById<ImageView>(R.id.imgCorrectSign1)
             val imgWrongSign1 = findViewById<ImageView>(R.id.imgWrongSign1)
             val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
+
             etConfirmPassword.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 }
@@ -2282,7 +2398,17 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 }
 
             })
+
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            etConfirmPassword.imeOptions = EditorInfo.IME_ACTION_DONE
+            etConfirmPassword.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    textSubmitButton.performClick()
+                    true
+                } else {
+                    false
+                }
+            }
             textSubmitButton.setOnClickListener {
                 //  toggleLoginButtonEnabled(false, textSubmitButton)
                 if (NetworkMonitorCheck._isConnected.value) {
@@ -2295,7 +2421,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             etConfirmPassword.error = "Confirm Password required"
                             showErrorDialog(requireContext(), AppConstant.conPassword)
                             toggleLoginButtonEnabled(true, textSubmitButton)
-                        } else {
+                        }
+                        else if (!checkPasswordValidity(etPassword.text.toString())) {
+                            toggleLoginButtonEnabled(true, textSubmitButton)
+                            return@launch
+                        }  else {
                             resetPassword(
                                 userId,
                                 etPassword.text.toString(),
@@ -2319,6 +2449,41 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             show()
         }
     }
+
+
+    private fun checkPasswordValidity(password: String): Boolean {
+        val passwordPattern = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#\$%^&*()-+=])[a-zA-Z0-9!@#\$%^&*()-+=]{8,}$"
+        val pattern = Pattern.compile(passwordPattern)
+        val isPasswordValid = pattern.matcher(password).matches()
+
+        if (!isPasswordValid) {
+            //showErrorDialog(ErrorMessages.passwordMustConsist)
+            showErrorDialog(
+                requireContext(), passwordMustConsist
+            )
+           // binding.etPassword.requestFocus()
+        }
+
+        return isPasswordValid
+    }
+
+    private fun checkPasswordValidity1(password: String): Boolean {
+        val passwordPattern = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#\$%^&*()-+=])[a-zA-Z0-9!@#\$%^&*()-+=]{8,}$"
+        val pattern = Pattern.compile(passwordPattern)
+        val isPasswordValid = pattern.matcher(password).matches()
+
+        if (!isPasswordValid) {
+            //showErrorDialog(ErrorMessages.passwordMustConsist)
+//            showErrorDialog(
+//                requireContext(), passwordMustConsist
+//            )
+            return false
+            // binding.etPassword.requestFocus()
+        }
+
+        return isPasswordValid
+    }
+
 
     private fun resetPassword(
         userId: String,

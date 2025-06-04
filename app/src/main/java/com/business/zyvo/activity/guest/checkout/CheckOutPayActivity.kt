@@ -1,12 +1,14 @@
 package com.business.zyvo.activity.guest.checkout
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -23,6 +25,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -52,16 +56,26 @@ import com.business.zyvo.adapter.AdapterAddPaymentCard
 import com.business.zyvo.adapter.SetPreferred
 import com.business.zyvo.adapter.guest.AdapterProAddOn
 import com.business.zyvo.databinding.ActivityCheckOutPayBinding
+import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.formatDateyyyyMMddToMMMMddyyyy
+import com.business.zyvo.utils.ErrorDialog.getLocationDetails
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -73,6 +87,8 @@ import com.stripe.android.model.Token
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Arrays
 import java.util.Calendar
 import java.util.Objects
 
@@ -96,10 +112,17 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
     var userCardsList: MutableList<UserCards> = mutableListOf()
     var selectuserCard: UserCards? = null
     var customerId = ""
+    var etAddress : EditText? = null
+    var etCity1 : EditText? = null
+    var zipcode : EditText? = null
+    var etState1 : EditText? = null
+
     private val checkOutPayViewModel: CheckOutPayViewModel by lazy {
         ViewModelProvider(this)[CheckOutPayViewModel::class.java]
     }
-
+    // For handling the result of the Autocomplete Activity
+    var latitude: String = "0.00"
+    var longitude: String = "0.00"
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -954,7 +977,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
             val textMonth: TextView = findViewById(R.id.textMonth)
             val textYear: TextView = findViewById(R.id.textYear)
@@ -967,6 +990,11 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             val etZipCode: EditText = findViewById(R.id.etZipCode)
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+
+            etAddress = etStreet
+            etCity1 = etCity
+            zipcode = etZipCode
+            etState1 = etState
             checkBox.setOnClickListener {
                 if (checkBox.isChecked) {
                     etStreet.setText(street_address)
@@ -980,6 +1008,8 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     etZipCode.text.clear()
                 }
             }
+
+            locationSelection(etStreet)
 
             textMonth.setOnClickListener {
                 dateManager.showMonthSelectorDialog { selectedMonth ->
@@ -1134,6 +1164,49 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
 
             //   }
         }
+    }
+
+    fun locationSelection(etStreet : EditText) {
+        etStreet.setOnClickListener {
+
+            val apiKey = getString(R.string.api_key_location)
+            if (!Places.isInitialized()) {
+                Places.initialize(this, apiKey)
+            }
+
+            val fields: List<Place.Field> = Arrays.asList<Place.Field>(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.ADDRESS,
+                Place.Field.LAT_LNG
+            )
+
+            val intent: Intent =
+                Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(this)
+            startActivityForResult(intent, 103)
+        }
+
+        etStreet.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val apiKey = getString(R.string.api_key_location)
+                if (!Places.isInitialized()) {
+                    Places.initialize(this, apiKey)
+                }
+                val fields: List<Place.Field> = Arrays.asList<Place.Field>(
+                    Place.Field.ID,
+                    Place.Field.NAME,
+                    Place.Field.ADDRESS,
+                    Place.Field.LAT_LNG
+                )
+
+                val intent: Intent =
+                    Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                        .build(this)
+                startActivityForResult(intent, 103)
+            }
+        }
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -1467,6 +1540,77 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             )
         }
     }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+            if (resultCode == Activity.RESULT_OK) {
+                val place = Autocomplete.getPlaceFromIntent(data)
+                //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
+                val addressComponents = place.addressComponents?.asList()
+                var address: String = place.address
+                // do query with address
+
+                val latLng = place.latLng
+
+                latitude = latLng.latitude.toString()
+                longitude = latLng.longitude.toString()
+                val location = LatLng(latitude.toDouble(), longitude.toDouble())
+                // Move the camera to the specified location
+                fetchAddressDetails(address,latitude.toDouble(), longitude.toDouble())
+                etCity1?.isEnabled = true
+                if (latitude == null) {
+                    latitude = "0.0001"
+                }
+
+                if (longitude == null) {
+                    longitude = "0.0001"
+                }
+
+
+                var add = address
+//                setmarkeronMAp(latitude,longitude);
+                //  setmarkeronMAp(latitude,longitude,0);
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                etCity1?.isEnabled = true
+                // TODO: Handle the error.
+                val status = Autocomplete.getStatusFromIntent(data)
+                Toast.makeText(this, "Error: " + status.statusMessage, Toast.LENGTH_LONG)
+                    .show()
+//                Log.i(TAG, status.getStatusMessage());
+            }
+
+    }
+
+    private fun fetchAddressDetails(address:String,latitude: Double, longitude: Double) {
+        // Launching a coroutine to run the geocoding task in the background
+        lifecycleScope.launch {
+            try {
+                val addressDetails = withContext(Dispatchers.IO) {
+                    LocationManager(this@CheckOutPayActivity).getAddressFromCoordinates(latitude, longitude)
+                }
+            etAddress?.setText(address)
+                etAddress?.text?.length?.let { etAddress?.setSelection(it) }
+                etCity1?.setText(addressDetails.city)
+                zipcode?.setText(addressDetails.postalCode)
+
+                etState1?.setText(addressDetails.state)
+
+
+
+            } catch (e: Exception) {
+                Log.e("Geocoder", "Error fetching address: ${e.message}")
+                Toast.makeText(
+                    this@CheckOutPayActivity,
+                    "Unable to fetch address details",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
 
 
 }

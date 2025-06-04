@@ -96,7 +96,7 @@ class LoggedScreenAdapter(
             holder.binding.textMiles.text = "$it miles away"
         }
         currentItem.hourly_rate?.let {
-            holder.binding.textPricePerHours.text = "$${truncateToTwoDecimalPlaces(it)}/h"
+            holder.binding.textPricePerHours.text = "$${truncateToTwoDecimalPlaces(it)} / h"
         }
 
         currentItem.is_instant_book?.let {

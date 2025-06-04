@@ -705,8 +705,8 @@
 
                         <ImageView
                             android:id="@+id/img_calendar"
-                            android:layout_width="@dimen/_12sdp"
-                            android:layout_height="@dimen/_12sdp"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:src="@drawable/ic_calendar_icon" />
 
@@ -745,8 +745,8 @@
 
                         <ImageView
                             android:id="@+id/clock_1"
-                            android:layout_width="@dimen/_12sdp"
-                            android:layout_height="@dimen/_12sdp"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_15sdp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_clock_new" />
 
@@ -776,8 +776,8 @@
 
                         <ImageView
                             android:id="@+id/clock_old"
-                            android:layout_width="@dimen/_12ssp"
-                            android:layout_height="@dimen/_12ssp"
+                            android:layout_width="@dimen/_15ssp"
+                            android:layout_height="@dimen/_15ssp"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_clock_new" />

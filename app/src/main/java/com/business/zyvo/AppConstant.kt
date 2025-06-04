@@ -190,6 +190,8 @@ class AppConstant {
         //const val Image : String = "image"
         const val propertyList: String = "propertyList"
        const val  loginType : String  = "LoginType"
+        const val passwordMustConsist =
+            "The password must consist of at least 8 characters and include at least 1 number, 1 uppercase letter, and 1 special character."
 
     }
 

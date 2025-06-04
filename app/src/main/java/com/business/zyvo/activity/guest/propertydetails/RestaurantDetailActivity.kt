@@ -288,6 +288,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 }
                                 if (propertyData?.reviews_total_count.equals("0")) binding.showMoreReview.visibility =
                                     View.GONE
+//Vipin
+//                                if (propertyData?.reviews_total_count!!.toInt() < 4){ binding.showMoreReview.visibility =
+//                                    View.GONE}else {
+//                                    binding.showMoreReview.visibility =
+//                                        View.VISIBLE
+//                                }
 
                                 pagination?.let {
                                     Log.d(
@@ -298,7 +304,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                     /* if (it.total <= it.current_page) {
                                          binding.showMoreReview.visibility = View.GONE
                                      }*/
-
+Log.d("checkDataCurrentPage",it.current_page.toString())
+Log.d("checkDataTotalPage",it.total_pages.toString())
                                     if (it.current_page == it.total_pages) {
                                         binding.showMoreReview.visibility = View.GONE
                                     } else {
@@ -1084,6 +1091,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.tvLocationName.paintFlags =
             binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+        if (addOnList.size <= 2){
+            binding.tvShowMore.visibility = View.GONE
+
+        }else{
+            binding.tvShowMore.visibility = View.VISIBLE
+        }
         binding.tvShowMore.setOnClickListener {
             adapterAddon.toggleList()
 
@@ -1391,6 +1404,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                           binding.reviewMoreView.visibility = View.GONE
                                       }*/
                                     if (it.current_page == it.total_pages) {
+
                                         binding.showMoreReview.visibility = View.GONE
                                     } else {
                                         binding.showMoreReview.visibility = View.VISIBLE
