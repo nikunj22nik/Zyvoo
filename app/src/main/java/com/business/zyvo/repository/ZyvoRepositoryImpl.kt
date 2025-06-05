@@ -4729,6 +4729,14 @@ import javax.inject.Inject
                  if (isSuccessful) {
                      body()?.let { resp ->
                          if (resp.has("success") && resp.get("success").asBoolean) {
+                              var msg = resp.get("message").asString
+
+                              if(msg.trim().equals("No connected Stripe account.")
+                                  ||  msg.trim().equals("No connected account found for the user.")){
+
+                                  emit(NetworkResult.Error(msg))
+                                 return@flow
+                             }
                              emit(NetworkResult.Success(resp))
 
                          } else {
@@ -5146,6 +5154,12 @@ import javax.inject.Inject
                  if (isSuccessful) {
                      body()?.let { resp ->
                          if (resp.has("success") && resp.get("success").asBoolean) {
+
+                             var msg = resp.get("message").asString
+                             if(msg.trim().equals("No connected Stripe account.") ||  msg.trim().equals("No connected account found for the user.")){
+                                 emit(NetworkResult.Error(msg))
+                                 return@flow
+                             }
 
                              if (resp.has("data") && !resp.get("data").isJsonNull) {
                                  val data = resp.getAsJsonObject("data")
