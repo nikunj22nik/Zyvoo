@@ -1127,6 +1127,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         R.color.scroll_bar_color
                     )
                 )
+                textResend.isClickable = true
+                textResend.isEnabled = true
             }
             else {
                 textResend.setTextColor(
@@ -1135,6 +1137,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         R.color.grey
                     )
                 )
+                textResend.isClickable = false
+                textResend.isEnabled = false
             }
 
             textSubmitButton.setOnClickListener{
@@ -1223,6 +1227,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     R.color.grey
                                 )
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textTimeResend)
                     }
@@ -1264,7 +1270,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     requireContext(),
                                     R.color.grey
                                 )
+
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textResend)
                     }
@@ -2538,6 +2547,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         R.color.scroll_bar_color
                     )
                 )
+                textResend.isClickable = true
+                textResend.isEnabled = true
             } else {
                 textResend.setTextColor(
                     ContextCompat.getColor(
@@ -2545,6 +2556,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         R.color.grey
                     )
                 )
+                textResend.isClickable = false
+                textResend.isEnabled = false
             }
 
             textSubmitButton.setOnClickListener {
@@ -2583,6 +2596,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             R.color.grey
                         )
                     )
+                    textResend.isClickable = false
+                    textResend.isEnabled = false
                 }
             }
             imageCross.setOnClickListener {
@@ -3130,6 +3145,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         R.color.scroll_bar_color
                     )
                 )
+                textResend.isClickable = true
+                textResend.isEnabled = true
             } else {
                 textResend.setTextColor(
                     ContextCompat.getColor(
@@ -3137,6 +3154,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         R.color.grey
                     )
                 )
+                textResend.isClickable = false
+                textResend.isEnabled = false
             }
 
             textSubmitButton.setOnClickListener {
@@ -3248,6 +3267,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             R.color.scroll_bar_color
                         )
                     )
+                    textResend.isClickable = true
+                    textResend.isEnabled = true
                 } else {
                     textResend.setTextColor(
                         ContextCompat.getColor(
@@ -3255,6 +3276,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             R.color.grey
                         )
                     )
+                    textResend.isClickable = false
+                    textResend.isEnabled = false
                 }
             }
         }
@@ -3694,6 +3717,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     R.color.grey
                                 )
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textTimeResend)
                     }
@@ -3743,6 +3768,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     R.color.grey
                                 )
                             )
+                            textResend.isClickable = false
+                            textResend.isEnabled = false
                         }
                         toggleLoginButtonEnabled(true, textResend)
                     }

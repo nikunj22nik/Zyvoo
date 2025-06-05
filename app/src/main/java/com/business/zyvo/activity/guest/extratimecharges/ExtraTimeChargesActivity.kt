@@ -1002,7 +1002,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             val submit: RelativeLayout = findViewById(R.id.yes_btn)
             val txtSubmit: RelativeLayout = findViewById(R.id.rl_cancel_btn)
             val tvNewAmount: TextView = findViewById(R.id.tvNewAmount)
-            tvNewAmount.text = "Your new total amount is $$hourlTotal"
+            tvNewAmount.text = "Your new total amount is $${hourlTotal.toInt()}"
             submit.setOnClickListener {
                 this@ExtraTimeChargesActivity.hour = hour
                 hour?.let { resp ->

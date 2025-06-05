@@ -686,7 +686,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             @SuppressLint("SetTextI18n")
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val remainingChars = maxLength - (s?.length ?: 0)
-                textView.text = "max $remainingChars characters"
+                textView.text = "Max $remainingChars characters"
             }
 
             override fun afterTextChanged(s: Editable?) {}
@@ -1287,7 +1287,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             val crossButton: ImageView = findViewById(R.id.imgCross)
             val submit :RelativeLayout = findViewById(R.id.yes_btn)
             val tvNewAmount:TextView = findViewById<TextView>(R.id.tvNewAmount)
-            tvNewAmount.text = "Your new total amount is $$hourlTotal"
+
+            tvNewAmount.text = "Your new total amount is $${hourlTotal.toInt()}"
             val txtSubmit : RelativeLayout = findViewById(R.id.rl_cancel_btn)
             txtSubmit.setOnClickListener {
                 dialog.dismiss()

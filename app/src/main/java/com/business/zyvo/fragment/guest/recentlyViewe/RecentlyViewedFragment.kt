@@ -168,6 +168,7 @@ class RecentlyViewedFragment : Fragment() , OnClickListener1, onItemClickListene
                                       }
                                       wishlistItem = list*/
                                       homePropertyData = properties
+                                      Log.d("checkHomePropertyData",it.data.toString())
 
                                       homeadapter?.updateData(homePropertyData)
                                   }
