@@ -110,6 +110,7 @@ import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.viewmodel.PaymentViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 import com.hbb20.CountryCodePicker
 import com.stripe.android.ApiResultCallback
@@ -126,6 +127,7 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.Objects
 
@@ -326,15 +328,15 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             findNavController().navigate(R.id.hostPayoutFragment)
         }
         // Observe the isLoading state
-        lifecycleScope.launch {
-            profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-                if (isLoading) {
-                    LoadingUtils.showDialog(requireContext(), false)
-                } else {
-                    LoadingUtils.hideDialog()
-                }
-            }
-        }
+//        lifecycleScope.launch {
+//            profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+//                if (isLoading) {
+//                    LoadingUtils.showDialog(requireContext(), false)
+//                } else {
+//                    LoadingUtils.hideDialog()
+//                }
+//            }
+//        }
         getUserProfile()
 
         binding.rlEdit.setOnClickListener {
@@ -563,141 +565,125 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
+                            LoadingUtils.hideDialog()
                             binding.llScrlView.visibility=View.VISIBLE
                             var name = ""
                             it.data?.let { resp ->
                                 Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ," + resp.toString())
-                                userProfile = Gson().fromJson(resp, UserProfile::class.java)
-                                userProfile.let {
-                                   it?.first_name?.let {
-                                       name+=it+" "
-                                       firstName = it
-                                   }
-                                    it?.last_name?.let {
-                                        name+=it
-                                        lastName = it
-                                    }
-
-
-                                    it?.name = name
-                                    binding.user = it
-                                    it?.email?.let {
-                                        binding.etEmail.setText(it)
-                                        binding.etEmail.isEnabled = false
-                                    }
-                                    it?.phone_number?.let {
-                                        binding.etPhoneNumeber.setText(it)
-                                        binding.etPhoneNumeber.isEnabled = false
-                                    }
-                                    it?.street?.let {
-                                        binding.streetEditText.setText(it)
-                                    }
-
-                                    it?.state?.let {
-                                        binding.stateEt.setText(it)
-                                    }
-
-                                    it?.zip_code?.let {
-                                        binding.zipEt.setText(it)
-                                    }
-
-                                    it?.city?.let {
-                                        binding.cityET.setText(it)
-                                    }
-
-                                    if (it?.profile_image != null) {
-
-                                        Glide.with(requireContext())
-                                            .asBitmap() // Convert the image into Bitmap
-                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
-                                            .into(object : SimpleTarget<Bitmap>() {
-                                                override fun onResourceReady(
-                                                    resource: Bitmap,
-                                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
-                                                ) {
-                                                    // The 'resource' is the Bitmap
-                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
-                                                    binding.imageProfilePicture.setImageBitmap(
-                                                        resource
-                                                    )
-                                                    imageBytes =
-                                                        MediaUtils.bitmapToByteArray(resource)
-                                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
-                                                }
-                                            })
-                                    }
-                                    if (it?.email_verified != null && it.email_verified == 1) {
-                                        binding.textConfirmNow.visibility = GONE
-                                        binding.textVerified.visibility =
-                                            View.VISIBLE
-                                    }
-                                    if (it?.phone_verified != null && it.phone_verified == 1) {
-                                        binding.textConfirmNow1.visibility = GONE
-                                        binding.textVerified1.visibility =
-                                            View.VISIBLE
-                                    }
-                                    if (it?.identity_verified != null && it.identity_verified == 1) {
-                                        binding.textConfirmNow2.visibility = GONE
-                                        binding.textVerified2.visibility =
-                                            View.VISIBLE
-                                    }
-                                    if (it?.where_live != null && it.where_live.isNotEmpty()) {
-                                        locationList = getObjectsFromNames(it.where_live) { name ->
-                                            AddLocationModel(name)  // Using the constructor of MyObject to create instances
-                                        }
-
-                                        val newLanguage = AddLocationModel(AppConstant.unknownLocation)
-                                        locationList.add(newLanguage)
-                                        addLocationAdapter.updateLocations(locationList)
-                                    }
-                                    if (it?.my_work != null && it.my_work.isNotEmpty()) {
-                                        workList = getObjectsFromNames(it.my_work) { name ->
-                                            AddWorkModel(name)  // Using the constructor of MyObject to create instances
-                                        }
-                                        val newLanguage = AddWorkModel(AppConstant.unknownLocation)
-                                        workList.add(newLanguage)
-                                        addWorkAdapter.updateWork(workList)
-                                    }
-                                    if (it?.languages != null && it.languages.isNotEmpty()) {
-                                        languageList = getObjectsFromNames(it.languages) { name ->
-                                            AddLanguageModel(name)  // Using the constructor of MyObject to create instances
-                                        }
-                                        val newLanguage =
-                                            AddLanguageModel(AppConstant.unknownLocation)
-                                        languageList.add(newLanguage)
-                                        addLanguageSpeakAdapter.updateLanguage(languageList)
-                                    }
-//                                    if (it?.hobbies != null && it.hobbies.isNotEmpty()) {
-//                                        hobbiesList = getObjectsFromNames(it.hobbies) { name ->
-//                                            AddHobbiesModel(name)  // Using the constructor of MyObject to create instances
+//                                userProfile = Gson().fromJson(resp, UserProfile::class.java)
+//                                userProfile.let {
+//                                   it?.first_name?.let {
+//                                       name+=it+" "
+//                                       firstName = it
+//                                   }
+//                                    it?.last_name?.let {
+//                                        name+=it
+//                                        lastName = it
+//                                    }
+//
+//
+//                                    it?.name = name
+//                                    binding.user = it
+//                                    it?.email?.let {
+//                                        binding.etEmail.setText(it)
+//                                        binding.etEmail.isEnabled = false
+//                                    }
+//                                    it?.phone_number?.let {
+//                                        binding.etPhoneNumeber.setText(it)
+//                                        binding.etPhoneNumeber.isEnabled = false
+//                                    }
+//                                    it?.street?.let {
+//                                        binding.streetEditText.setText(it)
+//                                    }
+//
+//                                    it?.state?.let {
+//                                        binding.stateEt.setText(it)
+//                                    }
+//
+//                                    it?.zip_code?.let {
+//                                        binding.zipEt.setText(it)
+//                                    }
+//
+//                                    it?.city?.let {
+//                                        binding.cityET.setText(it)
+//                                    }
+//
+//                                    if (it?.profile_image != null) {
+//                                        Glide.with(requireContext())
+//                                            .asBitmap() // Convert the image into Bitmap
+//                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
+//                                            .into(object : SimpleTarget<Bitmap>() {
+//                                                override fun onResourceReady(
+//                                                    resource: Bitmap,
+//                                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+//                                                ) {
+//                                                    // The 'resource' is the Bitmap
+//                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
+//                                                    binding.imageProfilePicture.setImageBitmap(
+//                                                        resource
+//                                                    )
+//                                                    imageBytes =
+//                                                        MediaUtils.bitmapToByteArray(resource)
+//                                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
+//                                                }
+//                                            })
+//                                    }
+//                                    if (it?.email_verified != null && it.email_verified == 1) {
+//                                        binding.textConfirmNow.visibility = GONE
+//                                        binding.textVerified.visibility =
+//                                            View.VISIBLE
+//                                    }
+//                                    if (it?.phone_verified != null && it.phone_verified == 1) {
+//                                        binding.textConfirmNow1.visibility = GONE
+//                                        binding.textVerified1.visibility =
+//                                            View.VISIBLE
+//                                    }
+//                                    if (it?.identity_verified != null && it.identity_verified == 1) {
+//                                        binding.textConfirmNow2.visibility = GONE
+//                                        binding.textVerified2.visibility =
+//                                            View.VISIBLE
+//                                    }
+//                                    if (it?.where_live != null && it.where_live.isNotEmpty()) {
+//                                        locationList = getObjectsFromNames(it.where_live) { name ->
+//                                            AddLocationModel(name)  // Using the constructor of MyObject to create instances
+//                                        }
+//
+//                                        val newLanguage = AddLocationModel(AppConstant.unknownLocation)
+//                                        locationList.add(newLanguage)
+//                                        addLocationAdapter.updateLocations(locationList)
+//                                    }
+//                                    if (it?.my_work != null && it.my_work.isNotEmpty()) {
+//                                        workList = getObjectsFromNames(it.my_work) { name ->
+//                                            AddWorkModel(name)  // Using the constructor of MyObject to create instances
+//                                        }
+//                                        val newLanguage = AddWorkModel(AppConstant.unknownLocation)
+//                                        workList.add(newLanguage)
+//                                        addWorkAdapter.updateWork(workList)
+//                                    }
+//                                    if (it?.languages != null && it.languages.isNotEmpty()) {
+//                                        languageList = getObjectsFromNames(it.languages) { name ->
+//                                            AddLanguageModel(name)  // Using the constructor of MyObject to create instances
 //                                        }
 //                                        val newLanguage =
-//                                            AddHobbiesModel(AppConstant.unknownLocation)
-//                                        hobbiesList.add(newLanguage)
-//                                        addHobbiesAdapter.updateHobbies(hobbiesList)
+//                                            AddLanguageModel(AppConstant.unknownLocation)
+//                                        languageList.add(newLanguage)
+//                                        addLanguageSpeakAdapter.updateLanguage(languageList)
 //                                    }
-//                                    if (it?.pets != null && it.pets.isNotEmpty()) {
-//                                        petsList = getObjectsFromNames(it.pets) { name ->
-//                                            AddPetsModel(name)  // Using the constructor of MyObject to create instances
-//                                        }
-//                                        val newLanguage = AddPetsModel(AppConstant.unknownLocation)
-//                                        petsList.add(newLanguage)
-//                                        addPetsAdapter.updatePets(petsList)
-//                                    }
-                                }
+//
+//                                }
+
+                                settingDataToUi(resp)
                             }
                         }
-
                         is NetworkResult.Error -> {
+                            LoadingUtils.hideDialog()
                             binding.llScrlView.visibility=View.GONE
                             showErrorDialog(requireContext(), it.message!!)
                         }
-
                         else -> {
 
                             Log.v(ErrorDialog.TAG, "error::" + it.message)
                         }
-
                     }
                 }
             }
@@ -717,6 +703,85 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 null
             }
         }.toMutableList()
+    }
+
+    private fun settingDataToUi(resp : JsonObject){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val userProfile = Gson().fromJson(resp, UserProfile::class.java)
+
+            val nameBuilder = StringBuilder()
+            val firstName = userProfile.first_name?.also { nameBuilder.append("$it ") } ?: ""
+            val lastName = userProfile.last_name?.also { nameBuilder.append(it) } ?: ""
+            userProfile.name = nameBuilder.toString()
+
+            // Transform lists off main thread
+            val transformedLocationList = userProfile.where_live?.let {
+                getObjectsFromNames(it) { name -> AddLocationModel(name) }
+            }?.apply {
+                add(AddLocationModel(AppConstant.unknownLocation))
+            } ?: emptyList()
+
+            val transformedWorkList = userProfile.my_work?.let {
+                getObjectsFromNames(it) { name -> AddWorkModel(name) }
+            }?.apply {
+                add(AddWorkModel(AppConstant.unknownLocation))
+            } ?: emptyList()
+
+            val transformedLanguageList = userProfile.languages?.let {
+                getObjectsFromNames(it) { name -> AddLanguageModel(name) }
+            }?.apply {
+                add(AddLanguageModel(AppConstant.unknownLocation))
+            } ?: emptyList()
+
+            // Now switch to UI thread
+            withContext(Dispatchers.Main) {
+                binding.user = userProfile
+                binding.etEmail.setText(userProfile.email ?: "")
+                binding.etEmail.isEnabled = false
+                binding.etPhoneNumeber.setText(userProfile.phone_number ?: "")
+                binding.etPhoneNumeber.isEnabled = false
+                binding.streetEditText.setText(userProfile.street ?: "")
+                binding.stateEt.setText(userProfile.state ?: "")
+                binding.zipEt.setText(userProfile.zip_code ?: "")
+                binding.cityET.setText(userProfile.city ?: "")
+
+                if (userProfile.email_verified == 1) {
+                    binding.textConfirmNow.visibility = View.GONE
+                    binding.textVerified.visibility = View.VISIBLE
+                }
+                if (userProfile.phone_verified == 1) {
+                    binding.textConfirmNow1.visibility = View.GONE
+                    binding.textVerified1.visibility = View.VISIBLE
+                }
+                if (userProfile.identity_verified == 1) {
+                    binding.textConfirmNow2.visibility = View.GONE
+                    binding.textVerified2.visibility = View.VISIBLE
+                }
+
+                // Load profile image
+                userProfile.profile_image?.let {
+                    Glide.with(requireContext())
+                        .asBitmap()
+                        .load(BuildConfig.MEDIA_URL + it)
+                        .into(object : SimpleTarget<Bitmap>() {
+                            override fun onResourceReady(
+                                resource: Bitmap,
+                                transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+                            ) {
+                                binding.imageProfilePicture.setImageBitmap(resource)
+                                imageBytes = MediaUtils.bitmapToByteArray(resource)
+                                Log.d("ImageBytes", imageBytes.toString())
+                            }
+                        })
+                }
+
+                // Update adapters
+                addLocationAdapter.updateLocations(transformedLocationList.toMutableList())
+                addWorkAdapter.updateWork(transformedWorkList.toMutableList())
+                addLanguageSpeakAdapter.updateLanguage(transformedLanguageList.toMutableList())
+            }
+        }
+
     }
 
 
@@ -4331,6 +4396,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             )
             .locale(Locale.getDefault().language) // Set the locale for the verification process
             .build()
+
 
         getInquiryResult.launch(inquiry)
 

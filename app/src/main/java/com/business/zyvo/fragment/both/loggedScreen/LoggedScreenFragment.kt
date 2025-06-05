@@ -2960,7 +2960,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         }
 
                         is NetworkResult.Error -> {
-                            showErrorDialog(requireContext(), it.message!!)
+
+                            showErrorDialog(requireContext(), "We didn’t find any properties close to your location.")
+
                         }
 
                         else -> {

@@ -329,6 +329,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         Log.d("TESTING", "User Id is " + session.getUserId())
 
+        Log.d("TESTING_TIME","From_Hour"+fromHour +" "+"To_Hour"+toHour+" min_booking_hours"+minimumHourValue)
         requestBody.title = titleResult
         requestBody.space_type = spaceType
         requestBody.property_size = propertySize
@@ -911,10 +912,33 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         // LoadingUtils.showErrorDialog(requireContext(),"The 'from' time ($fromHour) is NOT earlier than the 'to' time ($toHour).")
         // return false
 
+        if(!isTimeRangeGreaterThanMinimum(fromHour,toHour,minimumHourValue)){
+            LoadingUtils.showErrorDialog(requireContext(),"The selected time range is less than the minimum required duration.")
+            return false
+        }
+
 
         return true
     }
 
+    fun isTimeRangeGreaterThanMinimum(
+        startTime: String,
+        endTime: String,
+        minDiscountHours: Int
+    ): Boolean {
+        // Parse time strings into hours (e.g., "18:32" → 18.5333)
+        fun parseTime(time: String): Double {
+            val (hours, minutes) = time.split(":").map { it.toInt() }
+            return hours + (minutes / 60.0)
+        }
+
+        val start = parseTime(startTime)
+        val end = parseTime(endTime)
+        val diffHours = end - start
+
+        Log.d("TESTING_TIME","DIFFhOURS"+diffHours+" "+"Min Discount Hour"+minDiscountHours)
+        return diffHours > minDiscountHours
+    }
 
     private fun galleryTextField() {
         binding.textType.addTextChangedListener(object : TextWatcher {

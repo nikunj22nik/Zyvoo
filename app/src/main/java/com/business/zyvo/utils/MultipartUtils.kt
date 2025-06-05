@@ -3,6 +3,8 @@ package com.business.zyvo.utils
 import android.content.Context
 import android.net.Uri
 import android.provider.OpenableColumns
+import com.google.i18n.phonenumbers.NumberParseException
+import com.google.i18n.phonenumbers.PhoneNumberUtil
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -11,6 +13,25 @@ import java.io.FileOutputStream
 import java.io.InputStream
 
 object MultipartUtils {
+
+
+    fun isNumberFromCountry(phoneNumber: String, selectedCountryCode: String): Boolean {
+        val phoneUtil = PhoneNumberUtil.getInstance()
+        return try {
+            // Remove '+' from selected country code and get region
+            val countryCallingCode = selectedCountryCode.replace("+", "")
+            val regions = phoneUtil.getRegionCodesForCountryCode(countryCallingCode.toInt())
+            if (regions.isEmpty()) return false
+
+            // Try parsing the number using the first region mapped to the code
+            val numberProto = phoneUtil.parse(phoneNumber, regions.first())
+            val parsedCountryCode = numberProto.countryCode.toString()
+
+            parsedCountryCode == countryCallingCode
+        } catch (e: NumberParseException) {
+            false
+        }
+    }
 
     fun uriToMultipartBodyPart(context: Context, uri: Uri, paramName: String): MultipartBody.Part? {
         try {

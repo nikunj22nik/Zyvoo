@@ -265,22 +265,33 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.navigationProperties -> {
-                homeResume()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.host_fragment_properties)
+                val navController = findNavController(R.id.fragmentContainerView_main)
+                val destinationId = R.id.host_fragment_properties
+                if (navController.currentDestination?.id != destinationId) {
+                    homeResume()
+                    findNavController(R.id.fragmentContainerView_main).navigate(R.id.host_fragment_properties)
+                }
             }
 
             R.id.navigationInbox_1 -> {
                 inboxColor()
-
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostChatFragment)
+                val navController = findNavController(R.id.fragmentContainerView_main)
+                val destinationId = R.id.hostChatFragment
+                if (navController.currentDestination?.id != destinationId) {
+                    findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostChatFragment)
+                }
 
             }
 
             R.id.navigationBookings -> {
                 if(NetworkMonitorCheck._isConnected.value) {
                     binding.rlBookingCount.visibility = View.GONE
-                    bookingResume()
-                    findNavController(R.id.fragmentContainerView_main).navigate(R.id.bookingScreenHostFragment)
+                    val navController = findNavController(R.id.fragmentContainerView_main)
+                    val destinationId = R.id.bookingScreenHostFragment
+                    if (navController.currentDestination?.id != destinationId) {
+                        bookingResume()
+                        findNavController(R.id.fragmentContainerView_main).navigate(R.id.bookingScreenHostFragment)
+                    }
                 }else{
                     LoadingUtils.showErrorDialog(this@HostMainActivity,"Please Check Your Internet Connection")
                 }
@@ -288,7 +299,12 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
 
             R.id.icProfile -> {
                 profileColor()
-                findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostProfileFragment)
+                val navController = findNavController(R.id.fragmentContainerView_main)
+                val destinationId = R.id.hostProfileFragment
+
+                if (navController.currentDestination?.id != destinationId) {
+                    findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostProfileFragment)
+                }
             }
         }
     }

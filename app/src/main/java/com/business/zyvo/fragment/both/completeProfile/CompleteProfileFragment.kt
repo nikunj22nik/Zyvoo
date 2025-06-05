@@ -103,9 +103,9 @@ import java.util.Locale
 @AndroidEntryPoint
 class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , OnClickListener{
 
-    private  var _binding: FragmentCompleteProfileBinding? = null
+    private var _binding: FragmentCompleteProfileBinding? = null
     private val binding get() = _binding!!
-    private  lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
+    private lateinit var  commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
     private lateinit var addWorkAdapter: AddWorkAdapter
     private lateinit var addLanguageSpeakAdapter: AddLanguageSpeakAdapter
@@ -121,9 +121,9 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     private lateinit var localeAdapter: LocaleAdapter
     private var locales: List<Locale> = listOf()
     private var etSearch: TextView? = null
-    private  var bottomSheetDialog : BottomSheetDialog? = null
+    private var bottomSheetDialog : BottomSheetDialog? = null
     private var imageStatus = ""
-    lateinit  var navController :NavController
+    lateinit var navController :NavController
     private lateinit var otpDigits: Array<EditText>
     private var countDownTimer: CountDownTimer? = null
     private var identityVerified = 0
@@ -160,7 +160,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     // Add the new location to the list and notify the adapter
                     locationList.add(locationList.size-1, newLocation)
 
-                 //   Toast.makeText(requireContext(),"count${locationList.size}",Toast.LENGTH_LONG).show()
+                    //   Toast.makeText(requireContext(),"count${locationList.size}",Toast.LENGTH_LONG).show()
                     // Check if we need to hide the "Add New" button
 
                     //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
@@ -177,7 +177,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-         navController = findNavController()
+        navController = findNavController()
         commonAuthWorkUtils = CommonAuthWorkUtils(requireContext(),navController)
         apiKey = getString(R.string.api_key)
 
@@ -235,12 +235,11 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         session = SessionManager(requireActivity())
 
         binding.imageEditAbout.setOnClickListener {
-          binding.etAboutMe.isEnabled = true
+            binding.etAboutMe.isEnabled = true
         }
 
         arguments?.let {
-          val data = Gson().fromJson(requireArguments().getString("data")!!,JsonObject::class.java)
-
+            val data = Gson().fromJson(requireArguments().getString("data")!!,JsonObject::class.java)
             userId = data.get("user_id").asInt.toString()
             session!!.setUserId(userId.toInt())
             token = data.get("token").asString
@@ -310,7 +309,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     }
 
     private fun launchVerifyIdentity(){
-         val TEMPLATE_ID = BuildConfig.templateID
+        val TEMPLATE_ID = BuildConfig.templateID
 
         val inquiry = Inquiry.fromTemplate(TEMPLATE_ID)
             .environment(Environment.SANDBOX) // Use Environment.PRODUCTION for live verification
@@ -403,19 +402,19 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     val newLanguage = AddLanguageModel(local)
 
                     // Add the new location to the list and notify the adapter
-                  //  languageList.add(0, newLanguage)
+                    //  languageList.add(0, newLanguage)
                     //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
-                  /*  if (type == "add") {*/
-                        languageList.add(languageList.size - 1, newLanguage)
-                        addLanguageSpeakAdapter.updateLanguage(languageList)
-                        callingLanguageApi(local)
-                   /* }else{
-                        val index = languageList.indexOfFirst { it.name == local }
-                        val removedLang = languageList[index].name
-                        deleteLanguageApi(index)
-                        languageList.removeAt(index)
-                        SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
-                    }*/
+                    /*  if (type == "add") {*/
+                    languageList.add(languageList.size - 1, newLanguage)
+                    addLanguageSpeakAdapter.updateLanguage(languageList)
+                    callingLanguageApi(local)
+                    /* }else{
+                         val index = languageList.indexOfFirst { it.name == local }
+                         val removedLang = languageList[index].name
+                         deleteLanguageApi(index)
+                         languageList.removeAt(index)
+                         SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
+                     }*/
                     //  addLocationAdapter.notifyItemInserted(locationList.size - 1)
                     dismiss()
                 }
@@ -434,18 +433,18 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             var userId = SessionManager(requireContext()).getUserId()
             LoadingUtils.showDialog(requireContext(),false)
             completeProfileViewModel.addLanguageApi(userId.toString(), languageName).collect {
-                     when(it){
-                         is NetworkResult.Success ->{
-                             LoadingUtils.hideDialog()
-                         }
-                         is NetworkResult.Error ->{
-                             LoadingUtils.hideDialog()
-                             LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
-                         }
-                         else ->{
+                when(it){
+                    is NetworkResult.Success ->{
+                        LoadingUtils.hideDialog()
+                    }
+                    is NetworkResult.Error ->{
+                        LoadingUtils.hideDialog()
+                        LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
+                    }
+                    else ->{
 
-                         }
-                     }
+                    }
+                }
             }
 
         }
@@ -467,29 +466,29 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         return true
     }
 
-   private fun bottomSheetUploadImage(){
-       Log.d("TESTING_COMPELETE_PROFILE","Inside of Bottom Sheet Upload Image")
-       bottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog1)
-       bottomSheetDialog?.setContentView(R.layout.bottom_sheet_upload_image)
+    private fun bottomSheetUploadImage(){
+        Log.d("TESTING_COMPELETE_PROFILE","Inside of Bottom Sheet Upload Image")
+        bottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog1)
+        bottomSheetDialog?.setContentView(R.layout.bottom_sheet_upload_image)
 
-       val textCamera = bottomSheetDialog?.findViewById<TextView>(R.id.textCamera)
+        val textCamera = bottomSheetDialog?.findViewById<TextView>(R.id.textCamera)
 
-       val textGallery = bottomSheetDialog?.findViewById<TextView>(R.id.textGallery)
+        val textGallery = bottomSheetDialog?.findViewById<TextView>(R.id.textGallery)
 
-       textCamera?.setOnClickListener {
-           profileImageCameraChooser()
-           bottomSheetDialog?.dismiss()
-       }
+        textCamera?.setOnClickListener {
+            profileImageCameraChooser()
+            bottomSheetDialog?.dismiss()
+        }
 
-       textGallery?.setOnClickListener {
-           profileImageGalleryChooser()
-           bottomSheetDialog?.dismiss()
-       }
+        textGallery?.setOnClickListener {
+            profileImageGalleryChooser()
+            bottomSheetDialog?.dismiss()
+        }
 
 
-       bottomSheetDialog?.show()
+        bottomSheetDialog?.show()
 
-   }
+    }
 
     override fun itemClick(obj: Int, text: String, enteredText: String)  {
         when (text) {
@@ -534,87 +533,87 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     override fun onClick(p0: View?) {
 
         when(p0?.id){
-           R.id.imageInfoIcon -> {
-               binding.cvInfo.visibility = View.VISIBLE
-           }
+            R.id.imageInfoIcon -> {
+                binding.cvInfo.visibility = View.VISIBLE
+            }
 
 
-           R.id.clHead -> {
-               binding.cvInfo.visibility = View.GONE
+            R.id.clHead -> {
+                binding.cvInfo.visibility = View.GONE
 
 
-           }
+            }
 
-           R.id.imageEditPicture -> {
-               bottomSheetUploadImage()
-           }
+            R.id.imageEditPicture -> {
+                bottomSheetUploadImage()
+            }
 
-           R.id.imageEditName->{
-            dialogChangeName(requireContext())
-           }
+            R.id.imageEditName->{
+                dialogChangeName(requireContext())
+            }
 
-           R.id.textConfirmNow->{
+            R.id.textConfirmNow->{
 
-              dialogEmailVerification(requireContext())
-           }
+                dialogEmailVerification(requireContext())
+            }
 
-           R.id.textConfirmNow1->{
-               dialogNumberVerification(requireContext())
-           }
+            R.id.textConfirmNow1->{
+                dialogNumberVerification(requireContext())
+            }
 
-           R.id.textSaveButton -> {
-               toggleLoginButtonEnabled(false, binding.textSaveButton)
-               lifecycleScope.launch {
-                   completeProfileViewModel.networkMonitor.isConnected
-                       .distinctUntilChanged() // Ignore duplicate consecutive values
-                       .collect { isConn ->
-                           if (!isConn) {
-                               showErrorDialog(
-                                   requireContext(),
-                                   resources.getString(R.string.no_internet_dialog_msg)
-                               )
-                               toggleLoginButtonEnabled(true, binding.textSaveButton)
-                           } else {
-                               lifecycleScope.launch(Dispatchers.Main) {
-                                   val fullName = binding.textName.text.toString().trim()
-                                   val nameParts = fullName.split(" ")
+            R.id.textSaveButton -> {
+                toggleLoginButtonEnabled(false, binding.textSaveButton)
+                lifecycleScope.launch {
+                    completeProfileViewModel.networkMonitor.isConnected
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
+                        .collect { isConn ->
+                            if (!isConn) {
+                                showErrorDialog(
+                                    requireContext(),
+                                    resources.getString(R.string.no_internet_dialog_msg)
+                                )
+                                toggleLoginButtonEnabled(true, binding.textSaveButton)
+                            } else {
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    val fullName = binding.textName.text.toString().trim()
+                                    val nameParts = fullName.split(" ")
 
                                     firstName = nameParts.getOrNull(0) ?: ""
                                     lastName = nameParts.getOrNull(1) ?: ""
 
-                                   if (validation()) {
-                                       completeProfileReq.user_id = session?.getUserId()!!
-                                       completeProfileReq.first_name =  firstName
-                                       completeProfileReq.last_name =  lastName
-                                       completeProfileReq.about_me = binding.etAboutMe.text.toString()
-                                       completeProfileReq.where_live = getNames(locationList)
-                                       completeProfileReq.works = getNames(workList)
-                                       completeProfileReq.languages = getNames(languageList)
-                                       completeProfileReq.hobbies = getNames(hobbiesList)
-                                       completeProfileReq.pets = getNames(petsList)
-                                       completeProfileReq.bytes = imageBytes
-                                       completeProfileReq.identityVerified = identityVerified
-                                       completeProfile(completeProfileReq,binding.textSaveButton)
-                                   }else{
-                                       toggleLoginButtonEnabled(true, binding.textSaveButton)
-                                   }
-                               }
-                           }
-                       }
-               }
-           }
+                                    if (validation()) {
+                                        completeProfileReq.user_id = session?.getUserId()!!
+                                        completeProfileReq.first_name =  firstName
+                                        completeProfileReq.last_name =  lastName
+                                        completeProfileReq.about_me = binding.etAboutMe.text.toString()
+                                        completeProfileReq.where_live = getNames(locationList)
+                                        completeProfileReq.works = getNames(workList)
+                                        completeProfileReq.languages = getNames(languageList)
+                                        completeProfileReq.hobbies = getNames(hobbiesList)
+                                        completeProfileReq.pets = getNames(petsList)
+                                        completeProfileReq.bytes = imageBytes
+                                        completeProfileReq.identityVerified = identityVerified
+                                        completeProfile(completeProfileReq,binding.textSaveButton)
+                                    }else{
+                                        toggleLoginButtonEnabled(true, binding.textSaveButton)
+                                    }
+                                }
+                            }
+                        }
+                }
+            }
 
-           R.id.skip_now ->{
-               if (binding.textName.text.toString().isNotEmpty()) {
-                   val intent = Intent(requireContext(), GuesMain::class.java)
-                   intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                   startActivity(intent)
-                   requireActivity().finish()
-               }else{
-                   showErrorDialog(requireContext(),"Enter your name to proceed to the next screen.")
-               }
-           }
-       }
+            R.id.skip_now ->{
+                if (binding.textName.text.toString().isNotEmpty()) {
+                    val intent = Intent(requireContext(), GuesMain::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }else{
+                    showErrorDialog(requireContext(),"Enter your name to proceed to the next screen.")
+                }
+            }
+        }
 
     }
 
@@ -660,13 +659,13 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                 result.data?.data?.let { uri ->
                     if (uri!=null) {
                         // Load image into BottomSheetDialog's ImageView if available
-                       /* binding.imageProfilePicture.let {
-                            Glide.with(this)
-                                .load(uri)
-                                .error(R.drawable.ic_profile_login)
-                                .placeholder(R.drawable.ic_profile_login)
-                                .into(it)
-                        }*/
+                        /* binding.imageProfilePicture.let {
+                             Glide.with(this)
+                                 .load(uri)
+                                 .error(R.drawable.ic_profile_login)
+                                 .placeholder(R.drawable.ic_profile_login)
+                                 .into(it)
+                         }*/
                         Glide.with(this)
                             .asBitmap()
                             .load(uri)
@@ -765,117 +764,117 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             show()
         }}
 
-/*
-    @SuppressLint("SetTextI18n")
-    private fun dialogChangeName(context: Context?){
+    /*
+        @SuppressLint("SetTextI18n")
+        private fun dialogChangeName(context: Context?){
+            val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+            dialog?.apply {
+                setCancelable(true)
+                setCanceledOnTouchOutside(true)
+                setContentView(R.layout.dialog_change_names)
+                window?.attributes = WindowManager.LayoutParams().apply {
+                    copyFrom(window?.attributes)
+                    width = WindowManager.LayoutParams.MATCH_PARENT
+                    height = WindowManager.LayoutParams.MATCH_PARENT
+                }
+
+
+                val textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
+                val editTextFirstName =  findViewById<EditText>(R.id.editTextFirstName)
+                val editTextLastName =  findViewById<EditText>(R.id.editTextLastName)
+                val imageProfilePicture =  findViewById<CircleImageView>(R.id.imageProfilePicture)
+                if (imageBytes.isNotEmpty()){
+                    MediaUtils.setImageFromByteArray(imageBytes,imageProfilePicture)
+                }
+                textSaveChangesButton.setOnClickListener{
+                    if (editTextFirstName.text.isEmpty()){
+                        showErrorDialog(requireContext(),AppConstant.firstName)
+                    }else if (editTextLastName.text.isEmpty()){
+                        showErrorDialog(requireContext(),AppConstant.lastName)
+                    }else{
+                        dismiss()
+                        completeProfileReq.first_name =editTextFirstName.text.toString()
+                        completeProfileReq.last_name =editTextLastName.text.toString()
+                        binding.textName.text = editTextFirstName.text.toString()+" "+editTextLastName.text.toString()
+                    }
+
+                }
+
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                show()
+            }}
+
+     */
+
+    // this function change the name of dialog
+    private fun dialogChangeName(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(true)
-            setCanceledOnTouchOutside(true)
             setContentView(R.layout.dialog_change_names)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                width = WindowManager.LayoutParams.WRAP_CONTENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
+            }
+
+            val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
+            if (imageBytes.isNotEmpty()) {
+                MediaUtils.setImageFromByteArray(imageBytes, imageProfilePicture)
             }
 
 
-            val textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
-            val editTextFirstName =  findViewById<EditText>(R.id.editTextFirstName)
-            val editTextLastName =  findViewById<EditText>(R.id.editTextLastName)
-            val imageProfilePicture =  findViewById<CircleImageView>(R.id.imageProfilePicture)
-            if (imageBytes.isNotEmpty()){
-                MediaUtils.setImageFromByteArray(imageBytes,imageProfilePicture)
-            }
-            textSaveChangesButton.setOnClickListener{
-                if (editTextFirstName.text.isEmpty()){
-                    showErrorDialog(requireContext(),AppConstant.firstName)
-                }else if (editTextLastName.text.isEmpty()){
-                    showErrorDialog(requireContext(),AppConstant.lastName)
-                }else{
-                    dismiss()
-                    completeProfileReq.first_name =editTextFirstName.text.toString()
-                    completeProfileReq.last_name =editTextLastName.text.toString()
-                    binding.textName.text = editTextFirstName.text.toString()+" "+editTextLastName.text.toString()
-                }
-
-            }
-
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }}
-
- */
-
-    // this function change the name of dialog
-      private fun dialogChangeName(context: Context?) {
-    val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-    dialog?.apply {
-        setCancelable(true)
-        setContentView(R.layout.dialog_change_names)
-        window?.attributes = WindowManager.LayoutParams().apply {
-            copyFrom(window?.attributes)
-            width = WindowManager.LayoutParams.WRAP_CONTENT
-            height = WindowManager.LayoutParams.WRAP_CONTENT
-        }
-
-        val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
-        if (imageBytes.isNotEmpty()) {
-            MediaUtils.setImageFromByteArray(imageBytes, imageProfilePicture)
-        }
-
-
-        val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
-        val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
-        val editTextLastName = findViewById<EditText>(R.id.editTextLastName)
+            val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
+            val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
+            val editTextLastName = findViewById<EditText>(R.id.editTextLastName)
 //        if (fullName != ""){
 //            val nameParts = fullName.trim().split(" ", limit = 2)
 //            editTextFirstName.setText(nameParts[0]) // First name
 //            editTextLastName.setText(if (nameParts.size > 1) nameParts[1] else "")
 //        }
-        editTextFirstName.setText(firstName)
-        editTextLastName.setText(lastName)
-        textSaveChangesButton.setOnClickListener {
-            if (editTextFirstName.text.isEmpty()) {
-                showErrorDialog(requireContext(), AppConstant.firstName)
-            } else if (editTextLastName.text.isEmpty()) {
-                showErrorDialog(requireContext(), AppConstant.lastName)
-            } else {
-                toggleLoginButtonEnabled(false, textSaveChangesButton)
-                updateName(
-                    editTextFirstName.text.toString(),
-                    editTextLastName.text.toString(),
-                    dialog, textSaveChangesButton
-                )
+            editTextFirstName.setText(firstName)
+            editTextLastName.setText(lastName)
+            textSaveChangesButton.setOnClickListener {
+                if (editTextFirstName.text.isEmpty()) {
+                    showErrorDialog(requireContext(), AppConstant.firstName)
+                } else if (editTextLastName.text.isEmpty()) {
+                    showErrorDialog(requireContext(), AppConstant.lastName)
+                } else {
+                    toggleLoginButtonEnabled(false, textSaveChangesButton)
+                    updateName(
+                        editTextFirstName.text.toString(),
+                        editTextLastName.text.toString(),
+                        dialog, textSaveChangesButton
+                    )
+                }
             }
+
+            editTextFirstName.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable?) {
+                    updateFirstName = s.toString()
+                    firstName = s.toString()
+                }
+            })
+
+            editTextLastName.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+                override fun afterTextChanged(s: Editable?) {
+                    updateLastName = s.toString()
+                    lastName = s.toString()
+                }
+            })
+
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
         }
-
-        editTextFirstName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                updateFirstName = s.toString()
-                 firstName = s.toString()
-            }
-        })
-
-        editTextLastName.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-            override fun afterTextChanged(s: Editable?) {
-                updateLastName = s.toString()
-                lastName = s.toString()
-            }
-        })
-
-
-        window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        show()
     }
-}
 
 
-      private fun dialogEmailVerification(context: Context?){
+    private fun dialogEmailVerification(context: Context?){
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(true)
@@ -1172,14 +1171,11 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                             binding.textVerified1.visibility = View.VISIBLE
                             dialog.dismiss()
                         }
-
                         toggleLoginButtonEnabled(true, text)
                     }
 
                     is NetworkResult.Error -> {
-                        showErrorDialog(
-                            requireContext(), it.message!!
-                        )
+                        showErrorDialog(requireContext(), it.message!!)
                         toggleLoginButtonEnabled(true, text)
                     }
 
@@ -1381,7 +1377,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
             "language" ->{
                 deleteLanguageApi(obj)
-               }
+            }
 
             "Hobbies"->{
                 hobbiesList.removeAt(obj)
@@ -1416,7 +1412,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let {
-                                                resp ->
+                                                    resp ->
 //                                                Toast.makeText(
 //                                                requireContext(),
 //                                                    resp.toString(),
@@ -1532,7 +1528,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                     binding.user = it
 
                                     if (it?.profile_image != null) {
-                                            Glide.with(requireContext()).asBitmap().load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
+                                        Glide.with(requireContext()).asBitmap().load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
                                             .into(object : SimpleTarget<Bitmap>() {
                                                 override fun onResourceReady(
                                                     resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
@@ -1590,7 +1586,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                         addLanguageSpeakAdapter.updateLanguage(languageList)
                                         var savingList = mutableListOf<AddLanguageModel>()
                                         languageList.forEach {
-                                           var localeNew = AddLanguageModel(it.name,it.country)
+                                            var localeNew = AddLanguageModel(it.name,it.country)
                                             savingList.add(localeNew)
                                         }
                                         SessionManager(requireContext()).clearLanguage()

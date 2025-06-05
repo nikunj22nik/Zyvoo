@@ -158,6 +158,7 @@ dependencies {
     implementation("com.stripe:stripe-android:16.3.0")
 
     implementation ("com.appsflyer:af-android-sdk:6.12.1")
+    implementation("com.googlecode.libphonenumber:libphonenumber:8.13.19")
 
 
 }
