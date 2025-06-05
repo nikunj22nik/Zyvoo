@@ -1864,7 +1864,10 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }
     }
 
-
+    fun isValidName(minLength: Int = 2, maxLength: Int = 30,str:String): Boolean {
+        val trimmed = str.trim()
+        return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
+    }
     private fun dialogChangeName(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -1889,9 +1892,18 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             textSaveChangesButton.setOnClickListener {
                 if (editTextFirstName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.firstName)
-                } else if (editTextLastName.text.isEmpty()) {
+                }
+                else if(!isValidName(str = editTextFirstName.text.toString())){
+                    showErrorDialog(requireContext(),"First name should be between 3 and 30 characters long.")
+                }
+
+                else if (editTextLastName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.lastName)
-                } else {
+                }
+                else if(!isValidName(str = editTextLastName.text.toString())){
+                    showErrorDialog(requireContext(),"Last name should be between 3 and 30 characters long.")
+                }
+                else {
                     toggleLoginButtonEnabled(false, textSaveChangesButton)
                     updateName(
                         editTextFirstName.text.toString(),

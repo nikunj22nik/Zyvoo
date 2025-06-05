@@ -264,6 +264,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
+
                                 propertyData = Gson().fromJson(
                                     resp.first.getAsJsonObject("data"),
                                     PropertyData::class.java
@@ -301,14 +302,17 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                         "TOTAL PAGES :- " + it.total + " " + "Current Pages:- " + it.current_page
                                     )
 
-                                    /* if (it.total <= it.current_page) {
-                                         binding.showMoreReview.visibility = View.GONE
-                                     }*/
+
 Log.d("checkDataCurrentPage",it.current_page.toString())
 Log.d("checkDataTotalPage",it.total_pages.toString())
                                     if (it.current_page == it.total_pages) {
                                         binding.showMoreReview.visibility = View.GONE
-                                    } else {
+                                    }
+                                   else if (it.total <= it.current_page) {
+                                        binding.showMoreReview.visibility = View.GONE
+                                    }
+
+                                    else {
                                         binding.showMoreReview.visibility = View.VISIBLE
                                     }
 

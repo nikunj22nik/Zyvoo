@@ -26,11 +26,22 @@
             android:background="@color/white"
             tools:context=".fragment.guest.profile.ProfileFragment">
 
+           <View
+               android:id="@+id/v1"
+               android:layout_width="match_parent"
+               android:layout_height="@dimen/_1sdp"
+               android:layout_marginTop="@dimen/_5sdp"
+               android:background="@color/grey"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintStart_toStartOf="parent"
+               />
+
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/clSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="@id/v1">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -111,81 +122,86 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/clProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/button_grey_line_bg"
-                app:layout_constraintTop_toBottomOf="@+id/clSearch">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imageProfilePicture"
-                    android:layout_width="@dimen/_100sdp"
-                    android:layout_height="@dimen/_100sdp"
-                    android:background="@drawable/profle_picture_ring"
-                    android:padding="@dimen/_17sdp"
-                    android:src="@drawable/ic_women_image"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/imageEditPicture"
-                    android:layout_width="@dimen/_23sdp"
-                    android:layout_height="@dimen/_23sdp"
-                    android:layout_margin="@dimen/_60sdp"
-                    android:src="@drawable/ic_edit_icon"
-                    app:layout_constraintStart_toStartOf="@id/imageProfilePicture"
-                    app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:id="@+id/clProfile"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginHorizontal="@dimen/_10sdp"
+               android:layout_marginTop="@dimen/_20sdp"
+               android:background="@drawable/button_grey_line_bg"
+              app:layout_constraintTop_toBottomOf="@id/clSearch">
+               <!--android:src="@drawable/ic_women_image"-->
+               <de.hdodenhof.circleimageview.CircleImageView
+                   android:id="@+id/imageProfilePicture"
+                   android:layout_width="@dimen/_100sdp"
+                   android:layout_height="@dimen/_100sdp"
+                   android:background="@drawable/profle_picture_ring"
+                   android:padding="@dimen/_17sdp"
+                   android:src="@drawable/ic_img_not_found"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintStart_toStartOf="parent"
+                   app:layout_constraintTop_toTopOf="parent" />
 
 
-                <TextView
-                    android:id="@+id/textName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_25sdp"
-                    android:fontFamily="@font/poppins"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_15sdp"
-                    android:textStyle="bold"
-                    android:text="@{user.name != null ? user.name : `NAMAN SHARMA`}"
-                    app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
-                    app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
-
-                <TextView
-                    android:id="@+id/textHost"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
-                    android:text="Host"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14ssp"
-                    app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
-                    app:layout_constraintTop_toBottomOf="@+id/textName" />
-
-                <ImageView
-                    android:id="@+id/imageInfoIcon"
-                    android:layout_width="@dimen/_17sdp"
-                    android:layout_height="@dimen/_17sdp"
-                    android:layout_marginStart="@dimen/_2sdp"
-                    android:padding="@dimen/_2sdp"
-                    android:src="@drawable/ic_info_icon"
-                    app:layout_constraintStart_toEndOf="@id/textHost"
-                    app:layout_constraintTop_toBottomOf="@id/textName" />
-
-                <ImageView
-                    android:id="@+id/imageEditName"
-                    android:layout_width="@dimen/_28sdp"
-                    android:layout_height="@dimen/_28sdp"
-                    android:layout_marginTop="@dimen/_21sdp"
-                    android:src="@drawable/ic_edit_icon"
-                    app:layout_constraintStart_toEndOf="@id/textName"
-                    app:layout_constraintTop_toTopOf="parent" />
+               <ImageView
+                   android:id="@+id/imageEditPicture"
+                   android:layout_width="@dimen/_23sdp"
+                   android:layout_height="@dimen/_23sdp"
+                   android:layout_margin="@dimen/_60sdp"
+                   android:src="@drawable/ic_edit_icon"
+                   app:layout_constraintStart_toStartOf="@id/imageProfilePicture"
+                   app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+               <TextView
+                   android:id="@+id/textName"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_marginTop="@dimen/_25sdp"
+                   android:maxWidth="@dimen/_150sdp"
+                   android:singleLine="true"
+                   android:fontFamily="@font/poppins"
+                   android:hint="Hey Guest!"
+                   android:text="@{user.name != null ? user.name : ``}"
+                   android:textColorHint="@color/black"
+                   android:textColor="@color/black"
+                   android:textSize="@dimen/_15sdp"
+                   android:textStyle="bold"
+                   app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
+                   app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
+
+               <TextView
+                   android:id="@+id/textHost"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:fontFamily="@font/poppins"
+                   android:text="Host"
+                   android:textColor="@color/black"
+                   android:textSize="@dimen/_14ssp"
+                   app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
+                   app:layout_constraintTop_toBottomOf="@+id/textName" />
+
+               <ImageView
+                   android:id="@+id/imageInfoIcon"
+                   android:layout_width="@dimen/_17sdp"
+                   android:layout_height="@dimen/_17sdp"
+                   android:layout_marginStart="@dimen/_2sdp"
+                   android:padding="@dimen/_2sdp"
+                   android:src="@drawable/ic_info_icon"
+                   app:layout_constraintStart_toEndOf="@id/textHost"
+                   app:layout_constraintTop_toBottomOf="@id/textName" />
+
+               <ImageView
+                   android:id="@+id/imageEditName"
+                   android:layout_width="@dimen/_28sdp"
+                   android:layout_height="@dimen/_28sdp"
+                   android:layout_marginTop="@dimen/_18sdp"
+                   android:src="@drawable/ic_edit_icon"
+                   app:layout_constraintStart_toEndOf="@id/textName"
+                   app:layout_constraintTop_toTopOf="parent" />
+
+
+           </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <androidx.cardview.widget.CardView
