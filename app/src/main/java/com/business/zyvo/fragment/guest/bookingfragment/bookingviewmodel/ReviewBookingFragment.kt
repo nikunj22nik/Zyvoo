@@ -3,6 +3,7 @@ package com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
@@ -29,6 +30,7 @@ import android.widget.RatingBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -114,6 +116,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("TESTING_VIEW","INSIDE VIEW DETAILS bOOKING")
         arguments?.let {
             bookingId = it.getInt("BOOKING_ID")
         }
@@ -1290,13 +1293,28 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
     }
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+
+        // Enable all gestures (zoom, scroll, tilt, rotate)
+        mMap?.uiSettings?.apply {
+            isZoomGesturesEnabled = true
+            isScrollGesturesEnabled = true
+            isTiltGesturesEnabled = true
+            isRotateGesturesEnabled = true
+            isMyLocationButtonEnabled = true
+            isCompassEnabled = true
+            isMapToolbarEnabled = true
+        }
+
+
+
         mMap?.setOnMapLoadedCallback {
             val place = LatLng(latitude, longitude)
-            Log.d(ErrorDialog.TAG,""+latitude+" "+longitude)
+            Log.d("map", "$latitude $longitude")
             mMap?.addMarker(MarkerOptions().position(place).title("Marker in place"))
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(place, 10f))
         }
     }
+
 
     fun shapeTopBottomRightCorners(shapeableImageView: ShapeableImageView) {
         val shapeAppearanceModel = ShapeAppearanceModel.Builder()

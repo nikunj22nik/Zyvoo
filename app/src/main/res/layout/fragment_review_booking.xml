@@ -679,7 +679,6 @@
                             android:id="@+id/imageShare"
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
-                            android:layout_marginEnd="16dp"
                             android:src="@drawable/ic_share_icon"
                             app:tint="#000" />
 
@@ -688,6 +687,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins_light"
                             android:text="Share"
+                            android:layout_marginStart="@dimen/_3sdp"
                             android:textColor="#000"
                             android:textSize="@dimen/_10ssp" />
                     </LinearLayout>

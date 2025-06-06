@@ -43,6 +43,7 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+       Log.d("TESTING_VIEW","INSIDE VIEW DETAILS")
         sessionManager = SessionManager(requireContext())
     }
 
@@ -156,13 +157,13 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
         when (option) {
             "All Bookings" -> filterBooking = bookingListModel/* bookingListModel.sortByDescending { it.booking_status }*/
             "Confirmed" -> filterBooking =
-                bookingListModel.filter { it.booking_status == "confirmed" }.toMutableList()
+                bookingListModel.filter { it.booking_status == "Confirmed" }.toMutableList()
             "Pending" -> filterBooking =
-                bookingListModel.filter { it.booking_status == "pending" }.toMutableList()
+                bookingListModel.filter { it.booking_status == "Pending" }.toMutableList()
             "Finished" -> filterBooking =
-                bookingListModel.filter { it.booking_status == "finished" }.toMutableList()
+                bookingListModel.filter { it.booking_status == "Finished" }.toMutableList()
             "Cancelled" -> filterBooking =
-                bookingListModel.filter { it.booking_status == "cancelled" }.toMutableList()
+                bookingListModel.filter { it.booking_status == "Cancelled" }.toMutableList()
         }
         adapterMyBookingsAdapter.updateItem(filterBooking)
     }
