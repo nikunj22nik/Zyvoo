@@ -26,6 +26,7 @@ import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
@@ -119,6 +120,7 @@ import java.util.Objects
 @AndroidEntryPoint
 class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,
     SetPreferred {
+
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
@@ -130,6 +132,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     private lateinit var dateManager: DateManager
     private lateinit var userId: String
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
+    var profileImageString :String =""
     private val profileViewModel: ProfileViewModel by lazy {
         ViewModelProvider(this)[ProfileViewModel::class.java]
     }
@@ -171,12 +174,21 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     Log.d("@@@@@", "Location: $placeName")
 
                     val newLocation = AddLocationModel(placeName)
-                    addLivePlace(place_name = placeName)
+                    var flag =false
+                    locationList.forEach {
+                        if(it.name == placeName){
+                            flag = true
+                        }
+                    }
+                    if(!flag) {
 
-                    // Update the list and notify adapter in one step
-                    locationList.add(locationList.size - 1, newLocation)
-                    // addLocationAdapter.notifyItemInserted(0)
-                    addLocationAdapter.updateLocations(locationList)
+                        addLivePlace(place_name = placeName)
+
+                        // Update the list and notify adapter in one step
+                        locationList.add(locationList.size - 1, newLocation)
+                        // addLocationAdapter.notifyItemInserted(0)
+                        addLocationAdapter.updateLocations(locationList)
+                    }
 
                     Log.i(ErrorDialog.TAG, "Place: $placeName, ${place.id}")
                 }
@@ -491,6 +503,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 profileViewModel.getUserProfile(session?.getUserId().toString()).collect { it ->
                     when (it) {
                         is NetworkResult.Success -> {
+                            binding.scrollView.visibility =View.VISIBLE
                             var name = ""
                             it.data?.let { resp ->
                                 Log.d("TESTING_PROFILE", "HERE IN A USER PROFILE ,$resp")
@@ -505,11 +518,12 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         name += it
                                         lastName = it
                                     }
-
                                     it?.name = name
+
                                     binding.user = it
 
                                     if (it?.profile_image != null) {
+
 //                                        Glide.with(requireContext())
 //                                            .asBitmap() // Convert the image into Bitmap
 //                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
@@ -529,7 +543,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 //                                                }
 //                                            })
 
-                                        Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.profile_image).into(binding.imageProfilePicture)
+                                        profileImageString = BuildConfig.MEDIA_URL + it.profile_image
+
+                                            Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.profile_image).into(binding.imageProfilePicture)
                                     }
                                     if (it?.email_verified != null && it.email_verified == 1) {
                                         binding.textConfirmNow.visibility = GONE
@@ -745,10 +761,15 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                  //   languageList.add(languageList.size - 1, newLanguage)
                   /*  if (type == "add") {*/
                         if (languageList.size < 3) {
+                            var flag = false
+                            languageList.forEach {
+                                if(it.name == newLanguage.name)
+                                   flag = true
+                            }
 
-                            addLanguageApi(newLanguage.name)
-                            if (!languageList.contains(newLanguage)) {
+                            if (!languageList.contains(newLanguage) && !flag) {
                                 languageList.add(languageList.size - 1, newLanguage)
+                                addLanguageApi(newLanguage.name)
                             }
                         }
                    /* }else{
@@ -934,7 +955,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             R.id.imageEditName -> {
                 dialogChangeName(requireContext())
             }
-
             R.id.textConfirmNow -> {
                 dialogEmailVerificationProfile(requireContext())
             }
@@ -2187,6 +2207,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val etZipCode: EditText = findViewById(R.id.etZipCode)
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+            val cross :ImageView = findViewById(R.id.img_cross)
+            cross.setOnClickListener {
+                dialog.dismiss()
+            }
             checkBox.setOnClickListener {
                 if (checkBox.isChecked) {
                     etStreet.setText(street_address)
@@ -2963,7 +2987,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
         }
     }
-
+    fun isValidName(minLength: Int = 2, maxLength: Int = 30, str: String): Boolean {
+        val trimmed = str.trim()
+        return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
+    }
     private fun dialogChangeName(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -2971,13 +2998,15 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             setContentView(R.layout.dialog_change_names)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
+                width = WindowManager.LayoutParams.WRAP_CONTENT
+                height = WindowManager.LayoutParams.WRAP_CONTENT
             }
             val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
-            if (imageBytes.isNotEmpty()) {
-                MediaUtils.setImageFromByteArray(imageBytes, imageProfilePicture)
-            }
+            Glide.with(requireContext()).load(profileImageString).into(imageProfilePicture)
+//
+//            if (imageBytes.isNotEmpty()) {
+//                MediaUtils.setImageFromByteArray(imageBytes, imageProfilePicture)
+//            }
 
 
             val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
@@ -2990,8 +3019,17 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             textSaveChangesButton.setOnClickListener {
                 if (editTextFirstName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.firstName)
+                } else if (!isValidName(str = editTextFirstName.text.toString())) {
+                    Log.d("Testing_name_size","size"+editTextFirstName.text.toString().length)
+                    showErrorDialog(
+                        requireContext(),
+                        "First name should be between 3 and 20 characters long."
+                    )
                 } else if (editTextLastName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.lastName)
+                } else if (!isValidName(str = editTextLastName.text.toString())) {
+                    Log.d("Testing_name_size","size"+editTextLastName.text.toString().length)
+                    showErrorDialog(requireContext(), "Last name should be between 3 and 20 characters long.")
                 } else {
                     toggleLoginButtonEnabled(false, textSaveChangesButton)
                     updateName(
@@ -3300,11 +3338,24 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     }
                     setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 }
-
                 findViewById<ImageView>(R.id.imageCross)?.setOnClickListener { dismiss() }
 
                 val etPassword = findViewById<EditText>(R.id.etPassword) ?: return
                 val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword) ?: return
+
+
+                etConfirmPassword.imeOptions = EditorInfo.IME_ACTION_DONE
+
+                etConfirmPassword.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
+
+
+                etConfirmPassword.setOnEditorActionListener { _, actionId, _ ->    if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    findViewById<TextView>(R.id.textSubmitButton).performClick()
+                    true
+                } else {
+                    false
+                }
+          }
 
                 findViewById<TextView>(R.id.textSubmitButton)?.setOnClickListener {
                     val password = etPassword.text.toString().trim()
@@ -3418,10 +3469,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                                dialogSuccess(
-                                                    context,
-                                                    "Your password has been changed\n" + " successfully."
-                                                )
+                                               LoadingUtils.showSuccessDialog(requireContext(),"Pa")
                                             }
                                         }
 
@@ -3955,10 +4003,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         lifecycleScope.launch {
             profileViewModel.logout(session?.getUserId().toString()).collect {
                 when (it) {
-
                     is NetworkResult.Success -> {
                         showSuccessDialog(requireContext(), it.data!!)
-
                         val sessionManager = SessionManager(requireContext())
                         sessionManager.setUserId(-1)
                         val intent = Intent(requireContext(), AuthActivity::class.java)
@@ -3968,9 +4014,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
                     is NetworkResult.Error -> {
                         showErrorDialog(requireContext(), it.message!!)
-
                     }
-
                     else -> {
 
                     }

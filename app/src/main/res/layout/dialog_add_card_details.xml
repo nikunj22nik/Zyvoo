@@ -58,6 +58,7 @@
         android:fontFamily="@font/poppins"
         android:hint="Name"
         android:maxLines="1"
+        android:maxLength="30"
         android:paddingHorizontal="@dimen/_10ssp"
         android:paddingVertical="@dimen/_4sdp"
         android:textColor="#000"

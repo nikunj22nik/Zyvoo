@@ -6,7 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutAddPetsBinding
@@ -71,7 +73,11 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
             // Handle click on the check button after entering data
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
-                if (enteredText.isNotEmpty()) {
+                if(enteredText.length >25){
+                   LoadingUtils.showErrorDialog(binding.root.context,"Pet name must be less than 25 characters long.")
+                return@setOnClickListener
+                }
+                else if (enteredText.isNotEmpty()) {
                     listner2.itemClick(adapterPosition,"Pets",enteredText)
                     // Add the new work item to the list
                     list.add(list.size -1 , AddPetsModel(enteredText))

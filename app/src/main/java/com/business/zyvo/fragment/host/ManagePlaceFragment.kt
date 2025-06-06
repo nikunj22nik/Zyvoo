@@ -602,12 +602,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             val disPrice = disCountPrice.toInt()
             bulkDiscountPrice = disPrice
             binding.tvDiscountSelect.setText(bulkDiscountPrice.toString() + "%  Discount")
-
-
-
             addOnList = it.add_ons.toMutableList()
             addOnList.add(AddOnModel("Unknown Location", "0"))
+
             Log.d("checkAddOnDataNew", it.add_ons.toMutableList().toString())
+
             addOnAdapter.updateAddOn(addOnList)
         }
     }
@@ -2727,15 +2726,26 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
                 if (itemName.isNotEmpty() && itemPrice.isNotEmpty()) {
                     val newAddOn = AddOnModel(itemName, itemPrice)
-                    addOnList.add(0, newAddOn)
-                    // addonlist.add(itemName)
-                    //    addonPrice.add(itemPrice)
-                    Log.d("checkAddonData", addOnList.toString())
-                    Log.d("checkAddonData", addonPrice.toString())
-                    addOnAdapter.updateAddOn(addOnList)
-                    //  addOnAdapter.notifyDataSetChanged()
-                    addOnAdapter.notifyItemInserted(0)
-                    dialog.dismiss()
+                    var flag = false
+
+                    addOnList.forEach {
+                        if(it.name == newAddOn.name){
+                            flag = true
+                        }
+                    }
+
+                    if(!flag) {
+
+                        addOnList.add(0, newAddOn)
+                        // addonlist.add(itemName)
+                        //    addonPrice.add(itemPrice)
+                        Log.d("checkAddonData", addOnList.toString())
+                        Log.d("checkAddonData", addonPrice.toString())
+                        addOnAdapter.updateAddOn(addOnList)
+                        //  addOnAdapter.notifyDataSetChanged()
+                        addOnAdapter.notifyItemInserted(0)
+                        dialog.dismiss()
+                    }
                 } else {
                     Toast.makeText(
                         requireContext(),

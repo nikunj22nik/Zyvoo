@@ -69,7 +69,8 @@ class AddOnAdapter(var context: Context, var list : MutableList<AddOnModel>, var
         return if (viewType == uploadOnCode) {
             val binding = LayoutAddOnHostBinding.inflate(LayoutInflater.from(context), parent, false)
             AddOnViewHolder(binding)
-        } else {
+        }
+        else {
             val binding = LayoutAddOnTextHostBinding.inflate(LayoutInflater.from(context), parent, false)
             AddOnViewHolderFixed(binding)
         }
@@ -92,16 +93,11 @@ class AddOnAdapter(var context: Context, var list : MutableList<AddOnModel>, var
         } else if (holder is AddOnViewHolderFixed) {
             holder.bind()
             textAddNew = holder.binding.textAddNew
-            if (list.size >= 3) {
-                holder.binding.textAddNew?.visibility = View.GONE
-            } else {
-                holder.binding.textAddNew?.visibility  = View.VISIBLE
-            }
+            holder.binding.textAddNew?.visibility  = View.VISIBLE
         }
     }
 
     fun updateAddOn(newList: MutableList<AddOnModel>) {
-
         this.list = newList
         if (list.isEmpty()) {
             list.add(AddOnModel("","")) // Placeholder for "Add New"

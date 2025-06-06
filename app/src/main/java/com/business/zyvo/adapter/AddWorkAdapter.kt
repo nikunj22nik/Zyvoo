@@ -8,12 +8,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddTextBinding
 import com.business.zyvo.databinding.LayoutMyWorkBinding
 import com.business.zyvo.model.AddLocationModel
 import com.business.zyvo.model.AddWorkModel
 import com.business.zyvo.onItemClickData
+import com.business.zyvo.utils.ErrorDialog
 
 class AddWorkAdapter(
     var context: Context,
@@ -84,7 +86,10 @@ class AddWorkAdapter(
             // Handle click on the check button after entering data
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
-                if (enteredText.isNotEmpty()) {
+               if(enteredText.length >30){
+                   LoadingUtils.showErrorDialog(binding.root.context,"Please enter a work name shorter than 30 characters.")
+               }
+               else if (enteredText.isNotEmpty()) {
                     listner2.itemClick(position,"work",enteredText)
                     // Add the new work item to the list
                     list.add(list.size -1 , AddWorkModel(enteredText))
@@ -96,8 +101,9 @@ class AddWorkAdapter(
 
                     // Clear EditText field for the next input
                     binding.etType.text.clear()
-                }else{
-                    Toast.makeText(context,"Please Enter Work",Toast.LENGTH_LONG).show()
+                }
+                else{
+                    LoadingUtils.showErrorDialog(binding.root.context,"Please Enter Work")
                 }
             }
         }

@@ -20,7 +20,9 @@ import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.databinding.FragmentSplashBinding
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.MultipartUtils
 import retrofit2.http.Tag
 
 
@@ -49,8 +51,11 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-       Log.d("Testing","I AM ON SPLASH SCREEN")
-            handler = Handler(Looper.getMainLooper())
+        Log.d("TESTING_android",""+MultipartUtils.isPhoneNumberMatchingCountryCode("9870697900","+1"))
+
+        Log.d("Testing","I AM ON SPLASH SCREEN")
+
+          handler = Handler(Looper.getMainLooper())
           handler.postDelayed({
                 val session = SessionManager(requireContext())
                 if (session.getUserId() != -1 && session.getUserSession()!! && !session.getAuthToken().equals("") && session.getName() != "") {
