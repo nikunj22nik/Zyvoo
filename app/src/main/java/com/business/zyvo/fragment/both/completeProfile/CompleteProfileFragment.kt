@@ -1484,6 +1484,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 //                                    userProfile?.name = first_name + " " + last_name
 //                                    binding.user = userProfile
                                     binding.textName.text = first_name + " " + last_name
+                                    session?.setName(first_name + " " + last_name)
+                                    Log.d("checkthisResponse", resp.toString())
                                 }
                                 toggleLoginButtonEnabled(true, textSaveChangesButton)
                                 dialog.dismiss()

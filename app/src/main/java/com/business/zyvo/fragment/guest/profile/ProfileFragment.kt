@@ -1634,6 +1634,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 it.data?.let { resp ->
                                     showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.name = first_name + " " + last_name
+                                    session?.setName(first_name + " " + last_name)
                                     binding.user = userProfile
                                 }
                                 toggleLoginButtonEnabled(true, textSaveChangesButton)
