@@ -174,13 +174,20 @@
                 android:textColor="#000000"
                 app:buttonTint="@color/black" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:layout_marginTop="@dimen/_13sdp"
+                android:layout_marginHorizontal="@dimen/_18sdp"
+                android:background="#E5E5E5" />
+
             <!-- Submit Button -->
             <TextView
                 android:id="@+id/btnSubmit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_18sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_13sdp"
                 android:layout_marginBottom="@dimen/_85sdp"
                 android:background="@drawable/button_bg"
                 android:backgroundTint="#4AEAB1"

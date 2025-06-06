@@ -51,7 +51,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="@dimen/_40sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/bg_four_side_corner_grey_slight_more"
+                android:background="@drawable/bg_four_side_corner_grey_slight_more_light"
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -69,11 +69,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/_2sdp"
-                    android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:background="#E5E5E5" />
+
 
                 <TextView
                     android:id="@+id/textHostName"
@@ -86,7 +82,11 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_17ssp" />
 
-
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:background="#E5E5E5" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -94,12 +94,19 @@
                     android:layout_marginBottom="@dimen/_7sdp"
                     android:fontFamily="@font/poppins"
                     android:text="Host"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14ssp" />
 
 
             </LinearLayout>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:background="#E5E5E5" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -197,7 +204,7 @@
                 android:layout_height="@dimen/_2sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_8sdp"
-                android:background="#1A000000" />
+                android:background="#E5E5E5" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

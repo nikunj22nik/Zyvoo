@@ -261,6 +261,7 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
 
                                 it.about_host?.host_profession?.let { professions ->
                                     if (professions.isNotEmpty()) {
+                                        binding.textMyWorkName.visibility = View.VISIBLE
                                         val firstProfession = professions.getOrNull(0)
                                         val secondProfession = professions.getOrNull(1)
 
@@ -269,6 +270,8 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                             firstProfession != null -> firstProfession
                                             else -> ""
                                         }
+                                    }else{
+                                        binding.textMyWorkName.visibility = View.GONE
                                     }
                                 }
 
@@ -283,7 +286,15 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                 }*/
 
                                 if (it.about_host?.location != null) {
-                                    binding.textLocationName.setText(it.about_host.location)
+                                    if (it.about_host?.location.isNotEmpty()){
+                                        binding.textLocationName.visibility = View.VISIBLE
+                                        binding.textLocationName.setText(it.about_host.location)
+                                    }else{
+                                        binding.textLocationName.visibility = View.GONE
+                                    }
+
+                                }else{
+                                    binding.textLocationName.visibility = View.GONE
                                 }
                                 /*if (it.about_host?.language != null && it.about_host?.language.isNotEmpty()){
                                     if (it.about_host.language.get(0) != null && it.about_host?.language[1] != null) {
@@ -295,6 +306,7 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
 
                                 it.about_host?.language?.let { languages ->
                                     if (languages.isNotEmpty()) {
+                                        binding.textLanguagesName.visibility = View.VISIBLE
                                         val firstLanguage = languages.getOrNull(0)
                                         val secondLanguage = languages.getOrNull(1)
 
@@ -303,6 +315,9 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                             firstLanguage != null -> firstLanguage
                                             else -> ""
                                         }
+                                    }
+                                    else{
+                                        binding.textLanguagesName.visibility = View.GONE
                                     }
                                 }
 
