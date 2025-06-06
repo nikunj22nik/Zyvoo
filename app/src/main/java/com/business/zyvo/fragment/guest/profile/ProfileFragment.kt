@@ -510,24 +510,26 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     binding.user = it
 
                                     if (it?.profile_image != null) {
-                                        Glide.with(requireContext())
-                                            .asBitmap() // Convert the image into Bitmap
-                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
-                                            .into(object : SimpleTarget<Bitmap>() {
-                                                override fun onResourceReady(
-                                                    resource: Bitmap,
-                                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
-                                                ) {
-                                                    // The 'resource' is the Bitmap
-                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
-                                                    binding.imageProfilePicture.setImageBitmap(
-                                                        resource
-                                                    )
-                                                    imageBytes =
-                                                        MediaUtils.bitmapToByteArray(resource)
-                                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
-                                                }
-                                            })
+//                                        Glide.with(requireContext())
+//                                            .asBitmap() // Convert the image into Bitmap
+//                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
+//                                            .into(object : SimpleTarget<Bitmap>() {
+//                                                override fun onResourceReady(
+//                                                    resource: Bitmap,
+//                                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
+//                                                ) {
+//                                                    // The 'resource' is the Bitmap
+//                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
+//                                                    binding.imageProfilePicture.setImageBitmap(
+//                                                        resource
+//                                                    )
+//                                                    imageBytes =
+//                                                        MediaUtils.bitmapToByteArray(resource)
+//                                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
+//                                                }
+//                                            })
+
+                                        Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.profile_image).into(binding.imageProfilePicture)
                                     }
                                     if (it?.email_verified != null && it.email_verified == 1) {
                                         binding.textConfirmNow.visibility = GONE
