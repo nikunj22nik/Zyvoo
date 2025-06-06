@@ -109,7 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:hint="Lorem ddddddddddddddddIpsum is simply dummy text of the printin  and typesetting industry. Lorem Ipsum has been g"
+                    android:hint="Write about yourself"
                     android:textColor="@color/black"
                     android:text="@{user.about_me != null ? user.about_me : ``}"
                     android:fontFamily="@font/poppins"
@@ -240,7 +240,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_11sdp"
-                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_13sdp"
                 android:background="@drawable/button_grey_line_bg"
                 android:backgroundTint="#3A4B4C"
                 android:orientation="horizontal"
@@ -509,10 +509,8 @@
                 android:id="@+id/recyclerViewLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:layout_marginHorizontal="@dimen/_15sdp"
-
                 android:orientation="horizontal"
+                android:layout_marginStart="@dimen/_15sdp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -541,7 +539,7 @@
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewLocation" />
@@ -579,7 +577,7 @@
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewWork" />
@@ -618,7 +616,7 @@
                 android:id="@+id/view3"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewlanguages" />
@@ -644,7 +642,7 @@
                 android:id="@+id/rlEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -683,8 +681,8 @@
                 android:id="@+id/viewEmail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/rlEmailAddress" />
 
@@ -707,7 +705,7 @@
                 android:id="@+id/rlPhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -747,8 +745,8 @@
                 android:id="@+id/viewPhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/rlPhoneNumber" />
 
@@ -771,7 +769,7 @@
                 android:id="@+id/rlPasswordTitle"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -799,7 +797,6 @@
                     android:id="@+id/imageEditPassword"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-
                     android:layout_alignParentEnd="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:src="@drawable/ic_edit_icon"
@@ -812,8 +809,8 @@
                 android:id="@+id/viewPassword"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/rlPasswordTitle" />
 
@@ -1046,8 +1043,8 @@
                 android:id="@+id/viewMailingAddress"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/rlMailingZipCodeTitle" />
 
@@ -1091,7 +1088,7 @@
                 android:id="@+id/viewPayment1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/textPaymentMethod" />
@@ -1138,15 +1135,11 @@
                     android:id="@+id/recyclerViewPaymentCardList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
-
                     android:orientation="vertical"
-
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHeight_max="@dimen/_140sdp"
                     app:layout_constraintStart_toStartOf="parent"
-
                     app:spanCount="1"
                     tools:itemCount="3"
                     tools:listitem="@layout/layout_payment_cardlist" />
@@ -1211,6 +1204,7 @@
                     android:visibility="visible"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     />
+
 
 
                 <TextView
@@ -1363,15 +1357,10 @@
                 android:id="@+id/viewPayment"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/rlPaymentMethodFun" />
-
-
-
-
-
 
             <TextView
                 android:id="@+id/textUsefulPages"
@@ -1486,7 +1475,7 @@
                 android:id="@+id/viewNotifications"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/textNotifications" />
@@ -1548,7 +1537,7 @@
                 android:id="@+id/viewFeedback"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/textGiveFeedback" />
@@ -1610,7 +1599,7 @@
                 android:id="@+id/viewPrivacy"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#C4C4C4"
                 app:layout_constraintTop_toBottomOf="@+id/textPrivacyPolicy" />

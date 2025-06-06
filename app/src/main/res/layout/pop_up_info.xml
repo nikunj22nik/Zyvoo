@@ -2,14 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_3sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cvInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="#FDFBFB"
         android:visibility="visible"
+        android:elevation="@dimen/_8ssp"
         app:cardCornerRadius="@dimen/_10sdp"
         >
 
@@ -18,9 +20,9 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_light"
             android:padding="@dimen/_5sdp"
-            android:text="Before you can book or host  on the platform the name on Id must match verification documents."
+            android:text="Before you can book or host  on the platform the\n name on Id must match verification documents."
             android:textColor="@color/black"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_8ssp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

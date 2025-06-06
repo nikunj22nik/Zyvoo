@@ -1396,11 +1396,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 if (NetworkMonitorCheck._isConnected.value) {
                     if (isValidEmail(etEmail.text!!.toString().trim())) {
                         if (etEmail.text!!.isEmpty()) {
-                            etEmail.error = "Email Address required"
                             showErrorDialog(requireContext(), AppConstant.email)
                             toggleLoginButtonEnabled(true, textSubmitButton)
                         } else if (!isValidEmail(etEmail.text.toString())) {
-                            etEmail.error = "Invalid Email Address"
                             showErrorDialog(requireContext(), AppConstant.invalideemail)
                             toggleLoginButtonEnabled(true, textSubmitButton)
                         } else {
@@ -1412,7 +1410,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                             }
                         }
                     } else {
-                        etEmail.error = "Please enter a valid email."
                         showErrorDialog(requireContext(), "Please enter a valid email.")
                         toggleLoginButtonEnabled(true, textSubmitButton)
                     }

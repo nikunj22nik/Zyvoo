@@ -130,6 +130,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.Objects
+import androidx.core.graphics.drawable.toDrawable
 
 
 @AndroidEntryPoint
@@ -1814,7 +1815,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etMobileNumber.text!!.isEmpty()) {
-                                        etMobileNumber.error = "Mobile required"
+//                                        etMobileNumber.error = "Mobile required"
                                         showErrorDialog(requireContext(), AppConstant.mobile)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
@@ -1838,7 +1839,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             imageCross.setOnClickListener {
                 dismiss()
             }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
             show()
         }
     }
@@ -1914,9 +1915,14 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 height = WindowManager.LayoutParams.WRAP_CONTENT
             }
             val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
-            if (imageBytes.isNotEmpty()) {
-                MediaUtils.setImageFromByteArray(imageBytes, imageProfilePicture)
+            userProfile?.profile_image?.let { imagePath ->
+                Glide.with(context)
+                    .asBitmap()
+                    .load(BuildConfig.MEDIA_URL + imagePath)
+                    .into(imageProfilePicture)
             }
+
+
 
 
             val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
@@ -1949,10 +1955,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 }
             }
 
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
             show()
         }
     }
+
 
     private fun dialogEmailVerificationProfile(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -2457,11 +2464,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
-                                        etEmail.error = "Email Address required"
+//                                        etEmail.error = "Email Address required"
                                         showErrorDialog(requireContext(), AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else if (!isValidEmail(etEmail.text.toString())) {
-                                        etEmail.error = "Invalid Email Address"
+//                                        etEmail.error = "Invalid Email Address"
                                         showErrorDialog(requireContext(), AppConstant.invalideemail)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
@@ -3343,41 +3350,25 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private fun showPopupHostInfoWindow(anchorView: View) {
         val popupView = LayoutInflater.from(context).inflate(R.layout.pop_up_info, null)
 
-        // Measure the popupView
-        popupView.measure(
-            View.MeasureSpec.UNSPECIFIED,
-            View.MeasureSpec.UNSPECIFIED
-        )
-
-        val popupHeight = popupView.measuredHeight
-        val popupWidth = popupView.measuredWidth
-
-        // Create the PopupWindow
         val popupWindow = PopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
-        )
-        popupWindow.elevation = 8f
-        popupWindow.isOutsideTouchable = true
-        popupWindow.setBackgroundDrawable(null)
+        ).apply {
+            elevation = 8f
+            isOutsideTouchable = true
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
 
-        // Get anchorView location on screen
-        val location = IntArray(2)
-        anchorView.getLocationOnScreen(location)
+        // Optional: Slight X offset to align with anchor
+        val xOffset = -popupView.measuredWidth / 2 + anchorView.width / 2
+        val yOffset = 8  // slight space between icon and popup
 
-        val anchorX = location[0]
-        val anchorY = location[1]
-        val anchorHeight = anchorView.height
-        val anchorWidth = anchorView.width
-
-        // Adjust position: slightly to the right of anchor's right edge, and below the view
-        val xOffset = anchorX + anchorWidth + 8  // 8 pixels to the right
-        val yOffset = anchorY + anchorHeight     // just below the anchor
-
-        popupWindow.showAtLocation(anchorView, Gravity.START, xOffset, yOffset)
+        popupWindow.showAsDropDown(anchorView, xOffset, yOffset)
     }
+
+
 
 
 
