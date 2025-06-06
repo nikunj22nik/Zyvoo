@@ -277,15 +277,16 @@ class SessionManager(var context: Context) {
         return try {
             // Define the date format (yyyy-MM-dd)
             val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-            // Parse the input date string into a Date object
+            dateFormat.isLenient = false
+            // Parse input date
             val inputDate = dateFormat.parse(dateStr)
 
-            // Get the current date
-            val currentDate = Date()
+            // Get current date (remove time)
+            val todayStr = dateFormat.format(Date())
+            val currentDate = dateFormat.parse(todayStr)
 
-            // Compare the dates
-            inputDate >= currentDate
+            // Now safely compare just the dates (not time)
+            !inputDate.before(currentDate)  // true if today or future
         } catch (e: Exception) {
             // Return false if the date format is incorrect
             false

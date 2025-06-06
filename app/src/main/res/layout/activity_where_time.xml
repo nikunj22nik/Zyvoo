@@ -81,6 +81,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:hint="Where"
+                        android:textColorHint="#000000"
                       android:gravity="center"
                         android:textSize="@dimen/_11sdp"
                         android:textStyle="bold" />
@@ -105,15 +106,29 @@
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     android:layout_marginVertical="@dimen/_7sdp"
                     android:visibility="gone">
-
+                    <TextView
+                        android:id="@+id/whereTest"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/poppins"
+                        android:hint="Where"
+                        android:textColorHint="#000000"
+                        android:gravity="center"
+                        android:textSize="@dimen/_11sdp"
+                        android:textStyle="bold" />
                     <AutoCompleteTextView
                         android:id="@+id/et_search_location"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_7sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_centerVertical="true"
                         android:background="@null"
                         android:singleLine="true"
+                        android:textSize="@dimen/_11sdp"
+                        android:layout_toEndOf="@+id/whereTest"
+                        android:layout_alignParentEnd="true"
+                        android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 
@@ -169,6 +184,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Time"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />
 
@@ -563,6 +579,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Activity"
+                        android:textColor="@color/black"
                         android:textSize="@dimen/_10sdp"
                         android:textStyle="bold" />
 
