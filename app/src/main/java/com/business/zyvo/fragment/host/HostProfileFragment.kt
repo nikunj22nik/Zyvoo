@@ -218,11 +218,20 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     val newLocation = AddLocationModel(placeName)
                     addLivePlace(place_name = placeName)
 
-                    // Update the list and notify adapter in one step
-                    locationList.add(locationList.size - 1, newLocation)
-                    // addLocationAdapter.notifyItemInserted(0)
-                    addLocationAdapter.updateLocations(locationList)
 
+                    var flag =false
+                    locationList.forEach {
+                        if(it.name == placeName){
+                            flag = true
+                        }
+                    }
+                    if(!flag) {
+
+                        // Update the list and notify adapter in one step
+                        locationList.add(locationList.size - 1, newLocation)
+                        // addLocationAdapter.notifyItemInserted(0)
+                        addLocationAdapter.updateLocations(locationList)
+                    }
                     Log.i(ErrorDialog.TAG, "Place: $placeName, ${place.id}")
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
@@ -4322,8 +4331,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         dialog.apply {
 
             setContentView(R.layout.dialog_add_card_details)
-            setCancelable(true)
-            setCanceledOnTouchOutside(true)
+            setCancelable(false)
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.WRAP_CONTENT

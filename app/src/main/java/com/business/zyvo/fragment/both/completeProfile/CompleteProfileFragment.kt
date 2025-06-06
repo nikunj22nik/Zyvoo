@@ -611,7 +611,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     startActivity(intent)
                     requireActivity().finish()
                 }else{
-                    showErrorDialog(requireContext(),"Enter your name to proceed to the next screen.")
+                    showErrorDialog(requireContext(),"Kindly update at least your name.")
                 }
             }
         }

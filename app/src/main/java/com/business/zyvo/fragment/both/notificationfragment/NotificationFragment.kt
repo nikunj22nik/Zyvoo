@@ -128,6 +128,8 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                                 Log.d("checkDataList",list.toString())
                                 adapterGuestNotification.updateItem(list.toMutableList())
                             } else {
+                                binding.tvNoData.visibility =View.VISIBLE
+                                binding.recyclerView.visibility =View.GONE
                                 notificationId = 0
                                 adapterGuestNotification.updateItem(mutableListOf())
                                 Log.d("API_RESPONSE", "Empty list received.")

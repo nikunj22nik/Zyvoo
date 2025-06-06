@@ -2,7 +2,6 @@ package com.business.zyvo.fragment.host
 
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -21,9 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.HorizontalScrollView
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.RatingBar
 import android.widget.RelativeLayout
@@ -36,23 +33,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.adapter.AdapterAddOn
-import com.business.zyvo.adapter.guest.AdapterReview
 import com.business.zyvo.adapter.host.AdapterIncludeInBooking
+import com.business.zyvo.adapter.host.AdapterReviewHost
 import com.business.zyvo.databinding.FragmentReviewBookingBinding
+import com.business.zyvo.fragment.both.MapDialogFragment
+import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
+import com.business.zyvo.model.host.ReviewerProfileModel
 import com.business.zyvo.model.host.hostdetail.HostDetailModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog.formatConvertCount
+import com.business.zyvo.utils.ErrorDialog.showToast
+import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.viewmodel.host.HostBookingsViewModel
@@ -65,27 +67,13 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.shape.ShapeAppearanceModel
+import com.google.gson.Gson
 import com.skydoves.powerspinner.OnSpinnerItemSelectedListener
 import com.skydoves.powerspinner.PowerSpinnerView
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
-import android.widget.LinearLayout.LayoutParams
-import com.business.zyvo.BuildConfig
-import com.business.zyvo.activity.ChatActivity
-import com.business.zyvo.adapter.host.AdapterReviewHost
-import com.business.zyvo.fragment.both.MapDialogFragment
-import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
-import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.Review
-import com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel.dataclass.ReviewModel
-import com.business.zyvo.model.MyBookingsModel
-import com.business.zyvo.model.host.ReviewerProfileModel
-import com.business.zyvo.utils.ErrorDialog.formatConvertCount
-import com.business.zyvo.utils.ErrorDialog.showToast
-import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
-import com.google.gson.Gson
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -177,6 +165,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         mapView = binding.mapView
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
+
         initialization()
         binding.llFavorite.visibility = View.GONE
         binding.llShare.visibility = View.GONE

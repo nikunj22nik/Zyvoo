@@ -200,16 +200,17 @@
                         android:textColor="#B1B1B1"
                         android:textSize="@dimen/_13sdp" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/tv_minimum_val"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_minimum"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:text="$0"
-                        android:textColor="@color/black"
+                        android:background="@null"
+
                         android:textSize="@dimen/_14sdp"
-                        android:textStyle="bold" />
+                        />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -231,19 +232,20 @@
                         android:layout_marginTop="@dimen/_5sdp"
                         android:fontFamily="@font/poppins"
                         android:text="Maximum"
+
                         android:textColor="#B1B1B1"
                         android:textSize="@dimen/_13sdp" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/tv_maximum_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_maximum"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:text="$2000"
-                        android:textColor="@color/black"
+                        android:background="@null"
                         android:textSize="@dimen/_14sdp"
-                        android:textStyle="bold" />
+                         />
                 </RelativeLayout>
             </LinearLayout>
 

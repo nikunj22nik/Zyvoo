@@ -83,7 +83,7 @@ lateinit var sessionManager : SessionManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = ExploreArticlesAdapter(requireContext(), mutableListOf())
+        adapter = ExploreArticlesAdapter(requireContext(), mutableListOf(),type ?: "article")
         binding.recyclerNewArticles.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerNewArticles.adapter = adapter

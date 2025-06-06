@@ -198,8 +198,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     val originalLeft = min?.toInt()?.div(10)?.times(2)
                     val originalRight = max?.toInt()?.div(10)?.times(2)
                     binding.seekBar.setSelectedEntries(originalLeft!!.toInt(), originalRight!!.toInt())
-                    binding.tvMinimumVal.text = "$$min"
-                    binding.tvMaximumValue.text = "$$max"
+                    binding.tvMinimumVal.setText("$$min")
+                    binding.tvMaximumValue.setText("$$max")
                 }
                 // Set Location values
                 val location = it.location ?: ""
@@ -971,9 +971,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         seekBar.onRangeChanged = { leftPinValue, rightPinValue ->
             val leftVal = (leftPinValue?.toInt()?.div(2))?.times(100)
             val rightVal = (rightPinValue?.toInt()?.div(2))?.times(100)
-            binding.tvMinimumVal.text = "$"+leftVal.toString()
+            binding.tvMinimumVal.setText("$"+leftVal.toString())
             min = leftVal.toString()
-            binding.tvMaximumValue.text = "$"+rightVal.toString()
+            binding.tvMaximumValue.setText("$"+rightVal.toString())
             max = rightVal.toString()
         }
     }

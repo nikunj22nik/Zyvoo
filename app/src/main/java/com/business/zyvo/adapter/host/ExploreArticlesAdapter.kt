@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,8 +19,9 @@ import com.business.zyvo.fragment.guest.helpCenter.model.Guide
 
 import com.business.zyvo.model.TransactionModel
 
-class ExploreArticlesAdapter(var context: Context,private var list: MutableList<Article>) :
-    RecyclerView.Adapter<ExploreArticlesAdapter.ViewHolder>() {
+class ExploreArticlesAdapter(var context: Context,
+                             private var list: MutableList<Article>,
+                             var contentType: String ) :RecyclerView.Adapter<ExploreArticlesAdapter.ViewHolder>() {
 
     private lateinit var mListener: onItemClickListener
 
@@ -49,13 +51,17 @@ class ExploreArticlesAdapter(var context: Context,private var list: MutableList<
         if (currentItem.title != null){
             holder.binding.textTitle.text = currentItem.title
         }
-
+        if (contentType == "guides") {
+            holder.binding.textDescription.visibility = View.VISIBLE
         if (currentItem.description != null && !currentItem.description.equals("")){
             holder.binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Html.fromHtml(currentItem.description, Html.FROM_HTML_MODE_LEGACY)
             } else {
                 Html.fromHtml(currentItem.description)
             }
+        }
+        } else {
+            holder.binding.textDescription.visibility = View.GONE
         }
         if (currentItem.cover_image != null){
             Glide.with(context)
