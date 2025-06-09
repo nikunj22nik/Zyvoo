@@ -3559,6 +3559,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 it.data?.let { resp ->
                                     LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.name = first_name + " " + last_name
+                                    session?.setName(first_name + " " + last_name)
                                     binding.user = userProfile
                                 }
                                 toggleLoginButtonEnabled(true, textSaveChangesButton)

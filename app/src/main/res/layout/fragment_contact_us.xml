@@ -9,6 +9,7 @@
     tools:context=".fragment.both.contactUs.ContactUsFragment">
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
@@ -142,6 +143,7 @@
                             android:gravity="top|start"
                             android:layout_marginHorizontal="@dimen/_10sdp"
                             android:background="@null" />
+
                     </RelativeLayout>
 
 

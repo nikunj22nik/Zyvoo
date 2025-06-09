@@ -688,6 +688,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 hostId = list.data.host_id.toString()
                                 binding.textUserName.text = data.host_name ?: "N/A"
                                 binding.tvNamePlace.text = data.property_name ?: "N/A"
+                                binding.tvTitle.text = data.property_name ?: "N/A"
                                // binding.tvStatus.text = data.status
                                 val status = data.status
                                 binding.tvStatus.text = status?.replaceFirstChar { it.uppercaseChar() } ?: ""
