@@ -67,6 +67,9 @@ class HomeScreenAdapter(
             holder.binding.viewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
             TabLayoutMediator(holder.binding.tabLayoutForIndicator, holder.binding.viewpager2) { _, _ -> }.attach()
         }
+        holder.binding.textInstantBook.setOnClickListener {
+
+        }
 
         // Set TextView data
         currentItem.title?.let {

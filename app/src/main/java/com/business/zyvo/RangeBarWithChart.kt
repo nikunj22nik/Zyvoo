@@ -314,7 +314,9 @@ class RangeBarWithChart @JvmOverloads constructor(
             && (rightPinIndex >= 0 && rightPinIndex < entries.size)
         ) {
             val leftVal = entries[leftPinIndex].x.toInt().toString()
+
             val rightVal = entries[rightPinIndex].x.toInt().toString()
+
             onRangeChanged?.invoke(leftVal, rightVal)
         }
 

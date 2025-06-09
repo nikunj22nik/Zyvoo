@@ -51,7 +51,7 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("TESTING_android",""+MultipartUtils.isPhoneNumberMatchingCountryCode("9870697900","+1"))
+        Log.d("TESTING_android",""+MultipartUtils.isPhoneNumberMatchingCountryCode("443951858","+48"))
 
         Log.d("Testing","I AM ON SPLASH SCREEN")
 

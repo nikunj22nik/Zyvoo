@@ -26,7 +26,6 @@
         app:minDistance="1"
         app:tickRadius="0dp"
         app:movable="false"
-
         app:showTicks="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

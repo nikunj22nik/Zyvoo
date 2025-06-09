@@ -59,6 +59,7 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.AppConstant.Companion.passwordMustConsist
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.MultiPartsUtils
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
@@ -83,6 +84,8 @@ import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.TAG
+import com.business.zyvo.utils.MediaUtils
+import com.business.zyvo.utils.MultipartUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.ImagePopViewModel
 import com.business.zyvo.viewmodel.LoggedScreenViewModel
@@ -140,7 +143,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private var personPhoto: Uri? = null
     private var socialModel: SocialLoginModel? = null
     private lateinit var sessionManager: SessionManager
-
     private var showOneTapUI = true
     private var Token = ""
     private var latitude: String = ""
@@ -724,10 +726,14 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 if (NetworkMonitorCheck._isConnected.value) {
                     lifecycleScope.launch(Dispatchers.Main) {
                         if (etMobileNumber.text!!.isEmpty()) {
-                            etMobileNumber.error = "Mobile required"
                             showErrorDialog(requireContext(), AppConstant.mobile)
                             toggleLoginButtonEnabled(true, textContinueButton)
-                        } else {
+                        }
+                        else if (!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),countyCodePicker.selectedCountryCodeWithPlus)){
+                            showErrorDialog(requireContext(),AppConstant.validPhoneNumber)
+
+                        }
+                        else {
                             val phoneNumber = etMobileNumber.text.toString()
                             Log.d(TAG, phoneNumber)
                             val countryCode =
@@ -866,13 +872,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 if (NetworkMonitorCheck._isConnected.value) {
                     lifecycleScope.launch(Dispatchers.Main) {
                         if (etMobileNumber.text!!.isEmpty()) {
-
-                            etMobileNumber.error = "Mobile required"
                             toggleLoginButtonEnabled(true, textContinueButton)
                             showErrorDialog(requireContext(), AppConstant.mobile)
 
-
-                        } else if (!SessionManager(requireContext()).isPhoneNumber(etMobileNumber.text.toString())) {
+                        } else if (!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),countyCodePicker.selectedCountryCodeWithPlus)) {
                             showErrorDialog(requireContext(), AppConstant.VALID_PHONE)
                             toggleLoginButtonEnabled(true, textContinueButton)
                         } else {
@@ -958,6 +961,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
            }*/
 
         lifecycleScope.launch {
+
+
+
             loggedScreenViewModel.signupPhoneNumber(
                 code, number
             ).collect {

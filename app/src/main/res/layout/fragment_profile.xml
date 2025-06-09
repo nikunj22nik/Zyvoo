@@ -3,16 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
         <variable
             name="user"
             type="com.business.zyvo.fragment.guest.profile.model.UserProfile" />
     </data>
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,7 +41,9 @@
                     android:padding="@dimen/_17sdp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    />
 
 
                 <ImageView
@@ -381,7 +385,7 @@
                 android:id="@+id/etAboutMe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/button_grey_line_bg"
                 android:fontFamily="@font/poppins"
@@ -446,9 +450,9 @@
                 android:id="@+id/view1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewLocation" />
 
 
@@ -484,9 +488,9 @@
                 android:id="@+id/view2"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewWork" />
 
 
@@ -522,9 +526,9 @@
                 android:id="@+id/view3"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewlanguages" />
 
 
@@ -560,9 +564,9 @@
                 android:id="@+id/viewHobbies"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewHobbies" />
 
 
@@ -598,9 +602,9 @@
                 android:id="@+id/viewPets"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewPets" />
 
 
@@ -622,7 +626,7 @@
                 android:id="@+id/rlEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -662,9 +666,9 @@
                 android:id="@+id/viewEmail"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/rlEmailAddress" />
 
 
@@ -686,7 +690,7 @@
                 android:id="@+id/rlPhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -728,9 +732,9 @@
                 android:id="@+id/viewPhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/rlPhoneNumber" />
 
 
@@ -752,7 +756,7 @@
                 android:id="@+id/rlPasswordTitle"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_marginHorizontal="@dimen/_20sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -792,9 +796,9 @@
                 android:id="@+id/viewPassword"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/rlPasswordTitle" />
 
 
@@ -1026,9 +1030,9 @@
                 android:id="@+id/viewMailingAddress"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/rlMailingZipCodeTitle" />
 
 
@@ -1093,9 +1097,9 @@
                 android:id="@+id/viewPayment"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/textAddNewPaymentCard" />
 
 
@@ -1139,9 +1143,9 @@
                 android:id="@+id/viewNotifications"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/textNotifications" />
 
 
@@ -1201,9 +1205,9 @@
                 android:id="@+id/viewFeedback"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/textGiveFeedback" />
 
 
@@ -1282,9 +1286,9 @@
                 android:id="@+id/viewPrivacy"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_23sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:background="#C4C4C4"
+                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/textFaq" />
 
 

@@ -577,7 +577,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 //            cardNumberAdapterPayout.addItems(cardListPayout)
 //            binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
 //            binding.textCardNoDataFound.visibility = View.GONE
-//        }else{
+//        }
+//        else{
 //            binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
 //            binding.textCardNoDataFound.visibility = View.VISIBLE
 //        }
@@ -724,11 +725,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     }
                 }
             }
-        } else {
-            showErrorDialog(
-                requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg)
-            )
+
+        }
+        else{
+
+            showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
         }
     }
 
@@ -3558,6 +3559,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 it.data?.let { resp ->
                                     LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.name = first_name + " " + last_name
+                                    session?.setName(first_name + " " + last_name)
                                     binding.user = userProfile
                                 }
                                 toggleLoginButtonEnabled(true, textSaveChangesButton)

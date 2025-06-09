@@ -907,7 +907,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.tvYear.text = currentYear.toString()
 
         // Date Selector Toggle
-        binding.llDate.setOnClickListener {
+     //   binding.llDate.setOnClickListener {
 //            binding.rlDateSelection.visibility =
 //                if (binding.rlDateSelection.visibility == View.VISIBLE) View.GONE else View.VISIBLE
 
@@ -921,14 +921,31 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     val formattedMonth = String.format("%02d", selectedMonth + 1) // 1-based month
                     val formattedDay = String.format("%02d", selectedDay)
                     val selectedDate = "$selectedYear-$formattedMonth-$formattedDay"
+                    val selectedCal = Calendar.getInstance().apply {
+                        set(selectedYear, selectedMonth, selectedDay, 0, 0, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
 
-                    binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(selectedDate) // Set API format date
+                    val currentCal = Calendar.getInstance().apply {
+                        set(Calendar.HOUR_OF_DAY, 0)
+                        set(Calendar.MINUTE, 0)
+                        set(Calendar.SECOND, 0)
+                        set(Calendar.MILLISECOND, 0)
+                    }
+
+                    if (selectedCal.before(currentCal)) {
+                        showErrorDialog(this@FiltersActivity, "You cannot select a past date from the calendar.")
+                        //Toast.makeText(this, "Please select today or a future date", Toast.LENGTH_SHORT).show()
+                    } else {
+                        binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(selectedDate)
+                    }
+                 //   binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(selectedDate) // Set API format date
                 }, year, month, day)
 
                 datePickerDialog.show()
             }
 
-        }
+    //    }
         // Month Selector Dialog
         binding.rlMonth.setOnClickListener {
             dateManager.showMonthSelectorDialog { selectedMonth ->

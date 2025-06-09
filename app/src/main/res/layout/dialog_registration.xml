@@ -130,7 +130,6 @@
             android:layout_marginEnd="@dimen/_15sdp"
             android:hint="@string/enter_your_number_here"
             android:inputType="phone"
-            android:maxLength="10"
             android:textAlignment="textStart"
             android:layout_marginStart="@dimen/_5sdp"
             android:textSize="@dimen/_9ssp"
