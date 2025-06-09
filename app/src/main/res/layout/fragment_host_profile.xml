@@ -1218,7 +1218,7 @@
                     android:fontFamily="@font/poppins"
                     android:drawablePadding="@dimen/_7ssp"
                     app:drawableEndCompat="@drawable/ic_dropdown_close"
-                    android:layout_marginStart="@dimen/_12ssp"
+                    android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginVertical="@dimen/_10sdp"
                     android:layout_below="@+id/textAddNew"/>
 

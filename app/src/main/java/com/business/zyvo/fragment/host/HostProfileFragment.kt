@@ -521,6 +521,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     }
 
 
+
     // Function to initialize the adapter for adding locations
     private fun adapterInitialize() {
         addLocationAdapter = AddLocationAdapter(requireContext(), locationList, this, this)

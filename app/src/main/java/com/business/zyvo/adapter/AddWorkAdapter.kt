@@ -86,8 +86,8 @@ class AddWorkAdapter(
             // Handle click on the check button after entering data
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
-               if(enteredText.length >30){
-                   LoadingUtils.showErrorDialog(binding.root.context,"Please enter a work name shorter than 30 characters.")
+               if(enteredText.length >20){
+                   LoadingUtils.showErrorDialog(binding.root.context,"Please enter a work name shorter than 20 characters.")
                }
                else if (enteredText.isNotEmpty()) {
                     listner2.itemClick(position,"work",enteredText)

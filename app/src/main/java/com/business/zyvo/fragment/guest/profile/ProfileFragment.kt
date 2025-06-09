@@ -2999,7 +2999,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
         }
     }
-    fun isValidName(minLength: Int = 2, maxLength: Int = 30, str: String): Boolean {
+    fun isValidName(minLength: Int = 2, maxLength: Int = 20, str: String): Boolean {
         val trimmed = str.trim()
         return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
     }
