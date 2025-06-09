@@ -131,7 +131,6 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.Objects
 import androidx.core.graphics.drawable.toDrawable
-import com.business.zyvo.utils.MultipartUtils
 
 
 @AndroidEntryPoint
@@ -155,7 +154,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private lateinit var addPetsAdapter: AddPetsAdapter
     private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
     var firstTime: Boolean = true
-    var userProfile: UserProfile? = null
+    var userProfileImage: String? = null
     var imageBytes: ByteArray = byteArrayOf()
     var session: SessionManager? = null
     var languageDialogOpen = false
@@ -194,6 +193,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     var editAboutButton = true
     var firstName: String = ""
     var lastName: String = ""
+    var userProfile: UserProfile? = null
 
     private val list1 = mutableListOf<CountryLanguage>()
     private val list2 = mutableListOf<CountryLanguage>()
@@ -474,6 +474,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 result.data?.let { intent ->
                     val place = Autocomplete.getPlaceFromIntent(intent)
                     val latLng = place.latLng
+
+                    binding.streetEditText.clearFocus()
                     getLocationDetails(requireContext(), latLng) { locationDetails ->
                         // Use city, state, zipCode here
                         locationDetails?.let {
@@ -481,9 +483,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 ErrorDialog.TAG,
                                 "City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}"
                             )
-                            if (!it.city.isNullOrEmpty() &&
-                                !it.state.isNullOrEmpty() &&
-                                !it.zipCode.isNullOrEmpty()
+                            if (!it.city.isNullOrEmpty() && !it.state.isNullOrEmpty() && !it.zipCode.isNullOrEmpty()
                             ) {
                                 var street = ""
                                 if (it.streetAddress.isNullOrEmpty()) {
@@ -517,6 +517,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
             .build(requireContext())
+        binding.streetEditText.clearFocus()
         startStreertAutocomplete.launch(intent)
     }
 
@@ -529,9 +530,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         addWorkAdapter = AddWorkAdapter(requireContext(), workList, this, this)
         binding.recyclerViewWork.adapter = addWorkAdapter
         addWorkAdapter.updateWork(workList)
-
-        addLanguageSpeakAdapter =
-            AddLanguageSpeakAdapter(requireContext(), languageList, this, this)
+        addLanguageSpeakAdapter = AddLanguageSpeakAdapter(requireContext(), languageList, this, this)
         binding.recyclerViewlanguages.adapter = addLanguageSpeakAdapter
         addLanguageSpeakAdapter.updateLanguage(languageList)
         bankNameAdapter = BankNameAdapter(requireContext(), list = list1)
@@ -577,8 +576,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 //            cardNumberAdapterPayout.addItems(cardListPayout)
 //            binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
 //            binding.textCardNoDataFound.visibility = View.GONE
-//        }
-//        else{
+//        }else{
 //            binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
 //            binding.textCardNoDataFound.visibility = View.VISIBLE
 //        }
@@ -593,13 +591,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             lifecycleScope.launch(Dispatchers.Main) {
                 LoadingUtils.showDialog(requireContext(), false)
                 val session = SessionManager(requireContext())
-                profileViewModel.getUserProfile(session.getUserId().toString()).collect {
+                profileViewModel.getUserProfile(session?.getUserId().toString()).collect {
                     when (it) {
                         is NetworkResult.Success -> {
-
-
                             binding.llScrlView.visibility = View.VISIBLE
+
                             var name = ""
+
                             it.data?.let { resp ->
                                 Log.d(
                                     "TESTING_PROFILE",
@@ -714,8 +712,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
                             binding.llScrlView.visibility = View.GONE
-                            showErrorDialog(requireContext(),it.message?:"Something Went Wrong")
-
+                            showErrorDialog(requireContext(), it.message!!)
                         }
 
                         else -> {
@@ -725,11 +722,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     }
                 }
             }
-
-        }
-        else{
-
-            showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            LoadingUtils.showErrorDialog(
+                requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
     }
 
@@ -757,7 +754,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             // Transform lists off main thread
             val transformedLocationList = userProfile.where_live?.let {
-                getObjectsFromNames(it) { name -> AddLocationModel(name) }
+                getObjectsFromNames(it) {
+                    name -> AddLocationModel(name)
+                }
             }?.apply {
                 add(AddLocationModel(AppConstant.unknownLocation))
             } ?: emptyList()
@@ -801,6 +800,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                 // Load profile image
                 userProfile.profile_image?.let {
+                    userProfileImage = BuildConfig.MEDIA_URL + it
                     Glide.with(requireContext())
                         .asBitmap()
                         .load(BuildConfig.MEDIA_URL + it)
@@ -1808,20 +1808,16 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-
-            val imageCross = findViewById<ImageView>(R.id.imageCross)
-            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
+            var imageCross = findViewById<ImageView>(R.id.imageCross)
+            var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
-
             etMobileNumber.setText(binding.etPhoneNumeber.text.toString())
-
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
-
                 lifecycleScope.launch {
                     profileViewModel.networkMonitor.isConnected
-                        .distinctUntilChanged()
+                        .distinctUntilChanged() // Ignore duplicate consecutive values
                         .collect { isConn ->
                             if (!isConn) {
                                 showErrorDialog(
@@ -1830,24 +1826,17 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 )
                                 toggleLoginButtonEnabled(true, textSubmitButton)
                             } else {
-                                val phoneNumber = etMobileNumber.text.toString().trim()
-                                val countryCode = countyCodePicker.selectedCountryCodeWithPlus
-
-                                when {
-                                    phoneNumber.isEmpty() -> {
-                                        etMobileNumber.error = AppConstant.mobile
+                                lifecycleScope.launch(Dispatchers.Main) {
+                                    if (etMobileNumber.text!!.isEmpty()) {
+//                                        etMobileNumber.error = "Mobile required"
+                                        showErrorDialog(requireContext(), AppConstant.mobile)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
-                                    }
-
-                                    !MultipartUtils.isPhoneNumberMatchingCountryCode(phoneNumber, countryCode) -> {
-                                        etMobileNumber.error = AppConstant.validPhoneNumber
-                                        toggleLoginButtonEnabled(true, textSubmitButton)
-                                    }
-
-                                    else -> {
+                                    } else {
+                                        val phoneNumber = etMobileNumber.text.toString()
                                         Log.d(ErrorDialog.TAG, phoneNumber)
+                                        val countryCode =
+                                            countyCodePicker.selectedCountryCodeWithPlus
                                         Log.d(ErrorDialog.TAG, countryCode)
-
                                         verifyPhoneNumber(
                                             countryCode,
                                             phoneNumber,
@@ -1860,16 +1849,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         }
                 }
             }
-
             imageCross.setOnClickListener {
                 dismiss()
             }
-
             window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
             show()
         }
     }
-
 
     private fun verifyPhoneNumber(
         countryCode: String,
@@ -1901,7 +1887,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         }
 
                         is NetworkResult.Error -> {
-                            showErrorDialog(requireContext(), it.message?:"Something Went Wrong")
+                            showErrorDialog(requireContext(), it.message!!)
                             toggleLoginButtonEnabled(true, textSubmitButton)
                         }
 
@@ -1942,12 +1928,14 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 height = WindowManager.LayoutParams.WRAP_CONTENT
             }
             val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
-            userProfile?.profile_image?.let { imagePath ->
-                Glide.with(context)
-                    .asBitmap()
-                    .load(BuildConfig.MEDIA_URL + imagePath)
-                    .into(imageProfilePicture)
-            }
+            Glide.with(requireContext()).load(userProfileImage).into(imageProfilePicture)
+
+//            userProfile?.profile_image?.let { imagePath ->
+//                Glide.with(context)
+//                    .asBitmap()
+//                    .load(BuildConfig.MEDIA_URL + imagePath)
+//                    .into(imageProfilePicture)
+//            }
 
 
 
@@ -2017,7 +2005,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 toggleLoginButtonEnabled(true, textSubmitButton)
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
-                                    if (etEmail.text?.isEmpty() == true) {
+                                    if (etEmail.text!!.isEmpty()) {
                                         etEmail.error = "Email Address required"
                                         showErrorDialog(requireContext(), AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
@@ -3055,7 +3043,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     val password = etPassword.text.toString().trim()
                     val confirmPassword = etConfirmPassword.text.toString().trim()
                     if (!password.equals(confirmPassword)) {
-                        showErrorDialog(
+                        LoadingUtils.showErrorDialog(
                             requireContext(),
                             "Password and confirm password should be same"
                         )
@@ -3100,7 +3088,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                             is NetworkResult.Error -> {
                                 LoadingUtils.hideDialog()
-                                showErrorDialog(
+                                LoadingUtils.showErrorDialog(
                                     requireContext(),
                                     it.message.toString()
                                 )
@@ -3272,7 +3260,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         .distinctUntilChanged()
                         .collect { isConn ->
                             if (!isConn) {
-                                showErrorDialog(
+                                LoadingUtils.showErrorDialog(
                                     requireContext(),
                                     resources.getString(R.string.no_internet_dialog_msg)
                                 )
@@ -3559,7 +3547,6 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 it.data?.let { resp ->
                                     LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.name = first_name + " " + last_name
-                                    session?.setName(first_name + " " + last_name)
                                     binding.user = userProfile
                                 }
                                 toggleLoginButtonEnabled(true, textSaveChangesButton)
@@ -4128,7 +4115,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 .distinctUntilChanged()
                 .collect { isConn ->
                     if (!isConn) {
-                        showErrorDialog(
+                        LoadingUtils.showErrorDialog(
                             requireContext(),
                             resources.getString(R.string.no_internet_dialog_msg)
                         )
@@ -4220,7 +4207,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 .distinctUntilChanged()
                 .collect { isConn ->
                     if (!isConn) {
-                        showErrorDialog(
+                        LoadingUtils.showErrorDialog(
                             requireContext(),
                             resources.getString(R.string.no_internet_dialog_msg)
                         )
@@ -4265,7 +4252,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 .distinctUntilChanged()
                 .collect { isConn ->
                     if (!isConn) {
-                        showErrorDialog(
+                        LoadingUtils.showErrorDialog(
                             requireContext(),
                             resources.getString(R.string.no_internet_dialog_msg)
                         )

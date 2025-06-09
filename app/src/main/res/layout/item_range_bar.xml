@@ -26,6 +26,8 @@
         app:minDistance="1"
         app:tickRadius="0dp"
         app:movable="false"
+        app:activeFocusThumbColor="@color/light_blue_600"
+        app:fixedThumbColor="@color/light_blue_600"
         app:showTicks="false"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
