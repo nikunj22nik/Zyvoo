@@ -522,6 +522,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     }
 
 
+
     // Function to initialize the adapter for adding locations
     private fun adapterInitialize() {
         addLocationAdapter = AddLocationAdapter(requireContext(), locationList, this, this)
@@ -2569,8 +2570,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         textLoginButton: TextView
     ) {
         lifecycleScope.launch {
-            profileViewModel.emailVerification(
-                userId,
+            profileViewModel.updateEmail(
+                Integer.parseInt(userId),
                 email
             ).collect {
                 when (it) {
@@ -4485,7 +4486,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 Log.d("******  Token payment :-", "data $id")
 
                                 saveCardStripe(dialog, id, checkBox.isChecked)
-
+                                LoadingUtils.hideDialog()
                             }
                         })
                 }

@@ -162,7 +162,7 @@
                    android:singleLine="true"
                    android:fontFamily="@font/poppins"
                    android:hint="Hey Guest!"
-                   android:text="@{user.name != null ? user.name : ``}"
+                   android:text='@{user.name != null ? "Hey " + user.name : "Hey Guest!"}'
                    android:textColorHint="@color/black"
                    android:textColor="@color/black"
                    android:textSize="@dimen/_15sdp"
@@ -1218,7 +1218,7 @@
                     android:fontFamily="@font/poppins"
                     android:drawablePadding="@dimen/_7ssp"
                     app:drawableEndCompat="@drawable/ic_dropdown_close"
-                    android:layout_marginStart="@dimen/_12ssp"
+                    android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginVertical="@dimen/_10sdp"
                     android:layout_below="@+id/textAddNew"/>
 
