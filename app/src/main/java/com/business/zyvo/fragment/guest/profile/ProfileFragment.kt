@@ -88,6 +88,7 @@ import com.business.zyvo.utils.ErrorDialog.getLocationDetails
 import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.MediaUtils
+import com.business.zyvo.utils.MultipartUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
 import com.github.dhaval2404.imagepicker.ImagePicker
@@ -2208,9 +2209,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
             val cross :ImageView = findViewById(R.id.img_cross)
+
             cross.setOnClickListener {
                 dialog.dismiss()
             }
+
             checkBox.setOnClickListener {
                 if (checkBox.isChecked) {
                     etStreet.setText(street_address)
@@ -2224,6 +2227,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     etZipCode.text.clear()
                 }
             }
+
             textMonth.setOnClickListener {
                 dateManager.showMonthSelectorDialog { selectedMonth ->
                     textMonth.text = selectedMonth
@@ -2234,6 +2238,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     }
                 }
             }
+
             //vipin
             etCardNumber.addTextChangedListener(object : TextWatcher {
                 private var isFormatting: Boolean = false
@@ -2274,12 +2279,15 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 }
             })
             //end
-
-
             submitButton.setOnClickListener {
                 if (etCardHolderName.text.isEmpty()) {
-                    showToast(requireContext(), AppConstant.cardName)
-                } else if (textMonth.text.isEmpty()) {
+                    LoadingUtils.showErrorDialog(requireContext(), AppConstant.cardName)
+                }
+                else if(etCardHolderName.text.toString().length >30){
+                    LoadingUtils.showErrorDialog(requireContext(),"Please Enter Card Holder Name less than 30 character")
+                }
+
+                else if (textMonth.text.isEmpty()) {
                     showToast(requireContext(), AppConstant.cardMonth)
                 } else if (textYear.text.isEmpty()) {
                     showToast(requireContext(), AppConstant.cardYear)
@@ -2362,8 +2370,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     }
                 }
             }
-
         }
+
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -2923,10 +2932,12 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     toggleLoginButtonEnabled(false, textSubmitButton)
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etMobileNumber.text!!.isEmpty()) {
-                                        etMobileNumber.error = "Mobile required"
                                         showErrorDialog(requireContext(), AppConstant.mobile)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
-                                    } else {
+                                    }else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),  countyCodePicker.selectedCountryCodeWithPlus)){
+                                        showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
+                                    }
+                                    else {
                                         val phoneNumber = etMobileNumber.text.toString()
                                         Log.d(ErrorDialog.TAG, phoneNumber)
                                         val countryCode =

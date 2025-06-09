@@ -576,7 +576,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 //            cardNumberAdapterPayout.addItems(cardListPayout)
 //            binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
 //            binding.textCardNoDataFound.visibility = View.GONE
-//        }else{
+//        }
+//        else{
 //            binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
 //            binding.textCardNoDataFound.visibility = View.VISIBLE
 //        }
@@ -721,7 +722,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     }
                 }
             }
-        } else {
+        }
+        else {
             LoadingUtils.showErrorDialog(
                 requireContext(),
                 resources.getString(R.string.no_internet_dialog_msg)

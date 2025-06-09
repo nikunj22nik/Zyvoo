@@ -1538,7 +1538,7 @@ class SimpleRangeView @JvmOverloads constructor(
         val DEFAULT_ACTIVE_LABEL_COLOR = Color.parseColor("#0C6CE1")
         val DEFAULT_ACTIVE_THUMB_LABEL_COLOR = Color.parseColor("#0F7BFF")
         val DEFAULT_FIXED_LABEL_COLOR = Color.parseColor("#C5C5C5")
-        val DEFAULT_FIXED_THUMB_LABEL_COLOR = Color.parseColor("#C5C5C5")
+        val DEFAULT_FIXED_THUMB_LABEL_COLOR = Color.parseColor("#0000FF")
 
         val DEFAULT_LINE_COLOR = Color.parseColor("#F7F7F7")
         val DEFAULT_ACTIVE_LINE_COLOR = Color.parseColor("#0C6CE1")
@@ -1547,8 +1547,8 @@ class SimpleRangeView @JvmOverloads constructor(
         val DEFAULT_ACTIVE_TICK_COLOR = Color.parseColor("#FFFFFF")
         val DEFAULT_FIXED_TICK_COLOR = Color.parseColor("#C5C5C5")
         val DEFAULT_ACTIVE_THUMB_COLOR = Color.parseColor("#0F7BFF")
-        val DEFAULT_ACTIVE_FOCUS_THUMB_COLOR = DEFAULT_ACTIVE_THUMB_COLOR
-        val DEFAULT_FIXED_THUMB_COLOR = Color.parseColor("#E3E3E3")
+        val DEFAULT_ACTIVE_FOCUS_THUMB_COLOR = Color.parseColor("#0F7BFF")
+        val DEFAULT_FIXED_THUMB_COLOR = Color.parseColor("#0F7BFF")
 
         val DEFAULT_ACTIVE_FOCUS_THUMB_ALPHA = 1f
 
