@@ -1565,12 +1565,18 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             otpDigits[3].imeOptions = EditorInfo.IME_ACTION_DONE
             otpDigits[3].setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    textSubmitButton.performClick()
+                    val otp = otpDigits.joinToString("") { it.text.toString() }
+                    if (otp.length == 4 && otp.all { it.isDigit() }) {
+                        textSubmitButton.performClick()
+                    } else {
+                        Toast.makeText(context, "Please enter the complete OTP.", Toast.LENGTH_SHORT).show()
+                    }
                     true
                 } else {
                     false
                 }
             }
+
 
             for (i in 0 until otpDigits.size) {
                 val index = i
@@ -2311,25 +2317,19 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
     }
 
-    fun startCountDownTimer(
+
+    private fun startCountDownTimer(
         context: Context,
         textTimeResend: TextView,
         rlResendLine: RelativeLayout,
         textResend: TextView
     ) {
-        // Disable button and color it grey immediately
-        resendEnabled = false
-        textResend.isEnabled = false
-        textResend.setTextColor(ContextCompat.getColor(context, R.color.grey))
-        rlResendLine.visibility = View.VISIBLE
-
-        countDownTimer?.cancel() // Cancel any existing timer before starting a new one
-
         countDownTimer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val f = android.icu.text.DecimalFormat("00")
                 val min = (millisUntilFinished / 60000) % 60
                 val sec = (millisUntilFinished / 1000) % 60
+                textResend.isEnabled = false
                 textTimeResend.text = "${f.format(min)}:${f.format(sec)} sec"
             }
 
@@ -2337,12 +2337,27 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 textTimeResend.text = "00:00"
                 rlResendLine.visibility = View.GONE
                 textResend.isEnabled = true
-                resendEnabled = true
-                textResend.setTextColor(ContextCompat.getColor(context, R.color.scroll_bar_color))
-            }
-        }.start()
-    }
+                if (textTimeResend.text == "00:00") {
+                    resendEnabled = true
 
+                    textResend.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.scroll_bar_color
+                        )
+                    )
+                } else {
+                    textResend.setTextColor(
+                        ContextCompat.getColor(
+                            context,
+                            R.color.grey
+                        )
+                    )
+                }
+            }
+        }
+        countDownTimer?.start()
+    }
 
 
     private fun dialogNewPassword(

@@ -162,7 +162,7 @@
                    android:singleLine="true"
                    android:fontFamily="@font/poppins"
                    android:hint="Hey Guest!"
-                   android:text="@{user.name != null ? user.name : ``}"
+                   android:text='@{user.name != null ? "Hey " + user.name : "Hey Guest!"}'
                    android:textColorHint="@color/black"
                    android:textColor="@color/black"
                    android:textSize="@dimen/_15sdp"
