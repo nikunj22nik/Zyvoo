@@ -49,6 +49,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -2310,19 +2311,25 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
     }
 
-
-    private fun startCountDownTimer(
+    fun startCountDownTimer(
         context: Context,
         textTimeResend: TextView,
         rlResendLine: RelativeLayout,
         textResend: TextView
     ) {
+        // Disable button and color it grey immediately
+        resendEnabled = false
+        textResend.isEnabled = false
+        textResend.setTextColor(ContextCompat.getColor(context, R.color.grey))
+        rlResendLine.visibility = View.VISIBLE
+
+        countDownTimer?.cancel() // Cancel any existing timer before starting a new one
+
         countDownTimer = object : CountDownTimer(60000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val f = android.icu.text.DecimalFormat("00")
                 val min = (millisUntilFinished / 60000) % 60
                 val sec = (millisUntilFinished / 1000) % 60
-                textResend.isEnabled = false
                 textTimeResend.text = "${f.format(min)}:${f.format(sec)} sec"
             }
 
@@ -2330,122 +2337,138 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 textTimeResend.text = "00:00"
                 rlResendLine.visibility = View.GONE
                 textResend.isEnabled = true
-                if (textTimeResend.text == "00:00") {
-                    resendEnabled = true
-
-                    textResend.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.scroll_bar_color
-                        )
-                    )
-                } else {
-                    textResend.setTextColor(
-                        ContextCompat.getColor(
-                            context,
-                            R.color.grey
-                        )
-                    )
-                }
+                resendEnabled = true
+                textResend.setTextColor(ContextCompat.getColor(context, R.color.scroll_bar_color))
             }
-        }
-        countDownTimer?.start()
+        }.start()
     }
 
 
+
     private fun dialogNewPassword(
-        context: Context?, text: String,
+        context: Context?,
+        text: String,
         userId: String
     ) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(false)
             setContentView(R.layout.dialog_new_password)
+
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
+
             val imageCross = findViewById<ImageView>(R.id.imageCross)
             val etPassword = findViewById<EditText>(R.id.etPassword)
-            val imgCorrectSign1 = findViewById<ImageView>(R.id.imgCorrectSign1)
-            val imgWrongSign1 = findViewById<ImageView>(R.id.imgWrongSign1)
             val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
 
-            etConfirmPassword.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    val password = etPassword.text.toString()
-                    val confirmPassword = p0.toString()
-                    if (confirmPassword.isEmpty()) {
-                        imgCorrectSign1.visibility = View.GONE
-                        imgWrongSign1.visibility = View.GONE
-                    } else if (password == confirmPassword) {
-                        imgCorrectSign1.visibility = View.VISIBLE
-                        imgWrongSign1.visibility = View.GONE
-                    } else {
-                        imgWrongSign1.visibility = View.VISIBLE
-                        imgCorrectSign1.visibility = View.GONE
-                    }
-                }
-
-                override fun afterTextChanged(p0: Editable?) {
-                }
-
-            })
+            val imgCorrectSignPassword = findViewById<ImageView>(R.id.imgCorrectSign)
+            val imgWrongSignPassword = findViewById<ImageView>(R.id.imgWrongSign)
+            val imgCorrectSignConfirm = findViewById<ImageView>(R.id.imgCorrectSign1)
+            val imgWrongSignConfirm = findViewById<ImageView>(R.id.imgWrongSign1)
 
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
-            etConfirmPassword.imeOptions = EditorInfo.IME_ACTION_DONE
+
+            fun isValidPassword(password: String): Boolean {
+                val regex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#\$%^&+=!]).{8,}$")
+                return password.matches(regex)
+            }
+
+            fun validateInputs() {
+                val password = etPassword.text.toString()
+                val confirmPassword = etConfirmPassword.text.toString()
+
+                // Password rule check
+                if (password.isEmpty()) {
+                    imgCorrectSignPassword.visibility = View.GONE
+                    imgWrongSignPassword.visibility = View.GONE
+                } else if (isValidPassword(password)) {
+                    imgCorrectSignPassword.visibility = View.VISIBLE
+                    imgWrongSignPassword.visibility = View.GONE
+                } else {
+                    imgCorrectSignPassword.visibility = View.GONE
+                    imgWrongSignPassword.visibility = View.VISIBLE
+                }
+
+                // Confirm password match check
+                if (confirmPassword.isEmpty()) {
+                    imgCorrectSignConfirm.visibility = View.GONE
+                    imgWrongSignConfirm.visibility = View.GONE
+                } else if (password == confirmPassword) {
+                    imgCorrectSignConfirm.visibility = View.VISIBLE
+                    imgWrongSignConfirm.visibility = View.GONE
+                } else {
+                    imgCorrectSignConfirm.visibility = View.GONE
+                    imgWrongSignConfirm.visibility = View.VISIBLE
+                }
+            }
+
+            etPassword.addTextChangedListener { validateInputs() }
+            etConfirmPassword.addTextChangedListener { validateInputs() }
+
             etConfirmPassword.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     textSubmitButton.performClick()
                     true
-                } else {
-                    false
-                }
+                } else false
             }
+
             textSubmitButton.setOnClickListener {
-                //  toggleLoginButtonEnabled(false, textSubmitButton)
-                if (NetworkMonitorCheck._isConnected.value) {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        if (etPassword.text!!.isEmpty()) {
-                            etPassword.error = "Password required"
-                            showErrorDialog(requireContext(), AppConstant.password)
-                            toggleLoginButtonEnabled(true, textSubmitButton)
-                        } else if (etConfirmPassword.text!!.isEmpty()) {
-                            etConfirmPassword.error = "Confirm Password required"
-                            showErrorDialog(requireContext(), AppConstant.conPassword)
-                            toggleLoginButtonEnabled(true, textSubmitButton)
-                        }
-                        else if (!checkPasswordValidity(etPassword.text.toString())) {
-                            toggleLoginButtonEnabled(true, textSubmitButton)
-                            return@launch
-                        }  else {
-                            resetPassword(
-                                userId,
-                                etPassword.text.toString(),
-                                etConfirmPassword.text.toString(),
-                                dialog, textSubmitButton, text
-                            )
-                        }
-                    }
-                } else {
-                    showErrorDialog(
-                        requireContext(),
-                        resources.getString(R.string.no_internet_dialog_msg)
-                    )
+                toggleLoginButtonEnabled(false, textSubmitButton)
+
+                val password = etPassword.text.toString()
+                val confirmPassword = etConfirmPassword.text.toString()
+
+                if (!NetworkMonitorCheck._isConnected.value) {
+                    ErrorDialog.showErrorDialog(requireContext(),"No internet connection")
                     toggleLoginButtonEnabled(true, textSubmitButton)
+                    return@setOnClickListener
+                }
+
+                lifecycleScope.launch(Dispatchers.Main) {
+                    var isValid = true
+
+                    if (password.isEmpty()) {
+                        etPassword.error = "Password is required"
+                        etPassword.requestFocus()
+                        isValid = false
+                    } else if (!isValidPassword(password)) {
+                        etPassword.error =
+                            "Password must be 8+ characters with uppercase, lowercase, number, and symbol"
+                        etPassword.requestFocus()
+                        isValid = false
+                    }
+
+                    if (confirmPassword.isEmpty()) {
+                        etConfirmPassword.error = "Confirm password is required"
+                        etConfirmPassword.requestFocus()
+                        isValid = false
+                    } else if (password != confirmPassword) {
+                        etConfirmPassword.error = "Passwords do not match"
+                        etConfirmPassword.requestFocus()
+                        isValid = false
+                    }
+
+                    if (isValid) {
+                        resetPassword(userId, password, confirmPassword, dialog, textSubmitButton, text)
+                    } else {
+                        toggleLoginButtonEnabled(true, textSubmitButton)
+                    }
                 }
             }
+
             imageCross.setOnClickListener {
-                dismiss()
+                dialog.dismiss()
             }
+
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
     }
+
 
 
     private fun checkPasswordValidity(password: String): Boolean {

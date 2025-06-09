@@ -72,6 +72,8 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
     var filterStatus: String? = null
     var totalAmount: String? = null
     var instantAmount: String? = null
+    private var isDateDialogShowing = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,28 +122,29 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
         }
 
         binding.llDateRangeSelect.setOnClickListener {
+            if (isDateDialogShowing) return@setOnClickListener // Prevent multiple clicks
+
+            isDateDialogShowing = true // Mark dialog as showing
+
             DateManager(requireContext()).getRangeSelectedDateWithYear(
                 fragmentManager = parentFragmentManager
             ) { selectedData ->
-                selectedData?.let {
+                isDateDialogShowing = false // Reset flag when dialog is closed or data returned
 
+                selectedData?.let {
                     val (dateRange, year) = it
                     val (startDate1, endDate1) = dateRange
                     startDate = startDate1 + year
                     endDate = endDate1 + year
                     binding.tvDateRange.text = "$startDate1 - $endDate1 $year"
-//                    Toast.makeText(
-//                        requireContext(),
-//                        "Range: $startDate to $endDate, Year: $year",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
                     paymentWithdrawalList()
-
                 } ?: run {
                     Toast.makeText(requireContext(), "No date selected", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+
+
         binding.imageFilter.setOnClickListener {
             val dialog1 = FilterPaymentStatusFragment()
             // dialog1.setDialogListener(this)
