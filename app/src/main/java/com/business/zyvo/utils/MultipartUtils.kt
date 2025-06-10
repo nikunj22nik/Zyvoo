@@ -19,13 +19,13 @@ object MultipartUtils {
     fun isPhoneNumberMatchingCountryCode(userInputNumber: String, countryPhoneCode: String): Boolean {
         val phoneUtil = PhoneNumberUtil.getInstance()
 
-        // Normalize country code (e.g., "+91" or "91" → "91")
+        // Normalize country phone code (e.g., "+91" or "91" → "91")
         val normalizedCountryCode = countryPhoneCode.replace("+", "").trim()
 
-        // Remove all non-digit characters except +
+        // Clean user input: keep only digits and optional leading +
         val cleanNumber = userInputNumber.replace("[^\\d+]".toRegex(), "")
 
-        // Convert to full international format if needed
+        // Construct the full international number
         val internationalNumber = when {
             cleanNumber.startsWith("+") -> cleanNumber
             cleanNumber.startsWith(normalizedCountryCode) -> "+$cleanNumber"
@@ -33,29 +33,38 @@ object MultipartUtils {
         }
 
         return try {
-            // Get ISO region from country phone code (e.g., "+91" → "IN")
+            // Get ISO region from country phone code (e.g., "91" → "IN")
             val regionCode = phoneUtil.getRegionCodeForCountryCode(normalizedCountryCode.toInt())
 
-            // Parse number using correct region context
+            // If region code is invalid, return false
+            if (regionCode.isNullOrEmpty()) {
+                Log.e("PhoneValidation", "Invalid country code: $normalizedCountryCode")
+                return false
+            }
+
+            // Parse the phone number with the region
             val numberProto = phoneUtil.parse(internationalNumber, regionCode)
 
-            // Check actual country code of number
+            // Validate actual country code
             val actualCountryCode = numberProto.countryCode.toString()
+            val isValid = phoneUtil.isValidNumber(numberProto)
 
-            // Check if number is valid and matches the expected country code
-            val matches = actualCountryCode == normalizedCountryCode && phoneUtil.isValidNumber(numberProto)
+            val isMatch = actualCountryCode == normalizedCountryCode && isValid
 
             Log.d(
                 "PhoneValidation",
-                "Input: $userInputNumber → Normalized: $internationalNumber | Expected Code: $normalizedCountryCode | Actual Code: $actualCountryCode | Valid: ${phoneUtil.isValidNumber(numberProto)} | Match: $matches"
+                "Input: $userInputNumber → Normalized: $internationalNumber | " +
+                        "Expected Code: $normalizedCountryCode | Actual Code: $actualCountryCode | " +
+                        "Valid: $isValid | Match: $isMatch"
             )
 
-            matches
+            isMatch
         } catch (e: NumberParseException) {
             Log.e("PhoneValidation", "Invalid phone number: ${e.message}")
             false
         }
     }
+
     fun uriToMultipartBodyPart(context: Context, uri: Uri, paramName: String): MultipartBody.Part? {
         try {
             val inputStream: InputStream? = context.contentResolver.openInputStream(uri)

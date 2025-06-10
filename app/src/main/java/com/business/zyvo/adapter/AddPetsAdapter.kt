@@ -20,17 +20,15 @@ import com.business.zyvo.onItemClickData
 
 class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
                      var listner : OnClickListener1,
-                     var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>()
-{
+                     var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
 
     private val uploadPetsCode = 1 // Represents normal location entries
     private val uploadPetsFixed = 0
     private  var textAddNew : TextView? = null
 
+    inner class PetsViewHolder(var binding: LayoutAddPetsBinding) : RecyclerView.ViewHolder(binding.root) {
 
-
-    inner class PetsViewHolder(var binding: LayoutAddPetsBinding) :
-        RecyclerView.ViewHolder(binding.root) {
         init {
 //            binding.root.setOnClickListener{
 //                listner.itemClick(adapterPosition)
@@ -40,12 +38,12 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
         fun bind(petsItem: AddPetsModel) {
 
             binding.textMyWorkName.text = petsItem.name
+
             binding.imageCross.setOnClickListener {
-                listner.itemClick(
-                    adapterPosition,
-                    "Pets"
-                ) // Handle delete (or any other action) for this location
+                listner.itemClick(adapterPosition, "Pets")
+            // Handle delete (or any other action) for this location
             }
+
         }
 
     }
