@@ -2936,6 +2936,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     }else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),  countyCodePicker.selectedCountryCodeWithPlus)){
                                         showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
                                     }
                                     else {
                                         val phoneNumber = etMobileNumber.text.toString()

@@ -85,6 +85,7 @@ import com.business.zyvo.utils.ErrorDialog.TAG
 import com.business.zyvo.utils.ErrorDialog.customDialog
 import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.MediaUtils
+import com.business.zyvo.utils.MultipartUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
 import com.google.gson.Gson
@@ -744,6 +745,9 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                     if (etMobileNumber.text!!.isEmpty()) {
                                         etMobileNumber.error = "Mobile required"
                                         showErrorDialog(requireContext(),AppConstant.mobile)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    }else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),  countyCodePicker.selectedCountryCodeWithPlus)){
+                                        showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
                                         val phoneNumber = etMobileNumber.text.toString()
