@@ -1328,6 +1328,7 @@
                         android:layout_marginStart="@dimen/_6sdp"
                         android:layout_marginBottom="@dimen/_5sdp"
                         android:textColor="@color/black"
+                        android:inputType="number"
                         android:layout_toEndOf="@+id/imageCVVNumber"
                         android:text="CVV Number" />
 

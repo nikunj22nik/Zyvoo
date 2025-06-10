@@ -12,6 +12,7 @@ import android.widget.NumberPicker
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.FragmentManager
+import com.business.zyvo.R
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
@@ -432,7 +433,7 @@ class DateManager(var context: Context) {
         val day = c.get(Calendar.DAY_OF_MONTH)
         // Create DatePickerDialog
         val datePickerDialog = DatePickerDialog(
-            context,
+            context, R.style.DialogTheme,
             { _, selectedYear, selectedMonth, selectedDay ->
                 // Format the selected date with leading zeros for month and day
                 val formattedDate =

@@ -19,15 +19,14 @@ class RangeBarWithChart @JvmOverloads constructor(
 ) : ConstraintLayout(context, attrs, defStyleAttr) , SimpleRangeView.OnTrackRangeListener
 {
 
-    lateinit var elementRangeBar :com.business.zyvo.SimpleRangeView
+    lateinit var elementRangeBar : com.business.zyvo.SimpleRangeView
     lateinit var chart : BarChart
     init {
 
-        var bindingEvent = LayoutInflater.from(context)
-            .inflate(R.layout.item_range_bar, this, true)
+        var bindingEvent = LayoutInflater.from(context).inflate(R.layout.item_range_bar, this, true)
         elementRangeBar = bindingEvent.findViewById<SimpleRangeView>(R.id.elementRangeBar)
-        chart = bindingEvent.findViewById<BarChart>(R.id.chart)
 
+        chart = bindingEvent.findViewById<BarChart>(R.id.chart)
         attrs?.let {
             parseAttr(it)
         }

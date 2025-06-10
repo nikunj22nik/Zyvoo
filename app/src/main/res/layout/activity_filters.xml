@@ -173,8 +173,10 @@
                 app:barChartSelectedBackgroundColor="@android:color/black"
                 app:barChartSelectedLineColor="@android:color/black"
                 app:barChartUnSelectedLineColor="@android:color/darker_gray"
+
                 app:barChartUnselectedBackgroundColor="@android:color/darker_gray"
-                app:barLineColor="@android:color/holo_blue_light" />
+                app:barLineColor="@android:color/holo_blue_light"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -771,6 +771,7 @@ private var cardNumberString : String = ""
         }
     }
 
+    var callApi = true
     private fun setUpBankEvent() {
         binding.textAddBank.setOnClickListener {
             lifecycleScope.launch {
@@ -785,7 +786,10 @@ private var cardNumberString : String = ""
                         } else {
 
                             if (isValidation()) {
-                                addBankApi()
+                                if(callApi) {
+                                    callApi = false
+                                    addBankApi()
+                                }
                             }
                         }
 
@@ -910,11 +914,13 @@ private var cardNumberString : String = ""
                 ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
+                            callApi = true
                             showSuccessDialog(requireContext(), it.data!!)
                             navController.navigateUp()
                         }
 
                         is NetworkResult.Error -> {
+                            callApi = true
                             showErrorDialog(requireContext(), it.message!!)
                         }
 
@@ -926,6 +932,7 @@ private var cardNumberString : String = ""
                 }
             }
         }catch (e:Exception){
+            callApi = true
             e.printStackTrace()
         }
 
@@ -1187,7 +1194,7 @@ private var cardNumberString : String = ""
     }
 
     private fun isValidation(): Boolean {
-        if (binding.etFirstName.text.trim().toString().trim().isEmpty()) {
+        if(binding.etFirstName.text.trim().toString().trim().isEmpty()) {
             showErrorDialog(requireContext(), AppConstant.firstNameError)
             return false
         } else if (binding.etLastName.text?.trim().toString().trim().isEmpty()) {
@@ -1199,13 +1206,12 @@ private var cardNumberString : String = ""
         } else if (!binding.etEmail.text?.trim().toString().contains("@")) {
             showErrorDialog(requireContext(), AppConstant.validEmail)
             return false
-        } else if (binding.etPhoneNumber.text?.trim().toString().trim().isEmpty()) {
+        }
+        else if (binding.etPhoneNumber.text?.trim().toString().trim().isEmpty()) {
             showErrorDialog(requireContext(), AppConstant.phoneError)
             return false
-        } else if (binding.etPhoneNumber.text?.trim().toString().length != 10) {
-            showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
-            return false
-        } else if (binding.etDOB.text?.toString().equals("MM/DD/YYYY")) {
+        }
+        else if (binding.etDOB.text?.toString().equals("MM/DD/YYYY")) {
             showErrorDialog(requireContext(), AppConstant.dobError)
             return false
         } else if (binding.spinnerSelectIDType.text?.toString().equals("Select ID type")) {
@@ -1264,69 +1270,85 @@ private var cardNumberString : String = ""
         return true
     }
 
+    var callCardApi = true
     private fun setUpCardEvent() {
         binding.textAddCardDebitCard.setOnClickListener {
 
-            cardNumberString = Objects.requireNonNull(binding.etCardNumber.text.toString().replace(" ", "").trim())
-                .toString()
-            Log.d("checkCardNumber",cardNumberString)
-            lifecycleScope.launch {
-                viewModel.networkMonitor.isConnected
-                    .distinctUntilChanged()
-                    .collect { isConn ->
-                        if (!isConn) {
-                            showErrorDialog(
-                                requireContext(),
-                                resources.getString(R.string.no_internet_dialog_msg)
-                            )
-                        } else {
-
-                            if (isValidationCard()) {
-                                val cNumber = cardNumberString.trim()
-                                val monthName = binding.etMonth.text.toString().trim()
-                                val month = getMonthNumber(monthName)
-                                val year = binding.etYear.text.toString().trim()
-                                val cvv = binding.etCVVNumber.text.toString().trim()
-                                val firstName = binding.etFirstNameDebitCard.text.toString().trim()
-                                val lastName = binding.etLastNameDebitCard.text.toString().trim()
-                                val fullName = firstName + lastName
-                                val stripe = Stripe(
+            if(callCardApi) {
+                callCardApi = false
+                cardNumberString = Objects.requireNonNull(
+                    binding.etCardNumber.text.toString().replace(" ", "").trim()
+                )
+                    .toString()
+                Log.d("checkCardNumber", cardNumberString)
+                lifecycleScope.launch {
+                    viewModel.networkMonitor.isConnected
+                        .distinctUntilChanged()
+                        .collect { isConn ->
+                            if (!isConn) {
+                                showErrorDialog(
                                     requireContext(),
-                                    BuildConfig.STRIPE_KEY)
-                                val card = CardParams(
-                                    cNumber,
-                                    Integer.valueOf(month),
-                                    Integer.valueOf(year),
-                                    cvv,
-                                    fullName,
-                                    currency = "usd"
+                                    resources.getString(R.string.no_internet_dialog_msg)
                                 )
-                                // countryCode
-                                val curency = getCurrencyByCountry(countryCode)
-                                Log.d("CurrnecyName" , curency)
-                                stripe.createCardToken(card, null, null, object :
-                                    ApiResultCallback<Token> {
-                                    override fun onError(e: Exception) {
-                                        Log.d("PaymentActivity1", "data$e")
+                                callCardApi = true
+                            } else {
 
-                                        Toast.makeText(
-                                            requireContext(),
-                                            e.message.toString(),
-                                            Toast.LENGTH_LONG
-                                        ).show()
-                                    }
+                                if (isValidationCard()) {
+                                    val cNumber = cardNumberString.trim()
+                                    val monthName = binding.etMonth.text.toString().trim()
+                                    val month = getMonthNumber(monthName)
+                                    val year = binding.etYear.text.toString().trim()
+                                    val cvv = binding.etCVVNumber.text.toString().trim()
+                                    val firstName =
+                                        binding.etFirstNameDebitCard.text.toString().trim()
+                                    val lastName =
+                                        binding.etLastNameDebitCard.text.toString().trim()
+                                    val fullName = firstName + lastName
+                                    val stripe = Stripe(
+                                        requireContext(),
+                                        BuildConfig.STRIPE_KEY
+                                    )
+                                    val card = CardParams(
+                                        cNumber,
+                                        Integer.valueOf(month),
+                                        Integer.valueOf(year),
+                                        cvv,
+                                        fullName,
+                                        currency = "usd"
+                                    )
+                                    // countryCode
+                                    val curency = getCurrencyByCountry(countryCode)
+                                    Log.d("CurrnecyName", curency)
+                                    stripe.createCardToken(card, null, null, object :
+                                        ApiResultCallback<Token> {
+                                        override fun onError(e: Exception) {
+                                            Log.d("PaymentActivity1", "data$e")
 
-                                    override fun onSuccess(result: Token) {
-                                        val token = result.id
-                                        Log.d("Token payment :-", token)
-                                        addCardApi(token)
-                                    }
-                                })
+                                            callCardApi = true
+                                            Toast.makeText(
+                                                requireContext(),
+                                                e.message.toString(),
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
 
+                                        override fun onSuccess(result: Token) {
+                                            val token = result.id
+
+                                            Log.d("Token payment :-", token)
+                                            addCardApi(token)
+                                        }
+                                    })
+
+                                }
+                                else{
+                                    callCardApi = true
+                                }
                             }
-                        }
 
-                    }
+                        }
+                }
+
             }
         }
 
@@ -1494,11 +1516,13 @@ private var cardNumberString : String = ""
             ).collect {
                 when (it) {
                     is NetworkResult.Success -> {
+                        callCardApi = true
                         showSuccessDialog(requireContext(), it.data!!)
                         navController.navigateUp()
                     }
 
                     is NetworkResult.Error -> {
+                        callCardApi = true
                         showErrorDialog(requireContext(), it.message!!)
                     }
 
