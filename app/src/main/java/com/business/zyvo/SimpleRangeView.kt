@@ -1539,44 +1539,35 @@ class SimpleRangeView @JvmOverloads constructor(
         val DEFAULT_ACTIVE_THUMB_LABEL_COLOR = Color.parseColor("#0F7BFF")
         val DEFAULT_FIXED_LABEL_COLOR = Color.parseColor("#C5C5C5")
         val DEFAULT_FIXED_THUMB_LABEL_COLOR = Color.parseColor("#0000FF")
-
         val DEFAULT_LINE_COLOR = Color.parseColor("#F7F7F7")
         val DEFAULT_ACTIVE_LINE_COLOR = Color.parseColor("#0C6CE1")
         val DEFAULT_FIXED_LINE_COLOR = Color.parseColor("#E3E3E3")
         val DEFAULT_TICK_COLOR = Color.parseColor("#C5C5C5")
-        val DEFAULT_ACTIVE_TICK_COLOR = Color.parseColor("#FFFFFF")
+        val DEFAULT_ACTIVE_TICK_COLOR = Color.parseColor("#D3D3D3")
         val DEFAULT_FIXED_TICK_COLOR = Color.parseColor("#C5C5C5")
         val DEFAULT_ACTIVE_THUMB_COLOR = Color.parseColor("#0F7BFF")
         val DEFAULT_ACTIVE_FOCUS_THUMB_COLOR = Color.parseColor("#0F7BFF")
         val DEFAULT_FIXED_THUMB_COLOR = Color.parseColor("#0F7BFF")
-
         val DEFAULT_ACTIVE_FOCUS_THUMB_ALPHA = 1f
-
         val DEFAULT_LINE_THICKNESS = 4f
         val DEFAULT_ACTIVE_LINE_THICKNESS = 6f
         val DEFAULT_FIXED_LINE_THICKNESS = 6f
-
         val DEFAULT_ACTIVE_THUMB_FOCUS_RADIUS = 14f
         val DEFAULT_ACTIVE_THUMB_RADIUS = 10f
         val DEFAULT_FIXED_THUMB_RADIUS = 10f
-
         val DEFAULT_TICK_RADIUS = 1f
         val DEFAULT_ACTIVE_TICK_RADIUS = 1f
         val DEFAULT_FIXED_TICK_RADIUS = 1f
-
         val DEFAULT_INNER_RANGE_PADDING = 16f
         val DEFAULT_INNER_RANGE_PADDING_LEFT = DEFAULT_INNER_RANGE_PADDING
         val DEFAULT_INNER_RANGE_PADDING_RIGHT = DEFAULT_INNER_RANGE_PADDING
-
         val DEFAULT_COUNT = 10
         val DEFAULT_START = 0
         val DEFAULT_END = DEFAULT_COUNT - 1
         val DEFAULT_MINIMAL_DISTANCE = 1
         val DEFAULT_MAXIMAL_DISTANCE = 0
-
         val DEFAULT_START_FIXED = 0
         val DEFAULT_END_FIXED = 0
-
         val DEFAULT_SHOW_FIXED_LINE = false
         val DEFAULT_MOVABLE = false
         val DEFAULT_SHOW_TICKS = true
@@ -1584,10 +1575,10 @@ class SimpleRangeView @JvmOverloads constructor(
         val DEFAULT_SHOW_FIXED_TICKS = true
         val DEFAULT_SHOW_LABELS = true
         val DEFAULT_IS_RANGE = true
-
         val DEFAULT_LABEL_MARGIN_BOTTOM = 16f
         val DEFAULT_MINIMAL_DISTANCE_BETWEEN_LABELS = 20f // TODO
-
         val DEFAULT_LABEL_FONT_SIZE = 12f
     }
+
+
 }

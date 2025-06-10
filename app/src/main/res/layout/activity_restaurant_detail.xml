@@ -1301,13 +1301,17 @@
                 android:text="Midtown Manhattan, New York, NY"
                 android:textColor="@color/black" />
 
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/map_view"
+            <com.business.zyvo.utils.TouchableWrapper
+                android:id="@+id/map_touch_wrapper"
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_marginHorizontal="@dimen/_10sdp" />
+                android:layout_marginHorizontal="@dimen/_10sdp">
 
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/map_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </com.business.zyvo.utils.TouchableWrapper>
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"

@@ -418,7 +418,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         binding.tvNamePlace.setText(data.property_title)
         binding.textRatingStar.setText(data.reviews_total_rating)
-        binding.textK.setText(" ( " + formatConvertCount(data?.reviews_total_rating?:"") + " )")
+        binding.textK.setText(" ( " + formatConvertCount(data?.reviews_total_count?:"") + " )")
         binding.textMiles.setText(data.distance_miles + " miles away")
         binding.time.setText(data.booking_hour)
         binding.money.setText("$" + truncateToTwoDecimalPlaces(data.booking_amount?:"0"))

@@ -1023,6 +1023,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         emailVerificationProfile(session?.getUserId().toString(),
                                             etEmail.text.toString(),dialog,textSubmitButton)
                                     }
+
                                 }
                             }else{
                     showErrorDialog(requireContext(),

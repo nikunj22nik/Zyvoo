@@ -47,13 +47,6 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.CircularSeekBar.OnSeekBarChangeListener
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
@@ -81,6 +74,13 @@ import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
@@ -166,6 +166,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         initialization()
         updateCalendar()
         clickListeners1()
+        settingMapScrollability()
 
         binding.imageInfo.setOnClickListener {
             showPopupWindowForPets(it)
@@ -198,6 +199,20 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         getHomePropertyDetails()
     }
 
+    private fun settingMapScrollability(){
+        mapView.getMapAsync {
+            googleMap: GoogleMap? -> mapView.setOnTouchListener { v: View, event: MotionEvent ->
+                // Disallow parent (e.g., ScrollView) from intercepting touch events when interacting with the map
+                if (event.action == MotionEvent.ACTION_DOWN || event.action == MotionEvent.ACTION_MOVE) {
+                    v.parent.requestDisallowInterceptTouchEvent(true)
+                }
+                else if (event.action == MotionEvent.ACTION_UP) {
+                    v.parent.requestDisallowInterceptTouchEvent(false)
+                }
+                false // Return false to let the MapView still handle the touch
+            }
+        }
+    }
 
     private fun showAddWishlistDialog(property_id: String, pos: Int) {
         val dialog = Dialog(this, R.style.BottomSheetDialog)
@@ -1507,6 +1522,7 @@ Log.d("checkDataTotalPage",it.total_pages.toString())
     override fun onMapReady(googleMap: GoogleMap) {
         try {
             mMap = googleMap
+
         } catch (e: Resources.NotFoundException) {
             Log.e(ErrorDialog.TAG, "Can't find style. Error: ", e)
         }
