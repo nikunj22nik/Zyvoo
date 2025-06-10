@@ -121,7 +121,6 @@ import java.util.Objects
 @AndroidEntryPoint
 class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,
     SetPreferred {
-
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
@@ -2999,10 +2998,12 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
         }
     }
-    fun isValidName(minLength: Int = 2, maxLength: Int = 20, str: String): Boolean {
+
+    fun isValidName(minLength: Int = 2, maxLength: Int = 15, str: String): Boolean {
         val trimmed = str.trim()
         return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
     }
+
     private fun dialogChangeName(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -3031,18 +3032,22 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             textSaveChangesButton.setOnClickListener {
                 if (editTextFirstName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.firstName)
-                } else if (!isValidName(str = editTextFirstName.text.toString())) {
+                }
+                else if (!isValidName(str = editTextFirstName.text.toString())) {
                     Log.d("Testing_name_size","size"+editTextFirstName.text.toString().length)
                     showErrorDialog(
                         requireContext(),
                         "First name should be between 3 and 20 characters long."
                     )
-                } else if (editTextLastName.text.isEmpty()) {
+                }
+                else if (editTextLastName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.lastName)
-                } else if (!isValidName(str = editTextLastName.text.toString())) {
+                }
+                else if (!isValidName(str = editTextLastName.text.toString())) {
                     Log.d("Testing_name_size","size"+editTextLastName.text.toString().length)
                     showErrorDialog(requireContext(), "Last name should be between 3 and 20 characters long.")
-                } else {
+                }
+                else {
                     toggleLoginButtonEnabled(false, textSaveChangesButton)
                     updateName(
                         editTextFirstName.text.toString(),
@@ -3056,7 +3061,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             show()
         }
     }
-
 
     private fun dialogEmailVerification(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -3109,13 +3113,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     }
 
     @SuppressLint("SuspiciousIndentation", "CutPasteId")
-    fun dialogOtp(
-        context: Context,
-        code: String,
-        number: String,
-        textHeaderOfOtpVerfication: String,
-        type: String
-    ) {
+    fun dialogOtp(context: Context, code: String, number: String, textHeaderOfOtpVerfication: String, type: String)
+    {
         val dialog = Dialog(context, R.style.BottomSheetDialog)
         dialog.apply {
             setCancelable(false)

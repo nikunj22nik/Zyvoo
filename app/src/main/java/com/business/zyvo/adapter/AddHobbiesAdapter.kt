@@ -69,8 +69,8 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
             // Handle click on the check button after entering data
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
-                if(enteredText.length >25){
-                    LoadingUtils.showErrorDialog(binding.root.context,"Hobby must be less than 25 characters long.")
+                if(enteredText.length >20){
+                    LoadingUtils.showErrorDialog(binding.root.context,"Hobby must be less than 20 characters long.")
                     return@setOnClickListener
                 }
 

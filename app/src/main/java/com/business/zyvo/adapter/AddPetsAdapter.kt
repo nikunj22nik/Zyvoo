@@ -18,9 +18,9 @@ import com.business.zyvo.model.AddHobbiesModel
 import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.onItemClickData
 
-
-
-class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>, var listner : OnClickListener1,var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>()
+class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
+                     var listner : OnClickListener1,
+                     var listner2 : onItemClickData): RecyclerView.Adapter<RecyclerView.ViewHolder>()
 {
 
     private val uploadPetsCode = 1 // Represents normal location entries
@@ -73,8 +73,8 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
             // Handle click on the check button after entering data
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
-                if(enteredText.length >25){
-                   LoadingUtils.showErrorDialog(binding.root.context,"Pet name must be less than 25 characters long.")
+                if(enteredText.length >20){
+                   LoadingUtils.showErrorDialog(binding.root.context,"Pet name must be less than 20 characters long.")
                 return@setOnClickListener
                 }
                 else if (enteredText.isNotEmpty()) {
