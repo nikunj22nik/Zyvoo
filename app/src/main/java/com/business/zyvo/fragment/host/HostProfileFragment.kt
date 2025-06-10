@@ -750,8 +750,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val userProfile = Gson().fromJson(resp, UserProfile::class.java)
 
             val nameBuilder = StringBuilder()
-            val firstName = userProfile.first_name?.also { nameBuilder.append("$it ") } ?: ""
-            val lastName = userProfile.last_name?.also { nameBuilder.append(it) } ?: ""
+             firstName = userProfile.first_name?.also { nameBuilder.append("$it ") } ?: ""
+             lastName = userProfile.last_name?.also { nameBuilder.append(it) } ?: ""
             userProfile.name = nameBuilder.toString()
 
             // Transform lists off main thread

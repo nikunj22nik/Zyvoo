@@ -810,7 +810,10 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             }}
 
      */
-
+    fun isValidName(minLength: Int = 2, maxLength: Int = 15, str: String): Boolean {
+        val trimmed = str.trim()
+        return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
+    }
     // this function change the name of dialog
     private fun dialogChangeName(context: Context?) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
@@ -840,11 +843,25 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             editTextFirstName.setText(firstName)
             editTextLastName.setText(lastName)
             textSaveChangesButton.setOnClickListener {
+                Log.d("ZyvoTag", "1")
                 if (editTextFirstName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.firstName)
-                } else if (editTextLastName.text.isEmpty()) {
+                } else if (!isValidName(str = editTextFirstName.text.toString())) {
+                    Log.d("ZyvoTag", "2")
+                    Log.d("Testing_name_size","size"+editTextFirstName.text.toString().length)
+                    showErrorDialog(
+                        requireContext(),
+                        "First name should be between 3 and 20 characters long."
+                    )
+                }
+                else if (editTextLastName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.lastName)
-                } else {
+                } else if (!isValidName(str = editTextLastName.text.toString())) {
+                    Log.d("ZyvoTag", "3")
+                    Log.d("Testing_name_size","size"+editTextLastName.text.toString().length)
+                    showErrorDialog(requireContext(), "Last name should be between 3 and 20 characters long.")
+                }else {
+                    Log.d("ZyvoTag", "4")
                     toggleLoginButtonEnabled(false, textSaveChangesButton)
                     updateName(
                         editTextFirstName.text.toString(),
