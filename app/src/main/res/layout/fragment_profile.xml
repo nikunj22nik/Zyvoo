@@ -62,9 +62,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_25sdp"
                     android:fontFamily="@font/poppins"
+                   android:singleLine="true"
                     android:text='@{user.name != null ? "Hey " + (user.name.length() > 30 ? user.name.substring(0, 30) + ".." : user.name) : "Hey Guest!"}'
                     android:textColor="@color/black"
                     android:textSize="@dimen/_11sdp"
+                    android:maxWidth="@dimen/_150sdp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
                     app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />

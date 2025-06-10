@@ -68,7 +68,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_12sdp"
                     android:fontFamily="@font/poppins"
-                    android:text="Select payment method"
+                    android:text="Select Payout Method"
                     android:textColor="@color/black" />
 
 
@@ -605,7 +605,7 @@
                                 app:spinner_arrow_show="true"
                                 app:spinner_arrow_tint="#3A4B4C"
                                 app:spinner_divider_show="false"
-                                app:spinner_item_height="34dp"
+                                app:spinner_item_height="@dimen/_35sdp"
                                 app:spinner_popup_animation="fade"
                                 app:spinner_popup_background="@color/white"
                                 app:spinner_popup_elevation="14dp"
@@ -659,7 +659,7 @@
                                 app:spinner_arrow_show="true"
                                 app:spinner_arrow_tint="#3A4B4C"
                                 app:spinner_divider_show="false"
-                                app:spinner_item_height="34dp"
+                                app:spinner_item_height="@dimen/_35sdp"
                                 app:spinner_popup_animation="fade"
                                 app:spinner_popup_background="@color/white"
                                 app:spinner_popup_elevation="14dp"
@@ -713,7 +713,7 @@
                                 app:spinner_arrow_show="true"
                                 app:spinner_arrow_tint="#3A4B4C"
                                 app:spinner_divider_show="false"
-                                app:spinner_item_height="34dp"
+                                app:spinner_item_height="@dimen/_35sdp"
                                 app:spinner_popup_animation="fade"
                                 app:spinner_popup_background="@color/white"
                                 app:spinner_popup_elevation="14dp"
