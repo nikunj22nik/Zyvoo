@@ -69,7 +69,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_light"
         android:padding="@dimen/_7sdp"
-        android:text="UnBlock"
+        android:text="Unblock"
         android:visibility="gone"
         android:textColor="@color/black"
         android:textSize="@dimen/_11ssp"
