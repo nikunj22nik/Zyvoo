@@ -50,6 +50,7 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
@@ -610,6 +611,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             addOnAdapter.updateAddOn(addOnList)
         }
     }
+
 
     private fun galleryLocationScreenTask(data: GetPropertyDetail?) {
         binding.etTitle.setText(data?.title)
@@ -1222,6 +1224,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             .build(requireContext())
         startStreertAutocomplete.launch(intent)
     }
+    fun isValidName(minLength: Int = 2, maxLength: Int = 25, str: String): Boolean {
+        val trimmed = str.trim()
+        return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
+    }
+
 
     private fun checkingGalleryValidation(): Boolean {
 
@@ -1234,7 +1241,14 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             LoadingUtils.showErrorDialog(requireContext(), "Please Enter Title of Space")
             return false
         }
-
+        if (!isValidName(str = titleResult.toString())) {
+            Log.d("Testing_name_size","size"+titleResult.toString().length)
+            showErrorDialog(
+                requireContext(),
+                "Title of Space should be between 3 and 25 characters long."
+            )
+            return false
+        }
         if (descriptionResult.isEmpty()) {
             LoadingUtils.showErrorDialog(requireContext(), "Please Enter Description of Space")
             return false

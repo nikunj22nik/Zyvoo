@@ -111,7 +111,10 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         arguments?.let {
             if (it.containsKey(AppConstant.BOOKING_ID)) {
                 bookingId = it.getInt(AppConstant.BOOKING_ID)
+
                 extensioId = it.getString(AppConstant.EXTENSION_ID)?:""
+                Log.d("IdTag",bookingId.toString())
+                Log.d("IdTag",extensioId.toString())
             }
         }
 
@@ -554,6 +557,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         data?.images?.let {
             if (it.isNotEmpty()) {
                 if (it.size == 1) {
+                    Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it[0])
+                        .into(binding.imgProfileHotel)
                     binding.cvTwoAndThreeImage.visibility = View.GONE
                     binding.cvOneImage.visibility = View.VISIBLE
                     binding.llThreeImage.visibility = View.GONE
@@ -564,6 +569,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                         .into(binding.proImageViewOne)
                 }
                 if (it.size == 2) {
+                    Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it[0])
+                        .into(binding.imgProfileHotel)
                     binding.cvTwoAndThreeImage.visibility = View.VISIBLE
                     binding.cvOneImage.visibility = View.GONE
                     binding.llThreeImage.visibility = View.GONE
@@ -576,6 +583,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                         .load(BuildConfig.MEDIA_URL + it.get(1)).into(binding.proImageTwo)
                 }
                 if (it.size == 3) {
+                    Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it[0])
+                        .into(binding.imgProfileHotel)
                     binding.cvTwoAndThreeImage.visibility = View.VISIBLE
                     binding.cvOneImage.visibility = View.GONE
                     binding.llThreeImage.visibility = View.VISIBLE
@@ -590,6 +599,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                         .load(BuildConfig.MEDIA_URL + it.get(2)).into(binding.prImageThree)
                 }
                 if (it.size >= 4) {
+                    Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it[0])
+                        .into(binding.imgProfileHotel)
                     binding.cvTwoAndThreeImage.visibility = View.VISIBLE
                     binding.cvOneImage.visibility = View.GONE
                     binding.llThreeImage.visibility = View.VISIBLE
