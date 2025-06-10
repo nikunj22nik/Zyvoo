@@ -17,6 +17,7 @@ object MultipartUtils {
 
 
     fun isPhoneNumberMatchingCountryCode(userInputNumber: String, countryPhoneCode: String): Boolean {
+
         val phoneUtil = PhoneNumberUtil.getInstance()
 
         // Normalize country phone code (e.g., "+91" or "91" → "91")
@@ -33,19 +34,21 @@ object MultipartUtils {
         }
 
         return try {
+
             // Get ISO region from country phone code (e.g., "91" → "IN")
             val regionCode = phoneUtil.getRegionCodeForCountryCode(normalizedCountryCode.toInt())
-
             // If region code is invalid, return false
+
             if (regionCode.isNullOrEmpty()) {
                 Log.e("PhoneValidation", "Invalid country code: $normalizedCountryCode")
                 return false
             }
-
             // Parse the phone number with the region
+
             val numberProto = phoneUtil.parse(internationalNumber, regionCode)
 
             // Validate actual country code
+
             val actualCountryCode = numberProto.countryCode.toString()
             val isValid = phoneUtil.isValidNumber(numberProto)
 
