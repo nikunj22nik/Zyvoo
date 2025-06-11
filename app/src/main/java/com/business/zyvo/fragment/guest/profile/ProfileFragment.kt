@@ -121,8 +121,7 @@ import java.util.Objects
 @AndroidEntryPoint
 class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,
     SetPreferred {
-    private var _binding: FragmentProfileBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentProfileBinding
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
     private lateinit var addWorkAdapter: AddWorkAdapter
@@ -286,7 +285,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
         // Inflate the layout for this fragment
-        _binding =
+        binding =
             FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
         // val newLocation = AddLocationModel(AppConstant.unknownLocation)
@@ -497,6 +496,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun getUserProfile() {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
@@ -1012,11 +1012,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 if (NetworkMonitorCheck._isConnected.value) {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
-                                        etEmail.error = "Email Address required"
+//                                        etEmail.error = "Email Address required"
                                         showErrorDialog(requireContext(),AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     }else if (!isValidEmail(etEmail.text.toString())){
-                                        etEmail.error = "Invalid Email Address"
+//                                        etEmail.error = "Invalid Email Address"
                                         showErrorDialog(requireContext(),AppConstant.invalideemail)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
@@ -2889,8 +2889,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     toggleLoginButtonEnabled(false, textSubmitButton)
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etMobileNumber.text!!.isEmpty()) {
-                                        etMobileNumber.error = "Mobile required"
+//                                        etMobileNumber.error = "Mobile required"
                                         showErrorDialog(requireContext(),AppConstant.mobile)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    }else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),  countyCodePicker.selectedCountryCodeWithPlus)){
+                                        showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
                                         val phoneNumber = etMobileNumber.text.toString()
@@ -2937,6 +2940,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     }else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),  countyCodePicker.selectedCountryCodeWithPlus)){
                                         showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
                                     }
                                     else {
                                         val phoneNumber = etMobileNumber.text.toString()
@@ -3083,11 +3087,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 if (NetworkMonitorCheck._isConnected.value) {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
-                                        etEmail.error = "Email Address required"
+//                                        etEmail.error = "Email Address required"
                                         showErrorDialog(requireContext(), AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else if (!isValidEmail(etEmail.text.toString())) {
-                                        etEmail.error = "Invalid Email Address"
+//                                        etEmail.error = "Invalid Email Address"
                                         showErrorDialog(requireContext(), AppConstant.invalideemail)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
@@ -4040,6 +4044,5 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 }

@@ -5013,11 +5013,12 @@ import javax.inject.Inject
 
      override suspend fun getSavedItemWishList(
          userId: Int,
-         wishListId: Int
+         wishListId: Int,
+         latitude : String ,longitude : String
      ): Flow<NetworkResult<JsonObject>> = flow{
          emit(NetworkResult.Loading())
          try {
-             api.getSavedItemWishList(userId, wishListId).apply {
+             api.getSavedItemWishList(userId, wishListId,latitude  ,longitude ).apply {
                  if (isSuccessful) {
                      body()?.let { resp ->
                          if (resp.has("success") && resp.get("success").asBoolean) {

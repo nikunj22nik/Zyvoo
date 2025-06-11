@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:context=".fragment.host.HostProfileFragment">
 
        <androidx.constraintlayout.widget.ConstraintLayout
@@ -161,7 +161,7 @@
                    android:maxWidth="@dimen/_150sdp"
                    android:singleLine="true"
                    android:fontFamily="@font/poppins"
-                   android:hint="Hey Guest!"
+                   android:hint="Hey Host!"
                    android:text='@{user.name != null ? "Hey " + user.name : "Hey Guest!"}'
                    android:textColorHint="@color/black"
                    android:textColor="@color/black"

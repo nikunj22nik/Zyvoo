@@ -829,7 +829,9 @@ interface ZyvoApi {
     @FormUrlEncoded
     suspend fun getSavedItemWishList(
         @Field("user_id") userId :Int,
-        @Field("wishlist_id") wishListId :Int
+        @Field("wishlist_id") wishListId :Int,
+        @Field("latitude") latitude : String ,
+        @Field("longitude")   longitude : String
     ) : Response<JsonObject>
 
 

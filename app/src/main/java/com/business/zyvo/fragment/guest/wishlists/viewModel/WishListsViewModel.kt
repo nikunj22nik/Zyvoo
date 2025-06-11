@@ -64,9 +64,9 @@ class WishListsViewModel @Inject constructor(
 
 
     suspend fun getSavedItemWishList(
-        userId: Int, wishListId: Int
+        userId: Int, wishListId: Int,latitude : String,longitude : String
     ): Flow<NetworkResult<JsonObject>> {
-        return repository.getSavedItemWishList(userId, wishListId).onEach {
+        return repository.getSavedItemWishList(userId, wishListId,latitude,longitude).onEach {
             when (it) {
                 is NetworkResult.Loading -> {
                     isLoading.value = true

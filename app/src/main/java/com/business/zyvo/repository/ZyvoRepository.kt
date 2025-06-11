@@ -630,7 +630,8 @@ interface ZyvoRepository {
 
     suspend fun getSavedItemWishList(
         @Field("user_id") userId :Int,
-        @Field("wishlist_id") wishListId :Int
+        @Field("wishlist_id") wishListId :Int,
+        latitude : String ,longitude : String
     ) :Flow<NetworkResult<JsonObject>>
 
 

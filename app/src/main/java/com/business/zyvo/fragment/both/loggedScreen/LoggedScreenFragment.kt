@@ -731,6 +731,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         }
                         else if (!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),countyCodePicker.selectedCountryCodeWithPlus)){
                             showErrorDialog(requireContext(),AppConstant.validPhoneNumber)
+                            toggleLoginButtonEnabled(true, textContinueButton)
 
                         }
                         else {

@@ -139,7 +139,7 @@ class RecentlyViewedFragment : Fragment() , OnClickListener1, onItemClickListene
                     lifecycleScope.launch {
                         if (userId != null) {
                             LoadingUtils.showDialog(requireContext(),false)
-                            viewModel.getSavedItemWishList(userId, Integer.parseInt(wishId)).collect {
+                            viewModel.getSavedItemWishList(userId, Integer.parseInt(wishId),session!!.getLatitude(),session!!.getLongitude()).collect {
                               when(it){
                                   is NetworkResult.Success ->{
                                       LoadingUtils.hideDialog()

@@ -38,6 +38,7 @@ import com.business.zyvo.fragment.host.hostPayout.viewmodel.HostPayoutViewModel
 import com.business.zyvo.model.StateModel
 import com.business.zyvo.model.host.CountryModel
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.MultipartUtils
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.stripe.android.ApiResultCallback
 import com.stripe.android.Stripe
@@ -1210,6 +1211,9 @@ private var cardNumberString : String = ""
         else if (binding.etPhoneNumber.text?.trim().toString().trim().isEmpty()) {
             showErrorDialog(requireContext(), AppConstant.phoneError)
             return false
+        }else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(binding.etPhoneNumber.text.toString(),  binding.countyCodePicker.selectedCountryCodeWithPlus)){
+            showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
+            return false
         }
         else if (binding.etDOB.text?.toString().equals("MM/DD/YYYY")) {
             showErrorDialog(requireContext(), AppConstant.dobError)
@@ -1552,10 +1556,11 @@ private var cardNumberString : String = ""
         } else if (binding.etPhoneNumberDebitCard.text?.trim().toString().trim().isEmpty()) {
             showErrorDialog(requireContext(), AppConstant.phoneError)
             return false
-        } else if (binding.etPhoneNumberDebitCard.text?.trim().toString().length != 10) {
+        } else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(binding.etPhoneNumberDebitCard.text.toString(),  binding.countyCodePicker1.selectedCountryCodeWithPlus)){
             showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
             return false
-        } else if (binding.etDOBDebitCard.text?.toString().equals("MM/DD/YYYY")) {
+        }
+        else if (binding.etDOBDebitCard.text?.toString().equals("MM/DD/YYYY")) {
             showErrorDialog(requireContext(), AppConstant.dobError)
             return false
         } else if (binding.spinnerSelectIDTypeDebitCard.text?.toString().equals("Select ID type")) {

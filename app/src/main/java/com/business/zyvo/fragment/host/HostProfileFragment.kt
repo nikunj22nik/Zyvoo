@@ -131,6 +131,7 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.Objects
 import androidx.core.graphics.drawable.toDrawable
+import com.business.zyvo.utils.MultipartUtils
 
 
 @AndroidEntryPoint
@@ -749,8 +750,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val userProfile = Gson().fromJson(resp, UserProfile::class.java)
 
             val nameBuilder = StringBuilder()
-            val firstName = userProfile.first_name?.also { nameBuilder.append("$it ") } ?: ""
-            val lastName = userProfile.last_name?.also { nameBuilder.append(it) } ?: ""
+             firstName = userProfile.first_name?.also { nameBuilder.append("$it ") } ?: ""
+             lastName = userProfile.last_name?.also { nameBuilder.append(it) } ?: ""
             userProfile.name = nameBuilder.toString()
 
             // Transform lists off main thread
@@ -1831,6 +1832,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     if (etMobileNumber.text!!.isEmpty()) {
 //                                        etMobileNumber.error = "Mobile required"
                                         showErrorDialog(requireContext(), AppConstant.mobile)
+                                        toggleLoginButtonEnabled(true, textSubmitButton)
+                                    }else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),  countyCodePicker.selectedCountryCodeWithPlus)){
+                                        showErrorDialog(requireContext(), AppConstant.validPhoneNumber)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
                                         val phoneNumber = etMobileNumber.text.toString()
