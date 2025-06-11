@@ -293,6 +293,16 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         binding.textAddNew.setOnClickListener {
             dialogAddCardGuest()
         }
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(requireContext(), false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
+        }
 
         addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf(), this)
         binding.recyclerViewPaymentCardList1.adapter = addPaymentCardAdapter
@@ -763,17 +773,40 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 add(AddLocationModel(AppConstant.unknownLocation))
             } ?: emptyList()
 
-            val transformedWorkList = userProfile.my_work?.let {
-                getObjectsFromNames(it) { name -> AddWorkModel(name) }
-            }?.apply {
-                add(AddWorkModel(AppConstant.unknownLocation))
-            } ?: emptyList()
+          //  val transformedWorkList = userProfile.my_work?.let {
+//                workList = getObjectsFromNames(userProfile.my_work) { name ->
+//                    AddWorkModel(name)  // Using the constructor of MyObject to create instances
+//                }
+//                val newLanguage = AddWorkModel(AppConstant.unknownLocation)
+//                workList.add(newLanguage)
 
-            val transformedLanguageList = userProfile.languages?.let {
-                getObjectsFromNames(it) { name -> AddLanguageModel(name) }
-            }?.apply {
-                add(AddLanguageModel(AppConstant.unknownLocation))
-            } ?: emptyList()
+              //  getObjectsFromNames(it) { name -> AddWorkModel(name) }
+//            }?.apply {
+//                add(AddWorkModel(AppConstant.unknownLocation))
+//            } ?: emptyList()
+
+                                                if (userProfile?.my_work != null && userProfile.my_work.isNotEmpty()) {
+                                        workList = getObjectsFromNames(userProfile.my_work) { name ->
+                                            AddWorkModel(name)  // Using the constructor of MyObject to create instances
+                                        }
+                                        val newLanguage = AddWorkModel(AppConstant.unknownLocation)
+                                        workList.add(newLanguage)
+                                    }
+                                    if (userProfile?.languages != null && userProfile.languages.isNotEmpty()) {
+                                        languageList = getObjectsFromNames(userProfile.languages) { name ->
+                                            AddLanguageModel(name)  // Using the constructor of MyObject to create instances
+                                        }
+                                        val newLanguage =
+                                            AddLanguageModel(AppConstant.unknownLocation)
+                                        languageList.add(newLanguage)
+
+                                    }
+
+//            val transformedLanguageList = userProfile.languages?.let {
+//                getObjectsFromNames(it) { name -> AddLanguageModel(name) }
+//            }?.apply {
+//                add(AddLanguageModel(AppConstant.unknownLocation))
+//            } ?: emptyList()
 
             // Now switch to UI thread
             withContext(Dispatchers.Main) {
@@ -811,8 +844,10 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 LoadingUtils.hideDialog()
                 // Update adapters
                 addLocationAdapter.updateLocations(transformedLocationList.toMutableList())
-                addWorkAdapter.updateWork(transformedWorkList.toMutableList())
-                addLanguageSpeakAdapter.updateLanguage(transformedLanguageList.toMutableList())
+               // addWorkAdapter.updateWork(transformedWorkList.toMutableList())
+                addWorkAdapter.updateWork(workList)
+              //  addLanguageSpeakAdapter.updateLanguage(transformedLanguageList.toMutableList())
+                addLanguageSpeakAdapter.updateLanguage(languageList)
             }
         }
 
@@ -3419,7 +3454,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
 
             "work" -> {
+                Log.d("WorkDelete", "i'm here 1")
                 if (obj < workList.size - 1) {
+                    Log.d("WorkDelete", "i'm here 2")
                     deleteMyWork(obj)
                     workList.removeAt(obj)
                     addWorkAdapter.updateWork(workList)
@@ -3477,7 +3514,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                                     LoadingUtils.showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.about_me = about_me
-                                    binding.user = userProfile
+                                    Log.d("checkAboutMe","about_me"+about_me+"1")
+                                    //binding.user = userProfile
                                 }
                             }
 
@@ -3625,6 +3663,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     }
 
     private fun deleteMyWork(index: Int) {
+        Log.d("WorkDelete", "i'm here 3")
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()

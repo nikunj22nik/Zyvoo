@@ -127,6 +127,7 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                                 notificationId = list.first().notification_id
                                 Log.d("checkDataList",list.toString())
                                 adapterGuestNotification.updateItem(list.toMutableList())
+                                binding.tvNoData.visibility =View.GONE
                             } else {
                                 binding.tvNoData.visibility =View.VISIBLE
                                 binding.recyclerView.visibility =View.GONE
@@ -269,13 +270,29 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                     when (it) {
                         is NetworkResult.Success -> {
                             Log.d("Testing", "list here is " + it.data?.size)
-                            if (it.data != null){
-                                Log.d("checkDataList",it.data.toString())
-                                adapterNotificationScreen.updateItem(it.data)
+                            val list = it.data.orEmpty()
+                            if (list.isNotEmpty()) {
+                              //  notificationId = list.first().notification_id
+                                Log.d("checkDataList",list.toString())
+                                adapterNotificationScreen.updateItem(list.toMutableList())
+                                binding.tvNoData.visibility =View.GONE
+                            } else {
+                                binding.tvNoData.visibility =View.VISIBLE
+                                binding.recyclerView.visibility =View.GONE
 
-                                list = it.data
-
+                                adapterNotificationScreen.updateItem(list.toMutableList())
+                                Log.d("API_RESPONSE", "Empty list received.")
                             }
+//                            if (it.data != null){
+//                                Log.d("checkDataList",it.data.toString())
+//                                adapterNotificationScreen.updateItem(it.data)
+//
+//                                list = it.data
+//
+//                            } else{
+//                                binding.tvNoData.visibility =View.VISIBLE
+//                                binding.recyclerView.visibility =View.GONE
+//                            }
 
                             LoadingUtils.hideDialog()
                         }
