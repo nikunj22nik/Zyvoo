@@ -366,7 +366,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         binding.rlEdit.setOnClickListener {
             if (editAboutButton) {
                 binding.tvEdit.text = "Save"
-                binding.imageEditAboutIcon.visibility = View.GONE
+                binding.imageEditAboutIcon.visibility = GONE
                 binding.imageSaveAboutIcon.visibility = View.VISIBLE
                 binding.etAboutMeText.isEnabled = true
                 editAboutButton = false
@@ -392,8 +392,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 updateAddStreetAddress(binding.streetEditText.text.toString())
             }
             binding.streetEditText.isEnabled = false
-            binding.imageEditStreetAddress.visibility = View.VISIBLE
-            binding.imageStreetCheckedButton.visibility = GONE
+         //   binding.imageEditStreetAddress.visibility = View.VISIBLE
+         //   binding.imageStreetCheckedButton.visibility = GONE
         }
 
         binding.imageEditCityAddress.setOnClickListener {
@@ -408,8 +408,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 updateCityAddress(binding.cityET.text.toString(), "")
             }
             binding.cityET.isEnabled = false
-            binding.imageEditCityAddress.visibility = View.VISIBLE
-            binding.CityCheckedButton.visibility = GONE
+          //  binding.imageEditCityAddress.visibility = View.VISIBLE
+         //   binding.CityCheckedButton.visibility = GONE
         }
 
         binding.imageEditStateAddress.setOnClickListener {
@@ -424,8 +424,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 updateStateAddress("")
             }
             binding.stateEt.isEnabled = false
-            binding.imageEditStateAddress.visibility = View.VISIBLE
-            binding.stateCheckedButton.visibility = GONE
+          //  binding.imageEditStateAddress.visibility = View.VISIBLE
+        //    binding.stateCheckedButton.visibility = GONE
         }
 
         binding.imageEditZipAddress.setOnClickListener {
@@ -440,8 +440,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 updateZipCode(binding.zipEt.text.toString(), "")
             }
             binding.zipEt.isEnabled = false
-            binding.imageEditZipAddress.visibility = View.VISIBLE
-            binding.zipCodeCheckedButton.visibility = GONE
+         //   binding.imageEditZipAddress.visibility = View.VISIBLE
+        //    binding.zipCodeCheckedButton.visibility = GONE
 
         }
 
@@ -475,7 +475,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 result.data?.let { intent ->
                     val place = Autocomplete.getPlaceFromIntent(intent)
                     val latLng = place.latLng
-
+                    binding.imageEditStreetAddress.visibility = View.VISIBLE
+                    binding.imageStreetCheckedButton.visibility = GONE
                     binding.streetEditText.clearFocus()
                     getLocationDetails(requireContext(), latLng) { locationDetails ->
                         // Use city, state, zipCode here
@@ -498,18 +499,21 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 binding.stateEt.setText(it.state)
                                 binding.zipEt.setText(it.zipCode)
                                 binding.streetEditText.isEnabled = false
-                                binding.imageEditStreetAddress.visibility = View.VISIBLE
-                                binding.imageStreetCheckedButton.visibility = GONE
                                 updateAddStreetAddress(street ?: "")
                                 updateStateAddress(AppConstant.profileType)
                                 updateZipCode(it.zipCode, AppConstant.profileType)
                                 updateCityAddress(it.city, AppConstant.profileType)
+                            }else{
+                                binding.imageEditStreetAddress.visibility = GONE
+                                binding.imageStreetCheckedButton.visibility = View.VISIBLE
                             }
                         }
                     }
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
                 Log.i(ErrorDialog.TAG, "User canceled autocomplete")
+                binding.imageEditStreetAddress.visibility = GONE
+                binding.imageStreetCheckedButton.visibility = View.VISIBLE
             }
         }
 
@@ -713,7 +717,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
-                            binding.llScrlView.visibility = View.GONE
+                            binding.llScrlView.visibility = GONE
                             showErrorDialog(requireContext(), it.message!!)
                         }
 
@@ -788,15 +792,15 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 binding.cityET.setText(userProfile.city ?: "")
 
                 if (userProfile.email_verified == 1) {
-                    binding.textConfirmNow.visibility = View.GONE
+                    binding.textConfirmNow.visibility = GONE
                     binding.textVerified.visibility = View.VISIBLE
                 }
                 if (userProfile.phone_verified == 1) {
-                    binding.textConfirmNow1.visibility = View.GONE
+                    binding.textConfirmNow1.visibility = GONE
                     binding.textVerified1.visibility = View.VISIBLE
                 }
                 if (userProfile.identity_verified == 1) {
-                    binding.textConfirmNow2.visibility = View.GONE
+                    binding.textConfirmNow2.visibility = GONE
                     binding.textVerified2.visibility = View.VISIBLE
                 }
 
@@ -962,7 +966,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 binding.recyclerViewPaymentCardList1.visibility = View.VISIBLE
 
             } else if (!isDropdownOpen) {
-                binding.recyclerViewPaymentCardList1.visibility = View.GONE
+                binding.recyclerViewPaymentCardList1.visibility = GONE
 
 
             }
@@ -993,7 +997,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 binding.rlBankNameAndCardNamePayOut.visibility = View.VISIBLE
 
             } else if (!isDropdownOpenpayout) {
-                binding.rlBankNameAndCardNamePayOut.visibility = View.GONE
+                binding.rlBankNameAndCardNamePayOut.visibility = GONE
             }
             binding.textPayOutMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
         }
@@ -1128,7 +1132,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
 
             R.id.clHead -> {
-                binding.cvInfo.visibility = View.GONE
+                binding.cvInfo.visibility = GONE
             }
 
             R.id.imageEditPicture -> {
@@ -1195,11 +1199,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             togglePaymentTypeSelectButton.setOnCheckedChangeListener { v1, isChecked ->
                 if (!isChecked) {
-                    llDebitCard.visibility = View.GONE
+                    llDebitCard.visibility = GONE
                     rlBankAccount.visibility = View.VISIBLE
 
                 } else {
-                    rlBankAccount.visibility = View.GONE
+                    rlBankAccount.visibility = GONE
                     llDebitCard.visibility = View.VISIBLE
                 }
 
@@ -2857,7 +2861,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 when (it) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
-                            binding.textConfirmNow.visibility = View.GONE
+                            binding.textConfirmNow.visibility = GONE
                             binding.textVerified.visibility = View.VISIBLE
                             getUserProfile()
                             dialog.dismiss()
@@ -2900,7 +2904,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             rlResendLine.visibility = View.VISIBLE
-                            incorrectOtp.visibility = View.GONE
+                            incorrectOtp.visibility = GONE
                             countDownTimer?.cancel()
                             startCountDownTimer(
                                 requireContext(),
@@ -2949,7 +2953,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             rlResendLine.visibility = View.VISIBLE
-                            incorrectOtp.visibility = View.GONE
+                            incorrectOtp.visibility = GONE
                             countDownTimer?.cancel()
                             startCountDownTimer(
                                 requireContext(),
@@ -2998,7 +3002,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             override fun onFinish() {
                 textTimeResend.text = "00:00"
-                rlResendLine.visibility = View.GONE
+                rlResendLine.visibility = GONE
                 if (textTimeResend.text == "00:00") {
                     resendEnabled = true
                     textResend.setTextColor(
@@ -3132,7 +3136,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val textTimeResend = findViewById<TextView>(R.id.textTimeResend)
             val incorrectOtp = findViewById<TextView>(R.id.incorrectOtp)
             textEnterYourEmail.text = str
-            rlResendLine.visibility = View.GONE
+            rlResendLine.visibility = GONE
 
             imageCross.setOnClickListener {
                 dialog.dismiss()
@@ -3471,7 +3475,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                                     binding.tvEdit.text = "Edit"
                                     binding.imageEditAboutIcon.visibility = View.VISIBLE
-                                    binding.imageSaveAboutIcon.visibility = View.GONE
+                                    binding.imageSaveAboutIcon.visibility = GONE
                                     binding.etAboutMeText.isEnabled = false
                                     editAboutButton = true
 
@@ -4152,12 +4156,12 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     bankNameAdapterPayout.notifyDataSetChanged()
                                     binding.recyclerViewPaymentCardListPayOut.visibility =
                                         View.VISIBLE
-                                    binding.textBankNoDataFound.visibility = View.GONE
+                                    binding.textBankNoDataFound.visibility = GONE
                                     if (bankNameAdapterPayout != null) {
                                         bankNameAdapterPayout.notifyDataSetChanged()
                                     }
                                 } else {
-                                    binding.recyclerViewPaymentCardListPayOut.visibility = View.GONE
+                                    binding.recyclerViewPaymentCardListPayOut.visibility = GONE
                                     binding.textBankNoDataFound.visibility = View.VISIBLE
                                 }
                             }
@@ -4168,7 +4172,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     cardNumberAdapterPayout.notifyDataSetChanged()
                                     binding.recyclerViewCardNumberListPayOut.visibility =
                                         View.VISIBLE
-                                    binding.textCardNoDataFound.visibility = View.GONE
+                                    binding.textCardNoDataFound.visibility = GONE
 
                                     Log.d("cardList", "cardListImhere")
 
@@ -4177,7 +4181,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     }
 
                                 } else {
-                                    binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
+                                    binding.recyclerViewCardNumberListPayOut.visibility = GONE
                                     binding.textCardNoDataFound.visibility = View.VISIBLE
                                 }
                             }

@@ -119,13 +119,13 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     var spaceType: String = "entire_home"
     var propertySize: Int = 0
     var peopleCount: Int = 0
-    var badroomCount = 0;
-    var bathroomCount = 0;
+    var badroomCount = 0
+    var bathroomCount = 0
     var activityListResult = mutableSetOf<String>()
     var amenitiesListResult = mutableListOf<String>()
-    var instantBookingCheck = 0;
-    var selfCheckIn = 0;
-    var allowsPets = 0;
+    var instantBookingCheck = 0
+    var selfCheckIn = 0
+    var allowsPets = 0
     var cancellationDays: String = "00"
 
     // variables for Gallery and location
@@ -163,8 +163,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     private var PICK_IMAGES_REQUEST = 210
     private var minimumHourIndex = 0
     private var priceIndex = 0
-    private var discountHourIndex = 0;
-    private var discountPriceIndex = 0;
+    private var discountHourIndex = 0
+    private var discountPriceIndex = 0
     private lateinit var galleryAdapter: GallaryAdapter
     private var mMap: GoogleMap? = null
     private val REQUEST_CODE_STORAGE_PERMISSION = 1
@@ -184,16 +184,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     )
     lateinit var navController: NavController
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentManagePlaceBinding.inflate(inflater, container, false)
         settingDataToActivityModel()
         ActivityCompat.requestPermissions(
@@ -254,15 +249,15 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 Log.d("TESTING", "ActivityList size " + activityListResult.size)
                 Log.d("TESTING", "AmenitiesList Size" + amenitiesList.size)
                 if (activityListResult.size == 0) {
-                    LoadingUtils.showErrorDialog(requireContext(), "Please Select Activity")
+                    showErrorDialog(requireContext(), "Please Select Activity")
                     return@setOnClickListener
                 }
                 if (amenitiesListResult.size == 0) {
-                    LoadingUtils.showErrorDialog(requireContext(), "Please Select Aminities")
+                    showErrorDialog(requireContext(), "Please Select Amenities")
                     return@setOnClickListener
                 }
                 if (cancellationDays.equals("00")) {
-                    LoadingUtils.showErrorDialog(
+                    showErrorDialog(
                         requireContext(),
                         "Please Select Cancellation Time"
                     )
@@ -337,9 +332,9 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         requestBody.max_guest_count = peopleCount
         requestBody.bedroom_count = badroomCount
         requestBody.bathroom_count = bathroomCount
-        requestBody.is_instant_book = if (instantBookingCheck == 1) true else false
-        requestBody.has_self_checkin = if (selfCheckIn == 1) true else false
-        requestBody.allows_pets = if (allowsPets == 1) true else false
+        requestBody.is_instant_book = instantBookingCheck == 1
+        requestBody.has_self_checkin = selfCheckIn == 1
+        requestBody.allows_pets = allowsPets == 1
         requestBody.cancellation_duration = cancellationDays.toInt()
         requestBody.description = descriptionResult
         requestBody.parking_rules = parkingRule
@@ -356,7 +351,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         requestBody.bulk_discount_hour = bulkDiscountHour
         requestBody.bulk_discount_rate = bulkDiscountPrice
         requestBody.cleaning_fee =
-            if (cleaningCharges.toString().length == 0) 0.0f else cleaningCharges.toFloat();   ///need to correct
+            if (cleaningCharges.toString().length == 0) 0.0f else cleaningCharges.toFloat()   ///need to correct
         requestBody.available_month = availableMonth
         requestBody.available_day = days
         requestBody.available_from = fromHour
@@ -370,7 +365,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             val validAddOns = addOnList.filter { addOn ->
                 !addOn.name.isNullOrBlank() &&
                         addOn.price != null &&
-                        addOn.price!!.toDouble() > 0
+                        addOn.price.toDouble() > 0
             }
 
             requestBody.add_ons = validAddOns.toMutableList()
@@ -382,7 +377,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             if (propertyId == -1) {
                 if (newGalleryList.size == 0) {
-                    LoadingUtils.showErrorDialog(requireContext(), "Please Upload Images")
+                    showErrorDialog(requireContext(), "Please Upload Images")
                     return@launch
                 }
                 LoadingUtils.showDialog(requireContext(), false)
@@ -399,7 +394,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
-                            LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
+                            showErrorDialog(requireContext(), it.message.toString())
                         }
 
                         else -> {
@@ -412,7 +407,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 requestBody.delete_images = deleteImage
 
                 if (newGalleryList.size == 0 && imageList.size == 0) {
-                    LoadingUtils.showErrorDialog(requireContext(), "Please Upload Images")
+                    showErrorDialog(requireContext(), "Please Upload Images")
                     return@launch
                 }
                 LoadingUtils.showDialog(requireContext(), true)
@@ -426,7 +421,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
-                            LoadingUtils.showErrorDialog(requireContext(), it.message.toString())
+                            showErrorDialog(requireContext(), it.message.toString())
                         }
 
                         is NetworkResult.Loading -> {
@@ -441,15 +436,15 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun validation(): Boolean {
         if (activityListResult.size == 0) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Select Activity")
+            showErrorDialog(requireContext(), "Please Select Activity")
             return false
         }
         if (amenitiesListResult.size == 0) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Select Amenities")
+            showErrorDialog(requireContext(), "Please Select Amenities")
             return false
         }
         if (cancellationDays.equals("00")) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Select Cancellation Time")
+            showErrorDialog(requireContext(), "Please Select Cancellation Time")
             return false
         }
         if (!checkingGalleryValidation()) {
@@ -458,11 +453,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         if (!checkingAvailabilityData()) {
             return false
         } else if (binding.tvHours.text.isEmpty()) {
-            LoadingUtils.showErrorDialog(requireActivity(), AppConstant.stTime)
+            showErrorDialog(requireActivity(), AppConstant.stTime)
         } else if (binding.tvHours1.text.isEmpty()) {
-            LoadingUtils.showErrorDialog(requireActivity(), AppConstant.edTime)
+            showErrorDialog(requireActivity(), AppConstant.edTime)
         } else if (!isWithin24Hours(fromHour, toHour)) {
-            LoadingUtils.showErrorDialog(requireActivity(), AppConstant.avabilty)
+            showErrorDialog(requireActivity(), AppConstant.avabilty)
         }
         return true
     }
@@ -576,8 +571,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             it.available_from = DateManager(requireContext()).getHoursAndMinutes(it.available_from)
             var fromHour = DateManager(requireContext()).convert24HourToAMPM(it.available_from)
             var toHour = DateManager(requireContext()).convert24HourToAMPM(it.available_to)
-            binding.tvHours.setText(fromHour)
-            binding.tvHours1.setText(toHour)
+            binding.tvHours.text = fromHour
+            binding.tvHours1.text = toHour
             Log.d(
                 "TESTING_ZYvoo",
                 "Available From " + it.available_from + " Available To " + it.available_to
@@ -587,22 +582,22 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
             val minHour = it.min_booking_hours.toDouble()
             minimumHourValue = minHour.toInt()
-            binding.tvHoursSelect.setText(minimumHourValue.toString() + " hour minimum")
+            binding.tvHoursSelect.text = minimumHourValue.toString() + " hour minimum"
 
             var hPrice = it.hourly_rate.toDouble()
             hourlyPrice = hPrice.toInt()
-            binding.tvHoursRupeesSelect.setText("$" + hourlyPrice.toString())
+            binding.tvHoursRupeesSelect.text = "$" + hourlyPrice.toString()
 
 
             var discountHour = it.bulk_discount_hour.toDouble()
             bulkDiscountHour = discountHour.toInt()
-            binding.tvHoursBulkSelect.setText(bulkDiscountHour.toString() + " hour minimum")
+            binding.tvHoursBulkSelect.text = bulkDiscountHour.toString() + " hour minimum"
 
 
             val disCountPrice = it.bulk_discount_rate.toDouble()
             val disPrice = disCountPrice.toInt()
             bulkDiscountPrice = disPrice
-            binding.tvDiscountSelect.setText(bulkDiscountPrice.toString() + "%  Discount")
+            binding.tvDiscountSelect.text = bulkDiscountPrice.toString() + "%  Discount"
             addOnList = it.add_ons.toMutableList()
             addOnList.add(AddOnModel("Unknown Location", "0"))
 
@@ -892,12 +887,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     private fun checkingAvailabilityData(): Boolean {
 
         if (addOnList.size == 0) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Select Add-on")
+            showErrorDialog(requireContext(), "Please Select Add-on")
             return false
         }
 
         if (fromHour.equals(toHour)) {
-            LoadingUtils.showErrorDialog(
+            showErrorDialog(
                 requireContext(),
                 "Start time and end time should be different"
             )
@@ -905,7 +900,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
 
         if (fromHour.equals("00::00") && toHour.equals("00:00")) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Select Availability Hours")
+            showErrorDialog(requireContext(), "Please Select Availability Hours")
             return false
         }
         //   var value =DateManager(requireContext()).isFromTimeLessThanToTime(fromHour,toHour)
@@ -914,7 +909,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         // return false
 
         if(!isTimeRangeGreaterThanMinimum(fromHour,toHour,minimumHourValue)){
-            LoadingUtils.showErrorDialog(requireContext(),"The selected time range is less than the minimum required duration.")
+            showErrorDialog(requireContext(),"The selected time range is less than the minimum required duration.")
             return false
         }
 
@@ -1167,7 +1162,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     // For handling the result of the Autocomplete Activity
     private val startStreertAutocomplete =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+            if (result.resultCode == RESULT_OK && result.data != null) {
                 result.data?.let { intent ->
                     val place = Autocomplete.getPlaceFromIntent(intent)
                     val latLng = place.latLng
@@ -1188,24 +1183,24 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                                     binding.etAddress.setText(place.name ?: "")
                                     street = place.name ?: ""
                                 } else {
-                                    binding.etAddress.setText(it.streetAddress ?: "")
-                                    street = it.streetAddress ?: ""
+                                    binding.etAddress.setText(it.streetAddress)
+                                    street = it.streetAddress
                                 }
                                 if (it.city.isNullOrEmpty()) {
                                     binding.etCity.setText(it.city)
-                                    city = it.city ?: ""
+                                    city = it.city
                                 }
                                 if (it.state.isNullOrEmpty()) {
                                     binding.state.setText(it.state)
-                                    state = it.state ?: ""
+                                    state = it.state
                                 }
                                 if (it.zipCode.isNullOrEmpty()) {
                                     binding.zipcode.setText(it.zipCode)
-                                    zipcode = it.zipCode ?: ""
+                                    zipcode = it.zipCode
                                 }
                                 if (it.country.isNullOrEmpty()) {
                                     binding.country.setText(it.country)
-                                    country = it.country ?: ""
+                                    country = it.country
                                 }
                             }
                         }
@@ -1233,12 +1228,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     private fun checkingGalleryValidation(): Boolean {
 
         if (galleryList.size == 0) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Upload location Images")
+            showErrorDialog(requireContext(), "Please Upload location Images")
             return false
         }
 
         if (titleResult.isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Title of Space")
+            showErrorDialog(requireContext(), "Please Enter Title of Space")
             return false
         }
         if (!isValidName(str = titleResult.toString())) {
@@ -1250,31 +1245,31 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             return false
         }
         if (descriptionResult.isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Description of Space")
+            showErrorDialog(requireContext(), "Please Enter Description of Space")
             return false
         }
 
         if (street.isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Street")
+            showErrorDialog(requireContext(), "Please Enter Street")
             return false
         }
 
         if (city.isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Enter City Name")
+            showErrorDialog(requireContext(), "Please Enter City Name")
             return false
         }
 
         if (zipcode.isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Zip Code")
+            showErrorDialog(requireContext(), "Please Enter Zip Code")
             return false
         }
 
         if (country.isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Country")
+            showErrorDialog(requireContext(), "Please Enter Country")
             return false
         }
         if (state.isEmpty()) {
-            LoadingUtils.showErrorDialog(requireContext(), "Please Enter Country")
+            showErrorDialog(requireContext(), "Please Enter Country")
             return false
         }
         return true
@@ -1367,7 +1362,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                                     requireContext(),
                                     "You can only add 5 images to one property.",
                                     Toast.LENGTH_LONG
-                                ).show();
+                                ).show()
 
                             }
 
@@ -1384,12 +1379,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                                         requireContext(),
                                         "You can only add 5 images to one property.",
                                         Toast.LENGTH_LONG
-                                    ).show();
+                                    ).show()
 
                                 }
                             }
                         } else {
-                            requestPermission();
+                            requestPermission()
                         }
                     }
                 }
@@ -1637,7 +1632,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             }
         } else if (requestCode == 103) {
 
-            if (resultCode == Activity.RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 val place = Autocomplete.getPlaceFromIntent(data)
                 //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
                 val addressComponents = place.addressComponents?.asList()
@@ -3182,7 +3177,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         binding.llAvailabilityFromHours.setOnClickListener {
             DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
-                binding.tvHours.setText(selectedHour)
+                binding.tvHours.text = selectedHour
                 fromHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
                 Log.d("TESTING_ZYVOO", "From " + fromHour)
             }
@@ -3190,7 +3185,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         binding.llAvailabilityEndHours.setOnClickListener {
             DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
-                binding.tvHours1.setText(selectedHour)
+                binding.tvHours1.text = selectedHour
                 toHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
                 Log.d("TESTING_ZYVOO", "To " + toHour)
             }
@@ -3352,7 +3347,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                         minimumHourIndex = selectedIndex
                         //minimumHourValue = selectedIndex + 1;
                         //Vipin
-                        minimumHourValue = selectedIndex + 2;
+                        minimumHourValue = selectedIndex + 2
                     } else if (type.equals(AppConstant.PRICE)) {
                         priceIndex = selectedIndex
                         // hourlyPrice = (selectedIndex + 1) * 10
