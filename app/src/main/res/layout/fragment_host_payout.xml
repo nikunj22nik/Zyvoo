@@ -1966,14 +1966,12 @@ android:visibility="gone"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imagePostalCodeIconDebitCard"
                                 android:text="Postal Code" />
-
                             <ImageView
                                 android:id="@+id/imagePostalCodeIconDebitCard"
                                 android:layout_width="@dimen/_25sdp"
                                 android:layout_height="@dimen/_25sdp"
                                 android:layout_below="@+id/textPostalCodeDebitCard"
                                 android:src="@drawable/ic_orange_postal_icon" />
-
                             <EditText
                                 android:id="@+id/etPostalCodeDebitCard"
                                 android:layout_width="match_parent"
@@ -1992,7 +1990,6 @@ android:visibility="gone"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
                                 android:textSize="@dimen/_10ssp" />
-
 
                         </RelativeLayout>
 

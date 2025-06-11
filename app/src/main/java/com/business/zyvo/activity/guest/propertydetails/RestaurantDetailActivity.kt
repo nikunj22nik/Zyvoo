@@ -138,8 +138,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             // Log.d(ErrorDialog.TAG, status)
         }
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
+
         setContentView(binding.root)
+
         session = SessionManager(this)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -273,11 +276,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             lifecycleScope.launch(Dispatchers.Main) {
                 viewModel.getHomePropertyDetails(
-                    userIdCheck,
-                    propertyId
+                    userIdCheck, propertyId
                 ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
+                            binding.main.visibility =View.VISIBLE
                             it.data?.let { resp ->
 
                                 propertyData = Gson().fromJson(
@@ -350,7 +353,8 @@ Log.d("checkDataTotalPage",it.total_pages.toString())
                     }
                 }
             }
-        } else {
+        }
+        else {
             showErrorDialog(
                 this,
                 resources.getString(R.string.no_internet_dialog_msg)
@@ -545,15 +549,11 @@ Log.d("checkDataTotalPage",it.total_pages.toString())
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
-        val popupView =
-            LayoutInflater.from(this).inflate(R.layout.popup_positive_review, null)
+        val popupView = LayoutInflater.from(this).inflate(R.layout.popup_positive_review, null)
 
         // Create PopupWindow with the custom layout
         val popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
+            popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true
         )
 
         // Set click listeners for each menu item in the popup layout
