@@ -204,13 +204,13 @@
 
                     <EditText
                         android:id="@+id/tv_minimum_val"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_minimum"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:text="$0"
+                        android:inputType="numberDecimal"
                         android:background="@null"
-
                         android:textSize="@dimen/_14sdp"
                         />
                 </RelativeLayout>
@@ -240,11 +240,12 @@
 
                     <EditText
                         android:id="@+id/tv_maximum_value"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_maximum"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:text="$2000"
+                        android:inputType="numberDecimal"
                         android:background="@null"
                         android:textSize="@dimen/_14sdp"
                          />

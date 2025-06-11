@@ -158,6 +158,27 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             Log.e(ErrorDialog.TAG,e.message!!)
         }
 
+        binding.tvMaximumValue.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (!s.toString().startsWith("$")) {
+                    binding.tvMaximumValue.setText("$")
+                    binding.tvMaximumValue.setSelection(binding.tvMaximumValue.text?.length ?: 0)
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        binding.tvMinimumVal.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (!s.toString().startsWith("$")) {
+                    binding.tvMinimumVal.setText("$")
+                    binding.tvMinimumVal.setSelection(binding.tvMinimumVal.text?.length ?: 0)
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
 
     }
 

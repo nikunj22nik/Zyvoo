@@ -759,6 +759,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         }.toMutableList()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun settingDataToUi(resp: JsonObject) {
         lifecycleScope.launch(Dispatchers.IO) {
              userProfile = Gson().fromJson(resp, UserProfile::class.java)
