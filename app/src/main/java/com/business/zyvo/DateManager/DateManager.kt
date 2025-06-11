@@ -24,6 +24,7 @@ import java.time.format.TextStyle
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 class DateManager(var context: Context) {
 
@@ -378,6 +379,34 @@ class DateManager(var context: Context) {
         val date = inputFormat.parse(time)  // Parse the 12-hour formatted time
         return outputFormat.format(date)     // Convert it to 24-hour formatted time
     }
+    fun getTimeDifferenceInHrFormat(startTime: String, endTime: String): String {
+        val inputFormat = SimpleDateFormat("hh:mm a", Locale.getDefault())
+
+        return try {
+            val startDate = inputFormat.parse(startTime)
+            val endDate = inputFormat.parse(endTime)
+
+            if (startDate != null && endDate != null) {
+                var diffInMillis = endDate.time - startDate.time
+
+                if (diffInMillis < 0) {
+                  //  return ""
+                    diffInMillis += 24 * 60 * 60 * 1000 // add 24 hours
+                }
+
+                val hours = TimeUnit.MILLISECONDS.toHours(diffInMillis)
+                val minutes = TimeUnit.MILLISECONDS.toMinutes(diffInMillis) % 60
+
+               return hours.toString()
+            } else {
+                ""
+            }
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
+
 
 
     /*

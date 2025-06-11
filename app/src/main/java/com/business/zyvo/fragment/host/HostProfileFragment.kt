@@ -376,7 +376,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
         binding.rlEdit.setOnClickListener {
             if (editAboutButton) {
                 binding.tvEdit.text = "Save"
-                binding.imageEditAboutIcon.visibility = View.GONE
+                binding.imageEditAboutIcon.visibility = GONE
                 binding.imageSaveAboutIcon.visibility = View.VISIBLE
                 binding.etAboutMeText.isEnabled = true
                 editAboutButton = false
@@ -402,8 +402,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 updateAddStreetAddress(binding.streetEditText.text.toString())
             }
             binding.streetEditText.isEnabled = false
-            binding.imageEditStreetAddress.visibility = View.VISIBLE
-            binding.imageStreetCheckedButton.visibility = GONE
+         //   binding.imageEditStreetAddress.visibility = View.VISIBLE
+         //   binding.imageStreetCheckedButton.visibility = GONE
         }
 
         binding.imageEditCityAddress.setOnClickListener {
@@ -418,8 +418,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 updateCityAddress(binding.cityET.text.toString(), "")
             }
             binding.cityET.isEnabled = false
-            binding.imageEditCityAddress.visibility = View.VISIBLE
-            binding.CityCheckedButton.visibility = GONE
+          //  binding.imageEditCityAddress.visibility = View.VISIBLE
+         //   binding.CityCheckedButton.visibility = GONE
         }
 
         binding.imageEditStateAddress.setOnClickListener {
@@ -434,8 +434,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 updateStateAddress("")
             }
             binding.stateEt.isEnabled = false
-            binding.imageEditStateAddress.visibility = View.VISIBLE
-            binding.stateCheckedButton.visibility = GONE
+          //  binding.imageEditStateAddress.visibility = View.VISIBLE
+        //    binding.stateCheckedButton.visibility = GONE
         }
 
         binding.imageEditZipAddress.setOnClickListener {
@@ -450,8 +450,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 updateZipCode(binding.zipEt.text.toString(), "")
             }
             binding.zipEt.isEnabled = false
-            binding.imageEditZipAddress.visibility = View.VISIBLE
-            binding.zipCodeCheckedButton.visibility = GONE
+         //   binding.imageEditZipAddress.visibility = View.VISIBLE
+        //    binding.zipCodeCheckedButton.visibility = GONE
 
         }
 
@@ -485,7 +485,8 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 result.data?.let { intent ->
                     val place = Autocomplete.getPlaceFromIntent(intent)
                     val latLng = place.latLng
-
+                    binding.imageEditStreetAddress.visibility = View.VISIBLE
+                    binding.imageStreetCheckedButton.visibility = GONE
                     binding.streetEditText.clearFocus()
                     getLocationDetails(requireContext(), latLng) { locationDetails ->
                         // Use city, state, zipCode here
@@ -508,18 +509,21 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 binding.stateEt.setText(it.state)
                                 binding.zipEt.setText(it.zipCode)
                                 binding.streetEditText.isEnabled = false
-                                binding.imageEditStreetAddress.visibility = View.VISIBLE
-                                binding.imageStreetCheckedButton.visibility = GONE
                                 updateAddStreetAddress(street ?: "")
                                 updateStateAddress(AppConstant.profileType)
                                 updateZipCode(it.zipCode, AppConstant.profileType)
                                 updateCityAddress(it.city, AppConstant.profileType)
+                            }else{
+                                binding.imageEditStreetAddress.visibility = GONE
+                                binding.imageStreetCheckedButton.visibility = View.VISIBLE
                             }
                         }
                     }
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
                 Log.i(ErrorDialog.TAG, "User canceled autocomplete")
+                binding.imageEditStreetAddress.visibility = GONE
+                binding.imageStreetCheckedButton.visibility = View.VISIBLE
             }
         }
 
@@ -723,7 +727,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
-                            binding.llScrlView.visibility = View.GONE
+                            binding.llScrlView.visibility = GONE
                             showErrorDialog(requireContext(), it.message!!)
                         }
 
@@ -757,21 +761,28 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
     private fun settingDataToUi(resp: JsonObject) {
         lifecycleScope.launch(Dispatchers.IO) {
-            val userProfile = Gson().fromJson(resp, UserProfile::class.java)
+             userProfile = Gson().fromJson(resp, UserProfile::class.java)
+            userProfile?.let {
+                val nameBuilder = StringBuilder()
+                firstName = it.first_name?.also { nameBuilder.append("$it ") } ?: ""
+                lastName = it.last_name?.also { nameBuilder.append(it) } ?: ""
+                it.name = nameBuilder.toString()
 
-            val nameBuilder = StringBuilder()
-             firstName = userProfile.first_name?.also { nameBuilder.append("$it ") } ?: ""
-             lastName = userProfile.last_name?.also { nameBuilder.append(it) } ?: ""
-            userProfile.name = nameBuilder.toString()
+                // Transform lists off main thread
+                val transformedLocationList = it.where_live?.let {
+                    getObjectsFromNames(it) {
+                            name -> AddLocationModel(name)
+                    }
+                }?.apply {
+                    add(AddLocationModel(AppConstant.unknownLocation))
+                } ?: emptyList()
 
-            // Transform lists off main thread
-            val transformedLocationList = userProfile.where_live?.let {
-                getObjectsFromNames(it) {
-                    name -> AddLocationModel(name)
-                }
-            }?.apply {
-                add(AddLocationModel(AppConstant.unknownLocation))
-            } ?: emptyList()
+//                val transformedWorkList = it.my_work?.let {
+//                    getObjectsFromNames(it) { name -> AddWorkModel(name) }
+//                }?.apply {
+//                    add(AddWorkModel(AppConstant.unknownLocation))
+//                } ?: emptyList()
+
 
           //  val transformedWorkList = userProfile.my_work?.let {
 //                workList = getObjectsFromNames(userProfile.my_work) { name ->
@@ -785,15 +796,15 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 //                add(AddWorkModel(AppConstant.unknownLocation))
 //            } ?: emptyList()
 
-                                                if (userProfile?.my_work != null && userProfile.my_work.isNotEmpty()) {
-                                        workList = getObjectsFromNames(userProfile.my_work) { name ->
+                                                if (it.my_work != null && it.my_work.isNotEmpty()) {
+                                        workList = getObjectsFromNames(it.my_work) { name ->
                                             AddWorkModel(name)  // Using the constructor of MyObject to create instances
                                         }
                                         val newLanguage = AddWorkModel(AppConstant.unknownLocation)
                                         workList.add(newLanguage)
                                     }
-                                    if (userProfile?.languages != null && userProfile.languages.isNotEmpty()) {
-                                        languageList = getObjectsFromNames(userProfile.languages) { name ->
+                                    if (it.languages != null && it.languages.isNotEmpty()) {
+                                        languageList = getObjectsFromNames(it.languages) { name ->
                                             AddLanguageModel(name)  // Using the constructor of MyObject to create instances
                                         }
                                         val newLanguage =
@@ -808,46 +819,55 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 //                add(AddLanguageModel(AppConstant.unknownLocation))
 //            } ?: emptyList()
 
-            // Now switch to UI thread
-            withContext(Dispatchers.Main) {
-                binding.user = userProfile
-                binding.etEmail.setText(userProfile.email ?: "")
-                binding.etEmail.isEnabled = false
-                binding.etPhoneNumeber.setText(userProfile.phone_number ?: "")
-                binding.etPhoneNumeber.isEnabled = false
-                binding.streetEditText.setText(userProfile.street ?: "")
-                binding.stateEt.setText(userProfile.state ?: "")
-                binding.zipEt.setText(userProfile.zip_code ?: "")
-                binding.cityET.setText(userProfile.city ?: "")
+//                val transformedLanguageList = it.languages?.let {
+//                    getObjectsFromNames(it) { name -> AddLanguageModel(name) }
+//                }?.apply {
+//                    add(AddLanguageModel(AppConstant.unknownLocation))
+//                } ?: emptyList()
 
-                if (userProfile.email_verified == 1) {
-                    binding.textConfirmNow.visibility = View.GONE
-                    binding.textVerified.visibility = View.VISIBLE
-                }
-                if (userProfile.phone_verified == 1) {
-                    binding.textConfirmNow1.visibility = View.GONE
-                    binding.textVerified1.visibility = View.VISIBLE
-                }
-                if (userProfile.identity_verified == 1) {
-                    binding.textConfirmNow2.visibility = View.GONE
-                    binding.textVerified2.visibility = View.VISIBLE
-                }
+                // Now switch to UI thread
+                withContext(Dispatchers.Main) {
+                    binding.user = it
+                    binding.etEmail.setText(it.email ?: "")
+                    binding.etEmail.isEnabled = false
+                    binding.etPhoneNumeber.setText(it.phone_number ?: "")
+                    binding.etPhoneNumeber.isEnabled = false
+                    binding.streetEditText.setText(it.street ?: "")
+                    binding.stateEt.setText(it.state ?: "")
+                    binding.zipEt.setText(it.zip_code ?: "")
+                    binding.cityET.setText(it.city ?: "")
 
-                // Load profile image
-                userProfile.profile_image?.let {
-                    userProfileImage = BuildConfig.MEDIA_URL + it
-                    Glide.with(requireContext())
-                        .asBitmap()
-                        .load(BuildConfig.MEDIA_URL + it)
-                        .into(binding.imageProfilePicture)
-                }
-                LoadingUtils.hideDialog()
-                // Update adapters
-                addLocationAdapter.updateLocations(transformedLocationList.toMutableList())
-               // addWorkAdapter.updateWork(transformedWorkList.toMutableList())
-                addWorkAdapter.updateWork(workList)
-              //  addLanguageSpeakAdapter.updateLanguage(transformedLanguageList.toMutableList())
-                addLanguageSpeakAdapter.updateLanguage(languageList)
+
+                    if (it.email_verified == 1) {
+                        binding.textConfirmNow.visibility = GONE
+                        binding.textVerified.visibility = View.VISIBLE
+                    }
+                    if (it.phone_verified == 1) {
+                        binding.textConfirmNow1.visibility = GONE
+                        binding.textVerified1.visibility = View.VISIBLE
+                    }
+                    if (it.identity_verified == 1) {
+                        binding.textConfirmNow2.visibility = GONE
+                        binding.textVerified2.visibility = View.VISIBLE
+                    }
+
+                    // Load profile image
+                    it.profile_image?.let {
+                        userProfileImage = BuildConfig.MEDIA_URL + it
+                        Glide.with(requireContext())
+                            .asBitmap()
+                            .load(BuildConfig.MEDIA_URL + it)
+                            .into(binding.imageProfilePicture)
+                    }
+                    LoadingUtils.hideDialog()
+                    // Update adapters
+                    addLocationAdapter.updateLocations(transformedLocationList.toMutableList())
+          
+                    addWorkAdapter.updateWork(workList)
+                    //  addLanguageSpeakAdapter.updateLanguage(transformedLanguageList.toMutableList())
+                    addLanguageSpeakAdapter.updateLanguage(languageList)
+            }
+
             }
         }
 
@@ -997,7 +1017,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 binding.recyclerViewPaymentCardList1.visibility = View.VISIBLE
 
             } else if (!isDropdownOpen) {
-                binding.recyclerViewPaymentCardList1.visibility = View.GONE
+                binding.recyclerViewPaymentCardList1.visibility = GONE
 
 
             }
@@ -1028,7 +1048,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 binding.rlBankNameAndCardNamePayOut.visibility = View.VISIBLE
 
             } else if (!isDropdownOpenpayout) {
-                binding.rlBankNameAndCardNamePayOut.visibility = View.GONE
+                binding.rlBankNameAndCardNamePayOut.visibility = GONE
             }
             binding.textPayOutMethod.setCompoundDrawablesWithIntrinsicBounds(0, 0, drawableRes, 0)
         }
@@ -1163,7 +1183,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             }
 
             R.id.clHead -> {
-                binding.cvInfo.visibility = View.GONE
+                binding.cvInfo.visibility = GONE
             }
 
             R.id.imageEditPicture -> {
@@ -1230,11 +1250,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             togglePaymentTypeSelectButton.setOnCheckedChangeListener { v1, isChecked ->
                 if (!isChecked) {
-                    llDebitCard.visibility = View.GONE
+                    llDebitCard.visibility = GONE
                     rlBankAccount.visibility = View.VISIBLE
 
                 } else {
-                    rlBankAccount.visibility = View.GONE
+                    rlBankAccount.visibility = GONE
                     llDebitCard.visibility = View.VISIBLE
                 }
 
@@ -2855,7 +2875,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             binding.textVerified1.visibility = View.VISIBLE
                             getUserProfile()
                             dialog.dismiss()
-                            LoadingUtils.showSuccessDialog(requireContext(), resp)
+                            showSuccessDialog(requireContext(), resp)
                         }
 
                         toggleLoginButtonEnabled(true, text)
@@ -2892,7 +2912,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 when (it) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
-                            binding.textConfirmNow.visibility = View.GONE
+                            binding.textConfirmNow.visibility = GONE
                             binding.textVerified.visibility = View.VISIBLE
                             getUserProfile()
                             dialog.dismiss()
@@ -2935,7 +2955,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             rlResendLine.visibility = View.VISIBLE
-                            incorrectOtp.visibility = View.GONE
+                            incorrectOtp.visibility = GONE
                             countDownTimer?.cancel()
                             startCountDownTimer(
                                 requireContext(),
@@ -2984,7 +3004,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             rlResendLine.visibility = View.VISIBLE
-                            incorrectOtp.visibility = View.GONE
+                            incorrectOtp.visibility = GONE
                             countDownTimer?.cancel()
                             startCountDownTimer(
                                 requireContext(),
@@ -3033,7 +3053,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             override fun onFinish() {
                 textTimeResend.text = "00:00"
-                rlResendLine.visibility = View.GONE
+                rlResendLine.visibility = GONE
                 if (textTimeResend.text == "00:00") {
                     resendEnabled = true
                     textResend.setTextColor(
@@ -3167,7 +3187,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val textTimeResend = findViewById<TextView>(R.id.textTimeResend)
             val incorrectOtp = findViewById<TextView>(R.id.incorrectOtp)
             textEnterYourEmail.text = str
-            rlResendLine.visibility = View.GONE
+            rlResendLine.visibility = GONE
 
             imageCross.setOnClickListener {
                 dialog.dismiss()
@@ -3508,11 +3528,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                                     binding.tvEdit.text = "Edit"
                                     binding.imageEditAboutIcon.visibility = View.VISIBLE
-                                    binding.imageSaveAboutIcon.visibility = View.GONE
+                                    binding.imageSaveAboutIcon.visibility = GONE
                                     binding.etAboutMeText.isEnabled = false
                                     editAboutButton = true
 
-                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.about_me = about_me
                                     Log.d("checkAboutMe","about_me"+about_me+"1")
                                     //binding.user = userProfile
@@ -3549,7 +3569,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
-                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
                                 }
                             }
 
@@ -3588,8 +3608,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
-                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
+                                    firstName = first_name
+                                    lastName = last_name
                                     userProfile?.name = first_name + " " + last_name
+                                    session?.setName(first_name + " " + last_name)
                                     binding.user = userProfile
                                 }
                                 toggleLoginButtonEnabled(true, textSaveChangesButton)
@@ -3771,7 +3794,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
 
-                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
                                     val newLocation =
                                         AddLocationModel(place_name ?: "Unknown Location")
 
@@ -4128,7 +4151,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 when (it) {
 
                     is NetworkResult.Success -> {
-                        LoadingUtils.showSuccessDialog(requireContext(), it.data!!)
+                        showSuccessDialog(requireContext(), it.data!!)
                         val sessionManager = SessionManager(requireContext())
                         sessionManager.logOut()
                         sessionManager.setUserId(-1)
@@ -4191,12 +4214,12 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     bankNameAdapterPayout.notifyDataSetChanged()
                                     binding.recyclerViewPaymentCardListPayOut.visibility =
                                         View.VISIBLE
-                                    binding.textBankNoDataFound.visibility = View.GONE
+                                    binding.textBankNoDataFound.visibility = GONE
                                     if (bankNameAdapterPayout != null) {
                                         bankNameAdapterPayout.notifyDataSetChanged()
                                     }
                                 } else {
-                                    binding.recyclerViewPaymentCardListPayOut.visibility = View.GONE
+                                    binding.recyclerViewPaymentCardListPayOut.visibility = GONE
                                     binding.textBankNoDataFound.visibility = View.VISIBLE
                                 }
                             }
@@ -4207,7 +4230,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     cardNumberAdapterPayout.notifyDataSetChanged()
                                     binding.recyclerViewCardNumberListPayOut.visibility =
                                         View.VISIBLE
-                                    binding.textCardNoDataFound.visibility = View.GONE
+                                    binding.textCardNoDataFound.visibility = GONE
 
                                     Log.d("cardList", "cardListImhere")
 
@@ -4216,7 +4239,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     }
 
                                 } else {
-                                    binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
+                                    binding.recyclerViewCardNumberListPayOut.visibility = GONE
                                     binding.textCardNoDataFound.visibility = View.VISIBLE
                                 }
                             }
@@ -4654,7 +4677,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         }
 
                         is NetworkResult.Error -> {
-                            LoadingUtils.showSuccessDialog(requireContext(), it.message!!)
+                            showSuccessDialog(requireContext(), it.message!!)
                         }
 
                         else -> {

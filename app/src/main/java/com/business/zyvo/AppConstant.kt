@@ -193,6 +193,8 @@ class AppConstant {
         const val passwordMustConsist =
             "The password must consist of at least 8 characters and include at least 1 number, 1 uppercase letter, and 1 special character."
 
+        const val validAvailability: String = "Please enter minimum set hours"
+
     }
 
 

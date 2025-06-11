@@ -1288,6 +1288,7 @@
                         android:layout_marginVertical="@dimen/_5sdp"
                         android:background="@null"
                         android:singleLine="true"
+                        android:maxLength="150"
                         android:hint="Street"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />

@@ -1634,6 +1634,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
                                     showSuccessDialog(requireContext(), resp.first)
+                                    firstName = first_name
+                                    lastName = last_name
                                     userProfile?.name = first_name + " " + last_name
                                     session?.setName(first_name + " " + last_name)
                                     binding.user = userProfile

@@ -1142,6 +1142,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:visibility="gone"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:src="@drawable/ic_parking" />
 
@@ -1192,6 +1193,7 @@
                     android:id="@+id/img_host_rule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:src="@drawable/ic_host_rule" />
