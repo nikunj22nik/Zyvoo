@@ -1153,6 +1153,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     street = editable.toString()
+                }else{
+                    street = ""
                 }
             }
         })
@@ -1726,7 +1728,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         binding.recyclerAddOn.adapter = addOnAdapter
 
 
-        imageList = mutableListOf<Uri>()
+        imageList = mutableListOf()
 
         adapterActivity = ActivitiesAdapter(requireContext(), activityList.subList(0, 3))
 
@@ -2728,6 +2730,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             recyclerView.adapter = AddOnItemAdapter(itemList) { item ->
                 selectedItem = item
                 etItemName.setText(item)
+                etItemName.setSelection(etItemName.text.length)
             }
             btnSubmit.setOnClickListener {
                 val itemName = etItemName.text.toString()
@@ -3187,6 +3190,20 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
                 binding.tvHours1.text = selectedHour
                 toHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
+                val hr = DateManager(requireContext()).getTimeDifferenceInHrFormat(binding.tvHours.text.toString(),
+                    binding.tvHours1.text.toString())
+                hr.let {
+                    if (it.isNotBlank()){
+                    if (hr.toInt()>=minimumHourValue){
+                        Log.d(ErrorDialog.TAG,hr)
+                    }else{
+                        Log.d(ErrorDialog.TAG,AppConstant.validAvailability)
+                        Log.d(ErrorDialog.TAG,hr)
+                    }
+                    }else{
+
+                    }
+                }
                 Log.d("TESTING_ZYVOO", "To " + toHour)
             }
 

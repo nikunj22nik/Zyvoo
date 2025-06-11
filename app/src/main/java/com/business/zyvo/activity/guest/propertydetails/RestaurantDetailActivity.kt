@@ -321,8 +321,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                     )
 
 
-Log.d("checkDataCurrentPage",it.current_page.toString())
-Log.d("checkDataTotalPage",it.total_pages.toString())
+                                Log.d("checkDataCurrentPage",it.current_page.toString())
+                                Log.d("checkDataTotalPage",it.total_pages.toString())
                                     if (it.current_page == it.total_pages) {
                                         binding.showMoreReview.visibility = View.GONE
                                     }
@@ -470,7 +470,7 @@ Log.d("checkDataTotalPage",it.total_pages.toString())
                     binding.tvReadMoreLess.apply {
                         text = it
                         post {
-                            setTrimLength(20) // Set max character length before collapsing
+                            setTrimLength(50) // Set max character length before collapsing
                             setCollapsedText("Read More") // Text for collapsed state
                             setExpandedText("Read Less") // Text for expanded state
                         }
@@ -494,6 +494,12 @@ Log.d("checkDataTotalPage",it.total_pages.toString())
                     if (it.isNotEmpty()) {
                         addOnList = it.toMutableList()
                         adapterAddon.updateAdapter(addOnList)
+                        if (addOnList.size <= 4){
+                            binding.tvShowMore.visibility = View.GONE
+
+                        }else{
+                            binding.tvShowMore.visibility = View.VISIBLE
+                        }
                         Log.d("CheckAddOn", addOnList.toString())
                     }
                 }
@@ -1110,7 +1116,7 @@ Log.d("checkDataTotalPage",it.total_pages.toString())
         textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.tvLocationName.paintFlags =
             binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        if (addOnList.size <= 2){
+        if (addOnList.size <= 3){
             binding.tvShowMore.visibility = View.GONE
 
         }else{

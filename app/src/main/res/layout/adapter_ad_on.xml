@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_computer_science"
         android:layout_marginStart="@dimen/_10sdp"
+        android:visibility="gone"
         android:layout_gravity="center_vertical"
         />
 

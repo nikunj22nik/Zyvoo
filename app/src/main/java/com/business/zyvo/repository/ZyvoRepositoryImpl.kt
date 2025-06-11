@@ -1610,6 +1610,7 @@ import javax.inject.Inject
         fcm_token: String,
         device_type: String
     ): Flow<NetworkResult<JsonObject>> = flow {
+        emit(NetworkResult.Loading())
         try {
             api.getSocialLogin(
                 fname, lname, email, social_id, fcm_token, device_type

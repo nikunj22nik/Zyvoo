@@ -161,8 +161,7 @@
                    android:maxWidth="@dimen/_150sdp"
                    android:singleLine="true"
                    android:fontFamily="@font/poppins"
-                   android:hint="Hey Host!"
-                   android:text='@{user.name != null ? "Hey " + user.name : "Hey Guest!"}'
+                   android:text='@{user.name != null ? "" + user.name : ""}'
                    android:textColorHint="@color/black"
                    android:textColor="@color/black"
                    android:textSize="@dimen/_15sdp"

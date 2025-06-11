@@ -31,6 +31,7 @@
         android:paddingVertical="@dimen/_7sdp"
         android:paddingStart="@dimen/_10sdp"
         android:textColor="@color/black"
+        android:maxLength="60"
         android:textColorHint="@color/black"
         android:textSize="@dimen/_13ssp"
         app:layout_constraintTop_toBottomOf="@+id/rcy" />

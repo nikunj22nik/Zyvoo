@@ -751,72 +751,74 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
     private fun settingDataToUi(resp: JsonObject) {
         lifecycleScope.launch(Dispatchers.IO) {
-            val userProfile = Gson().fromJson(resp, UserProfile::class.java)
+             userProfile = Gson().fromJson(resp, UserProfile::class.java)
+            userProfile?.let {
+                val nameBuilder = StringBuilder()
+                firstName = it.first_name?.also { nameBuilder.append("$it ") } ?: ""
+                lastName = it.last_name?.also { nameBuilder.append(it) } ?: ""
+                it.name = nameBuilder.toString()
 
-            val nameBuilder = StringBuilder()
-             firstName = userProfile.first_name?.also { nameBuilder.append("$it ") } ?: ""
-             lastName = userProfile.last_name?.also { nameBuilder.append(it) } ?: ""
-            userProfile.name = nameBuilder.toString()
+                // Transform lists off main thread
+                val transformedLocationList = it.where_live?.let {
+                    getObjectsFromNames(it) {
+                            name -> AddLocationModel(name)
+                    }
+                }?.apply {
+                    add(AddLocationModel(AppConstant.unknownLocation))
+                } ?: emptyList()
 
-            // Transform lists off main thread
-            val transformedLocationList = userProfile.where_live?.let {
-                getObjectsFromNames(it) {
-                    name -> AddLocationModel(name)
-                }
-            }?.apply {
-                add(AddLocationModel(AppConstant.unknownLocation))
-            } ?: emptyList()
+                val transformedWorkList = it.my_work?.let {
+                    getObjectsFromNames(it) { name -> AddWorkModel(name) }
+                }?.apply {
+                    add(AddWorkModel(AppConstant.unknownLocation))
+                } ?: emptyList()
 
-            val transformedWorkList = userProfile.my_work?.let {
-                getObjectsFromNames(it) { name -> AddWorkModel(name) }
-            }?.apply {
-                add(AddWorkModel(AppConstant.unknownLocation))
-            } ?: emptyList()
+                val transformedLanguageList = it.languages?.let {
+                    getObjectsFromNames(it) { name -> AddLanguageModel(name) }
+                }?.apply {
+                    add(AddLanguageModel(AppConstant.unknownLocation))
+                } ?: emptyList()
 
-            val transformedLanguageList = userProfile.languages?.let {
-                getObjectsFromNames(it) { name -> AddLanguageModel(name) }
-            }?.apply {
-                add(AddLanguageModel(AppConstant.unknownLocation))
-            } ?: emptyList()
+                // Now switch to UI thread
+                withContext(Dispatchers.Main) {
+                    binding.user = it
+                    binding.etEmail.setText(it.email ?: "")
+                    binding.etEmail.isEnabled = false
+                    binding.etPhoneNumeber.setText(it.phone_number ?: "")
+                    binding.etPhoneNumeber.isEnabled = false
+                    binding.streetEditText.setText(it.street ?: "")
+                    binding.stateEt.setText(it.state ?: "")
+                    binding.zipEt.setText(it.zip_code ?: "")
+                    binding.cityET.setText(it.city ?: "")
 
-            // Now switch to UI thread
-            withContext(Dispatchers.Main) {
-                binding.user = userProfile
-                binding.etEmail.setText(userProfile.email ?: "")
-                binding.etEmail.isEnabled = false
-                binding.etPhoneNumeber.setText(userProfile.phone_number ?: "")
-                binding.etPhoneNumeber.isEnabled = false
-                binding.streetEditText.setText(userProfile.street ?: "")
-                binding.stateEt.setText(userProfile.state ?: "")
-                binding.zipEt.setText(userProfile.zip_code ?: "")
-                binding.cityET.setText(userProfile.city ?: "")
+                    if (it.email_verified == 1) {
+                        binding.textConfirmNow.visibility = GONE
+                        binding.textVerified.visibility = View.VISIBLE
+                    }
+                    if (it.phone_verified == 1) {
+                        binding.textConfirmNow1.visibility = GONE
+                        binding.textVerified1.visibility = View.VISIBLE
+                    }
+                    if (it.identity_verified == 1) {
+                        binding.textConfirmNow2.visibility = GONE
+                        binding.textVerified2.visibility = View.VISIBLE
+                    }
 
-                if (userProfile.email_verified == 1) {
-                    binding.textConfirmNow.visibility = GONE
-                    binding.textVerified.visibility = View.VISIBLE
-                }
-                if (userProfile.phone_verified == 1) {
-                    binding.textConfirmNow1.visibility = GONE
-                    binding.textVerified1.visibility = View.VISIBLE
-                }
-                if (userProfile.identity_verified == 1) {
-                    binding.textConfirmNow2.visibility = GONE
-                    binding.textVerified2.visibility = View.VISIBLE
-                }
+                    // Load profile image
+                    it.profile_image?.let {
+                        userProfileImage = BuildConfig.MEDIA_URL + it
+                        Glide.with(requireContext())
+                            .asBitmap()
+                            .load(BuildConfig.MEDIA_URL + it)
+                            .into(binding.imageProfilePicture)
+                    }
+                    LoadingUtils.hideDialog()
+                    // Update adapters
+                    addLocationAdapter.updateLocations(transformedLocationList.toMutableList())
+                    addWorkAdapter.updateWork(transformedWorkList.toMutableList())
+                    addLanguageSpeakAdapter.updateLanguage(transformedLanguageList.toMutableList())
+            }
 
-                // Load profile image
-                userProfile.profile_image?.let {
-                    userProfileImage = BuildConfig.MEDIA_URL + it
-                    Glide.with(requireContext())
-                        .asBitmap()
-                        .load(BuildConfig.MEDIA_URL + it)
-                        .into(binding.imageProfilePicture)
-                }
-                LoadingUtils.hideDialog()
-                // Update adapters
-                addLocationAdapter.updateLocations(transformedLocationList.toMutableList())
-                addWorkAdapter.updateWork(transformedWorkList.toMutableList())
-                addLanguageSpeakAdapter.updateLanguage(transformedLanguageList.toMutableList())
             }
         }
 
@@ -2824,7 +2826,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             binding.textVerified1.visibility = View.VISIBLE
                             getUserProfile()
                             dialog.dismiss()
-                            LoadingUtils.showSuccessDialog(requireContext(), resp)
+                            showSuccessDialog(requireContext(), resp)
                         }
 
                         toggleLoginButtonEnabled(true, text)
@@ -3479,7 +3481,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                     binding.etAboutMeText.isEnabled = false
                                     editAboutButton = true
 
-                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
                                     userProfile?.about_me = about_me
                                     binding.user = userProfile
                                 }
@@ -3515,7 +3517,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
-                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
                                 }
                             }
 
@@ -3554,8 +3556,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         when (it) {
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
-                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
+                                    firstName = first_name
+                                    lastName = last_name
                                     userProfile?.name = first_name + " " + last_name
+                                    session?.setName(first_name + " " + last_name)
                                     binding.user = userProfile
                                 }
                                 toggleLoginButtonEnabled(true, textSaveChangesButton)
@@ -3736,7 +3741,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
 
-                                    LoadingUtils.showSuccessDialog(requireContext(), resp.first)
+                                    showSuccessDialog(requireContext(), resp.first)
                                     val newLocation =
                                         AddLocationModel(place_name ?: "Unknown Location")
 
@@ -4093,7 +4098,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 when (it) {
 
                     is NetworkResult.Success -> {
-                        LoadingUtils.showSuccessDialog(requireContext(), it.data!!)
+                        showSuccessDialog(requireContext(), it.data!!)
                         val sessionManager = SessionManager(requireContext())
                         sessionManager.logOut()
                         sessionManager.setUserId(-1)
@@ -4619,7 +4624,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         }
 
                         is NetworkResult.Error -> {
-                            LoadingUtils.showSuccessDialog(requireContext(), it.message!!)
+                            showSuccessDialog(requireContext(), it.message!!)
                         }
 
                         else -> {

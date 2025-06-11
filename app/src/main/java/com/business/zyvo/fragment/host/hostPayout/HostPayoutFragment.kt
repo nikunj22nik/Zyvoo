@@ -610,7 +610,7 @@ private var cardNumberString : String = ""
 
     fun spinners() {
         binding.spinnerSelectIDType.setItems(
-            listOf("Driver license", "passport")
+            listOf("Driver license", "Passport")
         )
 
 
@@ -826,8 +826,17 @@ private var cardNumberString : String = ""
                     MultipartBody.Part.createFormData("dob[]", dobParts[1].toInt().toString()), // Day
                     MultipartBody.Part.createFormData("dob[]", dobParts[2].toInt().toString())  // Year
                 )
-                val idTypeBody = binding.spinnerSelectIDType.text.toString()
-                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+               /* val idTypeBody = binding.spinnerSelectIDType.text.toString()
+                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())*/
+            //  listOf("Driver license", "Passport")
+            val selectedIdType = binding.spinnerSelectIDType.text.toString()
+            val idType = when (selectedIdType) {
+                "Driver license" -> "driver_license"
+                "Passport" -> "passport"
+                else -> null
+            }
+
+            val idTypeBody = idType!!.toRequestBody("multipart/form-data".toMediaTypeOrNull())
                 val personalIdentificationNobody =
                     binding.etPersonalIdentificationNumber.text.toString().trim()
                         .toRequestBody("multipart/form-data".toMediaTypeOrNull())
@@ -943,7 +952,7 @@ private var cardNumberString : String = ""
     fun spinnersDebitCard() {
 
         binding.spinnerSelectIDTypeDebitCard.setItems(
-            listOf("Driver license", "passport")
+            listOf("Driver license", "Passport")
         )
 
 
@@ -1467,10 +1476,16 @@ private var cardNumberString : String = ""
 
             val postalCodeBody = binding.etPostalCodeDebitCard.text.toString()
                 .toRequestBody("multipart/form-data".toMediaTypeOrNull())
+                //  listOf("Driver license", "Passport")
+            val selectedIdType = binding.spinnerSelectIDTypeDebitCard.text.toString()
+            val idType = when (selectedIdType) {
+                "Driver license" -> "driver_license"
+                "Passport" -> "passport"
+                else -> null
+            }
 
+            val idTypeBody = idType!!.toRequestBody("multipart/form-data".toMediaTypeOrNull())
 
-            val idTypeBody = binding.spinnerSelectIDTypeDebitCard.text.toString()
-                .toRequestBody("multipart/form-data".toMediaTypeOrNull())
             val personalIdentificationNobody =
                 binding.etPersonalIdentificationNumberDebitCard.text.toString().trim()
                     .toRequestBody("multipart/form-data".toMediaTypeOrNull())
