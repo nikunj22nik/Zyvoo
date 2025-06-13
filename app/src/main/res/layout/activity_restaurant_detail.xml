@@ -901,8 +901,7 @@
                 android:textStyle="bold" />
 
 
-            <com.colormoon.readmoretextview.ReadMoreTextView
-
+           <!-- <com.colormoon.readmoretextview.ReadMoreTextView
                 android:id="@+id/tvReadMoreLess"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -912,9 +911,26 @@
                 android:fontFamily="@font/poppins"
                 android:textColor="#000000"
                 app:showTrimExpandedText="true"
+                app:readMoreText="Read More"
+                app:trimLines="3"
+                app:readMoreColor="@color/green_color_bar"
             android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
         has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="@dimen/_13sdp" />-->
+
+            <kr.co.prnd.readmore.ReadMoreTextView
+                android:id="@+id/tvReadMoreLess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:fontFamily="@font/poppins"
+                android:textColor="#000000"
+                app:readMoreText="Read More"
+                app:readMoreColor="@color/green_color_bar"
+                android:textSize="@dimen/_13sdp" >
+            </kr.co.prnd.readmore.ReadMoreTextView>
 
             <View
                 android:layout_width="match_parent"

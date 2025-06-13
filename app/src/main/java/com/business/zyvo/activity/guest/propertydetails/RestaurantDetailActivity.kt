@@ -34,6 +34,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -87,6 +88,7 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kr.co.prnd.readmore.ReadMoreTextView
 import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDate
@@ -468,14 +470,16 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
 
                 propertyData?.property_description?.let {
+                   /* binding.tvReadMoreLess.apply {
+                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet."//it
+                    //    setTrimLength(50) // Set max character length before collapsing
+                        setTrimLines(3)
+                        setCollapsedText("Read More") // Text for collapsed state
+                        setExpandedText("Read Less") // Text for expanded state
+                       binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
+                    }*/
                     binding.tvReadMoreLess.apply {
                         text = it
-                        post {
-                            setTrimLength(50) // Set max character length before collapsing
-                            setCollapsedText("Read More") // Text for collapsed state
-                            setExpandedText("Read Less") // Text for expanded state
-                        }
-                        binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
                     }
                 }
                 propertyData?.amenities?.let {

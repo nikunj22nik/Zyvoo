@@ -514,7 +514,6 @@ class WhereTimeActivity : AppCompatActivity() {
 
             adapterLocationSearch.setOnItemClickListener { selectedLocation ->
                 binding.textLocationName.text = "$selectedLocation"
-               // Toast.makeText(context, "Selected Location: $selectedLocation", Toast.LENGTH_SHORT).show()
                 binding.rlLocation.visibility = View.GONE
                 binding.rlTypingView.visibility =View.GONE
                 binding.rlWhere.visibility =View.VISIBLE
