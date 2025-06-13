@@ -471,7 +471,6 @@ class WhereTimeActivity : AppCompatActivity() {
 
             adapterLocationSearch.setOnItemClickListener { selectedLocation ->
                 binding.textLocationName.text = "$selectedLocation"
-
                 binding.rlLocation.visibility = View.GONE
                 binding.rlTypingView.visibility =View.GONE
                 binding.rlWhere.visibility =View.VISIBLE

@@ -160,5 +160,8 @@ dependencies {
     implementation ("com.appsflyer:af-android-sdk:6.12.1")
     implementation("com.googlecode.libphonenumber:libphonenumber:8.13.19")
 
+    implementation ("kr.co.prnd:readmore-textview:1.0.0")
+
+
 
 }

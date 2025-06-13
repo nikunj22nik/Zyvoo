@@ -158,6 +158,45 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             Log.e(ErrorDialog.TAG,e.message!!)
         }
 
+        binding.tvMaximumValue.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (!s.toString().startsWith("$")) {
+                    binding.tvMaximumValue.setText("$")
+                    binding.tvMaximumValue.setSelection(binding.tvMaximumValue.text?.length ?: 0)
+                    val originalLeft = binding.tvMinimumVal.text.toString().replace("$","")
+                        .toInt()?.div(100)?.times(2)
+                    val originalRight = binding.tvMaximumValue.text.toString().replace("$","")
+                        .toInt()?.div(100)?.times(2)
+                    binding.seekBar.setSelectedEntries(originalLeft!!.toInt(), originalRight!!.toInt())
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+
+        binding.tvMinimumVal.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                if (!s.toString().startsWith("$")) {
+                    binding.tvMinimumVal.setText("$")
+                    binding.tvMinimumVal.setSelection(binding.tvMinimumVal.text?.length ?: 0)
+                   /* if (binding.tvMinimumVal.text.toString().replace("$","")
+                        .isNotEmpty()) {
+                        val originalLeft = binding.tvMinimumVal.text.toString().replace("$",
+                            "")
+                            .toInt()?.div(2)?.times(100)
+                        val originalRight = binding.tvMaximumValue.text.toString().replace("$",
+                            "")
+                            .toInt()?.div(2)?.times(100)
+                        binding.seekBar.setSelectedEntries(
+                            originalLeft!!.toInt(),
+                            originalRight!!.toInt()
+                        )
+                    }*/
+                }
+            }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
 
     }
 
@@ -195,8 +234,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 min = it.minimum_price
                 max = it.maximum_price
                 if (!min.equals("") && !max.equals("")) {
-                    val originalLeft = min?.toInt()?.div(10)?.times(2)
-                    val originalRight = max?.toInt()?.div(10)?.times(2)
+                    //(leftPinValue?.toInt()?.div(2))?.times(100)
+                    val originalLeft = min?.toInt()?.div(100)?.times(2)
+                    val originalRight = max?.toInt()?.div(100)?.times(2)
                     binding.seekBar.setSelectedEntries(originalLeft!!.toInt(), originalRight!!.toInt())
                     binding.tvMinimumVal.setText("$$min")
                     binding.tvMaximumValue.setText("$$max")
@@ -1005,8 +1045,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                         latitude = selectedLatitude.toString(),
                         longitude = selectedLongitude.toString(),
                         place_type = selectedOption?.takeUnless { it.isNullOrEmpty() }.toString(),
-                        minimum_price = min,
-                        maximum_price = max,
+                        minimum_price = binding.tvMinimumVal.text.toString().replace("$",""),//min,
+                        maximum_price = binding.tvMaximumValue.text.toString().replace("$",""),//max,
                         location = binding.autocompleteLocation.text.toString(),
                         date = if (!binding.tvDateSelect.text.toString().equals(""))ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd(binding.tvDateSelect.text.toString())else "",
                         time = binding.tvHour.text.toString().replace(" hours",""),
