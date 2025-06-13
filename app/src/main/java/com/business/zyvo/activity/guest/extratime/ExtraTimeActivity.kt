@@ -192,28 +192,6 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             }
         })
 
-/*
-        binding.rlSubmitMessage.setOnClickListener {
-            val userInput = binding.etShareMessage.text.toString()
-
-            if(userInput.length>0){
-                messageSend = userInput
-            }
-
-            propertyData?.let {
-                var propertyid = it.property_id
-                var hostId = it.host_id
-                var userId = SessionManager(this).getUserId()
-                var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
-
-                Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
-
-                callingJoinChannelApi(messageSend)
-
-            }
-        }
-
- */
         binding.rlSubmitMessage.setOnClickListener {
             val userInput = binding.etShareMessage.text.toString()
             if(userInput.length>0){
@@ -222,9 +200,9 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             if (!messageSend.equals("other")  ){
                 propertyData?.let  { pro->
                     bookingId?.let {
-                        var propertyid = it
-                        var hostId = pro.host_id
-                        var userId = SessionManager(this).getUserId()
+                        val propertyid = it
+                        val hostId = pro.host_id
+                        val userId = SessionManager(this).getUserId()
                         var channelName = if (userId!! < hostId) {
                             "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
                         } else {
@@ -244,9 +222,9 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 if (userInput.trim().isNotEmpty()){
                     propertyData?.let { pro->
                         bookingId?.let {
-                            var propertyid = it
-                            var hostId = pro.host_id
-                            var userId = SessionManager(this).getUserId()
+                            val propertyid = it
+                            val hostId = pro.host_id
+                            val userId = SessionManager(this).getUserId()
                             var channelName = if (userId!! < hostId) {
                                 "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
                             } else {
@@ -295,11 +273,11 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                         when(it){
                             is NetworkResult.Success ->{
                                 LoadingUtils.hideDialog()
-                                var loggedInId = SessionManager(this@ExtraTimeActivity).getUserId()
+                                val loggedInId = SessionManager(this@ExtraTimeActivity).getUserId()
                                 if(it.data?.receiver_id?.toInt() == loggedInId){
-                                    var userImage :String =  it.data?.receiver_avatar.toString()
+                                    val userImage :String =  it.data?.receiver_avatar.toString()
                                     Log.d("TESTING_PROFILE_HOST",userImage)
-                                    var friendImage :String = it.data?.sender_avatar.toString()
+                                    val friendImage :String = it.data?.sender_avatar.toString()
                                     Log.d("TESTING_PROFILE_HOST",friendImage)
                                     var friendName :String = ""
                                     if(it.data?.sender_name != null){
@@ -321,9 +299,9 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                                     startActivity(intent)
                                 }
                                 else if(it.data?.sender_id?.toInt() == loggedInId){
-                                    var userImage :String =  it.data?.sender_avatar.toString()
+                                    val userImage :String =  it.data?.sender_avatar.toString()
                                     Log.d("TESTING_PROFILE_HOST",userImage)
-                                    var friendImage :String = it.data?.receiver_avatar.toString()
+                                    val friendImage :String = it.data?.receiver_avatar.toString()
                                     Log.d("TESTING_PROFILE_HOST",friendImage)
                                     var friendName :String = ""
                                     if(it.data?.receiver_name != null){
@@ -414,7 +392,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
 
 
         binding.dateView2.setOnClickListener {
-            var dialog1 = SelectHourFragmentDialog()
+            val dialog1 = SelectHourFragmentDialog()
             dialog1.setDialogListener(this)
             dialog1.show(supportFragmentManager, "MYDIALOF")
         }
@@ -541,7 +519,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                     binding.tvMiles.text = "$it miles away"
                 }
                 date?.let {
-                    var dummyData = formatDateyyyyMMddToMMMMddyyyy(it)
+                    val dummyData = formatDateyyyyMMddToMMMMddyyyy(it)
 
                     binding.tvDate.text = dummyData
                  //   binding.tvDate.text = date
@@ -648,7 +626,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
         }
     }
 
-    fun calculateTotalPrice(addOnList: List<AddOn>): Double {
+    private fun calculateTotalPrice(addOnList: List<AddOn>): Double {
         return addOnList.filter { it.checked }
             .sumOf { it.price.toDoubleOrNull() ?: 0.0 }
     }
@@ -664,9 +642,6 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             val et_addiotnal_detail : EditText = findViewById(R.id.et_addiotnal_detail)
             val powerSpinner :PowerSpinnerView = findViewById(R.id.spinnerView1)
             submit.setOnClickListener {
-//                if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
-//                    txtSubmit.setText("Submitted")
-//                }else
                     if(et_addiotnal_detail.text.isEmpty()){
                     showToast(this@ExtraTimeActivity,AppConstant.additional)
                 }
@@ -714,8 +689,8 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
 
-            var okBtn :ImageView = findViewById<ImageView>(R.id.img_cross)
-            var cross :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+            val okBtn :ImageView = findViewById<ImageView>(R.id.img_cross)
+            val cross :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
             okBtn.setOnClickListener {
                 dialog.dismiss()
             }
@@ -750,8 +725,8 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                     height = WindowManager.LayoutParams.MATCH_PARENT
                 }
 
-                var okBtn :ImageView = findViewById<ImageView>(R.id.img_cross)
-                var cross :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+                val okBtn :ImageView = findViewById<ImageView>(R.id.img_cross)
+                val cross :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
                 okBtn.setOnClickListener {
                     dialog.dismiss()
                 }
@@ -783,9 +758,9 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
 
-            var okBtn :ImageView = findViewById<ImageView>(R.id.img_crss_1)
-            var cross :RelativeLayout = findViewById<RelativeLayout>(R.id.yes_btn)
-            var cancelBtn :RelativeLayout = findViewById(R.id.cancel_btn)
+            val okBtn :ImageView = findViewById<ImageView>(R.id.img_crss_1)
+            val cross :RelativeLayout = findViewById<RelativeLayout>(R.id.yes_btn)
+            val cancelBtn :RelativeLayout = findViewById(R.id.cancel_btn)
 
             cancelBtn.setOnClickListener {
                 dialog.dismiss()
@@ -797,9 +772,6 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             cross.setOnClickListener {
                 cancelBooking(dialog)
             }
-
-
-
             window?.setLayout(
                 (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
                 ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content

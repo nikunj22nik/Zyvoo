@@ -57,15 +57,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         binding.navigationBookings.setOnClickListener(this)
         binding.navigationWishlist.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
-        /*try {
-            quickstartConversationsManager = (application as MyApp).conversationsManager!!
-            if (quickstartConversationsManager!=null) {
-                quickstartConversationsManager.setListener(this)
-            }
-            Log.e("******", "Error setting QuickstartConversationsManager listener Add")
-        } catch (e: Exception) {
-            Log.e("******", "Error setting QuickstartConversationsManager listener", e)
-        }*/
+
         try {
             val app = application as? MyApp
             if (app?.conversationsManager != null) {
@@ -114,8 +106,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
     @SuppressLint("SuspiciousIndentation")
     private fun handlingDeepLink() {
-        // Get the intent that started this activity
-        // Check if the intent contains a URI (deep link)
+
         if (intent.extras!=null){
             val propertyId = intent?.extras?.getString("propertyId")
             val propertyMile = intent?.extras?.getString("propertyMile")
@@ -154,19 +145,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
                                     }
                                 }
                             }
-                           /* if (app.conversationsManager==null) {
-                                app.initializeTwilioClient(sessionManager.getChatToken()!!)
-                                try {
-                                    quickstartConversationsManager = app.conversationsManager!!
-                                    if (quickstartConversationsManager!=null) {
-                                        quickstartConversationsManager.setListener(this@GuesMain)
-                                    }
-                                } catch (e: Exception) {
-                                    Log.e("******", "Error setting QuickstartConversationsManager listener", e)
-                                }
-                                Log.e("******", "initializeConversationsManager")
 
-                            }*/
                         }
 
                         is NetworkResult.Error -> {
@@ -215,11 +194,11 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
     private fun callingGetChatUser() {
         lifecycleScope.launch {
-            var sessionManager = SessionManager(this@GuesMain)
-            var userId = sessionManager.getUserId()
+            val sessionManager = SessionManager(this@GuesMain)
+            val userId = sessionManager.getUserId()
             if (userId != null) {
-                var sessionManager = SessionManager(this@GuesMain)
-                var type = sessionManager.getUserType()
+                val sessionManager = SessionManager(this@GuesMain)
+                val type = sessionManager.getUserType()
                 if (type != null) {
                     guestViewModel.getChatUserChannelList(userId,type).collect {
                         when (it) {
@@ -400,24 +379,24 @@ class GuesMain : AppCompatActivity(), OnClickListener,
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
-                var sessionManager = SessionManager(this)
+                val sessionManager = SessionManager(this)
                 sessionManager.setNotificationOnOffStatus(true)
             }
             else {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }else{
-            var sessionManager = SessionManager(this)
+            val sessionManager = SessionManager(this)
             sessionManager.setNotificationOnOffStatus(true)
         }
     }
 
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
         if (isGranted) {
-            var sessionManager = SessionManager(this)
+            val sessionManager = SessionManager(this)
             sessionManager.setNotificationOnOffStatus(true)
         }else{
-            var sessionManager = SessionManager(this)
+            val sessionManager = SessionManager(this)
             sessionManager.setNotificationOnOffStatus(false)
         }
     }
@@ -443,40 +422,6 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         getTotalUnreadMessages()
 
     }
-
- /*   private fun getTotalUnreadMessages(){
-        var totalUnreadCount:Long = 0
-        runOnUiThread {
-            try {
-                quickstartConversationsManager?.conversationsClient?.myConversations!!.forEach {
-                    Log.d("*******","m 8888"+it.friendlyName +" M "+it.uniqueName)
-                }
-
-                if (quickstartConversationsManager?.conversationsClient?.myConversations!!.size > 0) {
-                    for (i in quickstartConversationsManager?.conversationsClient?.myConversations!!) {
-                        try {
-                            if (map.containsKey(i.uniqueName)) {
-                                Log.d("*******","m 8888"+i.friendlyName +" M "+i.uniqueName)
-                                i.getUnreadMessagesCount { re->
-                                    if (re!=null) {
-                                        Log.d("*******", re.toString())
-                                        totalUnreadCount += re
-                                        Log.d("*******", "total " + totalUnreadCount.toString())
-                                        binding.tvChatNumber.text = "$totalUnreadCount"
-                                    }
-                                }
-                            }
-                        } catch (e: Exception) {
-                            Log.d("massage error", "data :-" + e.message)
-                        }
-                    }
-                  //  binding.tvChatNumber.text = "$totalUnreadCount"
-                }
-            }catch (e:Exception){
-                Log.d("******","msg :- "+e.message)
-            }
-        }
-    }*/
 
     private fun getTotalUnreadMessages() {
         val conversations = quickstartConversationsManager?.conversationsClient?.myConversations

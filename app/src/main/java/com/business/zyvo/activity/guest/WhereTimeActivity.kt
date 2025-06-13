@@ -129,24 +129,6 @@ class WhereTimeActivity : AppCompatActivity() {
                 try {
                     hour = progress
 
-                   // var selectedTime = binding.text1.text
-
-//                    // Define the time formatter (12-hour format with AM/PM)
-//                    val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                        DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
-//                    } else {
-//                        TODO("VERSION.SDK_INT < O")
-//                    }
-//                    Log.d(ErrorDialog.TAG,selectedTime.toString())
-//                    // Parse the start time string into a LocalTime object
-//                    val startTime = LocalTime.parse(selectedTime, formatter)
-//
-//                    val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
-//                        .toLong())
-//                    // Format the end time back to a string
-//                    val formattedEndTime = endTime.format(formatter)
-//                    binding.text2.text = formattedEndTime.uppercase()
-
                 }catch (e:Exception){
                     Log.d(ErrorDialog.TAG,e.message!!)
                 }
@@ -292,14 +274,14 @@ class WhereTimeActivity : AppCompatActivity() {
                         TODO("VERSION.SDK_INT < O")
                     }
                     Log.d(ErrorDialog.TAG,selectedTime)
-                    // Parse the start time string into a LocalTime object
+
                     val startTime = LocalTime.parse(selectedTime, formatter)
-                    // Add 2 hours to get the end time
+
                     Log.d(ErrorDialog.TAG,binding.textTime.text.toString())
                     if (binding.textTime.text.toString().isNotEmpty()){
                         val endTime = startTime.plusHours(binding.textTime.text.toString().replace(" hour","")
                             .toLong())
-                        // Format the end time back to a string
+
                         val formattedEndTime = endTime.format(formatter)
                         binding.text2.text = formattedEndTime.uppercase()
                     }
@@ -337,7 +319,7 @@ class WhereTimeActivity : AppCompatActivity() {
                 else{
                     binding.rlActivityRecy.visibility = View.VISIBLE
                 }
-              //  binding.rlActivityRecy.visibility = View.VISIBLE
+
             }
         }
     }
@@ -396,8 +378,7 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.calendarLayout.visibility = View.VISIBLE
             binding.layoutFlexible.visibility = View.GONE
             binding.cv1.visibility = View.GONE
-        //    updateCalendar()
-       //     updateCalendar1()
+
 
         }
         binding.tvHourly.setOnClickListener {
@@ -419,8 +400,7 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.calendarLayout.visibility = View.GONE
             binding.layoutFlexible.visibility = View.VISIBLE
             binding.cv1.visibility = View.GONE
-        //    updateCalendar()
-        //    updateCalendar1()
+
         }
         binding.rlActivity.setOnClickListener {
             if(binding.rlActivityRecy.visibility == View.VISIBLE){
@@ -458,29 +438,6 @@ class WhereTimeActivity : AppCompatActivity() {
 
 
     private fun callingWhereSeach() {
-       /* binding.etSearchLocation.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                s?.let {
-                    if (it.isNotEmpty()) {
-                        binding.rlLocation.visibility = View.VISIBLE
-                        binding.rlTypingView.visibility =View.VISIBLE
-                        binding.rlWhere.visibility =View.GONE
-                        fetchAutocompleteSuggestions(it.toString(), applicationContext)
-                    } else {
-                        binding.rlLocation.visibility = View.GONE
-                        binding.rlTypingView.visibility =View.GONE
-                        binding.rlWhere.visibility =View.VISIBLE
-                    }
-                }
-            }
-
-            override fun afterTextChanged(p0: Editable?) {
-            }
-        })*/
-
         appLocationManager = com.business.zyvo.locationManager.LocationManager(this, this)
 
         appLocationManager.autoCompleteLocationWork(binding.etSearchLocation)
@@ -509,19 +466,18 @@ class WhereTimeActivity : AppCompatActivity() {
                 "TESTING_ZYVOO_LOCATION",
                 "Suggestions For Location :- " + suggestions.size.toString()
             )
-            // val adapter = ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, suggestions)
+
             adapterLocationSearch.updateAdapter(suggestions.toMutableList())
 
             adapterLocationSearch.setOnItemClickListener { selectedLocation ->
                 binding.textLocationName.text = "$selectedLocation"
-               // Toast.makeText(context, "Selected Location: $selectedLocation", Toast.LENGTH_SHORT).show()
+
                 binding.rlLocation.visibility = View.GONE
                 binding.rlTypingView.visibility =View.GONE
                 binding.rlWhere.visibility =View.VISIBLE
                 binding.etSearchLocation.clearFocus()
                 binding.etSearchLocation.setText("")
             }
-            //adapter.notifyDataSetChanged()
         }.addOnFailureListener { exception ->
             Toast.makeText(context, "Error: ${exception.message}", Toast.LENGTH_SHORT).show()
         }
@@ -544,44 +500,13 @@ class WhereTimeActivity : AppCompatActivity() {
         allMonths.forEachIndexed { index, month ->
             if (index % 2 == 0) {
                 topMonths.add(month)
-//            } else {
-//                bottomMonths.add(month)
             }
         }
 
         addMonthView(calendarLayout, currentMonth)
-        // addMonthView(calendarLayout, currentMonth.plusMonths(1))
     }
 
     private fun updateCalendar1() {
-//        // Updates the calendar layout with the current and next month views.
-//        val calendarLayout = binding.calendarLayout1
-//        calendarLayout.removeAllViews()
-//        val topMonths = mutableListOf<YearMonth>()
-//        val bottomMonths = mutableListOf<YearMonth>()
-//
-//        // Separate months into top and bottom lists
-//        val allMonths = (1..12).map { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            currentMonth.plusMonths(it.toLong())
-//        } else {
-//            TODO("VERSION.SDK_INT < O")
-//        }
-//
-//        }
-//        allMonths.forEachIndexed { index, month ->
-//            if (index % 2 == 0) {
-//                topMonths.add(month)
-////            } else {
-////                bottomMonths.add(month)
-//            }
-//        }
-//
-//        addMonthView(calendarLayout, currentMonth)
-//        // addMonthView(calendarLayout, currentMonth.plusMonths(1))
-
-
-
-        // Updates the calendar layout with the current and next month views.
         val calendarLayout1 = binding.calendarLayout1
         calendarLayout1.removeAllViews()
         val topMonths = mutableListOf<YearMonth>()
@@ -598,8 +523,7 @@ class WhereTimeActivity : AppCompatActivity() {
         allMonths.forEachIndexed { index, month ->
             if (index % 2 == 0) {
                 topMonths.add(month)
-//            } else {
-//                bottomMonths.add(month)
+
             }
         }
 
@@ -698,11 +622,6 @@ class WhereTimeActivity : AppCompatActivity() {
                 updateCalendar1()
             }
             parentLayout.addView(monthView)
-        } else {
-            // If not the current month, hide the previous and next buttons
-//            val llPreviousAndNextMonth = monthView.findViewById<LinearLayout>(R.id.llPreviousAndNextMonth)
-//            llPreviousAndNextMonth.visibility = View.GONE
-//            parentLayout.addView(monthView)
         }
     }
 
@@ -756,8 +675,5 @@ class WhereTimeActivity : AppCompatActivity() {
 
         return actList
     }
-
-
-
 
 }

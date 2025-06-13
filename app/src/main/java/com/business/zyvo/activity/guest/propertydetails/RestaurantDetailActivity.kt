@@ -308,11 +308,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 if (propertyData?.reviews_total_count.equals("0")) binding.showMoreReview.visibility =
                                     View.GONE
 //Vipin
-//                                if (propertyData?.reviews_total_count!!.toInt() < 4){ binding.showMoreReview.visibility =
-//                                    View.GONE}else {
-//                                    binding.showMoreReview.visibility =
-//                                        View.VISIBLE
-//                                }
 
                                 pagination?.let {
                                     Log.d(
@@ -462,7 +457,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.textHourDiscount.text = "$it+ hour discount"
                 }
                 propertyData?.bulk_discount_rate?.let {
-                    var proDiscountR = it.toDouble().toInt().toString()
+                    val proDiscountR = it.toDouble().toInt().toString()
                     binding.proDiscount.text = "$proDiscountR% Off"
                 }
 
@@ -517,7 +512,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                             .title("Marker in ${propertyData?.address}")
                     )
                     mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 12f))
-                    //    mMap?.clear()
                     // Apply custom style to the map
                     val success: Boolean = mMap!!.setMapStyle(
                         MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style)
@@ -1131,41 +1125,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 binding.tvShowMore.text = "Show More"
             }
 
-            //  binding.tvShowMore.text = if (adapterAddon.itemCount == addOnList.size) "Show Less" else "Show More"
         }
-        /*
-        binding.startBooking.setOnClickListener {
-            if (binding.tvBookingTxt.text.toString().equals("Start Booking")) {
-                binding.tvBookingTxt.setText("Proceed to Checkout")
-                binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
-                binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
-                binding.cv1.visibility = View.GONE
-                binding.calendarLayout.visibility = View.VISIBLE
-                binding.llday.visibility = View.VISIBLE
-                binding.llHr.visibility = View.GONE
-                binding.textend.setFocusable(false);
-                binding.textend.setClickable(false);
-            } else if (binding.textHr.text.isEmpty()) {
-                showToast(this,AppConstant.hours)
-            } else if (binding.textPrice.text.isEmpty()) {
-                showToast(this,AppConstant.price)
-            } else if (binding.textstart.text.isEmpty()) {
-                showToast(this,AppConstant.stTime)
-            } else if (binding.textend.text.isEmpty()) {
-                showToast(this,AppConstant.edTime)
-            } else{
-                val intent = Intent(this@RestaurantDetailActivity, CheckOutPayActivity::class.java)
-                intent.putExtra("hour",binding.textHr.text.toString().replace(" hour",""))
-                intent.putExtra("price",binding.textPrice.text.toString())
-                intent.putExtra("stTime",binding.textstart.text.toString())
-                intent.putExtra("edTime",binding.textend.text.toString())
-                intent.putExtra("propertyData",Gson().toJson(propertyData))
-                intent.putExtra("propertyMile",propertyMile)
-                intent.putExtra("date",selectedDate.toString())
-                startActivity(intent)
-            }
-        }
-         */
+
         binding.startBooking.setOnClickListener {
             if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
                 if (binding.tvBookingTxt.text.toString().equals("Start Booking")) {
@@ -1205,42 +1166,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         clickListeners()
         selectTime()
     }
-
-    /*
-        fun selectTime() {
-            binding.rlView1.setOnClickListener {
-                    DateManager(this).showTimePickerDialog(this) { selectedTime ->
-                        try {
-                            binding.textstart.setText(selectedTime)
-                            // Define the time formatter (12-hour format with AM/PM)
-                            val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
-                            } else {
-                                TODO("VERSION.SDK_INT < O")
-                            }
-                            Log.d(ErrorDialog.TAG,selectedTime)
-                            // Parse the start time string into a LocalTime object
-                            val startTime = LocalTime.parse(selectedTime, formatter)
-                            // Add 2 hours to get the end time
-                            val endTime = startTime.plusHours(binding.textHr.text.toString().replace(" hour","")
-                                .toLong())
-                            // Format the end time back to a string
-                            val formattedEndTime = endTime.format(formatter)
-                            binding.textend.text = formattedEndTime.uppercase()
-                        }catch (e:Exception){
-                            Log.d(ErrorDialog.TAG,e.message!!)
-                        }
-                    }
-            }
-    //        binding.rlView2.setOnClickListener {
-    //                DateManager(this).showTimePickerDialog(this) { selectedTime ->
-    //                    binding.textend.setText(selectedTime)
-    //                }
-    //        }
-        }
-
-     */
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun checkHostPropertyAvailability(
@@ -1425,9 +1350,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 }
 
                                 pagination?.let {
-                                    /*  if(it.total <= it.current_page){
-                                          binding.reviewMoreView.visibility = View.GONE
-                                      }*/
                                     if (it.current_page == it.total_pages) {
 
                                         binding.showMoreReview.visibility = View.GONE
@@ -1439,8 +1361,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 reviewList?.let {
                                     if (it.isNotEmpty()) {
                                         adapterReview.updateAdapter(it)
-                                        // binding.proreviewCount.text = "("+ formatConvertCount(reviewList.size.toString()) +" reviews)"
-                                        //   binding.proTotalReview.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
                                     }
                                 }
 
@@ -1552,14 +1472,10 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         allMonths.forEachIndexed { index, month ->
             if (index % 2 == 0) {
                 topMonths.add(month)
-//            } else {
-//                bottomMonths.add(month)
             }
         }
 
         addMonthView(calendarLayout, currentMonth)
-
-        // addMonthView(calendarLayout, currentMonth.plusMonths(1))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -1604,13 +1520,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }else {
                         dateView.setOnClickListener {
                             selectedDate = date
-                          /*  if (!SessionManager(this).isDateGreaterOrEqual(selectedDate.toString())) {
-                                showErrorDialog(
-                                    this@RestaurantDetailActivity,
-                                    "You cannot select a past date from the calendar."
-                                )
-                                return@setOnClickListener
-                            }*/
                             updateCalendar()
                             // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
                         }
@@ -1649,11 +1558,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 updateCalendar()
             }
             parentLayout.addView(monthView)
-        } else {
-            // If not the current month, hide the previous and next buttons
-//            val llPreviousAndNextMonth = monthView.findViewById<LinearLayout>(R.id.llPreviousAndNextMonth)
-//            llPreviousAndNextMonth.visibility = View.GONE
-//            parentLayout.addView(monthView)
         }
     }
 

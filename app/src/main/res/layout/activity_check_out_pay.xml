@@ -1285,7 +1285,7 @@
                 android:layout_marginTop="@dimen/_14sdp"
                 android:fontFamily="@font/poppins"
                 android:textSize="@dimen/_12sdp"
-                android:visibility="gone"
+                android:visibility="visible"
                 android:text="Show More" />
 
             <View

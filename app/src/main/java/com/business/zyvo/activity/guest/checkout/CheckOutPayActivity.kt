@@ -8,7 +8,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -22,11 +21,10 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -44,12 +42,11 @@ import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.activity.ChatActivity
-import com.business.zyvo.activity.guest.extratime.ExtraTimeActivity
 import com.business.zyvo.activity.guest.checkout.model.MailingAddress
 import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
 import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.activity.guest.checkout.viewmodel.CheckOutPayViewModel
-import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
+import com.business.zyvo.activity.guest.extratime.ExtraTimeActivity
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.activity.guest.propertydetails.model.PropertyData
 import com.business.zyvo.adapter.AdapterAddPaymentCard
@@ -60,17 +57,13 @@ import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
-import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.formatDateyyyyMMddToMMMMddyyyy
-import com.business.zyvo.utils.ErrorDialog.getLocationDetails
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
@@ -238,9 +231,9 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             }
             if (!messageSend.equals("other")  ){
                 propertyData?.let {
-                    var propertyid = it.property_id
-                    var hostId = it.host_id
-                    var userId = SessionManager(this).getUserId()
+                    val propertyid = it.property_id
+                    val hostId = it.host_id
+                    val userId = SessionManager(this).getUserId()
                     //var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
                     var channelName= ""
                     if (userId!=null && hostId!=null) {
@@ -257,10 +250,10 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             }else{
                 if (userInput.trim().isNotEmpty()){
                     propertyData?.let {
-                        var propertyid = it.property_id
-                        var hostId = it.host_id
-                        var userId = SessionManager(this).getUserId()
-                        var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
+                        val propertyid = it.property_id
+                        val hostId = it.host_id
+                        val userId = SessionManager(this).getUserId()
+                        val channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
                         Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
                         callingJoinChannel(propertyid,hostId,userId,channelName,userInput.trim())
                     }
@@ -294,70 +287,14 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             }
             checkOutPayViewModel.joinChatChannel(userId, hostId, channel, "guest").collect {
                 when (it) {
-                  /*  is NetworkResult.Success -> {
-                        LoadingUtils.hideDialog()
-
-                        var loggedInId = SessionManager(this@CheckOutPayActivity).getUserId()
-                        if(it.data?.receiver_id?.toInt() == loggedInId){
-                            var userImage :String =  it.data?.receiver_avatar.toString()
-                            Log.d("TESTING_PROFILE_HOST",userImage)
-                            var friendImage :String = it.data?.sender_avatar.toString()
-                            Log.d("TESTING_PROFILE_HOST",friendImage)
-                            var friendName :String = ""
-                            if(it.data?.sender_name != null){
-                                friendName = it.data.sender_name
-                            }
-                            var userName = ""
-                            userName = it.data?.receiver_name.toString()
-                            val intent = Intent(this@CheckOutPayActivity, ChatActivity::class.java)
-                            intent.putExtra("user_img",userImage).toString()
-                            SessionManager(this@CheckOutPayActivity).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
-                            Log.d("TESTING","REVIEW HOST"+channel)
-                            intent.putExtra(AppConstant.CHANNEL_NAME,channel)
-                            intent.putExtra(AppConstant.FRIEND_ID,hostId)
-                            intent.putExtra("friend_img",friendImage).toString()
-                            intent.putExtra("friend_name",friendName).toString()
-                            intent.putExtra("user_name",userName)
-                            intent.putExtra("sender_id",hostId.toString())
-                            Log.d("ZYVOO-TESTING",messageSend+" Message Send in CheckOut")
-                            intent.putExtra("message",messageSend)
-                            startActivity(intent)
-                        }
-                        else if(it.data?.sender_id?.toInt() == loggedInId){
-                            var userImage :String =  it.data?.sender_avatar.toString()
-                            Log.d("TESTING_PROFILE_HOST",userImage)
-                            var friendImage :String = it.data?.receiver_avatar.toString()
-                            Log.d("TESTING_PROFILE_HOST",friendImage)
-                            var friendName :String = ""
-                            if(it.data?.receiver_name != null){
-                                friendName = it.data.receiver_name
-                            }
-                            var userName = ""
-                            userName = it.data?.sender_name.toString()
-                            val intent = Intent(this@CheckOutPayActivity, ChatActivity::class.java)
-                            intent.putExtra("user_img",userImage).toString()
-                            SessionManager(this@CheckOutPayActivity).getUserId()?.
-                            let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
-                            Log.d("TESTING","REVIEW HOST"+channel)
-                            intent.putExtra(AppConstant.CHANNEL_NAME,channel)
-                            intent.putExtra(AppConstant.FRIEND_ID,hostId)
-                            intent.putExtra("friend_img",friendImage).toString()
-                            intent.putExtra("friend_name",friendName).toString()
-                            intent.putExtra("user_name",userName)
-                            intent.putExtra("sender_id",hostId.toString())
-                            Log.d("ZYVOO-TESTING",messageSend+" Message Send in CheckOut")
-                            intent.putExtra("message",messageSend)
-                            startActivity(intent)
-                        }
-                    }*/
                     is NetworkResult.Success ->{
                         LoadingUtils.hideDialog()
-                        var loggedInId = SessionManager(this@CheckOutPayActivity).getUserId()
+                        val loggedInId = SessionManager(this@CheckOutPayActivity).getUserId()
                         if(it.data?.receiver_id?.toInt() == loggedInId){
 
-                            var userImage :String =  it.data?.receiver_avatar.toString()
+                            val userImage :String =  it.data?.receiver_avatar.toString()
                             Log.d("TESTING_PROFILE_HOST",userImage)
-                            var friendImage :String = it.data?.sender_avatar.toString()
+                            val friendImage :String = it.data?.sender_avatar.toString()
                             Log.d("TESTING_PROFILE_HOST",friendImage)
                             var friendName :String = ""
                             if(it.data?.sender_name != null){
@@ -379,9 +316,9 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                             startActivity(intent)
                         }
                         else if(it.data?.sender_id?.toInt() == loggedInId){
-                            var userImage :String =  it.data?.sender_avatar.toString()
+                            val userImage :String =  it.data?.sender_avatar.toString()
                             Log.d("TESTING_PROFILE_HOST",userImage)
-                            var friendImage :String = it.data?.receiver_avatar.toString()
+                            val friendImage :String = it.data?.receiver_avatar.toString()
                             Log.d("TESTING_PROFILE_HOST",friendImage)
                             var friendName :String = ""
                             if(it.data?.receiver_name != null){
@@ -437,10 +374,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                         binding.ivStar.visibility = View.GONE
                     }
                 }
-               /* propertyData?.min_booking_hours?.let {
-                    binding.tvResponseTime.text =
-                        "Respond within " + convertHoursToHrMin(it.toDouble())
-                }*/
                 propertyData?.images?.let {
                     if (it.isNotEmpty()) {
                         Glide.with(this@CheckOutPayActivity).load(BuildConfig.MEDIA_URL + it.get(0))
@@ -460,14 +393,14 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     binding.tvMiles.text = "$it miles away"
                 }
                 date?.let {
-                    var dummyData = formatDateyyyyMMddToMMMMddyyyy(it)
+                    val dummyData = formatDateyyyyMMddToMMMMddyyyy(it)
 
                     binding.tvDate.text = dummyData
                 }
                 stTime?.let { resp ->
                     edTime?.let {
                         binding.tvTiming.text = "From $resp to $it"
-                       var fetchTimeDetails = PrepareData.extractTimeDetails(stTime!!, edTime!!)
+                       val fetchTimeDetails = PrepareData.extractTimeDetails(stTime!!, edTime!!)
 
                        binding.endHour.setText(fetchTimeDetails.startHour)
                        binding.endMinute.setText(fetchTimeDetails.startMinute)
@@ -485,10 +418,23 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 propertyData?.host_rules?.let {
                     binding.proHostRule.text = it
                 }
+//                propertyData?.add_ons?.let {
+//                    if (it.isNotEmpty()) {
+//                        addOnList = it.toMutableList()
+//                        adapterAddon.updateAdapter(addOnList.subList(0,Math.min(3,addOnList.size)))
+//                    }
+//                }
                 propertyData?.add_ons?.let {
                     if (it.isNotEmpty()) {
                         addOnList = it.toMutableList()
-                        adapterAddon.updateAdapter(addOnList.subList(0,Math.min(3,addOnList.size)))
+                        adapterAddon.updateAdapter(addOnList)
+                        if (addOnList.size <= 4){
+                            binding.tvShowMore.visibility = View.GONE
+
+                        }else{
+                            binding.tvShowMore.visibility = View.VISIBLE
+                        }
+                        Log.d("CheckAddOn", addOnList.toString())
                     }
                 }
                 calculatePrice()
@@ -501,13 +447,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
     @SuppressLint("SetTextI18n")
     fun messageHostListener() {
         val dateManager = DateManager(this)
-//        binding.rlHours.setOnClickListener {
-//            dateManager.showHourSelectionDialog(this) { selectedHour ->
-//                binding.tvHours.text = selectedHour
-//                hour = selectedHour.replace(" hours", "")
-//                calculatePrice()
-//            }
-//        }
+
 
         binding.textSaveChangesButtonTime.setOnClickListener {
             stTime = binding.endHour.text.toString() + ":" +
@@ -521,27 +461,10 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         binding.imgBack.setOnClickListener {
             onBackPressed()
         }
-//        binding.doubt.setOnClickListener {
-//            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
-//            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-//            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-//        }
-//        binding.tvAvailableDay.setOnClickListener {
-//            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-//            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
-//            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-//        }
-//        binding.tvOtherReason.setOnClickListener {
-//            binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-//            binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-//            binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
-//        }
-
-
     }
 
 
-    fun callingSelectionOfTime() {
+    private fun callingSelectionOfTime() {
         val hoursArray = Array(24) { i -> String.format("%02d", i + 1) } // Ensures "01, 02, 03..."
         val hoursList: List<String> = hoursArray.toList().subList(0,12)
 
@@ -653,11 +576,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         })
 
         binding.dateView1.setOnClickListener {
-//            if (binding.relTime.visibility == View.VISIBLE) {
-//                binding.relTime.visibility = View.GONE
-//            } else {
-//                binding.relTime.visibility = View.VISIBLE
-//            }
             finish()
         }
 
@@ -685,7 +603,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         val am_pm_list = listOf("AM", "PM")
         val years = (2024..2050).toList()
         val yearsStringList = years.map { it.toString() }
-        //Toast.makeText(this,"Year String List: "+yearsStringList.size,Toast.LENGTH_LONG).show()
         val days = resources.getStringArray(R.array.day).toList()
 
 
@@ -786,27 +703,15 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         })
 
         binding.dateView.setOnClickListener {
-//            if (binding.relCalendarLayouts.visibility == View.VISIBLE) {
-//                binding.relCalendarLayouts.visibility = View.GONE
-//            } else {
-//                binding.relCalendarLayouts.visibility = View.VISIBLE
-//                var splt = date?.split("-")
-//                binding.spinnerDate.setText(splt?.get(2).toString()?:"")
-//                var num = Integer.parseInt(splt?.get(1))
-//                binding.spinnermonth.setText(PrepareData.monthNumberToName(num))
-//                binding.spinneryear.setText(splt?.get(0)?:"")
-//            }
-
             finish()
         }
 
         binding.textSaveChangesButton.setOnClickListener {
-           // date = binding.spinnermonth.text.toString() + " " + binding.spinnerDate.text.toString() + ", " + binding.spinneryear.text.toString()
-            var dateFormated = ""+binding.spinneryear.text.toString()+"-"+PrepareData.monthNameToNumber(binding.spinnermonth.text.toString())+"-"+binding.spinnerDate.text.toString()
+            val dateFormated = ""+binding.spinneryear.text.toString()+"-"+PrepareData.monthNameToNumber(binding.spinnermonth.text.toString())+"-"+binding.spinnerDate.text.toString()
 
             Log.d("Formatted_Date",dateFormated)
             date = dateFormated
-            var dummy  = formatDateyyyyMMddToMMMMddyyyy(dateFormated)
+            val dummy  = formatDateyyyyMMddToMMMMddyyyy(dateFormated)
             binding.tvDate.text = dummy
             binding.relCalendarLayouts.visibility = View.GONE
         }
@@ -846,16 +751,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     }
                     stTime?.let { resp ->
                         edTime?.let {
-                            /* var intent = Intent(this@CheckOutPayActivity
-                                 , ExtraTimeActivity::class.java)
-                             intent.putExtra("price",binding.tvPrice.text.toString().replace("$", ""),)
-                             intent.putExtra("stTime",stTime)
-                             intent.putExtra("edTime",edTime)
-                             intent.putExtra("propertyData",Gson().toJson(propertyData))
-                             intent.putExtra("propertyMile",propertyMile)
-                             intent.putExtra("date",date)
-                             intent.putExtra("hour",binding.tvHours.text.toString().replace(" Hours",""))
-                             startActivity(intent)*/
                             date?.let { it1 ->
                                 bookProperty(
                                     propertyData?.property_id.toString(),
@@ -935,9 +830,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         for (i in 1950..thisYear) {
             years.add(i.toString())
         }
-        /* checkOutPayViewModel.paymentCardList.observe(this, Observer { payment ->
-             addPaymentCardAdapter.updateItem(payment)
-         })*/
 
         binding.dateView.setOnClickListener {
             binding.relCalendarLayouts.visibility = View.VISIBLE
@@ -990,6 +882,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             val etZipCode: EditText = findViewById(R.id.etZipCode)
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+            val imgcross: ImageView = findViewById(R.id.img_cross)
 
             etAddress = etStreet
             etCity1 = etCity
@@ -1021,18 +914,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     textYear.text = selectedYear.toString()
                 }
             }
-            /* if (etCardHolderName.text.isEmpty()){
-                    submitButton.setOnClickListener {
-
-                        showToast(this@CheckOutPayActivity,AppConstant.cardName)
-                    }
-                }else if (textMonth.text.isEmpty()){
-                    showToast(this@CheckOutPayActivity,AppConstant.cardMonth)
-                }else if (textYear.text.isEmpty()){
-                    showToast(this@CheckOutPayActivity,AppConstant.cardYear)
-                }else if (etCardCvv.text.isEmpty()){
-                    showToast(this@CheckOutPayActivity,AppConstant.cardCVV)
-                }else {*/
 
             //vipin
             etCardNumber.addTextChangedListener(object : TextWatcher {
@@ -1074,7 +955,9 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 }
             })
             //end
-
+            imgcross.setOnClickListener {
+                dismiss()
+            }
             submitButton.setOnClickListener {
                 if (etCardHolderName.text.isEmpty()) {
                     showToast(this@CheckOutPayActivity, AppConstant.cardName)
@@ -1089,8 +972,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     val stripe = Stripe(this@CheckOutPayActivity, BuildConfig.STRIPE_KEY)
                     var month: Int? = null
                     var year: Int? = null
-                    //  val cardNumber: String =
-                    //    Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
                     val cardNumber: String =
                         Objects.requireNonNull(etCardNumber.text.toString().replace(" ", "").trim())
                             .toString()
@@ -1162,7 +1043,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 }
             }
 
-            //   }
         }
     }
 
@@ -1371,12 +1251,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 }
             }
             propertyData?.cleaning_fee?.toDoubleOrNull()?.let {
-              //  Cleaning Fees: Set by hosts based on property size and cleaning requirements.
-                //  (Should be set by host while creating a listing and the Zyvo platform should further
-                //  deduct 3% from this cleaning fee per booking).
-
-              //  val taxAmount = calculatePercentage(it,3.0)
-               // val totalclean = taxAmount+it
                 binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(it.toString())}"
                 totalPrice += it
             }
@@ -1571,15 +1445,12 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
 
 
                 var add = address
-//                setmarkeronMAp(latitude,longitude);
-                //  setmarkeronMAp(latitude,longitude,0);
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 etCity1?.isEnabled = true
                 // TODO: Handle the error.
                 val status = Autocomplete.getStatusFromIntent(data)
                 Toast.makeText(this, "Error: " + status.statusMessage, Toast.LENGTH_LONG)
                     .show()
-//                Log.i(TAG, status.getStatusMessage());
             }
 
     }

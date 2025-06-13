@@ -836,15 +836,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
         // Capture selected activities
         adapterActivity.setOnItemClickListener { list, _,status ->
-         /*   selectedActivities = list.filter { it.checked }.toMutableList()
-            selectedActivities.forEach { activity ->*/
+
             if (status) {
                 //selectedActivityName.add(activity.name)
                 selectedActivityName.add(list)
             }else{
-                /*  if (selectedActivityName.contains(activity.name)){
-                        selectedActivityName.remove(activity.name)
-                    }*/
+
                 if (selectedActivityName.contains(list)){
                     selectedActivityName.remove(list)
                 }
@@ -856,22 +853,18 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     binding.tvbadroom.visibility = View.GONE
                     binding.llbadrooms.visibility = View.GONE
                 }
-             //   Log.d("Selected Activity", "Name: ${activity.name}, Checked: ${activity.checked}")
                 Log.d("Selected Activity", "List: "+TextUtils.join(",",selectedActivityName))
-          //  }
+
         }
 
         // Capture Other selected activities
         adapterActivity2.setOnItemClickListener { list, _ ,status->
-           /* selectedActivities = list.filter { it.checked }.toMutableList()
-            selectedActivities.forEach { activity ->*/
+
                 if (status) {
                     //selectedActivityName.add(activity.name)
                     selectedActivityName.add(list)
                 }else{
-                  /*  if (selectedActivityName.contains(activity.name)){
-                        selectedActivityName.remove(activity.name)
-                    }*/
+
                     if (selectedActivityName.contains(list)){
                         selectedActivityName.remove(list)
                     }
@@ -883,12 +876,11 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     binding.tvbadroom.visibility = View.GONE
                     binding.llbadrooms.visibility = View.GONE
                 }
-             //   Log.d("Selected Other Activity", "Name: ${activity.name}, Checked: ${activity.checked}")
+
                 Log.d("Selected Activity", "List: "+TextUtils.join(",",selectedActivityName))
-          //  }
+
         }
 
-        // Toggle Other Activities RecyclerView
         binding.tvOtherActivity.setOnClickListener {
             with(binding.recyclerActivity2) {
                 visibility = if (visibility == View.VISIBLE) {
@@ -906,10 +898,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.tvMonthName.text = currentMonth
         binding.tvYear.text = currentYear.toString()
 
-        // Date Selector Toggle
-     //   binding.llDate.setOnClickListener {
-//            binding.rlDateSelection.visibility =
-//                if (binding.rlDateSelection.visibility == View.VISIBLE) View.GONE else View.VISIBLE
 
             binding.llDate.setOnClickListener {
                 val calendar = Calendar.getInstance()
@@ -935,11 +923,11 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
                     if (selectedCal.before(currentCal)) {
                         showErrorDialog(this@FiltersActivity, "You cannot select a past date from the calendar.")
-                        //Toast.makeText(this, "Please select today or a future date", Toast.LENGTH_SHORT).show()
+
                     } else {
                         binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(selectedDate)
                     }
-                 //   binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(selectedDate) // Set API format date
+
                 }, year, month, day)
 
                 datePickerDialog.show()
@@ -974,7 +962,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     @SuppressLint("SetTextI18n")
     private fun callingPriceRangeGraphSelection(){
         val barEntrys = ArrayList<BarEntry>()
-        var seekBar = binding.seekBar
+        val seekBar = binding.seekBar
 
         val heights = arrayOf(5f, 3f, 4f, 7f, 8f, 15f, 13f, 12f, 10f, 5f, 17f, 16f, 13f, 12f, 8f,
             13f,10f,6f,9f,11f,7f,5f, 3f, 4f, 7f, 8f, 15f, 13f, 12f, 10f, 5f, 17f, 16f, 13f, 12f, 8f,
@@ -1039,7 +1027,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     intent.putExtra("requestData",Gson().toJson(requestData))
                     setResult(Activity.RESULT_OK, intent)
                     finish() // Close the activity
-                  //  findNavController(R.id.fragmentContainerView_main).navigate(R.id.guest_fragment,bundle)
+
 
                 } else {
                     showErrorDialog(this@FiltersActivity, getString(R.string.no_internet_dialog_msg))
@@ -1107,7 +1095,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.underlinedTextView.paint.isAntiAlias = true
         binding.underlinedTextView.setOnClickListener {
             languageAdapter.updateAdapter(languageList)
-            // binding.underlinedTextView.visibility =View.GONE
+
             showingLessText()
         }
     }
@@ -1141,8 +1129,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
             // Update button text
             binding.underlinedTextView1.text = if (isExpanded) "Show Less" else "Show More"
-            // binding.underlinedTextView.visibility =View.GONE
-         //   showingLessAmText()
+
         }
 
     }
@@ -1168,42 +1155,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     }
 
     private fun showDropdown(anchorView: View) {
-        // Inflate the dropdown layout
-
-//        Log.d("TESTING_ZYVOO","Here is Layout")
-//        val popupView = LayoutInflater.from(this).inflate(R.layout.dropdown_item_time, null)
-//        val dropdownLayout = LinearLayout(this)
-//        dropdownLayout.orientation = LinearLayout.VERTICAL
-//
-//        // Create TextViews for each item
-//        for (item in items) {
-//            val textView = LayoutInflater.from(this).inflate(R.layout.dropdown_item_time, dropdownLayout, false) as TextView
-//            textView.text = item
-//            textView.setOnClickListener {
-//                selectedItemTextView.text = item
-//                popupWindow.dismiss()
-//                Toast.makeText(this, "Selected: $item", Toast.LENGTH_SHORT).show()
-//            }
-//            dropdownLayout.addView(textView)
-//        }
-//
-//        // Create the PopupWindow
-//       // popupWindow = PopupWindow(dropdownLayout, dropdownLayout.measuredWidth, ViewGroup.LayoutParams.WRAP_CONTENT, true)
-//
-//
-//        popupWindow = PopupWindow(dropdownLayout,
-//            ViewGroup.LayoutParams.MATCH_PARENT,
-//            ViewGroup.LayoutParams.WRAP_CONTENT,
-//            true)
-//      //  var borderDrawable: Drawable = ContextCompat.getDrawable(this, R.drawable.bg_four_side_grey_corner)!!
-//       // popupWindow.background = borderDrawable
-//
-//
-//        popupWindow.isFocusable = true
-//
-//        // Show the PopupWindow
-//        popupWindow.showAsDropDown(anchorView, 0, 0)
-
 
         val dropdownView = LayoutInflater.from(this).inflate(R.layout.dropdown_item_time, null)
 
@@ -1255,12 +1206,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
         }
 
-        // Show the PopupWindow
-//        popupWindow.showAsDropDown(anchorView, 0,anchorView.height)
-
-
-
-
         dropdownView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         val dropdownHeight = dropdownView.measuredHeight
 
@@ -1273,12 +1218,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
         // Show the PopupWindow at the calculated position
         popupWindow.showAtLocation(anchorView.rootView, Gravity.NO_GRAVITY, location[0], yPosition)
-
-//        dropdownView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-//        val dropdownHeight = dropdownView.measuredHeight
-//
-//        // Show the PopupWindow at the bottom of the anchor view
-//        popupWindow.showAtLocation()
 
     }
 
@@ -1351,58 +1290,58 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         activityList.add(model5)
 
 
-        var model6 = ActivityModel()
+        val model6 = ActivityModel()
         model6.name = "Film Shoot"
         model6.image = R.drawable.ic_film_shoot
         activityList.add(model6)
 
-        var model7 = ActivityModel()
+        val model7 = ActivityModel()
         model7.name = "Performance"
         model7.image = R.drawable.ic_performance
         activityList.add(model7)
 
-        var model8 = ActivityModel()
+        val model8 = ActivityModel()
         model8.name = "Workshop"
         model8.image = R.drawable.ic_workshop
         activityList.add(model8)
 
-        var model9 = ActivityModel()
+        val model9 = ActivityModel()
         model9.name = "Corporate Event"
         model9.image = R.drawable.ic_corporate_event
         activityList.add(model9)
 
-        var model10 = ActivityModel()
+        val model10 = ActivityModel()
         model10.name = "Wedding"
         model10.image = R.drawable.ic_weding
         activityList.add(model10)
 
-        var model11 = ActivityModel()
+        val model11 = ActivityModel()
         model11.name = "Dinner"
         model11.image = R.drawable.ic_dinner
         activityList.add(model11)
 
-        var model12 = ActivityModel()
+        val model12 = ActivityModel()
         model12.name = "Retreat"
         model12.image = R.drawable.ic_retreat
         activityList.add(model12)
 
 
-        var model13 = ActivityModel()
+        val model13 = ActivityModel()
         model13.name = "Pop-up"
         model13.image = R.drawable.ic_popup_people
         activityList.add(model13)
 
-        var model14 = ActivityModel()
+        val model14 = ActivityModel()
         model14.name = "Networking"
         model14.image = R.drawable.ic_networking
         activityList.add(model14)
 
-        var model15 = ActivityModel()
+        val model15 = ActivityModel()
         model15.name = "Fitness Class"
         model15.image = R.drawable.ic_fitness_class
         activityList.add(model15)
 
-        var model16 = ActivityModel()
+        val model16 = ActivityModel()
         model16.name = "Audio Recording"
         model16.image = R.drawable.ic_audio_recording
         activityList.add(model16)
@@ -1414,17 +1353,14 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     }
 
     private fun showPopupWindowForPets(anchorView: View) {
-        // Inflate the popup layout
+
         val inflater = LayoutInflater.from(this)
         val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
 
-        // Create the PopupWindow
         val popupWindow = PopupWindow(popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT
             ,
             ViewGroup.LayoutParams.WRAP_CONTENT)
-
-        // Show the popup window at the bottom right of the TextView
 
         popupWindow.isOutsideTouchable = true
         popupWindow.isFocusable = true

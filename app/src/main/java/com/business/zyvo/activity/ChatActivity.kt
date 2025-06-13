@@ -173,21 +173,6 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         if (NetworkMonitorCheck._isConnected.value) {
             LoadingUtils.showDialog(this,false)
 
-          /*  quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity, providertoken, groupName, friendId.toString(), userId.toString(),"host")
-            quickstartConversationsManager.setListener(this)*/
-           /* try {
-                quickstartConversationsManager = (application as MyApp).conversationsManagerOneTowOne!!
-                if (quickstartConversationsManager!=null){
-                    quickstartConversationsManager.setListener(this)
-                    quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
-                }else{
-                    quickstartConversationsManager.initializeWithAccessToken(this@ChatActivity,
-                        providertoken, groupName, friendId, userId)
-                    quickstartConversationsManager.setListener(this)
-                }
-            } catch (e: Exception) {
-                Log.e("ChatActivity", "Error setting QuickstartConversationsManager listener", e)
-            }*/
             try {
                 val myApp = application as? MyApp
                 quickstartConversationsManager = myApp?.conversationsManagerOneTowOne ?: QuickstartConversationsManagerOneTowOne()
@@ -415,16 +400,13 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         LoadingUtils.hideDialog()
         Log.d(ErrorDialog.TAG,"reloadLastMessages")
         Log.d(ErrorDialog.TAG,previousScreenMessage+" Previous Screen message")
-       /* if(previousScreenMessage!= null && previousScreenMessage.length >0) {
-            quickstartConversationsManager.sendMessage(previousScreenMessage)
-        }*/
         quickstartConversationsManager.loadConversationById(groupName, friendId, userId)
     }
 
     override fun showError(message:String) {
         if (!(isFinishing) && !(isDestroyed)) {
             LoadingUtils.hideDialog()
-           // LoadingUtils.showSuccessDialog(this, message)
+
         }
     }
 

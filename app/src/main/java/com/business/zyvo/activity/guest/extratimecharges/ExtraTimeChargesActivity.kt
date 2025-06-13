@@ -37,7 +37,6 @@ import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.guest.checkout.model.MailingAddress
 import com.business.zyvo.activity.guest.checkout.model.UserCards
-import com.business.zyvo.activity.guest.extratime.ExtraTimeActivity
 import com.business.zyvo.activity.guest.extratimecharges.viewmodel.ExtraTimeChargeViewModel
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.activity.guest.propertydetails.model.PropertyData
@@ -49,14 +48,12 @@ import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.addHours
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
-import com.business.zyvo.utils.ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd
 import com.business.zyvo.utils.ErrorDialog.convertHoursToHrMin
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.formatDateyyyyMMddToMMMMddyyyy
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
-import com.business.zyvo.viewmodel.PaymentViewModel
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -151,7 +148,6 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     binding.tvDiscount.text.toString().replace("$", "")
                 )
             }
-            //   startActivity(Intent(this, ExtraTimeActivity::class.java))
         }
 
 
@@ -184,7 +180,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         }
 
         binding.dateView2.setOnClickListener {
-            var dialog1 = SelectHourFragmentDialog()
+            val dialog1 = SelectHourFragmentDialog()
             dialog1.setDialogListener(this)
             dialog1.show(supportFragmentManager, "MYDIALOF")
         }
@@ -210,9 +206,6 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         binding.tvReadMoreLess.setCollapsedText("show more")
         binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
 
-        /* binding.myBooking.setOnClickListener {
-            startActivity(Intent(this, ExtraTimeActivity::class.java))
-         }*/
 
         setPropertyData()
         getUserCards()
@@ -277,27 +270,6 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
 
             }
         })
-/*
-        binding.rlSubmitMessage.setOnClickListener {
-            val userInput = binding.etShareMessage.text.toString()
-            if(userInput.length>0){
-                messageSend = userInput
-            }
-            propertyData?.let {
-                var propertyid = it.property_id
-                var hostId = it.host_id
-                var userId = SessionManager(this).getUserId()
-                var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
-
-                Log.d("TESTING_IDS","PropertyId :- "+propertyid.toString()+" Hostid"+hostId)
-
-                callingJoinChannelApi(messageSend)
-
-            }
-        }
-
-
- */
         binding.rlSubmitMessage.setOnClickListener {
             val userInput = binding.etShareMessage.text.toString()
             if(userInput.length>0){
@@ -306,9 +278,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             if (!messageSend.equals("other")  ){
                 propertyData?.let  { pro->
                     bookingId?.let {
-                        var propertyid = it
-                        var hostId = pro.host_id
-                        var userId = SessionManager(this).getUserId()
+                        val propertyid = it
+                        val hostId = pro.host_id
+                        val userId = SessionManager(this).getUserId()
                         var channelName = if (userId!! < hostId) {
                             "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
                         } else {
@@ -328,9 +300,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 if (userInput.trim().isNotEmpty()){
                     propertyData?.let  { pro->
                         bookingId?.let {
-                            var propertyid = it
-                            var hostId = pro.host_id
-                            var userId = SessionManager(this).getUserId()
+                            val propertyid = it
+                            val hostId = pro.host_id
+                            val userId = SessionManager(this).getUserId()
                             var channelName = if (userId!! < hostId) {
                                 "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
                             } else {
@@ -378,14 +350,14 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                         when (it) {
                             is NetworkResult.Success -> {
                                 LoadingUtils.hideDialog()
-                                var loggedInId =
+                                val loggedInId =
                                     SessionManager(this@ExtraTimeChargesActivity).getUserId()
 
                                 if (it.data?.receiver_id?.toInt() == loggedInId) {
 
-                                    var userImage: String = it.data?.receiver_avatar.toString()
+                                    val userImage: String = it.data?.receiver_avatar.toString()
                                     Log.d("TESTING_PROFILE_HOST", userImage)
-                                    var friendImage: String = it.data?.sender_avatar.toString()
+                                    val friendImage: String = it.data?.sender_avatar.toString()
                                     Log.d("TESTING_PROFILE_HOST", friendImage)
                                     var friendName: String = ""
                                     if (it.data?.sender_name != null) {
@@ -415,9 +387,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                                     intent.putExtra("message",messageSend)
                                     startActivity(intent)
                                 } else if (it.data?.sender_id?.toInt() == loggedInId) {
-                                    var userImage: String = it.data?.sender_avatar.toString()
+                                    val userImage: String = it.data?.sender_avatar.toString()
                                     Log.d("TESTING_PROFILE_HOST", userImage)
-                                    var friendImage: String = it.data?.receiver_avatar.toString()
+                                    val friendImage: String = it.data?.receiver_avatar.toString()
                                     Log.d("TESTING_PROFILE_HOST", friendImage)
                                     var friendName: String = ""
                                     if (it.data?.receiver_name != null) {
@@ -516,15 +488,11 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 }
                 date?.let {
                     Log.d(ErrorDialog.TAG,it)
-                    var dummyData = formatDateyyyyMMddToMMMMddyyyy(it)
+                    val dummyData = formatDateyyyyMMddToMMMMddyyyy(it)
                     binding.tvDate.text = dummyData
                  //   binding.tvDate.text = date
                 }
-              /*  stTime?.let { resp ->
-                    edTime?.let {
-                        binding.tvTiming.text = "From $it to ${addHours(it,hour)}"
-                    }
-                }*/
+
                 hour?.let { resp ->
                     edTime?.let {
                         binding.tvTiming.text = "From $it to ${addHours(it,resp.toInt())}"
@@ -683,7 +651,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         var city = ""
         var state = ""
         var zip_code = ""
-        var dateManager = DateManager(this)
+        val dateManager = DateManager(this)
         val dialog = Dialog(this, R.style.BottomSheetDialog)
         dialog?.apply {
             setCancelable(true)
@@ -703,6 +671,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             val etZipCode: EditText = findViewById(R.id.etZipCode)
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
+            val imgcross: ImageView = findViewById(R.id.img_cross)
             checkBox.setOnClickListener {
                 if (checkBox.isChecked){
                     etStreet.setText(street_address)
@@ -769,7 +738,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 }
             })
             //end
-
+            imgcross.setOnClickListener {
+                dismiss()
+            }
             submitButton.setOnClickListener {
                 if (etCardHolderName.text.isEmpty()) {
                     showToast(this@ExtraTimeChargesActivity, AppConstant.cardName)
@@ -784,8 +755,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     val stripe = Stripe(this@ExtraTimeChargesActivity, BuildConfig.STRIPE_KEY)
                     var month: Int? = null
                     var year: Int? = null
-                   // val cardNumber: String =
-                     //   Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
+
                     //vipin
                     val cardNumber: String =
                         Objects.requireNonNull(etCardNumber.text.toString().replace(" ", "").trim())
