@@ -465,6 +465,14 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         } ?: binding.tvAddOn.setText("$0")
 
+        data.discount?.let {
+            if (it != "") {
+                binding.tvDiscount.setText("$-" + truncateToTwoDecimalPlaces(it))
+            } else {
+                binding.tvDiscount.setText("$" + "0")
+            }
+        }?: binding.tvDiscount.setText("$0")
+
 
         data.booking_total_amount?.takeIf { it.isNotEmpty() }?.let {
             binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(it)}"

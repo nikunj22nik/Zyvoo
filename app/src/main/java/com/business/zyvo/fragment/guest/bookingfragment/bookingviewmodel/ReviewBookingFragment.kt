@@ -644,6 +644,7 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
 
         // Generate the link
         linkGenerator.generateLink(requireContext(), object : LinkGenerator.ResponseListener {
+            @SuppressLint("SuspiciousIndentation")
             override fun onResponse(s: String) {
                 // Successfully generated the link
                 Log.d(ErrorDialog.TAG, s)

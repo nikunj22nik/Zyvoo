@@ -1225,6 +1225,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         val trimmed = str.trim()
         return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
     }
+    fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): Boolean {
+        val trimmed = str.trim()
+        return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
+    }
 
 
     private fun checkingGalleryValidation(): Boolean {
@@ -1250,7 +1254,14 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             showErrorDialog(requireContext(), "Please Enter Description of Space")
             return false
         }
-
+        if (!isValidDescription(str = descriptionResult.toString())) {
+            Log.d("Testing_name_size","size"+descriptionResult.toString().length)
+            showErrorDialog(
+                requireContext(),
+                "Description should be between 3 and 150 characters long."
+            )
+            return false
+        }
         if (street.isEmpty()) {
             showErrorDialog(requireContext(), "Please Enter Street")
             return false

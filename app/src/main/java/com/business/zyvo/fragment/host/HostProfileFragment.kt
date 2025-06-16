@@ -131,7 +131,13 @@ import kotlinx.coroutines.withContext
 import java.util.Locale
 import java.util.Objects
 import androidx.core.graphics.drawable.toDrawable
+import androidx.core.widget.addTextChangedListener
+import com.business.zyvo.AppConstant.Companion.passwordMustConsist
+import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.utils.MultipartUtils
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.widget.AutocompleteActivity
+import java.util.Arrays
 
 
 @AndroidEntryPoint
@@ -205,7 +211,13 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
     private lateinit var getInquiryResult: ActivityResultLauncher<Inquiry>
 
     private lateinit var userId: String
-
+    var etAddress : EditText? = null
+    var etCity1 : EditText? = null
+    var zipcode : EditText? = null
+    var etState1 : EditText? = null
+    var latitude: String = "0.00"
+    var longitude: String = "0.00"
+    private var cardDialog: Dialog? = null
 
     // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
@@ -3099,6 +3111,47 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
                 val etPassword = findViewById<EditText>(R.id.etPassword) ?: return
                 val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword) ?: return
+                val imgCorrectSignPassword = findViewById<ImageView>(R.id.imgCorrectSign)
+                val imgWrongSignPassword = findViewById<ImageView>(R.id.imgWrongSign)
+                val imgCorrectSignConfirm = findViewById<ImageView>(R.id.imgCorrectSign1)
+                val imgWrongSignConfirm = findViewById<ImageView>(R.id.imgWrongSign1)
+                fun isValidPassword(password: String): Boolean {
+                    val regex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#\$%^&+=!]).{8,}$")
+                    return password.matches(regex)
+                }
+
+                fun validateInputs() {
+                    val password = etPassword.text.toString()
+                    val confirmPassword = etConfirmPassword.text.toString()
+
+                    // Password rule check
+                    if (password.isEmpty()) {
+                        imgCorrectSignPassword.visibility = View.GONE
+                        imgWrongSignPassword.visibility = View.GONE
+                    } else if (isValidPassword(password)) {
+                        imgCorrectSignPassword.visibility = View.VISIBLE
+                        imgWrongSignPassword.visibility = View.GONE
+                    } else {
+                        imgCorrectSignPassword.visibility = View.GONE
+                        imgWrongSignPassword.visibility = View.VISIBLE
+                    }
+
+                    // Confirm password match check
+                    if (confirmPassword.isEmpty()) {
+                        imgCorrectSignConfirm.visibility = View.GONE
+                        imgWrongSignConfirm.visibility = View.GONE
+                    } else if (password == confirmPassword) {
+                        imgCorrectSignConfirm.visibility = View.VISIBLE
+                        imgWrongSignConfirm.visibility = View.GONE
+                    } else {
+                        imgCorrectSignConfirm.visibility = View.GONE
+                        imgWrongSignConfirm.visibility = View.VISIBLE
+                    }
+                }
+
+                etPassword.addTextChangedListener { validateInputs() }
+                etConfirmPassword.addTextChangedListener { validateInputs() }
+
 
                 findViewById<TextView>(R.id.textSubmitButton)?.setOnClickListener {
                     val password = etPassword.text.toString().trim()
@@ -3111,16 +3164,33 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         return@setOnClickListener
                     }
 
-                    when {
-                        password.isEmpty() -> showErrorDialog(ctx, "Enter Password")
-                        confirmPassword.isEmpty() -> showErrorDialog(ctx, "Enter Confirm Password")
-                        password != confirmPassword -> showErrorDialog(ctx, "Password not match")
-                        else -> {
-                            dismiss()
-                            callingOtpFetchApi(password, confirmPassword)
+//                    when {
+//                        password.isEmpty() -> showErrorDialog(ctx, "Enter Password")
+//                        confirmPassword.isEmpty() -> showErrorDialog(ctx, "Enter Confirm Password")
+//                        password != confirmPassword -> showErrorDialog(ctx, "Password not match")
+//                        else -> {
+//                            dismiss()
+//                            callingOtpFetchApi(password, confirmPassword)
+//
+//                            // Dismiss the dialog after successful API call
+//                        }
+//                    }
 
-                            // Dismiss the dialog after successful API call
-                        }
+                    if (password.isEmpty()) {
+                        showErrorDialog(ctx, "Enter Password")
+                    } else if (!isValidPassword(password)){
+                        showErrorDialog(
+                            requireContext(), passwordMustConsist
+                        )
+                    }
+                    else if (confirmPassword.isEmpty()) {
+                        showErrorDialog(ctx, "Enter Confirm Password")
+                    } else if (password != confirmPassword) {
+                        showErrorDialog(ctx, "Password not match")
+                    } else {
+
+                        dismiss() // Dismiss the dialog after successful API call
+                        callingOtpFetchApi(password, confirmPassword)
                     }
                 }
 
@@ -4396,13 +4466,16 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
 
     private fun dialogAddCardGuest() {
+        if (cardDialog?.isShowing == true) {
+            return // Dialog is already showing, don't open another one
+        }
         var street_address = ""
         var city = ""
         var state = ""
         var zip_code = ""
         var dateManager = DateManager(requireContext())
-        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
-        dialog.apply {
+        cardDialog = Dialog(requireContext(), R.style.BottomSheetDialog)
+        cardDialog?.apply {
 
             setContentView(R.layout.dialog_add_card_details)
             setCancelable(false)
@@ -4423,7 +4496,10 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
             val cross: ImageView = findViewById(R.id.img_cross)
-
+            etAddress = etStreet
+            etCity1 = etCity
+            zipcode = etZipCode
+            etState1 = etState
             cross.setOnClickListener {
                 dismiss()
             }
@@ -4440,6 +4516,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                     etZipCode.text.clear()
                 }
             }
+            locationSelection(etStreet)
             textMonth.setOnClickListener {
                 dateManager.showMonthSelectorDialog { selectedMonth ->
                     textMonth.text = selectedMonth
@@ -4552,7 +4629,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                                 val id = result.id
                                 Log.d("******  Token payment :-", "data $id")
 
-                                saveCardStripe(dialog, id, checkBox.isChecked)
+                                saveCardStripe(cardDialog!!, id, checkBox.isChecked)
                                 LoadingUtils.hideDialog()
                             }
                         })
@@ -4756,7 +4833,113 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                 }
         }
     }
+    fun locationSelection(etStreet : EditText) {
+        etStreet.setOnClickListener {
 
+            val apiKey = getString(R.string.api_key_location)
+            if (!Places.isInitialized()) {
+                Places.initialize(requireContext(), apiKey)
+            }
+
+            val fields: List<Place.Field> = Arrays.asList<Place.Field>(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.ADDRESS,
+                Place.Field.LAT_LNG
+            )
+
+            val intent: Intent =
+                Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(requireContext())
+            startActivityForResult(intent, 103)
+        }
+
+        etStreet.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val apiKey = getString(R.string.api_key_location)
+                if (!Places.isInitialized()) {
+                    Places.initialize(requireContext(), apiKey)
+                }
+                val fields: List<Place.Field> = Arrays.asList<Place.Field>(
+                    Place.Field.ID,
+                    Place.Field.NAME,
+                    Place.Field.ADDRESS,
+                    Place.Field.LAT_LNG
+                )
+
+                val intent: Intent =
+                    Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                        .build(requireContext())
+                startActivityForResult(intent, 103)
+            }
+        }
+
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+        if (resultCode == Activity.RESULT_OK) {
+            val place = Autocomplete.getPlaceFromIntent(data)
+            //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
+            val addressComponents = place.addressComponents?.asList()
+            var address: String = place.address
+            // do query with address
+
+            val latLng = place.latLng
+
+            latitude = latLng.latitude.toString()
+            longitude = latLng.longitude.toString()
+            val location = LatLng(latitude.toDouble(), longitude.toDouble())
+            // Move the camera to the specified location
+            fetchAddressDetails(address,latitude.toDouble(), longitude.toDouble())
+            etCity1?.isEnabled = true
+            if (latitude == null) {
+                latitude = "0.0001"
+            }
+
+            if (longitude == null) {
+                longitude = "0.0001"
+            }
+
+
+            var add = address
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            etCity1?.isEnabled = true
+            // TODO: Handle the error.
+            val status = Autocomplete.getStatusFromIntent(data)
+            Toast.makeText(requireContext(), "Error: " + status.statusMessage, Toast.LENGTH_LONG)
+                .show()
+        }
+
+    }
+
+    private fun fetchAddressDetails(address:String,latitude: Double, longitude: Double) {
+        // Launching a coroutine to run the geocoding task in the background
+        lifecycleScope.launch {
+            try {
+                val addressDetails = withContext(Dispatchers.IO) {
+                    LocationManager(requireContext()).getAddressFromCoordinates(latitude, longitude)
+                }
+                etAddress?.setText(address)
+                etAddress?.text?.length?.let { etAddress?.setSelection(it) }
+                etCity1?.setText(addressDetails.city)
+                zipcode?.setText(addressDetails.postalCode)
+
+                etState1?.setText(addressDetails.state)
+
+
+
+            } catch (e: Exception) {
+                Log.e("Geocoder", "Error fetching address: ${e.message}")
+                Toast.makeText(
+                    requireContext(),
+                    "Unable to fetch address details",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

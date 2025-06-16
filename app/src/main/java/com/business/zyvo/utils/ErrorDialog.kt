@@ -32,6 +32,7 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.Instant
@@ -467,7 +468,17 @@ object ErrorDialog {
     }
 
 
-
+    fun convertTo24HourFormat(inputDate: String): String? {
+        return try {
+            val inputFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
+            val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val dateObj = inputFormat.parse(inputDate)
+            outputFormat.format(dateObj)
+        } catch (e: ParseException) {
+            Log.e("DateFormatter", "Error parsing date: ${e.message}")
+            null
+        }
+    }
 
 
 }

@@ -36,6 +36,7 @@ class MyBookingsAdapter(
             when (currentItem.booking_status) {
                 "Confirmed" -> binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
                 "Waiting Payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                "Pending" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
                 "Cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
                 else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg)
             }

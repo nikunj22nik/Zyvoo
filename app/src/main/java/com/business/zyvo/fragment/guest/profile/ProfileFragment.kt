@@ -38,6 +38,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -48,6 +49,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import com.business.zyvo.AppConstant
+import com.business.zyvo.AppConstant.Companion.passwordMustConsist
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
@@ -75,6 +77,7 @@ import com.business.zyvo.databinding.FragmentProfileBinding
 import com.business.zyvo.fragment.both.completeProfile.HasName
 import com.business.zyvo.fragment.guest.profile.model.UserProfile
 import com.business.zyvo.fragment.guest.profile.viewModel.ProfileViewModel
+import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.model.AddHobbiesModel
 import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.AddLocationModel
@@ -92,9 +95,11 @@ import com.business.zyvo.utils.MultipartUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
 import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.checkbox.MaterialCheckBox
@@ -115,8 +120,11 @@ import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Arrays
 import java.util.Locale
 import java.util.Objects
+import java.util.regex.Pattern
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,
@@ -161,6 +169,13 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     private lateinit var getInquiryResult: ActivityResultLauncher<Inquiry>
     var firstName: String = ""
     var lastName: String = ""
+    var etAddress : EditText? = null
+    var etCity1 : EditText? = null
+    var zipcode : EditText? = null
+    var etState1 : EditText? = null
+    var latitude: String = "0.00"
+    var longitude: String = "0.00"
+    private var cardDialog: Dialog? = null
 
     // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
@@ -2186,13 +2201,16 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
     private fun dialogAddCard() {
+        if (cardDialog?.isShowing == true) {
+            return // Dialog is already showing, don't open another one
+        }
         var street_address = ""
         var city = ""
         var state = ""
         var zip_code = ""
         var dateManager = DateManager(requireContext())
-        val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
-        dialog.apply {
+        cardDialog = Dialog(requireContext(), R.style.BottomSheetDialog)
+        cardDialog?.apply {
             setCancelable(true)
             setContentView(R.layout.dialog_add_card_details)
             window?.attributes = WindowManager.LayoutParams().apply {
@@ -2212,9 +2230,12 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val etCardCvv: EditText = findViewById(R.id.etCardCvv)
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
             val cross :ImageView = findViewById(R.id.img_cross)
-
+            etAddress = etStreet
+            etCity1 = etCity
+            zipcode = etZipCode
+            etState1 = etState
             cross.setOnClickListener {
-                dialog.dismiss()
+                cardDialog?.dismiss()
             }
 
             checkBox.setOnClickListener {
@@ -2230,6 +2251,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     etZipCode.text.clear()
                 }
             }
+            locationSelection(etStreet)
 
             textMonth.setOnClickListener {
                 dateManager.showMonthSelectorDialog { selectedMonth ->
@@ -2285,12 +2307,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             submitButton.setOnClickListener {
                 if (etCardHolderName.text.isEmpty()) {
                     LoadingUtils.showErrorDialog(requireContext(), AppConstant.cardName)
-                }
-                else if(etCardHolderName.text.toString().length >30){
+                } else if(etCardHolderName.text.toString().length >30){
                     LoadingUtils.showErrorDialog(requireContext(),"Please Enter Card Holder Name less than 30 character")
-                }
-
-                else if (textMonth.text.isEmpty()) {
+                } else if (textMonth.text.isEmpty()) {
                     showToast(requireContext(), AppConstant.cardMonth)
                 } else if (textYear.text.isEmpty()) {
                     showToast(requireContext(), AppConstant.cardYear)
@@ -2345,7 +2364,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 val id = result.id
                                 Log.d("******  Token payment :-", "data $id")
                                 LoadingUtils.hideDialog()
-                                saveCardStripe(dialog, id, checkBox.isChecked)
+                                saveCardStripe(cardDialog!!, id, checkBox.isChecked)
 
                             }
                         })
@@ -3360,6 +3379,46 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
                 val etPassword = findViewById<EditText>(R.id.etPassword) ?: return
                 val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword) ?: return
+                val imgCorrectSignPassword = findViewById<ImageView>(R.id.imgCorrectSign)
+                val imgWrongSignPassword = findViewById<ImageView>(R.id.imgWrongSign)
+                val imgCorrectSignConfirm = findViewById<ImageView>(R.id.imgCorrectSign1)
+                val imgWrongSignConfirm = findViewById<ImageView>(R.id.imgWrongSign1)
+                fun isValidPassword(password: String): Boolean {
+                    val regex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#\$%^&+=!]).{8,}$")
+                    return password.matches(regex)
+                }
+
+                fun validateInputs() {
+                    val password = etPassword.text.toString()
+                    val confirmPassword = etConfirmPassword.text.toString()
+
+                    // Password rule check
+                    if (password.isEmpty()) {
+                        imgCorrectSignPassword.visibility = View.GONE
+                        imgWrongSignPassword.visibility = View.GONE
+                    } else if (isValidPassword(password)) {
+                        imgCorrectSignPassword.visibility = View.VISIBLE
+                        imgWrongSignPassword.visibility = View.GONE
+                    } else {
+                        imgCorrectSignPassword.visibility = View.GONE
+                        imgWrongSignPassword.visibility = View.VISIBLE
+                    }
+
+                    // Confirm password match check
+                    if (confirmPassword.isEmpty()) {
+                        imgCorrectSignConfirm.visibility = View.GONE
+                        imgWrongSignConfirm.visibility = View.GONE
+                    } else if (password == confirmPassword) {
+                        imgCorrectSignConfirm.visibility = View.VISIBLE
+                        imgWrongSignConfirm.visibility = View.GONE
+                    } else {
+                        imgCorrectSignConfirm.visibility = View.GONE
+                        imgWrongSignConfirm.visibility = View.VISIBLE
+                    }
+                }
+
+                etPassword.addTextChangedListener { validateInputs() }
+                etConfirmPassword.addTextChangedListener { validateInputs() }
 
 
                 etConfirmPassword.imeOptions = EditorInfo.IME_ACTION_DONE
@@ -3379,14 +3438,29 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     val password = etPassword.text.toString().trim()
                     val confirmPassword = etConfirmPassword.text.toString().trim()
 
-                    when {
-                        password.isEmpty() -> showErrorDialog(ctx, "Enter Password")
-                        confirmPassword.isEmpty() -> showErrorDialog(ctx, "Enter Confirm Password")
-                        password != confirmPassword -> showErrorDialog(ctx, "Password not match")
-                        else -> {
-                            updatePasswordApi(password, confirmPassword)
-                            dismiss() // Dismiss the dialog after successful API call
-                        }
+//                    when {
+//                        password.isEmpty() -> showErrorDialog(ctx, "Enter Password")
+//                        confirmPassword.isEmpty() -> showErrorDialog(ctx, "Enter Confirm Password")
+//                        password != confirmPassword -> showErrorDialog(ctx, "Password not match")
+//                        else -> {
+//                            updatePasswordApi(password, confirmPassword)
+//                            dismiss() // Dismiss the dialog after successful API call
+//                        }
+//                    }
+                    if (password.isEmpty()) {
+                        showErrorDialog(ctx, "Enter Password")
+                    } else if (!isValidPassword(password)){
+                        showErrorDialog(
+                            requireContext(), passwordMustConsist
+                        )
+                    }
+                    else if (confirmPassword.isEmpty()) {
+                        showErrorDialog(ctx, "Enter Confirm Password")
+                    } else if (password != confirmPassword) {
+                        showErrorDialog(ctx, "Password not match")
+                    } else {
+                        updatePasswordApi(password, confirmPassword)
+                        dismiss() // Dismiss the dialog after successful API call
                     }
                 }
 
@@ -3487,7 +3561,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                               LoadingUtils.showSuccessDialog(requireContext(),"Pa")
+                                               LoadingUtils.showSuccessDialog(requireContext(),"Password updated successfully.")
                                             }
                                         }
 
@@ -4043,6 +4117,114 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
         }
     }
+    fun locationSelection(etStreet : EditText) {
+        etStreet.setOnClickListener {
+
+            val apiKey = getString(R.string.api_key_location)
+            if (!Places.isInitialized()) {
+                Places.initialize(requireContext(), apiKey)
+            }
+
+            val fields: List<Place.Field> = Arrays.asList<Place.Field>(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.ADDRESS,
+                Place.Field.LAT_LNG
+            )
+
+            val intent: Intent =
+                Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                    .build(requireContext())
+            startActivityForResult(intent, 103)
+        }
+
+        etStreet.setOnFocusChangeListener { v, hasFocus ->
+            if (hasFocus) {
+                val apiKey = getString(R.string.api_key_location)
+                if (!Places.isInitialized()) {
+                    Places.initialize(requireContext(), apiKey)
+                }
+                val fields: List<Place.Field> = Arrays.asList<Place.Field>(
+                    Place.Field.ID,
+                    Place.Field.NAME,
+                    Place.Field.ADDRESS,
+                    Place.Field.LAT_LNG
+                )
+
+                val intent: Intent =
+                    Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                        .build(requireContext())
+                startActivityForResult(intent, 103)
+            }
+        }
+
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+        if (resultCode == Activity.RESULT_OK) {
+            val place = Autocomplete.getPlaceFromIntent(data)
+            //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
+            val addressComponents = place.addressComponents?.asList()
+            var address: String = place.address
+            // do query with address
+
+            val latLng = place.latLng
+
+            latitude = latLng.latitude.toString()
+            longitude = latLng.longitude.toString()
+            val location = LatLng(latitude.toDouble(), longitude.toDouble())
+            // Move the camera to the specified location
+            fetchAddressDetails(address,latitude.toDouble(), longitude.toDouble())
+            etCity1?.isEnabled = true
+            if (latitude == null) {
+                latitude = "0.0001"
+            }
+
+            if (longitude == null) {
+                longitude = "0.0001"
+            }
+
+
+            var add = address
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            etCity1?.isEnabled = true
+            // TODO: Handle the error.
+            val status = Autocomplete.getStatusFromIntent(data)
+            Toast.makeText(requireContext(), "Error: " + status.statusMessage, Toast.LENGTH_LONG)
+                .show()
+        }
+
+    }
+
+    private fun fetchAddressDetails(address:String,latitude: Double, longitude: Double) {
+        // Launching a coroutine to run the geocoding task in the background
+        lifecycleScope.launch {
+            try {
+                val addressDetails = withContext(Dispatchers.IO) {
+                    LocationManager(requireContext()).getAddressFromCoordinates(latitude, longitude)
+                }
+                etAddress?.setText(address)
+                etAddress?.text?.length?.let { etAddress?.setSelection(it) }
+                etCity1?.setText(addressDetails.city)
+                zipcode?.setText(addressDetails.postalCode)
+
+                etState1?.setText(addressDetails.state)
+
+
+
+            } catch (e: Exception) {
+                Log.e("Geocoder", "Error fetching address: ${e.message}")
+                Toast.makeText(
+                    requireContext(),
+                    "Unable to fetch address details",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

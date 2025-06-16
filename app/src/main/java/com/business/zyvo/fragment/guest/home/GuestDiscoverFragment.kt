@@ -753,6 +753,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 if (location != null) {
                     latitude = location.latitude.toString()
                     longitude = location.longitude.toString()
+                    sessionManager.setLatitude(latitude.toString())
+                    sessionManager.setLongitude(longitude.toString())
                     sessionManager.setGustLatitude(latitude)
                     sessionManager.setGustLongitude(longitude)
                     loadHomeApi()

@@ -12,7 +12,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
-        android:background="@color/grey" />
+        android:background="#E5E5E5" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -73,11 +73,13 @@
 
                 <TextView
                     android:id="@+id/textHostName"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_7sdp"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
+                    android:textAlignment="center"
                     android:text=""
                     android:textColor="@color/black"
                     android:textSize="@dimen/_17ssp" />

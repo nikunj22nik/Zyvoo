@@ -140,12 +140,25 @@ class WhereTimeActivity : AppCompatActivity() {
             if (!binding.text1.text.toString().equals("00:00 PM")){
                 start_time   = binding.text1.text.toString()
                 start_time = "$date $start_time"
+//                val formattedTime = ErrorDialog.convertTo24HourFormat(start_time)
+//                formattedTime?.let {
+//                    start_time = it
+//                    Log.d("checkDateFormate", "Formatted: $end_time")
+//                }
             }else{
                 start_time = ""
             }
             if (!binding.text2.text.toString().equals("00:00 PM")){
+                Log.d("checkDateFormate",end_time)
                 end_time   = binding.text2.text.toString()
+                Log.d("checkDateFormate",end_time)
                 end_time = "$date $end_time"
+//                val formattedTime = ErrorDialog.convertTo24HourFormat(end_time)
+//                formattedTime?.let {
+//                    end_time = it
+//                    Log.d("checkDateFormate", "Formatted: $end_time")
+//                }
+
             }else{
                 end_time = ""
             }

@@ -428,7 +428,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     if (it.isNotEmpty()) {
                         addOnList = it.toMutableList()
                         adapterAddon.updateAdapter(addOnList)
-                        if (addOnList.size <= 4){
+                        if (addOnList.size <= 3){
                             binding.tvShowMore.visibility = View.GONE
 
                         }else{
@@ -838,7 +838,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
     }
 
     private fun showingMoreText() {
-        val text = "Show More"
+        val text = binding.tvShowMore.text
         val spannableString = SpannableString(text).apply {
             setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
@@ -847,11 +847,11 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         binding.tvShowMore.paint.isAntiAlias = true
         binding.tvShowMore.setOnClickListener {
             adapterAddon.toggleList()
-            if (binding.tvShowMore.text.equals("Show More")){
-                    binding.tvShowMore.text ="Show Less"
+            if (binding.tvShowMore.text.equals("Show Less")){
+                    binding.tvShowMore.text ="Show More"
               }
           else{
-              binding.tvShowMore.text = "Show More"
+              binding.tvShowMore.text = "Show Less"
             }
         }
     }

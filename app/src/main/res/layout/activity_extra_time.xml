@@ -723,15 +723,15 @@
                         android:id="@+id/date_view"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginStart="@dimen/_13sdp"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:background="@drawable/bg_two_side_corner"
                         android:paddingVertical="@dimen/_10sdp">
 
                         <ImageView
                             android:id="@+id/img_calendar"
-                            android:layout_width="@dimen/_12sdp"
-                            android:layout_height="@dimen/_12sdp"
+                            android:layout_width="@dimen/_17sdp"
+                            android:layout_height="@dimen/_17sdp"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:src="@drawable/ic_calendar_icon" />
 
@@ -764,8 +764,8 @@
 
                         <ImageView
                             android:id="@+id/clock_1"
-                            android:layout_width="@dimen/_12sdp"
-                            android:layout_height="@dimen/_12sdp"
+                            android:layout_width="@dimen/_17sdp"
+                            android:layout_height="@dimen/_17sdp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_clock_new" />
 
@@ -775,6 +775,7 @@
                             android:layout_marginStart="@dimen/_9sdp"
                             android:layout_toRightOf="@id/clock_1"
                             android:hint="2 Hours"
+                            android:layout_marginTop="@dimen/_5sdp"
                             android:id="@+id/tvHours"
                             android:fontFamily="@font/poppins"
                             android:textSize="@dimen/_12ssp"
@@ -788,15 +789,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/date_view"
-                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginStart="@dimen/_13sdp"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:background="@drawable/bg_two_side_corner"
                         android:paddingVertical="@dimen/_10sdp">
 
                         <ImageView
                             android:id="@+id/clock_old"
-                            android:layout_width="@dimen/_12ssp"
-                            android:layout_height="@dimen/_12ssp"
+                            android:layout_width="@dimen/_17ssp"
+                            android:layout_height="@dimen/_17ssp"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_clock_new" />
@@ -808,6 +809,7 @@
                             android:layout_marginStart="@dimen/_7sdp"
                             android:layout_toRightOf="@id/clock_old"
                             android:text="From 01pm to 03pm"
+                            android:layout_marginTop="@dimen/_5sdp"
                             android:layout_marginEnd="@dimen/_7sdp"
                             android:fontFamily="@font/poppins"
                             android:textSize="@dimen/_12ssp"
@@ -825,8 +827,8 @@
 
                         <ImageView
                             android:id="@+id/add_more"
-                            android:layout_width="@dimen/_13ssp"
-                            android:layout_height="@dimen/_13ssp"
+                            android:layout_width="@dimen/_17ssp"
+                            android:layout_height="@dimen/_17ssp"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_add_more" />

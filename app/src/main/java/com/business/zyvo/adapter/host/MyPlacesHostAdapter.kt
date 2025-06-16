@@ -96,10 +96,24 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         TabLayoutMediator(holder.binding.tabLayoutForIndicator, holder.binding.viewpager2) { _, _ -> }.attach()
         // Set TextView data
         holder.binding.textHotelName.text = currentItem.title
-        var rating = currentItem.property_rating +"("+ currentItem.property_review_count+")"
-        var price ="$"+currentItem.hourly_rate+" / h"
+        var rating = ""
+        currentItem.property_rating?.let {
+            val formattedRating = String.format("%.1f", it.toFloat())
+             rating = formattedRating +"("+ currentItem.property_review_count+")"
+        }
+
+        var price = ""
+        currentItem.hourly_rate.let{
+          val   priceInt = it.toFloat().toInt().toString()
+             price ="$"+priceInt+" / h"
+        }
+
+
         holder.binding.textRating.text = rating
-        holder.binding.textPricePerHours.text = price
+        Log.d("checkDataRating",rating.toString())
+        Log.d("checkDataPrice",price.toString())
+        holder.binding.textPricePerHours.text = price.toString()
+
 
         currentItem.distance_miles?.let {   holder.binding.textMiles.text = currentItem.distance_miles +" miles away" }
 

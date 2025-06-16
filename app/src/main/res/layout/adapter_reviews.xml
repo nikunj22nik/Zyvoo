@@ -116,7 +116,7 @@
         android:id="@+id/v1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
-        android:background="@color/grey"
+        android:background="#E5E5E5"
         android:layout_below="@id/rl_bg_1"
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginBottom="@dimen/_15sdp"
