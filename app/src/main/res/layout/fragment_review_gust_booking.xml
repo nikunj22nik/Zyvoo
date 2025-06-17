@@ -943,6 +943,7 @@
                             android:layout_width="@dimen/_15sdp"
                             android:layout_height="@dimen/_15sdp"
                             android:src="@drawable/ic_share_icon"
+                            android:layout_gravity="center_vertical"
                             app:tint="#000" />
 
                         <TextView
@@ -1699,6 +1700,7 @@
                     android:layout_marginHorizontal="@dimen/_7sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginBottom="@dimen/_10sdp"
+                    android:visibility="gone"
                     android:background="@color/grey" />
 
                 <ImageView

@@ -478,6 +478,19 @@ object ErrorDialog {
             Log.e("DateFormatter", "Error parsing date: ${e.message}")
             null
         }
+
+
+    }
+    fun convertTo24HourFormatSecond(inputDate: String): String {
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+        return try {
+            val date = inputFormat.parse(inputDate)
+            outputFormat.format(date)
+        } catch (e: Exception) {
+            Log.e("DateConvert", "Error: ${e.message}")
+            "" // Return original if error occurs
+        }
     }
 
 

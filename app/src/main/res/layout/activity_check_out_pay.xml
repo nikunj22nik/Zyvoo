@@ -159,7 +159,7 @@
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/ic_clock_dot_new"
                         android:drawablePadding="@dimen/_2sdp"
-                        android:hint="Respond within 2 hr"
+                        android:hint="Respond within 1 hr"
                         android:id="@+id/tvResponseTime"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
@@ -743,7 +743,7 @@
                         android:layout_toRightOf="@id/date_view"
                         android:background="@drawable/bg_two_side_corner"
                         android:paddingHorizontal="@dimen/_15sdp"
-                        android:paddingVertical="@dimen/_10sdp">
+                        android:paddingVertical="@dimen/_8sdp">
 
                         <ImageView
                             android:id="@+id/clock_1"

@@ -255,7 +255,7 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                     .error(R.drawable.ic_circular_img_user)
                                     .into(binding.imageProfilePicture)
 
-                                binding.textListing.setText(it.host?.name+" Listings")
+                                binding.textListing.setText(it.host?.name+"'s Listings")
                                 binding.textHostName.setText(it.host?.name)
 
 
