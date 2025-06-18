@@ -14,7 +14,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -773,7 +773,9 @@
                     android:fontFamily="@font/poppins"
                     android:hint="**********"
                     android:inputType="textPassword"
+                    android:paddingTop="@dimen/_8ssp"
                     android:maxLines="1"
+                    android:gravity="center_vertical"
                     android:enabled="false"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
