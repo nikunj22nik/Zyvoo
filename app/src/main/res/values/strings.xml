@@ -145,6 +145,7 @@
     <string name="sort_by_highest_review">Sort by: Highest Review</string>
     <string name="sort_by_lowest_review">Sort by: Lowest Review</string>
     <string name="sort_by_recent_review">Sort by: Recent Review</string>
+    <string name="enter_confirm_password">Enter Confirm password</string>
 
     <string-array name="hourly_rates">
         <item>$10 per hour</item>
