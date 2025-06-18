@@ -5,14 +5,15 @@
     android:layout_marginHorizontal="@dimen/_15sdp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:paddingBottom="@dimen/_20sdp"
+    android:paddingBottom="@dimen/_15sdp"
     android:background="@drawable/dialog_bg">
 
     <ImageView
         android:id="@+id/imageCross"
-        android:layout_width="@dimen/_14sdp"
-        android:layout_height="@dimen/_14sdp"
-        android:layout_margin="@dimen/_10sdp"
+        android:layout_width="@dimen/_16sdp"
+        android:layout_height="@dimen/_16sdp"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         android:src="@drawable/ic_cross"
         android:layout_alignParentEnd="true" />
 
@@ -67,57 +68,58 @@
 
         <EditText
             android:id="@+id/otp_digit1"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_42sdp"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp"
             android:maxLength="1"
             android:inputType="number"
             android:gravity="center"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:background="@drawable/otp_box"/>
 
         <EditText
             android:id="@+id/otp_digit2"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_42sdp"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp"
             android:maxLength="1"
             android:inputType="number"
             android:gravity="center"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:layout_marginHorizontal="@dimen/_4sdp"
             android:background="@drawable/otp_box"/>
 
         <EditText
             android:id="@+id/otp_digit3"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_42sdp"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp"
             android:maxLength="1"
             android:inputType="number"
             android:gravity="center"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:layout_marginEnd="@dimen/_4sdp"
             android:background="@drawable/otp_box"/>
 
         <EditText
             android:id="@+id/otp_digit4"
-            android:layout_width="@dimen/_40sdp"
-            android:layout_height="@dimen/_42sdp"
+            android:layout_width="@dimen/_38sdp"
+            android:layout_height="@dimen/_38sdp"
             android:maxLength="1"
             android:inputType="number"
             android:gravity="center"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:background="@drawable/otp_box"/>
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/textSubmitButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_15sdp"
         android:background="@drawable/button_bg"
         android:fontFamily="@font/poppins"
-        android:paddingHorizontal="@dimen/_90sdp"
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:textAlignment="center"
         android:paddingVertical="@dimen/_9sdp"
         android:text="Submit"
         android:layout_centerHorizontal="true"

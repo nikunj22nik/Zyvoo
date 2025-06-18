@@ -124,7 +124,7 @@
         android:layout_height="@dimen/_13sdp"
         android:src="@drawable/ic_star"
         android:layout_marginStart="@dimen/_3sdp"
-        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textHotelName"/>
 
@@ -135,7 +135,7 @@
         app:layout_constraintStart_toEndOf="@id/imageStar"
         android:text="5.0"
         android:textStyle="bold"
-        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginTop="@dimen/_4sdp"
         android:textSize="@dimen/_11ssp"
         android:textColor="#FCA800"
        android:layout_marginStart="@dimen/_2sdp"
@@ -149,7 +149,7 @@
         android:textStyle="bold"
         android:textColor="#A4A4A4"
         android:textSize="@dimen/_11ssp"
-        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginStart="@dimen/_2sdp"
         app:layout_constraintStart_toEndOf="@id/textRating"
         app:layout_constraintTop_toBottomOf="@id/textHotelName"/>
@@ -160,7 +160,7 @@
         android:layout_height="wrap_content"
         android:text="0 miles away"
         android:textColor="#A4A4A4"
-        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginTop="@dimen/_4sdp"
         android:textSize="@dimen/_12ssp"
         android:drawablePadding="@dimen/_5sdp"
         android:layout_marginStart="@dimen/_2sdp"

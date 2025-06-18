@@ -3569,7 +3569,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                               LoadingUtils.showSuccessDialog(requireContext(),"Password updated successfully.")
+                                               LoadingUtils.showSuccessDialog(requireContext(),"Your password has been changed \n successfully.")
                                             }
                                         }
 

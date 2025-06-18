@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
         android:text="Register Now"
+        android:layout_marginTop="-4dp"
         android:textColor="@color/black"
         android:textSize="@dimen/_13ssp"
         android:textStyle="bold"
@@ -36,7 +37,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
-        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:background="#C4C4C4"
         app:layout_constraintTop_toBottomOf="@id/textTitle" />
@@ -241,6 +242,7 @@
         android:id="@+id/rlCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2sdp"
         android:layout_marginHorizontal="@dimen/_30sdp"
         app:layout_constraintTop_toBottomOf="@+id/textCreateAccountButton">
 
@@ -259,7 +261,7 @@
             android:fontFamily="@font/poppins"
             android:text="Keep me logged"
             android:textColor="@color/black"
-            android:textSize="@dimen/_9sdp" />
+            android:textSize="@dimen/_10sdp" />
 
     </RelativeLayout>
 
@@ -278,9 +280,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_5sdp"
         android:fontFamily="@font/poppins"
-        android:text="Already have a account?"
+        android:text="Already have an account?"
         android:textColor="@color/black"
-        android:textSize="@dimen/_9sdp"
+        android:textSize="@dimen/_10sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/viewOr" />

@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins_medium"
         android:text="Register Now"
+        android:layout_marginTop="-4dp"
         android:textStyle="bold"
       android:textColor="@color/black"
         android:textSize="@dimen/_13ssp"
@@ -34,7 +35,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
-        android:layout_marginTop="@dimen/_3sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:background="#C4C4C4"
         app:layout_constraintTop_toBottomOf="@id/textTitle" />
@@ -82,20 +83,20 @@
 
         <LinearLayout
             android:id="@+id/ll1"
-            android:layout_width="@dimen/_80sdp"
+            android:layout_width="@dimen/_82sdp"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layoutDirection="ltr">
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/countyCodePicker"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_25ssp"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12ssp"
                 android:background="@android:color/white"
                 android:backgroundTint="@color/white"
                 android:layoutDirection="ltr"
-                android:layout_marginVertical="@dimen/_5ssp"
+                android:layout_marginVertical="@dimen/_4ssp"
                 app:ccpDialog_background="@color/white"
                 app:ccpDialog_showTitle="false"
                 app:ccpDialog_fastScroller_bubbleColor="@color/black"
@@ -105,8 +106,9 @@
                 app:ccp_showFlag="true"
                 app:ccp_defaultNameCode="US"
                 app:ccp_showNameCode="false"
-                app:ccp_textGravity="RIGHT"
-                app:ccp_textSize="@dimen/_10ssp"
+                app:ccp_textGravity="CENTER"
+
+                app:ccp_textSize="@dimen/_11ssp"
                 app:layout_constraintTop_toTopOf="parent"
 
                 />
@@ -135,7 +137,7 @@
             android:textAlignment="textStart"
             android:fontFamily="@font/poppins"
             android:layout_marginStart="@dimen/_5sdp"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_9ssp"
             android:textColor="#7A7A7A"
             android:textColorHint="#7A7A7A" />
 
@@ -165,7 +167,7 @@
         android:background="@drawable/button_bg"
         android:layout_marginTop="@dimen/_10sdp"
         android:textAlignment="center"
-        android:paddingVertical="@dimen/_7sdp"
+        android:paddingVertical="@dimen/_8sdp"
         android:fontFamily="@font/poppins_medium"
         android:textColor="@color/black"
         android:textSize="@dimen/_10sdp"
@@ -176,6 +178,7 @@
         android:id="@+id/rlCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_2sdp"
         android:layout_marginHorizontal="@dimen/_30sdp"
         app:layout_constraintTop_toBottomOf="@+id/textContinueButton">
         <com.google.android.material.checkbox.MaterialCheckBox
@@ -189,7 +192,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Keep me logged"
-            android:textSize="@dimen/_9sdp"
+            android:textSize="@dimen/_10sdp"
             android:fontFamily="@font/poppins"
             android:textColor="@color/black"
             android:layout_centerVertical="true"
@@ -205,6 +208,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
         android:background="#EDEDED"
+        android:layout_marginTop="@dimen/_3sdp"
         app:layout_constraintTop_toBottomOf="@+id/rlCheck"
         android:layout_marginHorizontal="@dimen/_23sdp"/>
 
@@ -215,7 +219,7 @@
         android:text="OR"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_9sdp"
+        android:textSize="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@+id/viewOr"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -229,7 +233,7 @@
         android:text="Login with"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_9sdp"
+        android:textSize="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@+id/textOr"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -279,14 +283,14 @@
         android:id="@+id/textAlready"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Already have a account?"
+        android:text="Already have an account?"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_9sdp"
+        android:textSize="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@+id/viewOr2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_10sdp"
         />
 
 
