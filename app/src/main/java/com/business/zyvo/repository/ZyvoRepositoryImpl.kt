@@ -629,7 +629,7 @@ import javax.inject.Inject
         }
 
     override suspend fun completeProfile(completeProfileReq: CompleteProfileReq):
-            Flow<NetworkResult<Pair<String, String>>> = flow {
+            Flow<NetworkResult<Triple<String, String,String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             var multipart: MultipartBody.Part? = null
@@ -680,11 +680,12 @@ import javax.inject.Inject
                             if (resp.has("success") &&
                                 resp.get("success").asBoolean
                             ) {
+                                var data = resp.get("data").asJsonObject
                                 emit(
                                     NetworkResult.Success(
-                                        Pair(
+                                        Triple(
                                             "Profile update Successfully",
-                                            "200"
+                                            "200",data.get("user_image").asString
                                         )
                                     )
                                 )
@@ -903,7 +904,7 @@ import javax.inject.Inject
     override suspend fun uploadProfileImage(
         userId: String,
         bytes: ByteArray
-    ): Flow<NetworkResult<Pair<String, String>>> = flow {
+    ): Flow<NetworkResult<Triple<String, String, String>>> = flow {
         emit(NetworkResult.Loading())
         try {
             var multipart: MultipartBody.Part? = null
@@ -917,7 +918,8 @@ import javax.inject.Inject
                         if (resp.has("success") &&
                             resp.get("success").asBoolean
                         ) {
-                            emit(NetworkResult.Success(Pair(resp.get("message").asString, "200")))
+                            var data = resp.get("data").asJsonObject
+                            emit(NetworkResult.Success(Triple(resp.get("message").asString, "200",data.get("profile_image_url").asString)))
                         } else {
                             emit(NetworkResult.Error(resp.get("message").asString))
                         }

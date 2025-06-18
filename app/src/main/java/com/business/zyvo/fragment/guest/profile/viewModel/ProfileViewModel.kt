@@ -125,7 +125,7 @@ class ProfileViewModel @Inject constructor(
     }
 
     suspend fun uploadProfileImage(userId: String, bytes: ByteArray):
-            Flow<NetworkResult<Pair<String, String>>> {
+            Flow<NetworkResult<Triple<String, String, String>>> {
         return repository.uploadProfileImage(userId, bytes).onEach {
             when (it) {
                 is NetworkResult.Loading -> {

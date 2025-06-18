@@ -19,7 +19,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.MyApp
@@ -101,7 +103,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         askNotificationPermission()
         handlingDeepLink()
 
-
+        showImage()
     }
 
     @SuppressLint("SuspiciousIndentation")
@@ -289,7 +291,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
 
-
+        showImage()
     }
 
     fun bookingResume() {
@@ -326,7 +328,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-
+        showImage()
     }
 
 
@@ -474,7 +476,17 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
     }
 
-
+fun showImage(){
+    Log.d("imageCheck","imageCheck")
+    Log.d("imageCheck",BuildConfig.MEDIA_URL + SessionManager(this).getUserImage())
+    if (SessionManager(this).getUserImage() != ""){
+        Glide.with(this)
+            .load(BuildConfig.MEDIA_URL + SessionManager(this).getUserImage())
+            .error(R.drawable.ic_profile_login)
+            .placeholder(R.drawable.ic_profile_login)
+            .into(binding.imageProfile)
+    }
+}
 
 
 }

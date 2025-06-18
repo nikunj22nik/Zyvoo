@@ -108,6 +108,8 @@ android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:textColor="#3A4B4C"
+                        android:fontFamily="@font/open_sans_bold"
                        android:layout_centerInParent="true"
                         android:textSize="@dimen/_8sdp"
                         />
@@ -170,6 +172,8 @@ android:textStyle="bold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2"
+                        android:textColor="#3A4B4C"
+                        android:fontFamily="@font/open_sans_bold"
                         android:layout_centerInParent="true"
                         android:textSize="@dimen/_8sdp"
                         />
@@ -220,7 +224,7 @@ android:textStyle="bold"
                 android:layout_weight="1"
                 android:gravity="center">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageProfile"
                     android:layout_width="@dimen/_23sdp"
                     android:layout_height="@dimen/_23sdp"

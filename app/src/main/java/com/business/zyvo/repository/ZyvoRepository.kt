@@ -110,7 +110,7 @@ interface ZyvoRepository {
     suspend fun updateProperty(requestBody: PropertyDetailsSave): Flow<NetworkResult<String>>
 
 
-    suspend fun completeProfile(property: CompleteProfileReq): Flow<NetworkResult<Pair<String, String>>>
+    suspend fun completeProfile(property: CompleteProfileReq): Flow<NetworkResult<Triple<String, String,String>>>
 
     suspend fun phoneVerification(
         userId: String,
@@ -137,7 +137,7 @@ interface ZyvoRepository {
     suspend fun uploadProfileImage(
         userId: String,
         bytes: ByteArray
-    ): Flow<NetworkResult<Pair<String, String>>>
+    ): Flow<NetworkResult<Triple<String, String, String>>>
 
     suspend fun addUpdateName(
         userId: String,

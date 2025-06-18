@@ -22,8 +22,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
+import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BookingRemoveListener
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
@@ -111,6 +113,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         askNotificationPermission()
 
         callingBookingNumberApi()
+        showImage()
     }
 
 
@@ -521,6 +524,17 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
 
     override fun showError() {
 
+    }
+
+    fun showImage(){
+        Log.d("imageCheck","imageCheck")
+        if (SessionManager(this).getUserImage() != ""){
+            Glide.with(this)
+                .load(BuildConfig.MEDIA_URL + SessionManager(this).getUserImage())
+                .error(R.drawable.ic_profile_login)
+                .placeholder(R.drawable.ic_profile_login)
+                .into(binding.imageProfile)
+        }
     }
 
 }

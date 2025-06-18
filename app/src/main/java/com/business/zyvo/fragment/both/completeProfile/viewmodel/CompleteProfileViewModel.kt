@@ -98,7 +98,7 @@ class CompleteProfileViewModel @Inject constructor(private val repository: ZyvoR
     }
 
     suspend fun completeProfile(completeProfileReq: CompleteProfileReq):
-            Flow<NetworkResult<Pair<String,String>>> {
+            Flow<NetworkResult<Triple<String, String,String>>> {
         return repository.completeProfile(completeProfileReq).onEach {
             when(it){
                 is NetworkResult.Loading -> {

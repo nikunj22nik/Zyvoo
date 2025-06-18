@@ -133,6 +133,7 @@ import java.util.Objects
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.widget.addTextChangedListener
 import com.business.zyvo.AppConstant.Companion.passwordMustConsist
+import com.business.zyvo.activity.HostMainActivity
 import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.utils.MultipartUtils
 import com.google.android.gms.maps.model.LatLng
@@ -871,7 +872,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             .asBitmap()
                             .load(BuildConfig.MEDIA_URL + it)
                             .into(binding.imageProfilePicture)
+                        session?.setUserImage(it)
+                        Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it).into( (activity as HostMainActivity).binding.imageProfile)
+                        (activity as HostMainActivity).showImage()
                     }
+
                     LoadingUtils.hideDialog()
                     // Update adapters
                     addLocationAdapter.updateLocations(transformedLocationList.toMutableList())
@@ -1473,7 +1478,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
     override fun onResume() {
         super.onResume()
-        (activity as? GuesMain)?.profileColor()
+        (activity as? HostMainActivity)?.profileColor()
 
     }
 
@@ -3641,6 +3646,9 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
                                     showSuccessDialog(requireContext(), resp.first)
+                                    session?.setUserImage(resp.third)
+                                    Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + resp.third).into( (activity as HostMainActivity).binding.imageProfile)
+                                    (activity as HostMainActivity).showImage()
                                 }
                             }
 
@@ -4226,6 +4234,7 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         val sessionManager = SessionManager(requireContext())
                         sessionManager.logOut()
                         sessionManager.setUserId(-1)
+                        sessionManager.setUserImage("")
                         val intent = Intent(requireContext(), AuthActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         requireActivity().startActivity(intent)

@@ -69,6 +69,14 @@ class SessionManager(var context: Context) {
         return pref?.getBoolean(AppConstant.USER_VERIFIED,false) ?: false
     }
 
+    fun setUserImage(image:String){
+        editor!!.putString(AppConstant.USER_IMAGE, image)
+        editor!!.commit()
+    }
+
+    fun getUserImage() :String?{
+        return pref?.getString(AppConstant.USER_IMAGE,"")
+    }
 
     fun setUserId(id:Int){
         editor!!.putInt(AppConstant.Id,id)

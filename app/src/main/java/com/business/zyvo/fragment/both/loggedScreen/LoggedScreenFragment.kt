@@ -57,6 +57,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.AppConstant.Companion.passwordMustConsist
+import com.business.zyvo.BuildConfig
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.MultiPartsUtils
@@ -512,6 +513,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                         val data: Data = Gson().fromJson(resp, Data::class.java)
                                         sessionManager.setUserId(data.user_id)
                                         sessionManager.setAuthToken(data.token)
+                                            data.user_image?.let { Log.d("imageCheck", it) }
+                                            data.user_image?.let { sessionManager.setUserImage(it) }
+                                       
 
                                         val bundle = Bundle().apply {
                                             putString("data", Gson().toJson(data))
@@ -1153,6 +1157,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                         "Response Token is " + resp.get("token").asString
                                     )
                                     session.setLoginType("emailAddress")
+                                    if (resp.get("user_image") != null){
+                                        session.setUserImage(resp.get("user_image").asString)
+                                    }
                                     val intent = Intent(requireActivity(), GuesMain::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     startActivity(intent)
@@ -2099,6 +2106,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                     session.setUserId(resp.get("user_id").asInt)
                                     session.setAuthToken(resp.get("token").asString)
                                     session.setLoginType("mobileNumber")
+
+                                    if (resp.get("user_image") != null){
+                                        Log.d("imageCheck", resp.get("user_image").asString)
+                                        session.setUserImage(resp.get("user_image").asString)
+                                    }
                                     Log.d("checkLoginType","i get this mobileNumber"+session.getLoginType())
                                     val intent = Intent(requireActivity(), GuesMain::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -2117,7 +2129,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                 }
                                 session.setLoginType("mobileNumber")
                                 Log.d("checkLoginType","i get this mobileNumber"+session.getLoginType())
-
+                                if (resp.get("user_image") != null){
+                                    Log.d("imageCheck", resp.get("user_image").asString)
+                                    session.setUserImage(resp.get("user_image").asString)
+                                }
                                 val bundle = Bundle()
                                 bundle.putString("data", Gson().toJson(resp))
                                 bundle.putString("type", "mobile")

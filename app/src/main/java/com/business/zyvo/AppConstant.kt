@@ -38,6 +38,7 @@ class AppConstant {
         var AuthToken = "AuthToken"
         var Name1 = "FullName"
         val USER_VERIFIED: String? = "user_verified"
+        val USER_IMAGE: String? = "user_image"
         val Button = "button"
         val USER_ID: String? = "USER_ID"
         val PRICE: String = "PRICE"

@@ -561,6 +561,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                         profileImageString = BuildConfig.MEDIA_URL + it.profile_image
 
                                             Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.profile_image).into(binding.imageProfilePicture)
+                                        if (it.profile_image != null){
+                                            session?.setUserImage(it.profile_image)
+                                        }
+                                        Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + it.profile_image).into( (activity as GuesMain).binding.imageProfile)
+                                        (activity as GuesMain).showImage()
                                     }
                                     if (it?.email_verified != null && it.email_verified == 1) {
                                         binding.textConfirmNow.visibility = GONE
@@ -1610,6 +1615,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
                                     showSuccessDialog(requireContext(), resp.first)
+                                    session?.setUserImage(resp.third)
+                                    Glide.with(requireContext()).load(BuildConfig.MEDIA_URL + resp.third).into( (activity as GuesMain).binding.imageProfile)
+                                    (activity as GuesMain).showImage()
                                 }
                             }
 
@@ -4099,6 +4107,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                         showSuccessDialog(requireContext(), it.data!!)
                         val sessionManager = SessionManager(requireContext())
                         sessionManager.setUserId(-1)
+                        sessionManager.setUserImage("")
                         val intent = Intent(requireContext(), AuthActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         requireActivity().startActivity(intent)

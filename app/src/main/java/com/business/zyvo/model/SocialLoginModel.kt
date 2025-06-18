@@ -14,5 +14,6 @@ data class Data(
     val is_profile_complete: Boolean = false,
     val social_id: String = "",
     val token: String = "",
-    val user_id: Int = 0
+    val user_id: Int = 0,
+    val user_image : String? = ""
 )

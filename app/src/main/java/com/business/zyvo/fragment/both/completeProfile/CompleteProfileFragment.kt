@@ -630,6 +630,9 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                 session?.setUserId(userId.toInt())
                                 Log.d("CheckUserIdComplete",session?.getUserId().toString())
                             }
+                          //  Log.d("imageCheck", session?.setUserImage(resp.third).toString())
+                                session?.setUserImage(resp.third)
+
                             ErrorDialog.showToast(requireActivity(),resp.first)
                             val intent = Intent(requireContext(),GuesMain::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

@@ -21,7 +21,7 @@
         android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:text="Register Now"
         android:textStyle="bold"
       android:textColor="@color/black"
@@ -34,6 +34,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
+        android:layout_marginTop="@dimen/_3sdp"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:background="#C4C4C4"
         app:layout_constraintTop_toBottomOf="@id/textTitle" />
@@ -43,14 +44,14 @@
         android:id="@+id/textWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/poppins_medium"
         android:text="Welcome to Zyvo"
-        android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_17sdp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/view"
         android:textColor="@color/black"
-        android:layout_marginTop="@dimen/_10sdp"/>
+        android:textSize="@dimen/_17sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view" />
 
     <TextView
         android:id="@+id/textEnterYourEmail"
@@ -88,13 +89,13 @@
 
             <com.hbb20.CountryCodePicker
                 android:id="@+id/countyCodePicker"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/_25ssp"
                 android:layout_marginStart="@dimen/_12ssp"
                 android:background="@android:color/white"
                 android:backgroundTint="@color/white"
                 android:layoutDirection="ltr"
-                android:layout_marginVertical="@dimen/_2sdp"
+                android:layout_marginVertical="@dimen/_5ssp"
                 app:ccpDialog_background="@color/white"
                 app:ccpDialog_showTitle="false"
                 app:ccpDialog_fastScroller_bubbleColor="@color/black"
@@ -105,8 +106,9 @@
                 app:ccp_defaultNameCode="US"
                 app:ccp_showNameCode="false"
                 app:ccp_textGravity="RIGHT"
-                app:ccp_textSize="12.5sp"
+                app:ccp_textSize="@dimen/_10ssp"
                 app:layout_constraintTop_toTopOf="parent"
+
                 />
         </LinearLayout>
 
@@ -131,8 +133,9 @@
             android:hint="@string/enter_your_number_here"
             android:inputType="phone"
             android:textAlignment="textStart"
+            android:fontFamily="@font/poppins"
             android:layout_marginStart="@dimen/_5sdp"
-            android:textSize="@dimen/_9ssp"
+            android:textSize="@dimen/_10ssp"
             android:textColor="#7A7A7A"
             android:textColorHint="#7A7A7A" />
 
@@ -152,17 +155,18 @@
 
     <TextView
         android:id="@+id/textContinueButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_30sdp"
         android:text="Continue"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/button_bg"
         android:layout_marginTop="@dimen/_10sdp"
-        android:paddingHorizontal="@dimen/_90sdp"
+        android:textAlignment="center"
         android:paddingVertical="@dimen/_7sdp"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:textColor="@color/black"
         android:textSize="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@+id/rlPhoneNumber"/>
@@ -200,7 +204,7 @@
         android:id="@+id/viewOr"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
-        android:background="#4DC4C4C4"
+        android:background="#EDEDED"
         app:layout_constraintTop_toBottomOf="@+id/rlCheck"
         android:layout_marginHorizontal="@dimen/_23sdp"/>
 
@@ -266,7 +270,7 @@
         android:id="@+id/viewOr2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
-        android:background="#4DC4C4C4"
+        android:background="#EDEDED"
         android:layout_marginTop="@dimen/_6sdp"
         app:layout_constraintTop_toBottomOf="@id/llSocail"
         android:layout_marginHorizontal="@dimen/_23sdp"/>
@@ -293,7 +297,7 @@
         android:layout_height="wrap_content"
         android:text="Login Here"
         android:textColor="@color/black"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:textStyle="bold"
         android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintStart_toStartOf="parent"
