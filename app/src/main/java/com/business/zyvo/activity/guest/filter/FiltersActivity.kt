@@ -1,4 +1,4 @@
-package com.business.zyvo.activity.guest
+package com.business.zyvo.activity.guest.filter
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -25,19 +25,26 @@ import android.widget.AutoCompleteTextView
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.activity.guest.filter.viewmodel.FiltersViewModel
+import com.business.zyvo.activity.guest.propertydetails.model.Pagination
+import com.business.zyvo.activity.guest.propertydetails.model.PropertyData
+import com.business.zyvo.activity.guest.propertydetails.model.Review
+import com.business.zyvo.activity.guest.propertydetails.viewmode.PropertyDetailsViewModel
 import com.business.zyvo.adapter.guest.ActivitiesAdapter
 import com.business.zyvo.adapter.guest.AmenitiesAdapter
 import com.business.zyvo.databinding.ActivityFiltersBinding
-import com.business.zyvo.fragment.guest.home.viewModel.FilterViewModel
 import com.business.zyvo.model.ActivityModel
 import com.business.zyvo.model.FilterRequest
 import com.business.zyvo.session.SessionManager
@@ -45,30 +52,34 @@ import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
 import com.github.mikephil.charting.data.BarEntry
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 @AndroidEntryPoint
-class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListener , View.OnClickListener {
+class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListener,
+    View.OnClickListener {
 
     lateinit var binding: ActivityFiltersBinding
+    private val viewModel: FiltersViewModel by viewModels()
     private lateinit var selectedItemTextView: TextView
     private lateinit var popupWindow: PopupWindow
     private lateinit var autocompleteTextView: AutoCompleteTextView
     private lateinit var appLocationManager: com.business.zyvo.locationManager.LocationManager
-    private lateinit var activityList : MutableList<ActivityModel>
-    private lateinit var amenitiesList :MutableList<Pair<String,Boolean>>
-    private lateinit var languageList :MutableList<Pair<String,Boolean>>
-    private lateinit var adapterActivity :ActivitiesAdapter
-    private lateinit var adapterActivity2 :ActivitiesAdapter
-    private lateinit var amenitiesAdapter :AmenitiesAdapter
-    private lateinit var languageAdapter:AmenitiesAdapter
-    private lateinit var dateManager :DateManager
+    private lateinit var activityList: MutableList<ActivityModel>
+    private lateinit var amenitiesList: MutableList<Pair<String, Boolean>>
+    private lateinit var languageList: MutableList<Pair<String, Boolean>>
+    private lateinit var adapterActivity: ActivitiesAdapter
+    private lateinit var adapterActivity2: ActivitiesAdapter
+    private lateinit var amenitiesAdapter: AmenitiesAdapter
+    private lateinit var languageAdapter: AmenitiesAdapter
+    private lateinit var dateManager: DateManager
     private var selectedOption = "any"
     private var availOption = ""
     private var propertySize: String = ""
@@ -85,8 +96,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     private lateinit var sessionManager: SessionManager
     private var selectedLatitude: Double = 0.0
     private var selectedLongitude: Double = 0.0
-    private  var min = ""
-    private var max  =  ""
+    private var min = ""
+    private var max = ""
     var isExpanded = false
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -97,8 +108,19 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         dateManager = DateManager(this)
         setContentView(binding.root)
         settingDataToActivityModel()
-        adapterActivity = ActivitiesAdapter(this,activityList.subList(0,3))
-        adapterActivity2 = ActivitiesAdapter(this,activityList.subList(3,activityList.size))
+        // Observe the isLoading state
+        lifecycleScope.launch {
+            viewModel.isLoading.observe(this@FiltersActivity) { isLoading ->
+                if (isLoading) {
+                    LoadingUtils.showDialog(this@FiltersActivity, false)
+                } else {
+                    LoadingUtils.hideDialog()
+                }
+            }
+        }
+
+        adapterActivity = ActivitiesAdapter(this, activityList.subList(0, 3))
+        adapterActivity2 = ActivitiesAdapter(this, activityList.subList(3, activityList.size))
         amenitiesAdapter = AmenitiesAdapter(this, mutableListOf())
         languageAdapter = AmenitiesAdapter(this, mutableListOf())
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -110,7 +132,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         sessionManager = SessionManager(this)
 
         selectedItemTextView = binding.tvHour
-       // settingDataToActivityModel()
+        // settingDataToActivityModel()
         binding.imgBack.setOnClickListener {
             onBackPressed()
         }
@@ -154,8 +176,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
         try {
             setFilterData()
-        }catch (e:Exception){
-            Log.e(ErrorDialog.TAG,e.message!!)
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, e.message!!)
         }
 
         binding.tvMaximumValue.addTextChangedListener(object : TextWatcher {
@@ -163,13 +185,17 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 if (!s.toString().startsWith("$")) {
                     binding.tvMaximumValue.setText("$")
                     binding.tvMaximumValue.setSelection(binding.tvMaximumValue.text?.length ?: 0)
-                    val originalLeft = binding.tvMinimumVal.text.toString().replace("$","")
-                        .toInt()?.div(100)?.times(2)
-                    val originalRight = binding.tvMaximumValue.text.toString().replace("$","")
-                        .toInt()?.div(100)?.times(2)
-                    binding.seekBar.setSelectedEntries(originalLeft!!.toInt(), originalRight!!.toInt())
+                    val originalLeft = binding.tvMinimumVal.text.toString().replace("$", "")
+                        .toFloat().toInt()?.div(100)?.times(2)
+                    val originalRight = binding.tvMaximumValue.text.toString().replace("$", "")
+                        .toFloat().toInt()?.div(100)?.times(2)
+                    binding.seekBar.setSelectedEntries(
+                        originalLeft!!.toInt(),
+                        originalRight!!.toInt()
+                    )
                 }
             }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
@@ -179,21 +205,22 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 if (!s.toString().startsWith("$")) {
                     binding.tvMinimumVal.setText("$")
                     binding.tvMinimumVal.setSelection(binding.tvMinimumVal.text?.length ?: 0)
-                   /* if (binding.tvMinimumVal.text.toString().replace("$","")
-                        .isNotEmpty()) {
-                        val originalLeft = binding.tvMinimumVal.text.toString().replace("$",
-                            "")
-                            .toInt()?.div(2)?.times(100)
-                        val originalRight = binding.tvMaximumValue.text.toString().replace("$",
-                            "")
-                            .toInt()?.div(2)?.times(100)
-                        binding.seekBar.setSelectedEntries(
-                            originalLeft!!.toInt(),
-                            originalRight!!.toInt()
-                        )
-                    }*/
+                    /* if (binding.tvMinimumVal.text.toString().replace("$","")
+                         .isNotEmpty()) {
+                         val originalLeft = binding.tvMinimumVal.text.toString().replace("$",
+                             "")
+                             .toInt()?.div(2)?.times(100)
+                         val originalRight = binding.tvMaximumValue.text.toString().replace("$",
+                             "")
+                             .toInt()?.div(2)?.times(100)
+                         binding.seekBar.setSelectedEntries(
+                             originalLeft!!.toInt(),
+                             originalRight!!.toInt()
+                         )
+                     }*/
                 }
             }
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
@@ -202,21 +229,22 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
     @SuppressLint("SetTextI18n")
     private fun setFilterData() {
-            val filterdata = sessionManager.getFilterRequest()
-        if (!filterdata.equals("")){
-            val value:FilterRequest = Gson().fromJson(filterdata,FilterRequest::class.java)
+        val filterdata = sessionManager.getFilterRequest()
+        if (!filterdata.equals("")) {
+            val value: FilterRequest = Gson().fromJson(filterdata, FilterRequest::class.java)
             value?.let {
-                Log.d(ErrorDialog.TAG,Gson().toJson(value))
+                Log.d(ErrorDialog.TAG, Gson().toJson(value))
                 //Set place type data
-                when(it.place_type){
-                   "any" -> {
+                when (it.place_type) {
+                    "any" -> {
                         selectedOption = "any"
-                        Log.d("TESTING_VOOPON","Here in the home setup")
+                        Log.d("TESTING_VOOPON", "Here in the home setup")
                         binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
                         binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                         binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
                     }
-                  "private_room" -> {
+
+                    "private_room" -> {
                         selectedOption = "private_room"
                         binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                         binding.tvRoom.setBackgroundResource(R.drawable.bg_inner_manage_place)
@@ -237,16 +265,21 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     //(leftPinValue?.toInt()?.div(2))?.times(100)
                     val originalLeft = min?.toInt()?.div(100)?.times(2)
                     val originalRight = max?.toInt()?.div(100)?.times(2)
-                    binding.seekBar.setSelectedEntries(originalLeft!!.toInt(), originalRight!!.toInt())
+                    binding.seekBar.setSelectedEntries(
+                        originalLeft!!.toInt(),
+                        originalRight!!.toInt()
+                    )
                     binding.tvMinimumVal.setText("$$min")
                     binding.tvMaximumValue.setText("$$max")
+                }else{
+                    getPropertyPriceRange()
                 }
                 // Set Location values
                 val location = it.location ?: ""
-                Log.d(ErrorDialog.TAG,location)
+                Log.d(ErrorDialog.TAG, location)
                 selectedLatitude = it.latitude.toDouble()
                 selectedLongitude = it.longitude.toDouble()
-              //  binding.autocompleteLocation.setText(location, false)
+                //  binding.autocompleteLocation.setText(location, false)
                 binding.autocompleteLocation.post {
                     binding.autocompleteLocation.setText(location, false)
                     binding.autocompleteLocation.dismissDropDown()
@@ -259,29 +292,36 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     binding.tvHour.text = "${it.time} hours"//toString().replace(" hours","")
                 }
                 //Set No Of People
-                when(it.people_count){
+                when (it.people_count) {
                     "1" -> {
                         updateSelection(1)
                     }
+
                     "2" -> {
                         updateSelection(2)
                     }
+
                     "3" -> {
                         updateSelection(3)
                     }
+
                     "4" -> {
                         updateSelection(4)
                     }
+
                     "5" -> {
                         updateSelection(5)
                     }
+
                     "6" -> {
                         updateSelection(6)
                     }
+
                     "7" -> {
                         updateSelection(7)
                     }
-                    else ->{
+
+                    else -> {
                         availOption = it.people_count
                         binding.availEditText.setText(availOption)
                     }
@@ -296,24 +336,25 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 settingBackgroundTaskToParkingNewSetValue(it.parkingcount)
                 //Set Activity Value
                 selectedActivityName = it.activities?.toMutableList()!!
-                for (saveactivity in selectedActivityName){
-                    for (i in 0 until activityList.size){
-                        if (saveactivity.equals(activityList.get(i).name)){
-                          val activitymodel = activityList.get(i)
+                for (saveactivity in selectedActivityName) {
+                    for (i in 0 until activityList.size) {
+                        if (saveactivity.equals(activityList.get(i).name)) {
+                            val activitymodel = activityList.get(i)
                             activitymodel.checked = true
-                            activityList.set(i,activitymodel)
+                            activityList.set(i, activitymodel)
                         }
                     }
                 }
-                adapterActivity.updateAdapter(activityList.subList(0,3))
-                adapterActivity2.updateAdapter(activityList.subList(3,activityList.size))
+                adapterActivity.updateAdapter(activityList.subList(0, 3))
+                adapterActivity2.updateAdapter(activityList.subList(3, activityList.size))
 
                 //Set Amenities Value
-                selectedAmenities  = it.amenities?.toMutableList()!!
-                for (saveactivity in selectedAmenities){
-                    for (i in 0 until amenitiesList.size){
-                        if (saveactivity.equals(amenitiesList.get(i).first)){
-                            val updatedPair = amenitiesList[i].copy(second = true) // Create a new Pair
+                selectedAmenities = it.amenities?.toMutableList()!!
+                for (saveactivity in selectedAmenities) {
+                    for (i in 0 until amenitiesList.size) {
+                        if (saveactivity.equals(amenitiesList.get(i).first)) {
+                            val updatedPair =
+                                amenitiesList[i].copy(second = true) // Create a new Pair
                             amenitiesList[i] = updatedPair // Update the list with the new Pair
                         }
                     }
@@ -322,30 +363,31 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
                 //Set Booking Value
                 instantBookingCount = it.instant_booking
-                if (instantBookingCount.equals("")||instantBookingCount.equals("0")){
+                if (instantBookingCount.equals("") || instantBookingCount.equals("0")) {
                     binding.instantBookingSwitch.isChecked = false
-                }else{
+                } else {
                     binding.instantBookingSwitch.isChecked = true
                 }
                 selfCheckIn = it.self_check_in
-                if (selfCheckIn.equals("")||selfCheckIn.equals("0")){
+                if (selfCheckIn.equals("") || selfCheckIn.equals("0")) {
                     binding.selfCheckinToggle.isChecked = false
-                }else{
+                } else {
                     binding.selfCheckinToggle.isChecked = true
                 }
                 petCheckIn = it.allows_pets
-                if (petCheckIn.equals("")||petCheckIn.equals("0")){
+                if (petCheckIn.equals("") || petCheckIn.equals("0")) {
                     binding.petToggle.isChecked = false
-                }else{
+                } else {
                     binding.petToggle.isChecked = true
                 }
 
                 //Set Language Value
-                selectedLanguages  = it.languages?.toMutableList()!!
-                for (saveactivity in selectedLanguages){
-                    for (i in 0 until languageList.size){
-                        if (saveactivity.equals(languageList.get(i).first)){
-                            val updatedPair = languageList[i].copy(second = true) // Create a new Pair
+                selectedLanguages = it.languages?.toMutableList()!!
+                for (saveactivity in selectedLanguages) {
+                    for (i in 0 until languageList.size) {
+                        if (saveactivity.equals(languageList.get(i).first)) {
+                            val updatedPair =
+                                languageList[i].copy(second = true) // Create a new Pair
                             languageList[i] = updatedPair // Update the list with the new Pair
                         }
                     }
@@ -434,7 +476,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     }
 
 
-    private fun settingBackgroundTaskToBathroom(){
+    private fun settingBackgroundTaskToBathroom() {
 
         val bathroomOptions = listOf(
             binding.tvAnyBathroom to "any",
@@ -546,7 +588,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         })
     }
 
-    private fun settingBackgroundTaskToBathroomSetValue(defaultValue: String?){
+    private fun settingBackgroundTaskToBathroomSetValue(defaultValue: String?) {
 
         val bathroomOptions = listOf(
             binding.tvAnyBathroom to "any",
@@ -648,13 +690,15 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
+
     // Function to highlight the selected TextView based on value
-    private fun setSelectedProperty(selectedValue: String,
-                                    propertyOptions: List<Pair<TextView, String>>) {
+    private fun setSelectedProperty(
+        selectedValue: String,
+        propertyOptions: List<Pair<TextView, String>>
+    ) {
         clearSelections(propertyOptions)
         // Find the matching TextView and highlight it
-        propertyOptions.find { it.second == selectedValue }?.first?.
-        setBackgroundResource(R.drawable.bg_inner_select_white)
+        propertyOptions.find { it.second == selectedValue }?.first?.setBackgroundResource(R.drawable.bg_inner_select_white)
     }
 
     private fun clearSelections(options: List<Pair<TextView, String>>) {
@@ -724,7 +768,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun settingBackgroundTaskToParking(){
+    private fun settingBackgroundTaskToParking() {
         binding.tvAnyParkingSpace.setOnClickListener {
             binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_inner_select_white)
             binding.tv1Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -875,49 +919,49 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         })
 
         // Capture selected activities
-        adapterActivity.setOnItemClickListener { list, _,status ->
+        adapterActivity.setOnItemClickListener { list, _, status ->
 
             if (status) {
                 //selectedActivityName.add(activity.name)
                 selectedActivityName.add(list)
-            }else{
+            } else {
 
-                if (selectedActivityName.contains(list)){
+                if (selectedActivityName.contains(list)) {
                     selectedActivityName.remove(list)
                 }
             }
-            if (selectedActivityName.contains("Stays")){
-                    binding.tvbadroom.visibility = View.VISIBLE
-                    binding.llbadrooms.visibility = View.VISIBLE
-                }else{
-                    binding.tvbadroom.visibility = View.GONE
-                    binding.llbadrooms.visibility = View.GONE
-                }
-                Log.d("Selected Activity", "List: "+TextUtils.join(",",selectedActivityName))
+            if (selectedActivityName.contains("Stays")) {
+                binding.tvbadroom.visibility = View.VISIBLE
+                binding.llbadrooms.visibility = View.VISIBLE
+            } else {
+                binding.tvbadroom.visibility = View.GONE
+                binding.llbadrooms.visibility = View.GONE
+            }
+            Log.d("Selected Activity", "List: " + TextUtils.join(",", selectedActivityName))
 
         }
 
         // Capture Other selected activities
-        adapterActivity2.setOnItemClickListener { list, _ ,status->
+        adapterActivity2.setOnItemClickListener { list, _, status ->
 
-                if (status) {
-                    //selectedActivityName.add(activity.name)
-                    selectedActivityName.add(list)
-                }else{
+            if (status) {
+                //selectedActivityName.add(activity.name)
+                selectedActivityName.add(list)
+            } else {
 
-                    if (selectedActivityName.contains(list)){
-                        selectedActivityName.remove(list)
-                    }
+                if (selectedActivityName.contains(list)) {
+                    selectedActivityName.remove(list)
                 }
-                if (selectedActivityName.contains("Stays")){
-                    binding.tvbadroom.visibility = View.VISIBLE
-                    binding.llbadrooms.visibility = View.VISIBLE
-                }else{
-                    binding.tvbadroom.visibility = View.GONE
-                    binding.llbadrooms.visibility = View.GONE
-                }
+            }
+            if (selectedActivityName.contains("Stays")) {
+                binding.tvbadroom.visibility = View.VISIBLE
+                binding.llbadrooms.visibility = View.VISIBLE
+            } else {
+                binding.tvbadroom.visibility = View.GONE
+                binding.llbadrooms.visibility = View.GONE
+            }
 
-                Log.d("Selected Activity", "List: "+TextUtils.join(",",selectedActivityName))
+            Log.d("Selected Activity", "List: " + TextUtils.join(",", selectedActivityName))
 
         }
 
@@ -939,13 +983,16 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.tvYear.text = currentYear.toString()
 
 
-            binding.llDate.setOnClickListener {
-                val calendar = Calendar.getInstance()
-                val year = calendar.get(Calendar.YEAR)
-                val month = calendar.get(Calendar.MONTH)
-                val day = calendar.get(Calendar.DAY_OF_MONTH)
+        binding.llDate.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val year = calendar.get(Calendar.YEAR)
+            val month = calendar.get(Calendar.MONTH)
+            val day = calendar.get(Calendar.DAY_OF_MONTH)
 
-                val datePickerDialog = DatePickerDialog(this, R.style.DialogTheme,{ _, selectedYear, selectedMonth, selectedDay ->
+            val datePickerDialog = DatePickerDialog(
+                this,
+                R.style.DialogTheme,
+                { _, selectedYear, selectedMonth, selectedDay ->
                     val formattedMonth = String.format("%02d", selectedMonth + 1) // 1-based month
                     val formattedDay = String.format("%02d", selectedDay)
                     val selectedDate = "$selectedYear-$formattedMonth-$formattedDay"
@@ -962,18 +1009,26 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     }
 
                     if (selectedCal.before(currentCal)) {
-                        showErrorDialog(this@FiltersActivity, "You cannot select a past date from the calendar.")
+                        showErrorDialog(
+                            this@FiltersActivity,
+                            "You cannot select a past date from the calendar."
+                        )
 
                     } else {
-                        binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(selectedDate)
+                        binding.tvDateSelect.text =
+                            ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(selectedDate)
                     }
 
-                }, year, month, day)
+                },
+                year,
+                month,
+                day
+            )
 
-                datePickerDialog.show()
-            }
+            datePickerDialog.show()
+        }
 
-    //    }
+        //    }
         // Month Selector Dialog
         binding.rlMonth.setOnClickListener {
             dateManager.showMonthSelectorDialog { selectedMonth ->
@@ -993,20 +1048,62 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         }
     }
 
-    private fun setCurrentDate(){
+    private fun setCurrentDate() {
         val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         // Set date in TextView
         binding.tvDateSelect.text = currentDate
     }
 
     @SuppressLint("SetTextI18n")
-    private fun callingPriceRangeGraphSelection(){
+    private fun callingPriceRangeGraphSelection() {
         val barEntrys = ArrayList<BarEntry>()
         val seekBar = binding.seekBar
 
-        val heights = arrayOf(5f, 3f, 4f, 7f, 8f, 15f, 13f, 12f, 10f, 5f, 17f, 16f, 13f, 12f, 8f,
-            13f,10f,6f,9f,11f,7f,5f, 3f, 4f, 7f, 8f, 15f, 13f, 12f, 10f, 5f, 17f, 16f, 13f, 12f, 8f,
-            13f,10f,6f,9f,11f,7f)
+
+        val heights = arrayOf(
+            5f,
+            3f,
+            4f,
+            7f,
+            8f,
+            15f,
+            13f,
+            12f,
+            10f,
+            5f,
+            17f,
+            16f,
+            13f,
+            12f,
+            8f,
+            13f,
+            10f,
+            6f,
+            9f,
+            11f,
+            7f,
+            5f,
+            3f,
+            4f,
+            7f,
+            8f,
+            15f,
+            13f,
+            12f,
+            10f,
+            5f,
+            17f,
+            16f,
+            13f,
+            12f,
+            8f,
+            13f,
+            10f,
+            6f,
+            9f,
+            11f,
+            7f
+        )
 
         for (i in heights.indices) {
             barEntrys.add(BarEntry(i.toFloat(), heights[i]))
@@ -1016,12 +1113,46 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         seekBar.onRangeChanged = { leftPinValue, rightPinValue ->
             val leftVal = (leftPinValue?.toInt()?.div(2))?.times(100)
             val rightVal = (rightPinValue?.toInt()?.div(2))?.times(100)
-            binding.tvMinimumVal.setText("$"+leftVal.toString())
+            binding.tvMinimumVal.setText("$" + leftVal.toString())
             min = leftVal.toString()
-            binding.tvMaximumValue.setText("$"+rightVal.toString())
+            binding.tvMaximumValue.setText("$" + rightVal.toString())
             max = rightVal.toString()
         }
     }
+
+ /*
+private fun callingPriceRangeGraphSelection() {
+    val seekBar = binding.seekBar
+
+    // Get the actual min/max from your API response or set defaults
+    val minPrice = min.toFloatOrNull() ?: 10f
+    val maxPrice = max.toFloatOrNull() ?: 140f
+
+    // Create entries that match your actual price range
+    val barEntries = ArrayList<BarEntry>()
+    val step = (maxPrice - minPrice) / 40 // Adjust 40 based on how many bars you want
+
+    for (i in 0..40) {
+        val price = minPrice + (i * step)
+        // You might want to adjust the height based on your data distribution
+        barEntries.add(BarEntry(i.toFloat(), (10f + i % 5))) // Example height pattern
+    }
+
+    seekBar.setEntries(barEntries)
+
+    seekBar.onRangeChanged = { leftPinValue, rightPinValue ->
+        // Calculate actual prices based on the pin positions
+        val leftVal = minPrice + (leftPinValue?.toFloat() ?: 0f) * step
+        val rightVal = minPrice + (rightPinValue?.toFloat() ?: 40f) * step
+
+        binding.tvMinimumVal.setText("$${leftVal.toInt()}")
+        min = leftVal.toInt().toString()
+        binding.tvMaximumValue.setText("$${rightVal.toInt()}")
+        max = rightVal.toInt().toString()
+    }
+}
+
+  */
 
     @SuppressLint("SetTextI18n")
     private fun clickListenerCalls() {
@@ -1045,11 +1176,14 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                         latitude = selectedLatitude.toString(),
                         longitude = selectedLongitude.toString(),
                         place_type = selectedOption?.takeUnless { it.isNullOrEmpty() }.toString(),
-                        minimum_price = binding.tvMinimumVal.text.toString().replace("$",""),//min,
-                        maximum_price = binding.tvMaximumValue.text.toString().replace("$",""),//max,
+                        minimum_price = binding.tvMinimumVal.text.toString().replace("$", ""),//min,
+                        maximum_price = binding.tvMaximumValue.text.toString()
+                            .replace("$", ""),//max,
                         location = binding.autocompleteLocation.text.toString(),
-                        date = if (!binding.tvDateSelect.text.toString().equals(""))ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd(binding.tvDateSelect.text.toString())else "",
-                        time = binding.tvHour.text.toString().replace(" hours",""),
+                        date = if (!binding.tvDateSelect.text.toString()
+                                .equals("")
+                        ) ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd(binding.tvDateSelect.text.toString()) else "",
+                        time = binding.tvHour.text.toString().replace(" hours", ""),
                         people_count = availOption,
                         property_size = propertySize,
                         bedroom = bedroomCount,
@@ -1060,17 +1194,21 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                         allows_pets = petCheckIn.toString(),
                         activities = selectedActivityName,
                         amenities = selectedAmenities,
-                        languages = selectedLanguages)
+                        languages = selectedLanguages
+                    )
                     sessionManager.setFilterRequest(Gson().toJson(requestData))
                     val intent = Intent()
-                    intent.putExtra("type","filter")
-                    intent.putExtra("requestData",Gson().toJson(requestData))
+                    intent.putExtra("type", "filter")
+                    intent.putExtra("requestData", Gson().toJson(requestData))
                     setResult(Activity.RESULT_OK, intent)
                     finish() // Close the activity
 
 
                 } else {
-                    showErrorDialog(this@FiltersActivity, getString(R.string.no_internet_dialog_msg))
+                    showErrorDialog(
+                        this@FiltersActivity,
+                        getString(R.string.no_internet_dialog_msg)
+                    )
                 }
             }
 
@@ -1084,7 +1222,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 tvEntireHome.performClick()
                 val requestData = FilterRequest(
                     user_id = sessionManager.getUserId().toString(),
-                    latitude ="",
+                    latitude = "",
                     longitude = "",
                     place_type = "",
                     minimum_price = "",
@@ -1102,10 +1240,11 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     allows_pets = "",
                     activities = mutableListOf(),
                     amenities = mutableListOf(),
-                    languages = mutableListOf())
+                    languages = mutableListOf()
+                )
                 sessionManager.setFilterRequest(Gson().toJson(requestData))
                 val intent = Intent()
-                intent.putExtra("type","clearAllBtn")
+                intent.putExtra("type", "clearAllBtn")
                 setResult(Activity.RESULT_OK, intent)
                 finish() // Close the activity
 
@@ -1149,7 +1288,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.underlinedTextView.paint.flags = Paint.UNDERLINE_TEXT_FLAG
         binding.underlinedTextView.paint.isAntiAlias = true
         binding.underlinedTextView.setOnClickListener {
-            languageAdapter.updateAdapter(languageList.subList(0,6))
+            languageAdapter.updateAdapter(languageList.subList(0, 6))
             showingMoreText()
         }
     }
@@ -1183,7 +1322,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.underlinedTextView1.paint.flags = Paint.UNDERLINE_TEXT_FLAG
         binding.underlinedTextView1.paint.isAntiAlias = true
         binding.underlinedTextView1.setOnClickListener {
-            amenitiesAdapter.updateAdapter(amenitiesList.subList(0,6))
+            amenitiesAdapter.updateAdapter(amenitiesList.subList(0, 6))
             showingMoreAmText()
         }
 
@@ -1199,10 +1338,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         val dropdownView = LayoutInflater.from(this).inflate(R.layout.dropdown_item_time, null)
 
         // Create the PopupWindow
-        popupWindow = PopupWindow(dropdownView,
+        popupWindow = PopupWindow(
+            dropdownView,
             250,
             400,
-            true)
+            true
+        )
 
         // Set up click listeners for each item in the dropdown
         dropdownView.findViewById<TextView>(R.id.item_1).setOnClickListener {
@@ -1224,7 +1365,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             }
 
         }
-        dropdownView.findViewById<TextView>(R.id.item_4).setOnClickListener{
+        dropdownView.findViewById<TextView>(R.id.item_4).setOnClickListener {
             selectedItemTextView.text = "4 Hour"
             if (popupWindow != null && popupWindow.isShowing()) {
                 popupWindow.dismiss();
@@ -1274,11 +1415,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         when (p0?.id) {
             R.id.tv_home_setup -> {
                 selectedOption = "any"
-                Log.d("TESTING_VOOPON","Here in the home setup")
+                Log.d("TESTING_VOOPON", "Here in the home setup")
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
             }
+
             R.id.tv_room -> {
                 selectedOption = "private_room"
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1295,11 +1437,10 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         }
     }
 
-    private fun settingDataToActivityModel(){
+    private fun settingDataToActivityModel() {
         activityList = mutableListOf<ActivityModel>()
         amenitiesList = PrepareData.getOnlyAmenitiesList()
         languageList = PrepareData.getLanguagePairs()
-
 
 
         val model1 = ActivityModel()
@@ -1321,7 +1462,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         model4.name = "Meeting"
         model4.image = R.drawable.ic_meeting
         activityList.add(model4)
-
 
 
         val model5 = ActivityModel()
@@ -1388,7 +1528,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
     }
 
-    private fun getNationalLanguages(): MutableList<Pair<String,Boolean>> {
+    private fun getNationalLanguages(): MutableList<Pair<String, Boolean>> {
         return PrepareData.getLanguagePairs()
     }
 
@@ -1397,10 +1537,11 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         val inflater = LayoutInflater.from(this)
         val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
 
-        val popupWindow = PopupWindow(popupView,
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
-            ,
-            ViewGroup.LayoutParams.WRAP_CONTENT)
+        )
 
         popupWindow.isOutsideTouchable = true
         popupWindow.isFocusable = true
@@ -1410,6 +1551,53 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     override fun onItemClick(list: MutableList<Pair<String, Boolean>>) {
         val selectedItems = list.filter { it.second }
         Log.d("FilterActivity", "Selected Amenities: $selectedItems")
+    }
+
+    private fun getPropertyPriceRange() {
+        if (NetworkMonitorCheck._isConnected.value) {
+
+            lifecycleScope.launch(Dispatchers.Main) {
+                viewModel.getPropertyPriceRange(
+
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+
+
+                            if (it.data?.has("minimum_price") == true && !it.data.get("minimum_price")!!.isJsonNull) {
+//                                binding.tvMinimumVal.setText("$"+it.data.get("minimum_price")!!.asString.toDouble().toInt().toString())
+//                               min = it.data.get("minimum_price")!!.asString.toDouble().toInt().toString()
+//                                Log.d("checkValue",it.data.get("minimum_price")!!.asString)
+                                min = it.data.get("minimum_price")!!.asString.toDouble().toInt().toString()
+                                binding.tvMinimumVal.setText("$$min")
+                            }
+                            if (it.data?.has("maximum_price") == true && !it.data.get("maximum_price")!!.isJsonNull) {
+//                                binding.tvMaximumValue.setText("$"+it.data.get("maximum_price")!!.asString.toDouble().toInt().toString())
+//                               max = it.data.get("maximum_price")!!.asString.toDouble().toInt().toString()
+//                                Log.d("checkValue",it.data.get("maximum_price")!!.asString)
+                                max = it.data.get("maximum_price")!!.asString.toDouble().toInt().toString()
+                                binding.tvMaximumValue.setText("$$max")
+                            }
+                            callingPriceRangeGraphSelection()
+
+                        }
+
+                        is NetworkResult.Error -> {
+                            showErrorDialog(this@FiltersActivity, it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        } else {
+            showErrorDialog(
+                this,
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
+        }
     }
 
 }

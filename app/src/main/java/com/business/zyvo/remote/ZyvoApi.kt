@@ -950,4 +950,7 @@ interface ZyvoApi {
         @Field("end_time") end_time :String
     ) : Response<JsonObject>
 
+    @GET("get_property_price_range")
+    suspend fun getPropertyPriceRange(
+    ): Response<JsonObject>
 }

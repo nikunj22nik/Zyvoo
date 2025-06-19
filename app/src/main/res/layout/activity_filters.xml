@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/white"
-    tools:context=".activity.guest.FiltersActivity">
+    tools:context=".activity.guest.filter.FiltersActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -207,7 +207,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_minimum"
                         android:layout_marginStart="@dimen/_10sdp"
-                        android:text="$0"
+
                         android:inputType="numberDecimal"
                         android:background="@null"
                         android:textSize="@dimen/_14sdp"
@@ -243,7 +243,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_maximum"
                         android:layout_marginStart="@dimen/_10sdp"
-                        android:text="$2000"
+
                         android:inputType="numberDecimal"
                         android:background="@null"
                         android:textSize="@dimen/_14sdp"

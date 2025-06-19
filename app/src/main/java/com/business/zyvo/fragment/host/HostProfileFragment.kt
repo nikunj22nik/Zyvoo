@@ -947,6 +947,11 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
                         if (!languageList.contains(newLanguage)) {
                             languageList.add(languageList.size - 1, newLanguage)
                         }
+//                        else {
+//                            showErrorDialog(requireContext(),"Can't add one Same Language more than one.")
+//                        }
+                    }else{
+                        showErrorDialog(requireContext(),"You can only have \n two languages.")
                     }
                     /*  }else{
                           val index = languageList.indexOfFirst { it.name == local }
@@ -1168,10 +1173,10 @@ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnCli
 
             R.id.textLanguage -> {
                 //  findNavController().navigate(R.id.language_fragment_host)
-                if (!languageDialogOpen) {
-                    languageDialogOpen = true
+             //   if (!languageDialogOpen) {
+                   // languageDialogOpen = true
                     dialogSelectLanguage()
-                }
+               // }
             }
 
             R.id.textNotifications -> {

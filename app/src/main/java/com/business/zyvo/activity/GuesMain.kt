@@ -257,7 +257,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-
+        showImage()
     }
 
 
@@ -274,7 +274,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-
+        showImage()
     }
 
     fun profileColor() {
@@ -309,7 +309,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
         binding.tvWishlist.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-
+        showImage()
     }
 
     fun discoverResume() {

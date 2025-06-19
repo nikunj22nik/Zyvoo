@@ -831,6 +831,10 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                   /*  if (pagination!!.total <= pagination!!.current_page) {
                                         binding.showMoreReview.visibility = View.GONE
                                     }*/
+                                    if (pagination?.total != null){
+                                        binding.textK.setText("("+pagination?.total.toString()+")")
+                                        binding.tvReviewsCount.text = "Reviews "+"("+pagination?.total.toString()+")"
+                                    }
                                     if (it.current_page==it.total_pages){
                                         binding.showMoreReview.visibility = View.GONE
                                     }else{
@@ -844,8 +848,8 @@ class ReviewBookingFragment : Fragment() , OnMapReadyCallback {
                                 reviewList?.let {
                                     if (it.isNotEmpty()){
                                         adapterReview.updateAdapter(it)
-                                        binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +")"
-                                        binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
+                                       // binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +")"
+                                      //  binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
                                     }
                                 }
                                 data?.amenities?.let {

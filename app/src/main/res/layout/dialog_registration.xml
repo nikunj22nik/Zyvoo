@@ -138,7 +138,7 @@
             android:fontFamily="@font/poppins"
             android:layout_marginStart="@dimen/_5sdp"
             android:textSize="@dimen/_9ssp"
-            android:textColor="#7A7A7A"
+            android:textColor="#000000"
             android:textColorHint="#7A7A7A" />
 
     </RelativeLayout>

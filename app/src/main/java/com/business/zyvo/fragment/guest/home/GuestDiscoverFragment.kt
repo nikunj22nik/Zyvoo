@@ -64,7 +64,7 @@ import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivity
-import com.business.zyvo.activity.guest.FiltersActivity
+import com.business.zyvo.activity.guest.filter.FiltersActivity
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
@@ -225,7 +225,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         binding.recyclerViewBooking.adapter = adapter
 
         binding.filterIcon.setOnClickListener {
-            val intent = Intent(requireContext(),FiltersActivity::class.java)
+            val intent = Intent(requireContext(), FiltersActivity::class.java)
            // startActivity(intent)
             startForResult.launch(intent)
         }

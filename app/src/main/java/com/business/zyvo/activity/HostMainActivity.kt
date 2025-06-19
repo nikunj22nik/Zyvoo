@@ -249,7 +249,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         binding.tvInbox.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
         binding.tvBookings.setTextColor(ContextCompat.getColor(this, R.color.clickedColor))
         binding.tvProfile.setTextColor(ContextCompat.getColor(this, R.color.unClickedColor))
-
+        showImage()
     }
 
     fun homeResume() {
@@ -272,12 +272,14 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                 val destinationId = R.id.host_fragment_properties
                 if (navController.currentDestination?.id != destinationId) {
                     homeResume()
+                    showImage()
                     findNavController(R.id.fragmentContainerView_main).navigate(R.id.host_fragment_properties)
                 }
             }
 
             R.id.navigationInbox_1 -> {
                 inboxColor()
+                showImage()
                 val navController = findNavController(R.id.fragmentContainerView_main)
                 val destinationId = R.id.hostChatFragment
                 if (navController.currentDestination?.id != destinationId) {
@@ -293,20 +295,25 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                     val destinationId = R.id.bookingScreenHostFragment
                     if (navController.currentDestination?.id != destinationId) {
                         bookingResume()
+
                         findNavController(R.id.fragmentContainerView_main).navigate(R.id.bookingScreenHostFragment)
                     }
+
                 }else{
                     LoadingUtils.showErrorDialog(this@HostMainActivity,"Please Check Your Internet Connection")
                 }
+
             }
 
             R.id.icProfile -> {
-                profileColor()
+
                 val navController = findNavController(R.id.fragmentContainerView_main)
                 val destinationId = R.id.hostProfileFragment
 
                 if (navController.currentDestination?.id != destinationId) {
                     findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostProfileFragment)
+                    profileColor()
+                    showImage()
                 }
             }
         }

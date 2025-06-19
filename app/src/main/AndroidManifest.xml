@@ -69,7 +69,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".activity.guest.FiltersActivity"
+            android:name=".activity.guest.filter.FiltersActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
 

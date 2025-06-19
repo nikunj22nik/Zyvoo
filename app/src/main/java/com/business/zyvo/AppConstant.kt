@@ -130,7 +130,7 @@ class AppConstant {
         val otp = "Please enter the OTP"
         val unKnownError = "There was an unknown error. Check your connection, and try again."
         val unknownLocation = "Unknown Location"
-        val aboutMe = "AboutMe is required"
+        val aboutMe = "About Me is required"
         val details = "Details is required"
         val feedbackAbout = "Please select feedback about"
         val hours = "Hours is required"

@@ -57,17 +57,15 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.AppConstant.Companion.passwordMustConsist
-import com.business.zyvo.BuildConfig
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
-import com.business.zyvo.MultiPartsUtils
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
-import com.business.zyvo.activity.guest.FiltersActivity
+import com.business.zyvo.activity.guest.filter.FiltersActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.sorryresult.SorryActivity
@@ -85,10 +83,8 @@ import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.TAG
-import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.MultipartUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
-import com.business.zyvo.viewmodel.ImagePopViewModel
 import com.business.zyvo.viewmodel.LoggedScreenViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -115,7 +111,6 @@ import com.hbb20.CountryCodePicker
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.regex.Pattern
 
 @AndroidEntryPoint

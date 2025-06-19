@@ -233,14 +233,15 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                         when (it) {
                             is NetworkResult.Success -> {
                                 LoadingUtils.hideDialog()
-                                val newList = mutableListOf<NotificationScreenModel>()
-                                list.forEach {
-                                    if (it.notificationId != obj.notificationId) {
-                                        newList.add(it)
-                                    }
-                                }
-                                adapterNotificationScreen.updateItem(newList)
-                                list = newList
+//                                val newList = mutableListOf<NotificationScreenModel>()
+//                                list.forEach {
+//                                    if (it.notificationId != obj.notificationId) {
+//                                        newList.add(it)
+//                                    }
+//                                }
+//                                adapterNotificationScreen.updateItem(newList)
+//                                list = newList
+                                callingNotificationApiHost(userId)
                             }
 
                             is NetworkResult.Error -> {

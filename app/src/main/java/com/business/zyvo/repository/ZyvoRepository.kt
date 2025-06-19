@@ -730,6 +730,9 @@ interface ZyvoRepository {
         endTime :String
     ) :Flow<NetworkResult<JsonObject>>
 
+    suspend fun getPropertyPriceRange(
+    ) :Flow<NetworkResult<JsonObject>>
+
 }
 
 

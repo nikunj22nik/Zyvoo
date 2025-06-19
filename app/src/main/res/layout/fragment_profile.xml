@@ -14,7 +14,7 @@
         android:id="@+id/scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,9 +63,9 @@
                     android:layout_marginTop="@dimen/_25sdp"
                     android:fontFamily="@font/poppins"
                    android:singleLine="true"
-                    android:text='@{user.name != null ? "" + (user.name.length() > 30 ? user.name.substring(0, 30) + ".." : user.name) : ""}'
+                    android:text='@{user.name != null ? "Hey " + (user.name.length() > 30 ? user.name.substring(0, 30) + ".." : user.name)+ "!" : ""}'
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp"
+                    android:textSize="@dimen/_13sdp"
                     android:maxWidth="@dimen/_150sdp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
@@ -77,8 +77,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins"
                     android:text="Guest"
+                    android:textFontWeight="300"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_11ssp"
+                    android:textSize="@dimen/_12ssp"
                     app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
                     app:layout_constraintTop_toBottomOf="@+id/textName" />
 
@@ -159,7 +160,7 @@
                         android:layout_width="@dimen/_72sdp"
                         android:layout_height="@dimen/_72sdp"
                         android:layout_margin="@dimen/_11sdp"
-                        android:background="@drawable/button_grey_line_bg"
+                        android:background="@drawable/button_grey_line_bg2"
                         android:backgroundTint="#1AFFFFFF"
                         android:padding="@dimen/_20sdp"
                         android:src="@drawable/big_email_icon"
@@ -220,7 +221,7 @@
                         android:layout_height="@dimen/_72sdp"
                         android:layout_marginHorizontal="@dimen/_14sdp"
                         android:layout_marginVertical="@dimen/_11sdp"
-                        android:background="@drawable/button_grey_line_bg"
+                        android:background="@drawable/button_grey_line_bg2"
                         android:backgroundTint="#1AFFFFFF"
                         android:padding="@dimen/_21sdp"
                         android:src="@drawable/big_phone_icon"
@@ -282,7 +283,7 @@
                         android:layout_width="@dimen/_72sdp"
                         android:layout_height="@dimen/_72sdp"
                         android:layout_marginVertical="@dimen/_10sdp"
-                        android:background="@drawable/button_grey_line_bg"
+                        android:background="@drawable/button_grey_line_bg2"
                         android:backgroundTint="#1AFFFFFF"
                         android:padding="@dimen/_17sdp"
                         android:src="@drawable/ic_author_profile_icon"
@@ -356,7 +357,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="About Me"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/clVerification" />
@@ -412,7 +413,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Where I live*"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etAboutMe" />
@@ -467,7 +468,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="My work"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view1" />
@@ -505,7 +506,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Languages I speak*"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
@@ -543,7 +544,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Hobbies"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view3" />
@@ -581,7 +582,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Pets"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewHobbies" />
@@ -619,7 +620,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Email"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewPets" />
@@ -683,7 +684,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Phone Number"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewEmail" />
@@ -749,7 +750,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Password"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewPhoneNumber" />
@@ -815,7 +816,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Mailing Address"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
 
                 app:layout_constraintStart_toStartOf="parent"
@@ -1052,7 +1053,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Payment Method"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
                 app:drawableEndCompat="@drawable/ic_dropdown_close"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1116,7 +1117,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Useful Pages"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
 
 
@@ -1162,7 +1163,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Support"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
 
                 app:layout_constraintStart_toStartOf="parent"
@@ -1224,7 +1225,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Legal"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="@dimen/_14sdp"
                 android:textStyle="bold"
 
                 app:layout_constraintStart_toStartOf="parent"
