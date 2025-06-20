@@ -141,7 +141,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         imm.showSoftInput(binding.llLocation, InputMethodManager.SHOW_IMPLICIT)
 
         clickListenerCalls()
-        callingPriceRangeGraphSelection()
+//        callingPriceRangeGraphSelection()
         setUpRecyclerView()
 
         appLocationManager = com.business.zyvo.locationManager.LocationManager(application, this)
@@ -271,8 +271,10 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     )
                     binding.tvMinimumVal.setText("$$min")
                     binding.tvMaximumValue.setText("$$max")
+                    callingPriceRangeGraphSelection()
                 }else{
                     getPropertyPriceRange()
+                    callingPriceRangeGraphSelection()
                 }
                 // Set Location values
                 val location = it.location ?: ""
@@ -1053,7 +1055,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         // Set date in TextView
         binding.tvDateSelect.text = currentDate
     }
-
+/*
     @SuppressLint("SetTextI18n")
     private fun callingPriceRangeGraphSelection() {
         val barEntrys = ArrayList<BarEntry>()
@@ -1120,19 +1122,22 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         }
     }
 
- /*
+ */
 private fun callingPriceRangeGraphSelection() {
     val seekBar = binding.seekBar
 
     // Get the actual min/max from your API response or set defaults
-    val minPrice = min.toFloatOrNull() ?: 10f
-    val maxPrice = max.toFloatOrNull() ?: 140f
-
+   // val minPrice = min.toFloatOrNull() ?: 10f
+   // val maxPrice = max.toFloatOrNull() ?: 140f
+    val minPrice = binding.tvMinimumVal.text.toString().replace("$","").toFloat()
+    val maxPrice = binding.tvMaximumValue.text.toString().replace("$","").toFloat()
+Log.d("checktvMinimumVal",binding.tvMinimumVal.text.toString())
+Log.d("checktvMinimumVal",binding.tvMaximumValue.text.toString())
     // Create entries that match your actual price range
     val barEntries = ArrayList<BarEntry>()
-    val step = (maxPrice - minPrice) / 40 // Adjust 40 based on how many bars you want
+    val step = (maxPrice - minPrice) / 20 // Adjust 40 based on how many bars you want
 
-    for (i in 0..40) {
+    for (i in 0..20) {
         val price = minPrice + (i * step)
         // You might want to adjust the height based on your data distribution
         barEntries.add(BarEntry(i.toFloat(), (10f + i % 5))) // Example height pattern
@@ -1151,8 +1156,6 @@ private fun callingPriceRangeGraphSelection() {
         max = rightVal.toInt().toString()
     }
 }
-
-  */
 
     @SuppressLint("SetTextI18n")
     private fun clickListenerCalls() {
@@ -1578,7 +1581,7 @@ private fun callingPriceRangeGraphSelection() {
                                 max = it.data.get("maximum_price")!!.asString.toDouble().toInt().toString()
                                 binding.tvMaximumValue.setText("$$max")
                             }
-                            callingPriceRangeGraphSelection()
+                            //callingPriceRangeGraphSelection()
 
                         }
 
