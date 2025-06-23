@@ -141,7 +141,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         imm.showSoftInput(binding.llLocation, InputMethodManager.SHOW_IMPLICIT)
 
         clickListenerCalls()
-//        callingPriceRangeGraphSelection()
+        callingPriceRangeGraphSelection()
         setUpRecyclerView()
 
         appLocationManager = com.business.zyvo.locationManager.LocationManager(application, this)
@@ -185,14 +185,15 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 if (!s.toString().startsWith("$")) {
                     binding.tvMaximumValue.setText("$")
                     binding.tvMaximumValue.setSelection(binding.tvMaximumValue.text?.length ?: 0)
-                    val originalLeft = binding.tvMinimumVal.text.toString().replace("$", "")
+                    //Shrawan
+                   /* val originalLeft = binding.tvMinimumVal.text.toString().replace("$", "")
                         .toFloat().toInt()?.div(100)?.times(2)
                     val originalRight = binding.tvMaximumValue.text.toString().replace("$", "")
                         .toFloat().toInt()?.div(100)?.times(2)
                     binding.seekBar.setSelectedEntries(
                         originalLeft!!.toInt(),
                         originalRight!!.toInt()
-                    )
+                    )*/
                 }
             }
 
@@ -271,11 +272,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     )
                     binding.tvMinimumVal.setText("$$min")
                     binding.tvMaximumValue.setText("$$max")
-                    callingPriceRangeGraphSelection()
-                }else{
+                }/*else{
                     getPropertyPriceRange()
-                    callingPriceRangeGraphSelection()
-                }
+                }*/
                 // Set Location values
                 val location = it.location ?: ""
                 Log.d(ErrorDialog.TAG, location)
@@ -1055,13 +1054,10 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         // Set date in TextView
         binding.tvDateSelect.text = currentDate
     }
-/*
     @SuppressLint("SetTextI18n")
     private fun callingPriceRangeGraphSelection() {
         val barEntrys = ArrayList<BarEntry>()
         val seekBar = binding.seekBar
-
-
         val heights = arrayOf(
             5f,
             3f,
@@ -1122,8 +1118,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         }
     }
 
- */
-private fun callingPriceRangeGraphSelection() {
+
+    /*private fun callingPriceRangeGraphSelection() {
     val seekBar = binding.seekBar
 
     // Get the actual min/max from your API response or set defaults
@@ -1131,8 +1127,8 @@ private fun callingPriceRangeGraphSelection() {
    // val maxPrice = max.toFloatOrNull() ?: 140f
     val minPrice = binding.tvMinimumVal.text.toString().replace("$","").toFloat()
     val maxPrice = binding.tvMaximumValue.text.toString().replace("$","").toFloat()
-Log.d("checktvMinimumVal",binding.tvMinimumVal.text.toString())
-Log.d("checktvMinimumVal",binding.tvMaximumValue.text.toString())
+    Log.d("checktvMinimumVal",binding.tvMinimumVal.text.toString())
+    Log.d("checktvMinimumVal",binding.tvMaximumValue.text.toString())
     // Create entries that match your actual price range
     val barEntries = ArrayList<BarEntry>()
     val step = (maxPrice - minPrice) / 20 // Adjust 40 based on how many bars you want
@@ -1155,7 +1151,7 @@ Log.d("checktvMinimumVal",binding.tvMaximumValue.text.toString())
         binding.tvMaximumValue.setText("$${rightVal.toInt()}")
         max = rightVal.toInt().toString()
     }
-}
+}*/
 
     @SuppressLint("SetTextI18n")
     private fun clickListenerCalls() {
@@ -1573,6 +1569,7 @@ Log.d("checktvMinimumVal",binding.tvMaximumValue.text.toString())
 //                                Log.d("checkValue",it.data.get("minimum_price")!!.asString)
                                 min = it.data.get("minimum_price")!!.asString.toDouble().toInt().toString()
                                 binding.tvMinimumVal.setText("$$min")
+
                             }
                             if (it.data?.has("maximum_price") == true && !it.data.get("maximum_price")!!.isJsonNull) {
 //                                binding.tvMaximumValue.setText("$"+it.data.get("maximum_price")!!.asString.toDouble().toInt().toString())
@@ -1581,7 +1578,8 @@ Log.d("checktvMinimumVal",binding.tvMaximumValue.text.toString())
                                 max = it.data.get("maximum_price")!!.asString.toDouble().toInt().toString()
                                 binding.tvMaximumValue.setText("$$max")
                             }
-                            //callingPriceRangeGraphSelection()
+                            setMinMax((10/10),(50/10))
+
 
                         }
 
@@ -1602,5 +1600,19 @@ Log.d("checktvMinimumVal",binding.tvMaximumValue.text.toString())
             )
         }
     }
+
+    fun setMinMax(min: Int, max: Int) {
+        if (min >= max) {
+            Log.e("RangeBarWithChart", "Min value cannot be greater than or equal to max value.")
+            return
+        }
+
+        val entries = ArrayList<BarEntry>()
+        for (i in min..max) {
+            entries.add(BarEntry(i.toFloat(), i.toFloat())) // or some other Y value
+        }
+        binding.seekBar.setEntries(entries)
+    }
+
 
 }

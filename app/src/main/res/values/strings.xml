@@ -146,6 +146,15 @@
     <string name="sort_by_lowest_review">Sort by: Lowest Review</string>
     <string name="sort_by_recent_review">Sort by: Recent Review</string>
     <string name="enter_confirm_password">Enter Confirm password</string>
+    <string name="register_now">Register Now</string>
+    <string name="login_here">Login Here</string>
+    <string name="enter_your_phone_to_register_your_naccount">Enter your Phone to Register your\naccount</string>
+    <string name="enter_your_phone_to_login_your_naccount">Enter your Phone to login your\naccount</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="enter_your_email_to_register_your_n_account">Enter your email to Register your\n account.</string>
+    <string name="enter_your_email_and_password_to_n_login_your_account">Enter your email and Password to\n login your account.</string>
+    <string name="create_account">Create Account</string>
 
     <string-array name="hourly_rates">
         <item>$10 per hour</item>

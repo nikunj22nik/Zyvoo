@@ -11,5 +11,8 @@ data class HomePropertyData( val images: List<String>,
                              val review_count: String,
                              val latitude: String,
                              val longitude: String,
-                             val distance_miles: String)
+                             val distance_miles: String,
+                             val host_name: String,
+                             val host_profile_image: String,
+                             val host_address: String)
 

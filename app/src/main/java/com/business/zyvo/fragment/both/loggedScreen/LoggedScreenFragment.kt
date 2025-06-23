@@ -148,6 +148,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     var session: SessionManager? = null
     private var homePropertyData: MutableList<HomePropertyData> = mutableListOf()
     private var loginDialog: Dialog? = null
+    private var logType = "login"
+    private var islogTypeMobile = false
+    private var islogTypeEmail = false
 
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
@@ -615,6 +618,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.textLogin -> {
+                islogTypeMobile = false
                 dialogLogin(requireContext())
 
             }
@@ -688,10 +692,11 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
             val checkBox = findViewById<CheckBox>(R.id.checkBox)
-            val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
+            val textTitle = findViewById<TextView>(R.id.textTitle)
             val textForget = findViewById<TextView>(R.id.textForget)
-            val textDontHaveAnAccount = findViewById<TextView>(R.id.textDontHaveAnAccount)
+            val textEnterYourEmail = findViewById<TextView>(R.id.textEnterYourEmail)
             val textRegister = findViewById<TextView>(R.id.textRegister)
+            val textDontHaveAnAccount = findViewById<TextView>(R.id.textDontHaveAnAccount)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
             // Set IME options for password field
             etMobileNumber.imeOptions = EditorInfo.IME_ACTION_DONE
@@ -708,8 +713,23 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 }
             }
             textRegister.setOnClickListener {
-                dialogRegister(context)
-                dismiss()
+                if (islogTypeMobile){
+                    islogTypeMobile = false
+                    textRegister.text = getString(R.string.register_now)
+                    textTitle.text = getString(R.string.login)
+                    textEnterYourEmail.text =
+                        getString(R.string.enter_your_phone_to_login_your_naccount)
+                    textDontHaveAnAccount.text = getString(R.string.don_t_have_an_account)
+                }else {
+                    textRegister.text = getString(R.string.login_here)
+                    textTitle.text = getString(R.string.register_now)
+                    textEnterYourEmail.text =
+                        getString(R.string.enter_your_phone_to_register_your_naccount)
+                    textDontHaveAnAccount.text = getString(R.string.already_have_an_account)
+                    islogTypeMobile = true
+                }
+              //  dialogRegister(context)
+             //   dismiss()
             }
 
             textForget.setOnClickListener {
@@ -717,32 +737,58 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 dismiss()
             }
             imageEmailSocial.setOnClickListener {
+                islogTypeEmail = false
                 dialogLoginEmail(context)
                 dismiss()
             }
             textContinueButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textContinueButton)
                 if (NetworkMonitorCheck._isConnected.value) {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        if (etMobileNumber.text!!.isEmpty()) {
-                            showErrorDialog(requireContext(), AppConstant.mobile)
-                            toggleLoginButtonEnabled(true, textContinueButton)
-                        }
-                        else if (!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),countyCodePicker.selectedCountryCodeWithPlus)){
-                            showErrorDialog(requireContext(),AppConstant.validPhoneNumber)
-                            toggleLoginButtonEnabled(true, textContinueButton)
+                    if (islogTypeMobile){
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            if (etMobileNumber.text!!.isEmpty()) {
+                                toggleLoginButtonEnabled(true, textContinueButton)
+                                showErrorDialog(requireContext(), AppConstant.mobile)
 
+                            } else if (!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),countyCodePicker.selectedCountryCodeWithPlus)) {
+                                showErrorDialog(requireContext(), AppConstant.VALID_PHONE)
+                                toggleLoginButtonEnabled(true, textContinueButton)
+                            } else {
+                                val phoneNumber = etMobileNumber.text.toString()
+                                Log.d(TAG, phoneNumber)
+                                val countryCode = countyCodePicker.selectedCountryCodeWithPlus
+                                Log.d(TAG, countryCode)
+                                callingRegisterPhone(
+                                    countryCode,
+                                    phoneNumber,
+                                    loginDialog!!,
+                                    textContinueButton,
+                                    checkBox
+                                )
+                            }
                         }
-                        else {
-                            val phoneNumber = etMobileNumber.text.toString()
-                            Log.d(TAG, phoneNumber)
-                            val countryCode =
-                                countyCodePicker.selectedCountryCodeWithPlus
-                            Log.d(TAG, countryCode)
-                            submitLogin(
-                                countryCode, phoneNumber,
-                                loginDialog!!, textContinueButton, checkBox
-                            )
+                    }else{
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            if (etMobileNumber.text!!.isEmpty()) {
+                                showErrorDialog(requireContext(), AppConstant.mobile)
+                                toggleLoginButtonEnabled(true, textContinueButton)
+                            }
+                            else if (!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),countyCodePicker.selectedCountryCodeWithPlus)){
+                                showErrorDialog(requireContext(),AppConstant.validPhoneNumber)
+                                toggleLoginButtonEnabled(true, textContinueButton)
+
+                            }
+                            else {
+                                val phoneNumber = etMobileNumber.text.toString()
+                                Log.d(TAG, phoneNumber)
+                                val countryCode =
+                                    countyCodePicker.selectedCountryCodeWithPlus
+                                Log.d(TAG, countryCode)
+                                submitLogin(
+                                    countryCode, phoneNumber,
+                                    loginDialog!!, textContinueButton, checkBox
+                                )
+                            }
                         }
                     }
                 } else {
@@ -759,8 +805,13 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             }
             googleLoginBtn.setOnClickListener {
                 if (NetworkMonitorCheck._isConnected.value) {
-                    startGoogleSignIn("login")
                     dismiss()
+                    if (islogTypeMobile){
+                        startGoogleSignIn("register")
+                    }else{
+                        startGoogleSignIn("login")
+                    }
+
                 } else {
                     showErrorDialog(
                         requireContext(),
@@ -1019,7 +1070,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
             val textLoginButton = findViewById<TextView>(R.id.textLoginButton)
             val checkBox = findViewById<CheckBox>(R.id.checkBox)
-            val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
+            val textTitle = findViewById<TextView>(R.id.textTitle)
             val textForget = findViewById<TextView>(R.id.textForget)
 
             val imgHidePass = findViewById<ImageView>(R.id.imgHidePass)
@@ -1030,6 +1081,8 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
             val etLoginEmail = findViewById<EditText>(R.id.etLoginEmail)
             val etLoginPassword = findViewById<EditText>(R.id.etLoginPassword)
+
+            val textEnterYourEmail = findViewById<TextView>(R.id.textEnterYourEmail)
 
             // Set IME options for password field
             etLoginPassword.imeOptions = EditorInfo.IME_ACTION_DONE
@@ -1048,8 +1101,27 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             eyeHideShow(imgHidePass, imgShowPass, etLoginPassword)
 
             textRegister.setOnClickListener {
-                dialogRegisterEmail(context)
-                dismiss()
+                if (islogTypeEmail){
+                    islogTypeEmail = false
+                    textRegister.text = getString(R.string.register_now)
+                    textTitle.text = getString(R.string.login)
+                    textEnterYourEmail.text =
+                        getString(R.string.enter_your_email_and_password_to_n_login_your_account)
+                    textDontHaveAnAccount.text = getString(R.string.don_t_have_an_account)
+                    textLoginButton.text = getString(R.string.login)
+                    textForget.visibility = View.VISIBLE
+                }else {
+                    islogTypeEmail = true
+                    textRegister.text = getString(R.string.login_here)
+                    textTitle.text = getString(R.string.register_now)
+                    textEnterYourEmail.text =
+                        getString(R.string.enter_your_email_to_register_your_n_account)
+                    textDontHaveAnAccount.text = getString(R.string.already_have_an_account)
+                    textLoginButton.text = getString(R.string.create_account)
+                    textForget.visibility = View.GONE
+                }
+             //   dialogRegisterEmail(context)
+             //   dismiss()
             }
 
             textForget.setOnClickListener {
@@ -1059,29 +1131,57 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             textLoginButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textLoginButton)
                 if (NetworkMonitorCheck._isConnected.value) {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        if (etLoginEmail.text!!.isEmpty()) {
-                            etLoginEmail.error = "Email address required"
-                            showErrorDialog(requireContext(), AppConstant.email)
-                            toggleLoginButtonEnabled(true, textLoginButton)
-                        } else if (!isValidEmail(etLoginEmail.text.toString())) {
-                            etLoginEmail.error = "Invalid email address"
-                            showErrorDialog(requireContext(), AppConstant.invalideemail)
-                            toggleLoginButtonEnabled(true, textLoginButton)
-                        } else if (etLoginPassword.text!!.isEmpty()) {
-                            etLoginPassword.error = "Password required"
-                            showErrorDialog(requireContext(), AppConstant.password)
-                            toggleLoginButtonEnabled(true, textLoginButton)
-                        }else if (!checkPasswordValidity(etLoginPassword.text.toString())) {
-                            toggleLoginButtonEnabled(true, textLoginButton)
-                            return@launch
-                        } else {
-                            loginEmail(
-                                etLoginEmail.text.toString(),
-                                etLoginPassword.text.toString(),
-                                dialog, textLoginButton,
-                                checkBox
-                            )
+                    if (islogTypeEmail){
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            if (etLoginEmail.text.isEmpty()) {
+                                etLoginEmail.error = "Email Address required"
+                                showErrorDialog(requireContext(), AppConstant.email)
+                                toggleLoginButtonEnabled(true, textLoginButton)
+                            } else if (!isValidEmail(etLoginEmail.text.toString())) {
+                                etLoginEmail.error = "Invalid Email Address"
+                                showErrorDialog(requireContext(), AppConstant.invalideemail)
+                                toggleLoginButtonEnabled(true, textLoginButton)
+                            } else if (etLoginPassword.text.isEmpty()) {
+                                etLoginPassword.error = "Password required"
+                                showErrorDialog(requireContext(), AppConstant.password)
+                                toggleLoginButtonEnabled(true, textLoginButton)
+                            } else if (!checkPasswordValidity(etLoginPassword.text.toString())) {
+                                toggleLoginButtonEnabled(true, textLoginButton)
+                                return@launch
+                            }  else {
+                                signupEmail(
+                                    etLoginEmail.text.toString(),
+                                    etLoginPassword.text.toString(),
+                                    dialog, textLoginButton,
+                                    checkBox
+                                )
+                            }
+                        }
+                    }else {
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            if (etLoginEmail.text!!.isEmpty()) {
+                                etLoginEmail.error = "Email address required"
+                                showErrorDialog(requireContext(), AppConstant.email)
+                                toggleLoginButtonEnabled(true, textLoginButton)
+                            } else if (!isValidEmail(etLoginEmail.text.toString())) {
+                                etLoginEmail.error = "Invalid email address"
+                                showErrorDialog(requireContext(), AppConstant.invalideemail)
+                                toggleLoginButtonEnabled(true, textLoginButton)
+                            } else if (etLoginPassword.text!!.isEmpty()) {
+                                etLoginPassword.error = "Password required"
+                                showErrorDialog(requireContext(), AppConstant.password)
+                                toggleLoginButtonEnabled(true, textLoginButton)
+                            } else if (!checkPasswordValidity(etLoginPassword.text.toString())) {
+                                toggleLoginButtonEnabled(true, textLoginButton)
+                                return@launch
+                            } else {
+                                loginEmail(
+                                    etLoginEmail.text.toString(),
+                                    etLoginPassword.text.toString(),
+                                    dialog, textLoginButton,
+                                    checkBox
+                                )
+                            }
                         }
                     }
                 } else {

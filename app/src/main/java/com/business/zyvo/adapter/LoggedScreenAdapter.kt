@@ -10,6 +10,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.bumptech.glide.Glide
+import com.business.zyvo.BuildConfig
 import com.google.android.material.tabs.TabLayoutMediator
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
@@ -123,6 +125,18 @@ class LoggedScreenAdapter(
                 holder.binding.imageWishFull.visibility = View.GONE
             }
         }
+
+        currentItem.host_name?.let {
+            holder.binding.tvHostName.text = it
+        }
+        currentItem.host_address?.let {
+            holder.binding.tvHostAddress.text = it
+        }
+        currentItem.host_profile_image?.let {
+            Glide.with(context).load(BuildConfig.MEDIA_URL + it)
+                .into(holder.binding.hotsProfileIamge)
+        }
+
     }
 
     @SuppressLint("NotifyDataSetChanged")

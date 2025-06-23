@@ -60,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
-        android:text="Enter your email to Register your\n account."
+        android:text="@string/enter_your_email_to_register_your_n_account"
         android:textAlignment="center"
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
@@ -222,15 +222,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
-
         android:background="@drawable/button_bg"
         android:fontFamily="@font/poppins"
-
-
         android:paddingHorizontal="@dimen/_70sdp"
-
         android:paddingVertical="@dimen/_7sdp"
-        android:text="Create Account"
+        android:text="@string/create_account"
         android:textColor="@color/black"
         android:textSize="@dimen/_10sdp"
         android:textStyle="bold"

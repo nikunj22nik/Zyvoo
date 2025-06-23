@@ -45,12 +45,79 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:tabBackground="@drawable/tab_pager_selector"
                 app:tabGravity="center"
+                app:layout_constraintBottom_toTopOf="@id/rl_btm_view"
                 android:layout_marginHorizontal="@dimen/_30sdp"
                 app:tabIndicatorHeight="0dp"
                 app:tabPaddingEnd="@dimen/_8sdp"
                 app:tabPaddingStart="@dimen/_8sdp" />
+        <RelativeLayout
+            android:id="@+id/rl_btm_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_15sdp"
+            android:background="@drawable/home_host_bg"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="@dimen/_10sdp"
+            android:paddingVertical="@dimen/_5sdp"
+            android:gravity="center_vertical"
+            android:visibility="visible">
+            <FrameLayout
+                android:id="@+id/profileFrame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10sdp">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/hots_profile_iamge"
+                    android:layout_width="@dimen/_35ssp"
+                    android:layout_height="@dimen/_35ssp"
+                    android:src="@drawable/user_text"
+                    android:layout_marginStart="@dimen/_10sdp"
+                    />
+                <ImageView
+                    android:id="@+id/imageReward"
+                    android:layout_width="@dimen/_13sdp"
+                    android:layout_height="@dimen/_13sdp"
+                    android:src="@drawable/ic_reward"
+                    android:visibility="visible"
+                    android:layout_gravity="bottom|end"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </FrameLayout>
 
-            <ImageView
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_toRightOf="@id/profileFrame"
+                android:layout_marginStart="@dimen/_12sdp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:id="@+id/tv_host_name"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:id="@+id/tv_host_address"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10ssp"
+                    android:fontFamily="@font/poppins" />
+
+
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+            <!--<ImageView
                 android:id="@+id/imageReward"
                 android:layout_width="@dimen/_20sdp"
                 android:layout_height="@dimen/_20sdp"
@@ -59,7 +126,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_margin="@dimen/_8sdp"/>
-
+-->
             <TextView
                 android:id="@+id/textInstantBook"
                 android:layout_width="@dimen/_93sdp"

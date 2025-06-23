@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:text="Enter your email and Password to\n login your account."
+        android:text="@string/enter_your_email_and_password_to_n_login_your_account"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:fontFamily="@font/poppins"
@@ -214,20 +214,19 @@
 
 
     </RelativeLayout>
-
-
-
+    <!--android:paddingHorizontal="@dimen/_98sdp"-->
     <TextView
         android:id="@+id/textLoginButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login"
+        android:text="@string/login"
         android:textStyle="bold"
+        android:textAlignment="center"
+        android:layout_marginHorizontal="@dimen/_30ssp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@drawable/button_bg"
         android:layout_marginTop="@dimen/_10sdp"
-        android:paddingHorizontal="@dimen/_98sdp"
         android:paddingVertical="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
@@ -308,7 +307,7 @@
         android:id="@+id/textRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Register Now"
+        android:text="@string/register_now"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins"
         android:textStyle="bold"
