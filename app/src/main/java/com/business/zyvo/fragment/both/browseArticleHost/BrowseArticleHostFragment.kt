@@ -64,12 +64,14 @@ lateinit var sessionManager : SessionManager
             if (it.containsKey(AppConstant.type)) {
                 if (it.getString(AppConstant.type).equals("Article")) {
                     type = "article"
-                    binding.tvViewTitle.setText("Browse all Articles")
-                    binding.textLabel.setText("Articles for "+sessionManager.getUserType())
+                    binding.tvViewTitle.setText("Hi ${sessionManager.getFirstName()}, how can we help?")
+                    val userType = sessionManager?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
+                    binding.textLabel.setText("Articles for "+userType)
                 } else {
                     type = "guides"
-                    binding.tvViewTitle.setText("Browse all Guides")
-                    binding.textLabel.setText("Guides for "+sessionManager.getUserType())
+                    binding.tvViewTitle.setText("Hi ${sessionManager.getFirstName()}, how can we help?")
+                    val userType = sessionManager?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
+                    binding.textLabel.setText("Guides for "+userType)
                 }
             }
         }

@@ -99,7 +99,9 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
         }
-        binding.textGuidesForGuests.setText("Guides for "+ (session?.getUserType() ?: ""))
+        val userType = session?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
+        binding.textGuidesForGuests.text = "Guides for $userType"
+      //  binding.textGuidesForGuests.setText("Guides for "+ (session?.getUserType()?.toUpperCase() ?: ""))
         lifecycleScope.launch {
             viewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -112,7 +114,6 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
                     } else {
                         getHelpCenter()
                     }
-
                 }
         }
 
@@ -140,7 +141,8 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
                             )
 
                             if (model.data.user_fname != null){
-                                val name = model.data.user_fname
+                               val  name = model.data.user_fname
+                                session?.setFirstName(name)
                                 binding.textTitle.setText("Hi $name, how can we help?")
                             }
 

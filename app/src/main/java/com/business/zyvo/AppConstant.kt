@@ -14,6 +14,7 @@ class AppConstant {
         val NOTIFICATION: String = "Notification"
         val FRIEND_ID: String? = "FRIENDiD"
         val CHANNEL_NAME: String = "Channel_Name"
+        val nameHelper : String = "nameHelper"
         val HOST_ID: String? = "HOST_ID"
         val CHAT_TOKEN: String? = "chat_token"
         val PENDING: String = "pending"

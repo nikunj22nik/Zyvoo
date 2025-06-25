@@ -122,6 +122,17 @@ class SessionManager(var context: Context) {
     fun getName():String?{
         return pref?.getString(AppConstant.Name1,"")
     }
+
+
+    fun setFirstName(name:String){
+        editor!!.putString(AppConstant.nameHelper,name)
+        editor!!.commit()
+    }
+
+    fun getFirstName():String?{
+        return pref?.getString(AppConstant.nameHelper,"")
+    }
+
     fun logOut() {
         editor?.clear()
         editor?.apply()

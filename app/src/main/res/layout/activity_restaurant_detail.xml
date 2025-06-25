@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:visibility="gone"
+    android:visibility="visible"
     tools:context=".activity.guest.propertydetails.RestaurantDetailActivity">
 
     <View
@@ -498,6 +498,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
                         android:layout_marginVertical="@dimen/_4ssp"
+                        android:layout_marginEnd="@dimen/_5sdp"
                         android:layout_weight="1"
                         android:fontFamily="@font/poppins"
                         android:gravity="center"
@@ -631,7 +632,7 @@
                         android:id="@+id/rl_view1"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_weight="0.43"
+                        android:layout_weight="0.44"
                         android:background="@drawable/bg_two_side_corner">
 
                         <ImageView
@@ -675,7 +676,7 @@
                         android:id="@+id/rl_view2"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_weight="0.46"
+                        android:layout_weight="0.455"
                         android:background="@drawable/bg_two_side_corner">
 
                         <ImageView
@@ -726,7 +727,7 @@
                         android:id="@+id/rl_view3"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_weight="0.43"
+                        android:layout_weight="0.44"
                         android:background="@drawable/bg_two_side_corner">
 
                         <ImageView
@@ -773,7 +774,7 @@
                         android:id="@+id/rl_view4"
                         android:layout_width="0dp"
                         android:layout_height="@dimen/_30sdp"
-                        android:layout_weight="0.45"
+                        android:layout_weight="0.455"
                         android:background="@drawable/bg_two_side_corner">
 
                         <ImageView

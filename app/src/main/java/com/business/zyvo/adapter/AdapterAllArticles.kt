@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.text.Html
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.OnClickListener
@@ -26,13 +27,15 @@ class AdapterAllArticles(var context: Context,
                 binding.textTitle.setText(currentItem.title)
             }
           if (currentItem.description != null){
-
+              binding.textDescription.visibility = View.VISIBLE
               binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                   Html.fromHtml(currentItem.description, Html.FROM_HTML_MODE_LEGACY)
               } else {
                   Html.fromHtml(currentItem.description)
               }
 
+          }else{
+              binding.textDescription.visibility = View.GONE
           }
 
 
