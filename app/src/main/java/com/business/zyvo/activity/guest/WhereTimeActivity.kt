@@ -682,7 +682,10 @@ class WhereTimeActivity : AppCompatActivity() {
         actList.add("Stays")
         actList.add("Event Space")
         actList.add("Photo Shoot")
-        actList.add("Music Video")
+        actList.add("Meeting")
+        actList.add("Party")
+        actList.add("Pool")
+        actList.add("Film Shoot")
         actList.add("Wedding")
 
         return actList

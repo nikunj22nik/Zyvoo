@@ -88,7 +88,9 @@ class LoggedScreenAdapter(
         }
 
         currentItem.rating?.let {
-            holder.binding.textRating.text = it
+            val formattedRating = String.format("%.1f", it.toFloat())
+            holder.binding.textRating.text = formattedRating
+            // holder.binding.textRating.text = String.format("%.1f", it)
         }
         currentItem.review_count?.let {
             holder.binding.textTotal.text = "("+ formatConvertCount(it) +")"

@@ -145,7 +145,7 @@
     <string name="sort_by_highest_review">Sort by: Highest Review</string>
     <string name="sort_by_lowest_review">Sort by: Lowest Review</string>
     <string name="sort_by_recent_review">Sort by: Recent Review</string>
-    <string name="enter_confirm_password">Enter Confirm password</string>
+    <string name="enter_confirm_password">Enter confirm password</string>
     <string name="register_now">Register Now</string>
     <string name="login_here">Login Here</string>
     <string name="enter_your_phone_to_register_your_naccount">Enter your Phone to Register your\naccount</string>
