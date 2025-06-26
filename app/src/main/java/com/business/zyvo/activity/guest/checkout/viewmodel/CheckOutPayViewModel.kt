@@ -1,11 +1,7 @@
 package com.business.zyvo.activity.guest.checkout.viewmodel
-
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.business.zyvo.NetworkResult
-import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
-import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.model.AddPaymentCardModel
 import com.business.zyvo.model.host.ChannelModel
 import com.business.zyvo.repository.ZyvoRepository
@@ -19,9 +15,6 @@ import javax.inject.Inject
 class CheckOutPayViewModel  @Inject constructor(private val repository: ZyvoRepository) : ViewModel(){
     val isLoading = MutableLiveData<Boolean>()
     private val _paymentCardList = MutableLiveData<MutableList<AddPaymentCardModel>>()
-    val paymentCardList : LiveData<MutableList<AddPaymentCardModel>> get() =  _paymentCardList
-
-
     init {
         loadPaymentDetail()
     }
