@@ -234,7 +234,6 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     val propertyid = it.property_id
                     val hostId = it.host_id
                     val userId = SessionManager(this).getUserId()
-                    //var channelName = if(userId!! < hostId){ "ZYVOOPROJ_"+userId+"_"+hostId+"_"+propertyid} else{"ZYVOOPROJ_"+hostId+"_"+userId+"_"+propertyid}
                     var channelName= ""
                     if (userId!=null && hostId!=null) {
                         if (userId < hostId) {
