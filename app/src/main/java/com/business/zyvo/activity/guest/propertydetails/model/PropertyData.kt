@@ -23,6 +23,7 @@ data class PropertyData(var property_id: Int = 0,  // Use default value or make 
                         var cleaning_fee: String? = null,
                         var service_fee: String? = null,
                         var tax: String? = null,
+                        var tax_amount: String? = null,
                         var add_ons: List<AddOn>? = null,
                         var address: String = "",
                         var latitude: String = "",

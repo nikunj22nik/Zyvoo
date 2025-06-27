@@ -1260,12 +1260,29 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                     totalPrice += taxAmount
                 }
             }
-            propertyData?.tax?.toDoubleOrNull()?.let {resp ->
+           /* propertyData?.tax?.toDoubleOrNull()?.let {resp ->
                 hourlyTotal?.let {
                     val taxAmount = calculatePercentage(it,resp)
                     binding.tvTaxesPrice.text = "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
                     totalPrice += taxAmount
 
+                }
+            }*/
+            val taxAmountStr = propertyData?.tax_amount
+            val taxAmountDouble = taxAmountStr?.toDoubleOrNull()
+            if ( taxAmountStr.isNullOrEmpty() || taxAmountDouble == null || taxAmountDouble <= 0.0) {
+                binding.rltax.visibility = View.GONE
+            }else {
+                binding.rltax.visibility = View.VISIBLE
+                propertyData?.tax_amount?.toDoubleOrNull()?.let { resp ->
+                    hourlyTotal?.let { amount ->
+                        hour?.let { hr ->
+                            val taxAmount = (amount + (hr.toInt() * resp)) //calculatePercentage(it,resp)
+                            binding.tvTaxesPrice.text =
+                                "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
+                            totalPrice += taxAmount
+                        }
+                    }
                 }
             }
             addOnList.let {
