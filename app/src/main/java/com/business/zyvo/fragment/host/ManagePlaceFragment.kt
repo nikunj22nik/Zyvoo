@@ -95,6 +95,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Arrays
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -3404,6 +3405,18 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
+    }
+
+    fun getCountryCode(countryName: String): String? {
+        val locales = Locale.getISOCountries()
+
+        for (countryCode in locales) {
+            val locale = Locale("", countryCode)
+            if (locale.displayCountry.equals(countryName, ignoreCase = true)) {
+                return countryCode
+            }
+        }
+        return null
     }
 
     override fun onDestroyView() {
