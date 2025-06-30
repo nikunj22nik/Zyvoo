@@ -597,12 +597,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/availEditText"
-                        android:layout_marginStart="@dimen/_4sdp"
-                        android:layout_marginTop="@dimen/_3sdp"
                         android:background="@null"
                         android:inputType="number"
                         android:hint="Type.."
-                        android:textColor="#3F3D56" />
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColorHint="@color/colorChartSelected"
+                        android:textColor="@color/colorChartSelected" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -744,12 +749,18 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/etCustomPropertySize"
-                        android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@null"
                         android:inputType="number"
                         android:hint="Type.."
-                        android:textColor="#3F3D56" />
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColorHint="@color/colorChartSelected"
+                        android:textColor="@color/colorChartSelected" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -1068,13 +1079,19 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:id="@+id/etCustomBedroom"
                         android:inputType="number"
                         android:background="@null"
                         android:hint="Type.."
-                        android:textColor="#3F3D56" />
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColorHint="@color/colorChartSelected"
+                        android:textColor="@color/colorChartSelected" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -1229,12 +1246,19 @@
                     <EditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@null"
                         android:id="@+id/etBathroom"
+                        android:inputType="number"
                         android:hint="Type.."
-                        android:textColor="#3F3D56" />
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:gravity="center_vertical"
+                        android:fontFamily="@font/poppins_medium"
+                        android:textSize="@dimen/_11sdp"
+                        android:textColorHint="@color/colorChartSelected"
+                        android:textColor="@color/colorChartSelected" />
 
                     <ImageView
                         android:layout_width="wrap_content"

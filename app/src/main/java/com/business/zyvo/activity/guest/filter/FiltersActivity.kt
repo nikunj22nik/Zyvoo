@@ -20,9 +20,12 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.AutoCompleteTextView
+import android.widget.LinearLayout
 import android.widget.PopupWindow
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -32,10 +35,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
+import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
 import com.business.zyvo.activity.guest.filter.viewmodel.FiltersViewModel
 import com.business.zyvo.activity.guest.propertydetails.model.Pagination
@@ -44,13 +51,16 @@ import com.business.zyvo.activity.guest.propertydetails.model.Review
 import com.business.zyvo.activity.guest.propertydetails.viewmode.PropertyDetailsViewModel
 import com.business.zyvo.adapter.guest.ActivitiesAdapter
 import com.business.zyvo.adapter.guest.AmenitiesAdapter
+import com.business.zyvo.adapter.host.DropDownTextAdapter
 import com.business.zyvo.databinding.ActivityFiltersBinding
 import com.business.zyvo.model.ActivityModel
 import com.business.zyvo.model.FilterRequest
+import com.business.zyvo.model.host.ItemDropDown
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
+import com.business.zyvo.utils.PrepareData.getNewHourMinimumList
 import com.github.mikephil.charting.data.BarEntry
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -119,8 +129,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             }
         }
 
-        adapterActivity = ActivitiesAdapter(this, activityList.subList(0, 3))
-        adapterActivity2 = ActivitiesAdapter(this, activityList.subList(3, activityList.size))
+        adapterActivity = ActivitiesAdapter(this, activityList.subList(0, 4))
+        adapterActivity2 = ActivitiesAdapter(this, activityList.subList(4, activityList.size))
         amenitiesAdapter = AmenitiesAdapter(this, mutableListOf())
         languageAdapter = AmenitiesAdapter(this, mutableListOf())
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -287,10 +297,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 }
 
                 //Set Date Value
-                binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(it.date)
+                if (it.date.isNotEmpty()) {
+                    binding.tvDateSelect.text = ErrorDialog.formatDateyyyyMMddToMMMMddyyyy(it.date)
+                }
                 //Set Time Value
                 if (!it.time.equals("")) {
-                    binding.tvHour.text = "${it.time} hours"//toString().replace(" hours","")
+                    binding.tvHour.text = "${it.time} hour${if (it.time.toInt() == 1) "" else "s"}"//toString().replace(" hours","")
                 }
                 //Set No Of People
                 when (it.people_count) {
@@ -346,8 +358,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                         }
                     }
                 }
-                adapterActivity.updateAdapter(activityList.subList(0, 3))
-                adapterActivity2.updateAdapter(activityList.subList(3, activityList.size))
+                adapterActivity.updateAdapter(activityList.subList(0, 4))
+                adapterActivity2.updateAdapter(activityList.subList(4, activityList.size))
 
                 //Set Amenities Value
                 selectedAmenities = it.amenities?.toMutableList()!!
@@ -864,8 +876,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     @RequiresApi(Build.VERSION_CODES.O)
     fun setUpRecyclerView() {
         // Grid Layout Managers
-        val gridLayoutManager = GridLayoutManager(this, 3) // Activity (Main) - 3 columns
-        val gridLayoutManager2 = GridLayoutManager(this, 3) // Activity (Other) - 3 columns
+        val gridLayoutManager = GridLayoutManager(this, 4) // Activity (Main) - 3 columns
+        val gridLayoutManager2 = GridLayoutManager(this, 4) // Activity (Other) - 3 columns
         val gridLayoutManager3 = GridLayoutManager(this, 2) // Languages - 2 columns
         val gridLayoutManager4 = GridLayoutManager(this, 2) // Amenities - 2 columns
 
@@ -1162,9 +1174,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             tvEntireHome.setOnClickListener(this@FiltersActivity)
             llDate.setOnClickListener(this@FiltersActivity)
             llTime.setOnClickListener {
-                DateManager(this@FiltersActivity).showHourSelectionDialog(this@FiltersActivity) { selectedHour ->
+               /* DateManager(this@FiltersActivity).showHourSelectionDialog(this@FiltersActivity) { selectedHour ->
                     tvHour.text = selectedHour
-                }
+                }*/
+                val items = getNewHourList()
+
+                createDropdown (items,  binding.llTime)
             }
             byDefaultSelect()
 
@@ -1182,7 +1197,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                         date = if (!binding.tvDateSelect.text.toString()
                                 .equals("")
                         ) ErrorDialog.convertDateFormatMMMMddyyyytoyyyyMMdd(binding.tvDateSelect.text.toString()) else "",
-                        time = binding.tvHour.text.toString().replace(" hours", ""),
+                        time = binding.tvHour.text.toString().replace(Regex("\\s*hours?")/*" hours"*/, ""),
                         people_count = availOption,
                         property_size = propertySize,
                         bedroom = bedroomCount,
@@ -1612,6 +1627,50 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             entries.add(BarEntry(i.toFloat(), i.toFloat())) // or some other Y value
         }
         binding.seekBar.setEntries(entries)
+    }
+
+    private fun createDropdown(
+        items: MutableList<ItemDropDown>,
+        llHours: LinearLayout
+    ) {
+        val inflater = layoutInflater
+        val view = inflater.inflate(R.layout.popup_menu_layout, null)
+
+        // Setup your RecyclerView adapter here
+        val popupWindow = PopupWindow(
+            view,
+            llHours.width, // Match width of the anchor view
+            WindowManager.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        popupWindow.isOutsideTouchable = true
+        popupWindow.elevation = 10f
+
+        // Show popup below llHours
+        popupWindow.showAsDropDown(llHours, 0, 0)
+
+        val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
+
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        val adapter = DropDownTextAdapter(items, object : OnClickListener {
+            override fun itemClick(selectedIndex: Int) {
+                 //   minimumHourIndex = selectedIndex
+                    //minimumHourValue = selectedIndex + 1;
+                    //Vipin
+              //      minimumHourValue = selectedIndex + 2
+            }
+        }) { selectedText ->
+            // Update TextView with the selected text
+            binding.tvHour.text = selectedText
+            popupWindow.dismiss()
+        }
+        recyclerView.adapter = adapter
+        popupWindow.showAsDropDown(binding.tvHour)
+    }
+
+    fun getNewHourList(): MutableList<ItemDropDown> {
+        return (1..23).map { ItemDropDown("$it hour${if (it >= 2) "s" else ""}")/* ItemDropDown("$it hour")*/ }.toMutableList()
     }
 
 

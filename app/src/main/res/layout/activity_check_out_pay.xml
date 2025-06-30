@@ -563,6 +563,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:hint="$0"
+                        android:text="$0"
                         android:id="@+id/tvTaxesPrice"
                         android:fontFamily="@font/poppins"
                         android:textColorHint="@color/black"

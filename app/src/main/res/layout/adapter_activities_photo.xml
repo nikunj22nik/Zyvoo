@@ -12,8 +12,8 @@
 
     <ImageView
         android:id="@+id/img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/_22sdp"
+        android:layout_height="@dimen/_22sdp"
         android:src="@drawable/ic_audio_recording"
         android:layout_gravity="center_horizontal"
 
