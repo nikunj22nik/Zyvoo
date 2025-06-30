@@ -1277,7 +1277,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 propertyData?.tax_amount?.toDoubleOrNull()?.let { resp ->
                     hourlyTotal?.let { amount ->
                         hour?.let { hr ->
-                            val taxAmount = (amount + (hr.toInt() * resp)) //calculatePercentage(it,resp)
+                            val taxAmount = (amount + (hr.toInt() * resp))
                             binding.tvTaxesPrice.text =
                                 "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
                             totalPrice += taxAmount
