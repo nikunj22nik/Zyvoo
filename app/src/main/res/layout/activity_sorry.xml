@@ -18,15 +18,29 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sorry_we"
-        android:textSize="@dimen/_15sdp"
-        android:layout_gravity="center_horizontal"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_marginTop="@dimen/_30sdp"
-        android:textStyle="bold"
-        android:textAlignment="center" />
+        android:layout_height="wrap_content">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:background="#E5E5E5" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sorry_we"
+            android:textSize="@dimen/_15sdp"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/poppins"
+            android:textFontWeight="500"
+            android:layout_marginTop="-5dp"
+            android:textColor="#000000"
+            android:textAlignment="center" />
+    </RelativeLayout>
+
 
     <ImageView
         android:layout_width="wrap_content"

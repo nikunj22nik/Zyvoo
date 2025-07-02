@@ -133,6 +133,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         adapterActivity2 = ActivitiesAdapter(this, activityList.subList(4, activityList.size))
         amenitiesAdapter = AmenitiesAdapter(this, mutableListOf())
         languageAdapter = AmenitiesAdapter(this, mutableListOf())
+        languageAdapter.changeDefaultCount(4)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -405,7 +406,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                         }
                     }
                 }
-                languageAdapter.updateAdapter(languageList.subList(0, 6))
+                languageAdapter.updateAdapter(languageList.subList(0, 4))
             }
         }
     }
@@ -904,7 +905,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         }
 
         // Update language adapter and capture selected languages
-        languageAdapter.updateAdapter(languageList.subList(0, 6))
+        languageAdapter.updateAdapter(languageList.subList(0, 4))
 
         languageAdapter.setOnItemClickListener(object : AmenitiesAdapter.onItemClickListener {
             override fun onItemClick(list: MutableList<Pair<String, Boolean>>) {
@@ -1289,7 +1290,11 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.underlinedTextView.setOnClickListener {
             languageAdapter.updateAdapter(languageList)
 
-            showingLessText()
+           // showingLessText()
+            isExpanded = !isExpanded
+            languageAdapter.toggleExpand()
+            // Update button text
+            binding.underlinedTextView.text = if (isExpanded) "Show Less" else "Show More"
         }
     }
 
@@ -1302,7 +1307,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.underlinedTextView.paint.flags = Paint.UNDERLINE_TEXT_FLAG
         binding.underlinedTextView.paint.isAntiAlias = true
         binding.underlinedTextView.setOnClickListener {
-            languageAdapter.updateAdapter(languageList.subList(0, 6))
+            languageAdapter.updateAdapter(languageList.subList(0, 4))
             showingMoreText()
         }
     }
@@ -1556,10 +1561,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-
         popupWindow.isOutsideTouchable = true
         popupWindow.isFocusable = true
-        popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
+        popupWindow.showAsDropDown(anchorView, 10, 0)
     }
 
     override fun onItemClick(list: MutableList<Pair<String, Boolean>>) {

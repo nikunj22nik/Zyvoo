@@ -391,6 +391,8 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.calendarLayout.visibility = View.VISIBLE
             binding.layoutFlexible.visibility = View.GONE
             binding.cv1.visibility = View.GONE
+            binding.rlPrice.visibility = View.GONE
+            binding.rlActivity.visibility = View.VISIBLE
 
 
         }
@@ -403,6 +405,8 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.calendarLayout.visibility = View.GONE
             binding.layoutFlexible.visibility = View.GONE
             binding.cv1.visibility = View.VISIBLE
+            binding.rlPrice.visibility = View.VISIBLE
+            binding.rlActivity.visibility = View.GONE
         }
         binding.tvFlexible.setOnClickListener {
 
@@ -413,6 +417,8 @@ class WhereTimeActivity : AppCompatActivity() {
             binding.calendarLayout.visibility = View.GONE
             binding.layoutFlexible.visibility = View.VISIBLE
             binding.cv1.visibility = View.GONE
+            binding.rlPrice.visibility = View.GONE
+            binding.rlActivity.visibility = View.VISIBLE
 
         }
         binding.rlActivity.setOnClickListener {
@@ -553,7 +559,7 @@ class WhereTimeActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        params.setMargins(10, 10, 10, 10)
+        params.setMargins(3, 3, 3, 3)
         val monthView = layoutInflater.inflate(R.layout.calendar_month, parentLayout, false)
 
         val monthTitle = monthView.findViewById<TextView>(R.id.month_title)

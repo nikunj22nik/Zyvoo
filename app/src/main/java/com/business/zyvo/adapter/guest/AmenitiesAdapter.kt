@@ -15,7 +15,7 @@ import com.business.zyvo.databinding.AdapterAmentiesBinding
 class AmenitiesAdapter(var context: Context, var list: MutableList<Pair<String, Boolean>>) : RecyclerView.Adapter<AmenitiesAdapter.ViewHolder>() {
     private lateinit var mListener: onItemClickListener
     private var isExpanded = false
-    private val DEFAULT_VISIBLE_COUNT = 6  // Number of items visible by default
+    private var DEFAULT_VISIBLE_COUNT = 6  // Number of items visible by default
 
     interface onItemClickListener {
         fun onItemClick(list: MutableList<Pair<String, Boolean>>)
@@ -88,6 +88,11 @@ class AmenitiesAdapter(var context: Context, var list: MutableList<Pair<String, 
     // Function to toggle list expansion
     fun toggleExpand() {
         isExpanded = !isExpanded
+        notifyDataSetChanged()
+    }
+
+    fun changeDefaultCount( value:Int) {
+        DEFAULT_VISIBLE_COUNT = value
         notifyDataSetChanged()
     }
 

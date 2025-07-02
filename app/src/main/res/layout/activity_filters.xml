@@ -1478,7 +1478,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.8"
                         android:drawableEnd="@drawable/ic_eye_icon"
-                        android:drawablePadding="@dimen/_4ssp"
+                        android:drawablePadding="@dimen/_4sdp"
                         android:fontFamily="@font/poppins"
                         android:text="Allows Pets"
                         android:textColor="@color/black"
