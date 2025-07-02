@@ -3,12 +3,9 @@
     android:layout_width="@dimen/_35sdp"
     android:layout_height="@dimen/_30sdp"
     android:layout_weight="1"
-    android:textStyle="bold"
     android:gravity="center"
-
-
     android:layout_margin="@dimen/_3sdp"
-
     android:textColor="#000"
     android:textSize="@dimen/_10ssp"
     />
+<!--    android:textStyle="bold"-->

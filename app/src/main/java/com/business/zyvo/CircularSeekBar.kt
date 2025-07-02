@@ -61,7 +61,8 @@ class CircularSeekBar @JvmOverloads constructor(
     }
 
     private val paintDot = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.parseColor("#4AEAB1")
+        //#4AEAB1
+        color = Color.parseColor("#D9D9D9")
         strokeWidth = 5f
         style = Paint.Style.FILL
     }

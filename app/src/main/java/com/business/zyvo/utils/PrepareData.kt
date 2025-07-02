@@ -562,30 +562,34 @@ object PrepareData {
 
     fun getLanguagePairs(): MutableList<Pair<String, Boolean>> {
         val languageList = listOf(
-            "Pashto, Dari",            // Afghanistan
-            "Albanian",                // Albania
-            "Arabic", "Berber",        // Algeria
+            "English",            // Afghanistan
+            "French",                // Albania
+            "German",
+            "Japanese",        // Algeria
             "Catalan",                 // Andorra
             "Portuguese",              // Angola
             "Spanish",                 // Argentina
             "Armenian",                // Armenia
-            "English",                 // Australia
+            "Pashto, Dari",                 // Australia
             "German",                  // Austria
             "Azerbaijani",             // Azerbaijan
             "Bengali",                 // Bangladesh
-            "Dutch", "French", "German",   // Belgium
+            "Dutch",
+            "French",
+            "Arabic",               // Belgium
             "Portuguese",              // Brazil
-            "French",                  // Canada
+            "Albanian",                  // Canada
             "Mandarin",                // China
             "Spanish",                 // Colombia
             "Danish",                  // Denmark
             "Arabic",                  // Egypt
-            "Finnish", "Swedish",      // Finland
-            "French",                  // France
+            "Finnish",
+            "Swedish",      // Finland
             "German",                  // Germany
-            "Hindi", "English",        // India
+            "Hindi",
+            "English",        // India
             "Italian",                 // Italy
-            "Japanese",                // Japan
+            "Berber",                // Japan
             "Spanish",                 // Mexico
             "Dutch",                   // Netherlands
             "Māori",                   // New Zealand
@@ -593,7 +597,6 @@ object PrepareData {
             "Russian",                 // Russia
             "Spanish",                 // South Africa
             "Spanish",                 // Spain
-            "Swedish",                 // Sweden
             "German",                  // Switzerland
             "English",                 // United States
             "Vietnamese"               // Vietnam
