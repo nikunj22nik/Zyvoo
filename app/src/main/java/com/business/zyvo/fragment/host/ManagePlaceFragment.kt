@@ -82,6 +82,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
@@ -666,7 +667,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             // Move the camera to the specified location
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
             // Add a marker at that location
-            mMap?.addMarker(MarkerOptions().position(location))
+            mMap?.addMarker(MarkerOptions().position(location).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon)))
         }
 
         val resultList = mutableListOf<Uri>()
@@ -908,11 +909,11 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         //  if(!value){
         // LoadingUtils.showErrorDialog(requireContext(),"The 'from' time ($fromHour) is NOT earlier than the 'to' time ($toHour).")
         // return false
-
-        if(!isTimeRangeGreaterThanMinimum(fromHour,toHour,minimumHourValue)){
-            showErrorDialog(requireContext(),"The selected time range is less than the minimum required duration.")
-            return false
-        }
+//vipin 02-07-2025
+//        if(!isTimeRangeGreaterThanMinimum(fromHour,toHour,minimumHourValue)){
+//            showErrorDialog(requireContext(),"The selected time range is less than the minimum required duration.")
+//            return false
+//        }
 
 
         return true
@@ -1226,10 +1227,15 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         val trimmed = str.trim()
         return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
     }
-    fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): Boolean {
-        val trimmed = str.trim()
-        return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
-    }
+//    fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): Boolean {
+//        val trimmed = str.trim()
+//        return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
+//    }
+fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): Boolean {
+    val trimmed = str.trim()
+    return trimmed.length in minLength..maxLength &&
+            trimmed.matches("^[\\p{L}\\p{N}\\s'\".,!?@#\\$%^&*()\\[\\]-]+$".toRegex())
+}
 
 
     private fun checkingGalleryValidation(): Boolean {
@@ -1256,7 +1262,8 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             return false
         }
         if (!isValidDescription(str = descriptionResult.toString())) {
-            Log.d("Testing_name_size","size"+descriptionResult.toString().length)
+            Log.d("Testing_discription_size","size"+descriptionResult.toString().length)
+            Log.d("Testing_discription_size",descriptionResult.toString())
             showErrorDialog(
                 requireContext(),
                 "Description should be between 3 and 150 characters long."

@@ -62,6 +62,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.imageview.ShapeableImageView
@@ -724,7 +725,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
             val newYork = LatLng(latitude, longitude)
             mMap?.clear()
-            mMap?.addMarker(MarkerOptions().position(newYork).title(data.property_title))
+            mMap?.addMarker(MarkerOptions().position(newYork).title(data.property_title)
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon)))
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
 
         }
@@ -1260,7 +1262,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
 
         mMap = p0
         val newYork = LatLng(40.7128, -74.0060)
-        mMap?.addMarker(MarkerOptions().position(newYork).title("Marker in New York"))
+        mMap?.addMarker(MarkerOptions().position(newYork).title("Marker in New York")
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon)))
         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
 
         //        val location =  LatLng(latitude, longitude)

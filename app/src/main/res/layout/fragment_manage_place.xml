@@ -1378,7 +1378,7 @@
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/map_view"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="@dimen/_200sdp"
                     android:layout_marginHorizontal="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_12sdp"
                     android:layout_marginBottom="@dimen/_10sdp"

@@ -153,6 +153,10 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
         clickListenerCalls()
         callingPriceRangeGraphSelection()
+
+        if (min.equals("") && max.equals("")) {
+        getPropertyPriceRange()
+        }
         setUpRecyclerView()
 
         appLocationManager = com.business.zyvo.locationManager.LocationManager(application, this)
@@ -1597,7 +1601,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                                 max = it.data.get("maximum_price")!!.asString.toDouble().toInt().toString()
                                 binding.tvMaximumValue.setText("$$max")
                             }
-                            setMinMax((10/10),(50/10))
+                           // setMinMax((10/10),(50/10))
 
 
                         }
