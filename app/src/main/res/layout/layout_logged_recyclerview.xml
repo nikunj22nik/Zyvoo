@@ -225,7 +225,7 @@
         android:id="@+id/textMiles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0 miles away"
+        android:text=""
         android:textColor="#A4A4A4"
         android:layout_marginTop="@dimen/_4sdp"
         android:textSize="@dimen/_12ssp"

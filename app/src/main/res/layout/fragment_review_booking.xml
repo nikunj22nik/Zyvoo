@@ -1531,7 +1531,7 @@
                 <com.google.android.gms.maps.MapView
                     android:id="@+id/map_view"
                     android:layout_width="match_parent"
-                    android:layout_height="400dp"
+                    android:layout_height="@dimen/_200sdp"
                     android:layout_marginHorizontal="@dimen/_10sdp" />
 
                 <View
@@ -1566,8 +1566,8 @@
                         android:gravity="start">
 
                         <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/_14sdp"
+                            android:layout_height="@dimen/_14sdp"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/ic_start_new" />
 

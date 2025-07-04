@@ -386,16 +386,16 @@
                             android:layout_height="wrap_content">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_13sdp"
+                                android:layout_height="@dimen/_13sdp"
                                 android:layout_marginTop="@dimen/_3sdp"
                                 android:src="@drawable/ic_start_new" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_5sdp"
                                 android:hint="5.0"
+                                android:textAlignment="textEnd"
                                 android:textColorHint="@color/black"
                                 android:id="@+id/tvRating"
                                 android:textSize="@dimen/_12sdp"
@@ -405,7 +405,8 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_4sdp"
+                                android:textAlignment="textStart"
+                                android:layout_marginStart="@dimen/_2sdp"
                                 android:hint="(1k+)"
                                 android:textColorHint="@color/black"
                                 android:id="@+id/tvTotalReview"
@@ -420,8 +421,8 @@
                             android:layout_marginTop="@dimen/_6sdp">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_16sdp"
+                                android:layout_height="@dimen/_16sdp"
                                 android:src="@drawable/ic_location_icon" />
 
                             <TextView
@@ -475,6 +476,7 @@
                         android:hint="$0"
                         android:id="@+id/tvPrice"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black" />
 
@@ -506,6 +508,7 @@
                         android:hint="$0"
                         android:id="@+id/tvCleaningFee"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"/>
 
@@ -536,6 +539,7 @@
                         android:hint="$0"
                         android:id="@+id/tvZyvoServiceFee"
                         android:fontFamily="@font/poppins"
+                        android:textSize="@dimen/_12sdp"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"/>" />
 
@@ -565,6 +569,7 @@
                         android:hint="$0"
                         android:text="$0"
                         android:id="@+id/tvTaxesPrice"
+                        android:textSize="@dimen/_12sdp"
                         android:fontFamily="@font/poppins"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"/>" />
@@ -624,6 +629,7 @@
                         android:hint="$0"
                         android:id="@+id/tvAddOnPrice"
                         android:textColorHint="@color/black"
+                        android:textSize="@dimen/_12sdp"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/black"/>
                      />
@@ -633,6 +639,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:background="#E5E5E5">
 
@@ -642,7 +649,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
                     android:layout_marginBottom="@dimen/_10sdp">
 
                     <TextView
@@ -661,6 +668,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvTotalPrice"
+                        android:textSize="@dimen/_12sdp"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/black"/>
 " />
@@ -1433,7 +1441,7 @@
                 android:textSize="@dimen/_13sdp"
                 />
 
-            <com.colormoon.readmoretextview.ReadMoreTextView
+            <com.business.zyvo.utils.ReadMoreTextView
                 android:id="@+id/tvReadMoreLess"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -1467,15 +1475,15 @@ has been the industry's standard dummy text ever the industry's standard dummy .
             <RelativeLayout
                 android:id="@+id/rl_parking"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_height="@dimen/_38sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/bg_four_side_grey_corner">
 
                 <ImageView
                     android:id="@+id/img_parking"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:src="@drawable/ic_parking" />
@@ -1520,15 +1528,15 @@ has been the industry's standard dummy text ever the industry's standard dummy .
             <RelativeLayout
                 android:id="@+id/rl_host_rules"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_height="@dimen/_38sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/bg_four_side_grey_corner">
 
                 <ImageView
                     android:id="@+id/img_host_rule"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:src="@drawable/ic_host_rule" />
@@ -1582,7 +1590,8 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:id="@+id/rl_confirm_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:background="@drawable/bg_green_add_card">
@@ -1595,6 +1604,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:text="Confirm &amp; Pay"
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins"
+                    android:textSize="@dimen/_12sdp"
                     android:textStyle="bold" />
 
             </RelativeLayout>

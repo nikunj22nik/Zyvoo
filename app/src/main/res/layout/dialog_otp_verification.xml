@@ -2,67 +2,65 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
 
-    android:layout_marginHorizontal="@dimen/_15sdp"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:paddingBottom="@dimen/_15sdp"
-    android:background="@drawable/dialog_bg">
+    android:layout_marginHorizontal="@dimen/_15sdp"
+    android:background="@drawable/dialog_bg"
+    android:paddingBottom="@dimen/_15sdp">
 
     <ImageView
         android:id="@+id/imageCross"
         android:layout_width="@dimen/_16sdp"
         android:layout_height="@dimen/_16sdp"
+        android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginEnd="@dimen/_10sdp"
-        android:src="@drawable/ic_cross"
-        android:layout_alignParentEnd="true" />
+        android:src="@drawable/ic_cross" />
 
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/imageCross"
+        android:layout_centerHorizontal="true"
         android:fontFamily="@font/poppins"
         android:text="OTP Verification"
-        android:layout_centerHorizontal="true"
         android:textColor="@color/black"
         android:textSize="@dimen/_13ssp"
-        android:textStyle="bold"
-        android:layout_below="@+id/imageCross" />
+        android:textStyle="bold" />
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
+        android:layout_below="@+id/textTitle"
+        android:layout_marginHorizontal="@dimen/_21sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:background="#C4C4C4"
-        android:layout_below="@+id/textTitle" />
+        android:background="#C4C4C4" />
 
 
     <TextView
         android:id="@+id/textEnterYourEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_30sdp"
-        android:fontFamily="@font/poppins"
+        android:layout_below="@+id/view"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:fontFamily="@font/poppins"
         android:text="Please type the verification code send \nto +1 999 999 9999"
         android:textAlignment="center"
         android:textColor="@color/black"
-
-        android:layout_below="@+id/view"/>
-
-
+        android:textSize="@dimen/_11sdp" />
 
 
     <LinearLayout
         android:id="@+id/OtpView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_below="@+id/textEnterYourEmail"
-        android:gravity="center"
         android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:orientation="horizontal"
         android:padding="16dp">
 
 
@@ -70,46 +68,46 @@
             android:id="@+id/otp_digit1"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
-            android:maxLength="1"
-            android:inputType="number"
             android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/otp_box"
             android:gravity="center"
-            android:textSize="22sp"
-            android:background="@drawable/otp_box"/>
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="22sp" />
 
         <EditText
             android:id="@+id/otp_digit2"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
-            android:maxLength="1"
-            android:inputType="number"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:gravity="center"
-            android:textSize="22sp"
             android:layout_marginHorizontal="@dimen/_4sdp"
-            android:background="@drawable/otp_box"/>
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/otp_box"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="22sp" />
 
         <EditText
             android:id="@+id/otp_digit3"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
-            android:maxLength="1"
-            android:inputType="number"
-            android:gravity="center"
-            android:textSize="22sp"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/otp_box"/>
+            android:background="@drawable/otp_box"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="22sp" />
 
         <EditText
             android:id="@+id/otp_digit4"
             android:layout_width="@dimen/_32sdp"
             android:layout_height="@dimen/_32sdp"
-            android:maxLength="1"
-            android:inputType="number"
-            android:gravity="center"
-            android:textSize="22sp"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/otp_box"/>
+            android:background="@drawable/otp_box"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:textSize="22sp" />
 
     </LinearLayout>
 
@@ -117,30 +115,28 @@
         android:id="@+id/textSubmitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/OtpView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginHorizontal="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_15sdp"
         android:background="@drawable/button_bg"
         android:fontFamily="@font/poppins"
-        android:layout_marginHorizontal="@dimen/_20sdp"
-        android:textAlignment="center"
         android:paddingVertical="@dimen/_9sdp"
         android:text="Submit"
-        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="@dimen/_11sdp"
-        android:textStyle="bold"
-        android:layout_below="@+id/OtpView"
-        />
+        android:textStyle="bold" />
 
 
     <RelativeLayout
         android:id="@+id/rlDidntReceive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-
         android:layout_below="@+id/textSubmitButton"
-        >
+
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/textDidntReceive"
@@ -178,10 +174,9 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_30sdp"
+        android:layout_below="@+id/rlDidntReceive"
         android:layout_centerHorizontal="true"
-
-        android:layout_below="@+id/rlDidntReceive">
+        android:layout_marginBottom="@dimen/_30sdp">
 
         <RelativeLayout
             android:id="@+id/rlResendLine"

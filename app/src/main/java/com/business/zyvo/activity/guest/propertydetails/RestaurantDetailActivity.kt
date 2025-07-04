@@ -34,11 +34,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -80,6 +78,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
@@ -88,7 +87,6 @@ import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kr.co.prnd.readmore.ReadMoreTextView
 import java.io.File
 import java.io.FileOutputStream
 import java.time.LocalDate
@@ -512,9 +510,14 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         propertyData?.latitude!!.toDouble(),
                         propertyData?.longitude!!.toDouble()
                     )
+//                    mMap?.addMarker(
+//                        MarkerOptions().position(newYork)
+//                            .title("Marker in ${propertyData?.address}")
+//                    )
                     mMap?.addMarker(
                         MarkerOptions().position(newYork)
                             .title("Marker in ${propertyData?.address}")
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon))
                     )
                     mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 12f))
                     // Apply custom style to the map

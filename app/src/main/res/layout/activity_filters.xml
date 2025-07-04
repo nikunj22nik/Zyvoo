@@ -64,11 +64,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Type of Place"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
+                 />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -145,11 +145,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Price range"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/_13sdp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -274,8 +273,8 @@
                     app:layout_constraintTop_toTopOf="parent">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_16sdp"
+                        android:layout_height="@dimen/_16sdp"
                         android:layout_gravity="center_vertical"
 
                         android:layout_marginStart="@dimen/_10sdp"
@@ -286,7 +285,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/_7sdp"
-
+android:fontFamily="@font/poppins"
                         android:background="@null"
                         android:hint="Location"
                         android:singleLine="true"
@@ -314,8 +313,8 @@
                     app:layout_constraintTop_toBottomOf="@id/ll_location">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_16sdp"
+                        android:layout_height="@dimen/_16sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:src="@drawable/ic_date_calendar" />
@@ -328,6 +327,7 @@
                         android:layout_marginStart="@dimen/_7sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:hint="Date"
+                        android:fontFamily="@font/poppins"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
@@ -435,8 +435,8 @@
                     app:layout_constraintTop_toBottomOf="@id/ll_date">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_16sdp"
+                        android:layout_height="@dimen/_16sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="@dimen/_6sdp"
                         android:src="@drawable/ic_timer" />
@@ -449,6 +449,7 @@
                         android:layout_marginStart="@dimen/_7sdp"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:hint="Time"
+                        android:fontFamily="@font/poppins"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"
                         android:textSize="@dimen/_13sdp" />
@@ -474,11 +475,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Availability"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -486,10 +487,10 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="No of People"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
-                android:textStyle="bold" />
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -597,6 +598,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/availEditText"
+
                         android:background="@null"
                         android:inputType="number"
                         android:hint="Type.."
@@ -625,10 +627,10 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Property Size (Sq ft)"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp"
-                android:textStyle="bold" />
+                 />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -753,6 +755,7 @@
                         android:background="@null"
                         android:inputType="number"
                         android:hint="Type.."
+
                         android:layout_marginStart="@dimen/_4sdp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
@@ -761,6 +764,7 @@
                         android:textSize="@dimen/_11sdp"
                         android:textColorHint="@color/colorChartSelected"
                         android:textColor="@color/colorChartSelected" />
+
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -941,10 +945,9 @@
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bedrooms"
                 android:id="@+id/tvbadroom"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/_12sdp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1109,10 +1112,9 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bathrooms"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/_12sdp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1281,11 +1283,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_14sdp"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Activities"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
+                />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_activity"
@@ -1305,8 +1307,7 @@
                     android:layout_marginStart="@dimen/_13sdp"
                     android:layout_marginTop="@dimen/_13sdp"
                     android:text="Other Activities"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp" />
 
@@ -1338,8 +1339,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:text="Amenities"
-                android:fontFamily="@font/poppins"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15sdp" />
 
@@ -1374,11 +1374,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_13sdp"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Booking"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
-                android:textStyle="bold" />
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -1386,8 +1386,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="Instant Book"
-               android:textStyle="bold"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
                  />
@@ -1426,9 +1425,8 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="Self check-in"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:textSize="@dimen/_14sdp"
                  />
 
@@ -1478,12 +1476,11 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0.8"
                         android:drawableEnd="@drawable/ic_eye_icon"
-                        android:drawablePadding="@dimen/_4sdp"
-                        android:fontFamily="@font/poppins"
+                        android:drawablePadding="@dimen/_4ssp"
+                        android:fontFamily="@font/poppins_medium"
                         android:text="Allows Pets"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/_13sdp" />
                 </RelativeLayout>
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -1507,11 +1504,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Language"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
+                android:textSize="@dimen/_13sdp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_language"
@@ -1527,6 +1523,7 @@
                 android:layout_marginTop="@dimen/_6sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:paddingBottom="4dp"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Show More"
                 android:textColor="@android:color/black"
                 android:textSize="15sp" />

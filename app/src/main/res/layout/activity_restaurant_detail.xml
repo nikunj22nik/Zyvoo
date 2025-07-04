@@ -108,6 +108,7 @@
                     android:layout_marginTop="@dimen/_7sdp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:id="@+id/proreviewCount"
+                    android:textSize="@dimen/_12sdp"
                     android:hint="(30 reviews)"
                     android:layout_toEndOf="@+id/proRating"/>
 </RelativeLayout>
@@ -135,8 +136,8 @@
                     android:orientation="horizontal"
                     android:layout_centerVertical="true">
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_14sdp"
+                        android:layout_height="@dimen/_14sdp"
                         android:scaleType="fitXY"
                         android:src="@drawable/ic_clock_dot_new" />
 
@@ -147,6 +148,7 @@
                         android:layout_marginStart="@dimen/_4sdp"
                         android:fontFamily="@font/poppins"
                         android:hint="2 hr"
+                        android:textSize="@dimen/_11sdp"
                         android:textAlignment="textStart"
                         android:id="@+id/proBookingMin"
                         android:textColorHint="@color/black"
@@ -166,8 +168,8 @@
 
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/_14sdp"
+                    android:layout_height="@dimen/_14sdp"
                     android:layout_marginStart="@dimen/_4sdp"
                     android:layout_marginEnd="@dimen/_4sdp"
                     android:src="@drawable/ic_sqrt_feet_small" />
@@ -177,6 +179,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins"
                     android:hint="323 sqft"
+                    android:textSize="@dimen/_11sdp"
                     android:id="@+id/proSqr"
                     android:textColorHint="@color/black"
                     android:textColor="@color/black" />
@@ -192,8 +195,8 @@
 
                     <ImageView
                         android:id="@+id/imageShare"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_14sdp"
+                        android:layout_height="@dimen/_14sdp"
                         android:layout_marginStart="@dimen/_11sdp"
                         android:layout_marginEnd="@dimen/_4sdp"
                         android:src="@drawable/ic_share_icon" />
@@ -204,6 +207,7 @@
                         android:layout_marginEnd="@dimen/_6sdp"
                         android:fontFamily="@font/poppins"
                         android:text="Share"
+                        android:textSize="@dimen/_11sdp"
                         android:textColor="@color/black" />
                 </LinearLayout>
 
@@ -217,8 +221,8 @@
                     >
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_14sdp"
+                        android:layout_height="@dimen/_14sdp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="@dimen/_4sdp"
                         android:id="@+id/proNoWishLists"
@@ -239,6 +243,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:text="Wishlist"
+                        android:textSize="@dimen/_11sdp"
                         android:textColor="@color/black" />
                 </LinearLayout>
                 </RelativeLayout>
@@ -1150,7 +1155,8 @@
             <RelativeLayout
                 android:id="@+id/rl_parking"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_7sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@drawable/bg_four_side_grey_corner">
@@ -1160,7 +1166,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:src="@drawable/ic_parking" />
 
@@ -1172,6 +1178,7 @@
                     android:layout_toRightOf="@id/img_parking"
                     android:fontFamily="@font/poppins"
                     android:text="Parking"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp" />
 
                 <ImageView
@@ -1202,16 +1209,17 @@
             <RelativeLayout
                 android:id="@+id/rl_host_rule"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_40sdp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/_7sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/bg_four_side_grey_corner">
 
                 <ImageView
                     android:id="@+id/img_host_rule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:src="@drawable/ic_host_rule" />
@@ -1224,6 +1232,7 @@
                     android:layout_toRightOf="@id/img_host_rule"
                     android:fontFamily="@font/poppins"
                     android:text="Host rules"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/_13sdp" />
 
                 <ImageView
@@ -1275,6 +1284,7 @@
                 android:layout_marginStart="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_12sdp"
                 android:text="Host provided services, items or options. \nAvailable at checkout. "
                 android:textColor="@color/black" />
 
@@ -1310,7 +1320,7 @@
                 android:text="Address &amp; Location"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14sdp"
-                android:textStyle="bold" />
+                 />
 
             <TextView
                 android:id="@+id/tv_location_name"
@@ -1319,13 +1329,14 @@
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_12sdp"
                 android:text="Midtown Manhattan, New York, NY"
                 android:textColor="@color/black" />
 
             <com.business.zyvo.utils.TouchableWrapper
                 android:id="@+id/map_touch_wrapper"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="@dimen/_200sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp">
 
                 <com.google.android.gms.maps.MapView
@@ -1366,8 +1377,8 @@
                     android:gravity="start">
 
                     <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="@dimen/_14sdp"
+                        android:layout_height="@dimen/_14sdp"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_start_new" />
 

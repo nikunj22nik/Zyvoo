@@ -326,6 +326,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             R.id.rl_show_map ->{
                 if(binding.recyclerViewBooking.visibility == View.VISIBLE){
                     binding.tvMapContent.setText("Show List")
+                    binding.imgMap.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.map_setting_icon))
                     binding.rlMapView.visibility = View.VISIBLE
                     binding.recyclerViewBooking.visibility = View.GONE
                     binding.clSearch.visibility = View.GONE
@@ -369,6 +370,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 else{
                     binding.clSearch.visibility = View.VISIBLE
                     binding.tvMapContent.setText("Show Map")
+                    binding.imgMap.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_location_map_home))
                     binding.rlMapView.visibility = View.GONE
                     binding.recyclerViewBooking.visibility = View.VISIBLE
                     try {

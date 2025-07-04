@@ -93,9 +93,11 @@ android:maxWidth="@dimen/_150sdp"
 
             <ImageView
                 android:id="@+id/imageInfoIcon"
-                android:layout_width="@dimen/_10sdp"
-                android:layout_height="@dimen/_10sdp"
+                android:layout_width="@dimen/_14sdp"
+                android:layout_height="@dimen/_14sdp"
                 android:layout_marginStart="@dimen/_4sdp"
+                android:padding="@dimen/_2sdp"
+                android:layout_marginTop="-4dp"
                 android:src="@drawable/ic_info_icon"
                 app:layout_constraintStart_toEndOf="@id/textHost"
                 app:layout_constraintTop_toBottomOf="@id/textName" />
@@ -414,7 +416,7 @@ android:maxWidth="@dimen/_150sdp"
             android:layout_height="@dimen/_1sdp"
             android:layout_marginHorizontal="@dimen/_23sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="#C4C4C4"
+            android:background="#E5E5E5"
             app:layout_constraintTop_toBottomOf="@+id/recyclerViewLocation" />
 
 
@@ -467,7 +469,7 @@ android:maxWidth="@dimen/_150sdp"
             android:layout_height="@dimen/_1sdp"
             android:layout_marginHorizontal="@dimen/_23sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="#C4C4C4"
+            android:background="#E5E5E5"
             app:layout_constraintTop_toBottomOf="@+id/recyclerViewWork" />
 
 
@@ -505,7 +507,7 @@ android:maxWidth="@dimen/_150sdp"
             android:layout_height="@dimen/_1sdp"
             android:layout_marginHorizontal="@dimen/_23sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="#C4C4C4"
+            android:background="#E5E5E5"
             app:layout_constraintTop_toBottomOf="@+id/recyclerViewlanguages" />
 
 
@@ -543,7 +545,7 @@ android:maxWidth="@dimen/_150sdp"
             android:layout_height="@dimen/_1sdp"
             android:layout_marginHorizontal="@dimen/_23sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="#C4C4C4"
+            android:background="#E5E5E5"
             app:layout_constraintTop_toBottomOf="@+id/recyclerViewHobbies" />
 
 
@@ -581,7 +583,7 @@ android:maxWidth="@dimen/_150sdp"
             android:layout_height="@dimen/_1sdp"
             android:layout_marginHorizontal="@dimen/_23sdp"
             android:layout_marginTop="@dimen/_5sdp"
-            android:background="#C4C4C4"
+            android:background="#E5E5E5"
             app:layout_constraintTop_toBottomOf="@+id/recyclerViewPets" />
 
 
@@ -595,6 +597,7 @@ android:maxWidth="@dimen/_150sdp"
             android:paddingHorizontal="@dimen/_10sdp"
             android:paddingVertical="@dimen/_5sdp"
             android:text="Save Profile"
+            android:textSize="@dimen/_12sdp"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -609,6 +612,7 @@ android:maxWidth="@dimen/_150sdp"
             android:layout_marginStart="@dimen/_20sdp"
             android:fontFamily="@font/poppins"
             android:text="Skip for now"
+            android:textSize="@dimen/_12sdp"
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
