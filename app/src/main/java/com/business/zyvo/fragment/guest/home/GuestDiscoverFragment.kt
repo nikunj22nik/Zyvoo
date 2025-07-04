@@ -1214,7 +1214,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 override fun run() {
                     val elapsedTimeMinutes = ((System.currentTimeMillis() - startTime) / 60000.0) // Convert to minutes
                     val remainingNow = (totalDuration - elapsedTimeMinutes).coerceAtLeast(0.0)
-
+                  //  session?.setNeedMore(false)
                     if (remainingNow > 0) {
                         binding.customProgressBar.setProgress(elapsedTimeMinutes) // Update progress
                         handler.postDelayed(this, 1000*60) // Update every minute
