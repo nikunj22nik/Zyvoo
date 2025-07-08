@@ -79,9 +79,9 @@
         android:layout_height="wrap_content"
         android:text="Explore Articles"
         android:textColor="@color/black"
-        android:textSize="@dimen/_14ssp"
+        android:textSize="@dimen/_13ssp"
         android:fontFamily="@font/poppins"
-        android:textStyle="bold"
+
         app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -151,14 +151,14 @@
         android:text="Contact Us"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins"
-        android:paddingHorizontal="@dimen/_25sdp"
-        android:paddingVertical="@dimen/_10sdp"
+        android:paddingHorizontal="@dimen/_7sdp"
+        android:paddingVertical="@dimen/_6sdp"
         android:background="@drawable/button_bg"
         android:backgroundTint="#4AEAB1"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="@dimen/_85sdp" />
+        android:layout_marginBottom="@dimen/_75sdp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

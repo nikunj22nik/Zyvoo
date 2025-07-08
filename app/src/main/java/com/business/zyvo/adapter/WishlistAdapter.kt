@@ -57,18 +57,18 @@ class WishlistAdapter(var context: Context, private val isSmall: Boolean,
             }
 
           //   Adjust size based on isSmall flag using dimensions from dimens.xml
-            val resources = itemView.context.resources
-            val (imageWidth, imageHeight, _) = if (isSmall) {
-                Triple(resources.getDimensionPixelSize(R.dimen.imageWishListWidthSmall), resources.getDimensionPixelSize(R.dimen.imageWishListHeightSmall), resources.getDimension(R.dimen.text_small_size))
-            } else {
-                Triple(resources.getDimensionPixelSize(R.dimen.imageWishListWidthLarge), resources.getDimensionPixelSize(R.dimen.imageWishListHeightLarge), resources.getDimension(R.dimen.text_large_size))
-            }
+//            val resources = itemView.context.resources
+//            val (imageWidth, imageHeight, _) = if (isSmall) {
+//                Triple(resources.getDimensionPixelSize(R.dimen.imageWishListWidthSmall), resources.getDimensionPixelSize(R.dimen.imageWishListHeightSmall), resources.getDimension(R.dimen.text_small_size))
+//            } else {
+//                Triple(resources.getDimensionPixelSize(R.dimen.imageWishListWidthLarge), resources.getDimensionPixelSize(R.dimen.imageWishListHeightLarge), resources.getDimension(R.dimen.text_large_size))
+//            }
 
             // Apply dimensions to ImageView
-            binding.imageWishList.layoutParams.apply {
-                width = imageWidth
-                height = imageHeight
-            }
+//            binding.imageWishList.layoutParams.apply {
+//                width = imageWidth
+//                height = imageHeight
+//            }
             binding.imageWishList.requestLayout()
 
             if (edit) {

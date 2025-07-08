@@ -69,7 +69,7 @@
 
                     <RadioButton
                         android:id="@+id/radioGuest"
-                        android:layout_width="@dimen/_85sdp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:background="@drawable/toggle_selector"
@@ -83,7 +83,7 @@
 
                     <RadioButton
                         android:id="@+id/radioHost"
-                        android:layout_width="@dimen/_85sdp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:background="@drawable/toggle_selector"
@@ -223,6 +223,7 @@
                 android:paddingHorizontal="@dimen/_10ssp"
                 android:paddingVertical="@dimen/_5sdp"
                 android:text="Contact Us"
+                android:textSize="@dimen/_12sdp"
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

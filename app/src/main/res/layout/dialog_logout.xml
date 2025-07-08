@@ -26,7 +26,7 @@
         android:fontFamily="@font/poppins"
         android:text="Logout"
         android:textColor="@color/black"
-        android:textSize="@dimen/_13ssp"
+            android:textSize="@dimen/_13ssp"
         android:textStyle="bold" />
 
     <View
@@ -58,6 +58,7 @@
         android:textAlignment="center"
         android:fontFamily="@font/poppins"
         android:textColor="#636363"
+        android:textSize="@dimen/_13ssp"
         android:layout_marginHorizontal="@dimen/_30sdp"/>
 
 
@@ -72,7 +73,8 @@
         android:id="@+id/rlYes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_25sdp"
+        android:layout_marginStart="@dimen/_25sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_20sdp"
         android:background="@drawable/bg_two_side_corner_green"
@@ -98,7 +100,7 @@
 
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_20sdp"
-
+android:layout_marginEnd="@dimen/_20sdp"
 
         android:background="@drawable/bg_two_side_corner_green_layout"
         android:paddingHorizontal="@dimen/_25sdp"

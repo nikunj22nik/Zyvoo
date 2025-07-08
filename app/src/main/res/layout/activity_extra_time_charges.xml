@@ -409,38 +409,81 @@ android:textColor="@color/black"
                             android:textSize="@dimen/_13sdp"
                             android:textStyle="bold" />
 
-                        <LinearLayout
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content">-->
+
+<!--                            <ImageView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginTop="@dimen/_3sdp"-->
+<!--                                android:src="@drawable/ic_start_new" />-->
+
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginStart="@dimen/_2sdp"-->
+<!--                                android:hint="5.0"-->
+<!--                                android:textAlignment="textEnd"-->
+<!--                                android:textColorHint="@color/black"-->
+<!--                                android:id="@+id/tvRating"-->
+<!--                                android:textSize="@dimen/_12sdp"-->
+<!--                                android:fontFamily="@font/poppins"-->
+<!--                                android:textColor="#FCA800"/>-->
+
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:textAlignment="textStart"-->
+<!--                                android:layout_marginStart="@dimen/_2sdp"-->
+<!--                                android:hint="(1k+)"-->
+<!--                                android:textColorHint="@color/black"-->
+<!--                                android:id="@+id/tvTotalReview"-->
+<!--                                android:textSize="@dimen/_12sdp"-->
+<!--                                android:fontFamily="@font/poppins"-->
+<!--                                android:textColor="#A4A4A4"  />-->
+<!--                        </LinearLayout>-->
+
+                        <RelativeLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_3sdp"
+                            android:orientation="horizontal">
 
+                            <!-- Star Rating Icon -->
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/_3sdp"
-                                android:src="@drawable/ic_start_new" />
+                                android:id="@+id/imageStar"
+                                android:layout_width="@dimen/_13sdp"
+                                android:layout_height="@dimen/_13sdp"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginTop="@dimen/_2sdp"
+                                android:src="@drawable/ic_start_new"
+                                app:tint="#FFBB00" />
 
                             <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_5sdp"
-                                android:hint="5.0"
                                 android:id="@+id/tvRating"
-                                android:fontFamily="@font/poppins"
-                                android:textSize="@dimen/_12sdp"
-                                android:textColorHint="@color/fca800"
-                                android:textColor="@color/fca800" />
-
-                            <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_4sdp"
-                                android:hint="(1k+)"
-                                android:fontFamily="@font/poppins"
-                                android:textSize="@dimen/_12sdp"
+                                android:layout_toEndOf="@+id/imageStar"
+                                android:fontFamily="@font/inter"
+                                android:text="5.0"
+                                android:textColor="#FFBB00"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <TextView
                                 android:id="@+id/tvTotalReview"
-                                android:textColorHint="@color/a4a4a4"
-                                android:textColor="@color/a4a4a4" />
-                        </LinearLayout>
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toEndOf="@+id/tvRating"
+                                android:fontFamily="@font/poppins"
+                                android:text=" (0)"
+                                android:textColor="#666"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <!-- Distance -->
+
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -448,8 +491,8 @@ android:textColor="@color/black"
                             android:layout_marginTop="@dimen/_6sdp">
 
                             <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_16sdp"
+                                android:layout_height="@dimen/_16sdp"
                                 android:src="@drawable/ic_location_icon" />
 
                             <TextView

@@ -752,7 +752,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         popupWindow.isOutsideTouchable = true
         popupWindow.isFocusable = true
-        popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
+        // Set X and Y offset
+        val xOffset = anchorView.width - 30   // Add 20dp extra to move right (gap from left)
+        val yOffset = 10                      // Already given
+
+        // Show the popup with left side gap
+        popupWindow.showAsDropDown(anchorView, xOffset, yOffset)
     }
 
 
