@@ -517,6 +517,7 @@ class SimpleRangeView @JvmOverloads constructor(
         h: Float,
         paint: Paint
     ) {
+
         canvas.drawRect(x, y, x + w, y + h, paint)
     }
 

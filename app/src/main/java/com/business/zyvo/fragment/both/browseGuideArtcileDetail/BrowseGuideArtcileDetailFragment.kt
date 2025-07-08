@@ -1,5 +1,6 @@
 package com.business.zyvo.fragment.both.browseGuideArtcileDetail
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -61,6 +62,9 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
 
         binding.tvContactUs.setOnClickListener {
             findNavController().navigate(R.id.contact_us)
+        }
+        binding.imgShareIcon.setOnClickListener {
+            shareApp()
         }
 
         return binding.root
@@ -219,6 +223,19 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
 
 
         }
+    }
+
+    fun shareApp() {
+        val appPackageName = "com.business.zyvo"
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(
+                Intent.EXTRA_TEXT,
+                "Buy this best app at: https://play.google.com/store/apps/details?id=$appPackageName"
+            )
+            type = "text/plain"
+        }
+        startActivity(sendIntent)
     }
 
     override fun onDestroyView() {

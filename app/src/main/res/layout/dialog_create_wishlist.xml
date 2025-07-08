@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_marginHorizontal="@dimen/_5sdp"
+    android:layout_marginHorizontal="@dimen/_10sdp"
     android:background="@drawable/dialog_bg">
 
 
@@ -58,7 +58,7 @@
         android:id="@+id/etName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginHorizontal="@dimen/_17sdp"
         android:layout_marginTop="@dimen/_18sdp"
         android:background="@drawable/bg_rounded_full_corner_grey"
         android:paddingHorizontal="@dimen/_13sdp"
@@ -75,8 +75,8 @@
     <EditText
         android:id="@+id/etDescription"
         android:layout_width="0dp"
-        android:layout_height="@dimen/_85sdp"
-        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_height="@dimen/_75sdp"
+        android:layout_marginHorizontal="@dimen/_17sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:background="@drawable/button_grey_line_bg"
         android:gravity="start"
@@ -96,7 +96,7 @@
         android:id="@+id/textMaxCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_15sdp"
+        android:layout_marginHorizontal="@dimen/_17sdp"
         android:layout_marginTop="@dimen/_5sdp"
         android:fontFamily="@font/poppins"
         android:text="Max 50 characters"
@@ -105,44 +105,90 @@
         app:layout_constraintTop_toBottomOf="@+id/etDescription" />
 
 
-    <TextView
-        android:id="@+id/textCreate"
-        android:layout_width="wrap_content"
+<!--    <TextView-->
+<!--        android:id="@+id/textCreate"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="@dimen/_25sdp"-->
+<!--        android:layout_marginTop="@dimen/_15sdp"-->
+<!--        android:layout_marginBottom="@dimen/_30sdp"-->
+<!--        android:background="@drawable/bg_green_add_card"-->
+<!--        android:fontFamily="@font/lato"-->
+<!--        android:paddingHorizontal="@dimen/_30sdp"-->
+<!--        android:paddingVertical="@dimen/_13sdp"-->
+<!--        android:text="Create"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="@dimen/_15ssp"-->
+<!--        android:textStyle="normal"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textMaxCount" />-->
+
+
+<!--    <TextView-->
+<!--        android:id="@+id/textClear"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginEnd="@dimen/_25sdp"-->
+<!--        android:layout_marginTop="@dimen/_15sdp"-->
+<!--        android:layout_marginBottom="@dimen/_30sdp"-->
+<!--        android:background="@drawable/green_stroke_white_bg"-->
+<!--        android:fontFamily="@font/lato"-->
+<!--        android:paddingHorizontal="@dimen/_30sdp"-->
+<!--        android:paddingVertical="@dimen/_13sdp"-->
+<!--        android:text="Clear"-->
+<!--        android:textColor="@color/black"-->
+<!--        android:textSize="@dimen/_15ssp"-->
+<!--        android:textStyle="normal"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textMaxCount" />-->
+    <LinearLayout
+        android:id="@+id/buttonContainer"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_15sdp"
         android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginBottom="@dimen/_30sdp"
-        android:background="@drawable/bg_green_add_card"
-        android:fontFamily="@font/lato"
-        android:paddingHorizontal="@dimen/_30sdp"
-        android:paddingVertical="@dimen/_13sdp"
-        android:text="Create"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_15ssp"
-        android:textStyle="normal"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginStart="@dimen/_25sdp"
+        android:layout_marginEnd="@dimen/_25sdp"
+        app:layout_constraintTop_toBottomOf="@+id/textMaxCount"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textMaxCount" />
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <TextView
+            android:id="@+id/textCreate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_green_add_card"
+            android:fontFamily="@font/lato"
+            android:paddingVertical="@dimen/_13sdp"
+            android:text="Create"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15ssp"
+            android:textStyle="normal"
+            android:layout_marginEnd="@dimen/_5sdp" />
 
-    <TextView
-        android:id="@+id/textClear"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_15sdp"
-        android:layout_marginTop="@dimen/_15sdp"
-        android:layout_marginBottom="@dimen/_30sdp"
-        android:background="@drawable/green_stroke_white_bg"
-        android:fontFamily="@font/lato"
-        android:paddingHorizontal="@dimen/_30sdp"
-        android:paddingVertical="@dimen/_13sdp"
-        android:text="Clear"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_15ssp"
-        android:textStyle="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textMaxCount" />
+        <TextView
+            android:id="@+id/textClear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/green_stroke_white_bg"
+            android:fontFamily="@font/lato"
+            android:paddingVertical="@dimen/_13sdp"
+            android:text="Clear"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_15ssp"
+            android:textStyle="normal"
+            android:layout_marginStart="@dimen/_5sdp" />
+    </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

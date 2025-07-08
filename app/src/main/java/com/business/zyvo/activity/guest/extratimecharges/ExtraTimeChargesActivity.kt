@@ -464,8 +464,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     }
                 }
                 propertyData?.min_booking_hours?.let {
-                    binding.tvResponseTime.text =
-                        "Respond within " + convertHoursToHrMin(it.toDouble())
+                   // binding.tvResponseTime.text = "Respond within " + convertHoursToHrMin(it.toDouble())
                 }
                 propertyData?.images?.let {
                     if (it.isNotEmpty()) {

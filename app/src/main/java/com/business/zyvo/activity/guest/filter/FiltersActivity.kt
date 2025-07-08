@@ -44,6 +44,8 @@ import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
+import com.business.zyvo.RoundedBarChartRenderer
+import com.business.zyvo.RoundedTopBarChartRenderer
 import com.business.zyvo.activity.guest.filter.viewmodel.FiltersViewModel
 import com.business.zyvo.activity.guest.propertydetails.model.Pagination
 import com.business.zyvo.activity.guest.propertydetails.model.PropertyData
@@ -61,6 +63,8 @@ import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
 import com.business.zyvo.utils.PrepareData.getNewHourMinimumList
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -152,6 +156,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         imm.showSoftInput(binding.llLocation, InputMethodManager.SHOW_IMPLICIT)
 
         clickListenerCalls()
+        setupBarChartWithRoundedTops()
         callingPriceRangeGraphSelection()
 
         if (min.equals("") && max.equals("")) {
@@ -1072,69 +1077,140 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.tvDateSelect.text = currentDate
     }
     @SuppressLint("SetTextI18n")
+//    private fun callingPriceRangeGraphSelection() {
+//        val barEntrys = ArrayList<BarEntry>()
+//        val seekBar = binding.seekBar
+//        val heights = arrayOf(
+//            3f,
+//            1f,
+//            2f,
+//            4f,
+//            4.5f,
+//            10f,
+//            8f,
+//            6f,
+//            5f,
+//            3f,
+//            9f,
+//            8f,
+//            7.5f,
+//            6f,
+//            4f,
+//            6.5f,
+//            5f,
+//            3f,
+//            4.5f,
+//            5.5f,
+//            3.5f,
+//            2.5f,
+//            1.5f,
+//            2f,
+//            3.5f,
+//            4f,
+//            7.5f,
+//            6.5f,
+//            6f,
+//            5f,
+//            2.5f,
+//            8.5f,
+//            8f,
+//            6.5f,
+//            6f,
+//            4f,
+//            6.5f,
+//            5f,
+//            3f,
+//            4.5f,
+//            5.5f,
+//            3.5f
+//        )
+//
+//        for (i in heights.indices) {
+//            barEntrys.add(BarEntry(i.toFloat(), heights[i]))
+//        }
+//        val roundedRenderer = RoundedBarChartRenderer(
+//            seekBar,
+//            seekBar.animator,
+//            seekBar.viewPortHandler
+//        )
+//        roundedRenderer.setRadius(12f) // Set corner radius (adjust as needed)
+//        seekBar.renderer = roundedRenderer
+//        seekBar.setEntries(barEntrys)
+//
+//        seekBar.onRangeChanged = { leftPinValue, rightPinValue ->
+//            val leftVal = (leftPinValue?.toInt()?.div(2))?.times(100)
+//            val rightVal = (rightPinValue?.toInt()?.div(2))?.times(100)
+//            binding.tvMinimumVal.setText("$" + leftVal.toString())
+//            min = leftVal.toString()
+//            binding.tvMaximumValue.setText("$" + rightVal.toString())
+//            max = rightVal.toString()
+//        }
+//    }
     private fun callingPriceRangeGraphSelection() {
-        val barEntrys = ArrayList<BarEntry>()
         val seekBar = binding.seekBar
+
+        // Create sample data (replace with your actual data)
+        val barEntries = ArrayList<BarEntry>()
         val heights = arrayOf(
-            5f,
-            3f,
-            4f,
-            7f,
-            8f,
-            15f,
-            13f,
-            12f,
-            10f,
-            5f,
-            17f,
-            16f,
-            13f,
-            12f,
-            8f,
-            13f,
-            10f,
-            6f,
-            9f,
-            11f,
-            7f,
-            5f,
-            3f,
-            4f,
-            7f,
-            8f,
-            15f,
-            13f,
-            12f,
-            10f,
-            5f,
-            17f,
-            16f,
-            13f,
-            12f,
-            8f,
-            13f,
-            10f,
-            6f,
-            9f,
-            11f,
-            7f
+            3f, 1f, 2f, 4f, 4.5f, 10f, 8f, 6f, 5f, 3f,
+            9f, 8f, 7.5f, 6f, 4f, 6.5f, 5f, 3f, 4.5f, 5.5f,
+            3.5f, 2.5f, 1.5f, 2f, 3.5f, 4f, 7.5f, 6.5f,
+            6f, 5f, 2.5f, 8.5f, 8f, 6.5f, 6f, 4f, 6.5f,
+            5f, 3f, 4.5f, 5.5f, 3.5f
         )
 
         for (i in heights.indices) {
-            barEntrys.add(BarEntry(i.toFloat(), heights[i]))
+            barEntries.add(BarEntry(i.toFloat(), heights[i]))
         }
-        seekBar.setEntries(barEntrys)
 
+        // Create and set the custom renderer with rounded tops
+//        val roundedRenderer = RoundedBarChartRenderer(
+//            seekBar,
+//            seekBar.animator,
+//            seekBar.viewPortHandler
+//        )
+//        roundedRenderer.setRadius(12f) // Set corner radius
+//        seekBar.renderer = roundedRenderer
+
+        // Set the data
+        seekBar.setEntries(barEntries)
+
+        // Handle range changes
         seekBar.onRangeChanged = { leftPinValue, rightPinValue ->
             val leftVal = (leftPinValue?.toInt()?.div(2))?.times(100)
             val rightVal = (rightPinValue?.toInt()?.div(2))?.times(100)
-            binding.tvMinimumVal.setText("$" + leftVal.toString())
+            binding.tvMinimumVal.setText("$$leftVal")
             min = leftVal.toString()
-            binding.tvMaximumValue.setText("$" + rightVal.toString())
+            binding.tvMaximumValue.setText("$$rightVal")
             max = rightVal.toString()
         }
     }
+    private fun setupBarChartWithRoundedTops() {
 
+        val barChart = binding.seekBar.chart
+
+        // 1. Set your data
+        val entries = listOf(
+            BarEntry(0f, 10f),
+            BarEntry(1f, 20f),
+            BarEntry(2f, 30f)
+        )
+        val dataSet = BarDataSet(entries, "Data")
+        barChart.data = BarData(dataSet)
+
+        // 2. Set custom renderer with rounded corners
+        val renderer = RoundedTopBarChartRenderer(
+            barChart,
+            barChart.animator,
+            barChart.viewPortHandler
+        ).apply {
+            setRadius(4f) // Set your desired corner radius
+        }
+        barChart.renderer = renderer
+
+        // 3. Refresh chart
+        barChart.invalidate()
+    }
 
     /*private fun callingPriceRangeGraphSelection() {
     val seekBar = binding.seekBar
@@ -1567,7 +1643,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         )
         popupWindow.isOutsideTouchable = true
         popupWindow.isFocusable = true
-        popupWindow.showAsDropDown(anchorView, 10, 0)
+        popupWindow.showAsDropDown(anchorView, 220, 0)
     }
 
     override fun onItemClick(list: MutableList<Pair<String, Boolean>>) {

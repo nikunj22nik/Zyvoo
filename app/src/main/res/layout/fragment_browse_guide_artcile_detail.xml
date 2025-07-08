@@ -198,7 +198,7 @@
         android:id="@+id/textDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+android:textSize="@dimen/_13sdp"
          android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_13sdp"
         android:textColor="@color/black"
@@ -258,48 +258,89 @@
                 android:text="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy"
                 android:textColor="@color/black" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_14sdp"
-                android:layout_marginStart="@dimen/_12sdp"
-                android:background="@drawable/bg_four_side_grey_corner"
-                android:paddingHorizontal="@dimen/_15sdp"
-                android:paddingVertical="@dimen/_7sdp"
-                >
-
-                <TextView
-                    android:id="@+id/tv_author"
-                    android:layout_width="wrap_content"
+                android:weightSum="2">
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Author:"
-                    android:textSize="@dimen/_10sdp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/poppins"
-                    />
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:paddingHorizontal="@dimen/_15sdp"
+                    android:paddingVertical="@dimen/_7sdp"
+                    >
 
-                <ImageView
-                    android:id="@+id/img_author"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/tv_author"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Author:"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins"
+                        />
+
+                    <ImageView
+                        android:id="@+id/img_author"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_username_icon"
+                        android:layout_below="@id/tv_author"
+                        android:layout_marginTop="@dimen/_7sdp"
+                        />
+
+                    <TextView
+                        android:id="@+id/textAuthorName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/img_author"
+
+                        android:layout_below="@id/tv_author"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:textColor="@color/black"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:fontFamily="@font/poppins"
+                        />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_username_icon"
-                    android:layout_below="@id/tv_author"
-                    android:layout_marginTop="@dimen/_7sdp"
-                    />
+                    android:layout_marginTop="@dimen/_14sdp"
+                    android:layout_marginHorizontal="@dimen/_12sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_four_side_grey_corner"
+                    android:paddingHorizontal="@dimen/_15sdp"
+                    android:paddingVertical="@dimen/_7sdp"
+                    >
 
-                <TextView
-                    android:id="@+id/textAuthorName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/img_author"
+                    <TextView
+                        android:id="@+id/tvShareThisArticle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Share This Article:"
+                        android:layout_centerHorizontal="true"
+                        android:textSize="@dimen/_10sdp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/poppins"
+                        />
 
-                    android:layout_below="@id/tv_author"
-                    android:layout_marginStart="@dimen/_8sdp"
-                    android:textColor="@color/black"
-                    android:layout_marginTop="@dimen/_8sdp"
-                    android:fontFamily="@font/poppins"
-                    />
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/imgShareIcon"
+                        android:layout_width="@dimen/_22sdp"
+                        android:layout_height="@dimen/_22sdp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_share_composite"
+                        android:layout_below="@id/tvShareThisArticle"
+                       android:background="@drawable/circular_green"
+                        android:layout_marginTop="@dimen/_7sdp"
+                        />
+                </RelativeLayout>
+            </LinearLayout>
+
 
             
             <View

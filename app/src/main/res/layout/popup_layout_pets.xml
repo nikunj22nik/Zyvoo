@@ -3,13 +3,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_four_side_grey_corner_white"
-    android:padding="@dimen/_14sdp">
+
+    android:padding="@dimen/_9sdp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="@dimen/_200sdp"
         android:text="Your safety and peace of mind are our top priorities. ZYVO is proud to provide comprehensive liability insurance coverage for all bookings"
         android:fontFamily="@font/poppins"
+        android:textSize="@dimen/_9sdp"
         android:textAlignment="inherit"
         />
 

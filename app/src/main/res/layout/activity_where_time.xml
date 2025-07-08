@@ -301,7 +301,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_centerInParent="true"
-                            app:cc_borderWidth="@dimen/_42sdp"
+                            app:cc_borderWidth="@dimen/_35sdp"
                             app:cc_endHour="2"
                             app:cc_endIconResource="@drawable/oval_white"
                             app:cc_fillColor="#4AEAB1"
@@ -313,8 +313,8 @@
                         </com.business.zyvo.CircularSeekBar>
 
                         <androidx.cardview.widget.CardView
-                            android:layout_width="@dimen/_110sdp"
-                            android:layout_height="@dimen/_110sdp"
+                            android:layout_width="@dimen/_130sdp"
+                            android:layout_height="@dimen/_130sdp"
                             android:layout_centerInParent="true"
                             android:backgroundTint="@color/white"
                             android:elevation="@dimen/_200sdp"

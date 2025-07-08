@@ -29,8 +29,6 @@
         android:layout_height="wrap_content"
         android:text="Preferred"
         android:textSize="@dimen/_13ssp"
-        android:textStyle="bold"
-        android:layout_marginEnd="@dimen/_10ssp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
         android:textAlignment="center"

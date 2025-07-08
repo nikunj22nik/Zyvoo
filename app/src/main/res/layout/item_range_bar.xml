@@ -7,13 +7,15 @@
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="0dp"
-        android:layout_height="110dp"
+        android:layout_height="@dimen/_65sdp"
         android:layout_marginStart="1dp"
         android:layout_marginEnd="1dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <com.business.zyvo.SimpleRangeView
         xmlns:app="http://schemas.android.com/apk/res-auto"

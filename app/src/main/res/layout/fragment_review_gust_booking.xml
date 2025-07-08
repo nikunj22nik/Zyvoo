@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         android:layout_marginBottom="@dimen/_65sdp"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <ScrollView
@@ -611,7 +611,7 @@
                                     android:id="@+id/textRatingStar"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="@dimen/_2sdp"
+                                    android:layout_marginStart="@dimen/_4sdp"
                                     android:layout_toEndOf="@+id/imageStar"
                                     android:fontFamily="@font/inter"
                                     android:text="5.0"

@@ -4,59 +4,61 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_weight="1"
+    android:layout_marginHorizontal="@dimen/_4sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-android:layout_marginStart="@dimen/_10sdp"
     android:layout_marginTop="@dimen/_10sdp">
 
-    <!--<RelativeLayout
-        android:layout_width="@dimen/_135sdp"
-        android:layout_height="@dimen/_140sdp"
-        android:layout_gravity="center">
 
-        <ImageView
-            android:id="@+id/imageCross"
-            android:layout_width="@dimen/_15sdp"
-            android:layout_height="@dimen/_15sdp"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="@dimen/_7sdp"
-            android:elevation="@dimen/_30sdp"
-            android:src="@drawable/ic_cross"
-            app:tint="@color/white"
-
-            />
-    </RelativeLayout>-->
-
-    <RelativeLayout
-        android:layout_width="@dimen/_135sdp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center">
         <ImageView
             android:id="@+id/imageCross"
             android:layout_width="@dimen/_15sdp"
             android:layout_height="@dimen/_15sdp"
-            android:layout_alignParentEnd="true"
+           app:layout_constraintTop_toTopOf="parent"
             android:layout_margin="@dimen/_7sdp"
             android:elevation="@dimen/_30sdp"
             android:src="@drawable/ic_cross"
+            app:layout_constraintEnd_toEndOf="parent"
             app:tint="@color/white"
 
             />
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageWishList"
-        android:layout_width="@dimen/imageWishListWidthLarge"
-        android:layout_height="@dimen/imageWishListHeightLarge"
-        android:scaleType="fitXY"
-     android:layout_gravity="center"
-        android:src="@drawable/ic_image_for_viewpager"
-        app:shapeAppearanceOverlay="@style/RoundedSquare"/>
-    
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:cardCornerRadius="@dimen/_10sdp"
+            app:cardElevation="2dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintDimensionRatio="1:1">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/imageWishList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_image_for_viewpager"
+               />
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
+
+
+
+
     <TextView
         android:id="@+id/textTitle"
         android:layout_width="@dimen/_110sdp"
         android:layout_height="wrap_content"
         android:text="Cabin in Peshastin"
-        android:layout_below="@+id/imageWishList"
+        app:layout_constraintTop_toBottomOf="@+id/cvImage"
         android:layout_gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
         android:fontFamily="@font/poppins"
         android:layout_marginStart="@dimen/_2sdp"
         android:textColor="@color/black"
@@ -66,6 +68,8 @@ android:layout_marginStart="@dimen/_10sdp"
             android:layout_width="@dimen/_110sdp"
             android:layout_height="wrap_content"
             android:text=""
+            app:layout_constraintTop_toBottomOf="@+id/textTitle"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_below="@+id/textTitle"
             android:layout_gravity="center"
             android:fontFamily="@font/poppins"
@@ -80,11 +84,13 @@ android:layout_marginStart="@dimen/_10sdp"
         android:layout_width="@dimen/_110sdp"
         android:layout_height="wrap_content"
         android:text="4 saved"
+        app:layout_constraintTop_toBottomOf="@+id/textdis"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_gravity="center"
         android:layout_marginStart="@dimen/_2sdp"
         android:layout_below="@+id/textdis"
         android:fontFamily="@font/poppins"
         android:textColor="#7F7F7F"
         android:textStyle="normal"/>
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
