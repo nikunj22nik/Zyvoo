@@ -73,6 +73,7 @@ import com.business.zyvo.model.host.ItemRadio
 import com.business.zyvo.model.host.PropertyDetailsSave
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
+import com.business.zyvo.utils.ErrorDialog.getHourDifference
 import com.business.zyvo.utils.ErrorDialog.getLocationDetails
 import com.business.zyvo.utils.ErrorDialog.isWithin24Hours
 import com.business.zyvo.utils.PrepareData
@@ -456,10 +457,17 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             return false
         } else if (binding.tvHours.text.isEmpty()) {
             showErrorDialog(requireActivity(), AppConstant.stTime)
+            return false
         } else if (binding.tvHours1.text.isEmpty()) {
             showErrorDialog(requireActivity(), AppConstant.edTime)
-        } else if (!isWithin24Hours(fromHour, toHour)) {
+            return false
+        }else if(getHourDifference(fromHour, toHour)<minimumHourValue){
+            showErrorDialog(requireActivity(), AppConstant.minimumHour)
+            return false
+        }
+        else if (!isWithin24Hours(fromHour, toHour)) {
             showErrorDialog(requireActivity(), AppConstant.avabilty)
+            return false
         }
         return true
     }

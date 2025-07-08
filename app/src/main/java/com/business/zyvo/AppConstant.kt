@@ -142,6 +142,7 @@ class AppConstant {
         val emailValid = "Please enter a valid email"
         val description = "Description is required"
         val avabilty = "Please choose an availability window within 24 hours."
+        val minimumHour = "Please select at least the minimum required hours to proceed."
         val placeOpenActivity = "placeOpenActivity"
         val property_images = "property_images"
         val latitude = "latitude"

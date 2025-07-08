@@ -458,6 +458,37 @@ object ErrorDialog {
         }
     }
 
+
+    fun getHourDifference(startTimeStr: String, endTimeStr: String): Long {
+        return try {
+            val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+            val startTime = format.parse(startTimeStr)
+            val endTime = format.parse(endTimeStr)
+
+            if (startTime != null && endTime != null) {
+                val calendarStart = Calendar.getInstance().apply { time = startTime }
+                val calendarEnd = Calendar.getInstance().apply { time = endTime }
+
+                // If end time is before start time, it means it's on the next day
+                if (calendarEnd.before(calendarStart)) {
+                    calendarEnd.add(Calendar.DATE, 1)
+                }
+
+                val diffMillis = calendarEnd.timeInMillis - calendarStart.timeInMillis
+                val hoursDiff = diffMillis / (1000 * 60 * 60)
+
+                hoursDiff
+            } else {
+                -1L  // return -1 to indicate error in parsing
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            -1L
+        }
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun convertTo12HourFormat(time24: String): String {
         val inputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
