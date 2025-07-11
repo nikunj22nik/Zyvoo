@@ -348,6 +348,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     ErrorDialog.convertDateToTimeFormat(filterRequest.start_time),
                     ErrorDialog.convertDateToTimeFormat(filterRequest.end_time),
                     filterRequest.activity,
+                    filterRequest.property_price
                 ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
@@ -1255,6 +1256,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                     if (resp.get("user_image") != null){
                                         session.setUserImage(resp.get("user_image").asString)
                                     }
+                                    session.setCurrentPanel(AppConstant.Guest)
                                     val intent = Intent(requireActivity(), GuesMain::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     startActivity(intent)
@@ -2207,6 +2209,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                         session.setUserImage(resp.get("user_image").asString)
                                     }
                                     Log.d("checkLoginType","i get this mobileNumber"+session.getLoginType())
+                                    session.setCurrentPanel(AppConstant.Guest)
                                     val intent = Intent(requireActivity(), GuesMain::class.java)
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                                     startActivity(intent)

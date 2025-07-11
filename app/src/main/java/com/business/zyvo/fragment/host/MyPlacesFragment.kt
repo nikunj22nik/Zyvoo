@@ -133,7 +133,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         }
 
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-        return binding.root
+        return _binding!!.root
     }
 
     private fun deleteProperty(propertyId: Int) {
@@ -546,7 +546,8 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
+
+       // _binding = null
     }
 
 }

@@ -638,11 +638,16 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         val currentCampaign = "property_share"
         val oneLinkId = "scFp" // Replace with your OneLink ID
         val brandDomain = "zyvobusiness.onelink.me" // Your OneLink domain
+        val session = SessionManager(this)
+        val type = session.getCurrentPanel()
+        val location = "PropertyDetails"
 
         // Prepare the deep link values
-        val deepLink = "zyvoo://property?propertyId=$propertyId"
+        //?propertyId=$propertyId
+        ///propertyId=$propertyId
+        val deepLink = "zyvoo://property"
         val webLink =
-            "https://zyvo.tgastaging.com/property/$propertyId" // Web fallback link
+            "https://zyvo.tgastaging.com/property" // Web fallback link
 
         // Create the link generator
         val linkGenerator = ShareInviteHelper.generateInviteUrl(this)
@@ -650,6 +655,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             .setCampaign(currentCampaign)
             .addParameter("af_dp", deepLink) // App deep link
             .addParameter("af_web_dp", webLink) // Web fallback URL
+            .addParameter("propertyId", propertyId)     // Custom key 1
+            .addParameter("user_type", type ?: "default")    // Custom key 2
+            .addParameter("location", location)         // Custom key 3
 
         // Generate the link
         linkGenerator.generateLink(this, object : LinkGenerator.ResponseListener {

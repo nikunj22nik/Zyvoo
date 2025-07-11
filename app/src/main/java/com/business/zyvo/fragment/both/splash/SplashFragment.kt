@@ -60,9 +60,7 @@ class SplashFragment : Fragment() {
                 val session = SessionManager(requireContext())
                 if (session.getUserId() != -1 && session.getUserSession()!! && !session.getAuthToken().equals("") && session.getName() != "") {
                     if (session.getCurrentPanel().equals(AppConstant.Host)) {
-                        val intent = Intent(requireContext(), HostMainActivity::class.java)
-                        startActivity(intent)
-                        requireActivity().finish()
+                        handelDeeplinkHost()
                     }
                     else {
                         handlingDeepLink()
@@ -79,6 +77,41 @@ class SplashFragment : Fragment() {
 
     }
 
+    private fun handelDeeplinkHost() {
+        // Get the intent that started this activity
+        val intent = requireActivity().intent
+        // Check if the intent contains a URI (deep link)
+        if (intent?.action == Intent.ACTION_VIEW) {
+            val data: Uri? = intent.data
+            if (data != null && data.scheme == "zyvoo" && data.host == "property") {
+                val location = data.getQueryParameter("location")
+                val type = data.getQueryParameter("user_type")?.replace("://","")
+                // Now you can use the propertyId in your activity
+                // Fetch property details using the propertyId
+                 if (location.equals("Article") && type.equals(AppConstant.Host)) {
+                    val guideId = data.getQueryParameter("guide_id")
+                     val textType = data.getQueryParameter("textType")
+                    Log.d(ErrorDialog.TAG, "guide  ID: $guideId")
+                    val intent = Intent(requireContext(), HostMainActivity::class.java)
+                    intent.putExtra("location",location)
+                    intent.putExtra("guideId",guideId)
+                     intent.putExtra("textType",textType)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }else{
+                     val intent = Intent(requireContext(), HostMainActivity::class.java)
+                     startActivity(intent)
+                     requireActivity().finish()
+                }
+
+            }
+        }else{
+            val intent = Intent(requireContext(), HostMainActivity::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+        }
+    }
+
     private fun handlingDeepLink() {
         // Get the intent that started this activity
         val intent = requireActivity().intent
@@ -86,15 +119,35 @@ class SplashFragment : Fragment() {
         if (intent?.action == Intent.ACTION_VIEW) {
             val data: Uri? = intent.data
             if (data != null && data.scheme == "zyvoo" && data.host == "property") {
-                val propertyId = data.getQueryParameter("propertyId")
+                val location = data.getQueryParameter("location")
+                val type = data.getQueryParameter("user_type")?.replace("://","")
+
                 // Now you can use the propertyId in your activity
-                Log.d(ErrorDialog.TAG, "Property ID: $propertyId")
                 // Fetch property details using the propertyId
-                val intent = Intent(requireContext(), GuesMain::class.java)
-                intent.putExtra("propertyId",propertyId)
-                intent.putExtra("propertyMile","")
-                startActivity(intent)
-                requireActivity().finish()
+                if (location.equals("PropertyDetails") &&  type.equals(AppConstant.Guest)){
+                    val propertyId = data.getQueryParameter("propertyId")
+                    Log.d(ErrorDialog.TAG, "Property ID: $propertyId")
+                    val intent = Intent(requireContext(), GuesMain::class.java)
+                    intent.putExtra("propertyId", propertyId)
+                    intent.putExtra("location",location)
+                    intent.putExtra("propertyMile", "")
+                    startActivity(intent)
+                    requireActivity().finish()
+                }else if (location.equals("Article") &&  type.equals(AppConstant.Guest)) {
+                    val guideId = data.getQueryParameter("guide_id")
+                    val textType = data.getQueryParameter("textType")
+                    Log.d(ErrorDialog.TAG, "guide  ID: $guideId")
+                    val intent = Intent(requireContext(), GuesMain::class.java)
+                    intent.putExtra("location",location)
+                    intent.putExtra("guideId",guideId)
+                    intent.putExtra("textType",textType)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }else{
+                    val intent = Intent(requireContext(), GuesMain::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                }
 
             }
         }else{

@@ -13,5 +13,6 @@ data class SearchFilterRequest(
     val start_time: String = "",
     val end_time: String = "",
     val location:String = "",
-    val activity: String = ""):Parcelable
+    val activity: String = "",
+    val property_price: String = ""):Parcelable
 

@@ -730,7 +730,8 @@ interface ZyvoApi {
         @Field("hour") hour : String,
         @Field("start_time") start_time : String,
         @Field("end_time") end_time : String,
-        @Field("activity") activity : String
+        @Field("activity") activity : String,
+        @Field("property_price") property_price : String
     ) :Response<JsonObject>
 
     @POST("get_user_bookings")

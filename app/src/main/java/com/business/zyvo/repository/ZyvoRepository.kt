@@ -590,7 +590,8 @@ interface ZyvoRepository {
         hour : String,
         start_time : String,
         end_time : String,
-        activity : String
+        activity : String,
+        property_price:String
     ): Flow<NetworkResult<JsonArray>>
 
     suspend fun getUserBookings(

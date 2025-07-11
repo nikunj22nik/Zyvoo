@@ -920,7 +920,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     ErrorDialog.convertDateToTimeFormat(filterRequest.end_time),
                    /* filterRequest.start_time,
                     filterRequest.end_time,*/
-                    filterRequest.activity,).collect {
+                    filterRequest.activity,
+                    filterRequest.property_price).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->

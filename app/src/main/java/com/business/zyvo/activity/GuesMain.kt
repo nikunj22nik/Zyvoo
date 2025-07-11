@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
@@ -108,15 +109,40 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
     @SuppressLint("SuspiciousIndentation")
     private fun handlingDeepLink() {
-
         if (intent.extras!=null){
-            val propertyId = intent?.extras?.getString("propertyId")
-            val propertyMile = intent?.extras?.getString("propertyMile")
-            if (propertyId!=null && propertyMile!=null){
-            val intent = Intent(this, RestaurantDetailActivity::class.java)
-                intent.putExtra("propertyId",propertyId)
-                intent.putExtra("propertyMile",propertyMile)
-                startActivity(intent)
+            val location = intent?.extras?.getString("location")
+            if (location.equals("PropertyDetails")){
+                val propertyId = intent?.extras?.getString("propertyId")
+                val propertyMile = intent?.extras?.getString("propertyMile")
+                if (propertyId!=null && propertyMile!=null){
+                    val intent = Intent(this, RestaurantDetailActivity::class.java)
+                    intent.putExtra("propertyId",propertyId)
+                    intent.putExtra("propertyMile",propertyMile)
+                    startActivity(intent)
+                }
+            }else{
+                val guideId = intent?.extras?.getString("guideId")
+                if (guideId!=null){
+                    profileColor()
+                    val textType = intent?.extras?.getString("textType")
+                    val bundle = Bundle()
+                    bundle.apply {
+                        putString(AppConstant.Id,guideId)
+                        putString(AppConstant.textType,textType)
+                    }
+                    Log.d(ErrorDialog.TAG, "guide  ID: $guideId")
+                    val navHostFragment = supportFragmentManager
+                        .findFragmentById(R.id.fragmentContainerView_main) as? NavHostFragment
+
+                    if (navHostFragment == null) {
+                        Log.e("NavError", "NavHostFragment is null. Check layout or ID.")
+                        return
+                    }
+
+                    val navController = navHostFragment.navController
+                    navController.navigate(R.id.browse_aricle_details, bundle)
+                    profileColor()
+                }
             }
         }
 

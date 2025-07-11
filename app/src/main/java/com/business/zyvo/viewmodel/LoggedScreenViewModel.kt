@@ -305,10 +305,11 @@ class LoggedScreenViewModel @Inject constructor(
         hour : String,
         start_time : String,
         end_time : String,
-        activity : String):
+        activity : String,
+        property_price:String):
             Flow<NetworkResult<JsonArray>> {
         return repository.getHomeDataSearchFilter(user_id, latitude, longitude,date,
-            hour,start_time, end_time, activity).onEach {
+            hour,start_time, end_time, activity,property_price).onEach {
             when(it){
                 is NetworkResult.Loading -> {
                     isLoading.value = true

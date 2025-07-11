@@ -67,6 +67,7 @@ class WhereTimeActivity : AppCompatActivity() {
     private var start_time = ""
     private var end_time = ""
     private var activity = ""
+    private var property_price = ""
     private var selectdate = false
     private lateinit var appLocationManager: com.business.zyvo.locationManager.LocationManager
     private var currentMonth: YearMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -165,6 +166,7 @@ class WhereTimeActivity : AppCompatActivity() {
             if (!selectdate){
                 date = ""
             }
+            property_price = binding.etprice.text.toString()
             val requestData = SearchFilterRequest(
                 user_id = sessionManager.getUserId().toString(),
                 latitude = selectedLatitude.toString(),
@@ -174,7 +176,8 @@ class WhereTimeActivity : AppCompatActivity() {
                 start_time = start_time,
                 end_time = end_time,
                 location = binding.etSearchLocation.text.toString(),
-                activity = activity)
+                activity = activity,
+                property_price = property_price)
             sessionManager.setSearchFilterRequest(Gson().toJson(requestData))
             val intent = Intent()
             intent.putExtra("type","filter")
@@ -193,7 +196,8 @@ class WhereTimeActivity : AppCompatActivity() {
                 start_time = "",
                 end_time = "",
                 location = "",
-                activity = "")
+                activity = "",
+                property_price = "")
             sessionManager.setSearchFilterRequest(Gson().toJson(requestData))
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = LocalDate.now()
@@ -272,6 +276,10 @@ class WhereTimeActivity : AppCompatActivity() {
                 if (!it.activity.equals("")){
                     activity = it.activity
                     binding.tvActivityName.text = activity
+                }
+                if (!it.property_price.equals("")){
+                    property_price = it.property_price
+                    binding.etprice.setText(property_price)
                 }
             }
         }

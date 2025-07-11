@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.appsflyer.share.LinkGenerator
+import com.appsflyer.share.ShareInviteHelper
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
@@ -23,6 +26,8 @@ import com.business.zyvo.fragment.both.browseGuideArtcileDetail.model.ArticleDet
 import com.business.zyvo.fragment.both.browseGuideArtcileDetail.model.GuideDetailResponse
 import com.business.zyvo.fragment.both.browseGuideArtcileDetail.viewModel.BrowseGuideArtcileDetailViewModel
 import com.business.zyvo.fragment.guest.helpCenter.model.HelpCenterResponse
+import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -64,7 +69,8 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
             findNavController().navigate(R.id.contact_us)
         }
         binding.imgShareIcon.setOnClickListener {
-            shareApp()
+            //shareApp()
+            generateDeepLink()
         }
 
         return binding.root
@@ -241,6 +247,61 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+
+    private fun generateDeepLink() {
+        // Your OneLink base URL and campaign details
+        val currentCampaign = "property_share"
+        val oneLinkId = "scFp" // Replace with your OneLink ID
+        val brandDomain = "zyvobusiness.onelink.me" // Your OneLink domain
+
+        val session = SessionManager(requireContext())
+        val type = session.getCurrentPanel()
+        val location = "Article"
+
+        // Prepare the deep link values
+        val deepLink = "zyvoo://property"
+        val webLink =
+            "https://zyvo.tgastaging.com/property" // Web fallback link
+
+        // Create the link generator
+        val linkGenerator = ShareInviteHelper.generateInviteUrl(requireContext())
+            .setBaseDeeplink("https://$brandDomain/$oneLinkId")
+            .setCampaign(currentCampaign)
+            .addParameter("af_dp", deepLink) // App deep link
+            .addParameter("af_web_dp", webLink) // Web fallback URL
+            .addParameter("guide_id", id)     // Custom key 1
+            .addParameter("textType", textType)     // Custom key 1
+            .addParameter("user_type", type)    // Custom key 2
+            .addParameter("location", location)         // Custom key 3
+
+        // Generate the link
+        linkGenerator.generateLink(requireContext(), object : LinkGenerator.ResponseListener {
+            override fun onResponse(s: String) {
+                // Successfully generated the link
+                Log.d(ErrorDialog.TAG, s)
+                // Example share message with the generated link
+                val message = "Check out this article: $s"
+                shareLink(message)
+
+            }
+
+            override fun onResponseError(s: String) {
+                // Handle error if link generation fails
+                Log.e("Error", "Error Generating Link: $s")
+            }
+        })
+    }
+
+    private fun shareLink(message: String) {
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, message)
+            type = "text/plain"
+        }
+        val shareIntent = Intent.createChooser(sendIntent, "Share via")
+        startActivity(shareIntent)
     }
 
 

@@ -523,6 +523,7 @@
                         android:layout_height="match_parent"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:id="@+id/etprice"
                         android:fontFamily="@font/poppins"
                         android:layout_toRightOf="@+id/tvprice"
                         android:hint="Select Price"

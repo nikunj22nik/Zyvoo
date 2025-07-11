@@ -4413,12 +4413,14 @@ import javax.inject.Inject
          hour : String,
          start_time : String,
          end_time : String,
-         activity : String
+         activity : String,
+         property_price:String
      ): Flow<NetworkResult<JsonArray>> = flow {
          emit(NetworkResult.Loading())
          try {
              api.getHomeDataSearchFilter(
-                 user_id, latitude, longitude,date,hour,start_time, end_time, activity
+                 user_id, latitude, longitude,date,hour,start_time, end_time, activity,
+                 property_price
              ).apply {
                  if (isSuccessful) {
                      body()?.let { resp ->

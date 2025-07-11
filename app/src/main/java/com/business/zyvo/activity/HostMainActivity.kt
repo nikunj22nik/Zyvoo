@@ -1,6 +1,7 @@
 package com.business.zyvo.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -22,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BookingRemoveListener
@@ -30,6 +32,7 @@ import com.business.zyvo.LoadingUtils
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.chat.QuickstartConversationsManager
 import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
 import com.business.zyvo.databinding.ActivityHostMainBinding
@@ -113,8 +116,42 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         askNotificationPermission()
 
         callingBookingNumberApi()
+        handlingDeepLink()
         showImage()
     }
+
+    @SuppressLint("SuspiciousIndentation")
+    private fun handlingDeepLink() {
+        if (intent.extras!=null){
+            val location = intent?.extras?.getString("location")
+            if (location.equals("Article")){
+                val guideId = intent?.extras?.getString("guideId")
+                val textType = intent?.extras?.getString("textType")
+                if (guideId!=null) {
+                    profileColor()
+                    val bundle = Bundle()
+                    bundle.apply {
+                        putString(AppConstant.Id, guideId)
+                        putString(AppConstant.textType, textType)
+                    }
+                    Log.d(ErrorDialog.TAG, "guide  ID: $guideId")
+                    val navHostFragment = supportFragmentManager
+                        .findFragmentById(R.id.fragmentContainerView_main) as? NavHostFragment
+
+                    if (navHostFragment == null) {
+                        Log.e("NavError", "NavHostFragment is null. Check layout or ID.")
+                        return
+                    }
+
+                    val navController = navHostFragment.navController
+                    navController.navigate(R.id.browse_aricle_details, bundle)
+                    profileColor()
+                }
+            }
+        }
+
+    }
+
 
 
     private fun callingBookingNumberApi(){
