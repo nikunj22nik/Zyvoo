@@ -274,7 +274,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     Log.e(TAG, e.message!!)
                 }
             }
-
     }
 
 
@@ -699,6 +698,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val textRegister = findViewById<TextView>(R.id.textRegister)
             val textDontHaveAnAccount = findViewById<TextView>(R.id.textDontHaveAnAccount)
             val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
+            countyCodePicker.setFlagSize(resources.getDimensionPixelSize(R.dimen.default_twentySpacing)) // yaha flag size set hoga
             // Set IME options for password field
             etMobileNumber.imeOptions = EditorInfo.IME_ACTION_DONE
             etMobileNumber.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)

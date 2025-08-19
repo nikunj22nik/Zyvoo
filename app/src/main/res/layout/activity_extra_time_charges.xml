@@ -19,7 +19,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:background="@color/grey" />
             <RelativeLayout
@@ -44,7 +44,7 @@
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:background="#E5E5E5" />
             <TextView
                 android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
                 android:textStyle="bold" />
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="#E5E5E5" />
@@ -132,7 +132,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1sp"
+                    android:layout_height="@dimen/_1dp"
                     android:layout_marginHorizontal="@dimen/_6sdp"
 
                     android:background="@color/grey" />
@@ -699,7 +699,7 @@ android:textColor="@color/black"
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
+                    android:layout_height="@dimen/_1dp"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:background="#E5E5E5">
 
@@ -901,7 +901,7 @@ android:textColor="@color/black"
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="@color/grey" />
@@ -1022,7 +1022,7 @@ android:textColor="@color/black"
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="#E5E5E5" />
@@ -1052,7 +1052,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:textSize="@dimen/_12sdp" />
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:background="@color/grey"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
@@ -1175,7 +1175,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:background="@color/grey" />

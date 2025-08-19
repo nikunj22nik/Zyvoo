@@ -246,8 +246,10 @@ class DateManager(var context: Context) {
             val startDate = selection?.first?.let { java.util.Date(it) }
             val endDate = selection?.second?.let { java.util.Date(it) }
 
-            val dateFormat = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
-            val dateFormat1 = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
+            //val dateFormat = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
+            //val dateFormat1 = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
+            val dateFormat = java.text.SimpleDateFormat("MMM dd yyyy", java.util.Locale.getDefault())
+            val dateFormat1 = java.text.SimpleDateFormat("MMM dd yyyy", java.util.Locale.getDefault())
             val startDateString = startDate?.let { dateFormat.format(it) }
             val endDateString = endDate?.let { dateFormat1.format(it) }
 
@@ -264,14 +266,14 @@ class DateManager(var context: Context) {
         }
 
         datePicker.addOnNegativeButtonClickListener {
-            Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
+           // Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
             onDateRangeSelected(null)
         }
 
 
 
         datePicker.addOnCancelListener {
-            Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
+       //     Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
             onDateRangeSelected(null)
         }
     }

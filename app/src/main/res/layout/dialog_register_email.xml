@@ -36,7 +36,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
+        android:layout_height="@dimen/_1dp"
         android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:background="#C4C4C4"
@@ -264,7 +264,7 @@
     <View
         android:id="@+id/viewOr"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
+        android:layout_height="@dimen/_1dp"
         android:layout_marginHorizontal="@dimen/_23sdp"
         android:background="#C4C4C4"
         android:layout_marginTop="@dimen/_10sdp"

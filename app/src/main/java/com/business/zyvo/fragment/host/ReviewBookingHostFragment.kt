@@ -474,7 +474,9 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             }
         }?: binding.tvDiscount.setText("$0")
 
-
+        if (binding.tvDiscount.text.toString().equals("$0") || binding.tvDiscount.text.toString().equals("$-0")){
+            binding.lldiscount.visibility = View.GONE
+        }
         data.booking_total_amount?.takeIf { it.isNotEmpty() }?.let {
             binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(it)}"
         } ?: run {
@@ -919,51 +921,59 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                 var onTimeRate = ratingbar3.rating
                 var sessionManager = SessionManager(requireContext())
                 var userId = sessionManager.getUserId()
-                lifecycleScope.launch {
-                    if (NetworkMonitorCheck._isConnected.value) {
-                        if (userId != null) {
-                            LoadingUtils.showDialog(requireContext(), false)
-                            viewModel.reviewGuest(
-                                userId,
-                                bookingId,
-                                propertyId,
-                                responseRate.toInt(),
-                                communicationRate.toInt(),
-                                onTimeRate.toInt(),
-                                message
-                            ).collect {
-                                when (it) {
-                                    is NetworkResult.Success -> {
-                                        LoadingUtils.hideDialog()
-                                        LoadingUtils.showSuccessDialog(
-                                            requireContext(),
-                                            it.message.toString()
-                                        )
-                                    }
+                if (etMessage.text.isNotEmpty() && responseRate.toInt()!=0 &&
+                    communicationRate.toInt()!=0 &&
+                    onTimeRate.toInt()!=0){
+                    dismiss()
+                    lifecycleScope.launch {
+                        if (NetworkMonitorCheck._isConnected.value) {
+                            if (userId != null) {
+                                LoadingUtils.showDialog(requireContext(), false)
+                                viewModel.reviewGuest(
+                                    userId,
+                                    bookingId,
+                                    propertyId,
+                                    responseRate.toInt(),
+                                    communicationRate.toInt(),
+                                    onTimeRate.toInt(),
+                                    message
+                                ).collect {
+                                    when (it) {
+                                        is NetworkResult.Success -> {
+                                            LoadingUtils.hideDialog()
+                                            LoadingUtils.showSuccessDialog(
+                                                requireContext(),
+                                                it.data.toString()
+                                            )
+                                        }
 
-                                    is NetworkResult.Error -> {
-                                        LoadingUtils.hideDialog()
-                                        LoadingUtils.showErrorDialog(
-                                            requireContext(),
-                                            it.message.toString()
-                                        )
-                                    }
+                                        is NetworkResult.Error -> {
+                                            LoadingUtils.hideDialog()
+                                            LoadingUtils.showErrorDialog(
+                                                requireContext(),
+                                                it.message.toString()
+                                            )
+                                        }
 
-                                    else -> {
-                                        LoadingUtils.hideDialog()
+                                        else -> {
+                                            LoadingUtils.hideDialog()
+                                        }
                                     }
                                 }
                             }
+                        } else {
+                            LoadingUtils.showErrorDialog(
+                                requireContext(),
+                                "Please Check Internet Connection"
+                            )
                         }
-                    } else {
-                        LoadingUtils.showErrorDialog(
-                            requireContext(),
-                            "Please Check Internet Connection"
-                        )
                     }
+                }else{
+                    LoadingUtils.showErrorDialog(
+                        requireContext(),
+                        AppConstant.message
+                    )
                 }
-
-                dismiss()
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()

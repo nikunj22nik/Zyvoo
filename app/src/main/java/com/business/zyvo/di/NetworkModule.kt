@@ -9,11 +9,13 @@ import com.business.zyvo.remote.ZyvoApi
 import com.business.zyvo.repository.ZyvoRepository
 import com.business.zyvo.repository.ZyvoRepositoryImpl
 import com.business.zyvo.utils.AuthInterceptor
+import com.business.zyvo.utils.ErrorDialog
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit

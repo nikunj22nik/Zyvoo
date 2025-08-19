@@ -34,9 +34,9 @@
             />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_success_icon"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:src="@drawable/ic_success_icon_new"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
@@ -55,17 +55,20 @@
 
         <RelativeLayout
             android:id="@+id/rl_okay"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_13sdp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/_10sdp"
+            android:layout_marginStart="@dimen/_28sdp"
+            android:layout_marginEnd="@dimen/_28sdp"
+            android:layout_marginBottom="@dimen/_15ssp"
             android:background="@drawable/bg_green_add_card"
             >
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Okay"
+                android:textAlignment="center"
                 android:fontFamily="@font/poppins"
                 android:layout_margin="@dimen/_10sdp"
                 android:textColor="@color/black"

@@ -52,7 +52,7 @@ class ExploreArticlesAdapter(var context: Context,
             holder.binding.textTitle.text = currentItem.title
         }
         if (contentType == "guides") {
-            holder.binding.textDescription.visibility = View.VISIBLE
+            holder.binding.textDescription.visibility = View.GONE
         if (currentItem.description != null && !currentItem.description.equals("")){
             holder.binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 Html.fromHtml(currentItem.description, Html.FROM_HTML_MODE_LEGACY)

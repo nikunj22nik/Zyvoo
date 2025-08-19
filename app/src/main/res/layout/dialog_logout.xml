@@ -32,7 +32,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
+        android:layout_height="@dimen/_1dp"
         android:layout_marginVertical="@dimen/_5sdp"
         android:layout_below="@+id/textTitle"
         android:layout_marginHorizontal="@dimen/_20sdp"
@@ -57,8 +57,8 @@
         android:layout_below="@+id/imageIcon"
         android:textAlignment="center"
         android:fontFamily="@font/poppins"
-        android:textColor="#636363"
-        android:textSize="@dimen/_13ssp"
+        android:textColor="@color/_636363"
+        android:textSize="@dimen/_14sdp"
         android:layout_marginHorizontal="@dimen/_30sdp"/>
 
 
@@ -97,11 +97,9 @@
         android:id="@+id/rlCancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginBottom="@dimen/_20sdp"
-android:layout_marginEnd="@dimen/_20sdp"
-
+        android:layout_marginEnd="@dimen/_20sdp"
         android:background="@drawable/bg_two_side_corner_green_layout"
         android:paddingHorizontal="@dimen/_25sdp"
         android:paddingVertical="@dimen/_8sdp">

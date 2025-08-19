@@ -11,7 +11,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
+        android:layout_height="@dimen/_1dp"
         android:background="#E5E5E5" />
     <RelativeLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
+        android:layout_height="@dimen/_1dp"
         android:background="@color/grey" />
 
     <ScrollView
@@ -86,7 +86,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_2sdp"
+                    android:layout_height="@dimen/_2dp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:background="#E5E5E5" />
                 <TextView
@@ -104,7 +104,7 @@
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
@@ -203,7 +203,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:background="#E5E5E5" />
@@ -251,7 +251,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@color/grey" />
@@ -331,7 +331,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_7sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:id="@+id/reviewMoreView"

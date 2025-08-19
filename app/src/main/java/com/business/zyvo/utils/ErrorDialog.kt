@@ -524,5 +524,74 @@ object ErrorDialog {
         }
     }
 
+    fun getUpdatedTimeZoneId(): String {
+        val aliasMap = mapOf(
+            "Asia/Calcutta" to "Asia/Kolkata",
+            "Asia/Chungking" to "Asia/Shanghai",
+            "Asia/Katmandu" to "Asia/Kathmandu",
+            "Asia/Saigon" to "Asia/Ho_Chi_Minh",
+            "Asia/Istanbul" to "Europe/Istanbul",
+            "Asia/Kashgar" to "Asia/Urumqi",
+            "Asia/Ujung_Pandang" to "Asia/Makassar",
+            "Australia/ACT" to "Australia/Sydney",
+            "Australia/NSW" to "Australia/Sydney",
+            "Australia/North" to "Australia/Darwin",
+            "Australia/South" to "Australia/Adelaide",
+            "Australia/Tasmania" to "Australia/Hobart",
+            "Australia/Victoria" to "Australia/Melbourne",
+            "Australia/West" to "Australia/Perth",
+            "Brazil/East" to "America/Sao_Paulo",
+            "Canada/Eastern" to "America/Toronto",
+            "Canada/Central" to "America/Winnipeg",
+            "Canada/Mountain" to "America/Edmonton",
+            "Canada/Pacific" to "America/Vancouver",
+            "Canada/Atlantic" to "America/Halifax",
+            "Canada/Newfoundland" to "America/St_Johns",
+            "Etc/Greenwich" to "GMT",
+            "Europe/Nicosia" to "Asia/Nicosia",
+            "GMT" to "Etc/GMT",
+            "Hongkong" to "Asia/Hong_Kong",
+            "Iceland" to "Atlantic/Reykjavik",
+            "Indian/Antananarivo" to "Africa/Nairobi",
+            "Indian/Comoro" to "Africa/Nairobi",
+            "Indian/Mayotte" to "Africa/Nairobi",
+            "Iran" to "Asia/Tehran",
+            "Israel" to "Asia/Jerusalem",
+            "Jamaica" to "America/Jamaica",
+            "Japan" to "Asia/Tokyo",
+            "Mexico/General" to "America/Mexico_City",
+            "Pacific/Johnston" to "Pacific/Honolulu",
+            "Pacific/Ponape" to "Pacific/Pohnpei",
+            "Pacific/Samoa" to "Pacific/Pago_Pago",
+            "Pacific/Truk" to "Pacific/Chuuk",
+            "Pacific/Yap" to "Pacific/Chuuk",
+            "Poland" to "Europe/Warsaw",
+            "Portugal" to "Europe/Lisbon",
+            "Singapore" to "Asia/Singapore",
+            "Turkey" to "Europe/Istanbul",
+            "US/Alaska" to "America/Anchorage",
+            "US/Aleutian" to "America/Adak",
+            "US/Arizona" to "America/Phoenix",
+            "US/Central" to "America/Chicago",
+            "US/East-Indiana" to "America/Indiana/Indianapolis",
+            "US/Eastern" to "America/New_York",
+            "US/Hawaii" to "Pacific/Honolulu",
+            "US/Indiana-Starke" to "America/Indiana/Knox",
+            "US/Michigan" to "America/Detroit",
+            "US/Mountain" to "America/Denver",
+            "US/Pacific" to "America/Los_Angeles",
+            "US/Samoa" to "Pacific/Pago_Pago"
+        )
+
+        return try {
+            val systemZone = java.util.TimeZone.getDefault().id
+            aliasMap[systemZone] ?: systemZone
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "UTC"
+        }
+    }
+
+
 
 }

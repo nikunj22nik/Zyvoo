@@ -134,9 +134,9 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
                 selectedData?.let {
                     val (dateRange, year) = it
                     val (startDate1, endDate1) = dateRange
-                    startDate = startDate1 + year
-                    endDate = endDate1 + year
-                    binding.tvDateRange.text = "$startDate1 - $endDate1 $year"
+                    startDate = startDate1// + year
+                    endDate = endDate1// + year
+                    binding.tvDateRange.text = "$startDate - $endDate"//"$startDate1 - $endDate1 $year"
                     paymentWithdrawalList()
                 } ?: run {
                     Toast.makeText(requireContext(), "No date selected", Toast.LENGTH_SHORT).show()

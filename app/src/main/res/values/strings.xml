@@ -141,7 +141,7 @@
     <string name="turn_on_notifications">Turn on Notifications</string>
     <string name="show_more"><u>Show More</u></string>
     <string name="booking_time_extension_bte">Booking time extension (BTE)</string>
-    <string name="review_guest">Review Guest</string>
+    <string name="review_guest">Review Guest    </string>
     <string name="sort_by_highest_review">Sort by: Highest Review</string>
     <string name="sort_by_lowest_review">Sort by: Lowest Review</string>
     <string name="sort_by_recent_review">Sort by: Recent Review</string>
@@ -155,6 +155,10 @@
     <string name="enter_your_email_to_register_your_n_account">Enter your email to Register your\n account.</string>
     <string name="enter_your_email_and_password_to_n_login_your_account">Enter your email and Password to\n login your account.</string>
     <string name="create_account">Create Account</string>
+    <string name="contact_us">Contact us</string>
+    <string name="we_ll_start_with_some_questions_and_get_nyou_to_the_right_place">We\'ll start with some questions and get \nyou to the right place.</string>
+    <string name="need_to_get_in_touch">Need to get in touch?</string>
+    <string name="message_the_host">Message the host</string>
 
     <string-array name="hourly_rates">
         <item>$10 per hour</item>

@@ -34,7 +34,7 @@
     <View
         android:id="@+id/viewTop"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
+        android:layout_height="@dimen/_1dp"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:background="#33000000"
         app:layout_constraintTop_toBottomOf="@+id/textHeader" />
@@ -85,7 +85,6 @@
         android:textColorHint="#80000000"
         android:paddingHorizontal="@dimen/_13sdp"
         android:paddingVertical="@dimen/_7sdp"
-
         android:textColor="#80000000"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -104,45 +103,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etDescription" />
 
-
-<!--    <TextView-->
-<!--        android:id="@+id/textCreate"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginStart="@dimen/_25sdp"-->
-<!--        android:layout_marginTop="@dimen/_15sdp"-->
-<!--        android:layout_marginBottom="@dimen/_30sdp"-->
-<!--        android:background="@drawable/bg_green_add_card"-->
-<!--        android:fontFamily="@font/lato"-->
-<!--        android:paddingHorizontal="@dimen/_30sdp"-->
-<!--        android:paddingVertical="@dimen/_13sdp"-->
-<!--        android:text="Create"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="@dimen/_15ssp"-->
-<!--        android:textStyle="normal"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/textMaxCount" />-->
-
-
-<!--    <TextView-->
-<!--        android:id="@+id/textClear"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="@dimen/_25sdp"-->
-<!--        android:layout_marginTop="@dimen/_15sdp"-->
-<!--        android:layout_marginBottom="@dimen/_30sdp"-->
-<!--        android:background="@drawable/green_stroke_white_bg"-->
-<!--        android:fontFamily="@font/lato"-->
-<!--        android:paddingHorizontal="@dimen/_30sdp"-->
-<!--        android:paddingVertical="@dimen/_13sdp"-->
-<!--        android:text="Clear"-->
-<!--        android:textColor="@color/black"-->
-<!--        android:textSize="@dimen/_15ssp"-->
-<!--        android:textStyle="normal"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/textMaxCount" />-->
     <LinearLayout
         android:id="@+id/buttonContainer"
         android:layout_width="0dp"

@@ -111,7 +111,7 @@
 
                         <View
                             android:id="@+id/viewProfile"
-                            android:layout_width="@dimen/_2sdp"
+                            android:layout_width="@dimen/_2dp"
                             android:layout_height="@dimen/_20sdp"
                             android:layout_alignParentStart="true"
                             android:background="#24000000" />
@@ -213,7 +213,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
+                    android:layout_height="@dimen/_1dp"
                     android:background="#E5E5E5" />
 
                 <LinearLayout
@@ -221,33 +221,34 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:gravity="center"
                     android:visibility="visible"
                     android:weightSum="2">
 
                     <TextView
                         android:id="@+id/textReviewBookingButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_10sdp"
                         android:layout_weight="1"
+                        android:layout_margin="@dimen/_5ssp"
                         android:background="@drawable/bg_save_button"
-                        android:paddingHorizontal="@dimen/_18sdp"
-                        android:paddingVertical="@dimen/_7sdp"
                         android:text="@string/review_guest"
                         android:textColor="#FFFFFF"
+                        android:padding="@dimen/_10ssp"
+                        android:textAlignment="center"
                         android:textSize="@dimen/_12ssp" />
 
                     <TextView
                         android:id="@+id/textMessageTheHostButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_10sdp"
+                        android:layout_margin="@dimen/_5ssp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_four_corner_light_black"
-                        android:paddingHorizontal="@dimen/_15sdp"
-                        android:paddingVertical="@dimen/_7sdp"
-                        android:text="Message the host"
+                        android:text="@string/message_the_host"
+                        android:textAlignment="center"
                         android:textColor="#000000"
+                        android:padding="@dimen/_10ssp"
                         android:textSize="@dimen/_12ssp" />
 
 
@@ -263,27 +264,31 @@
 
                     <TextView
                         android:id="@+id/textApproveBookingButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_10sdp"
                         android:layout_weight="1"
+                        android:textAlignment="center"
                         android:background="@drawable/bg_save_button"
                         android:paddingHorizontal="@dimen/_18sdp"
                         android:paddingVertical="@dimen/_7sdp"
                         android:text="Approve Booking"
+                        android:padding="@dimen/_10ssp"
                         android:textColor="#FFFFFF"
                         android:textSize="@dimen/_12ssp" />
 
                     <TextView
                         android:id="@+id/textDeclineTheHostButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_10sdp"
                         android:layout_weight="1"
+                        android:textAlignment="center"
                         android:background="@drawable/bg_four_corner_light_black"
                         android:paddingHorizontal="@dimen/_15sdp"
                         android:paddingVertical="@dimen/_7sdp"
                         android:text="Decline Booking"
+                        android:padding="@dimen/_10ssp"
                         android:textColor="#000000"
                         android:textSize="@dimen/_12ssp" />
 
@@ -303,7 +308,12 @@
                     android:paddingHorizontal="@dimen/_16sdp"
                     android:paddingVertical="@dimen/_7sdp"
                     android:text="Report an Issue"
+                    android:layout_marginTop="@dimen/_5ssp"
                     android:textColor="#000000"
+                    android:padding="@dimen/_10ssp"
+                    android:paddingStart="@dimen/_20ssp"
+                    android:paddingEnd="@dimen/_20ssp"
+                    android:textAlignment="center"
                     android:textSize="@dimen/_12ssp" />
 
 
@@ -424,7 +434,7 @@
                     <!-- Divider -->
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
+                        android:layout_height="@dimen/_1dp"
                         android:layout_marginVertical="8dp"
                         android:background="#DDDDDD" />
 
@@ -591,6 +601,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:visibility="visible"
+                            android:id="@+id/lldiscount"
                             android:orientation="horizontal">
 
                             <!-- Repeat these lines for each fee type -->
@@ -617,7 +628,7 @@
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="@dimen/_1sdp"
+                            android:layout_height="@dimen/_1dp"
                             android:layout_marginTop="@dimen/_5sdp"
                             android:background="#E5E5E5" />
 
@@ -1020,7 +1031,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/_1dp"
                     android:background="#E5E5E5" />
 
                 <!-- Booking Details Section -->
@@ -1139,7 +1150,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
+                    android:layout_height="@dimen/_1dp"
                     android:background="#E5E5E5"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
@@ -1298,7 +1309,7 @@
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_1sdp"
+                        android:layout_height="@dimen/_1dp"
                         android:background="#E5E5E5"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:layout_marginHorizontal="@dimen/_10sdp"
@@ -1333,7 +1344,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
+                    android:layout_height="@dimen/_1dp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:background="#E5E5E5" />
@@ -1454,7 +1465,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
+                    android:layout_height="@dimen/_1dp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:background="#E5E5E5" />
@@ -1499,7 +1510,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
+                    android:layout_height="@dimen/_1dp"
                     android:visibility="gone"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginVertical="@dimen/_15sdp" />
@@ -1536,7 +1547,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
+                    android:layout_height="@dimen/_1dp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:background="#E5E5E5" />
@@ -1628,7 +1639,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
+                    android:layout_height="@dimen/_1dp"
                     android:layout_marginHorizontal="@dimen/_7sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginBottom="@dimen/_10sdp"

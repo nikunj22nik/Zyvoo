@@ -138,6 +138,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     private var property:PropertyData?=null
     private  var wishOpen : Boolean = false
 
+    private var dialog: Dialog? = null
+
 
 
     private val guestDiscoverViewModel: GuestDiscoverViewModel by lazy {
@@ -260,8 +262,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         if (runnable==null) {
             getUserBookings()
         }
-
-
         return binding.root
     }
 
@@ -329,7 +329,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     binding.imgMap.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.map_setting_icon))
                     binding.rlMapView.visibility = View.VISIBLE
                     binding.recyclerViewBooking.visibility = View.GONE
-                    binding.clSearch.visibility = View.GONE
+                    binding.clSearch.visibility = View.VISIBLE
                     if (homePropertyData.isNotEmpty()) {
                         for (location in homePropertyData) {
                             location.latitude.let {
@@ -814,6 +814,36 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                                 homePropertyData = properties
                                 if (homePropertyData.isNotEmpty()) {
                                     adapter.updateData(homePropertyData)
+                                    try {
+                                        if (homePropertyData.isNotEmpty()) {
+                                            for (location in homePropertyData) {
+                                                location?.latitude.let {
+                                                    location?.longitude.let {
+                                                        val customMarkerBitmap =
+                                                            createCustomMarker(requireContext(), "$${location.hourly_rate.toDouble().toInt()}/h")
+                                                        val markerOptions = MarkerOptions()
+                                                            .position(LatLng(location.latitude.toDouble(), location.longitude.toDouble()))
+                                                            .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
+                                                            .title("$${location.hourly_rate.toDouble().toInt()}/h")
+                                                        val marker = googleMap.addMarker(markerOptions)
+                                                        marker?.tag = location.property_id  // 🔑 Save property_id in tag
+                                                        // Move and zoom the camera to the first location
+                                                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                                            LatLng(location.latitude.toDouble(), location.longitude.toDouble()), 12f))
+                                                    }
+                                                }
+                                            }
+                                            // Apply custom style to the map
+                                            val success: Boolean = googleMap.setMapStyle(
+                                                MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
+                                            )
+                                            if (!success) {
+                                                Log.e("MapsActivity", "Style parsing failed.")
+                                            }
+                                        }
+                                    }catch (e:Exception){
+                                        e.printStackTrace()
+                                    }
                                 }
                             }
                         }
@@ -930,6 +960,36 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                                 homePropertyData = properties
                                 if (homePropertyData.isNotEmpty()) {
                                     adapter.updateData(homePropertyData)
+                                    try {
+                                        if (homePropertyData.isNotEmpty()) {
+                                            for (location in homePropertyData) {
+                                                location.latitude.let {
+                                                    location.longitude.let {
+                                                        val customMarkerBitmap =
+                                                            createCustomMarker(requireContext(), "$${location.hourly_rate.toDouble().toInt()}/h")
+                                                        val markerOptions = MarkerOptions()
+                                                            .position(LatLng(location.latitude.toDouble(), location.longitude.toDouble()))
+                                                            .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
+                                                            .title("$${location.hourly_rate.toDouble().toInt()}/h")
+                                                        val marker = googleMap.addMarker(markerOptions)
+                                                        marker?.tag = location.property_id  // 🔑 Save property_id in tag
+                                                        // Move and zoom the camera to the first location
+                                                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                                            LatLng(location.latitude.toDouble(), location.longitude.toDouble()), 12f))
+                                                    }
+                                                }
+                                            }
+                                            // Apply custom style to the map
+                                            val success: Boolean = googleMap.setMapStyle(
+                                                MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
+                                            )
+                                            if (!success) {
+                                                Log.e("MapsActivity", "Style parsing failed.")
+                                            }
+                                        }
+                                    }catch (e:Exception){
+                                        e.printStackTrace()
+                                    }
                                 }
                             }
                         }
@@ -977,6 +1037,36 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                                 homePropertyData = properties
                                 if (homePropertyData.isNotEmpty()) {
                                     adapter.updateData(homePropertyData)
+                                    try {
+                                        if (homePropertyData.isNotEmpty()) {
+                                            for (location in homePropertyData) {
+                                                location?.latitude.let {
+                                                    location?.longitude.let {
+                                                        val customMarkerBitmap =
+                                                            createCustomMarker(requireContext(), "$${location.hourly_rate.toDouble().toInt()}/h")
+                                                        val markerOptions = MarkerOptions()
+                                                            .position(LatLng(location.latitude.toDouble(), location.longitude.toDouble()))
+                                                            .icon(BitmapDescriptorFactory.fromBitmap(customMarkerBitmap))
+                                                            .title("$${location.hourly_rate.toDouble().toInt()}/h")
+                                                        val marker = googleMap.addMarker(markerOptions)
+                                                        marker?.tag = location.property_id  // 🔑 Save property_id in tag
+                                                        // Move and zoom the camera to the first location
+                                                        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                                            LatLng(location.latitude.toDouble(), location.longitude.toDouble()), 12f))
+                                                    }
+                                                }
+                                            }
+                                            // Apply custom style to the map
+                                            val success: Boolean = googleMap.setMapStyle(
+                                                MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.map_style)
+                                            )
+                                            if (!success) {
+                                                Log.e("MapsActivity", "Style parsing failed.")
+                                            }
+                                        }
+                                    }catch (e:Exception){
+                                        e.printStackTrace()
+                                    }
                                 }
                             }
                         }
@@ -1240,47 +1330,56 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     }
 
     private fun dialogNeedMore() {
-        val dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
-        dialog.apply {
-            setCancelable(true)
-            setContentView(R.layout.dialog_need_more_time)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            val ivclose:ImageView = dialog.findViewById(R.id.ivclose)
-            ivclose.setOnClickListener {
-                session?.setNeedMore(true)
-                dismiss()
-            }
-            val rl_yes:RelativeLayout = dialog.findViewById(R.id.rl_yes)
-            rl_yes.setOnClickListener {
-                var dialog1 = SelectHourFragmentDialog()
-                dialog1.setDialogListener(object : DialogListener{
-                    @RequiresApi(Build.VERSION_CODES.O)
-                    override fun onSubmitClicked(hour: String) {
-                        Log.d(ErrorDialog.TAG,hour)
-                        property?.hourly_rate?.toDoubleOrNull()?.let { resp ->
-                            hour?.let {
-                                val hourlyTotal = (resp * it.toDouble())
-                                openNewDialog(hourlyTotal,hour)
+        try {
+            if (dialog?.isShowing == true) return  // Already open, do nothing
+            dialog =  Dialog(requireContext(), R.style.BottomSheetDialog)
+            dialog?.apply {
+                setCancelable(true)
+                setContentView(R.layout.dialog_need_more_time)
+                window?.attributes = WindowManager.LayoutParams().apply {
+                    copyFrom(window?.attributes)
+                    width = WindowManager.LayoutParams.MATCH_PARENT
+                    height = WindowManager.LayoutParams.MATCH_PARENT
+                }
+                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                val ivclose:ImageView = findViewById(R.id.ivclose)
+                ivclose.setOnClickListener {
+                    session?.setNeedMore(true)
+                    dismiss()
+                }
+                val rl_yes:RelativeLayout = findViewById(R.id.rl_yes)
+                rl_yes.setOnClickListener {
+                    var dialog1 = SelectHourFragmentDialog()
+                    dialog1.setDialogListener(object : DialogListener{
+                        @RequiresApi(Build.VERSION_CODES.O)
+                        override fun onSubmitClicked(hour: String) {
+                            Log.d(ErrorDialog.TAG,hour)
+                            property?.hourly_rate?.toDoubleOrNull()?.let { resp ->
+                                hour?.let {
+                                    val hourlyTotal = (resp * it.toDouble())
+                                    openNewDialog(hourlyTotal,hour)
+                                }
                             }
                         }
-                    }
-                })
-                dialog1.show(requireActivity().supportFragmentManager, "MYDIALOF")
-                session?.setNeedMore(true)
-                dismiss()
+                    })
+                    dialog1.show(requireActivity().supportFragmentManager, "MYDIALOF")
+                    session?.setNeedMore(true)
+                    dismiss()
+                }
+                val rl_cancel:RelativeLayout = findViewById(R.id.rl_cancel)
+                rl_cancel.setOnClickListener {
+                    session?.setNeedMore(true)
+                    dismiss()
+                }
+                setOnDismissListener {
+                    dialog = null  // Reset dialog reference when dismissed
+                }
+                show()
             }
-            val rl_cancel:RelativeLayout = dialog.findViewById(R.id.rl_cancel)
-            rl_cancel.setOnClickListener {
-                session?.setNeedMore(true)
-                dismiss()
-            }
-            show()
+        }catch (e:Exception){
+            e.message
         }
+
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -1360,5 +1459,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         startActivity(intent)
         return true
     }
+
+
 
 }

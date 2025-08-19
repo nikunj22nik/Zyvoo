@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginVertical="@dimen/_5sdp"
-    android:layout_marginHorizontal="@dimen/_20ssp"
+    android:layout_marginStart="@dimen/_20ssp"
+    android:layout_marginEnd="@dimen/_5ssp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -30,7 +31,8 @@
         android:text="Preferred"
         android:textSize="@dimen/_13ssp"
         android:fontFamily="@font/poppins"
-        android:textColor="@color/black"
+        android:textFontWeight="400"
+        android:textColor="#000000"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/textCardNumber"

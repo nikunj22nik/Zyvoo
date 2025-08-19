@@ -94,7 +94,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
 
                     val bundle = Bundle().apply {
                         putString(AppConstant.PROPERTY_ID, position.property_id.toString())
-                        putString(AppConstant.property_images, property_images.toString())
+                        putString(AppConstant.property_images, property_images)
                         putString(AppConstant.latitude, latitude)
                         putString(AppConstant.longitude, longitude)
                         putString(AppConstant.property_rating, property_rating)
@@ -102,7 +102,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                         putString(AppConstant.property_review_count, property_review_count)
                         putString(AppConstant.distance_miles, distance_miles)
                         putString(AppConstant.title, title)
-
                     }
                     findNavController().navigate(R.id.placeOpenFragment, bundle)
 

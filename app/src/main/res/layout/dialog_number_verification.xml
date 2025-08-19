@@ -33,7 +33,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
+        android:layout_height="@dimen/_1dp"
         android:layout_marginHorizontal="@dimen/_20sdp"
         android:background="#C4C4C4"
         android:layout_marginTop="@dimen/_7sdp"
@@ -107,7 +107,7 @@ we will send 4 digits code to your number."
 
         <View
             android:id="@+id/viewNumber"
-            android:layout_width="@dimen/_1sdp"
+            android:layout_width="@dimen/_1dp"
             android:layout_height="@dimen/_20sdp"
             android:layout_toEndOf="@+id/ll1"
             android:layout_centerVertical="true"

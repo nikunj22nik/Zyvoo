@@ -49,7 +49,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:background="#E5E5E5" />
 
 
@@ -63,8 +63,8 @@
                 android:fontFamily="@font/poppins"
                 android:letterSpacing=".01"
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n\nIt has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
-                android:textColor="#000"
-                android:textSize="@dimen/_11ssp" />
+                android:textColor="@color/_000000"
+                android:textSize="@dimen/_13sdp" />
 
             <!-- Feedback Topic Dropdown -->
             <TextView
@@ -73,9 +73,8 @@
                 android:layout_marginHorizontal="@dimen/_18sdp"
                 android:layout_marginTop="16dp"
                 android:text="What's your feedback about?"
-
-                android:textColor="#333333"
-                android:textSize="@dimen/_12sdp" />
+                android:textColor="@color/_000000"
+                android:textSize="@dimen/_13sdp" />
 
             <!--        <Spinner-->
             <!--            android:id="@+id/spinnerFeedback"-->
@@ -91,7 +90,7 @@
             <com.skydoves.powerspinner.PowerSpinnerView
                 android:id="@+id/spinnerFeedback"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:layout_marginStart="@dimen/_17sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
@@ -121,7 +120,7 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Add Details"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="@dimen/_13sdp"
                 android:textColor="@color/black"
                 android:visibility="gone" />
 
@@ -137,7 +136,7 @@
                 android:inputType="textMultiLine"
                 android:minHeight="@dimen/_105sdp"
                 android:padding="@dimen/_10sdp"
-                android:textColor="#333333"
+                android:textColor="@color/_000000"
                 android:textSize="@dimen/_10ssp"
                 android:visibility="gone" />
 
@@ -148,9 +147,10 @@
                 android:layout_marginHorizontal="@dimen/_18sdp"
                 android:layout_marginTop="@dimen/_18sdp"
                 android:fontFamily="@font/poppins"
-                android:text="Need to get in touch?"
-                android:textColor="#000"
-                android:textSize="@dimen/_14sdp"
+                android:text="@string/need_to_get_in_touch"
+                android:textFontWeight="700"
+                android:textColor="@color/_000000"
+                android:textSize="@dimen/_15ssp"
                 android:textStyle="bold" />
 
             <TextView
@@ -159,9 +159,9 @@
                 android:layout_marginHorizontal="@dimen/_18sdp"
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/poppins"
-                android:text="We'll start with some questions and get \nyou to the right place."
-                android:textColor="#000"
-                android:textSize="@dimen/_11ssp" />
+                android:text="@string/we_ll_start_with_some_questions_and_get_nyou_to_the_right_place"
+                android:textColor="@color/_000000"
+                android:textSize="@dimen/_13sdp" />
 
             <TextView
                 android:id="@+id/btnContactUs"
@@ -170,16 +170,18 @@
                 android:layout_marginHorizontal="@dimen/_18sdp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:background="@drawable/text_bg1"
-                android:paddingHorizontal="@dimen/_15ssp"
-                android:paddingVertical="@dimen/_6sdp"
-                android:text="Contact us"
+                android:paddingStart="@dimen/_28sdp"
+                android:paddingEnd="@dimen/_28sdp"
+                android:text="@string/contact_us"
                 android:textSize="@dimen/_13sdp"
-                android:textColor="#000000"
+                android:padding="@dimen/_8ssp"
+                android:elevation="@dimen/_15ssp"
+                android:textColor="@color/_000000"
                 app:buttonTint="@color/black" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:layout_marginHorizontal="@dimen/_18sdp"
                 android:background="#E5E5E5" />
@@ -196,11 +198,12 @@
                 android:backgroundTint="#4AEAB1"
                 android:elevation="@dimen/_2sdp"
                 android:textSize="@dimen/_13sdp"
+                android:padding="@dimen/_8ssp"
+                android:paddingStart="@dimen/_28sdp"
+                android:paddingEnd="@dimen/_28sdp"
                 android:fontFamily="@font/poppins"
-                android:paddingHorizontal="@dimen/_20sdp"
-                android:paddingVertical="@dimen/_6sdp"
                 android:text="Submit"
-                android:textColor="#000" />
+                android:textColor="@color/_000000" />
 
         </LinearLayout>
 

@@ -221,19 +221,22 @@ public class QuickstartConversationsManager {
 
         @Override
         public void onConversationUpdated(Conversation conversation, Conversation.UpdateReason updateReason) {
-            messages.clear();
-            if (conversation.getLastMessageIndex() != null) {
-                conversation.getMessageByIndex(conversation.getLastMessageIndex().intValue(), new CallbackListener<Message>() {
-                    @Override
-                    public void onSuccess(Message result) {
-                        Log.d("*******","onConversationUpdated");
-                        messages.add(result);
-                        if (conversationsManagerListener != null) {
-                            conversationsManagerListener.receivedNewMessage();
+            if (conversation.getSynchronizationStatus() == Conversation.SynchronizationStatus.ALL) {
+                messages.clear();
+                if (conversation.getLastMessageIndex() != null) {
+                    conversation.getMessageByIndex(conversation.getLastMessageIndex().intValue(), new CallbackListener<Message>() {
+                        @Override
+                        public void onSuccess(Message result) {
+                            Log.d("*******","onConversationUpdated");
+                            messages.add(result);
+                            if (conversationsManagerListener != null) {
+                                conversationsManagerListener.receivedNewMessage();
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
+
 
         }
 
@@ -244,7 +247,18 @@ public class QuickstartConversationsManager {
 
         @Override
         public void onConversationSynchronizationChange(Conversation conversation) {
-
+//            if (conversation.getSynchronizationStatus() == Conversation.SynchronizationStatus.ALL) {
+//                messages.clear();
+//                if (conversation.getLastMessageIndex() != null) {
+//                    conversation.getMessageByIndex(conversation.getLastMessageIndex().intValue(), result -> {
+//                        Log.d("*******","onConversationUpdated");
+//                        messages.add(result);
+//                        if (conversationsManagerListener != null) {
+//                            conversationsManagerListener.receivedNewMessage();
+//                        }
+//                    });
+//                }
+//            }
         }
 
         @Override
@@ -418,6 +432,7 @@ public class QuickstartConversationsManager {
 
         @Override
         public void onSynchronizationChanged(Conversation conversation) {
+
 
         }
     };

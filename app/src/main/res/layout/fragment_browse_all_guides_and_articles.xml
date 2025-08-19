@@ -135,17 +135,16 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_marginTop="@dimen/_10ssp"
-           android:layout_marginBottom="@dimen/_75sdp"
            android:background="@drawable/button_bg"
            android:fontFamily="@font/poppins"
            android:paddingHorizontal="@dimen/_10ssp"
            android:paddingVertical="@dimen/_5sdp"
            android:text="Contact Us"
            android:textColor="@color/black"
+           android:layout_marginBottom="@dimen/_15ssp"
            app:layout_constraintBottom_toBottomOf="parent"
            app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toBottomOf="@id/recyclerViewGuests" />
+           app:layout_constraintStart_toStartOf="parent" />
 
    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

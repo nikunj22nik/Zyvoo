@@ -8,6 +8,8 @@
 
     <style name="Theme.ZYVO" parent="Base.Theme.ZYVO" >
         <item name="popupMenuStyle">@style/CustomPopupMenu</item>
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="fontFamily">@font/poppins</item>
     </style>
 
     <style name="Theme.ZYVO.Fullscreen" parent="Theme.ZYVO">

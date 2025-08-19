@@ -29,6 +29,7 @@ import com.business.zyvo.adapter.host.AdapterOuterPlaceOrder
 import com.business.zyvo.databinding.FragmentPlaceOpenBinding
 import com.business.zyvo.fragment.host.placeOpen.model.PropertyStatusResponse
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.ErrorDialog
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -204,9 +205,10 @@ class PlaceOpenFragment : Fragment() {
 
                     val (dateRange, year) = it
                     val (startDate1, endDate1) = dateRange
-                    startDate = startDate1 + " " + year
-                    endDate = endDate1 + " " + year
-                    binding.tvDateRange.text = "$startDate1 - $endDate1 $year"
+                    startDate = startDate1 //+ " " + year
+                    endDate = endDate1 //+ " " + year
+                    //binding.tvDateRange.text = "$startDate1 - $endDate1 $year"
+                    binding.tvDateRange.text = "$startDate1 - $endDate1"
 //                    Toast.makeText(
 //                        this,
 //                        "Range: $startDate to $endDate, Year: $year",
@@ -223,8 +225,8 @@ class PlaceOpenFragment : Fragment() {
                                         resources.getString(R.string.no_internet_dialog_msg)
                                     )
                                 } else {
-
-                                    val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                                    try {
+                                        val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
 //                                    val startDate1 = LocalDate.parse(
 //                                        "$startDate $year",
@@ -236,29 +238,32 @@ class PlaceOpenFragment : Fragment() {
 //                                    val formattedEndDate = "$endDate $year".replace(Regex("\\s+"), " ") // Ensure proper spacing
 
 
-                                    Log.d("checkDates", startDate!!)
-                                    Log.d("checkDates", endDate!!)
-                                    val startDate1 = LocalDate.parse(
-                                        startDate,
-                                        DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH)
-                                    ).format(outputFormatter)
+                                        Log.d("checkDates", startDate!!)
+                                        Log.d("checkDates", endDate!!)
+                                        val startDate1 = LocalDate.parse(
+                                            startDate,
+                                            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH)
+                                        ).format(outputFormatter)
 
-                                    val endDate1 = LocalDate.parse(
-                                        endDate,
-                                        DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH)
-                                    )
-                                        .format(outputFormatter)
+                                        val endDate1 = LocalDate.parse(
+                                            endDate,
+                                            DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH)
+                                        )
+                                            .format(outputFormatter)
 
-                                    val user_id: String =
-                                        SessionManager(requireContext()).getUserId().toString()
-                                    propertyBookingDetails(
-                                        propertyId,
-                                        user_id,
-                                        "$startDate1",
-                                        "$endDate1",
-                                        latitude,
-                                        longitude
-                                    )
+                                        val user_id: String =
+                                            SessionManager(requireContext()).getUserId().toString()
+                                        propertyBookingDetails(
+                                            propertyId,
+                                            user_id,
+                                            "$startDate1",
+                                            "$endDate1",
+                                            latitude,
+                                            longitude
+                                        )
+                                    }catch (e:Exception){
+                                        Log.d(ErrorDialog.TAG,e.message?:"")
+                                    }
                                 }
 
                             }

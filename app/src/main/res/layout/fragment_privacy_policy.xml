@@ -94,7 +94,7 @@
                 android:fontFamily="@font/poppins"
                 android:textSize="@dimen/_8ssp"
                 android:text=""
-                android:textColor="#807B7B" />
+                android:textColor="@color/_807b7b" />
 
 
             <View

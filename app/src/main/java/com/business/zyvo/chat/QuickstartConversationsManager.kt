@@ -276,7 +276,20 @@ class QuickstartConversationsManager {
 
         override fun onConversationDeleted(conversation: Conversation) {}
 
-        override fun onConversationSynchronizationChange(conversation: Conversation) {}
+        override fun onConversationSynchronizationChange(conversation: Conversation) {
+//            if (conversation.synchronizationStatus == Conversation.SynchronizationStatus.ALL) {
+//                if (conversation.lastMessageIndex != null) {
+//                    conversation.getMessageByIndex(
+//                        conversation.lastMessageIndex.toInt().toLong()
+//                    ) { result ->
+//                        Log.d(ErrorDialog.TAG, "onConversationUpdated")
+//                        if (conversationsManagerListener != null) {
+//                            conversationsManagerListener!!.receivedNewMessage()
+//                        }
+//                    }
+//                }
+//            }
+        }
 
         override fun onError(errorInfo: ErrorInfo) {}
 

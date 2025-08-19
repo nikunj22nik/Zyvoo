@@ -285,7 +285,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginStart="@dimen/_7sdp"
-android:fontFamily="@font/poppins"
+                        android:fontFamily="@font/poppins"
                         android:background="@null"
                         android:hint="Location"
                         android:singleLine="true"
@@ -510,7 +510,6 @@ android:fontFamily="@font/poppins"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
-
                     android:text="Any"
                     android:textColor="#3F3D56"
                     android:layout_marginVertical="2dp"
@@ -531,11 +530,23 @@ android:fontFamily="@font/poppins"
                     android:textSize="13sp"  />
 
                 <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="0"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:textColor="#3F3D56"
+                    android:layout_marginVertical="2dp"
+                    android:textSize="13sp"  />
+
+                <TextView
                     android:id="@+id/tv_2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -546,24 +557,24 @@ android:fontFamily="@font/poppins"
 
                 <TextView
                     android:id="@+id/tv_3"
-                    android:layout_width="0dp"
+                    android:layout_width="52dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_marginVertical="2dp"
+                    android:layout_weight="0.79"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
                     android:text="3"
                     android:textColor="#3F3D56"
-                    android:layout_marginVertical="2dp"
-                    android:textSize="13sp"  />
+                    android:textSize="13sp" />
 
                 <TextView
                     android:id="@+id/tv_5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_weight="1.1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -571,6 +582,7 @@ android:fontFamily="@font/poppins"
                     android:textColor="#3F3D56"
                     android:layout_marginVertical="2dp"
                     android:textSize="13sp"  />
+
 
                 <TextView
                     android:id="@+id/tv_7"
@@ -598,7 +610,6 @@ android:fontFamily="@font/poppins"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:id="@+id/availEditText"
-
                         android:background="@null"
                         android:inputType="number"
                         android:hint="Type.."
@@ -619,6 +630,8 @@ android:fontFamily="@font/poppins"
                         android:layout_marginEnd="@dimen/_3sdp"
                         android:src="@drawable/ic_right_tick_bg_green" />
                 </RelativeLayout>
+
+
             </LinearLayout>
 
             <TextView

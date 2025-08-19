@@ -113,6 +113,7 @@ class QuickstartConversationsManagerOneTowOne {
                     } catch (e: Exception) {
                         conversationsManagerListener?.reloadLastMessages()
                         Log.e(TAG, "Failed to process messages: ${e.message}")
+                        conversationsManagerListener?.showError("")
                     }
                 }
                     }
@@ -120,6 +121,7 @@ class QuickstartConversationsManagerOneTowOne {
         } catch (e: Exception) {
             conversationsManagerListener?.reloadLastMessages()
             Log.e("*******", "msg ${e.message}")
+            conversationsManagerListener?.showError("")
         }
     }
 
@@ -149,6 +151,7 @@ class QuickstartConversationsManagerOneTowOne {
             }
         }catch (e:Exception){
             e.printStackTrace()
+            conversationsManagerListener?.showError("")
         }
     }
 
@@ -362,9 +365,8 @@ class QuickstartConversationsManagerOneTowOne {
         if (conversation.status == Conversation.ConversationStatus.JOINED) {
             this@QuickstartConversationsManagerOneTowOne.conversation = conversation
             Log.d(TAG, "Already joined default conversation")
-            this@QuickstartConversationsManagerOneTowOne.conversation!!.addListener(
-                mDefaultConversationListener
-            )
+            this@QuickstartConversationsManagerOneTowOne.conversation!!.addListener(mDefaultConversationListener)
+            this@QuickstartConversationsManagerOneTowOne.loadPreviousMessages(conversation)
             return
         }
 
@@ -378,6 +380,7 @@ class QuickstartConversationsManagerOneTowOne {
 
             override fun onError(errorInfo: ErrorInfo) {
                 Log.e(TAG, "Error joining conversation: ${errorInfo.message}")
+                conversationsManagerListener?.showError("")
             }
         })
     }
@@ -411,14 +414,16 @@ class QuickstartConversationsManagerOneTowOne {
         override fun onConversationAdded(conversation: Conversation) {}
 
         override fun onConversationUpdated(conversation: Conversation, updateReason: Conversation.UpdateReason) {
-            if (conversation.lastMessageIndex != null) {
-                conversation.getMessageByIndex(
-                    conversation.lastMessageIndex.toInt().toLong()
-                ) { result ->
-                    Log.d("*******", "onConversationUpdated")
-                   // messages.add(result!!)
-                    if (conversationsManagerListener != null) {
-                        conversationsManagerListener!!.receivedNewMessage()
+            if (conversation.synchronizationStatus == Conversation.SynchronizationStatus.ALL) {
+                if (conversation.lastMessageIndex != null) {
+                    conversation.getMessageByIndex(
+                        conversation.lastMessageIndex.toInt().toLong()
+                    ) { result ->
+                        Log.d("*******", "onConversationUpdated")
+                        // messages.add(result!!)
+                        if (conversationsManagerListener != null) {
+                            conversationsManagerListener!!.receivedNewMessage()
+                        }
                     }
                 }
             }
@@ -426,7 +431,21 @@ class QuickstartConversationsManagerOneTowOne {
 
         override fun onConversationDeleted(conversation: Conversation) {}
 
-        override fun onConversationSynchronizationChange(conversation: Conversation) {}
+        override fun onConversationSynchronizationChange(conversation: Conversation) {
+//            if (conversation.synchronizationStatus == Conversation.SynchronizationStatus.ALL) {
+//                if (conversation.lastMessageIndex != null) {
+//                    conversation.getMessageByIndex(
+//                        conversation.lastMessageIndex.toInt().toLong()
+//                    ) { result ->
+//                        Log.d("*******", "onConversationUpdated")
+//                        // messages.add(result!!)
+//                        if (conversationsManagerListener != null) {
+//                            conversationsManagerListener!!.receivedNewMessage()
+//                        }
+//                    }
+//                }
+//            }
+        }
 
         override fun onError(errorInfo: ErrorInfo) {}
 

@@ -34,5 +34,7 @@
     <dimen name="default_twentySpacing">20dp</dimen>
     <dimen name="default_thirtySpacing">30dp</dimen>
     <dimen name="default_fourtySpacing">40dp</dimen>
+    <dimen name="_1dp">1dp</dimen>
+    <dimen name="_2dp">2dp</dimen>
 
 </resources>

@@ -78,7 +78,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
+        android:layout_height="@dimen/_1dp"
         android:background="@color/grey"
         android:layout_marginTop="@dimen/_10sdp"
         />
@@ -207,7 +207,7 @@ android:textSize="@dimen/_13sdp"
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_1sdp"
+        android:layout_height="@dimen/_1dp"
         android:layout_marginHorizontal="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_15sdp"
         android:visibility="gone"
@@ -280,6 +280,7 @@ android:textSize="@dimen/_13sdp"
                         android:text="Author:"
                         android:textSize="@dimen/_10sdp"
                         android:textColor="@color/black"
+                        android:textStyle="bold"
                         android:fontFamily="@font/poppins"
                         />
 
@@ -325,6 +326,7 @@ android:textSize="@dimen/_13sdp"
                         android:layout_centerHorizontal="true"
                         android:textSize="@dimen/_10sdp"
                         android:textColor="@color/black"
+                        android:textStyle="bold"
                         android:fontFamily="@font/poppins"
                         />
 
@@ -345,7 +347,7 @@ android:textSize="@dimen/_13sdp"
             
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="@dimen/_1dp"
                 android:background="@color/grey"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"

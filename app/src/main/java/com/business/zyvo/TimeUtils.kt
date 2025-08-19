@@ -1,5 +1,6 @@
 package com.business.zyvo
 
+import android.util.Log
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -9,36 +10,64 @@ object TimeUtils {
     data class DateComponents(val year: Long, val month: Long, val day: Long, val hour: Long, val minute: Long)
 
     fun updateLastMsgTime(time: String): String {
-        try {
+//        try {
+//            Log.d("*******",time)
+//            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault())
+//            dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+//
+//            val secondDate = dateFormat.parse(time)
+//
+//            val currentCalendar = Calendar.getInstance()
+//            val firstDate = currentCalendar.time
+//
+//            val dateComponents = calculateDateComponents(secondDate, firstDate)
+//
+//            return when {
+//                dateComponents.year > 0 -> "${dateComponents.year}y ago"
+//                dateComponents.month > 0 -> "${dateComponents.month} month ago"
+//                dateComponents.day > 0 -> "${dateComponents.day}d ago"
+//                dateComponents.hour > 0 -> "${dateComponents.hour}h ago"
+//                dateComponents.minute > 0 -> {
+//                    if (dateComponents.minute >= 1) {
+//                        "${dateComponents.minute}m ago"
+//                    } else {
+//                        "now"
+//                    }
+//                }
+//                else -> "now"
+//            }
+//        } catch (e: ParseException) {
+//            e.printStackTrace()
+//        }
+//
+//        return "now"
+        return try {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX", Locale.getDefault())
             dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
-            val secondDate = dateFormat.parse(time)
+            val pastDate = dateFormat.parse(time) ?: return "now"
+            val now = System.currentTimeMillis()
+            val diff = now - pastDate.time
 
-            val currentCalendar = Calendar.getInstance()
-            val firstDate = currentCalendar.time
+            val seconds = diff / 1000
+            val minutes = seconds / 60
+            val hours = minutes / 60
+            val days = hours / 24
+            val months = days / 30
+            val years = days / 365
 
-            val dateComponents = calculateDateComponents(secondDate, firstDate)
-
-            return when {
-                dateComponents.year > 0 -> "${dateComponents.year}y ago"
-                dateComponents.month > 0 -> "${dateComponents.month} month ago"
-                dateComponents.day > 0 -> "${dateComponents.day}d ago"
-                dateComponents.hour > 0 -> "${dateComponents.hour}h ago"
-                dateComponents.minute > 0 -> {
-                    if (dateComponents.minute >= 1) {
-                        "${dateComponents.minute}m ago"
-                    } else {
-                        "now"
-                    }
-                }
+            when {
+                years > 0 -> "${years}y ago"
+                months > 0 -> "${months}month ago"
+                days > 0 -> "${days}d ago"
+                hours > 0 -> "${hours}h ago"
+                minutes > 0 -> "${minutes}minutes ago"
                 else -> "now"
             }
-        } catch (e: ParseException) {
+        } catch (e: Exception) {
             e.printStackTrace()
+            "now"
         }
-
-        return "now"
     }
 
     /**

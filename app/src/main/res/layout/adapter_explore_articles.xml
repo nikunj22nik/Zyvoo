@@ -27,6 +27,7 @@
         android:fontFamily="@font/poppins"
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginBottom="@dimen/_10ssp"
         />
 
     <TextView
@@ -34,11 +35,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_2sdp"
+        android:visibility="gone"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
         />
     <View
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="@dimen/_20sdp"/>
 
 </LinearLayout>
