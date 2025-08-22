@@ -81,9 +81,8 @@
                         android:fontFamily="@font/poppins"
                         android:hint="Where"
                         android:textColorHint="#000000"
-                      android:gravity="center"
-                        android:textFontWeight="400"
-                        android:textSize="@dimen/_11sdp" />
+                        android:gravity="center"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/textLocationName"
@@ -94,7 +93,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Type location...."
                         android:textColor="#66000000"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textSize="15sp" />
 
 
                 </RelativeLayout>
@@ -115,8 +114,8 @@
                         android:hint="Where"
                         android:textColorHint="#000000"
                         android:gravity="center"
-                        android:textSize="@dimen/_11sdp"
-                        android:textStyle="bold" />
+                        android:textSize="15sp"
+                        />
                     <AutoCompleteTextView
                         android:id="@+id/et_search_location"
                         android:layout_width="0dp"
@@ -125,18 +124,18 @@
                         android:layout_centerVertical="true"
                         android:background="@null"
                         android:singleLine="true"
-                        android:textSize="@dimen/_11sdp"
+                        android:textSize="15sp"
                         android:layout_toEndOf="@+id/whereTest"
                         android:layout_alignParentEnd="true"
                         android:textAlignment="textEnd"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 
-                  <!--  <EditText
-                        android:id="@+id/et_search_location"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@null" />-->
+                    <!--  <EditText
+                          android:id="@+id/et_search_location"
+                          android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:background="@null" />-->
 
                 </RelativeLayout>
 
@@ -184,9 +183,8 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Time"
-                        android:textFontWeight="400"
                         android:textColor="#000000"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -196,7 +194,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Add Time"
                         android:textColor="#66000000"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textSize="15sp" />
 
 
                 </RelativeLayout>
@@ -231,7 +229,7 @@
                         android:text="Dates"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_hourly"
@@ -244,7 +242,7 @@
                         android:gravity="center"
                         android:text="Hourly"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/tv_flexible"
@@ -258,7 +256,7 @@
                         android:text="Flexible"
                         android:layout_marginEnd="@dimen/_5sdp"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="14sp" />
 
                 </LinearLayout>
 
@@ -564,7 +562,7 @@
                         android:text="Activity"
                         android:textFontWeight="400"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_10sdp" />
+                        android:textSize="15sp" />
 
                     <ImageView
                         android:layout_width="@dimen/_12sdp"

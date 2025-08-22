@@ -67,8 +67,7 @@
             android:textAlignment="center"
             android:layout_marginTop="@dimen/_10ssp"
             android:fontFamily="@font/poppins"
-            android:textColor="#000000"
-            android:textStyle="bold" />
+            android:textColor="#000000" />
 
         <!-- Right line -->
         <View

@@ -41,14 +41,12 @@
             android:layout_marginStart="@dimen/_10ssp"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_10ssp"
-            android:fontFamily="@font/poppins"
+            android:fontFamily="@font/poppins_medium"
             android:gravity="start|center_vertical"
             android:maxLines="2"
-
             android:text="You got a booking"
             android:textColor="@color/black"
             android:textSize="@dimen/_11ssp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageNotification"
             app:layout_constraintTop_toBottomOf="@+id/imageCross" />

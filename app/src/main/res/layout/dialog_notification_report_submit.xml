@@ -26,11 +26,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Notification"
-            android:textSize="@dimen/_13sdp"
+            android:textSize="18sp"
             android:textColor="@color/black"
-            android:fontFamily="@font/poppins"
+            android:fontFamily="@font/poppins_semibold"
             android:layout_gravity="center_horizontal"
-            android:textStyle="bold"
             />
 
         <ImageView
@@ -50,7 +49,7 @@
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/poppins"
             android:textColor="#636363"
-            android:textSize="@dimen/_12ssp"
+            android:textSize="12sp"
             />
 
         <RelativeLayout
@@ -59,19 +58,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="@dimen/_10sdp"
-            android:layout_marginStart="@dimen/_25ssp"
-            android:layout_marginEnd="@dimen/_25ssp"
+            android:layout_marginBottom="@dimen/_25sdp"
+            android:layout_marginStart="@dimen/_27ssp"
+            android:layout_marginEnd="@dimen/_27ssp"
             android:background="@drawable/bg_green_add_card">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Okay"
+                android:textSize="15sp"
                 android:textAlignment="center"
                 android:fontFamily="@font/poppins"
-                android:layout_margin="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_5sdp"
                 android:textColor="@color/black"
-                android:textStyle="bold"
                 android:paddingHorizontal="@dimen/_10sdp" />
         </RelativeLayout>
 

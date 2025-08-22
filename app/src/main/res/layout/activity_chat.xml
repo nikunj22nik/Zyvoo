@@ -15,14 +15,14 @@
 
 
 
-        <ImageView
-            android:id="@+id/imgBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:src="@drawable/ic_back_icon"
-            android:layout_below="@id/view1"
-            android:layout_marginVertical="@dimen/_10sdp"/>
+    <ImageView
+        android:id="@+id/imgBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:src="@drawable/ic_back_icon"
+        android:layout_below="@id/view1"
+        android:layout_marginVertical="@dimen/_10sdp"/>
 
 
 
@@ -64,6 +64,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="online uSER"
                 android:layout_marginTop="@dimen/_7sdp"
+                android:textSize="13sp"
                 android:textColor="#7DD2B0"
                 app:layout_constraintVertical_bias="0.7"
                 android:layout_centerVertical="true"
@@ -90,13 +91,13 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             >
-        <ImageView
-            android:id="@+id/imageUnFavourite"
-            android:layout_width="@dimen/_28sdp"
-            android:layout_height="@dimen/_28sdp"
-            android:layout_marginEnd="@dimen/_5sdp"
-            android:src="@drawable/ic_favorite_star_icon"
-            />
+            <ImageView
+                android:id="@+id/imageUnFavourite"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:src="@drawable/ic_favorite_star_icon"
+                />
             <ImageView
                 android:id="@+id/imageFavourite"
                 android:layout_width="@dimen/_28sdp"
@@ -106,13 +107,13 @@
                 android:src="@drawable/ic_fav_chat"
                 />
 
-        <ImageView
-            android:id="@+id/imageThreeDots"
-            android:layout_width="@dimen/_28sdp"
-            android:layout_height="@dimen/_28sdp"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:src="@drawable/ic_three_dot_horizontal_icon"
-            />
+            <ImageView
+                android:id="@+id/imageThreeDots"
+                android:layout_width="@dimen/_28sdp"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:src="@drawable/ic_three_dot_horizontal_icon"
+                />
         </LinearLayout>
 
     </RelativeLayout>
@@ -126,15 +127,15 @@
 
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvChatting"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/_5sdp"
-            android:orientation="vertical"
-            android:layout_above="@id/llblock"
-            android:layout_below="@id/view3"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_5sdp"
+        android:orientation="vertical"
+        android:layout_above="@id/llblock"
+        android:layout_below="@id/view3"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     <LinearLayout
         android:layout_width="match_parent"

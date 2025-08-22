@@ -65,8 +65,7 @@
             android:maxLines="1"
             android:text="Katelyn Francy"
             android:textColor="@color/black"
-            android:textSize="@dimen/_14ssp"
-            android:textStyle="bold"
+            android:textSize="15sp"
             app:layout_constraintStart_toEndOf="@id/imagePicture"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -90,10 +89,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_two_side_corner_green_layout"
+                android:fontFamily="@font/poppins"
                 android:paddingHorizontal="@dimen/_7sdp"
                 android:paddingVertical="@dimen/_2sdp"
                 android:text="Apporve"
-                android:textColor="#00BF7B" />
+                android:textColor="#00BF7B"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/textDecline"
@@ -101,10 +102,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:background="@drawable/bg_two_side_corner_red_layout"
+                android:fontFamily="@font/poppins"
                 android:paddingHorizontal="@dimen/_7sdp"
                 android:paddingVertical="@dimen/_2sdp"
                 android:text="Decline"
-                android:textColor="#FF1A00" />
+                android:textColor="#FF1A00"
+                android:textSize="13sp" />
 
         </LinearLayout>
 
@@ -134,7 +137,7 @@
                 android:paddingVertical="@dimen/_3sdp"
                 android:text="Finished"
                 android:textColor="#3A4B4C"
-                android:textSize="@dimen/_11ssp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/textDate"
@@ -146,7 +149,7 @@
                 android:maxLines="1"
                 android:text="October 22, 2023"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_11ssp" />
+                android:textSize="13sp" />
         </com.google.android.flexbox.FlexboxLayout>
 
 
@@ -187,12 +190,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins"
-                android:text="I'm overbooked"
-                android:textSize="@dimen/_10ssp"
-                android:textStyle="bold"
 
-                />
+                android:fontFamily="@font/open_sans"
+                android:text="I'm overbooked"
+                android:textColor="#3F3D56"
+                android:textSize="13sp" />
 
         </RelativeLayout>
 
@@ -210,10 +212,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins"
+
+                android:fontFamily="@font/open_sans"
+                android:textColor="#3F3D56"
+                android:textSize="13sp"
                 android:text="Maintenance day"
-                android:textSize="@dimen/_10ssp"
-                android:textStyle="bold" />
+                />
 
         </RelativeLayout>
 
@@ -233,11 +237,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@null"
-                android:fontFamily="@font/poppins"
                 android:hint="Other reason.."
-                android:textColor="#663F3D56"
-                android:textSize="@dimen/_10ssp"
-                android:textStyle="bold" />
+                android:fontFamily="@font/open_sans"
+                android:textColorHint="#663F3D56"
+                android:textColor="#3F3D56"
+                android:textSize="13sp"
+                />
 
         </RelativeLayout>
 
@@ -252,11 +257,13 @@
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
             android:gravity="start"
+            android:fontFamily="@font/open_sans"
+            android:textColorHint="#663F3D56"
+            android:textColor="#3F3D56"
+            android:textSize="13sp"
             android:hint="Share a message..."
             android:paddingHorizontal="@dimen/_6sdp"
             android:paddingVertical="@dimen/_6sdp"
-            android:textSize="@dimen/_9ssp"
-
             />
 
 
@@ -272,9 +279,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:fontFamily="@font/open_sans"
                 android:text="Decline Request"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_10sdp" />
+                android:textSize="13sp" />
         </RelativeLayout>
 
     </LinearLayout>
@@ -299,16 +307,16 @@
             android:id="@+id/tvShareMessage"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_100sdp"
-
             android:layout_marginHorizontal="@dimen/_6sdp"
             android:layout_marginTop="@dimen/_6sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
+            android:fontFamily="@font/open_sans"
             android:gravity="start"
             android:hint="Share a message..."
             android:paddingHorizontal="@dimen/_6sdp"
             android:paddingVertical="@dimen/_6sdp"
-            android:textSize="@dimen/_9ssp"
+            android:textSize="13sp"
 
             />
 
@@ -325,9 +333,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:fontFamily="@font/open_sans"
                 android:text="Approve Request"
                 android:textColor="@color/white"
-                android:textSize="@dimen/_10sdp" />
+                android:textSize="13sp" />
         </RelativeLayout>
 
     </LinearLayout>

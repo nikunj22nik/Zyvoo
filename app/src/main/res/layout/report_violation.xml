@@ -26,10 +26,10 @@
             android:layout_height="wrap_content"
             android:text="Report Violation"
             android:textColor="@color/black"
-            android:textSize="@dimen/_13sdp"
+            android:fontFamily="@font/poppins_medium"
+            android:textSize="15sp"
             android:layout_gravity="center_horizontal"
-            android:fontFamily="@font/poppins"
-            android:textStyle="bold"
+
             />
 
 
@@ -53,12 +53,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Please select a reason for reporting this user."
-                android:textSize="@dimen/_14sdp"
-                android:textColor="#000000"
+
+
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:fontFamily="@font/poppins"
+                android:textSize="14sp"
                 />
 
 <!--            <RelativeLayout-->
@@ -101,7 +102,8 @@
                 android:padding="10dp"
                 android:textColor="#000"
                 android:textColorHint="#80000000"
-                android:textSize="14.5sp"
+                android:textSize="12sp"
+                android:fontFamily="@font/poppins"
                 app:spinner_arrow_gravity="end"
                 app:spinner_arrow_padding="8dp"
                 app:spinner_arrow_show="true"
@@ -117,11 +119,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Add Additional Details"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="14sp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:textColor="#000000"
-                android:textStyle="bold"
+
                 android:fontFamily="@font/poppins"
                 />
 
@@ -143,6 +145,8 @@
                     android:gravity="start|top"
                     android:inputType="textMultiLine"
                     android:text=""
+                    android:fontFamily="@font/poppins"
+                    android:textSize="12sp"
                     android:layout_margin="@dimen/_7sdp"
                     android:layout_marginTop="0dp"
                     />
@@ -167,9 +171,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Submit Report"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="15sp"
+                android:fontFamily="@font/poppins_medium"
                 android:textColor="#000000"
-                android:textStyle="bold"
                 android:layout_marginHorizontal="@dimen/_12sdp"
                 android:layout_marginVertical="@dimen/_10sdp"
                 />
@@ -179,7 +183,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="You can also add additional details to \n help us investigate further."
-            android:textSize="@dimen/_12ssp"
+            android:textSize="12sp"
             android:textAlignment="center"
             android:textColor="@color/black"
             android:layout_gravity="center_horizontal"

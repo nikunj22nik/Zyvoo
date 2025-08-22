@@ -28,10 +28,9 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="#000"
-            android:textSize="@dimen/_11ssp"
-            android:textStyle="bold"
+            android:textSize="15sp"
             android:layout_centerVertical="true"
-            android:fontFamily="@font/poppins_light"
+            android:fontFamily="@font/poppins"
             android:layout_toEndOf="@id/imageProfilePicture"/>
 
 
@@ -42,7 +41,7 @@
             android:layout_alignParentEnd="true"
             android:text="Jul 20, 2023, 11:32 AM"
             android:textColor="#000"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="12sp"
             android:layout_marginEnd="@dimen/_10sdp"
             android:fontFamily="@font/poppins"
             android:maxWidth="@dimen/_135sdp"
@@ -61,9 +60,8 @@
             android:layout_height="wrap_content"
             android:text=""
             android:textColor="#80000000"
-            android:textStyle="bold"
-            android:textSize="@dimen/_11ssp"
-            android:fontFamily="@font/poppins_light"
+            android:textSize="15sp"
+            android:fontFamily="@font/poppins"
             />
 
         <RelativeLayout

@@ -11,11 +11,10 @@
         android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:text="Article Topic Title"
         android:textColor="@color/black"
-        android:textSize="@dimen/_12ssp"
-        android:textStyle="bold"
+        android:textSize="15sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -25,7 +24,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
         android:text=""
-        android:textSize="@dimen/_13ssp"
+        android:textSize="16sp"
         android:textColor="#ACACAC"
 
         app:layout_constraintStart_toStartOf="parent"

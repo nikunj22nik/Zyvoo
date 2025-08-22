@@ -302,6 +302,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Hosted by Mia"
+                        android:textSize="12.44sp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins" />
 
@@ -310,7 +311,7 @@
                         android:layout_height="wrap_content"
                         android:text="Melbourne Beach, FL, US"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_8sdp"
+                        android:textSize="12.44sp"
                         android:fontFamily="@font/poppins" />
                 </LinearLayout>
             </RelativeLayout>
@@ -339,7 +340,7 @@
                 android:paddingVertical="@dimen/_4sdp"
                 android:text="Instant book"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_9ssp"
+                android:textSize="12.21sp"
                 android:textStyle="normal"
                 app:drawableStartCompat="@drawable/ic_caminho_flash"
                 app:layout_constraintStart_toStartOf="parent"
@@ -365,23 +366,22 @@
         android:text="Cabin in Peshastin"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
-        android:textStyle="bold"
         android:layout_marginStart="@dimen/_3sdp"
         android:layout_marginTop="@dimen/_5sdp"
         app:layout_constraintEnd_toStartOf="@id/textPricePerHours"
         app:layout_constraintTop_toBottomOf="@id/cl1"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginEnd="@dimen/_10sdp"
-        android:textSize="@dimen/_13sdp" />
+        android:textSize="13sp" />
 
     <!-- Star Image and Rating -->
     <ImageView
         android:id="@+id/imageStar"
-        android:layout_width="@dimen/_13sdp"
-        android:layout_height="@dimen/_13sdp"
+        android:layout_width="@dimen/_10sdp"
+        android:layout_height="@dimen/_10sdp"
         android:src="@drawable/ic_star"
         android:layout_marginStart="@dimen/_3sdp"
-        android:layout_marginTop="@dimen/_2sdp"
+        android:layout_marginTop="@dimen/_7sdp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textHotelName" />
 
@@ -390,9 +390,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="5.0"
-        android:textStyle="bold"
-        android:layout_marginTop="@dimen/_1sdp"
-        android:textSize="@dimen/_11ssp"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:textSize="11sp"
+        android:fontFamily="@font/poppins"
         android:textColor="#FCA800"
         android:layout_marginStart="@dimen/_2sdp"
         app:layout_constraintStart_toEndOf="@id/imageStar"
@@ -419,9 +419,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="37 miles away"
+
         android:textColor="#A4A4A4"
-        android:layout_marginTop="@dimen/_1sdp"
-        android:textSize="@dimen/_11ssp"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:textSize="11sp"
+        android:fontFamily="@font/poppins"
         android:drawablePadding="@dimen/_5sdp"
         android:layout_marginStart="@dimen/_2sdp"
         android:layout_marginEnd="@dimen/_4sdp"
@@ -436,11 +438,10 @@
         android:layout_height="wrap_content"
         android:text="Price per hour"
         android:textColor="#000"
-        android:textStyle="bold"
         android:drawablePadding="@dimen/_4sdp"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:layout_marginTop="@dimen/_5sdp"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         android:layout_marginEnd="@dimen/_4sdp"
         app:drawableStartCompat="@drawable/ic_clock"
         app:layout_constraintEnd_toEndOf="parent"

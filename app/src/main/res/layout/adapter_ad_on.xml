@@ -32,7 +32,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
             android:text="Computer Screen"
-            android:textStyle="bold"
+            android:textSize="12sp"
+            android:textColor="@color/black"
             android:fontFamily="@font/poppins"
             />
         <TextView
@@ -41,8 +42,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
             android:text="$10 / Item"
-            android:textStyle="bold"
-            android:fontFamily="@font/poppins"
+            android:textSize="12sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_light"
             />
 
     </LinearLayout>

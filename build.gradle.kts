@@ -8,7 +8,8 @@ buildscript {
     }
     dependencies {
         // Updated Gradle plugin
-        classpath("com.android.tools.build:gradle:8.4.2")
+        //classpath("com.android.tools.build:gradle:8.4.2")
+        classpath("com.android.tools.build:gradle:8.3.1")
 
         // Hilt plugin
         classpath("com.google.dagger:hilt-android-gradle-plugin:2.52")

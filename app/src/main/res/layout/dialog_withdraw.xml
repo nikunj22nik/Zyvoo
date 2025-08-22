@@ -24,13 +24,12 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageCross"
         android:layout_centerHorizontal="true"
-        android:textStyle="bold"
         android:layout_gravity="center_horizontal"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
 
         android:text="Withdraw Earnings"
         android:textColor="@color/black"
-        android:textSize="@dimen/_13sdp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -56,7 +55,7 @@
         android:fontFamily="@font/poppins"
         android:text="Available Balance :"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11sdp"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
     <TextView
@@ -64,15 +63,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textAvailableBalance"
-
-
         android:layout_marginStart="@dimen/_30sdp"
         android:layout_marginTop="@dimen/_10sdp"
         android:fontFamily="@font/poppins"
-
+        android:textSize="12sp"
         android:text="Instant Available Balance :"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -87,7 +83,7 @@
         android:fontFamily="@font/poppins"
         android:text="Amount : "
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp" />
+        android:textSize="12sp" />
 
 
     <EditText
@@ -101,7 +97,7 @@
         android:background="@drawable/bg_two_side_corner"
         android:fontFamily="@font/poppins"
         android:paddingVertical="@dimen/_3sdp"
-        android:textSize="@dimen/_11ssp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/tvWithdrawal"
@@ -113,7 +109,7 @@
         android:fontFamily="@font/poppins"
         android:text="Withdrawal Type : "
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp" />
+        android:textSize="12sp" />
 
 
     <LinearLayout
@@ -132,10 +128,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-
             android:fontFamily="@font/poppins"
-
-
+            android:textSize="12sp"
           />
 
 <!--        <ImageView-->
@@ -160,6 +154,8 @@
         android:background="@drawable/chat_list_bg"
         android:paddingHorizontal="@dimen/_5sdp"
         android:paddingVertical="@dimen/_5sdp"
+        android:fontFamily="@font/poppins"
+        android:textSize="10sp"
         android:text="Request withdrawal"
         android:textColor="#252849" />
 

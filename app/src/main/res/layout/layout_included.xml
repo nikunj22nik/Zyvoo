@@ -26,6 +26,6 @@
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
         android:textSize="@dimen/_12sdp"
-        android:textStyle="bold" />
+         />
 
 </LinearLayout>

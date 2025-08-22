@@ -28,12 +28,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginBottom="@dimen/_15sdp"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_semibold"
         android:layout_gravity="center"
         android:text="Turn on Location"
         android:textColor="@color/black"
-        android:textSize="@dimen/_14sdp"
-        android:textStyle="bold" />
+        android:textSize="18sp" />
 
 
     <TextView
@@ -49,7 +48,7 @@
         android:text="Lorem Ipsum is dummy text of the printing and typesetting industry, derived from a Latin passage by Cicero. Learn about its history, usage, variations and sources"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="@dimen/_12ssp" />
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/btnLocation"
@@ -58,11 +57,10 @@
         android:paddingHorizontal="@dimen/_52sdp"
         android:paddingVertical="@dimen/_7sdp"
         android:background="@drawable/button_bg"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:layout_gravity="center"
         android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="13sp"
         android:text="Turn on Location"
         android:textColor="@color/black" />
 
@@ -71,13 +69,14 @@
         android:id="@+id/textNotnow"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginLeft="@dimen/_35sdp"
         android:layout_marginRight="@dimen/_35sdp"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="Not now"
-        android:textSize="@dimen/_12ssp"
+        android:textSize="16sp"
         android:textColor="@color/black" />
 
 

@@ -137,13 +137,11 @@ object PrepareData {
             "Live Entertainment",
             "Pet Amenities (Pet Sitting, Pet Spa)",
             "Sports Facilities (Tennis Court, Golf Course)",
-            "Cultural Experiences/Workshops"
+            "Cultural Experiences/Workshops",
+            "Coffee/Tea Station"
         )
 
-        return   amenitiesList.flatMap { language ->
-            language.split(", ").map { it.trim() to false }
-        }.toMutableList()
-
+        return amenitiesList.map { it to false }.toMutableList()
     }
 
     @Throws(ParseException::class)

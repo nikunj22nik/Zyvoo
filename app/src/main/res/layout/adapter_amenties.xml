@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_uncheked_radio"
 
-      android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:layout_marginStart="@dimen/_5sdp"
         />
     <TextView
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="NIKUNJ GUPTA "
-        android:textSize="@dimen/_12sdp"
+        android:textSize="13sp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
         android:layout_marginTop="@dimen/_5sdp"

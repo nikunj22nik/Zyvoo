@@ -38,7 +38,7 @@
             android:drawableEnd="@drawable/ic_search_bar_icon22"
             android:drawablePadding="@dimen/_6sdp"
             android:hint="Search..."
-            android:textSize="@dimen/_11ssp"
+            android:textSize="15sp"
             android:inputType="text"
             android:textColor="#000"
             android:fontFamily="@font/poppins"

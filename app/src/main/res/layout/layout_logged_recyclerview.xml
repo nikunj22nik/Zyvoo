@@ -11,7 +11,7 @@
         android:id="@+id/cl1"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_250sdp"
-        app:cardCornerRadius="@dimen/_20sdp"
+        app:cardCornerRadius="@dimen/_15sdp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -100,6 +100,7 @@
                     android:text=""
                     android:id="@+id/tv_host_name"
                     android:textColor="@color/black"
+                    android:textSize="12.44sp"
                     android:fontFamily="@font/poppins" />
 
                 <TextView
@@ -108,7 +109,7 @@
                     android:text=""
                     android:id="@+id/tv_host_address"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
+                    android:textSize="12.44sp"
                     android:fontFamily="@font/poppins" />
 
 
@@ -175,7 +176,6 @@
         android:text="Cabin in Peshastin"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
-        android:textStyle="bold"
         android:layout_marginStart="@dimen/_3sdp"
         android:layout_marginTop="@dimen/_5sdp"
         app:layout_constraintEnd_toStartOf="@id/textPricePerHours"
@@ -183,12 +183,12 @@
         app:layout_constraintStart_toStartOf="parent"
 
         android:layout_marginEnd="@dimen/_10sdp"
-        android:textSize="@dimen/_13sdp"/>
+        android:textSize="13sp"/>
 
     <ImageView
         android:id="@+id/imageStar"
-        android:layout_width="@dimen/_13sdp"
-        android:layout_height="@dimen/_13sdp"
+        android:layout_width="@dimen/_10sdp"
+        android:layout_height="@dimen/_10sdp"
         android:src="@drawable/ic_star"
         android:layout_marginStart="@dimen/_3sdp"
         android:layout_marginTop="@dimen/_5sdp"
@@ -201,9 +201,9 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/imageStar"
         android:text="5.0"
-        android:textStyle="bold"
+        android:fontFamily="@font/poppins"
         android:layout_marginTop="@dimen/_4sdp"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="11sp"
         android:textColor="#FCA800"
        android:layout_marginStart="@dimen/_2sdp"
        app:layout_constraintTop_toBottomOf="@id/textHotelName"/>
@@ -213,9 +213,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="(1k+)"
-        android:textStyle="bold"
         android:textColor="#A4A4A4"
-        android:textSize="@dimen/_11ssp"
+        android:fontFamily="@font/poppins"
+        android:textSize="11sp"
         android:layout_marginTop="@dimen/_4sdp"
         android:layout_marginStart="@dimen/_2sdp"
         app:layout_constraintStart_toEndOf="@id/textRating"
@@ -227,9 +227,10 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textColor="#A4A4A4"
+        android:fontFamily="@font/poppins"
         android:layout_marginTop="@dimen/_4sdp"
-        android:textSize="@dimen/_12ssp"
-        android:drawablePadding="@dimen/_5sdp"
+        android:textSize="11sp"
+        android:drawablePadding="@dimen/_2sdp"
         android:layout_marginStart="@dimen/_2sdp"
         android:layout_marginEnd="@dimen/_4sdp"
         app:drawableStartCompat="@drawable/ic_location_hotel"
@@ -242,11 +243,10 @@
         android:layout_height="wrap_content"
         android:text="0 miles away"
         android:textColor="#000"
-        android:textStyle="bold"
         android:drawablePadding="@dimen/_4sdp"
         android:fontFamily="@font/poppins"
         android:layout_marginTop="@dimen/_5sdp"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         android:layout_marginEnd="@dimen/_4sdp"
         app:drawableStartCompat="@drawable/ic_clock"
         app:layout_constraintEnd_toEndOf="parent"

@@ -11,13 +11,12 @@
         android:id="@+id/itemAllBookings"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:layout_marginBottom="@dimen/_5sdp"
         android:text="All Bookings"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/itemFinished"
@@ -33,45 +32,41 @@
         android:id="@+id/itemBookingRequests"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Booking Requests"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/itemConfirmed"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Confirmed"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="15sp" />
 
     <TextView
         android:id="@+id/itemWaitingPayment"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Awaiting payment"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="15sp" />
 
 
     <TextView
         android:id="@+id/itemCancelled"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Cancelled"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="15sp" />
 
 </LinearLayout>

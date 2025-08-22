@@ -113,6 +113,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     private var min = ""
     private var max = ""
     var isExpanded = false
+    var isExpanded1 = false
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -1402,11 +1403,11 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.underlinedTextView1.paint.isAntiAlias = true
         binding.underlinedTextView1.setOnClickListener {
             amenitiesAdapter.updateAdapter(amenitiesList)
-            isExpanded = !isExpanded
+            isExpanded1 = !isExpanded1
             amenitiesAdapter.toggleExpand()
 
             // Update button text
-            binding.underlinedTextView1.text = if (isExpanded) "Show Less" else "Show More"
+            binding.underlinedTextView1.text = if (isExpanded1) "Show Less" else "Show More"
 
         }
 
@@ -1547,83 +1548,90 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         model1.image = R.drawable.ic_stays
         activityList.add(model1)
 
-        val model2 = ActivityModel()
+        var model2 = ActivityModel()
         model2.name = "Event Space"
         model2.image = R.drawable.ic_event_space
         activityList.add(model2)
 
-        val model3 = ActivityModel()
+        var model3 = ActivityModel()
         model3.name = "Photo shoot"
         model3.image = R.drawable.ic_photo_shoot
         activityList.add(model3)
 
-        val model4 = ActivityModel()
+        var model4 = ActivityModel()
         model4.name = "Meeting"
         model4.image = R.drawable.ic_meeting
         activityList.add(model4)
 
 
-        val model5 = ActivityModel()
+        var model5 = ActivityModel()
         model5.name = "Party"
         model5.image = R.drawable.ic_party
         activityList.add(model5)
 
-
-        val model6 = ActivityModel()
-        model6.name = "Film Shoot"
-        model6.image = R.drawable.ic_film_shoot
+        var model6 = ActivityModel()
+        model6.name = "Pool"
+        model6.image = R.drawable.pool_water
         activityList.add(model6)
 
-        val model7 = ActivityModel()
-        model7.name = "Performance"
-        model7.image = R.drawable.ic_performance
+
+        var model7 = ActivityModel()
+        model7.name = "Film Shoot"
+        model7.image = R.drawable.ic_film_shoot
         activityList.add(model7)
 
-        val model8 = ActivityModel()
-        model8.name = "Workshop"
-        model8.image = R.drawable.ic_workshop
+        var model8 = ActivityModel()
+        model8.name = "Performance"
+        model8.image = R.drawable.ic_performance
         activityList.add(model8)
 
-        val model9 = ActivityModel()
-        model9.name = "Corporate Event"
-        model9.image = R.drawable.ic_corporate_event
+        var model9 = ActivityModel()
+        model9.name = "Workshop"
+        model9.image = R.drawable.ic_workshop
         activityList.add(model9)
 
-        val model10 = ActivityModel()
-        model10.name = "Wedding"
-        model10.image = R.drawable.ic_weding
+        var model10 = ActivityModel()
+        model10.name = "Corporate Event"
+        model10.image = R.drawable.ic_corporate_event
         activityList.add(model10)
 
-        val model11 = ActivityModel()
-        model11.name = "Dinner"
-        model11.image = R.drawable.ic_dinner
+        var model11 = ActivityModel()
+        model11.name = "Wedding"
+        model11.image = R.drawable.ic_weding
         activityList.add(model11)
 
-        val model12 = ActivityModel()
+
+
+        var model12 = ActivityModel()
         model12.name = "Retreat"
         model12.image = R.drawable.ic_retreat
         activityList.add(model12)
 
 
-        val model13 = ActivityModel()
+        var model13 = ActivityModel()
         model13.name = "Pop-up"
         model13.image = R.drawable.ic_popup_people
         activityList.add(model13)
 
-        val model14 = ActivityModel()
+        var model14 = ActivityModel()
         model14.name = "Networking"
         model14.image = R.drawable.ic_networking
         activityList.add(model14)
 
-        val model15 = ActivityModel()
+        var model15 = ActivityModel()
         model15.name = "Fitness Class"
         model15.image = R.drawable.ic_fitness_class
         activityList.add(model15)
 
-        val model16 = ActivityModel()
+        var model16 = ActivityModel()
         model16.name = "Audio Recording"
         model16.image = R.drawable.ic_audio_recording
         activityList.add(model16)
+
+        var model17 = ActivityModel()
+        model17.name = "Dinner"
+        model17.image = R.drawable.ic_dinner
+        activityList.add(model17)
 
     }
 

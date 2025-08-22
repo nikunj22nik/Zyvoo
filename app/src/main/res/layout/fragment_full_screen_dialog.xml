@@ -18,10 +18,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sorry, we couldn’t find \n any results."
-        android:textSize="@dimen/_15sdp"
+        android:textSize="18sp"
+        android:fontFamily="@font/poppins_medium"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/_40sdp"
-        android:textStyle="bold"
         android:textAlignment="center"
         />
 

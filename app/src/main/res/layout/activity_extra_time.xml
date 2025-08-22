@@ -54,8 +54,8 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:fontFamily="@font/poppins"
                 android:text="New Booking Confirmed"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
+                android:textColor="@color/black"
+                android:textSize="18sp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
@@ -256,7 +256,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="Other reason"
                                 android:textSize="@dimen/_10ssp"
-                                 />
+                                />
 
                         </RelativeLayout>
 
@@ -316,7 +316,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                  android:layout_gravity="center_horizontal"
+                android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:visibility="visible"
                 android:paddingVertical="16dp">
@@ -334,7 +334,8 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:textAlignment="center"
-                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/black"
+                        android:textSize="15sp"
                         android:text="Cancel Booking" />
 
                 </RelativeLayout>
@@ -353,7 +354,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="15sp"
+                        android:textColor="@color/black"
                         android:text="Report an Issue" />
 
                 </RelativeLayout>
@@ -389,13 +391,13 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/image_hotel" />
                     </androidx.cardview.widget.CardView>
-                   <!-- <com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/_65sdp"
-                        android:layout_marginVertical="@dimen/_10sdp"
-                        android:layout_weight="0.3"
-                        android:id="@+id/ivProImage"
-                        android:src="@drawable/ic_img_check_out_pay" />-->
+                    <!-- <com.google.android.material.imageview.ShapeableImageView
+                         android:layout_width="0dp"
+                         android:layout_height="@dimen/_65sdp"
+                         android:layout_marginVertical="@dimen/_10sdp"
+                         android:layout_weight="0.3"
+                         android:id="@+id/ivProImage"
+                         android:src="@drawable/ic_img_check_out_pay" />-->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -411,44 +413,43 @@
                             android:fontFamily="@font/poppins"
                             android:hint="Cabin in Peshastin"
                             android:textColorHint="@color/black"
-                            android:textSize="@dimen/_13sdp"
-                            android:id="@+id/tvProName"
-                            android:textStyle="bold" />
+                            android:textSize="17sp"
+                            android:id="@+id/tvProName" />
 
-<!--                        <LinearLayout-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content">-->
+                        <!--                        <LinearLayout-->
+                        <!--                            android:layout_width="wrap_content"-->
+                        <!--                            android:layout_height="wrap_content">-->
 
-<!--                            <ImageView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginTop="@dimen/_3sdp"-->
-<!--                                android:src="@drawable/ic_start_new" />-->
+                        <!--                            <ImageView-->
+                        <!--                                android:layout_width="wrap_content"-->
+                        <!--                                android:layout_height="wrap_content"-->
+                        <!--                                android:layout_marginTop="@dimen/_3sdp"-->
+                        <!--                                android:src="@drawable/ic_start_new" />-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:layout_marginStart="@dimen/_2sdp"-->
-<!--                                android:hint="5.0"-->
-<!--                                android:textAlignment="textEnd"-->
-<!--                                android:textColorHint="@color/black"-->
-<!--                                android:id="@+id/tvRating"-->
-<!--                                android:textSize="@dimen/_12sdp"-->
-<!--                                android:fontFamily="@font/poppins"-->
-<!--                                android:textColor="#FCA800" />-->
+                        <!--                            <TextView-->
+                        <!--                                android:layout_width="wrap_content"-->
+                        <!--                                android:layout_height="wrap_content"-->
+                        <!--                                android:layout_marginStart="@dimen/_2sdp"-->
+                        <!--                                android:hint="5.0"-->
+                        <!--                                android:textAlignment="textEnd"-->
+                        <!--                                android:textColorHint="@color/black"-->
+                        <!--                                android:id="@+id/tvRating"-->
+                        <!--                                android:textSize="@dimen/_12sdp"-->
+                        <!--                                android:fontFamily="@font/poppins"-->
+                        <!--                                android:textColor="#FCA800" />-->
 
-<!--                            <TextView-->
-<!--                                android:layout_width="wrap_content"-->
-<!--                                android:layout_height="wrap_content"-->
-<!--                                android:textAlignment="textStart"-->
-<!--                                android:layout_marginStart="@dimen/_2sdp"-->
-<!--                                android:hint="(1k+)"-->
-<!--                                android:textColorHint="@color/black"-->
-<!--                                android:id="@+id/tvTotalReview"-->
-<!--                                android:textSize="@dimen/_12sdp"-->
-<!--                                android:fontFamily="@font/poppins"-->
-<!--                                android:textColor="#A4A4A4"  />-->
-<!--                        </LinearLayout>-->
+                        <!--                            <TextView-->
+                        <!--                                android:layout_width="wrap_content"-->
+                        <!--                                android:layout_height="wrap_content"-->
+                        <!--                                android:textAlignment="textStart"-->
+                        <!--                                android:layout_marginStart="@dimen/_2sdp"-->
+                        <!--                                android:hint="(1k+)"-->
+                        <!--                                android:textColorHint="@color/black"-->
+                        <!--                                android:id="@+id/tvTotalReview"-->
+                        <!--                                android:textSize="@dimen/_12sdp"-->
+                        <!--                                android:fontFamily="@font/poppins"-->
+                        <!--                                android:textColor="#A4A4A4"  />-->
+                        <!--                        </LinearLayout>-->
 
                         <RelativeLayout
                             android:layout_width="wrap_content"
@@ -475,7 +476,7 @@
                                 android:fontFamily="@font/inter"
                                 android:text="5.0"
                                 android:textColor="#FFBB00"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/tvTotalReview"
@@ -484,8 +485,8 @@
                                 android:layout_toEndOf="@+id/tvRating"
                                 android:fontFamily="@font/poppins"
                                 android:text=" (0)"
-                                android:textColor="#666"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textColor="#A4A4A4"
+                                android:textSize="14sp" />
 
                             <!-- Distance -->
 
@@ -507,7 +508,7 @@
                                 android:layout_marginStart="@dimen/_7sdp"
                                 android:hint="0 miles away"
                                 android:id="@+id/tvMiles"
-                                android:textSize="@dimen/_12sdp"
+                                android:textSize="14sp"
                                 android:fontFamily="@font/poppins"
                                 android:textColorHint="@color/a4a4a4"
                                 android:textColor="@color/a4a4a4" />
@@ -540,7 +541,7 @@
                         android:text="2 Hours"
                         android:id="@+id/tvTotalHours"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="15sp" />
 
 
                     <TextView
@@ -549,7 +550,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvPrice"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="15sp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins" />
 
@@ -570,7 +571,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Cleaning Fee"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="15sp" />
 
 
                     <TextView
@@ -579,7 +580,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvCleaningFee"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="15sp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins" />
 
@@ -599,7 +600,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Zyvo Service Fee"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="15sp" />
 
 
                     <TextView
@@ -608,7 +609,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvZyvoServiceFee"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="15sp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins" />
 
@@ -628,7 +629,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Taxes"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="15sp" />
 
 
                     <TextView
@@ -638,7 +639,7 @@
                         android:text="$0"
                         android:id="@+id/tvTaxesPrice"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="15sp"
                         android:fontFamily="@font/poppins" />
 
                 </RelativeLayout>
@@ -689,7 +690,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Add-on"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="15sp" />
 
 
                     <TextView
@@ -698,7 +699,7 @@
                         android:layout_alignParentEnd="true"
                         android:text="$0"
                         android:id="@+id/tvAddOnPrice"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="15sp"
                         android:textColor="@color/black"
                         android:fontFamily="@font/poppins" />
 
@@ -724,7 +725,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:text="Total"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="16sp"
                         android:textColor="@color/black" />
 
 
@@ -735,7 +736,7 @@
                         android:text="$0"
                         android:id="@+id/tvTotalPrice"
                         android:fontFamily="@font/poppins"
-                        android:textSize="@dimen/_12sdp"
+                        android:textSize="16sp"
                         android:textColor="@color/black" />
 
                 </RelativeLayout>
@@ -752,10 +753,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/poppins"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/poppins_medium"
                     android:text="Booking Details"
-                    android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp"
+                    />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -785,7 +787,7 @@
                             android:layout_marginStart="@dimen/_7sdp"
                             android:layout_toRightOf="@id/img_calendar"
                             android:hint="October 22, 2023"
-                            android:textSize="@dimen/_12ssp"
+                            android:textSize="13sp"
                             android:fontFamily="@font/poppins"
                             android:layout_marginEnd="@dimen/_7sdp"
                             android:textColor="@color/black"
@@ -821,7 +823,7 @@
                             android:layout_marginTop="@dimen/_5sdp"
                             android:id="@+id/tvHours"
                             android:fontFamily="@font/poppins"
-                            android:textSize="@dimen/_12ssp"
+                            android:textSize="13sp"
                             android:textColor="@color/black"
                             android:textColorHint="@color/black"/>
 
@@ -855,7 +857,7 @@
                             android:layout_marginTop="@dimen/_5sdp"
                             android:layout_marginEnd="@dimen/_7sdp"
                             android:fontFamily="@font/poppins"
-                            android:textSize="@dimen/_12ssp"
+                            android:textSize="13sp"
                             android:textColor="@color/black" />
                     </RelativeLayout>
                     <RelativeLayout
@@ -878,13 +880,13 @@
 
                         <TextView
                             android:id="@+id/tv_add_more"
-                          android:layout_width="wrap_content"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_7sdp"
                             android:layout_toRightOf="@id/add_more"
                             android:text="Add more time"
                             android:fontFamily="@font/poppins"
-                            android:textSize="@dimen/_12ssp"
+                            android:textSize="13sp"
                             android:textColor="@color/black" />
 
 
@@ -911,11 +913,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Cancelation Policies"
-                android:textSize="@dimen/_13ssp"
-                android:fontFamily="@font/poppins"
+                android:textSize="18sp"
+                android:fontFamily="@font/poppins_medium"
+                android:textColor="@color/black"
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:textStyle="bold"
                 />
             <com.colormoon.readmoretextview.ReadMoreTextView
                 android:id="@+id/tvReadMoreLess"
@@ -928,7 +930,7 @@
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:textColor="#000000"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="14sp" />
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
@@ -942,9 +944,9 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:text="Included in your booking"
-                android:textStyle="bold"
-                android:fontFamily="@font/poppins"
-                android:textSize="@dimen/_13ssp"
+                android:fontFamily="@font/poppins_medium"
+                android:textColor="@color/black"
+                android:textSize="18sp"
                 />
             <RelativeLayout
                 android:id="@+id/rl_parking"
@@ -969,8 +971,9 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_toRightOf="@id/img_parking"
                     android:text="Parking"
-                    android:fontFamily="@font/poppins"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/inter"
+                    android:textSize="14sp" />
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -1021,9 +1024,10 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_toRightOf="@id/img_host_rule"
-                    android:fontFamily="@font/poppins"
                     android:text="Host rules"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/inter"
+                    android:textSize="14sp"/>
 
                 <ImageView
                     android:layout_width="@dimen/_12sdp"
@@ -1073,9 +1077,10 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_centerVertical="true"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:text="My Bookings"
-                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                     />
+                    android:fontFamily="@font/inter"
+                    android:textSize="14sp"
+                    />
 
             </RelativeLayout>
 

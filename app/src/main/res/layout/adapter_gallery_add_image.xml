@@ -17,7 +17,7 @@
         android:id="@+id/img1"
         android:layout_width="@dimen/_18sdp"
         android:layout_height="@dimen/_18sdp"
-        android:src="@drawable/ic_add_more_icon_grey"
+        android:src="@drawable/ic_add_more_icon_grey2"
         android:layout_centerHorizontal="true"
         />
 
@@ -28,7 +28,9 @@
             android:layout_below="@id/img1"
             android:textSize="@dimen/_13ssp"
             android:textAlignment="center"
-            android:textColor="@color/black"
+            android:fontFamily="@font/poppins"
+
+            android:textColor="#9CA5A5"
             android:layout_marginTop="@dimen/_7sdp"
             />
 

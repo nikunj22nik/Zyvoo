@@ -23,11 +23,11 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageCross"
         android:layout_centerHorizontal="true"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:text="OTP Verification"
         android:textColor="@color/black"
-        android:textSize="@dimen/_13ssp"
-        android:textStyle="bold" />
+        android:textSize="14sp"
+        />
 
     <View
         android:id="@+id/view"
@@ -50,7 +50,7 @@
         android:text="Please type the verification code send \nto +1 999 999 9999"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11sdp" />
+        android:textSize="10sp" />
 
 
     <LinearLayout
@@ -121,13 +121,13 @@
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_15sdp"
         android:background="@drawable/button_bg"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:paddingVertical="@dimen/_9sdp"
         android:text="Submit"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11sdp"
-        android:textStyle="bold" />
+        android:textSize="13sp"
+        />
 
 
     <RelativeLayout
@@ -149,8 +149,7 @@
 
             android:text="Didn't receive the verification code?"
             android:textColor="#636363"
-            android:textSize="@dimen/_9ssp"
-            android:textStyle="normal" />
+            android:textSize="10sp" />
 
         <TextView
             android:id="@+id/textResend"
@@ -160,12 +159,10 @@
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/_3sdp"
             android:layout_toEndOf="@+id/textDidntReceive"
-            android:fontFamily="@font/poppins"
+            android:fontFamily="@font/poppins_medium"
             android:text="Resend"
             android:textColor="#636363"
-            android:textSize="@dimen/_10ssp"
-            android:textStyle="bold"
-
+            android:textSize="10sp"
             />
     </RelativeLayout>
 
@@ -194,8 +191,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Resend verification code in"
                 android:textColor="#636363"
-                android:textSize="@dimen/_9ssp"
-                android:textStyle="normal" />
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/textTimeResend"
@@ -206,8 +202,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="00:00"
                 android:textColor="#4AEAB1"
-                android:textFontWeight="600"
-                android:textSize="@dimen/_9ssp" />
+                android:textSize="10sp" />
         </RelativeLayout>
 
 
@@ -221,7 +216,7 @@
             android:text="Incorrect verification code, please try again!"
             android:textAlignment="center"
             android:textColor="@color/red"
-            android:textSize="@dimen/_11ssp"
+            android:textSize="10sp"
             android:visibility="gone" />
 
     </RelativeLayout>

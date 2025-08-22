@@ -38,13 +38,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
-            android:textSize="@dimen/_19ssp"
+            android:textSize="18sp"
             android:layout_marginStart="@dimen/_13sdp"
             android:layout_marginVertical="@dimen/_10sdp"
             android:textColor="@color/black"
             app:layout_constraintTop_toBottomOf="@+id/llHeader"
             app:layout_constraintStart_toStartOf="parent"
-
             android:text="Listing"/>
 
         <View

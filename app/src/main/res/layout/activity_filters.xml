@@ -67,8 +67,8 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Type of Place"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                 />
+                android:textSize="18sp"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:fontFamily="@font/poppins"
-                android:textSize="@dimen/_10sdp"
+                android:textSize="13sp"
                 android:text="Search rooms, entire homes, or any type of place."
                 android:textColor="@color/black" />
 
@@ -100,9 +100,9 @@
                     android:gravity="center"
                     android:paddingVertical="5dp"
                     android:textColor="#000000"
-                    android:textSize="@dimen/_10ssp"
+                    android:textSize="12sp"
                     android:text="Any Type"
-                     />
+                    />
 
                 <TextView
                     android:id="@+id/tv_room"
@@ -113,10 +113,10 @@
                     android:gravity="center"
 
                     android:text="Room"
-                   android:layout_gravity="center_vertical"
+                    android:layout_gravity="center_vertical"
                     android:paddingVertical="5dp"
                     android:textColor="#000000"
-                    android:textSize="@dimen/_10ssp" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_entire_home"
@@ -131,7 +131,7 @@
                     android:layout_gravity="center_vertical"
                     android:paddingVertical="5dp"
                     android:textColor="#000000"
-                    android:textSize="@dimen/_10ssp" />
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <View
@@ -148,7 +148,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Price range"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -158,7 +158,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Hour prices before fees and taxes"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_10sdp" />
+                android:textSize="13sp" />
 
             <com.business.zyvo.RangeBarWithChart
                 android:id="@+id/seekBar"
@@ -198,7 +198,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Minimum"
                         android:textColor="#B1B1B1"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="12sp" />
 
                     <EditText
                         android:id="@+id/tv_minimum_val"
@@ -209,7 +209,7 @@
 
                         android:inputType="numberDecimal"
                         android:background="@null"
-                        android:textSize="@dimen/_14sdp"
+                        android:textSize="14sp"
                         />
                 </RelativeLayout>
 
@@ -234,7 +234,7 @@
                         android:text="Maximum"
 
                         android:textColor="#B1B1B1"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="12sp" />
 
                     <EditText
                         android:id="@+id/tv_maximum_value"
@@ -245,8 +245,8 @@
 
                         android:inputType="numberDecimal"
                         android:background="@null"
-                        android:textSize="@dimen/_14sdp"
-                         />
+                        android:textSize="14sp"
+                        />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -291,6 +291,7 @@
                         android:singleLine="true"
                         android:gravity="center_vertical"
                         android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp"
                         android:textColorHint="@color/black" />
 
                     <ImageView
@@ -330,7 +331,7 @@
                         android:fontFamily="@font/poppins"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -452,7 +453,7 @@
                         android:fontFamily="@font/poppins"
                         android:textColorHint="@color/black"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="@dimen/_12sdp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -478,7 +479,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Availability"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="15sp"
                 />
 
             <TextView
@@ -487,9 +488,9 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="No of People"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="15sp"
                 />
 
             <LinearLayout
@@ -617,8 +618,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical"
-                        android:fontFamily="@font/poppins_medium"
-                        android:textSize="@dimen/_11sdp"
+                        android:fontFamily="@font/poppins"
+                        android:textSize="11sp"
                         android:textColorHint="@color/colorChartSelected"
                         android:textColor="@color/colorChartSelected" />
 
@@ -640,10 +641,10 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Property Size (Sq ft)"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                 />
+                android:textSize="15sp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -773,8 +774,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical"
-                        android:fontFamily="@font/poppins_medium"
-                        android:textSize="@dimen/_11sdp"
+                        android:fontFamily="@font/poppins"
+                        android:textSize="11sp"
                         android:textColorHint="@color/colorChartSelected"
                         android:textColor="@color/colorChartSelected" />
 
@@ -958,9 +959,9 @@
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bedrooms"
                 android:id="@+id/tvbadroom"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1104,8 +1105,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical"
-                        android:fontFamily="@font/poppins_medium"
-                        android:textSize="@dimen/_11sdp"
+                        android:fontFamily="@font/poppins"
+                        android:textSize="11sp"
                         android:textColorHint="@color/colorChartSelected"
                         android:textColor="@color/colorChartSelected" />
 
@@ -1125,9 +1126,9 @@
                 android:layout_marginStart="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="Bathrooms"
-                android:fontFamily="@font/poppins_medium"
+                android:fontFamily="@font/poppins"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="15sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1270,8 +1271,8 @@
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical"
-                        android:fontFamily="@font/poppins_medium"
-                        android:textSize="@dimen/_11sdp"
+                        android:fontFamily="@font/poppins"
+                        android:textSize="11sp"
                         android:textColorHint="@color/colorChartSelected"
                         android:textColor="@color/colorChartSelected" />
 
@@ -1299,7 +1300,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Activities"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
+                android:textSize="18sp"
                 />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -1322,7 +1323,7 @@
                     android:text="Other Activities"
                     android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp" />
+                    android:textSize="13sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -1336,9 +1337,9 @@
                 android:id="@+id/recycler_activity_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_13sdp"
+                android:layout_marginStart="@dimen/_8sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginEnd="@dimen/_5sdp" />
+                android:layout_marginEnd="@dimen/_8sdp" />
 
             <View
                 android:layout_width="match_parent"
@@ -1354,7 +1355,7 @@
                 android:text="Amenities"
                 android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15sdp" />
+                android:textSize="18sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_amenties"
@@ -1372,9 +1373,10 @@
                 android:layout_marginTop="@dimen/_6sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:paddingBottom="4dp"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Show More"
                 android:textColor="@android:color/black"
-                android:textSize="15sp" />
+                android:textSize="13sp" />
 
             <View
                 android:layout_width="match_parent"
@@ -1390,7 +1392,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Booking"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp"
+                android:textSize="18sp"
                 />
 
             <TextView
@@ -1401,8 +1403,8 @@
                 android:text="Instant Book"
                 android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp"
-                 />
+                android:textSize="15sp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1419,7 +1421,7 @@
                     android:fontFamily="@font/poppins"
                     android:text="Listings you can book without waiting host approval"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textSize="13sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:theme="@style/SCBSwitch"
@@ -1440,8 +1442,8 @@
                 android:text="Self check-in"
                 android:fontFamily="@font/poppins_medium"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp"
-                 />
+                android:textSize="15sp"
+                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -1458,7 +1460,7 @@
                     android:fontFamily="@font/poppins"
                     android:text="Listings you can book without waiting host approval"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textSize="13sp" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:theme="@style/SCBSwitch"
@@ -1493,7 +1495,7 @@
                         android:fontFamily="@font/poppins_medium"
                         android:text="Allows Pets"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="15sp" />
                 </RelativeLayout>
 
                 <androidx.appcompat.widget.SwitchCompat
@@ -1520,7 +1522,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Language"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="18sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_language"
@@ -1539,7 +1541,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:text="Show More"
                 android:textColor="@android:color/black"
-                android:textSize="15sp" />
+                android:textSize="13sp" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

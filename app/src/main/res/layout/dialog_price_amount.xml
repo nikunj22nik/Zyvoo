@@ -34,8 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Your new total amount is $60"
-        android:textSize="@dimen/_13ssp"
-        android:textStyle="bold"
+        android:textSize="14sp"
         android:id="@+id/tvNewAmount"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/_8sdp"
@@ -63,11 +62,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/lato"
                 android:text="Yes"
+                android:textFontWeight="600"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_13ssp"
-                android:textStyle="bold" />
+                />
 
 
         </RelativeLayout>
@@ -89,8 +89,8 @@
                 android:fontFamily="@font/poppins"
                 android:text="No"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13ssp"
-                android:textStyle="bold" />
+                android:textSize="15sp"
+                 />
 
 
         </RelativeLayout>

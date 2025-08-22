@@ -564,8 +564,7 @@ private var cardNumberString : String = ""
         binding.textBankAccountToggle.setOnClickListener {
             binding.textDebitCardToggle.setBackgroundColor(Color.TRANSPARENT)
             binding.textBankAccountToggle.setBackgroundResource(R.drawable.selected_green_toogle_bg)
-            binding.textBankAccountToggle.setTextColor(Color.parseColor("#FFFFFF"))
-            binding.textDebitCardToggle.setTextColor(Color.parseColor("#06C169"))
+
             binding.cvBankAccount2.visibility = View.VISIBLE
             binding.cvDebitCard3.visibility = View.GONE
         }
@@ -573,8 +572,6 @@ private var cardNumberString : String = ""
         binding.textDebitCardToggle.setOnClickListener {
             binding.textBankAccountToggle.setBackgroundColor(Color.TRANSPARENT)
             binding.textDebitCardToggle.setBackgroundResource(R.drawable.selected_green_toogle_bg)
-            binding.textBankAccountToggle.setTextColor(Color.parseColor("#06C169"))
-            binding.textDebitCardToggle.setTextColor(Color.parseColor("#FFFFFF"))
             binding.cvBankAccount2.visibility = View.GONE
             binding.cvDebitCard3.visibility = View.VISIBLE
         }

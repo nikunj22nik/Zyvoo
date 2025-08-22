@@ -78,11 +78,11 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_7sdp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:textAlignment="center"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_17ssp" />
+                    android:textSize="18sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -98,7 +98,7 @@
                     android:text="Host"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14ssp" />
+                    android:textSize="16sp" />
 
 
             </LinearLayout>
@@ -116,11 +116,10 @@
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_7sdp"
-                android:fontFamily="@font/poppins_light"
+                android:fontFamily="@font/poppins_medium"
                 android:text="About Host"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13ssp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
 
 
             <RelativeLayout
@@ -144,7 +143,7 @@
                     android:text=""
 
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp"
+                    android:textSize="13sp"
                     app:drawableStartCompat="@drawable/ic_location_line" />
 
 
@@ -164,7 +163,7 @@
                     android:paddingVertical="@dimen/_7sdp"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp"
+                    android:textSize="13sp"
 
                     app:drawableStartCompat="@drawable/ic_add_work_icon" />
 
@@ -185,7 +184,7 @@
                     android:paddingVertical="@dimen/_7sdp"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_11sdp"
+                    android:textSize="13sp"
                     app:drawableStartCompat="@drawable/ic_add_language_icon" />
 
 
@@ -218,11 +217,10 @@
                     android:id="@+id/textListing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:text=""
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_15ssp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/textViewMore"
@@ -232,8 +230,9 @@
                     android:drawableEnd="@drawable/ic_nextpage_dropdown"
                     android:drawablePadding="@dimen/_10sdp"
                     android:text="View more"
+                    android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13ssp" />
+                    android:textSize="15sp" />
 
 
             </RelativeLayout>
@@ -262,12 +261,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_12sdp"
                 android:layout_marginTop="@dimen/_14sdp"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Reviews (0)"
                 android:textColor="@color/black"
                 android:id="@+id/tvReviewTotal"
-                android:textSize="@dimen/_14sdp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -291,9 +289,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_8sdp"
                         android:text="0"
+                        android:fontFamily="@font/poppins_medium"
                         android:id="@+id/proTotalrating"
                         android:textColor="#FCA800"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -302,18 +301,19 @@
                         android:fontFamily="@font/poppins"
                         android:text="Rating"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:fontFamily="@font/poppins"
                     android:drawableEnd="@drawable/ic_drop_down"
                     android:drawablePadding="@dimen/_5sdp"
                     android:id="@+id/textReviewClick"
                     android:text="Sort by: Positive Reviews"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="15sp"
 
                     />
 
@@ -360,7 +360,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Show more reviews" />
+                    android:text="Show more reviews"
+                    android:fontFamily="@font/poppins"
+                    android:textSize="15sp"/>
 
 
             </RelativeLayout>

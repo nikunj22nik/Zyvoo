@@ -79,9 +79,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10ssp"
-                android:fontFamily="@font/poppins"
-                android:textSize="@dimen/_13ssp"
-                android:textStyle="bold"
+                android:fontFamily="@font/poppins_medium"
+                android:textSize="20sp"
                 android:text="Privacy Policy"
                 android:textColor="@color/black"
                 app:layout_constraintTop_toBottomOf="@+id/llHeader" />
@@ -92,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10ssp"
                 android:fontFamily="@font/poppins"
-                android:textSize="@dimen/_8ssp"
+                android:textSize="12sp"
                 android:text=""
                 android:textColor="@color/_807b7b" />
 

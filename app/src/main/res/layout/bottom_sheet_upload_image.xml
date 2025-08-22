@@ -6,18 +6,18 @@
     android:background="@color/white">
 
 
-<TextView
-    android:id="@+id/textAddProfile"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="Add Profile picture"
-    android:textAlignment="center"
-    android:textColor="@color/black"
-    android:fontFamily="@font/poppins"
-    app:layout_constraintTop_toTopOf="parent"
-    android:textSize="@dimen/_15ssp"
-    android:layout_marginTop="@dimen/_25sdp"
-    />
+    <TextView
+        android:id="@+id/textAddProfile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Profile picture"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:fontFamily="@font/poppins_medium"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="14sp"
+        android:layout_marginTop="@dimen/_25sdp"
+        />
 
     <View
         android:id="@+id/view"
@@ -33,10 +33,9 @@
         android:id="@+id/textCamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:drawableTop="@drawable/ic_take_camera_picture"
         android:text="Take Photo"
-        android:textSize="@dimen/_10sdp"
+        android:textSize="8sp"
         android:drawablePadding="@dimen/_7sdp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,7 +55,7 @@
 
         android:drawableTop="@drawable/ic_upload_from_device"
         android:text="Upload from Device "
-        android:textSize="@dimen/_10sdp"
+        android:textSize="8sp"
         android:drawablePadding="@dimen/_7sdp"
         app:layout_constraintBottom_toBottomOf="parent"
 

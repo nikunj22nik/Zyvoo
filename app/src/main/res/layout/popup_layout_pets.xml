@@ -12,7 +12,7 @@
         android:maxWidth="@dimen/_200sdp"
         android:text="Your safety and peace of mind are our top priorities. ZYVO is proud to provide comprehensive liability insurance coverage for all bookings"
         android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_9sdp"
+        android:textSize="8.77sp"
         android:textAlignment="inherit"
         />
 

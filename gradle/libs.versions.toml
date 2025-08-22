@@ -1,8 +1,8 @@
 [versions]
-agp = "8.5.0"
+agp = "8.3.1"
 inquiry = "2.4.5"
 inquiryVersion = "2.12.15"
-kotlin = "1.9.0"
+kotlin = "1.9.22"
 coreKtx = "1.13.1"
 glide = "4.16.0"
 junit = "4.13.2"

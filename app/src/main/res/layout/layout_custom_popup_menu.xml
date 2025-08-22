@@ -11,90 +11,82 @@
         android:id="@+id/itemMute"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Mute"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="13.72sp" />
 
     <TextView
         android:id="@+id/itemunMute"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Unmute"
         android:visibility="gone"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="13.72sp"/>
 
     <TextView
         android:id="@+id/itemReport"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Report"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold" />
+        android:textSize="13.72sp" />
 
     <TextView
         android:id="@+id/itemDelete"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Delete chat"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="13.72sp" />
 
     <TextView
         android:id="@+id/itemBlock"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Block"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="13.72sp" />
 
     <TextView
         android:id="@+id/itemUnBlock"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Unblock"
         android:visibility="gone"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="13.72sp"/>
 
     <TextView
         android:id="@+id/itemArchived"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Archived"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="13.72sp"/>
 
     <TextView
         android:id="@+id/itemUnArchived"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Unarchived"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="13.72sp"/>
 
 </LinearLayout>

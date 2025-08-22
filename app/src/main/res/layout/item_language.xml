@@ -20,7 +20,6 @@
         android:textAllCaps="false"
         android:textColor="#000000"
         android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"
 
         />
 

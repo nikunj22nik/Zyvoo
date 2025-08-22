@@ -62,7 +62,7 @@
         android:fontFamily="@font/poppins"
         android:layout_marginStart="@dimen/_2sdp"
         android:textColor="@color/black"
-        android:textStyle="normal"/>
+        android:textSize="14sp" />
         <TextView
             android:id="@+id/textdis"
             android:layout_width="@dimen/_110sdp"
@@ -91,6 +91,6 @@
         android:layout_below="@+id/textdis"
         android:fontFamily="@font/poppins"
         android:textColor="#7F7F7F"
-        android:textStyle="normal"/>
+        android:textSize="14sp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

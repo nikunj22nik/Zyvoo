@@ -39,13 +39,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10ssp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginTop="20sp"
                 android:fontFamily="@font/poppins"
                 android:text=""
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_14ssp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/viewTitle" />
@@ -79,7 +78,8 @@
                         android:paddingHorizontal="@dimen/_10sdp"
                         android:text="Guest"
                         android:textAlignment="center"
-                        android:textColor="@drawable/toggle_text_selector" />
+                        android:textColor="@drawable/toggle_text_selector"
+                        android:textSize="@dimen/_14ssp" />
 
                     <RadioButton
                         android:id="@+id/radioHost"
@@ -93,7 +93,8 @@
                         android:paddingHorizontal="@dimen/_12sdp"
                         android:text="Host"
                         android:textAlignment="center"
-                        android:textColor="@drawable/toggle_text_selector" />
+                        android:textColor="@drawable/toggle_text_selector"
+                        android:textSize="@dimen/_14ssp" />
 
                 </RadioGroup>
             </LinearLayout>
@@ -105,11 +106,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_14ssp"
                 android:layout_marginTop="@dimen/_20ssp"
+
                 android:fontFamily="@font/poppins"
                 android:text="Guides for Guests"
                 android:textColor="@color/black"
-                android:textSize="14.5sp"
-                android:textStyle="bold"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/llToggle" />
 
@@ -119,13 +120,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_20ssp"
-                android:layout_marginEnd="@dimen/_18ssp"
+                android:layout_marginEnd="@dimen/_10ssp"
                 android:drawablePadding="@dimen/_5sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Browse all Guides"
                 android:textColor="@color/black"
-                android:textSize="14.5dp"
-                android:textStyle="bold"
+                android:textSize="14sp"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/llToggle" />
@@ -135,7 +135,8 @@
                 android:id="@+id/recyclerViewGuests"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -153,8 +154,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Top Articles"
                 android:textColor="@color/black"
-                android:textSize="14.5sp"
-                android:textStyle="bold"
+                android:textSize="16sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewGuests" />
 
@@ -169,8 +169,7 @@
                 android:fontFamily="@font/poppins"
                 android:text="Browse all Article's"
                 android:textColor="@color/black"
-                android:textSize="14.5sp"
-                android:textStyle="bold"
+                android:textSize="14sp"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewGuests" />
@@ -192,11 +191,10 @@
                 android:id="@+id/textNeedGetTouch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Need to get in touch?"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_15ssp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/recyclerViewArticle" />
@@ -205,9 +203,10 @@
                 android:id="@+id/textWeWillStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins"
                 android:text="@string/we_ll_start_with_some_questions_and_get_you_to_the_right_place"
                 android:textColor="#999999"
-                android:textSize="@dimen/_13ssp"
+                android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textNeedGetTouch" />
@@ -223,8 +222,8 @@
                 android:paddingHorizontal="@dimen/_10ssp"
                 android:paddingVertical="@dimen/_5sdp"
                 android:text="Contact Us"
-                android:textSize="@dimen/_12sdp"
                 android:textColor="@color/black"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

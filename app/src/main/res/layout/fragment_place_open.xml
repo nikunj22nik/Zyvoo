@@ -71,6 +71,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:layout_weight="1"
+                        android:fontFamily="@font/inter"
                         android:text="Mar 11 - Mar 17 2023"
                         android:textColor="#000"
                         android:textSize="13sp" />
@@ -147,7 +148,7 @@
                             android:fontFamily="@font/poppins"
                             android:text="Cabin in Peshastin"
                             android:textColor="#000"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="17sp"
                             android:textStyle="normal" />
 
                         <RelativeLayout
@@ -175,18 +176,17 @@
                                 android:fontFamily="@font/inter"
                                 android:text="5.0"
                                 android:textColor="#FFBB00"
-                                android:textSize="@dimen/_11ssp" />
+                                android:textSize="14sp" />
 
                             <TextView
                                 android:id="@+id/textK"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_toEndOf="@+id/textRatingStar"
-                                android:fontFamily="@font/poppins"
+                                android:fontFamily="@font/inter"
                                 android:text=" (1k+)"
                                 android:textColor="#666"
-
-                                android:textSize="@dimen/_11ssp" />
+                                android:textSize="14sp" />
 
                             <ImageView
                                 android:id="@+id/imageMilesIcon"
@@ -205,10 +205,10 @@
                                 android:layout_marginStart="@dimen/_2sdp"
                                 android:layout_marginTop="@dimen/_1sdp"
                                 android:layout_toEndOf="@+id/imageMilesIcon"
-                                android:fontFamily="@font/poppins"
+                                android:fontFamily="@font/inter"
                                 android:text="37 miles away"
                                 android:textColor="#A4A4A4"
-                                android:textSize="@dimen/_10ssp"
+                                android:textSize="14sp"
                                 app:layout_constraintEnd_toEndOf="parent" />
                             <!-- Distance -->
 
@@ -242,7 +242,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:fontFamily="@font/poppins"
+                            android:fontFamily="@font/inter"
+                            android:textSize="15sp"
                             android:text="Pause Bookings"
                             android:textAlignment="center"
                             android:textColor="@color/white" />
@@ -265,8 +266,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:fontFamily="@font/poppins"
                             android:text="Edit Place"
+                            android:fontFamily="@font/inter"
+                            android:textSize="15sp"
                             android:textAlignment="center"
                             android:textColor="@color/black" />
                     </RelativeLayout>

@@ -168,7 +168,7 @@
                             android:singleLine="true"
                             android:text="Mia Jdddssddddd."
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12ssp"
+                            android:textSize="16sp"
                             android:textStyle="normal"
                             />
 
@@ -204,7 +204,7 @@
                             android:text="5.0"
                             android:layout_marginLeft="@dimen/_2sdp"
                             android:textColor="#FFBB00"
-                            android:textSize="@dimen/_13ssp" />
+                            android:textSize="13sp" />
 
                     </LinearLayout>
 
@@ -230,26 +230,28 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:fontFamily="@font/poppins"
                         android:layout_margin="@dimen/_5ssp"
                         android:background="@drawable/bg_save_button"
                         android:text="@string/review_guest"
                         android:textColor="#FFFFFF"
                         android:padding="@dimen/_10ssp"
                         android:textAlignment="center"
-                        android:textSize="@dimen/_12ssp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/textMessageTheHostButton"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/_5ssp"
+                        android:fontFamily="@font/poppins"
                         android:layout_weight="1"
                         android:background="@drawable/bg_four_corner_light_black"
                         android:text="@string/message_the_host"
                         android:textAlignment="center"
                         android:textColor="#000000"
                         android:padding="@dimen/_10ssp"
-                        android:textSize="@dimen/_12ssp" />
+                        android:textSize="15sp" />
 
 
                 </LinearLayout>
@@ -310,11 +312,12 @@
                     android:text="Report an Issue"
                     android:layout_marginTop="@dimen/_5ssp"
                     android:textColor="#000000"
+                    android:fontFamily="@font/poppins"
                     android:padding="@dimen/_10ssp"
                     android:paddingStart="@dimen/_20ssp"
                     android:paddingEnd="@dimen/_20ssp"
                     android:textAlignment="center"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textSize="15sp" />
 
 
                 <LinearLayout
@@ -361,8 +364,7 @@
                                 android:fontFamily="@font/poppins"
                                 android:text="Cabin in Peshastin"
                                 android:textColor="#000"
-                                android:textSize="@dimen/_15sdp"
-                                android:textStyle="normal" />
+                                android:textSize="17sp" />
 
                             <RelativeLayout
                                 android:layout_width="wrap_content"
@@ -389,18 +391,17 @@
                                     android:fontFamily="@font/inter"
                                     android:text="5.0"
                                     android:textColor="#FFBB00"
-                                    android:textSize="@dimen/_13ssp" />
+                                    android:textSize="14sp" />
 
                                 <TextView
                                     android:id="@+id/textK"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_toEndOf="@+id/textRatingStar"
-                                    android:fontFamily="@font/poppins"
+                                    android:fontFamily="@font/inter"
                                     android:text=" (1k+)"
                                     android:textColor="#666"
-
-                                    android:textSize="@dimen/_13ssp" />
+                                    android:textSize="14sp" />
 
                                 <ImageView
                                     android:id="@+id/imageMilesIcon"
@@ -419,10 +420,10 @@
                                     android:layout_marginStart="@dimen/_2sdp"
                                     android:layout_marginTop="@dimen/_1sdp"
                                     android:layout_toEndOf="@+id/imageMilesIcon"
-                                    android:fontFamily="@font/poppins"
+                                    android:fontFamily="@font/inter"
                                     android:text="37 miles away"
                                     android:textColor="#A4A4A4"
-                                    android:textSize="@dimen/_11ssp"
+                                    android:textSize="14sp"
                                     app:layout_constraintEnd_toEndOf="parent" />
                                 <!-- Distance -->
 
@@ -464,10 +465,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="4dp"
-                                android:fontFamily="@font/poppins"
                                 android:text="Hours"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
 
                             <View
                                 android:layout_width="0dp"
@@ -478,10 +479,10 @@
                                 android:id="@+id/money"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
                                 android:text="$0"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
                         </LinearLayout>
 
 
@@ -496,19 +497,19 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/poppins"
                                 android:text="Cleaning Fee"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/tv_cleaning_fee"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
                                 android:text="$0"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp"/>
 
                             <!-- Additional fees here -->
 
@@ -524,19 +525,19 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/poppins"
                                 android:text="Zyvo Service Fee"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/tv_service_fee"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
                                 android:text="$0"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
 
                             <!-- Additional fees here -->
 
@@ -552,19 +553,19 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/poppins"
                                 android:text="Taxes"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/tv_taxes"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
                                 android:text="$0"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
 
                             <!-- Additional fees here -->
 
@@ -580,19 +581,19 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/poppins"
                                 android:text="Add-on"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
 
                             <TextView
                                 android:id="@+id/tv_add_on"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
                                 android:text="$0"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
 
 
                         </LinearLayout>
@@ -609,19 +610,19 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/poppins"
                                 android:text="Discount"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp"/>
 
                             <TextView
                                 android:id="@+id/tv_discount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
                                 android:text="$0"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="15sp" />
 
 
                         </LinearLayout>
@@ -642,19 +643,19 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:fontFamily="@font/poppins"
                                 android:text="Total"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="16sp" />
 
                             <TextView
                                 android:id="@+id/tv_total_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:fontFamily="@font/poppins"
                                 android:text="$0"
+                                android:fontFamily="@font/poppins"
                                 android:textColor="@color/black"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="16sp" />
 
 
                         </LinearLayout>
@@ -679,8 +680,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Cabin in Peshastin"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_13ssp"
-                        android:textStyle="normal" />
+                        android:textSize="18sp" />
 
                     <!-- Status Badge -->
                     <TextView
@@ -693,9 +693,10 @@
                         android:background="@drawable/button_bg"
                         android:paddingHorizontal="@dimen/_10sdp"
                         android:paddingVertical="@dimen/_2sdp"
+                        android:fontFamily="@font/inter"
                         android:text="Finished"
                         android:textColor="#3A4B4C"
-                        android:textSize="@dimen/_11ssp" />
+                        android:textSize="13sp" />
                 </LinearLayout>
 
                 <!-- Action Icons -->
@@ -729,7 +730,7 @@
                             android:text="Share"
                             android:layout_marginStart="@dimen/_3sdp"
                             android:textColor="#000"
-                            android:textSize="@dimen/_10ssp" />
+                            android:textSize="12sp" />
                     </LinearLayout>
 
                     <!-- Favorite Icon -->
@@ -755,7 +756,7 @@
                             android:fontFamily="@font/poppins_light"
                             android:text="Favorite"
                             android:textColor="#000"
-                            android:textSize="@dimen/_10ssp" />
+                            android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -1041,10 +1042,10 @@
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_20ssp"
                     android:text="Booking Details"
-                    android:textSize="@dimen/_16sdp"
+                    android:textSize="18sp"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textStyle="bold" />
+                     />
 
                 <!-- Date and Duration -->
                 <LinearLayout
@@ -1069,8 +1070,8 @@
                         android:paddingVertical="@dimen/_5sdp">
 
                         <ImageView
-                            android:layout_width="@dimen/_20sdp"
-                            android:layout_height="@dimen/_18sdp"
+                            android:layout_width="@dimen/_15sdp"
+                            android:layout_height="@dimen/_14sdp"
                             android:src="@drawable/ic_calendar_icon" />
 
                         <TextView
@@ -1080,7 +1081,8 @@
                             android:layout_marginStart="@dimen/_5sdp"
                             android:text="October 22, 2023"
                             android:textColor="#000"
-                            android:textSize="@dimen/_13ssp" />
+                            android:fontFamily="@font/inter"
+                            android:textSize="13sp" />
                     </LinearLayout>
                     <!-- Date Icon and Text -->
 
@@ -1101,8 +1103,8 @@
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="@dimen/_15sdp"
-                            android:layout_height="@dimen/_15sdp"
+                            android:layout_width="@dimen/_13sdp"
+                            android:layout_height="@dimen/_13sdp"
 
                             android:src="@drawable/ic_clock_new" />
 
@@ -1113,7 +1115,8 @@
                             android:text="2 Hours"
                             android:layout_marginStart="@dimen/_3sdp"
                             android:textColor="#000"
-                            android:textSize="@dimen/_13ssp" />
+                            android:fontFamily="@font/inter"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -1132,8 +1135,8 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="@dimen/_15sdp"
-                        android:layout_height="@dimen/_15sdp"
+                        android:layout_width="@dimen/_13sdp"
+                        android:layout_height="@dimen/_13sdp"
 
                         android:src="@drawable/ic_clock_new" />
 
@@ -1144,7 +1147,8 @@
                         android:text="From 01pm to 03pm"
                         android:layout_marginStart="@dimen/_3sdp"
                         android:textColor="#000"
-                        android:textSize="@dimen/_13ssp" />
+                        android:fontFamily="@font/inter"
+                        android:textSize="13sp" />
                 </LinearLayout>
 
 
@@ -1168,10 +1172,9 @@
                         android:layout_marginHorizontal="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_12ssp"
                         android:text="@string/booking_time_extension_bte"
-                        android:textSize="@dimen/_16sdp"
+                        android:textSize="18sp"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black" />
 
                     <!-- Ext Date and Duration -->
                     <LinearLayout
@@ -1195,8 +1198,8 @@
                             android:paddingVertical="@dimen/_5sdp">
 
                             <ImageView
-                                android:layout_width="@dimen/_20sdp"
-                                android:layout_height="@dimen/_18sdp"
+                                android:layout_width="@dimen/_15sdp"
+                                android:layout_height="@dimen/_14sdp"
                                 android:src="@drawable/ic_calendar_icon" />
 
                             <TextView
@@ -1206,7 +1209,7 @@
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:text="October 22, 2023"
                                 android:textColor="#000"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="13sp" />
                         </LinearLayout>
                         <!-- Date Icon and Text -->
 
@@ -1237,7 +1240,7 @@
                                 android:text="2 Hours"
                                 android:layout_marginStart="@dimen/_3sdp"
                                 android:textColor="#000"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="13sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -1275,7 +1278,7 @@
                                 android:text="From 01pm to 03pm"
                                 android:layout_marginStart="@dimen/_3sdp"
                                 android:textColor="#000"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="13sp" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -1303,7 +1306,7 @@
                                 android:id="@+id/tv_ext_total_price"
                                 android:layout_marginStart="@dimen/_3sdp"
                                 android:textColor="#000"
-                                android:textSize="@dimen/_13ssp" />
+                                android:textSize="13sp" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -1328,10 +1331,9 @@
                     android:layout_marginStart="@dimen/_13sdp"
                     android:text="Included in your booking"
                     android:layout_marginTop="@dimen/_20sdp"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="18sp"
                     android:fontFamily="@font/poppins"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -1355,10 +1357,9 @@
                     android:layout_marginStart="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:text="Rules"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="18sp"
                     android:fontFamily="@font/poppins"
-                    android:textColor="@color/black"
-                    android:textStyle="bold" />
+                    android:textColor="@color/black" />
 
                 <RelativeLayout
                     android:id="@+id/rl_parking"
@@ -1382,9 +1383,9 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_toRightOf="@id/img_parking"
-                        android:fontFamily="@font/poppins"
+                        android:fontFamily="@font/inter"
                         android:text="Parking"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="14sp" />
 
                     <ImageView
                         android:layout_width="@dimen/_12sdp"
@@ -1433,9 +1434,9 @@
                         android:layout_centerVertical="true"
                         android:layout_marginStart="@dimen/_10sdp"
                         android:layout_toRightOf="@id/img_host_rule"
-                        android:fontFamily="@font/poppins"
+                        android:fontFamily="@font/inter"
                         android:text="Host rules"
-                        android:textSize="@dimen/_13sdp" />
+                        android:textSize="14sp" />
 
                     <ImageView
                         android:layout_width="@dimen/_12sdp"
@@ -1521,10 +1522,9 @@
                     android:layout_marginStart="@dimen/_11sdp"
                     android:layout_marginTop="@dimen/_15sdp"
                     android:text="Address &amp; Location"
-                    android:textSize="@dimen/_14sdp"
+                    android:textSize="18sp"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
                     />
 
                 <TextView
@@ -1535,6 +1535,7 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:fontFamily="@font/poppins"
                     android:layout_marginBottom="@dimen/_10sdp"
+                    android:textSize="15sp"
                     android:text=""
                     android:textColor="@color/black" />
 
@@ -1562,8 +1563,7 @@
                     android:fontFamily="@font/poppins"
                     android:text="Reviews"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_14sdp"
-                    android:textStyle="bold" />
+                    android:textSize="18sp" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -1588,17 +1588,18 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_8sdp"
                             android:text="4.9"
+                            android:fontFamily="@font/poppins_medium"
                             android:textColor="#FCA800"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="15sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_7sdp"
-                            android:fontFamily="@font/poppins"
+                            android:fontFamily="@font/inter"
                             android:text="Rating"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
 
                     <RelativeLayout
@@ -1612,10 +1613,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toStartOf="@+id/imageDropDown"
-                            android:fontFamily="@font/poppins"
+                            android:fontFamily="@font/inter"
                             android:text="Sort by: Positive Reviews"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="15sp"
                             />
 
                         <ImageView

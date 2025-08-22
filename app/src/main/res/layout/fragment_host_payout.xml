@@ -67,8 +67,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/_12sdp"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_medium"
                     android:text="Select Payout Method"
+                    android:textSize="16sp"
                     android:textColor="@color/black" />
 
 
@@ -76,7 +77,7 @@
                     android:id="@+id/llToggleSelectBankOrDebit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginHorizontal="@dimen/_55sdp"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:background="@drawable/green_storke_toggle_bg"
                     android:orientation="horizontal"
@@ -90,10 +91,10 @@
                         android:background="@drawable/selected_green_toogle_bg"
                         android:fontFamily="@font/poppins"
                         android:paddingVertical="@dimen/_6sdp"
+                        android:textSize="10sp"
                         android:text="Bank Account"
                         android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black" />
 
 
                     <TextView
@@ -104,9 +105,10 @@
                         android:fontFamily="@font/poppins"
                         android:paddingVertical="@dimen/_6sdp"
                         android:text="Debit Card"
+                        android:textSize="10sp"
                         android:textAlignment="center"
-                        android:textColor="#06C169"
-                        android:textStyle="bold" />
+                        android:textColor="@color/black"
+                        />
 
                 </LinearLayout>
 
@@ -132,10 +134,10 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="@dimen/_10sdp"
-                            android:fontFamily="@font/montserrat_medium"
+                            android:textSize="16sp"
+                            android:fontFamily="@font/montserrat_semibold"
                             android:text="Bank Account"
-                            android:textColor="@color/black"
-                            android:textStyle="bold" />
+                            android:textColor="@color/black" />
 
 
                         <RelativeLayout
@@ -150,6 +152,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imagePersonIcon"
                                 android:text="First Name" />
@@ -168,6 +172,8 @@
                                 android:layout_below="@+id/textFirstName"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_toEndOf="@+id/imagePersonIcon"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:background="@drawable/edittext_bg"
                                 android:hint="Enter first name"
                                 android:maxLines="1"
@@ -175,7 +181,7 @@
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                 />
 
 
                         </RelativeLayout>
@@ -194,6 +200,8 @@
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imagePersonIconLastName"
                                 android:text="Last Name" />
 
@@ -218,7 +226,8 @@
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -237,6 +246,8 @@
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageEmailIcon"
                                 android:text="Email" />
 
@@ -262,7 +273,8 @@
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -281,6 +293,8 @@
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imagePhoneNumberIcon"
                                 android:text="Phone Number" />
 
@@ -336,7 +350,8 @@
                                     android:paddingVertical="@dimen/_9sdp"
                                     android:textColor="#8B8B8B"
                                     android:textColorHint="#8B8B8B"
-                                    android:textSize="@dimen/_10ssp" />
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp" />
                             </RelativeLayout>
 
                             <EditText
@@ -372,6 +387,8 @@ android:visibility="gone"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imageDOBIcon"
                                 android:text="D.O.B" />
@@ -397,7 +414,8 @@ android:visibility="gone"
                                 android:text="MM-DD-YYYY"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -417,7 +435,9 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imageIDTypeIcon"
-                                android:text="ID Type" />
+                                android:text="ID Type"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
 
                             <ImageView
                                 android:id="@+id/imageIDTypeIcon"
@@ -435,13 +455,15 @@ android:visibility="gone"
                                 android:foreground="?attr/selectableItemBackground"
                                 android:hint="Select ID type"
                                 android:padding="8dp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_below="@+id/textIDType"
                                 android:layout_toEndOf="@+id/imageIDTypeIcon"
                                 android:paddingStart="@dimen/_20sdp"
                                 android:textColor="#3C4541"
-                                android:fontFamily="@font/poppins"
+
                                 android:textColorHint="#3C4541"
-                                android:textSize="@dimen/_10ssp"
+
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_arrow_padding="5dp"
                                 app:spinner_arrow_show="true"
@@ -491,6 +513,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imagePersonalIdentificationNumberIcon"
                                 android:text="Personal Identification Number" />
 
@@ -517,7 +541,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -535,6 +560,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageSSNIcon"
                                 android:text="SSN (Last 4 Number)" />
 
@@ -561,7 +588,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -580,6 +608,8 @@ android:visibility="gone"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
                                 android:layout_toEndOf="@+id/imageAddressIcon"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:text="Address" />
 
                             <ImageView
@@ -603,7 +633,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -621,6 +652,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageCountryIcon"
                                 android:text="Country" />
 
@@ -646,7 +679,7 @@ android:visibility="gone"
                                 android:textColor="#3C4541"
                                 android:fontFamily="@font/poppins"
                                 android:textColorHint="#3C4541"
-                                android:textSize="@dimen/_10ssp"
+                                android:textSize="12sp"
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_arrow_padding="5dp"
                                 app:spinner_popup_max_height="@dimen/_180sdp"
@@ -676,6 +709,8 @@ android:visibility="gone"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imageStateIcon"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:text="State" />
 
                             <ImageView
@@ -700,7 +735,7 @@ android:visibility="gone"
                                 android:textColor="#3C4541"
                                 android:fontFamily="@font/poppins"
                                 android:textColorHint="#3C4541"
-                                android:textSize="@dimen/_10ssp"
+                                android:textSize="12sp"
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_popup_max_height="@dimen/_180sdp"
                                 app:spinner_arrow_padding="5dp"
@@ -730,6 +765,8 @@ android:visibility="gone"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imageCityIcon"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:text="City" />
 
                             <ImageView
@@ -755,7 +792,7 @@ android:visibility="gone"
                                 android:fontFamily="@font/poppins"
                                 app:spinner_popup_max_height="@dimen/_180sdp"
                                 android:textColorHint="#3C4541"
-                                android:textSize="@dimen/_10ssp"
+                                android:textSize="12sp"
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_arrow_padding="5dp"
                                 app:spinner_arrow_show="true"
@@ -784,6 +821,8 @@ android:visibility="gone"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imagePostalCodeIcon"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:text="Postal Code" />
 
                             <ImageView
@@ -804,11 +843,12 @@ android:visibility="gone"
                                 android:hint="Postal Code"
                                 android:maxLines="1"
                                 android:inputType="number"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:paddingHorizontal="@dimen/_10sdp"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
-                                android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:textColorHint="#8B8B8B" />
 
 
                         </RelativeLayout>
@@ -826,6 +866,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageBankNameIcon"
                                 android:text="Bank Name" />
 
@@ -850,7 +892,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -868,6 +911,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageAccountHolderNameIcon"
                                 android:text="Account Holder Name" />
 
@@ -892,7 +937,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
 
 
                         </RelativeLayout>
@@ -910,6 +956,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageBankAccountNumberIcon"
                                 android:text="Bank Account Number" />
 
@@ -935,7 +983,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -953,6 +1002,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageConfirmAccountNumberIcon"
                                 android:text="Confirm Account Number" />
 
@@ -978,7 +1029,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -996,6 +1048,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageRoutingNumberIcon"
                                 android:text="Routing Number" />
 
@@ -1022,7 +1076,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -1040,6 +1095,8 @@ android:visibility="gone"
                                 android:textColor="@color/black"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageSelectBankProofTypeIcon"
                                 android:text="Select Bank Proof Type" />
 
@@ -1065,7 +1122,6 @@ android:visibility="gone"
                                 android:textColor="#3C4541"
                                 android:fontFamily="@font/poppins"
                                 android:textColorHint="#3C4541"
-                                android:textSize="@dimen/_10ssp"
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_arrow_padding="5dp"
                                 app:spinner_arrow_show="true"
@@ -1075,6 +1131,7 @@ android:visibility="gone"
                                 app:spinner_popup_animation="fade"
                                 app:spinner_popup_background="@color/white"
                                 app:spinner_popup_elevation="14dp"
+                                android:textSize="12sp"
                                 tools:ignore="RtlSymmetry" />
 
 
@@ -1094,6 +1151,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:text="Bank Proof" />
 
 
@@ -1114,6 +1173,7 @@ android:visibility="gone"
                                     android:layout_height="wrap_content"
                                     android:text="Choose a file"
                                     android:singleLine="true"
+                                    android:textSize="12sp"
                                     android:layout_centerVertical="true"
                                     android:layout_marginStart="@dimen/_10sdp"
                                     android:fontFamily="@font/poppins"
@@ -1126,11 +1186,11 @@ android:visibility="gone"
                                     android:text="Upload"
                                     android:drawableEnd="@drawable/ic_upload_icon"
                                     android:textColor="@color/white"
-                                    android:fontFamily="@font/poppins"
                                     android:background="@drawable/plain_edittext_bg"
                                     android:backgroundTint="#4AEAB1"
                                     android:layout_alignParentEnd="true"
-                                    android:textSize="@dimen/_10ssp"
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"
                                     android:drawablePadding="@dimen/_10sdp"
                                     android:paddingHorizontal="@dimen/_15sdp"
                                     android:layout_margin="@dimen/_2sdp"
@@ -1160,7 +1220,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
-
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:text="Verification Document (front &amp; back)" />
 
 
@@ -1185,6 +1246,7 @@ android:visibility="gone"
                                     android:layout_centerVertical="true"
                                     android:layout_marginStart="@dimen/_10sdp"
                                     android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"
                                     android:textColor="#8B8B8B"/>
 
                                 <TextView
@@ -1194,11 +1256,11 @@ android:visibility="gone"
                                     android:text="Upload"
                                     android:drawableEnd="@drawable/ic_upload_icon"
                                     android:textColor="@color/white"
-                                    android:fontFamily="@font/poppins"
                                     android:background="@drawable/plain_edittext_bg"
                                     android:backgroundTint="#4AEAB1"
                                     android:layout_alignParentEnd="true"
-                                    android:textSize="@dimen/_10ssp"
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"
                                     android:drawablePadding="@dimen/_10sdp"
                                     android:paddingHorizontal="@dimen/_15sdp"
                                     android:layout_margin="@dimen/_2sdp"
@@ -1226,6 +1288,7 @@ android:visibility="gone"
                                     android:layout_centerVertical="true"
                                     android:layout_marginStart="@dimen/_10sdp"
                                     android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"
                                     android:textColor="#8B8B8B"/>
 
                                 <TextView
@@ -1234,11 +1297,11 @@ android:visibility="gone"
                                     android:layout_height="wrap_content"
                                     android:text="Upload"
                                     android:textColor="@color/white"
-                                    android:fontFamily="@font/poppins"
                                     android:background="@drawable/plain_edittext_bg"
                                     android:backgroundTint="#4AEAB1"
                                     android:layout_alignParentEnd="true"
-                                    android:textSize="@dimen/_10ssp"
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"
                                     android:drawablePadding="@dimen/_10sdp"
                                     android:paddingHorizontal="@dimen/_15sdp"
                                     android:layout_margin="@dimen/_2sdp"
@@ -1263,7 +1326,7 @@ android:visibility="gone"
                             android:text="Add Bank"
                             android:textAlignment="center"
                             android:fontFamily="@font/poppins"
-
+                            android:textSize="12sp"
                             android:textColor="@color/white"
                             android:layout_marginTop="@dimen/_10sdp"
                             android:background="@drawable/button_bg"
@@ -1298,16 +1361,15 @@ android:visibility="gone"
                         android:padding="@dimen/_10sdp">
 
 
-
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:layout_marginTop="@dimen/_10sdp"
-                            android:fontFamily="@font/montserrat_medium"
+                            android:fontFamily="@font/montserrat_semibold"
                             android:text="Debit Card"
                             android:textColor="@color/black"
-                            android:textStyle="bold" />
+                            android:textSize="16sp" />
 
                         <RelativeLayout
                             android:id="@+id/rlFirstNameDebitCard"
@@ -1321,6 +1383,8 @@ android:visibility="gone"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imagePersonIconDebitCard"
                                 android:text="First Name" />
@@ -1347,7 +1411,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -1366,6 +1431,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imagePersonIconLastNameDebitCard"
                                 android:text="Last Name" />
 
@@ -1391,7 +1458,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -1410,6 +1478,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageEmailIconDebitCard"
                                 android:text="Email" />
 
@@ -1435,7 +1505,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -1454,6 +1525,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imagePhoneNumberIconDebitCard"
                                 android:text="Phone Number" />
 
@@ -1510,7 +1583,8 @@ android:visibility="gone"
                                     android:paddingVertical="@dimen/_9sdp"
                                     android:textColor="#8B8B8B"
                                     android:textColorHint="#8B8B8B"
-                                    android:textSize="@dimen/_10ssp" />
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp" />
                             </RelativeLayout>
 
 
@@ -1532,7 +1606,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -1551,6 +1626,8 @@ android:visibility="gone"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imageDOBIconDebitCard"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:text="D.O.B" />
 
                             <ImageView
@@ -1575,7 +1652,8 @@ android:visibility="gone"
                                 android:text="MM/DD/YYYY"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -1594,6 +1672,8 @@ android:visibility="gone"
                                 android:textColor="@color/black"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageIDTypeIconDebitCard"
                                 android:text="ID Type" />
 
@@ -1617,9 +1697,9 @@ android:visibility="gone"
                                 android:layout_toEndOf="@+id/imageIDTypeIconDebitCard"
                                 android:paddingStart="@dimen/_20sdp"
                                 android:textColor="#3C4541"
-                                android:fontFamily="@font/poppins"
                                 android:textColorHint="#3C4541"
-                                android:textSize="@dimen/_10ssp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_arrow_padding="5dp"
                                 app:spinner_arrow_show="true"
@@ -1670,7 +1750,9 @@ android:visibility="gone"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
                                 android:layout_toEndOf="@+id/imagePersonalIdentificationNumberIconDebitCard"
-                                android:text="Personal Identification Number" />
+                                android:text="Personal Identification Number"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
 
                             <ImageView
                                 android:id="@+id/imagePersonalIdentificationNumberIconDebitCard"
@@ -1695,7 +1777,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -1713,6 +1796,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_6sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:layout_toEndOf="@+id/imageSSNIconDebitCard"
                                 android:text="SSN (Last 4 Number)" />
 
@@ -1740,7 +1825,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -1759,7 +1845,9 @@ android:visibility="gone"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
                                 android:layout_toEndOf="@+id/imageAddressIconDebitCard"
-                                android:text="Address" />
+                                android:text="Address"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
 
                             <ImageView
                                 android:id="@+id/imageAddressIconDebitCard"
@@ -1783,7 +1871,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -1803,7 +1892,9 @@ android:visibility="gone"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
                                 android:layout_toEndOf="@+id/imageCountryIconDebitCard"
-                                android:text="Country" />
+                                android:text="Country"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
 
                             <ImageView
                                 android:id="@+id/imageCountryIconDebitCard"
@@ -1825,9 +1916,9 @@ android:visibility="gone"
                                 android:layout_toEndOf="@+id/imageCountryIconDebitCard"
                                 android:textColor="#3C4541"
                                 android:paddingStart="@dimen/_20sdp"
-                                android:fontFamily="@font/poppins"
                                 android:textColorHint="#3C4541"
-                                android:textSize="@dimen/_10ssp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_arrow_padding="5dp"
                                 app:spinner_popup_max_height="@dimen/_180sdp"
@@ -1857,7 +1948,9 @@ android:visibility="gone"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imageStateIconDebitCard"
-                                android:text="State" />
+                                android:text="State"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
 
                             <ImageView
                                 android:id="@+id/imageStateIconDebitCard"
@@ -1880,9 +1973,9 @@ android:visibility="gone"
                                 android:layout_toEndOf="@+id/imageStateIconDebitCard"
                                 android:paddingStart="@dimen/_20sdp"
                                 android:textColor="#3C4541"
-                                android:fontFamily="@font/poppins"
                                 android:textColorHint="#3C4541"
-                                android:textSize="@dimen/_10ssp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_arrow_padding="5dp"
                                 app:spinner_arrow_show="true"
@@ -1911,7 +2004,9 @@ android:visibility="gone"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imageCityIconDebitCard"
                                 android:textColor="@color/black"
-                                android:text="City" />
+                                android:text="City"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
 
                             <ImageView
                                 android:id="@+id/imageCityIconDebitCard"
@@ -1934,9 +2029,9 @@ android:visibility="gone"
                                 android:layout_toEndOf="@+id/imageCityIconDebitCard"
                                 android:paddingStart="@dimen/_20sdp"
                                 android:textColor="#3C4541"
-                                android:fontFamily="@font/poppins"
                                 android:textColorHint="#3C4541"
-                                android:textSize="@dimen/_10ssp"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 app:spinner_arrow_gravity="end"
                                 app:spinner_arrow_padding="5dp"
                                 app:spinner_arrow_show="true"
@@ -1965,7 +2060,9 @@ android:visibility="gone"
                                 android:textColor="@color/black"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:layout_toEndOf="@+id/imagePostalCodeIconDebitCard"
-                                android:text="Postal Code" />
+                                android:text="Postal Code"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
                             <ImageView
                                 android:id="@+id/imagePostalCodeIconDebitCard"
                                 android:layout_width="@dimen/_25sdp"
@@ -1989,7 +2086,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
                         </RelativeLayout>
 
@@ -2007,7 +2105,9 @@ android:visibility="gone"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
                                 android:layout_toEndOf="@+id/imageCardNumber"
-                                android:text="Card Number" />
+                                android:text="Card Number"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
 
                             <ImageView
                                 android:id="@+id/imageCardNumber"
@@ -2032,7 +2132,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -2052,7 +2153,9 @@ android:visibility="gone"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
                                 android:layout_toEndOf="@+id/imageCVVNumber"
-                                android:text="CVV Number" />
+                                android:text="CVV Number"
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"/>
 
                             <ImageView
                                 android:id="@+id/imageCVVNumber"
@@ -2077,7 +2180,8 @@ android:visibility="gone"
                                 android:paddingVertical="@dimen/_9sdp"
                                 android:textColor="#8B8B8B"
                                 android:textColorHint="#8B8B8B"
-                                android:textSize="@dimen/_10ssp" />
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp" />
 
 
                         </RelativeLayout>
@@ -2105,7 +2209,9 @@ android:visibility="gone"
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/black"
                                     android:layout_weight="1"
-                                    android:text="Month" />
+                                    android:text="Month"
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"/>
 
                                 <TextView
                                     android:id="@+id/textYear"
@@ -2113,7 +2219,9 @@ android:visibility="gone"
                                     android:layout_height="wrap_content"
                                     android:textColor="@color/black"
                                     android:layout_weight="1"
-                                    android:text="Year" />
+                                    android:text="Year"
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"/>
                             </LinearLayout>
 
 
@@ -2213,7 +2321,8 @@ android:visibility="gone"
                                     android:paddingVertical="@dimen/_9sdp"
                                     android:textColor="#8B8B8B"
                                     android:textColorHint="#8B8B8B"
-                                    android:textSize="@dimen/_10ssp" />
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp" />
 
 
                                 <TextView
@@ -2230,7 +2339,8 @@ android:visibility="gone"
                                     android:paddingVertical="@dimen/_9sdp"
                                     android:textColor="#8B8B8B"
                                     android:textColorHint="#8B8B8B"
-                                    android:textSize="@dimen/_10ssp" />
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"/>
                             </LinearLayout>
 
 
@@ -2250,7 +2360,8 @@ android:visibility="gone"
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_marginBottom="@dimen/_5sdp"
                                 android:textColor="@color/black"
-
+                                android:fontFamily="@font/poppins"
+                                android:textSize="12sp"
                                 android:text="Verification Document (front &amp; back)" />
 
 
@@ -2274,8 +2385,9 @@ android:visibility="gone"
                                     android:singleLine="true"
                                     android:layout_centerVertical="true"
                                     android:layout_marginStart="@dimen/_10sdp"
+                                    android:textColor="#8B8B8B"
                                     android:fontFamily="@font/poppins"
-                                    android:textColor="#8B8B8B"/>
+                                    android:textSize="12sp"/>
 
                                 <TextView
                                     android:id="@+id/layFrontCard"
@@ -2284,15 +2396,15 @@ android:visibility="gone"
                                     android:text="Upload"
                                     android:drawableEnd="@drawable/ic_upload_icon"
                                     android:textColor="@color/white"
-                                    android:fontFamily="@font/poppins"
                                     android:background="@drawable/plain_edittext_bg"
                                     android:backgroundTint="#4AEAB1"
                                     android:layout_alignParentEnd="true"
-                                    android:textSize="@dimen/_10ssp"
                                     android:drawablePadding="@dimen/_10sdp"
                                     android:paddingHorizontal="@dimen/_15sdp"
                                     android:layout_margin="@dimen/_2sdp"
-                                    android:paddingVertical="@dimen/_7sdp"/>
+                                    android:paddingVertical="@dimen/_7sdp"
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"/>
 
 
 
@@ -2315,8 +2427,9 @@ android:visibility="gone"
                                     android:singleLine="true"
                                     android:layout_centerVertical="true"
                                     android:layout_marginStart="@dimen/_10sdp"
+                                    android:textColor="#8B8B8B"
                                     android:fontFamily="@font/poppins"
-                                    android:textColor="#8B8B8B"/>
+                                    android:textSize="12sp"/>
 
                                 <TextView
                                     android:id="@+id/layBackCard"
@@ -2324,16 +2437,16 @@ android:visibility="gone"
                                     android:layout_height="wrap_content"
                                     android:text="Upload"
                                     android:textColor="@color/white"
-                                    android:fontFamily="@font/poppins"
                                     android:background="@drawable/plain_edittext_bg"
                                     android:backgroundTint="#4AEAB1"
                                     android:layout_alignParentEnd="true"
-                                    android:textSize="@dimen/_10ssp"
                                     android:drawablePadding="@dimen/_10sdp"
                                     android:paddingHorizontal="@dimen/_15sdp"
                                     android:layout_margin="@dimen/_2sdp"
                                     android:paddingVertical="@dimen/_7sdp"
-                                    app:drawableEndCompat="@drawable/ic_upload_icon" />
+                                    app:drawableEndCompat="@drawable/ic_upload_icon"
+                                    android:fontFamily="@font/poppins"
+                                    android:textSize="12sp"/>
 
 
 
@@ -2350,7 +2463,8 @@ android:visibility="gone"
                             android:layout_height="wrap_content"
                             android:text="Add Card "
                             android:textAlignment="center"
-                            android:fontFamily="@font/poppins"
+                            android:fontFamily="@font/poppins_medium"
+                            android:textSize="14sp"
                             android:textColor="@color/white"
                             android:layout_marginTop="@dimen/_50sdp"
                             android:background="@drawable/button_bg"

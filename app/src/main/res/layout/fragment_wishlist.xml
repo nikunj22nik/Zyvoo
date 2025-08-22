@@ -28,18 +28,19 @@
                 android:id="@+id/textHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Wishlist"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_19ssp"
+                android:textSize="20sp"
                 />
+
             <TextView
                 android:id="@+id/textEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/edit"
-                android:fontFamily="@font/poppins"
-                android:textSize="@dimen/_15ssp"
+                android:fontFamily="@font/poppins_medium"
+                android:textSize="20sp"
                 android:textColor="@color/black"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_alignParentEnd="true"

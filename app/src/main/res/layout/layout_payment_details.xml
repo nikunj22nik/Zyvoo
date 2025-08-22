@@ -33,9 +33,10 @@
         android:layout_below="@id/imagePrimaryIcon"
         android:layout_marginStart="@dimen/_5sdp"
         android:maxWidth="@dimen/_110sdp"
+        android:fontFamily="@font/poppins"
         android:text="Bank Account"
         android:textColor="#FFFFFF"
-        android:textSize="@dimen/_9ssp" />
+        android:textSize="12sp" />
 
 
     <ImageView
@@ -58,6 +59,7 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/_5sdp"
         android:maxWidth="@dimen/_35sdp"
+        android:fontFamily="@font/poppins_bold"
         android:text=""
         android:textColor="#FFF" />
 
@@ -81,13 +83,12 @@
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/_5ssp"
         android:layout_marginEnd="@dimen/_8sdp"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_bold"
        android:layout_marginTop="@dimen/_8sdp"
         android:text="sfdsfds"
         android:singleLine="true"
         android:textColor="#FFF"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold" />
+        android:textSize="12sp" />
 
 
 </RelativeLayout>

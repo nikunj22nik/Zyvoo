@@ -44,9 +44,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Host by Mia"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:textColor="@color/black"
-        android:textSize="@dimen/_12ssp"
+        android:textSize="15sp"
         android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toEndOf="@id/imageProfilePicture"
@@ -59,10 +59,9 @@
         android:layout_height="wrap_content"
         android:text="3 minutes ago"
         android:maxLines="1"
-
         android:textColor="#999999"
         android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="13sp"
 
         app:layout_constraintTop_toBottomOf="@id/textUserName"
         app:layout_constraintStart_toEndOf="@id/imageProfilePicture"/>
@@ -80,7 +79,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="@dimen/_10sdp"
         android:singleLine="true"
-        android:textSize="@dimen/_10ssp"
+        android:textSize="13sp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"/>
 

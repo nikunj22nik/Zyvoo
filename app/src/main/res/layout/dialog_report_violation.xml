@@ -22,11 +22,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:text="Report Violation"
         android:textColor="@color/black"
-        android:textSize="@dimen/_13ssp"
-        android:textStyle="bold" />
+        android:textSize="15sp" />
 
     <View
         android:id="@+id/view"
@@ -54,7 +53,7 @@
             android:fontFamily="@font/poppins"
             android:text="Please select a reason for reporting this user."
             android:textColor="@color/black"
-            android:textSize="@dimen/_13ssp" />
+            android:textSize="14sp" />
 
         <com.skydoves.powerspinner.PowerSpinnerView
             android:id="@+id/spinnerView1"
@@ -68,7 +67,8 @@
             android:padding="10dp"
             android:textColor="#000"
             android:textColorHint="#80000000"
-            android:textSize="14.5sp"
+            android:fontFamily="@font/poppins"
+            android:textSize="12sp"
             app:spinner_arrow_gravity="end"
             app:spinner_arrow_padding="8dp"
             app:spinner_arrow_show="true"
@@ -89,8 +89,7 @@
             android:fontFamily="@font/poppins"
             android:text="Add Additional Details"
             android:textColor="@color/black"
-            android:textSize="@dimen/_13ssp"
-
+            android:textSize="14sp"
             />
 
 
@@ -106,7 +105,7 @@
             android:hint="You can also add additional details to help us investigate further. "
             android:padding="@dimen/_5sdp"
             android:textColorHint="#444444"
-            android:textSize="@dimen/_11ssp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 
@@ -116,7 +115,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit Report"
-        android:textStyle="bold"
         android:layout_gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -124,10 +122,10 @@
         android:layout_marginTop="@dimen/_10sdp"
         android:paddingHorizontal="@dimen/_30sdp"
         android:paddingVertical="@dimen/_8sdp"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:textColor="@color/black"
         android:layout_marginBottom="@dimen/_15sdp"
-        android:textSize="@dimen/_11sdp"
+        android:textSize="15sp"
         app:layout_constraintTop_toBottomOf="@+id/rlPassword"/>
 
 </LinearLayout>

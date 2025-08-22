@@ -14,8 +14,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/circleImageView"
-            android:layout_width="@dimen/_45sdp"
-            android:layout_height="@dimen/_45sdp"
+            android:layout_width="47dp"
+            android:layout_height="47dp"
             android:src="@drawable/ic_circular_img_user"
             android:layout_marginTop="16dp"
             android:layout_centerVertical="true"
@@ -41,15 +41,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/poppins_bold"
                     android:text="Emily James"
-                    android:textColor="@color/black"
+                    android:textColor="#3F3D56"
                     android:id="@+id/txtName"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/ratingbar"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="12sp"
                     android:layout_alignParentStart="true"
-                    android:textStyle="bold" />
+                    />
 
                 <!--                <RatingBar-->
                 <!--                    android:id="@+id/ratingbar"-->
@@ -82,7 +82,7 @@
                     android:text="Mar 09, 22"
                     android:fontFamily="@font/poppins"
                     android:layout_alignParentEnd="true"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="12sp"
                     android:layout_centerVertical="true"
                     android:textColor="@color/black"/>
 
@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/txtReviews"
                     android:text="Host was very helpful. thank you so much"
-                    android:textSize="@dimen/_12sdp"
+                    android:textSize="12sp"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"/>
 

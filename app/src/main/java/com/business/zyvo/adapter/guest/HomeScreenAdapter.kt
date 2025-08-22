@@ -128,7 +128,7 @@ class HomeScreenAdapter(
         }
 
         currentItem.host_name?.let {
-            holder.binding.tvHostName.text = it
+            holder.binding.tvHostName.text = "Hosted by "+it
         }
         currentItem.host_address?.let {
             holder.binding.tvHostAddress.text = it

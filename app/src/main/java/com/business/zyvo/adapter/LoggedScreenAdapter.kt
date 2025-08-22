@@ -70,6 +70,7 @@ class LoggedScreenAdapter(
         }
         // Setup ViewPager and its adapter
         currentItem.images.let {
+            if (currentItem.images.toMutableList().size == 1 ) holder.binding.tabLayoutForIndicator.visibility = View.GONE else holder.binding.tabLayoutForIndicator.visibility = View.VISIBLE
             val viewPagerAdapter = GuestViewPagerAdapter(
                 currentItem.images.toMutableList(),
                 context,
@@ -97,10 +98,10 @@ class LoggedScreenAdapter(
         }
 
         currentItem.distance_miles?.let {
-            holder.binding.textMiles.text = "$it miles away"
+            holder.binding.textMiles.text = "${it} miles away"
         }
         currentItem.hourly_rate?.let {
-            holder.binding.textPricePerHours.text = "$${truncateToTwoDecimalPlaces(it)} / h"
+            holder.binding.textPricePerHours.text = "$${truncateToTwoDecimalPlaces(it)}/h"
         }
 
         currentItem.is_instant_book?.let {
