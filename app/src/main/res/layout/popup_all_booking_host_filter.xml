@@ -22,12 +22,11 @@
         android:id="@+id/itemFinished"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Finished"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="@dimen/_11ssp" />
     <TextView
         android:id="@+id/itemBookingRequests"
         android:layout_width="@dimen/_140sdp"

@@ -39,7 +39,7 @@ class BrowseArticleHostFragment : Fragment() {
         ViewModelProvider(this)[BrowseArticleHostViewModel::class.java]
     }
     var type: String? = null
-lateinit var sessionManager : SessionManager
+    lateinit var sessionManager: SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -65,13 +65,15 @@ lateinit var sessionManager : SessionManager
                 if (it.getString(AppConstant.type).equals("Article")) {
                     type = "article"
                     binding.tvViewTitle.setText("Hi ${sessionManager.getFirstName()}, how can we help?")
-                    val userType = sessionManager?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
-                    binding.textLabel.setText("Articles for "+userType)
+                    val userType =
+                        sessionManager?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
+                    binding.textLabel.setText("Articles for " + userType)
                 } else {
                     type = "guides"
                     binding.tvViewTitle.setText("Hi ${sessionManager.getFirstName()}, how can we help?")
-                    val userType = sessionManager?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
-                    binding.textLabel.setText("Guides for "+userType)
+                    val userType =
+                        sessionManager?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
+                    binding.textLabel.setText("Guides for " + userType)
                 }
             }
         }
@@ -85,29 +87,29 @@ lateinit var sessionManager : SessionManager
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = ExploreArticlesAdapter(requireContext(), mutableListOf(),type ?: "article")
+        adapter = ExploreArticlesAdapter(requireContext(), mutableListOf(), type ?: "article")
         binding.recyclerNewArticles.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerNewArticles.adapter = adapter
 
         adapter.setOnItemClickListener(object : ExploreArticlesAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                if (type == "guides")  {
+                if (type == "guides") {
                     val textType = "guides"
                     val bundle = Bundle()
                     bundle.apply {
-                       putString(AppConstant.Id,position.toString())
-                       putString(AppConstant.textType,textType)
+                        putString(AppConstant.Id, position.toString())
+                        putString(AppConstant.textType, textType)
                     }
-                    findNavController().navigate(R.id.browse_aricle_details,bundle)
+                    findNavController().navigate(R.id.browse_aricle_details, bundle)
                 } else {
                     val textType = "article"
                     val bundle = Bundle()
                     bundle.apply {
-                        putString(AppConstant.Id,position.toString())
-                        putString(AppConstant.textType,textType)
+                        putString(AppConstant.Id, position.toString())
+                        putString(AppConstant.textType, textType)
                     }
-                    findNavController().navigate(R.id.browse_aricle_details,bundle)
+                    findNavController().navigate(R.id.browse_aricle_details, bundle)
                 }
 
             }
@@ -125,7 +127,7 @@ lateinit var sessionManager : SessionManager
                     } else {
                         if (type == "guides") {
                             getGuideList("")
-                        }else{
+                        } else {
                             getArticleList("")
                         }
                     }
@@ -144,13 +146,13 @@ lateinit var sessionManager : SessionManager
         }
 
         binding.imageSearchButton.setOnClickListener {
-           val searchBar =  binding.etSearch.text.toString().trim()
+            val searchBar = binding.etSearch.text.toString().trim()
 
-                if (type == "guides") {
-                    getGuideList(searchBar)
-                }else{
-                    getArticleList(searchBar)
-                }
+            if (type == "guides") {
+                getGuideList(searchBar)
+            } else {
+                getArticleList(searchBar)
+            }
         }
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -158,7 +160,7 @@ lateinit var sessionManager : SessionManager
                 // Handle search here
                 if (type == "guides") {
                     getGuideList(searchBar)
-                }else{
+                } else {
                     getArticleList(searchBar)
                 }
                 true
@@ -172,21 +174,21 @@ lateinit var sessionManager : SessionManager
 
     private fun getGuideList(text: String) {
         val sessionManager = SessionManager(requireContext())
-        val usertype = sessionManager.getUserType()?:""
+        val usertype = sessionManager.getUserType() ?: ""
         lifecycleScope.launch {
-            viewModel.getGuideList(text,usertype).collect {
+            viewModel.getGuideList(text, usertype).collect {
                 when (it) {
                     is NetworkResult.Success -> {
                         val model = Gson().fromJson(it.data, BrowseArticleModel::class.java)
-                        Log.d("checkDataList",model.data.toString())
-                            if (!model.data.isNullOrEmpty()){
-                                binding.textNoDataFound.visibility = View.GONE
-                                binding.recyclerNewArticles.visibility = View.VISIBLE
-                                adapter.updateItem(model.data)
-                            }else{
-                                binding.textNoDataFound.visibility = View.VISIBLE
-                                binding.recyclerNewArticles.visibility = View.GONE
-                            }
+                        Log.d("checkDataList", model.data.toString())
+                        if (!model.data.isNullOrEmpty()) {
+                            binding.textNoDataFound.visibility = View.GONE
+                            binding.recyclerNewArticles.visibility = View.VISIBLE
+                            adapter.updateItem(model.data)
+                        } else {
+                            binding.textNoDataFound.visibility = View.VISIBLE
+                            binding.recyclerNewArticles.visibility = View.GONE
+                        }
                     }
 
                     is NetworkResult.Error -> {
@@ -207,9 +209,9 @@ lateinit var sessionManager : SessionManager
 
     private fun getArticleList(text: String) {
         val sessionManager = SessionManager(requireContext())
-        val usertype = sessionManager.getUserType()?:""
+        val usertype = sessionManager.getUserType() ?: ""
         lifecycleScope.launch {
-            viewModel.getArticleList(text,usertype).collect {
+            viewModel.getArticleList(text, usertype).collect {
                 when (it) {
 
                     is NetworkResult.Success -> {
@@ -219,11 +221,11 @@ lateinit var sessionManager : SessionManager
 //                            adapter.updateItem(model.data)
 //                        }
 
-                        if (!model.data.isNullOrEmpty()){
+                        if (!model.data.isNullOrEmpty()) {
                             binding.textNoDataFound.visibility = View.GONE
                             binding.recyclerNewArticles.visibility = View.VISIBLE
                             adapter.updateItem(model.data)
-                        }else{
+                        } else {
                             binding.textNoDataFound.visibility = View.VISIBLE
                             binding.recyclerNewArticles.visibility = View.GONE
                         }

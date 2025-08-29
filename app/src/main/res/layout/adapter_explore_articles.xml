@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:text="Articles Topic Title"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11sdp"
+        android:textSize="13sp"
         android:fontFamily="@font/poppins"
         android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_10sdp"

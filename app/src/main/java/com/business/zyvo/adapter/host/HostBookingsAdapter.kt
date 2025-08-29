@@ -126,6 +126,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                 if(currentItem.booking_status.equals("Pending")){
                     binding.llApproveAndDecline.visibility = View.VISIBLE
                     binding.textStatus.visibility = View.GONE
+                    binding.textDate.visibility = View.GONE
                     binding.fl.visibility = View.VISIBLE
                 }
                 else{

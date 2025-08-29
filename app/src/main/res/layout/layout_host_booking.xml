@@ -13,8 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_13sdp"
-        android:layout_marginVertical="@dimen/_10ssp"
-        android:background="@drawable/chat_list_unselected_bg"
+        android:layout_marginVertical="15dp"
+        android:background="@drawable/booking_list_unselected_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -57,7 +57,7 @@
             android:id="@+id/textName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_10ssp"
+
             android:layout_marginTop="@dimen/_15sdp"
 
             android:fontFamily="@font/poppins"
@@ -73,7 +73,7 @@
             android:id="@+id/llApproveAndDecline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
             android:orientation="horizontal"
             android:visibility="gone"
@@ -129,7 +129,6 @@
                 android:id="@+id/textStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10ssp"
                 android:background="@drawable/button_bg"
                 android:fontFamily="@font/poppins"
                 android:maxLines="1"
@@ -343,3 +342,5 @@
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

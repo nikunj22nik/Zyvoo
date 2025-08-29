@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_13sdp"
-    android:layout_marginVertical="@dimen/_10ssp"
+    android:layout_marginVertical="@dimen/_7ssp"
     android:background="@drawable/chat_list_unselected_bg">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -62,7 +62,6 @@
         android:textColor="#999999"
         android:fontFamily="@font/poppins"
         android:textSize="13sp"
-
         app:layout_constraintTop_toBottomOf="@id/textUserName"
         app:layout_constraintStart_toEndOf="@id/imageProfilePicture"/>
 

@@ -58,9 +58,10 @@
         android:text="Cabin in Peshastin"
         app:layout_constraintTop_toBottomOf="@+id/cvImage"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/_5sdp"
         app:layout_constraintStart_toStartOf="parent"
         android:fontFamily="@font/poppins"
-        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginStart="@dimen/_4sdp"
         android:textColor="@color/black"
         android:textSize="14sp" />
         <TextView
@@ -87,7 +88,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textdis"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_gravity="center"
-        android:layout_marginStart="@dimen/_2sdp"
+        android:layout_marginStart="@dimen/_4sdp"
         android:layout_below="@+id/textdis"
         android:fontFamily="@font/poppins"
         android:textColor="#7F7F7F"

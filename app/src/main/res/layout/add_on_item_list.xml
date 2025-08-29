@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
 
-android:id="@+id/tvItem"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:text="Sample Item"
-android:textSize="@dimen/_13ssp"
-    android:layout_marginVertical="@dimen/_5sdp"
+    android:id="@+id/tvItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_5sdp"
+    android:layout_marginVertical="@dimen/_5sdp"
     android:background="@drawable/bg_four_side_grey_corner"
-android:fontFamily="@font/poppins"
+    android:fontFamily="@font/poppins"
+    android:padding="8dp"
+    android:text="Sample Item"
     android:textColor="@color/black"
-    android:padding="8dp"/>
+    android:textSize="11sp" />
 
 

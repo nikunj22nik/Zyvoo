@@ -23,11 +23,10 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/imageCross"
         android:layout_centerHorizontal="true"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:text="Logout"
         android:textColor="@color/black"
-            android:textSize="@dimen/_13ssp"
-        android:textStyle="bold" />
+            android:textSize="14sp" />
 
     <View
         android:id="@+id/view"
@@ -58,7 +57,7 @@
         android:textAlignment="center"
         android:fontFamily="@font/poppins"
         android:textColor="@color/_636363"
-        android:textSize="@dimen/_14sdp"
+        android:textSize="14sp"
         android:layout_marginHorizontal="@dimen/_30sdp"/>
 
 
@@ -84,11 +83,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins"
+            android:fontFamily="@font/poppins_semibold"
             android:text="Yes"
             android:textColor="@color/black"
-            android:textSize="@dimen/_13ssp"
-            android:textStyle="bold" />
+            android:textSize="15sp" />
 
 
     </RelativeLayout>
@@ -110,8 +108,7 @@
             android:fontFamily="@font/poppins"
             android:text="Cancel"
             android:textColor="@color/black"
-            android:textSize="@dimen/_13ssp"
-            android:textStyle="bold" />
+            android:textSize="15sp" />
 
 
     </RelativeLayout>

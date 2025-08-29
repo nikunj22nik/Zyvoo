@@ -28,7 +28,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_8sdp">
+                android:layout_marginVertical="14dp">
 
                 <ImageView
                     android:id="@+id/imageBack"
@@ -52,6 +52,10 @@
                     android:src="@drawable/ic_search_filter" />
 
             </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1sdp"
+                android:background="#E5E5E5" />
 
             <!--            <View-->
             <!--                  android:layout_height="@dimen/_1dp"-->
@@ -63,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_13sdp"
+                android:layout_marginTop="24dp"
                 android:background="@drawable/bg_four_side_grey_corner">
 
                 <RelativeLayout
@@ -80,7 +84,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:hint="Where"
-                        android:textColorHint="#000000"
+                        android:textColorHint="@color/black"
                         android:gravity="center"
                         android:textSize="15sp" />
 
@@ -92,7 +96,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Type location...."
-                        android:textColor="#66000000"
+                        android:textColor="#999999"
                         android:textSize="15sp" />
 
 
@@ -166,7 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_13sdp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/bg_four_side_grey_corner">
 
                 <RelativeLayout
@@ -183,7 +187,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Time"
-                        android:textColor="#000000"
+                        android:textColor="@color/black"
                         android:textSize="15sp" />
 
                     <TextView
@@ -193,7 +197,7 @@
                         android:layout_centerVertical="true"
                         android:fontFamily="@font/poppins"
                         android:text="Add Time"
-                        android:textColor="#66000000"
+                        android:textColor="#999999"
                         android:textSize="15sp" />
 
 
@@ -206,7 +210,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/bg_four_side_grey_corner"
                 android:orientation="vertical">
 
@@ -329,12 +333,11 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="@dimen/_10sdp"
-                                    android:fontFamily="@font/poppins"
+                                    android:fontFamily="@font/poppins_medium"
                                     android:gravity="center"
                                     android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/_25ssp"
-                                    android:textStyle="bold"
+                                    android:textSize="48sp"
                                     app:layout_constraintBottom_toBottomOf="parent"
 
                                     app:layout_constraintEnd_toEndOf="parent"
@@ -348,10 +351,11 @@
                                     android:layout_centerHorizontal="true"
                                     android:gravity="center"
                                     android:text="Hours"
+                                    android:fontFamily="@font/inter"
                                     android:layout_marginTop="-20dp"
                                     android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/_18sdp"
+                                    android:textSize="16sp"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/textTime" />
@@ -379,7 +383,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_20sdp"
-                        android:layout_marginBottom="@dimen/_13sdp"
+                        android:layout_marginBottom="14dp"
                         android:orientation="vertical"
                         android:visibility="visible" />
 
@@ -401,7 +405,7 @@
                             android:id="@+id/rl_view1"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_35sdp"
-                            android:layout_marginTop="@dimen/_13sdp"
+                            android:layout_marginTop="16dp"
                             android:layout_weight="0.95"
                             android:background="@drawable/ic_four_side_circular">
 
@@ -423,8 +427,11 @@
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_toRightOf="@id/ic_clock_1"
                                 android:text="00:00 PM"
-                                android:textSize="@dimen/_13sdp"
-                                android:textStyle="bold" />
+                                android:paddingTop="@dimen/_4sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textColor="@color/black"
+                                android:textSize="15sp"
+                                />
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -445,7 +452,7 @@
                             android:id="@+id/rl_view2"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/_35sdp"
-                            android:layout_marginTop="@dimen/_13sdp"
+                            android:layout_marginTop="16dp"
                             android:layout_weight="0.95"
                             android:background="@drawable/ic_four_side_circular">
 
@@ -467,8 +474,10 @@
                                 android:layout_marginStart="@dimen/_5sdp"
                                 android:layout_toRightOf="@id/ic_clock_2"
                                 android:text="00:00 PM"
-                                android:textSize="@dimen/_13sdp"
-                                android:textStyle="bold" />
+                                android:paddingTop="@dimen/_4sdp"
+                                android:fontFamily="@font/poppins"
+                                android:textColor="@color/black"
+                                android:textSize="15sp" />
 
                             <ImageView
                                 android:layout_width="wrap_content"
@@ -543,7 +552,7 @@
                 android:layout_height="@dimen/_40sdp"
                 android:id="@+id/rl_activity"
                 android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_13sdp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/bg_four_side_grey_corner">
 
                 <RelativeLayout

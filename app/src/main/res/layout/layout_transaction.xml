@@ -17,16 +17,16 @@
         android:paddingVertical="@dimen/_3ssp"
         android:fontFamily="@font/inter"
         android:minWidth="@dimen/_50sdp"
+        android:maxLines="1"
         android:layout_alignParentStart="true"
         android:layout_gravity="top"
         android:textColor="#000"
-        android:textSize="@dimen/_10ssp"
-        android:textStyle="normal" />
+        android:textSize="14sp" />
 
 
     <RelativeLayout
         android:id="@+id/rlStatus"
-        android:layout_width="@dimen/_75sdp"
+        android:layout_width="@dimen/_85sdp"
         android:layout_toEndOf="@id/tvAmount"
         android:layout_marginEnd="@dimen/_20sdp"
         android:layout_gravity="top"
@@ -37,11 +37,11 @@
             android:layout_height="wrap_content"
             android:text="Status"
             android:fontFamily="@font/inter"
+            android:singleLine="true"
             android:paddingVertical="@dimen/_3ssp"
             android:paddingHorizontal="@dimen/_5sdp"
             android:textColor="#000"
-            android:textSize="@dimen/_10ssp"
-            android:textStyle="normal" />
+            android:textSize="14sp" />
     </RelativeLayout>
 
 
@@ -79,8 +79,7 @@
         android:maxWidth="@dimen/_100sdp"
         android:minWidth="@dimen/_100sdp"
         android:layout_toEndOf="@+id/profileImage"
-        android:textSize="@dimen/_10ssp"
-        android:textStyle="normal" />
+        android:textSize="14sp" />
 </RelativeLayout>
 
         <TextView
@@ -92,8 +91,9 @@
             android:minWidth="@dimen/_140sdp"
             android:fontFamily="@font/inter"
             android:layout_marginStart="@dimen/_5sdp"
+            android:singleLine="true"
             android:layout_toEndOf="@+id/rlProfileName"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="14sp"
             android:textColor="#000" />
 
     </RelativeLayout>

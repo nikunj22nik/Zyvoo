@@ -6,7 +6,6 @@
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/ic_dots_bg"
         android:orientation="vertical"
         tools:context=".fragment.host.placeOpen.PlaceOpenFragment">
 
@@ -73,7 +72,7 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/inter"
                         android:text="Mar 11 - Mar 17 2023"
-                        android:textColor="#000"
+                        android:textColor="#252849"
                         android:textSize="13sp" />
 
                     <ImageView
@@ -111,9 +110,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/bg_four_side_grey_corner_white"
+                android:background="@drawable/bg_four_side_grey_corner_white2"
                 android:orientation="vertical"
-                android:padding="@dimen/_10sdp">
+                android:padding="13dp">
                 >
 
                 <LinearLayout
@@ -122,8 +121,8 @@
                     android:orientation="horizontal">
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="@dimen/_60sdp"
-                        android:layout_height="@dimen/_65sdp"
+                        android:layout_width="85dp"
+                        android:layout_height="85dp"
                         app:cardCornerRadius="@dimen/_7sdp">
                         <!-- Image Placeholder -->
                         <ImageView
@@ -137,7 +136,8 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="3dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -151,59 +151,65 @@
                             android:textSize="17sp"
                             android:textStyle="normal" />
 
+
+
+                            <RelativeLayout
+                                android:id="@+id/rl1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                               >
+                                <ImageView
+                                    android:id="@+id/imageStar"
+                                    android:layout_width="@dimen/_13sdp"
+                                    android:layout_height="@dimen/_13sdp"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginTop="@dimen/_2sdp"
+                                    android:src="@drawable/ic_star"
+                                    app:tint="#FFBB00" />
+
+                                <TextView
+                                    android:id="@+id/textRatingStar"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/_2sdp"
+                                    android:layout_toEndOf="@+id/imageStar"
+                                    android:fontFamily="@font/inter"
+                                    android:text="5.0"
+                                    android:textColor="#FFBB00"
+                                    android:textSize="14sp" />
+                                <TextView
+                                    android:id="@+id/textK"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toEndOf="@+id/textRatingStar"
+                                    android:fontFamily="@font/inter"
+                                    android:layout_marginStart="2dp"
+                                    android:text=" (1k+)"
+                                    android:textColor="#A4A4A4"
+                                    android:textSize="14sp" />
+                            </RelativeLayout>
+                            <!-- Star Rating Icon -->
+
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_3sdp"
-                            android:orientation="horizontal">
+                            android:layout_marginTop="@dimen/_7sdp">
 
-                            <!-- Star Rating Icon -->
-                            <ImageView
-                                android:id="@+id/imageStar"
-                                android:layout_width="@dimen/_13sdp"
-                                android:layout_height="@dimen/_13sdp"
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginTop="@dimen/_2sdp"
-                                android:src="@drawable/ic_star"
-                                app:tint="#FFBB00" />
-
-                            <TextView
-                                android:id="@+id/textRatingStar"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_2sdp"
-                                android:layout_toEndOf="@+id/imageStar"
-                                android:fontFamily="@font/inter"
-                                android:text="5.0"
-                                android:textColor="#FFBB00"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/textK"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_toEndOf="@+id/textRatingStar"
-                                android:fontFamily="@font/inter"
-                                android:text=" (1k+)"
-                                android:textColor="#666"
-                                android:textSize="14sp" />
 
                             <ImageView
                                 android:id="@+id/imageMilesIcon"
-                                android:layout_width="@dimen/_16sdp"
-                                android:layout_height="@dimen/_16sdp"
-                                android:layout_below="@+id/textK"
+                                android:layout_width="17dp"
+                                android:layout_height="19dp"
                                 android:src="@drawable/ic_location_hotel"
-                                android:textColor="#666"
+                                android:textColor="#A4A4A4"
+                                android:layout_marginTop="2dp"
                                 android:textSize="@dimen/_13ssp" />
 
                             <TextView
                                 android:id="@+id/textMiles"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_below="@id/textK"
                                 android:layout_marginStart="@dimen/_2sdp"
-                                android:layout_marginTop="@dimen/_1sdp"
                                 android:layout_toEndOf="@+id/imageMilesIcon"
                                 android:fontFamily="@font/inter"
                                 android:text="37 miles away"
@@ -211,29 +217,34 @@
                                 android:textSize="14sp"
                                 app:layout_constraintEnd_toEndOf="parent" />
                             <!-- Distance -->
+                           </RelativeLayout>
 
 
-                        </RelativeLayout>
+
+
+
+
+
                     </LinearLayout>
                 </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1dp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="11dp"
                     android:background="#E5E5E5" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_8sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="11dp"
                     android:weightSum="1">
 
                     <RelativeLayout
                         android:id="@+id/rlPauseButton"
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/_35ssp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.45"
                         android:background="@drawable/bg_save_button">
 
@@ -243,6 +254,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:fontFamily="@font/inter"
+                            android:paddingVertical="8dp"
                             android:textSize="15sp"
                             android:text="Pause Bookings"
                             android:textAlignment="center"
@@ -258,7 +270,7 @@
                     <RelativeLayout
                         android:id="@+id/rlEditPlace"
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/_35ssp"
+                        android:layout_height="wrap_content"
                         android:layout_weight="0.45"
                         android:background="@drawable/bg_four_corner_light_black_small_corner">
 
@@ -268,6 +280,7 @@
                             android:layout_centerInParent="true"
                             android:text="Edit Place"
                             android:fontFamily="@font/inter"
+                            android:paddingVertical="8dp"
                             android:textSize="15sp"
                             android:textAlignment="center"
                             android:textColor="@color/black" />
@@ -286,6 +299,7 @@
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="15dp"
                 android:layout_marginBottom="@dimen/_75sdp">
 
 
@@ -357,8 +371,8 @@
                                         app:thirtySpace="@dimen/_10sdp"
                                         app:fourtySpace="@dimen/_12sdp"
                                         app:textSizeDays="@dimen/_15sdp"
-                                        app:textSizeName="@dimen/_10sdp"
-                                        app:textSizeStatus ="@dimen/_10sdp"
+                                        app:textSizeName="@dimen/_11sdp"
+                                        app:textSizeStatus ="@dimen/_11sdp"
                                         app:textSizeTime ="@dimen/_10sdp"
                                         />
                                 </HorizontalScrollView>

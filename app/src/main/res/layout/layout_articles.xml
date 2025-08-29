@@ -26,7 +26,6 @@
         android:text=""
         android:textSize="16sp"
         android:textColor="#ACACAC"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textTitle"/>
 

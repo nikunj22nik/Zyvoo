@@ -616,7 +616,7 @@ class WhereTimeActivity : AppCompatActivity() {
                                 dateView.setBackgroundResource(R.drawable.current_bg_date)
                                 date = selectedDate.toString()
                             }
-                            else -> dateView.setBackgroundResource(R.drawable.date_bg)
+                            else -> dateView.setBackgroundResource(R.drawable.date_bg2)
                         }
                     }
                     dateView.setTextColor(

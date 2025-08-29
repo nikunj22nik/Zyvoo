@@ -81,13 +81,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            android:fontFamily="@font/poppins"
+                            android:fontFamily="@font/poppins_medium"
                             android:gravity="center"
                             android:text=""
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:textSize="@dimen/_35ssp"
-                            android:textStyle="bold"
                             app:layout_constraintBottom_toBottomOf="parent"
 
                             app:layout_constraintEnd_toEndOf="parent"
@@ -104,7 +103,7 @@
                             android:text="Hours"
                             android:textAlignment="center"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
+                            android:textSize="17sp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/textTime" />
@@ -127,11 +126,11 @@
             android:layout_below="@+id/cv1"
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="25dp"
             android:fontFamily="@font/poppins"
             android:text="Or"
             android:textColor="@color/black"
-            android:textSize="@dimen/_17sdp"
+            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
@@ -142,8 +141,8 @@
             android:layout_height="@dimen/_40sdp"
             android:layout_below="@id/textOr"
             android:layout_marginHorizontal="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:background="@drawable/text_bg">
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_four_side_grey_corner_next">
 
 
             <TextView
@@ -155,10 +154,10 @@
                 android:fontFamily="@font/poppins"
                 android:text="Select hours"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp" />
+                android:textSize="18sp" />
 
             <ImageView
-                android:layout_width="@dimen/_12sdp"
+                android:layout_width="18dp"
                 android:layout_height="@dimen/_12sdp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
@@ -174,16 +173,16 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rlSelectHour"
             android:layout_marginHorizontal="@dimen/_15sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_marginBottom="@dimen/_30sdp"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="37dp"
             android:background="@drawable/bg_four_corner_light_black"
             android:backgroundTint="#3A4B4C"
             android:fontFamily="@font/poppins"
-            android:paddingVertical="@dimen/_7sdp"
+            android:paddingVertical="14dp"
             android:text="Save Changes"
             android:textAlignment="center"
             android:textColor="@color/white"
-            android:textStyle="bold"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/rlSelectHour" />
 

@@ -4,9 +4,9 @@
     android:layout_height="@dimen/_30sdp"
     android:layout_weight="1"
     android:textSize="11sp"
-    android:textStyle="bold"
+
     android:gravity="center"
     android:layout_margin="@dimen/_3sdp"
     android:padding="@dimen/_3sdp"
-
+    android:fontFamily="@font/poppins"
     android:background="?attr/selectableItemBackgroundBorderless" />

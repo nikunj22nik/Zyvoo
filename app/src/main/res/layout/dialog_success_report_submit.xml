@@ -1,79 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="@dimen/_12sdp"
-    android:background="@color/white">
+    android:background="@color/white"
+    app:cardCornerRadius="@dimen/_12sdp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <ImageView
             android:id="@+id/img_cross"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_img_cross_big"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_gravity="end"
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:layout_marginTop="@dimen/_10sdp"
-            />
+            android:src="@drawable/ic_img_cross_big" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Success"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            android:fontFamily="@font/poppins_medium"
             android:layout_gravity="center_horizontal"
-            />
+            android:fontFamily="@font/poppins_medium"
+            android:text="Success"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
 
         <ImageView
             android:layout_width="@dimen/_60sdp"
             android:layout_height="@dimen/_60sdp"
-            android:src="@drawable/ic_success_icon_new"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/_10sdp"
             android:layout_marginBottom="@dimen/_10sdp"
-            />
+            android:src="@drawable/ic_success_icon_new" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="We will review your report and take \n appropriate action if necessary."
-            android:textAlignment="center"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/poppins"
-            android:textColor="#636363"
-            android:textSize="12sp"
-            />
+            android:text="We will review your report and take \n appropriate action if necessary."
+            android:textAlignment="center"
+            android:textColor="#444444"
+            android:textSize="12sp" />
 
         <RelativeLayout
             android:id="@+id/rl_okay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_13sdp"
             android:layout_gravity="center_horizontal"
             android:layout_marginStart="@dimen/_28sdp"
+            android:layout_marginTop="29dp"
             android:layout_marginEnd="@dimen/_28sdp"
             android:layout_marginBottom="@dimen/_15ssp"
-            android:background="@drawable/bg_green_add_card"
-            >
+            android:background="@drawable/bg_green_add_card">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Okay"
-                android:textSize="15sp"
-                android:textAlignment="center"
                 android:fontFamily="@font/poppins_medium"
-android:paddingVertical="@dimen/_5sdp"
-                android:textColor="@color/black"
                 android:paddingHorizontal="@dimen/_10sdp"
-                />
+                android:paddingVertical="@dimen/_5sdp"
+
+                android:text="Okay"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="15sp" />
         </RelativeLayout>
 
     </LinearLayout>

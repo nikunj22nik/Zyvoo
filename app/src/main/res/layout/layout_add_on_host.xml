@@ -18,7 +18,7 @@
         android:maxLines="1"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11sdp"
+        android:textSize="11sp"
         />
 
     <TextView
@@ -33,7 +33,7 @@
         android:layout_marginStart="@dimen/_5sdp"
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11sdp"
+        android:textSize="11sp"
         />
 
     <ImageView

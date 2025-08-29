@@ -25,7 +25,8 @@ RecyclerView.Adapter<PropertyIncludedAdapter.ViewHolder>()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
        list.get(position)?.let {
-           holder.binding.tvincluded.text = it
+           val formatted = it.replace("-", "- ")
+           holder.binding.tvincluded.text = formatted
        }
     }
 

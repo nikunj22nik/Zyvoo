@@ -23,7 +23,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/_20ssp"
         android:textColor="@color/black"
-        android:textSize="@dimen/_13ssp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,7 +44,7 @@
         android:layout_height="@dimen/_1sdp"
         android:layout_marginHorizontal="@dimen/_10ssp"
         android:layout_marginTop="@dimen/_10ssp"
-        android:background="#24000000"
+        android:background="#DBDBDB"
         app:layout_constraintTop_toBottomOf="@+id/tv_rl1" />
 
 
@@ -53,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_10ssp"
-        android:layout_marginTop="@dimen/_10ssp"
+        android:layout_marginTop="17dp"
         android:background="@drawable/button_grey_line_bg"
         android:fontFamily="@font/poppins"
         android:hint="Name"
@@ -63,7 +63,7 @@
         android:paddingVertical="@dimen/_4sdp"
         android:textColor="#000"
         android:textColorHint="#000"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         app:layout_constraintTop_toBottomOf="@id/viewTitle" />
 
 
@@ -84,7 +84,7 @@
         android:paddingVertical="@dimen/_4sdp"
         android:textColor="#000"
         android:textColorHint="#000"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
 
         app:layout_constraintTop_toBottomOf="@id/etCardHolderName" />
 
@@ -100,7 +100,7 @@
         android:fontFamily="@font/poppins"
         android:textColor="#000"
         android:textColorHint="#000"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         android:background="@drawable/button_grey_line_bg"
         app:layout_constraintTop_toBottomOf="@id/etCardNumber"
         android:layout_marginStart="@dimen/_11ssp"
@@ -120,7 +120,7 @@
         android:fontFamily="@font/poppins"
         android:textColor="#000"
         android:textColorHint="#000"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         android:background="@drawable/button_grey_line_bg"
         app:layout_constraintTop_toBottomOf="@id/etCardNumber"
         android:layout_marginStart="@dimen/_11ssp"
@@ -144,7 +144,7 @@
         android:paddingVertical="@dimen/_4sdp"
         android:textColor="#000"
         android:textColorHint="#000"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         app:layout_constraintTop_toBottomOf="@+id/textYear"
         tools:ignore="MissingConstraints" />
 
@@ -155,11 +155,11 @@
         android:layout_height="wrap_content"
         android:text="Add Billing Address"
         app:layout_constraintTop_toBottomOf="@+id/etCardCvv"
-        android:layout_marginStart="@dimen/_11ssp"
+        android:layout_marginStart="@dimen/_11sdp"
         app:layout_constraintStart_toStartOf="parent"
         android:fontFamily="@font/poppins_medium"
         android:textColor="@color/black"
-        android:textSize="@dimen/_13ssp"
+        android:textSize="16sp"
         android:layout_marginTop="@dimen/_10ssp"
         />
 
@@ -175,7 +175,7 @@
         app:layout_constraintStart_toStartOf="parent"
         android:text="Same as Mailing Address"
         android:fontFamily="@font/poppins"
-        android:textSize="@dimen/_10ssp"/>
+        android:textSize="11sp"/>
 
 
     <EditText
@@ -186,12 +186,12 @@
         android:maxLines="1"
         android:autofillHints="name"
         android:textColorHint="@color/black"
-        android:layout_marginTop="@dimen/_10ssp"
+        android:layout_marginTop="3dp"
         android:paddingHorizontal="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
         android:textColor="#000"
         android:singleLine="true"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         android:background="@drawable/button_grey_line_bg"
         app:layout_constraintTop_toBottomOf="@id/checkBox"
         android:layout_marginStart="@dimen/_11ssp"
@@ -207,12 +207,12 @@
         android:maxLines="1"
         android:autofillHints="name"
         android:textColorHint="@color/black"
-        android:layout_marginTop="@dimen/_10ssp"
+        android:layout_marginTop="3dp"
         android:paddingHorizontal="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
         android:singleLine="true"
         android:textColor="#000"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         android:background="@drawable/button_grey_line_bg"
         app:layout_constraintTop_toBottomOf="@id/checkBox"
         android:layout_marginStart="@dimen/_11ssp"
@@ -229,12 +229,12 @@
         android:maxLines="1"
         android:autofillHints="name"
         android:textColorHint="@color/black"
-        android:layout_marginTop="@dimen/_10ssp"
+        android:layout_marginTop="15dp"
         android:paddingHorizontal="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
         android:singleLine="true"
         android:textColor="#000"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         android:background="@drawable/button_grey_line_bg"
         app:layout_constraintTop_toBottomOf="@id/etCity"
         android:layout_marginStart="@dimen/_11ssp"
@@ -251,12 +251,12 @@
         android:inputType="number"
         android:autofillHints="name"
         android:textColorHint="@color/black"
-        android:layout_marginTop="@dimen/_10ssp"
+        android:layout_marginTop="15dp"
         android:paddingHorizontal="@dimen/_7sdp"
         android:fontFamily="@font/poppins"
         android:singleLine="true"
         android:textColor="#000"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="12sp"
         android:background="@drawable/button_grey_line_bg"
         app:layout_constraintTop_toBottomOf="@id/etCity"
         android:layout_marginStart="@dimen/_11ssp"
@@ -277,9 +277,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etState"
         android:background="@drawable/button_bg"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:layout_marginTop="@dimen/_15sdp"
         android:layout_marginBottom="@dimen/_25sdp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:textColor="@color/black"
         android:paddingHorizontal="@dimen/_40sdp"

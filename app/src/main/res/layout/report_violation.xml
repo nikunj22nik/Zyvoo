@@ -52,9 +52,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Please select a reason for reporting this user."
-
-
+                android:text="Please select a reason for reporting \nthis user."
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:textColor="@color/black"
@@ -99,7 +97,9 @@
                 android:background="@drawable/button_grey_line_bg"
                 android:foreground="?attr/selectableItemBackground"
                 android:hint="Name"
-                android:padding="10dp"
+                android:paddingHorizontal="10dp"
+                android:paddingTop="@dimen/_7sdp"
+                android:paddingBottom="@dimen/_5sdp"
                 android:textColor="#000"
                 android:textColorHint="#80000000"
                 android:textSize="12sp"
@@ -120,9 +120,9 @@
                 android:layout_height="wrap_content"
                 android:text="Add Additional Details"
                 android:textSize="14sp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="10dp"
                 android:layout_marginStart="@dimen/_12sdp"
-                android:textColor="#000000"
+                android:textColor="@color/black"
 
                 android:fontFamily="@font/poppins"
                 />
@@ -131,8 +131,8 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_four_side_grey_corner"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_four_side_grey_corner_next"
+                android:layout_marginTop="6dp"
                 android:layout_marginHorizontal="@dimen/_12sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
                 >
@@ -140,13 +140,14 @@
                 <EditText
                     android:id="@+id/et_addiotnal_detail"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_130sdp"
+                    android:layout_height="132dp"
                     android:background="@null"
                     android:gravity="start|top"
                     android:inputType="textMultiLine"
                     android:text=""
                     android:fontFamily="@font/poppins"
                     android:textSize="12sp"
+                    android:textColor="#444444"
                     android:layout_margin="@dimen/_7sdp"
                     android:layout_marginTop="0dp"
                     />
@@ -164,7 +165,7 @@
             android:background="@drawable/bg_green_add_card"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/_10sdp"
-            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_marginTop="12dp"
             >
             <TextView
                 android:id="@+id/txt_submit"

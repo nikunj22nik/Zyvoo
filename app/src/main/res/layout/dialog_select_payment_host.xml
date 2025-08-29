@@ -14,12 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/_8sdp"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:gravity="center"
         android:text="Select payment method"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/_15ssp"
-        android:textStyle="bold" />
+        android:textSize="16sp" />
 
     <!-- Payment Method Tabs -->
 
@@ -27,9 +26,9 @@
     <ToggleButton
         android:id="@+id/togglePaymentTypeSelectButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="34dp"
         android:layout_gravity="center"
-        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginHorizontal="@dimen/_36sdp"
         android:layout_marginTop="@dimen/_5sdp"
 android:layout_below="@+id/tvSelectPaymentMethod"
         android:background="@drawable/payment_type_select_toggle_background"
@@ -64,17 +63,16 @@ android:layout_below="@+id/tvSelectPaymentMethod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_semibold"
                 android:text="Bank Account"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12ssp"
-                android:textStyle="bold" />
+                android:textSize="10sp" />
 
 
             <ImageView
                 android:id="@+id/imageBankIcon"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="28dp"
+                android:layout_height="24dp"
                 android:layout_below="@+id/textBankName"
 
                 android:src="@drawable/ic_bank"
@@ -92,7 +90,7 @@ android:layout_below="@+id/tvSelectPaymentMethod"
                 android:fontFamily="@font/poppins"
                 android:text="Bank Name"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="10sp" />
 
 
             <!-- Bank Name -->
@@ -101,17 +99,20 @@ android:layout_below="@+id/tvSelectPaymentMethod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textBankName"
-                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_23sdp"
+                android:padding="@dimen/_2sdp"
                 android:layout_marginTop="@dimen/_2sdp"
                 android:layout_marginBottom="8dp"
+
                 android:layout_toEndOf="@+id/imageBankIcon"
                 android:background="@drawable/bg_two_side_corner"
-                android:padding="@dimen/_5sdp" />
+                />
 
             <ImageView
                 android:id="@+id/imageAccountNumberIcon"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_below="@+id/textAccountNumber"
                 android:layout_marginEnd="@dimen/_7sdp"
                 android:layout_marginTop="@dimen/_2sdp"
@@ -127,7 +128,7 @@ android:layout_below="@+id/tvSelectPaymentMethod"
                 android:fontFamily="@font/poppins"
                 android:text="Account Number"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="10sp" />
 
 
             <!-- Bank Name -->
@@ -136,17 +137,18 @@ android:layout_below="@+id/tvSelectPaymentMethod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textAccountNumber"
-                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_23sdp"
+                android:padding="@dimen/_2sdp"
                 android:layout_marginBottom="8dp"
                 android:layout_toEndOf="@+id/imageAccountNumberIcon"
-                android:background="@drawable/bg_two_side_corner"
-                android:padding="@dimen/_5sdp" />
+                android:background="@drawable/bg_two_side_corner" />
 
 
             <ImageView
                 android:id="@+id/imageRoutingNumberIcon"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:layout_below="@+id/textRoutingNumber"
                 android:layout_marginTop="@dimen/_3sdp"
                 android:layout_marginEnd="@dimen/_7sdp"
@@ -162,7 +164,7 @@ android:layout_below="@+id/tvSelectPaymentMethod"
                 android:fontFamily="@font/poppins"
                 android:text="Routing Number"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
+                android:textSize="10sp" />
 
 
             <!-- Bank Name -->
@@ -171,11 +173,13 @@ android:layout_below="@+id/tvSelectPaymentMethod"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/textRoutingNumber"
-                android:layout_marginHorizontal="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="@dimen/_23sdp"
+                android:padding="@dimen/_2sdp"
                 android:layout_marginBottom="8dp"
                 android:layout_toEndOf="@+id/imageRoutingNumberIcon"
                 android:background="@drawable/bg_two_side_corner"
-                android:padding="@dimen/_5sdp" />
+                />
 
 
         </RelativeLayout>
@@ -350,13 +354,12 @@ android:layout_below="@+id/tvSelectPaymentMethod"
         android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"
         android:background="@drawable/bg_green_add_card"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_medium"
         android:paddingHorizontal="@dimen/_20sdp"
         android:paddingVertical="@dimen/_8sdp"
         android:text="Add payment"
-        android:textStyle="bold"
         android:layout_below="@+id/flContent"
         android:textColor="@android:color/black"
-        android:textSize="@dimen/_11ssp" />
+        android:textSize="10sp" />
 
 </RelativeLayout>

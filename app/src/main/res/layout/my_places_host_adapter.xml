@@ -368,7 +368,7 @@
         android:textColor="@color/black"
         android:layout_marginStart="@dimen/_3sdp"
         android:layout_marginTop="@dimen/_5sdp"
-        app:layout_constraintEnd_toStartOf="@id/textPricePerHours"
+        app:layout_constraintEnd_toStartOf="@id/layoutPricePerHour"
         app:layout_constraintTop_toBottomOf="@id/cl1"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginEnd="@dimen/_10sdp"
@@ -432,20 +432,52 @@
         app:layout_constraintTop_toBottomOf="@id/textHotelName" />
 
     <!-- Price per hour -->
-    <TextView
-        android:id="@+id/textPricePerHours"
+<!--    <TextView-->
+<!--        android:id="@+id/textPricePerHours"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Price per hour"-->
+<!--        android:textColor="#000"-->
+<!--        android:drawablePadding="@dimen/_4sdp"-->
+<!--        android:fontFamily="@font/poppins"-->
+<!--        android:layout_marginTop="@dimen/_5sdp"-->
+<!--        android:textSize="12sp"-->
+<!--        android:layout_marginEnd="@dimen/_4sdp"-->
+<!--        app:drawableStartCompat="@drawable/ic_clock2"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/cl1" />-->
+
+    <LinearLayout
+        android:id="@+id/layoutPricePerHour"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Price per hour"
-        android:textColor="#000"
-        android:drawablePadding="@dimen/_4sdp"
-        android:fontFamily="@font/poppins"
+        android:orientation="horizontal"
         android:layout_marginTop="@dimen/_5sdp"
-        android:textSize="12sp"
-        android:layout_marginEnd="@dimen/_4sdp"
-        app:drawableStartCompat="@drawable/ic_clock"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cl1" />
+        app:layout_constraintTop_toBottomOf="@id/cl1">
+
+        <!-- Clock Icon -->
+        <ImageView
+            android:id="@+id/imgClock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_clock2"
+            android:layout_marginEnd="@dimen/_4sdp"
+            />
+
+        <!-- Price Text -->
+        <TextView
+            android:id="@+id/textPricePerHours"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Price per hour"
+            android:textColor="#000"
+            android:textSize="12sp"
+            android:layout_marginTop="0.5dp"
+            android:fontFamily="@font/poppins"
+            android:layout_marginEnd="@dimen/_4sdp"/>
+    </LinearLayout>
+
 
 
 

@@ -114,7 +114,7 @@ object PrepareData {
             "Elevator/Lift Access",
             "Wheelchair Accessible",
             "Smoking Allowed",
-            "Non-Smoking Property",
+            "Non - Smoking Property",
             "Security Cameras",
             "Concierge Service",
             "Airport Shuttle Service",

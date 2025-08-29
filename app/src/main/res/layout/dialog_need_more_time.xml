@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="Need More Time?"
+            android:textColor="@color/black"
             android:fontFamily="@font/poppins_medium"
             android:textSize="14sp" />
 
@@ -42,7 +43,7 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:fontFamily="@font/poppins"
             android:textFontWeight="400"
-            android:textColor="@color/grey"
+            android:textColor="#636363"
             android:text="To Extend your booking time.\n Please \n
 click ‘yes” below."
             android:textAlignment="center"

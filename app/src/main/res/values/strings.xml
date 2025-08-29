@@ -159,6 +159,7 @@
     <string name="we_ll_start_with_some_questions_and_get_nyou_to_the_right_place">We\'ll start with some questions and get \nyou to the right place.</string>
     <string name="need_to_get_in_touch">Need to get in touch?</string>
     <string name="message_the_host">Message the host</string>
+    <string name="host_provided_services_items_or_options_navailable_at_checkout">Host provided services, items or options. \nAvailable at checkout.</string>
 
     <string-array name="hourly_rates">
         <item>$10 per hour</item>

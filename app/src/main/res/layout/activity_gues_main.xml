@@ -51,11 +51,12 @@
 
                 <ImageView
                     android:id="@+id/imageDiscover"
-                    android:layout_width="@dimen/_23sdp"
-                    android:layout_height="@dimen/_23sdp"
+                    android:layout_width="@dimen/_25dp"
+                    android:layout_height="@dimen/_25dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:src="@drawable/ic_discover_1"
                      />
 
@@ -66,10 +67,10 @@
                     android:layout_below="@+id/imageDiscover"
                     android:layout_marginTop="1dp"
                     android:layout_centerHorizontal="true"
-                    android:textSize="@dimen/_10ssp"
+                    android:textSize="@dimen/_11sp"
                     android:gravity="center"
                     android:text="Discover"
-android:textStyle="bold"
+                    android:textStyle="bold"
                     android:fontFamily="@font/inter"
                     android:textColor="#3A4B4C" />
 
@@ -85,12 +86,12 @@ android:textStyle="bold"
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageInbox"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_21sdp"
+                    android:layout_width="@dimen/_25dp"
+                    android:layout_height="@dimen/_25dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/_4sdp"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:src="@drawable/ic_chat"
                    />
 
@@ -124,7 +125,7 @@ android:textStyle="bold"
                     android:text="Inbox"
                     android:textStyle="bold"
                     android:textColor="#803A4B4C"
-                    android:textSize="@dimen/_10ssp"
+                    android:textSize="@dimen/_11sp"
                     android:fontFamily="@font/inter"
                     />
 
@@ -140,11 +141,12 @@ android:textStyle="bold"
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageBooking"
-                    android:layout_width="@dimen/_23sdp"
-                    android:layout_height="@dimen/_24sdp"
+                    android:layout_width="@dimen/_25dp"
+                    android:layout_height="@dimen/_25dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:src="@drawable/ic_booking_1"
                     />
 
@@ -157,7 +159,7 @@ android:textStyle="bold"
                      android:text="Bookings"
                     android:textStyle="bold"
                     android:textColor="#803A4B4C"
-                    android:textSize="@dimen/_10ssp"
+                    android:textSize="@dimen/_11sp"
                     android:fontFamily="@font/inter" />
                 <RelativeLayout
                     android:layout_width="@dimen/_14sdp"
@@ -192,11 +194,12 @@ android:textStyle="bold"
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageWishlist"
-                    android:layout_width="@dimen/_23sdp"
-                    android:layout_height="@dimen/_23sdp"
+                    android:layout_width="@dimen/_25dp"
+                    android:layout_height="@dimen/_25dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:src="@drawable/ic_wishlist"
                      />
 
@@ -209,7 +212,7 @@ android:textStyle="bold"
 
                     android:textStyle="bold"
                     android:textColor="#803A4B4C"
-                    android:textSize="@dimen/_10ssp"
+                    android:textSize="@dimen/_11sp"
                     android:fontFamily="@font/inter"
                       android:text="Wishlists"
                     />
@@ -226,11 +229,12 @@ android:textStyle="bold"
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageProfile"
-                    android:layout_width="@dimen/_23sdp"
-                    android:layout_height="@dimen/_23sdp"
+                    android:layout_width="@dimen/_25dp"
+                    android:layout_height="@dimen/_25dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_2sdp"
                     android:src="@drawable/ic_profile"
                     />
 
@@ -243,7 +247,7 @@ android:textStyle="bold"
                     android:text="Profile"
                     android:textStyle="bold"
                     android:textColor="#803A4B4C"
-                    android:textSize="@dimen/_10ssp"
+                    android:textSize="@dimen/_11sp"
                     android:fontFamily="@font/inter" />
 
             </RelativeLayout>

@@ -4,6 +4,7 @@
     android:layout_height="@dimen/_30sdp"
     android:layout_weight="1"
     android:gravity="center"
+    android:fontFamily="@font/poppins"
     android:layout_margin="@dimen/_3sdp"
     android:textColor="#000"
     android:textSize="@dimen/_10ssp"

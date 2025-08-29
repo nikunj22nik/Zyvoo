@@ -36,5 +36,13 @@
     <dimen name="default_fourtySpacing">40dp</dimen>
     <dimen name="_1dp">1dp</dimen>
     <dimen name="_2dp">2dp</dimen>
+    <dimen name="_14dp">14dp</dimen>
+    <dimen name="_23dp">23dp</dimen>
+    <dimen name="_25dp">25dp</dimen>
+    <dimen name="_12sp">12sp</dimen>
+    <dimen name="_13sp">13sp</dimen>
+    <dimen name="_14sp">14sp</dimen>
+    <dimen name="_18sp">18sp</dimen>
+    <dimen name="_11sp">11sp</dimen>
 
 </resources>

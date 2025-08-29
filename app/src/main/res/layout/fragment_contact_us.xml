@@ -22,24 +22,28 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginHorizontal="@dimen/_15sdp">
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginBottom="@dimen/_10sdp">
+
                 <ImageView
                     android:id="@+id/imageBackIcon"
                     android:layout_width="@dimen/_25sdp"
                     android:layout_height="@dimen/_25sdp"
-                    android:src="@drawable/ic_back_icon" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/poppins"
-                android:text="Contact Us"
-                android:layout_centerInParent="true"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_16sdp"
-                android:textStyle="bold" />
 
+                    android:src="@drawable/ic_back_icon"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_toEndOf="@+id/imageBackIcon"
+                    android:fontFamily="@font/poppins"
+                    android:text="Contact Us"
+                    android:textColor="@color/black"
+                    android:textSize="18sp" />
             </RelativeLayout>
 
             <View
@@ -57,18 +61,17 @@
                 android:fontFamily="@font/poppins"
                 android:text="@string/lorem_ipsum_short"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_10ssp" />
+                android:textSize="13sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_15sdp"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Help &amp; Contact"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold" />
+                android:textSize="16sp" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -89,11 +92,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_12sdp"
                         android:layout_marginTop="@dimen/_15sdp"
-                        android:fontFamily="@font/poppins"
+                        android:fontFamily="@font/poppins_medium"
                         android:text="Contact Us"
                         android:textColor="#6B7879"
-                        android:textSize="@dimen/_13ssp"
-                        android:textStyle="bold" />
+                        android:textSize="14sp" />
 
 
                     <EditText
@@ -105,7 +107,7 @@
                         android:fontFamily="@font/poppins"
                         android:inputType="textCapSentences"
                         android:hint="Your Name"
-                        android:textSize="@dimen/_11sdp" />
+                        android:textSize="12sp" />
 
                     <EditText
                         android:id="@+id/etEmail"
@@ -115,7 +117,7 @@
                         android:layout_marginTop="@dimen/_5sdp"
                         android:fontFamily="@font/poppins"
                         android:hint="Your Email"
-                        android:textSize="@dimen/_11sdp" />
+                        android:textSize="12sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -125,7 +127,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="Message"
                         android:textColor="#6B7879"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="14sp" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -140,6 +142,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:padding="@dimen/_5ssp"
+                            android:fontFamily="@font/poppins"
+                            android:textSize="12sp"
                             android:gravity="top|start"
                             android:layout_marginHorizontal="@dimen/_10sdp"
                             android:background="@null" />
@@ -160,9 +164,9 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:fontFamily="@font/poppins"
+                            android:textSize="14sp"
                             android:text="Submit"
-                            android:textColor="@color/black"
-                            android:textStyle="bold" />
+                            android:textColor="@color/black" />
 
                     </RelativeLayout>
 

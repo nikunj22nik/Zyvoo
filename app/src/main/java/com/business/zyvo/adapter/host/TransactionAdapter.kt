@@ -2,6 +2,7 @@ package com.business.zyvo.adapter.host
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -58,7 +59,8 @@ class TransactionAdapter(
                 binding.tvDate.text = "Date"
             }
 
-        } else {
+        } else
+        {
             val modal = transactionsList[rowPos - 1]
             holder.binding.profileImage.visibility = View.VISIBLE
 
@@ -105,7 +107,7 @@ class TransactionAdapter(
                 when (modal.status) {
                     "pending" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
                     "completed" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
-                    "canceled" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                    "cancelled" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
                     "finished" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
                     "confirmed" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
                     "Status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
@@ -122,6 +124,36 @@ class TransactionAdapter(
 
 
         }
+//        binding.tvAmount.text = "Amount"
+//        binding.tvStatus.text = "Status"
+//        binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+//        binding.tvGuestName.text = "Guest Name"
+//        binding.tvDate.text = "Date"
+        if (holder.binding.tvAmount.text == "Amount" ){
+            holder.binding.tvAmount.setTextColor(Color.parseColor("#000000"))
+        }else{
+            holder.binding.tvAmount.setTextColor(Color.parseColor("#252849"))
+        }
+
+        if (holder.binding.tvStatus.text == "Status" ){
+            holder.binding.tvStatus.setTextColor(Color.parseColor("#000000"))
+        }else{
+            holder.binding.tvStatus.setTextColor(Color.parseColor("#252849"))
+        }
+
+        if (holder.binding.tvGuestName.text == "Guest Name" ){
+            holder.binding.tvGuestName.setTextColor(Color.parseColor("#000000"))
+        }else{
+            holder.binding.tvGuestName.setTextColor(Color.parseColor("#252849"))
+        }
+
+        if (holder.binding.tvDate.text == "Date" ){
+            holder.binding.tvDate.setTextColor(Color.parseColor("#000000"))
+        }else{
+            holder.binding.tvDate.setTextColor(Color.parseColor("#252849"))
+        }
+
+
     }
 
     override fun getItemCount(): Int {

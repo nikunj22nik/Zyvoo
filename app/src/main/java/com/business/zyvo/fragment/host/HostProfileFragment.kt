@@ -141,8 +141,8 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import java.util.Arrays
 
 
-@AndroidEntryPoint
-class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,
+ @AndroidEntryPoint
+ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,
     SetPreferred {
 
     private var _binding: FragmentHostProfileBinding? = null

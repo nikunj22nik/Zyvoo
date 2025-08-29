@@ -762,7 +762,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
 
                                     "Cancelled" -> {
                                         binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
-                                        binding.textCancelTheHostButton.text = "Cancelled"
+                                        binding.textCancelTheHostButton.text = "  Cancelled  "
                                         binding.textCancelTheHostButton.isEnabled = false
                                     }
 
@@ -778,8 +778,16 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 }
                                 binding.textMiles.text =
                                     (data.distance_miles ?: "N/A").toString() + " miles away"
+
+                                //     binding.textRatingStar.text =
+                                //                                    "${truncateToTwoDecimalPlaces(String.format("%.1f", data.total_rating ?: "0".toFloat()))}"
+//                                binding.textRatingStar.text =
+//                                    "${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
+
                                 binding.textRatingStar.text =
-                                    "${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
+                                    String.format("%.1f", (data.total_rating ?: "0").toString().toFloat())
+
+
                                 binding.time.text = data.charges?.booking_hours.toString()
                                 binding.money.text =
                                     "$${truncateToTwoDecimalPlaces(data.charges?.booking_amount ?: "0.00")}"
@@ -813,8 +821,10 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 binding.tvHostContent.text = (data.host_rules ?: "N/A").toString()
                                 binding.tvLocationName.text = data.location ?: "N/A"
                                 propertyId = data.property_id ?: 0
+
                                 data?.total_rating?.let {
-                                    binding.endRatingTv.text = it
+                                    val formattedRating = String.format("%.1f", it.toFloat())
+                                    binding.endRatingTv.text = formattedRating
                                 }
 
                                 //image loading from glide

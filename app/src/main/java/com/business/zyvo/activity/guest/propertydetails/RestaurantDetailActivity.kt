@@ -747,7 +747,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun showPopupWindowForPets(anchorView: View) {
         // Inflate the popup layout
         val inflater = LayoutInflater.from(this)
-        val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
+        val popupView = inflater.inflate(R.layout.popup_layout_pets2, null)
 
         // Create the PopupWindow
         val popupWindow = PopupWindow(

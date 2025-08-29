@@ -1897,18 +1897,18 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         }
 
         binding.allowPets.setOnClickListener {
-            showPopupWindowForPets(binding.allowPets)
+            showPopupWindowForPets(binding.allowPets,"pet")
         }
 
         binding.allowCancel.setOnClickListener {
-            showPopupWindowForPets(binding.allowCancel)
+            showPopupWindowForPets(binding.allowCancel, "cancel")
         }
     }
 
-    private fun showPopupWindowForPets(anchorView: View) {
+    private fun showPopupWindowForPets(anchorView: View, text: String) {
         // Inflate the popup layout
         val inflater = LayoutInflater.from(requireContext())
-        val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
+        val popupView = inflater.inflate(R.layout.popup_layout_pets_manage, null)
 
         // Create the PopupWindow
         val popupWindow = PopupWindow(
@@ -1916,6 +1916,10 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
+        val textView = popupView.findViewById<TextView>(R.id.text)
+        if (text == "cancel"){
+            textView.text = "Guest can cancel within selected time \nframe before confirmed booking time \n(only ONE selection can be made)"
+        }
 
         // Show the popup window at the bottom right of the TextView
 
@@ -2624,7 +2628,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         galleryAdapter.updateAdapter(imageList)
 
 
-        binding.recyclerGallery.layoutManager = GridLayoutManager(requireContext(), 3)
+        binding.recyclerGallery.layoutManager = GridLayoutManager(requireContext(), 4)
         binding.recyclerGallery.adapter = galleryAdapter
 
         val gridLayoutManager = GridLayoutManager(requireContext(), 3) // Set 4 columns
@@ -2637,7 +2641,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.recyclerActivity.isNestedScrollingEnabled = false
         binding.recyclerActivity2.adapter = adapterActivity2
         binding.recyclerActivity2.visibility = View.GONE
-        binding.tvOtherActivity.setOnClickListener {
+        binding.llOtherActivities.setOnClickListener {
             if (binding.recyclerActivity2.visibility == View.VISIBLE) {
                 binding.recyclerActivity2.visibility = View.GONE
             } else {

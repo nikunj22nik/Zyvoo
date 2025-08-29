@@ -42,8 +42,10 @@
             android:inputType="text"
             android:textColor="#000"
             android:fontFamily="@font/poppins"
-            android:layout_marginVertical="@dimen/_10sdp"
-            android:padding="@dimen/_8sdp"
+            android:layout_marginVertical="@dimen/_14sdp"
+            android:paddingStart="@dimen/_8sdp"
+            android:paddingEnd="@dimen/_6sdp"
+            android:paddingVertical="@dimen/_8sdp"
             android:textColorHint="#000" />
 
         <!-- Menu Icon -->
@@ -63,6 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:layout_marginTop="@dimen/_13sdp"
         tools:listitem="@layout/layout_chat_list"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_below="@+id/llHeader"

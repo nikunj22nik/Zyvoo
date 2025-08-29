@@ -117,7 +117,7 @@
                     android:id="@+id/textCategory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
+                    android:textSize="11sp"
                     android:textColor="@color/black"
                     android:fontFamily="@font/poppins"
                     />
@@ -130,9 +130,8 @@
                 android:layout_height="wrap_content"
                 android:text="Post title article title name article blog"
                 android:textColor="@color/white"
-                android:textStyle="bold"
-                android:fontFamily="@font/poppins"
-                android:textSize="@dimen/_13sdp"
+                android:fontFamily="@font/poppins_medium"
+                android:textSize="20sp"
                 android:layout_marginStart="@dimen/_4sdp"
                 />
 
@@ -160,10 +159,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Mar 13, 2022"
+                    android:textSize="12sp"
                     android:layout_marginStart="@dimen/_5sdp"
                     android:textColor="@color/white"
                     android:fontFamily="@font/poppins"
-                    android:textStyle="bold"
                     />
 
                 <ImageView
@@ -183,7 +182,7 @@
                     android:layout_marginStart="@dimen/_5sdp"
                     android:textColor="@color/white"
                     android:fontFamily="@font/poppins"
-                    android:textStyle="bold"
+                    android:textSize="12sp"
                     />
 
             </LinearLayout>
@@ -198,11 +197,11 @@
         android:id="@+id/textDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-android:textSize="@dimen/_13sdp"
+android:textSize="16sp"
          android:layout_marginStart="@dimen/_10sdp"
         android:layout_marginTop="@dimen/_13sdp"
         android:textColor="@color/black"
-        android:fontFamily="@font/poppins"
+        android:fontFamily="@font/poppins_light"
         />
 
     <View
@@ -278,10 +277,9 @@ android:textSize="@dimen/_13sdp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Author:"
-                        android:textSize="@dimen/_10sdp"
+                        android:textSize="15sp"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/poppins"
+                        android:fontFamily="@font/poppins_medium"
                         />
 
                     <ImageView
@@ -298,7 +296,7 @@ android:textSize="@dimen/_13sdp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_toEndOf="@id/img_author"
-
+android:textSize="14sp"
                         android:layout_below="@id/tv_author"
                         android:layout_marginStart="@dimen/_8sdp"
                         android:textColor="@color/black"
@@ -324,10 +322,9 @@ android:textSize="@dimen/_13sdp"
                         android:layout_height="wrap_content"
                         android:text="Share This Article:"
                         android:layout_centerHorizontal="true"
-                        android:textSize="@dimen/_10sdp"
+                        android:textSize="14sp"
                         android:textColor="@color/black"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/poppins"
+                        android:fontFamily="@font/poppins_medium"
                         />
 
                     <ImageView
@@ -356,24 +353,23 @@ android:textSize="@dimen/_13sdp"
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="center_horizontal"
                 android:text="Need to get in touch?"
                 android:textColor="@color/black"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:textSize="@dimen/_13ssp"
-                android:fontFamily="@font/poppins"
-                />
+                android:textSize="18sp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="We’ll start with some questions and \n get you to the right place."
-                android:textColor="@color/black"
+                android:textColor="#999999"
                 android:fontFamily="@font/poppins"
                 android:textAlignment="center"
                 android:layout_gravity="center"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="16sp"
                 />
 
 
@@ -382,13 +378,13 @@ android:textSize="@dimen/_13sdp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Contact Us"
+                android:textSize="14sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/poppins"
-                android:paddingHorizontal="@dimen/_25sdp"
-                android:paddingVertical="@dimen/_10sdp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="9dp"
                 android:background="@drawable/button_bg"
                 android:backgroundTint="#4AEAB1"
-                android:textStyle="bold"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_70sdp"

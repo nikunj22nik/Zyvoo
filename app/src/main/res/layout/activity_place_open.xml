@@ -181,7 +181,7 @@
                             android:layout_toEndOf="@+id/textRatingStar"
                             android:fontFamily="@font/poppins"
                             android:text=" (1k+)"
-                            android:textColor="#666"
+                            android:textColor="#A4A4A4"
 
                             android:textSize="@dimen/_11ssp" />
 

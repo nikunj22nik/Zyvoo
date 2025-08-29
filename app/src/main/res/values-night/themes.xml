@@ -55,6 +55,14 @@
         <item name="cornerSizeBottomRight">8dp</item>
     </style>
 
+    <style name="RoundedGalleryImageViewShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">10dp</item>
+        <item name="cornerSizeTopRight">10dp</item>
+        <item name="cornerSizeBottomLeft">10dp</item>
+        <item name="cornerSizeBottomRight">10dp</item>
+    </style>
+
     <style name="Circular">
         <item name="cornerSize">50%</item>
     </style>

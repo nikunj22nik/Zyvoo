@@ -5,6 +5,7 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 
 class ScheduleView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
@@ -16,13 +17,6 @@ class ScheduleView(context: Context, attrs: AttributeSet?) : View(context, attrs
 
     private var daysOfWeek: List<String> = listOf()
     private var events: List<ScheduleEvent> = listOf()
-
-//    private val timeColumnWidth = 250f
-//    private val dayColumnWidth = 370f
-//    private val daySpacing = 20f
-//    private val rowHeight = 250f
-//    private val rowSpacing = 20f
-
 
     private var timeColumnWidth: Float
     private var dayColumnWidth: Float
@@ -132,8 +126,9 @@ class ScheduleView(context: Context, attrs: AttributeSet?) : View(context, attrs
             isAntiAlias = true
           //  textSize = 55f
             textSize = textSizeDays
-            color = Color.parseColor("#1E1E46")
+            color = Color.parseColor("#373B63")
             textAlign = Paint.Align.CENTER
+            typeface = ResourcesCompat.getFont(context, R.font.open_sans_bold)
         }
 
         // **Draw Weekday Labels**
@@ -198,7 +193,7 @@ class ScheduleView(context: Context, attrs: AttributeSet?) : View(context, attrs
             color = Color.BLACK
           //  textSize = 42f
             textSize = textSizeName
-            typeface = Typeface.DEFAULT_BOLD
+            typeface =  ResourcesCompat.getFont(context, R.font.open_sans_bold)
             textAlign = Paint.Align.LEFT
         }
         val maxTextWidth = dayColumnWidth - 80 // Adjust for padding
@@ -215,7 +210,7 @@ class ScheduleView(context: Context, attrs: AttributeSet?) : View(context, attrs
             }
            // textSize = 38f
             textSize = textSizeStatus
-            typeface = Typeface.DEFAULT
+            typeface =  ResourcesCompat.getFont(context, R.font.inter)
             textAlign = Paint.Align.LEFT
         }
         canvas.drawText(event.subtitle, left + 40, top + 110, subtitlePaint)
@@ -224,7 +219,7 @@ class ScheduleView(context: Context, attrs: AttributeSet?) : View(context, attrs
             color = Color.BLACK
            // textSize = 33f
             textSize = textSizeTime
-            typeface = Typeface.DEFAULT
+            typeface = ResourcesCompat.getFont(context, R.font.inter)
             textAlign = Paint.Align.LEFT
         }
         canvas.drawText(event.time, left + 40, top + 170, timePaint)

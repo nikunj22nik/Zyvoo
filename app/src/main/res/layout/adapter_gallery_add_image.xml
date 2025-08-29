@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_80sdp"
+    android:layout_height="62dp"
     android:id="@+id/main"
     android:layout_margin="@dimen/_10sdp"
-    android:background="@drawable/dashed_corner"
-    >
+    android:background="@drawable/dashed_corner2">
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        >
+        android:layout_centerInParent="true">
 
-    <ImageView
-        android:id="@+id/img1"
-        android:layout_width="@dimen/_18sdp"
-        android:layout_height="@dimen/_18sdp"
-        android:src="@drawable/ic_add_more_icon_grey2"
-        android:layout_centerHorizontal="true"
-        />
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_add_more_icon_grey2"
+            android:layout_centerHorizontal="true"
+            app:tint="#9CA5A5" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add More"
             android:layout_below="@id/img1"
-            android:textSize="@dimen/_13ssp"
+            android:textSize="9sp"
             android:textAlignment="center"
             android:fontFamily="@font/poppins"
 

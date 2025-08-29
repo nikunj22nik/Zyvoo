@@ -12,7 +12,6 @@
         android:textSize="@dimen/_15sdp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/_30sdp"
-        android:textStyle="bold"
         android:textAlignment="center" />
 
     <ImageView

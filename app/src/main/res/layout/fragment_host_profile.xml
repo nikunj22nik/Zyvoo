@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <data>
+
         <variable
             name="user"
             type="com.business.zyvo.fragment.guest.profile.model.UserProfile" />
@@ -19,22 +20,21 @@
         android:visibility="visible"
         tools:context=".fragment.host.HostProfileFragment">
 
-       <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/clHead"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
             tools:context=".fragment.guest.profile.ProfileFragment">
 
-           <View
-               android:id="@+id/v1"
-               android:layout_width="match_parent"
-               android:layout_height="@dimen/_1dp"
-               android:layout_marginTop="@dimen/_5sdp"
-               android:background="@color/grey"
-               app:layout_constraintTop_toTopOf="parent"
-               app:layout_constraintStart_toStartOf="parent"
-               />
+            <View
+                android:id="@+id/v1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_1dp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:background="#ECECEC"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -46,193 +46,185 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:fontFamily="@font/poppins"
                     android:text="About Me"
                     android:textColor="@color/black"
-                    android:fontFamily="@font/poppins"
-                    android:textSize="@dimen/_15ssp"
-                    android:layout_marginStart="@dimen/_15sdp"
+                    android:textSize="18sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <RelativeLayout
                     android:id="@+id/rl_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     android:background="@drawable/bg_two_side_corner"
-                    android:paddingStart="@dimen/_10sdp"
                     android:paddingVertical="@dimen/_4sdp"
+                    android:paddingStart="@dimen/_5sdp"
                     android:paddingEnd="@dimen/_4sdp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginEnd="@dimen/_10sdp"
-                    android:layout_marginTop="@dimen/_7sdp"
-                    android:layout_marginBottom="@dimen/_10sdp"
-                    >
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/tv_edit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Edit"
-                        android:textSize="@dimen/_13ssp"
-                        android:layout_marginStart="@dimen/_7sdp"
                         android:layout_centerVertical="true"
-                        />
+                        android:layout_marginStart="@dimen/_7sdp"
+                        android:fontFamily="@font/inter"
+                        android:text="Edit"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
 
 
                     <ImageView
                         android:id="@+id/imageEditAboutIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_edit_icon"
-                        android:layout_toEndOf="@id/tv_edit"
                         android:layout_marginStart="@dimen/_10sdp"
-                        />
+                        android:layout_toEndOf="@id/tv_edit"
+                        android:src="@drawable/ic_edit_icon" />
+
                     <ImageView
                         android:id="@+id/imageSaveAboutIcon"
                         android:layout_width="@dimen/_25sdp"
                         android:layout_height="@dimen/_25sdp"
-                        android:visibility="gone"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_2sdp"
+                        android:layout_toEndOf="@id/tv_edit"
                         android:paddingVertical="@dimen/_4sdp"
                         android:src="@drawable/ic_checked_icon"
-                        android:layout_toEndOf="@id/tv_edit"
-                        android:layout_marginEnd="@dimen/_2sdp"
-                        android:layout_marginStart="@dimen/_10sdp"
-                        />
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <EditText
                     android:id="@+id/etAboutMeText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:hint="Write about yourself."
-                    android:textColor="@color/black"
-                    android:text="@{user.about_me != null ? user.about_me : ``}"
-                    android:fontFamily="@font/poppins"
-                    android:enabled="false"
-                    android:textSize="@dimen/_11ssp"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_2sdp"
+                    android:background="@null"
+                    android:enabled="false"
+                    android:fontFamily="@font/poppins"
+                    android:hint="Write about yourself."
+                    android:text="@{user.about_me != null ? user.about_me : ``}"
+                    android:textColor="@color/black"
+                    android:textSize="15sp"
                     app:layout_constraintTop_toBottomOf="@id/rl_edit" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-           <androidx.constraintlayout.widget.ConstraintLayout
-               android:id="@+id/clProfile"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               android:layout_marginHorizontal="@dimen/_10sdp"
-               android:layout_marginTop="@dimen/_20sdp"
-               android:background="@drawable/button_grey_line_bg"
-              app:layout_constraintTop_toBottomOf="@id/clSearch">
-               <!--android:src="@drawable/ic_women_image"-->
-               <de.hdodenhof.circleimageview.CircleImageView
-                   android:id="@+id/imageProfilePicture"
-                   android:layout_width="@dimen/_100sdp"
-                   android:layout_height="@dimen/_100sdp"
-                   android:background="@drawable/profle_picture_ring"
-                   android:padding="@dimen/_17sdp"
-                   android:src="@drawable/ic_img_not_found"
-                   app:layout_constraintBottom_toBottomOf="parent"
-                   app:layout_constraintStart_toStartOf="parent"
-                   app:layout_constraintTop_toTopOf="parent" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="12.5dp"
+                android:background="@drawable/button_grey_line_bg"
+                app:layout_constraintTop_toBottomOf="@id/clSearch">
+                <!--android:src="@drawable/ic_women_image"-->
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/imageProfilePicture"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    android:background="@drawable/profle_picture_ring"
+                    android:padding="@dimen/_17sdp"
+                    android:src="@drawable/ic_img_not_found"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/imageEditPicture"
+                    android:layout_width="@dimen/_23sdp"
+                    android:layout_height="@dimen/_23sdp"
+                    android:layout_margin="@dimen/_60sdp"
+                    android:src="@drawable/ic_edit_icon"
+                    app:layout_constraintStart_toStartOf="@id/imageProfilePicture"
+                    app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
 
 
-               <ImageView
-                   android:id="@+id/imageEditPicture"
-                   android:layout_width="@dimen/_23sdp"
-                   android:layout_height="@dimen/_23sdp"
-                   android:layout_margin="@dimen/_60sdp"
-                   android:src="@drawable/ic_edit_icon"
-                   app:layout_constraintStart_toStartOf="@id/imageProfilePicture"
-                   app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
+                <TextView
+                    android:id="@+id/textName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_25sdp"
+                    android:fontFamily="@font/poppins"
+                    android:maxWidth="@dimen/_150sdp"
+                    android:singleLine="true"
+                    android:text='@{user.name != null ? "Hey " + (user.name.length() > 30 ? user.name.substring(0, 30) + ".." : user.name)+ "!" : ""}'
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
+                    app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
+
+                <TextView
+                    android:id="@+id/textHost"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Host"
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
+                    app:layout_constraintTop_toBottomOf="@+id/textName" />
+
+                <ImageView
+                    android:id="@+id/imageInfoIcon"
+                    android:layout_width="@dimen/_14sdp"
+                    android:layout_height="@dimen/_14sdp"
+                    android:layout_marginStart="@dimen/_2sdp"
+                    android:layout_marginTop="-4dp"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/ic_info_icon"
+                    app:layout_constraintStart_toEndOf="@id/textHost"
+                    app:layout_constraintTop_toBottomOf="@id/textName" />
+
+                <ImageView
+                    android:id="@+id/imageEditName"
+                    android:layout_width="@dimen/_28sdp"
+                    android:layout_height="@dimen/_28sdp"
+                    android:layout_marginTop="@dimen/_18sdp"
+                    android:src="@drawable/ic_edit_icon"
+                    app:layout_constraintStart_toEndOf="@id/textName"
+                    app:layout_constraintTop_toTopOf="parent" />
 
 
-               <TextView
-                   android:id="@+id/textName"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_marginTop="@dimen/_25sdp"
-                   android:maxWidth="@dimen/_150sdp"
-                   android:singleLine="true"
-                   android:fontFamily="@font/poppins"
-                   android:text='@{user.name != null ? "Hey " + (user.name.length() > 30 ? user.name.substring(0, 30) + ".." : user.name)+ "!" : ""}'
-                   android:textColorHint="@color/black"
-                   android:textColor="@color/black"
-                   android:textSize="@dimen/_15sdp"
-                   android:textStyle="bold"
-                   app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
-                   app:layout_constraintTop_toTopOf="@id/imageProfilePicture" />
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cvInfo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:visibility="gone"
+                    app:cardCornerRadius="@dimen/_10sdp"
+                    app:layout_constraintEnd_toEndOf="@id/clProfile"
+                    app:layout_constraintStart_toEndOf="@id/textHost"
 
-               <TextView
-                   android:id="@+id/textHost"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:fontFamily="@font/poppins"
-                   android:text="Host"
-                   android:textColor="@color/black"
-                   android:textSize="@dimen/_14ssp"
-                   app:layout_constraintStart_toEndOf="@+id/imageProfilePicture"
-                   app:layout_constraintTop_toBottomOf="@+id/textName" />
+                    app:layout_constraintTop_toBottomOf="@id/imageInfoIcon">
 
-               <ImageView
-                   android:id="@+id/imageInfoIcon"
-                   android:layout_width="@dimen/_14sdp"
-                   android:layout_height="@dimen/_14sdp"
-                   android:layout_marginStart="@dimen/_2sdp"
-                   android:padding="@dimen/_2sdp"
-                   android:layout_marginTop="-4dp"
-                   android:src="@drawable/ic_info_icon"
-                   app:layout_constraintStart_toEndOf="@id/textHost"
-                   app:layout_constraintTop_toBottomOf="@id/textName" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/poppins"
+                        android:padding="@dimen/_5sdp"
+                        android:text="Before you can book or host  on the platform the name on Id must match verification documents."
+                        android:textColor="@color/black"
+                        android:textSize="8sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-               <ImageView
-                   android:id="@+id/imageEditName"
-                   android:layout_width="@dimen/_28sdp"
-                   android:layout_height="@dimen/_28sdp"
-                   android:layout_marginTop="@dimen/_18sdp"
-                   android:src="@drawable/ic_edit_icon"
-                   app:layout_constraintStart_toEndOf="@id/textName"
-                   app:layout_constraintTop_toTopOf="parent" />
+                </androidx.cardview.widget.CardView>
 
 
-               <androidx.cardview.widget.CardView
-                   android:id="@+id/cvInfo"
-                   android:layout_width="0dp"
-                   android:layout_height="wrap_content"
-                   android:backgroundTint="@color/white"
-                   android:visibility="gone"
-                   app:cardCornerRadius="@dimen/_10sdp"
-                   app:layout_constraintEnd_toEndOf="@id/clProfile"
-                   app:layout_constraintStart_toEndOf="@id/textHost"
-
-                   app:layout_constraintTop_toBottomOf="@id/imageInfoIcon">
-
-                   <TextView
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:fontFamily="@font/poppins_light"
-                       android:padding="@dimen/_5sdp"
-                       android:text="Before you can book or host  on the platform the name on Id must match verification documents."
-                       android:textColor="@color/black"
-                       android:textSize="@dimen/_10ssp"
-                       android:textStyle="bold"
-                       app:layout_constraintEnd_toEndOf="parent"
-                       app:layout_constraintStart_toStartOf="parent"
-                       app:layout_constraintTop_toTopOf="parent" />
-
-               </androidx.cardview.widget.CardView>
-
-
-           </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <LinearLayout
@@ -240,12 +232,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_11sdp"
-                android:layout_marginTop="@dimen/_13sdp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/button_grey_line_bg"
                 android:backgroundTint="#3A4B4C"
                 android:orientation="horizontal"
-                android:weightSum="3"
                 android:paddingBottom="@dimen/_10sdp"
+                android:weightSum="3"
                 app:layout_constraintTop_toBottomOf="@+id/clProfile">
 
                 <!-- email address-->
@@ -253,9 +245,10 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:layout_weight="1">
+                    android:orientation="vertical">
+
                     <ImageView
                         android:id="@+id/imageEmail"
                         android:layout_width="@dimen/_72sdp"
@@ -310,12 +303,14 @@
                         app:layout_constraintTop_toBottomOf="@+id/textConfirmNow" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:layout_weight="1">
+                    android:orientation="vertical">
+
                     <ImageView
                         android:id="@+id/imagePhone"
                         android:layout_width="@dimen/_72sdp"
@@ -372,12 +367,14 @@
                         app:layout_constraintTop_toBottomOf="@+id/textConfirmNow1" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
+                    android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:layout_weight="1">
+                    android:orientation="vertical">
+
                     <ImageView
                         android:id="@+id/imageIdentity"
                         android:layout_width="@dimen/_72sdp"
@@ -443,8 +440,6 @@
                 <!-- verify identify-->
 
 
-
-
             </LinearLayout>
 
             <TextView
@@ -481,12 +476,12 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/button_grey_line_bg"
                 android:fontFamily="@font/poppins"
-                android:visibility="gone"
                 android:inputType="textMultiLine"
                 android:padding="@dimen/_10sdp"
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_10ssp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/textAbout" />
 
 
@@ -494,13 +489,12 @@
                 android:id="@+id/textWhereILive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="25dp"
                 android:fontFamily="@font/poppins"
                 android:text="Where I live*"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/etAboutMe" />
 
@@ -509,8 +503,8 @@
                 android:id="@+id/recyclerViewLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
                 android:layout_marginStart="@dimen/_15sdp"
+                android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -540,7 +534,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewLocation" />
 
@@ -549,13 +543,12 @@
                 android:id="@+id/textMyWork"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins"
                 android:text="My work"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view1" />
 
@@ -578,7 +571,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewWork" />
 
@@ -587,14 +580,13 @@
                 android:id="@+id/textLanguages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins"
-                android:text="Languages I speak*"
 
+                android:text="Languages I speak*"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view2" />
 
@@ -617,24 +609,21 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1dp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/recyclerViewlanguages" />
-
-
 
 
             <TextView
                 android:id="@+id/textEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins"
                 android:text="Email"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/view3" />
 
@@ -660,7 +649,7 @@
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="14sp"
                     android:textStyle="normal" />
 
 
@@ -682,7 +671,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/rlEmailAddress" />
 
@@ -691,13 +680,12 @@
                 android:id="@+id/textPhoneNumberTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins"
                 android:text="Phone Number"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewEmail" />
 
@@ -721,11 +709,11 @@
                     android:fontFamily="@font/poppins"
                     android:hint="Enter your Phone Number"
                     android:inputType="numberDecimal"
-                    android:maxLines="1"
                     android:maxLength="10"
+                    android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="14sp"
                     android:textStyle="normal" />
 
 
@@ -746,7 +734,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/rlPhoneNumber" />
 
@@ -755,13 +743,12 @@
                 android:id="@+id/textPasswordTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins"
                 android:text="Password"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewPhoneNumber" />
 
@@ -782,14 +769,14 @@
                     android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginEnd="@dimen/_25sdp"
                     android:background="@null"
+                    android:enabled="false"
                     android:fontFamily="@font/poppins"
                     android:hint="**********"
-                    android:enabled="false"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="14sp"
                     android:textStyle="normal" />
 
 
@@ -810,7 +797,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/rlPasswordTitle" />
 
@@ -819,13 +806,12 @@
                 android:id="@+id/textMailingAddressTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins"
                 android:text="Address"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewPassword" />
@@ -842,21 +828,21 @@
                 >
 
                 <EditText
+                    android:id="@+id/streetEditText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginEnd="@dimen/_30sdp"
                     android:background="@null"
-                    android:id="@+id/streetEditText"
+                    android:enabled="false"
                     android:fontFamily="@font/poppins"
                     android:hint="Street"
                     android:inputType="text"
-                    android:enabled="false"
-                    android:text="@{user.street != null ? user.street : ``}"
                     android:maxLines="1"
+                    android:text="@{user.street != null ? user.street : ``}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="14sp"
                     android:textStyle="normal" />
 
 
@@ -873,11 +859,11 @@
                     android:id="@+id/imageStreetCheckedButton"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
+                    android:layout_alignParentEnd="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:src="@drawable/ic_checked_icon"
                     android:visibility="gone"
-                    android:layout_alignParentEnd="true"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent" />
 
 
             </RelativeLayout>
@@ -893,20 +879,20 @@
                 app:layout_constraintTop_toBottomOf="@+id/textMailingAddressTitle">
 
                 <EditText
+                    android:id="@+id/cityET"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginEnd="@dimen/_30sdp"
                     android:background="@null"
-                    android:id="@+id/cityET"
+                    android:enabled="false"
                     android:fontFamily="@font/poppins"
                     android:hint="City"
-                    android:text="@{user.city != null ? user.city : ``}"
-                    android:enabled="false"
                     android:maxLines="1"
+                    android:text="@{user.city != null ? user.city : ``}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="14sp"
                     android:textStyle="normal" />
 
 
@@ -923,12 +909,11 @@
                     android:id="@+id/CityCheckedButton"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
+                    android:layout_alignParentEnd="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:src="@drawable/ic_checked_icon"
                     android:visibility="gone"
-                    android:layout_alignParentEnd="true"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
+                    app:layout_constraintEnd_toEndOf="parent" />
 
 
             </RelativeLayout>
@@ -939,7 +924,7 @@
                 android:layout_width="@dimen/_130sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginVertical="@dimen/_10ssp"
+                android:layout_marginTop="9dp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rlMailingStreetTitle"
@@ -947,20 +932,20 @@
                 >
 
                 <EditText
+                    android:id="@+id/stateEt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginEnd="@dimen/_30sdp"
                     android:background="@null"
-                    android:id="@+id/stateEt"
+                    android:enabled="false"
                     android:fontFamily="@font/poppins"
                     android:hint="State"
-                    android:enabled="false"
-                    android:text="@{user.state != null ? user.state : ``}"
                     android:maxLines="1"
+                    android:text="@{user.state != null ? user.state : ``}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="14sp"
                     android:textStyle="normal" />
 
 
@@ -978,11 +963,11 @@
                     android:id="@+id/stateCheckedButton"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
+                    android:layout_alignParentEnd="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:src="@drawable/ic_checked_icon"
                     android:visibility="gone"
-                    android:layout_alignParentEnd="true"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent" />
 
 
             </RelativeLayout>
@@ -992,27 +977,27 @@
                 android:layout_width="@dimen/_130sdp"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginVertical="@dimen/_10ssp"
+                android:layout_marginTop="9dp"
                 android:background="@drawable/button_grey_line_bg"
                 app:layout_constraintStart_toEndOf="@+id/rlMailingStreetTitle"
 
                 app:layout_constraintTop_toBottomOf="@+id/rlMailingCityTitle">
 
                 <EditText
+                    android:id="@+id/zipEt"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginEnd="@dimen/_30sdp"
                     android:background="@null"
-                    android:id="@+id/zipEt"
+                    android:enabled="false"
                     android:fontFamily="@font/poppins"
                     android:hint="Zip Code"
-                    android:enabled="false"
-                    android:text="@{user.zip_code != null ? user.zip_code : ``}"
                     android:maxLines="1"
+                    android:text="@{user.zip_code != null ? user.zip_code : ``}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="14sp"
                     android:textStyle="normal" />
 
 
@@ -1030,11 +1015,11 @@
                     android:id="@+id/zipCodeCheckedButton"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
+                    android:layout_alignParentEnd="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:src="@drawable/ic_checked_icon"
                     android:visibility="gone"
-                    android:layout_alignParentEnd="true"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent" />
 
 
             </RelativeLayout>
@@ -1044,7 +1029,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/rlMailingZipCodeTitle" />
 
@@ -1071,14 +1056,13 @@
                 android:id="@+id/textPaymentMethod"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginStart="@dimen/_17sdp"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:text="Payment Method"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:drawableEndCompat="@drawable/ic_dropdown_close"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewMailingAddress" />
@@ -1092,13 +1076,6 @@
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/textPaymentMethod" />
-
-
-
-
-
-
-
 
 
             <!--        <TextView-->
@@ -1125,12 +1102,13 @@
                 android:id="@+id/rlBankNameAndCardName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/_20sdp"
                 android:layout_marginVertical="@dimen/_2sdp"
-                android:elevation="@dimen/_30sdp"
                 android:background="@drawable/bg_four_side_grey_corner_white"
+                android:elevation="@dimen/_30sdp"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/viewPayment1">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewPaymentCardList"
                     android:layout_width="match_parent"
@@ -1169,77 +1147,71 @@
                 android:id="@+id/rlPaymentMethodFun"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/_10sdp"
                 android:paddingHorizontal="@dimen/_10sdp"
+                android:paddingVertical="@dimen/_10sdp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textPaymentMethod"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/textPaymentMethod">
 
                 <TextView
-                    android:id = "@+id/textAddNew"
-                    android:layout_width = "@dimen/_95sdp"
-                    android:layout_height = "wrap_content"
-                    android:text = "Add New"
-                    android:textSize="@dimen/_11sdp"
-                    android:paddingHorizontal="@dimen/_5sdp"
-                    android:fontFamily="@font/poppins"
-                    android:textColor="@color/black"
-                    android:layout_marginEnd="@dimen/_15sdp"
-                    android:drawablePadding="@dimen/_5sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:background="@drawable/button_grey_line_bg"
-                    android:padding="@dimen/_7sdp"
+                    android:id="@+id/textAddNew"
+                    android:layout_width="@dimen/_95sdp"
+                    android:layout_height="wrap_content"
                     android:layout_below="@id/recyclerViewPaymentCardList1"
-                    app:drawableEndCompat="@drawable/ic_plus_add_button"
-                    android:layout_marginTop="@dimen/_10sdp"/>
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="@dimen/_15sdp"
+                    android:background="@drawable/button_grey_line_bg"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:fontFamily="@font/poppins"
+                    android:padding="@dimen/_7sdp"
+                    android:paddingHorizontal="@dimen/_5sdp"
+                    android:text="Add New"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    app:drawableEndCompat="@drawable/ic_plus_add_button" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewPaymentCardList1"
-                    android:layout_width = "match_parent"
-                    android:layout_height = "wrap_content"
-                    android:layout_marginHorizontal = "@dimen/_10sdp"
-                    android:layout_marginVertical = "@dimen/_2sdp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginVertical="@dimen/_2sdp"
                     android:background="@drawable/bg_four_side_grey_corner_white"
                     android:orientation="vertical"
                     android:visibility="visible"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    />
-
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 
                 <TextView
                     android:id="@+id/textPayOutMethod"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/textAddNew"
+                    android:layout_marginVertical="10dp"
+                    android:layout_marginStart="@dimen/_17sdp"
+                    android:drawablePadding="@dimen/_7ssp"
+                    android:fontFamily="@font/poppins"
                     android:text="Payout Method"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_13sdp"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/poppins"
-                    android:drawablePadding="@dimen/_7ssp"
-                    app:drawableEndCompat="@drawable/ic_dropdown_close"
-                    android:layout_marginStart="@dimen/_10ssp"
-                    android:layout_marginVertical="@dimen/_10sdp"
-                    android:layout_below="@+id/textAddNew"/>
-
-
+                    android:textSize="18sp"
+                    app:drawableEndCompat="@drawable/ic_dropdown_close" />
 
 
                 <TextView
                     android:id="@+id/textAddNewPaymentMethod"
                     android:layout_width="@dimen/_95sdp"
                     android:layout_height="wrap_content"
-                    android:text="Add New"
-                    android:textSize="@dimen/_11sdp"
-                    android:paddingHorizontal="@dimen/_5sdp"
-                    android:fontFamily="@font/poppins"
-                    android:textColor="@color/black"
-                    android:layout_marginEnd="@dimen/_15sdp"
-                    android:drawablePadding="@dimen/_5sdp"
-                    android:layout_marginStart="@dimen/_10sdp"
-                    android:background="@drawable/button_grey_line_bg"
-                    android:padding="@dimen/_7sdp"
                     android:layout_below="@+id/textPayOutMethod"
+                    android:layout_marginStart="@dimen/_15sdp"
+                    android:layout_marginEnd="@dimen/_15sdp"
+                    android:background="@drawable/button_grey_line_bg"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:fontFamily="@font/poppins"
+                    android:padding="@dimen/_7sdp"
+                    android:paddingHorizontal="@dimen/_5sdp"
+                    android:text="Add New"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
                     app:drawableEndCompat="@drawable/ic_plus_add_button" />
 
 
@@ -1250,34 +1222,33 @@
                 android:id="@+id/rlBankNameAndCardNamePayOut"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_240sdp"
-                android:visibility="gone"
-                android:orientation="vertical"
                 android:layout_marginHorizontal="@dimen/_20sdp"
-                android:elevation="@dimen/_30sdp"
                 android:layout_marginTop="-60dp"
                 android:background="@drawable/bg_four_side_grey_corner_white"
-                app:layout_constraintTop_toBottomOf="@+id/rlPaymentMethodFun"
-                >
+                android:elevation="@dimen/_30sdp"
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/rlPaymentMethodFun">
 
                 <!-- Bank Title -->
                 <TextView
                     android:id="@+id/textBankTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Banks"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:padding="@dimen/_10sdp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/black"/>
+                    android:padding="@dimen/_10sdp"
+                    android:text="Banks"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewPaymentCardListPayOut"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:orientation="vertical"
                     android:layout_weight="1"
+                    android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHeight_max="@dimen/_140sdp"
@@ -1291,31 +1262,31 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/_10sdp"
                     android:text="No Data Found"
+                    android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
-                    android:padding="@dimen/_10sdp"
-                    android:gravity="center"
-                    android:textColor="@color/black"/>
+                    android:visibility="gone" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#5E5E5E"
-                    android:layout_marginVertical="@dimen/_5sdp"/>
+                    android:layout_marginVertical="@dimen/_5sdp"
+                    android:background="#5E5E5E" />
 
 
                 <TextView
                     android:id="@+id/textCardTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Debit Cards"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:padding="@dimen/_10sdp"
                     android:gravity="center_vertical"
-                    android:textColor="@color/black"/>
+                    android:padding="@dimen/_10sdp"
+                    android:text="Debit Cards"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -1323,8 +1294,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_below="@+id/recyclerViewPaymentCardListPayOut"
-                    android:orientation="vertical"
                     android:layout_weight="1"
+                    android:orientation="vertical"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHeight_max="@dimen/_140sdp"
@@ -1340,17 +1311,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/_10sdp"
                     android:text="No Data Found"
+                    android:textColor="@color/black"
+
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:visibility="gone"
-
-                    android:padding="@dimen/_10sdp"
-                    android:gravity="center"
-                    android:textColor="@color/black"/>
+                    android:visibility="gone" />
 
             </LinearLayout>
-
 
 
             <View
@@ -1366,13 +1336,12 @@
                 android:id="@+id/textUsefulPages"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="14dp"
                 android:fontFamily="@font/poppins"
                 android:text="Useful Pages"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewPayment" />
 
@@ -1381,55 +1350,54 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="16dp"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_vertical"
                 android:text="Payments and Withdrawals"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:drawableStartCompat="@drawable/ic_payment_withdraw"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textUsefulPages"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/textUsefulPages" />
+
             <TextView
                 android:id="@+id/textBooking"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="10dp"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_vertical"
                 android:text="Bookings"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:drawableStartCompat="@drawable/ic_booking"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textPaymentWithdraw"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/textPaymentWithdraw" />
+
             <TextView
                 android:id="@+id/textCreateList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="10dp"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_vertical"
                 android:text="Create New Listing"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:drawableStartCompat="@drawable/ic_create_list"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textBooking"
-                />
+                app:layout_constraintTop_toBottomOf="@+id/textBooking" />
 
 
             <TextView
@@ -1437,13 +1405,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="10dp"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_vertical"
                 android:text="Language"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:drawableStartCompat="@drawable/ic_language_icon"
@@ -1455,13 +1423,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="10dp"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_vertical"
                 android:text="Notifications"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:drawableStartCompat="@drawable/ic_notification_icon_profile"
@@ -1469,14 +1437,12 @@
                 app:layout_constraintTop_toBottomOf="@+id/textLanguage" />
 
 
-
-
             <View
                 android:id="@+id/viewNotifications"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="15dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/textNotifications" />
 
@@ -1485,13 +1451,12 @@
                 android:id="@+id/textSupport"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins"
                 android:text="Support"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewNotifications" />
@@ -1501,14 +1466,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="15dp"
                 android:drawableStart="@drawable/ic_help_center"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_vertical"
                 android:text="Visit the Help Center"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1520,14 +1485,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="9dp"
                 android:drawableStart="@drawable/ic_feedback_icon_profile"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_vertical"
                 android:text="Give us feedback"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1538,7 +1503,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/textGiveFeedback" />
 
@@ -1547,13 +1512,12 @@
                 android:id="@+id/textLegal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginStart="@dimen/_17sdp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins"
                 android:text="Legal"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_13sdp"
-                android:textStyle="bold"
+                android:textSize="18sp"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewFeedback" />
@@ -1563,14 +1527,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="15dp"
                 android:drawableStart="@drawable/ic_notebook_icon"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_vertical"
                 android:text="Terms of services"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1582,14 +1546,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="10dp"
                 android:drawableStart="@drawable/ic_notebook_icon"
                 android:drawablePadding="@dimen/_7ssp"
                 android:fontFamily="@font/poppins"
                 android:gravity="center_vertical"
                 android:text="Privacy policy"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 app:drawableEndCompat="@drawable/ic_nextpage_dropdown"
                 app:layout_constraintStart_toStartOf="parent"
@@ -1600,7 +1564,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/textPrivacyPolicy" />
 
@@ -1609,15 +1573,16 @@
                 android:id="@+id/textLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="@dimen/_15sdp"
+                android:layout_marginTop="20dp"
                 android:drawableStart="@drawable/ic_logout_icon"
-                android:drawablePadding="@dimen/_10ssp"
+                android:drawablePadding="10dp"
                 android:fontFamily="@font/poppins"
                 android:text="Logout"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
+                android:textSize="14sp"
                 android:textStyle="normal"
-                android:layout_marginStart="@dimen/_15sdp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/viewPrivacy" />
@@ -1627,15 +1592,15 @@
                 android:id="@+id/switch_host"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_10ssp"
-                android:layout_marginBottom="@dimen/_65sdp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="@dimen/_75sdp"
                 android:background="@drawable/button_bg"
-                android:fontFamily="@font/poppins"
+                android:fontFamily="@font/inter"
                 android:paddingHorizontal="@dimen/_95sdp"
                 android:paddingVertical="@dimen/_8sdp"
                 android:text="Switch to Guest"
                 android:textColor="@color/black"
-                android:textStyle="bold"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

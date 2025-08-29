@@ -5,8 +5,8 @@
     android:id="@+id/clMain"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/_13sdp"
-    android:layout_marginVertical="@dimen/_10ssp"
+    android:layout_marginHorizontal="@dimen/_18sdp"
+    android:layout_marginVertical="@dimen/_7sdp"
     android:background="@drawable/chat_list_unselected_bg">
 
 

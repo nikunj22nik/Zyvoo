@@ -11,35 +11,32 @@
         android:id="@+id/itemHighestReview"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Highest Review"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="@dimen/_11ssp" />
 
 
     <TextView
         android:id="@+id/itemLowestReview"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Lowest Review"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="@dimen/_11ssp" />
 
     <TextView
         android:id="@+id/itemRecentReview"
         android:layout_width="@dimen/_140sdp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_light"
+        android:fontFamily="@font/poppins"
         android:padding="@dimen/_7sdp"
         android:text="Recent Review"
         android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="bold"/>
+        android:textSize="@dimen/_11ssp" />
 
 
 

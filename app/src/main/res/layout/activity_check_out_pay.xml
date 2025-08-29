@@ -26,13 +26,13 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="@dimen/_10sdp">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/img_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginVertical="18dp"
                     android:layout_marginStart="@dimen/_15sdp"
                     android:src="@drawable/ic_back_icon" />
 
@@ -41,8 +41,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/_15sdp"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_filter" />
+                    android:src="@drawable/ic_filter"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <View
@@ -54,18 +54,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="28dp"
                 android:fontFamily="@font/poppins"
                 android:text="Checkout and Pay"
                 android:textColor="@color/black"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_12sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_3sdp"
                 android:background="#E5E5E5" />
 
             <LinearLayout
@@ -74,30 +73,29 @@
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/bg_four_side_grey_corner"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_marginVertical="@dimen/_10sdp"
                     android:layout_marginStart="@dimen/_5sdp"
-                    android:layout_gravity="center_horizontal"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        >
+                        android:layout_height="match_parent">
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:fontFamily="@font/poppins_light"
                             android:text="Hosted by"
-                            android:fontFamily="@font/poppins"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"
-                            android:layout_gravity="center_vertical"/>
+                            android:textSize="15sp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -115,23 +113,23 @@
 
 
                             <TextView
+                                android:id="@+id/tvHostName"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_7sdp"
-                                android:hint="Mia J."
-                                android:singleLine="true"
-                                android:maxWidth="@dimen/_140sdp"
-                                android:id="@+id/tvHostName"
                                 android:fontFamily="@font/poppins"
+                                android:hint="Mia J."
+                                android:maxWidth="@dimen/_140sdp"
+                                android:singleLine="true"
                                 android:textColor="@color/black"
                                 android:textColorHint="@color/black"
-                                android:textSize="@dimen/_12sdp" />
+                                android:textSize="16sp" />
 
                             <ImageView
+                                android:id="@+id/ivStar"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/_4ssp"
-                                android:id="@+id/ivStar"
                                 android:src="@drawable/ic_badge_img" />
 
                         </LinearLayout>
@@ -155,37 +153,37 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tvResponseTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
                         android:drawableStart="@drawable/ic_clock_dot_new"
-                        android:drawablePadding="@dimen/_2sdp"
+                        android:drawablePadding="@dimen/_3sdp"
+                        android:fontFamily="@font/poppins_light"
                         android:hint="Respond within 1 hr"
-                        android:id="@+id/tvResponseTime"
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
-                        android:fontFamily="@font/poppins"
-                        android:textSize="@dimen/_12sdp"
-                        android:layout_gravity="center_horizontal"/>
+                        android:textSize="15sp" />
 
                     <RelativeLayout
                         android:id="@+id/rl_msg_host"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/_35sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_8ssp"
                         android:layout_marginEnd="@dimen/_15sdp"
-                        android:layout_marginStart="@dimen/_15sdp"
-                        android:visibility="gone"
-                        android:background="@drawable/bg_four_corner_light_black">
+                        android:background="@drawable/bg_four_corner_light_black"
+                        android:visibility="gone">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:layout_marginTop="@dimen/_5sdp"
-                            android:text="Message the host"
                             android:fontFamily="@font/poppins"
+                            android:text="Message the host"
                             android:textColor="@color/black"
-                            android:textSize="@dimen/_12sdp"/>
+                            android:textSize="@dimen/_12sdp" />
 
                     </RelativeLayout>
 
@@ -197,125 +195,120 @@
                         android:layout_marginTop="@dimen/_3sdp"
                         android:background="@drawable/bg_four_side_grey_corner"
                         android:orientation="vertical"
-                        android:visibility="gone"
-                        >
+                        android:visibility="gone">
 
                         <RelativeLayout
                             android:id="@+id/doubt"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingHorizontal="@dimen/_6sdp"
-                            android:paddingVertical="@dimen/_6sdp"
-                            android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
                             android:background="@drawable/bg_four_side_corner_msg_box"
-                            >
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="I have a doubt"
-                                android:textSize="@dimen/_11ssp"
                                 android:fontFamily="@font/poppins"
+                                android:text="I have a doubt"
                                 android:textColor="@color/black"
+                                android:textSize="@dimen/_11ssp"
 
 
                                 />
 
                         </RelativeLayout>
+
                         <RelativeLayout
                             android:id="@+id/tv_available_day"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingHorizontal="@dimen/_6sdp"
-                            android:paddingVertical="@dimen/_6sdp"
                             android:layout_below="@id/doubt"
-                            android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
-                            >
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Available days"
-                                android:textSize="@dimen/_11ssp"
                                 android:fontFamily="@font/poppins"
+                                android:text="Available days"
                                 android:textColor="@color/black"
+                                android:textSize="@dimen/_11ssp"
 
                                 />
 
                         </RelativeLayout>
+
                         <RelativeLayout
                             android:id="@+id/tv_other_reason"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:paddingHorizontal="@dimen/_6sdp"
-                            android:paddingVertical="@dimen/_6sdp"
                             android:layout_below="@id/doubt"
+                            android:layout_marginHorizontal="@dimen/_6sdp"
                             android:layout_marginTop="@dimen/_6sdp"
                             android:layout_marginBottom="@dimen/_5sdp"
-                            android:layout_marginHorizontal="@dimen/_6sdp"
-                            android:visibility="visible"
                             android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
-                            >
+                            android:paddingHorizontal="@dimen/_6sdp"
+                            android:paddingVertical="@dimen/_6sdp"
+                            android:visibility="visible">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Other reason"
-                                android:textSize="@dimen/_10ssp"
-
                                 android:fontFamily="@font/poppins"
+                                android:text="Other reason"
+
                                 android:textColor="@color/black"
-                                />
+                                android:textSize="@dimen/_10ssp" />
 
                         </RelativeLayout>
+
                         <RelativeLayout
                             android:id="@+id/tv_share_message"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_100sdp"
+                            android:layout_below="@id/doubt"
+                            android:layout_marginHorizontal="@dimen/_6sdp"
+                            android:layout_marginTop="@dimen/_6sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
                             android:paddingHorizontal="@dimen/_6sdp"
                             android:paddingVertical="@dimen/_6sdp"
-                            android:layout_below="@id/doubt"
-                            android:layout_marginTop="@dimen/_6sdp"
-                            android:layout_marginHorizontal="@dimen/_6sdp"
-                            android:layout_marginBottom="@dimen/_10sdp"
-                            android:visibility="gone"
-                            android:background="@drawable/bg_four_side_corner_msg_box_grey_light"
-                            >
+                            android:visibility="gone">
 
                             <EditText
                                 android:id="@+id/et_share_message"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="Share a message"
-                                android:textSize="@dimen/_9ssp"
-                                android:background="@null"
-                                android:textColorHint="@color/black"
-                                android:fontFamily="@font/poppins"
-                                android:textColor="@color/black"
                                 android:layout_centerHorizontal="true"
-                                />
+                                android:background="@null"
+                                android:fontFamily="@font/poppins"
+                                android:hint="Share a message"
+                                android:textColor="@color/black"
+                                android:textColorHint="@color/black"
+                                android:textSize="@dimen/_9ssp" />
 
                         </RelativeLayout>
+
                         <RelativeLayout
                             android:id="@+id/rl_submit_message"
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/_33sdp"
-                            android:background="@drawable/bg_save_button"
                             android:layout_marginHorizontal="@dimen/_10sdp"
                             android:layout_marginBottom="@dimen/_10sdp"
-                            >
+                            android:background="@drawable/bg_save_button">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
                                 android:text="Message Host"
                                 android:textColor="@color/white"
-                                android:textSize="@dimen/_12sdp"
-                                android:layout_centerInParent="true"
-                                />
+                                android:textSize="@dimen/_12sdp" />
                         </RelativeLayout>
 
                     </LinearLayout>
@@ -329,19 +322,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:background="@drawable/bg_four_side_grey_corner"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_four_side_grey_corner_white2"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:layout_marginHorizontal="@dimen/_15sdp"
                     android:weightSum="1">
 
                     <androidx.cardview.widget.CardView
                         android:layout_width="0dp"
-                        android:layout_height="@dimen/_65sdp"
+                        android:layout_height="@dimen/_80sdp"
                         android:layout_marginVertical="@dimen/_10sdp"
                         android:layout_weight="0.3"
                         app:cardCornerRadius="@dimen/_7sdp">
@@ -366,16 +359,16 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_7sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
                         android:layout_weight="0.7"
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvProName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:hint="Cabin in Peshastin"
                             android:fontFamily="@font/poppins"
-                            android:id="@+id/tvProName"
+                            android:hint="Cabin in Peshastin"
                             android:textColor="@color/black"
                             android:textColorHint="@color/black"
                             android:textSize="17sp" />
@@ -447,7 +440,7 @@
                                 android:layout_toEndOf="@+id/tvRating"
                                 android:fontFamily="@font/poppins"
                                 android:text=" (0)"
-                                android:textColor="#666"
+                                android:textColor="#A4A4A4"
                                 android:textSize="14sp" />
 
                             <!-- Distance -->
@@ -465,15 +458,15 @@
                                 android:src="@drawable/ic_location_icon" />
 
                             <TextView
+                                android:id="@+id/tvMiles"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="@dimen/_7sdp"
-                                android:hint="0 miles away"
-                                android:id="@+id/tvMiles"
-                                android:textSize="14sp"
+                                android:layout_marginStart="@dimen/_3sdp"
                                 android:fontFamily="@font/poppins"
+                                android:hint="0 miles away"
+                                android:textColor="@color/a4a4a4"
                                 android:textColorHint="@color/a4a4a4"
-                                android:textColor="@color/a4a4a4" />
+                                android:textSize="14sp" />
 
                         </LinearLayout>
 
@@ -493,31 +486,29 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_10sdp">
+                    android:layout_marginHorizontal="@dimen/_15sdp">
 
                     <TextView
+                        android:id="@+id/tvTotalHours"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:hint="2 Hours"
-                        android:id="@+id/tvTotalHours"
-                        android:textColorHint="@color/black"
                         android:textColor="@color/black"
-                        android:textSize="15sp"
-                        />
+                        android:textColorHint="@color/black"
+                        android:textSize="15sp" />
 
 
                     <TextView
+                        android:id="@+id/tvPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:hint="$0"
-                        android:id="@+id/tvPrice"
                         android:fontFamily="@font/poppins"
-                        android:textSize="15sp"
+                        android:hint="$0"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/black"
-                        android:textColor="@color/black" />
+                        android:textSize="15sp" />
 
                 </RelativeLayout>
 
@@ -535,21 +526,20 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
                         android:text="@string/cleaning_fee"
-                        android:textSize="15sp"
                         android:textColor="@color/black"
-                        />
+                        android:textSize="15sp" />
 
 
                     <TextView
+                        android:id="@+id/tvCleaningFee"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:hint="$0"
-                        android:id="@+id/tvCleaningFee"
                         android:fontFamily="@font/poppins"
-                        android:textSize="15sp"
+                        android:hint="$0"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/black"
-                        android:textColor="@color/black"/>
+                        android:textSize="15sp" />
 
 
                 </RelativeLayout>
@@ -565,29 +555,29 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/zyvoo_service_fee"
-                        android:textSize="15sp"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black" />
+                        android:text="@string/zyvoo_service_fee"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
 
                     <TextView
+                        android:id="@+id/tvZyvoServiceFee"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:hint="$0"
-                        android:id="@+id/tvZyvoServiceFee"
                         android:fontFamily="@font/poppins"
-                        android:textSize="15sp"
+                        android:hint="$0"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/black"
-                        android:textColor="@color/black"/>" />
+                        android:textSize="15sp" />" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rltax"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/rltax"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_8sdp">
 
@@ -595,82 +585,81 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
                         android:text="@string/taxes"
-                        android:textSize="15sp"
-                        />
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
 
                     <TextView
+                        android:id="@+id/tvTaxesPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
+                        android:fontFamily="@font/poppins"
                         android:hint="$0"
                         android:text="$0"
-                        android:id="@+id/tvTaxesPrice"
-                        android:textSize="15sp"
-                        android:fontFamily="@font/poppins"
+                        android:textColor="@color/black"
                         android:textColorHint="@color/black"
-                        android:textColor="@color/black"/>" />
+                        android:textSize="15sp" />" />
 
                 </RelativeLayout>
                 <!--android:layout_marginBottom="@dimen/_10sdp"-->
                 <RelativeLayout
+                    android:id="@+id/llDiscountLabel"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
                     android:layout_marginTop="@dimen/_8sdp"
-                    android:id="@+id/llDiscountLabel"
                     android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
                         android:text="@string/discount"
-                        android:textSize="@dimen/_12sdp"
-                        />
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
 
 
                     <TextView
+                        android:id="@+id/tvDiscount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="$0"
-                        android:id="@+id/tvDiscount"
-                        android:textColorHint="@color/black"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"/> />
+                        android:text="$0"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black" />
+                    />
 
                 </RelativeLayout>
+
                 <RelativeLayout
+                    android:id="@+id/rladdOn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:id="@+id/rladdOn"
                     android:layout_marginTop="@dimen/_8sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
                         android:text="@string/add_on"
-                        android:textSize="15sp"
-                        />
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
 
 
                     <TextView
+                        android:id="@+id/tvAddOnPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:hint="$0"
-                        android:id="@+id/tvAddOnPrice"
-                        android:textColorHint="@color/black"
-                        android:textSize="15sp"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"/>
+                        android:hint="$0"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:textSize="15sp" />
                     />
 
                 </RelativeLayout>
@@ -678,8 +667,8 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_1sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
                     android:layout_marginHorizontal="@dimen/_15sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:background="#E5E5E5">
 
                 </View>
@@ -688,28 +677,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:layout_marginBottom="@dimen/_10sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"
                         android:text="Total"
-                        android:textSize="15sp"
-                        />
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
 
 
                     <TextView
+                        android:id="@+id/tvTotalPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:text="$0"
-                        android:id="@+id/tvTotalPrice"
-                        android:textSize="15sp"
                         android:fontFamily="@font/poppins"
-                        android:textColor="@color/black"/>
+                        android:text="$0"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
                     " />
 
                 </RelativeLayout>
@@ -719,7 +707,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="2dp"
                 android:layout_marginHorizontal="@dimen/_17sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="#E5E5E5" />
@@ -732,11 +720,11 @@
                     android:id="@+id/tvBookingDetails"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_15sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_18sdp"
+                    android:layout_marginTop="16dp"
                     android:fontFamily="@font/poppins_medium"
-                    android:textColor="@color/black"
                     android:text="Booking Details"
+                    android:textColor="@color/black"
                     android:textSize="18sp" />
 
                 <RelativeLayout
@@ -749,7 +737,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_13sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:background="@drawable/bg_two_side_corner"
                         android:paddingVertical="@dimen/_10sdp">
 
@@ -764,20 +752,21 @@
                             android:id="@+id/tv_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_7sdp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="@dimen/_3sdp"
                             android:layout_toRightOf="@id/img_calendar"
-                            android:text="October 22, 2023"
-                            android:textSize="13sp"
                             android:fontFamily="@font/poppins"
-                            android:textColor="@color/black" />
+                            android:text="October 22, 2023"
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_5sdp"
                             android:layout_marginEnd="@dimen/_5sdp"
                             android:layout_toRightOf="@id/tv_date"
-                            android:layout_centerVertical="true"
                             android:src="@drawable/ic_edit_icon_green" />
 
                     </RelativeLayout>
@@ -787,7 +776,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_9sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_5sdp"
                         android:layout_toRightOf="@id/date_view"
                         android:background="@drawable/bg_two_side_corner"
                         android:paddingHorizontal="@dimen/_15sdp"
@@ -804,14 +793,14 @@
                             android:id="@+id/tvHours"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="@dimen/_3sdp"
                             android:layout_toRightOf="@id/clock_1"
-                            android:hint="2 Hours"
-                            android:layout_marginTop="@dimen/_5sdp"
-                            android:textSize="13sp"
                             android:fontFamily="@font/poppins"
+                            android:hint="2 Hours"
+                            android:textColor="@color/black"
                             android:textColorHint="@color/black"
-                            android:textColor="@color/black" />
+                            android:textSize="13sp" />
 
                     </RelativeLayout>
 
@@ -829,28 +818,28 @@
                             android:id="@+id/clock_old"
                             android:layout_width="@dimen/_17ssp"
                             android:layout_height="@dimen/_17ssp"
-                            android:layout_marginStart="@dimen/_10sdp"
                             android:layout_centerVertical="true"
+                            android:layout_marginStart="@dimen/_10sdp"
                             android:src="@drawable/ic_clock_new" />
 
                         <TextView
                             android:id="@+id/tv_timing"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/_7sdp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginTop="@dimen/_3sdp"
                             android:layout_toRightOf="@id/clock_old"
-                            android:text="From 01pm to 03pm"
-                            android:layout_marginTop="3dp"
-                            android:textSize="13sp"
                             android:fontFamily="@font/poppins"
-                            android:textColor="@color/black" />
+                            android:text="From 01pm to 03pm"
+                            android:textColor="@color/black"
+                            android:textSize="13sp" />
 
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
                             android:layout_marginStart="@dimen/_10sdp"
                             android:layout_marginEnd="@dimen/_10sdp"
-                            android:layout_centerVertical="true"
                             android:layout_toRightOf="@id/tv_timing"
                             android:src="@drawable/ic_edit_icon_green" />
 
@@ -859,138 +848,134 @@
                     <androidx.cardview.widget.CardView
                         android:id="@+id/relTime"
                         android:layout_width="wrap_content"
-                        android:layout_below="@id/date_view_1"
                         android:layout_height="wrap_content"
+                        android:layout_below="@id/date_view_1"
                         android:layout_marginStart="@dimen/_15sdp"
                         android:layout_marginTop="@dimen/_3sdp"
-                        app:cardCornerRadius="@dimen/_10sdp"
-                        android:visibility="gone"
                         android:layout_marginBottom="@dimen/_5sdp"
-                        >
+                        android:visibility="gone"
+                        app:cardCornerRadius="@dimen/_10sdp">
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/_8sdp"
                             app:cardBackgroundColor="#FFFFFF"
-                            app:cardCornerRadius="@dimen/_10sdp"
-                            android:layout_marginTop="@dimen/_8sdp">
+                            app:cardCornerRadius="@dimen/_10sdp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="@dimen/_10sdp"
-                                android:orientation="vertical"
-                                >
+                                android:orientation="vertical">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_below="@id/imageIcon"
-                                    >
+                                    android:layout_below="@id/imageIcon">
+
                                     <TextView
                                         android:layout_width="@dimen/_40sdp"
                                         android:layout_height="wrap_content"
-                                        android:text="From"
-                                        android:layout_marginStart="@dimen/_10sdp"
-                                        android:textSize="@dimen/_12sdp"
-                                        android:fontFamily="@font/poppins"
                                         android:layout_gravity="center_vertical"
-                                        />
+                                        android:layout_marginStart="@dimen/_10sdp"
+                                        android:fontFamily="@font/poppins"
+                                        android:text="From"
+                                        android:textSize="@dimen/_12sdp" />
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
                                         android:layout_margin="10sp"
                                         android:background="@drawable/bg_four_side_grey_corner"
-                                        >
+                                        android:padding="@dimen/_2sdp">
+
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/endHour"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_9ssp"
-                                            android:padding = "0dp"
+                                            android:padding="0dp"
+                                            android:paddingStart="8dp"
+                                            android:paddingTop="6dp"
+                                            android:paddingEnd="8dp"
+                                            android:paddingBottom="6dp"
                                             android:text="1"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
+                                            android:textAlignment="center"
+                                            android:textSize="@dimen/_9ssp"
 
-                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                            app:spinner_arrow_gravity="end"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp" />
+                                            app:spinner_divider_size="0.4dp"
+                                            app:spinner_popup_animation="dropdown"
+                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            app:spinner_popup_elevation="14dp" />
 
                                     </LinearLayout>
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
                                         android:layout_marginVertical="10sp"
                                         android:layout_marginEnd="@dimen/_10sdp"
                                         android:background="@drawable/bg_four_side_grey_corner"
-                                        >
+                                        android:padding="@dimen/_2sdp">
+
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/endMinute"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
+                                            android:padding="0dp"
+                                            android:paddingStart="8dp"
+                                            android:paddingTop="6dp"
+                                            android:paddingEnd="8dp"
+                                            android:paddingBottom="6dp"
                                             android:text="0"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
+                                            android:textAlignment="center"
+                                            android:textSize="@dimen/_10ssp"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingBottom = "6dp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
+                                            app:spinner_arrow_gravity="end"
+                                            app:spinner_arrow_padding="@dimen/_10sdp"
+                                            app:spinner_divider_size="0.4dp"
+                                            app:spinner_popup_animation="dropdown"
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_elevation = "14dp" />
+                                            app:spinner_popup_elevation="14dp" />
 
                                     </LinearLayout>
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
                                         android:layout_marginVertical="10sp"
                                         android:layout_marginEnd="@dimen/_10sdp"
                                         android:background="@drawable/bg_four_side_grey_corner"
-                                        >
+                                        android:padding="@dimen/_2sdp">
+
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/endAmPm"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
+                                            android:padding="0dp"
+                                            android:paddingStart="8dp"
+                                            android:paddingTop="6dp"
+                                            android:paddingEnd="8dp"
+                                            android:paddingBottom="6dp"
                                             android:text="AM"
-                                            app:spinner_popup_top_padding="@dimen/_10sdp"
+
+                                            android:textAlignment="center"
+                                            android:textSize="@dimen/_10ssp"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_gravity="end"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
+                                            app:spinner_divider_size="0.4dp"
 
-                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_popup_animation="dropdown"
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp"
-                                            />
+                                            app:spinner_popup_elevation="14dp"
+                                            app:spinner_popup_top_padding="@dimen/_10sdp" />
 
                                     </LinearLayout>
 
@@ -999,112 +984,111 @@
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_below="@id/imageIcon"
-                                    >
+                                    android:layout_below="@id/imageIcon">
+
                                     <TextView
                                         android:layout_width="@dimen/_40sdp"
                                         android:layout_height="wrap_content"
-                                        android:text="To"
                                         android:layout_gravity="center_vertical"
                                         android:layout_marginStart="@dimen/_10sdp"
-                                        android:textSize="@dimen/_12sdp"
                                         android:fontFamily="@font/poppins"
+                                        android:text="To"
+                                        android:textSize="@dimen/_12sdp"
 
                                         />
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
                                         android:layout_margin="10sp"
                                         android:background="@drawable/bg_four_side_grey_corner"
-                                        >
+                                        android:padding="@dimen/_2sdp">
+
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/startHour"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_9ssp"
-                                            android:padding = "0dp"
+                                            android:padding="0dp"
+                                            android:paddingStart="8dp"
+                                            android:paddingTop="6dp"
+                                            android:paddingEnd="8dp"
+                                            android:paddingBottom="6dp"
                                             android:text="2"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            android:textAlignment="center"
+                                            android:textSize="@dimen/_9ssp"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_gravity="end"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp" />
+                                            app:spinner_divider_size="0.4dp"
+                                            app:spinner_popup_animation="dropdown"
+                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            app:spinner_popup_elevation="14dp" />
 
                                     </LinearLayout>
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
                                         android:layout_marginVertical="10sp"
                                         android:layout_marginEnd="@dimen/_10sdp"
                                         android:background="@drawable/bg_four_side_grey_corner"
-                                        >
+                                        android:padding="@dimen/_2sdp">
+
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/startMinute"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
-                                            android:text="0"
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:paddingStart = "8dp"
+                                            android:padding="0dp"
+                                            android:paddingStart="8dp"
+                                            android:paddingTop="6dp"
+                                            android:paddingEnd="8dp"
+                                            android:paddingBottom="6dp"
 
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
+                                            android:text="0"
+                                            android:textAlignment="center"
+                                            android:textSize="@dimen/_10ssp"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingBottom = "6dp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
+                                            app:spinner_arrow_gravity="end"
+                                            app:spinner_arrow_padding="@dimen/_10sdp"
+                                            app:spinner_divider_size="0.4dp"
+                                            app:spinner_popup_animation="dropdown"
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_elevation = "14dp" />
+                                            app:spinner_popup_elevation="14dp" />
 
                                     </LinearLayout>
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
                                         android:layout_marginVertical="10sp"
                                         android:layout_marginEnd="@dimen/_10sdp"
                                         android:background="@drawable/bg_four_side_grey_corner"
-                                        >
+                                        android:padding="@dimen/_2sdp">
+
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/startAmPm"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
+                                            android:padding="0dp"
+                                            android:paddingStart="8dp"
+                                            android:paddingTop="6dp"
+                                            android:paddingEnd="8dp"
+                                            android:paddingBottom="6dp"
                                             android:text="AM"
-                                            app:spinner_popup_top_padding="@dimen/_10sdp"
+                                            android:textAlignment="center"
+                                            android:textSize="@dimen/_10ssp"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_gravity="end"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
+                                            app:spinner_divider_size="0.4dp"
 
-                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_popup_animation="dropdown"
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp"
-                                            />
+                                            app:spinner_popup_elevation="14dp"
+                                            app:spinner_popup_top_padding="@dimen/_10sdp" />
 
                                     </LinearLayout>
 
@@ -1115,12 +1099,12 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:paddingHorizontal="@dimen/_20sdp"
-                                    android:layout_marginTop="@dimen/_10sdp"
                                     android:layout_marginHorizontal="@dimen/_10sdp"
+                                    android:layout_marginTop="@dimen/_10sdp"
                                     android:background="@drawable/edit_name_bg"
                                     android:backgroundTint="#3A4B4C"
                                     android:fontFamily="@font/poppins"
+                                    android:paddingHorizontal="@dimen/_20sdp"
                                     android:paddingVertical="@dimen/_8sdp"
                                     android:text="Save Changes"
                                     android:textAlignment="center"
@@ -1139,11 +1123,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/date_view"
-                        android:layout_marginTop="@dimen/_3sdp"
                         android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_3sdp"
                         android:layout_marginBottom="@dimen/_5sdp"
-                        app:cardCornerRadius="@dimen/_10sdp"
-                        android:visibility="gone">
+                        android:visibility="gone"
+                        app:cardCornerRadius="@dimen/_10sdp">
 
                         <androidx.cardview.widget.CardView
                             android:layout_width="wrap_content"
@@ -1155,108 +1139,106 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="@dimen/_10sdp"
-                                android:orientation="vertical"
-                                >
+                                android:orientation="vertical">
 
                                 <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_below="@id/imageIcon"
-                                    >
+                                    android:layout_below="@id/imageIcon">
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
                                         android:layout_margin="10sp"
                                         android:background="@drawable/bg_four_side_grey_corner"
-                                        >
+                                        android:padding="@dimen/_2sdp">
+
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/spinnerDate"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
+                                            android:padding="0dp"
+                                            android:paddingStart="8dp"
+                                            android:paddingTop="6dp"
+                                            android:paddingEnd="8dp"
+                                            android:paddingBottom="6dp"
                                             android:text="22"
-                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
+                                            android:textAlignment="center"
+                                            android:textSize="@dimen/_10ssp"
 
-                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_drawable="@drawable/ic_drop_down"
+                                            app:spinner_arrow_gravity="end"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp" />
+                                            app:spinner_divider_size="0.4dp"
+                                            app:spinner_popup_animation="dropdown"
+                                            app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
+                                            app:spinner_popup_elevation="14dp" />
 
                                     </LinearLayout>
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
                                         android:layout_marginVertical="10sp"
                                         android:layout_marginEnd="@dimen/_10sdp"
                                         android:background="@drawable/bg_four_side_grey_corner"
-                                        >
+                                        android:padding="@dimen/_2sdp">
+
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/spinnermonth"
                                             android:layout_width="@dimen/_80sdp"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
+                                            android:padding="0dp"
+                                            android:paddingStart="8dp"
+                                            android:paddingTop="6dp"
+
+                                            android:paddingEnd="8dp"
+                                            android:paddingBottom="6dp"
                                             android:text="October"
-
-                                            app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
+                                            android:textAlignment="center"
+                                            android:textSize="@dimen/_10ssp"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingBottom = "6dp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_arrow_gravity="end"
+                                            app:spinner_arrow_padding="@dimen/_10sdp"
+                                            app:spinner_divider_size="0.4dp"
 
-                                            app:spinner_popup_animation = "dropdown"
+                                            app:spinner_popup_animation="dropdown"
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_elevation = "14dp" />
+                                            app:spinner_popup_elevation="14dp" />
 
                                     </LinearLayout>
 
                                     <LinearLayout
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:padding="@dimen/_2sdp"
                                         android:layout_marginVertical="10sp"
                                         android:layout_marginEnd="@dimen/_10sdp"
                                         android:background="@drawable/bg_four_side_grey_corner"
-                                        >
+                                        android:padding="@dimen/_2sdp">
+
                                         <com.skydoves.powerspinner.PowerSpinnerView
                                             android:id="@+id/spinneryear"
                                             android:layout_width="wrap_content"
                                             android:layout_height="@dimen/_22sdp"
                                             android:gravity="center_horizontal|center_vertical"
-                                            android:textSize = "@dimen/_10ssp"
-                                            android:padding = "0dp"
+                                            android:padding="0dp"
+                                            android:paddingStart="8dp"
+                                            android:paddingTop="6dp"
+                                            android:paddingEnd="8dp"
+                                            android:paddingBottom="6dp"
                                             android:text="2024"
-                                            app:spinner_popup_top_padding="@dimen/_10sdp"
+                                            android:textAlignment="center"
+                                            android:textSize="@dimen/_10ssp"
                                             app:spinner_arrow_drawable="@drawable/ic_drop_down"
-                                            android:paddingStart = "8dp"
-                                            android:paddingEnd = "8dp"
-                                            android:paddingTop = "6dp"
-                                            android:paddingBottom = "6dp"
+                                            app:spinner_arrow_gravity="end"
                                             app:spinner_arrow_padding="@dimen/_10sdp"
-                                            android:textAlignment = "center"
-                                            app:spinner_arrow_gravity = "end"
-                                            app:spinner_divider_size = "0.4dp"
+                                            app:spinner_divider_size="0.4dp"
+                                            app:spinner_popup_animation="dropdown"
                                             app:spinner_popup_background="@drawable/bg_four_side_grey_inner_white_corner"
-                                            app:spinner_popup_animation = "dropdown"
-                                            app:spinner_popup_elevation = "14dp"
+                                            app:spinner_popup_elevation="14dp"
+                                            app:spinner_popup_top_padding="@dimen/_10sdp"
 
 
                                             />
@@ -1270,12 +1252,12 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:paddingHorizontal="@dimen/_20sdp"
-                                    android:layout_marginTop="@dimen/_10sdp"
                                     android:layout_marginHorizontal="@dimen/_10sdp"
+                                    android:layout_marginTop="@dimen/_10sdp"
                                     android:background="@drawable/edit_name_bg"
                                     android:backgroundTint="#3A4B4C"
                                     android:fontFamily="@font/poppins"
+                                    android:paddingHorizontal="@dimen/_20sdp"
                                     android:paddingVertical="@dimen/_8sdp"
                                     android:text="Save Changes"
                                     android:textAlignment="center"
@@ -1297,14 +1279,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_13sdp"
+                android:layout_marginTop="20dp"
                 android:fontFamily="@font/poppins_medium"
                 android:text="Add-ons from the host"
                 android:textColor="@color/black"
@@ -1313,9 +1295,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_13sdp"
+                android:layout_marginTop="15dp"
                 android:fontFamily="@font/poppins"
-                android:text="Host provided services, items or options. Available at checkout."
+                android:text="@string/host_provided_services_items_or_options_navailable_at_checkout"
+                android:textColor="@color/black"
                 android:textSize="15sp" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -1323,24 +1307,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp" />
+                android:layout_marginTop="@dimen/_12sdp" />
 
 
             <TextView
                 android:id="@+id/tv_show_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_14sdp"
+                android:layout_marginStart="@dimen/_13sdp"
+                android:layout_marginTop="14dp"
                 android:fontFamily="@font/poppins"
+                android:text="Show More"
+                android:textColor="@color/black"
                 android:textSize="12sp"
-                android:visibility="visible"
-                android:text="Show More" />
+                android:visibility="visible" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_height="2dp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="#E5E5E5" />
 
@@ -1351,8 +1336,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginStart="@dimen/_13sdp"
+                    android:layout_marginTop="21dp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="Payment Method"
                     android:textColor="@color/black"
@@ -1363,7 +1348,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="21dp"
                     android:layout_marginEnd="@dimen/_5sdp"
                     android:gravity="center_vertical">
 
@@ -1395,7 +1380,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_40sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/bg_two_side_corner">
 
                 <TextView
@@ -1403,8 +1387,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
-                    android:text="Credit or Debit Card"
                     android:fontFamily="@font/poppins"
+                    android:text="Credit or Debit Card"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -1415,7 +1399,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginEnd="@dimen/_10sdp"
+                    android:layout_marginEnd="16dp"
                     android:rotation="180"
                     android:src="@drawable/ic_dropdown_open" />
 
@@ -1443,19 +1427,19 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/recyclerViewPaymentCardList"
                     android:layout_centerHorizontal="true"
-                    android:paddingVertical="@dimen/_6sdp"
-                    android:paddingHorizontal="@dimen/_2sdp"
                     android:layout_marginVertical="@dimen/_10sdp"
-                    android:background="@drawable/bg_green_add_card">
+                    android:background="@drawable/bg_green_add_card"
+                    android:paddingHorizontal="@dimen/_2sdp"
+                    android:paddingVertical="@dimen/_6sdp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginHorizontal="@dimen/_12sdp"
+                        android:fontFamily="@font/poppins"
                         android:text="Add New Card"
                         android:textSize="@dimen/_11sdp"
-                        android:fontFamily="@font/poppins"
                         android:textStyle="bold" />
                 </RelativeLayout>
 
@@ -1465,27 +1449,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="20dp"
                 android:background="#E5E5E5" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_13sdp"
-                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Refund Policies"
                 android:textColor="@color/black"
-                android:fontFamily="@font/poppins_medium"
-                android:textSize="18sp"
-                />
+                android:textSize="18sp" />
 
             <com.business.zyvo.utils.ReadMoreTextView
                 android:id="@+id/tvReadMoreLess"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginHorizontal="@dimen/_13sdp"
+                android:layout_marginTop="3dp"
                 android:fontFamily="@font/poppins"
                 android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
@@ -1496,31 +1479,31 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_10sdp" />
+                android:layout_marginTop="20dp"
+                android:background="#DBDBDB" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_13sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/poppins_medium"
                 android:text="Included in your booking"
                 android:textColor="@color/black"
-                android:textSize="18sp"
-                android:fontFamily="@font/poppins_medium"
-                />
+                android:textSize="18sp" />
 
             <RelativeLayout
                 android:id="@+id/rl_parking"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/bg_four_side_grey_corner">
+                android:layout_marginTop="5dp"
+                android:background="@drawable/bg_four_side_grey_corner_rule">
 
                 <ImageView
                     android:id="@+id/img_parking"
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_width="20.32dp"
+                    android:layout_height="17.56dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:src="@drawable/ic_parking" />
@@ -1529,10 +1512,11 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginStart="8dp"
                     android:layout_toRightOf="@id/img_parking"
-                    android:text="Parking"
                     android:fontFamily="@font/poppins"
+                    android:paddingTop="@dimen/_4sdp"
+                    android:text="Parking"
                     android:textColor="@color/black"
                     android:textSize="14sp" />
 
@@ -1549,16 +1533,16 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:id="@+id/tv_parking_rule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/rounded_bottom_corners"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:visibility="gone"
-                >
+                android:background="@drawable/bg_four_side_grey_corner_rule"
+                android:visibility="gone">
+
                 <TextView
+                    android:id="@+id/proParkingRule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/proParkingRule"
-                    android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
-                    android:padding="@dimen/_10sdp" />
+                    android:padding="@dimen/_10sdp"
+                    android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance." />
 
             </RelativeLayout>
 
@@ -1567,13 +1551,13 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_38sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:background="@drawable/bg_four_side_grey_corner">
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_four_side_grey_corner_rule">
 
                 <ImageView
                     android:id="@+id/img_host_rule"
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
+                    android:layout_width="20.31dp"
+                    android:layout_height="17.94dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="@dimen/_10sdp"
                     android:src="@drawable/ic_host_rule" />
@@ -1582,11 +1566,12 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/_10sdp"
+                    android:layout_marginStart="8dp"
                     android:layout_toRightOf="@id/img_host_rule"
                     android:fontFamily="@font/poppins"
-                    android:textColor="@color/black"
+                    android:paddingTop="@dimen/_4sdp"
                     android:text="Host rules"
+                    android:textColor="@color/black"
                     android:textSize="14sp" />
 
                 <ImageView
@@ -1602,17 +1587,16 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:id="@+id/tv_host_rule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_four_side_grey_corner"
                 android:layout_marginHorizontal="@dimen/_16sdp"
-                android:visibility="gone"
-                >
+                android:background="@drawable/bg_four_side_grey_corner_rule"
+                android:visibility="gone">
+
                 <TextView
+                    android:id="@+id/proHostRule"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance."
-                    android:id="@+id/proHostRule"
                     android:padding="@dimen/_10sdp"
-                    />
+                    android:text="Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard McClintock, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the undoubtable source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of de Finibus Bonorum et Malorum (The Extremes of Good and Evil) by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance." />
 
             </RelativeLayout>
 
@@ -1620,17 +1604,17 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_1sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_13sdp"
-                android:background="#E5E5E5" />
+                android:layout_marginTop="20dp"
+                android:background="#DBDBDB" />
 
             <RelativeLayout
                 android:id="@+id/rl_confirm_pay"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_30sdp"
                 android:layout_gravity="start"
-                android:layout_marginStart="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginStart="@dimen/_18sdp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="86dp"
                 android:background="@drawable/bg_green_add_card">
 
                 <TextView
@@ -1638,9 +1622,9 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginHorizontal="@dimen/_10sdp"
+                    android:fontFamily="@font/poppins"
                     android:text="Confirm &amp; Pay"
                     android:textColor="@color/black"
-                    android:fontFamily="@font/poppins"
                     android:textSize="14sp" />
 
             </RelativeLayout>

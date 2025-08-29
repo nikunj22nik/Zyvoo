@@ -185,6 +185,7 @@
             android:layout_marginEnd="@dimen/_12sdp"
             android:layout_toRightOf="@id/img_map"
             android:fontFamily="@font/inter"
+            android:textSize="@dimen/_13sp"
             android:text="Show Map"
             android:textColor="@color/white" />
 

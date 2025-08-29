@@ -144,7 +144,6 @@
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:text="@string/where"
-
                     android:textColor="@color/black"
                     android:textSize="15sp" />
 
@@ -253,7 +252,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Discover"
-        android:textSize="@dimen/_10ssp"
+        android:textSize="@dimen/_11sp"
         android:textColor="#3A4B4C"
         android:fontFamily="@font/poppins"
         android:layout_weight="1"
@@ -275,7 +274,7 @@
         android:layout_weight="1"
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:textSize="@dimen/_10ssp"
+        android:textSize="@dimen/_11sp"
         app:drawableTopCompat="@drawable/ic_whishlist"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/textLogin"
@@ -290,7 +289,7 @@
         android:fontFamily="@font/poppins"
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginBottom="@dimen/_5sdp"
-        android:textSize="@dimen/_10ssp"
+        android:textSize="@dimen/_11sp"
         android:layout_weight="1"
         app:drawableTopCompat="@drawable/ic_profile_login"
         app:layout_constraintTop_toTopOf="parent"

@@ -421,7 +421,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
     private fun showingDataToUi(data: HostDetailModel) {
 
         binding.tvNamePlace.setText(data.property_title)
-        binding.textRatingStar.setText(data.reviews_total_rating)
+        binding.textRatingStar.setText(String.format("%.1f", (data.reviews_total_rating ?: "0").toString().toFloat()))
         binding.textK.setText(" ( " + formatConvertCount(data?.reviews_total_count?:"") + " )")
         binding.textMiles.setText(data.distance_miles + " miles away")
         binding.time.setText(data.booking_hour)
@@ -475,7 +475,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }?: binding.tvDiscount.setText("$0")
 
         if (binding.tvDiscount.text.toString().equals("$0") || binding.tvDiscount.text.toString().equals("$-0")){
-            binding.lldiscount.visibility = View.GONE
+            binding.llDiscountLabel.visibility = View.GONE
         }
         data.booking_total_amount?.takeIf { it.isNotEmpty() }?.let {
             binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(it)}"
@@ -529,7 +529,8 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
         }
 
         data.reviews_total_rating?.let {
-            binding.endRatingTv.setText(it)
+            val formattedRating = String.format("%.1f", it.toFloat())
+            binding.endRatingTv.text = formattedRating
         }
 
         data.parking_rules?.let {

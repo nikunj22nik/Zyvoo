@@ -120,12 +120,11 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/poppins_light"
+                    android:fontFamily="@font/poppins"
                     android:padding="@dimen/_5sdp"
                     android:text="Before you can book or host  on the platform the name on Id must match verification documents."
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_10ssp"
-                    android:textStyle="bold"
+                    android:textSize="8sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -170,11 +169,10 @@
                         android:id="@+id/textEmailAddress"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-                        android:fontFamily="@font/open_sans_bold"
                         android:text="Email Address"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_10ssp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textSize="@dimen/_12sp"
                         app:layout_constraintEnd_toEndOf="@id/imageEmail"
                         app:layout_constraintStart_toStartOf="@id/imageEmail"
                         app:layout_constraintTop_toBottomOf="@+id/imageEmail" />
@@ -187,7 +185,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="@string/confirm_now"
                         android:textColor="#80FFFFFF"
-                        android:textSize="@dimen/_9sdp"
+                        android:textSize="@dimen/_12sp"
                         app:layout_constraintEnd_toEndOf="@+id/textEmailAddress"
                         app:layout_constraintStart_toStartOf="@id/textEmailAddress"
                         app:layout_constraintTop_toBottomOf="@+id/textEmailAddress" />
@@ -231,11 +229,10 @@
                         android:id="@+id/textPhoneNumber"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
-                        android:fontFamily="@font/open_sans_bold"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textSize="@dimen/_12sp"
                         android:text="Phone Number"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_10ssp"
                         app:layout_constraintEnd_toEndOf="@id/imagePhone"
                         app:layout_constraintStart_toStartOf="@id/imagePhone"
                         app:layout_constraintTop_toBottomOf="@+id/imagePhone" />
@@ -248,9 +245,8 @@
                         android:fontFamily="@font/poppins"
                         android:text="@string/confirm_now"
                         android:textColor="#80FFFFFF"
-                        android:textSize="@dimen/_9sdp"
+                        android:textSize="@dimen/_12sp"
                         app:layout_constraintEnd_toEndOf="@+id/textPhoneNumber"
-
                         app:layout_constraintStart_toStartOf="@id/textPhoneNumber"
                         app:layout_constraintTop_toBottomOf="@+id/textPhoneNumber" />
 
@@ -295,10 +291,10 @@
                         android:id="@+id/textIdentity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/open_sans_bold"
                         android:text="Verify identity"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/_10ssp"
+                        android:fontFamily="@font/poppins_bold"
+                        android:textSize="@dimen/_12sp"
                         app:layout_constraintEnd_toEndOf="@id/imageIdentity"
                         app:layout_constraintStart_toStartOf="@id/imageIdentity"
                         app:layout_constraintTop_toBottomOf="@+id/imageIdentity" />
@@ -311,7 +307,7 @@
                         android:fontFamily="@font/poppins"
                         android:text="@string/confirm_now"
                         android:textColor="#80FFFFFF"
-                        android:textSize="@dimen/_9sdp"
+                        android:textSize="@dimen/_12sp"
                         android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="@+id/textIdentity"
                         app:layout_constraintStart_toStartOf="@id/textIdentity"
@@ -478,7 +474,6 @@
                 android:orientation="horizontal"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintEnd_toEndOf="parent"
-
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textMyWork" />
 
@@ -641,7 +636,7 @@
                     android:textColor="@color/black"
                     android:enabled="false"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_14sp"
                     android:textStyle="normal" />
 
 
@@ -705,7 +700,7 @@
                     android:enabled="false"
                     android:text="@{user.phone_number != null ? user.phone_number : ``}"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_14sp"
                     android:textStyle="normal" />
 
 
@@ -757,20 +752,20 @@
 
                 <EditText
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="@dimen/_30sdp"
                     android:layout_marginStart="@dimen/_10ssp"
                     android:layout_marginEnd="@dimen/_25sdp"
+                    android:paddingTop="5dp"
+                    android:gravity="center_vertical"
                     android:background="@null"
-                    android:fontFamily="@font/poppins"
+                    android:fontFamily="@font/inter"
                     android:hint="**********"
                     android:inputType="textPassword"
-                    android:paddingTop="@dimen/_8ssp"
                     android:maxLines="1"
-                    android:gravity="center_vertical"
                     android:enabled="false"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
-                    android:textSize="@dimen/_12ssp"
+                    android:textSize="@dimen/_14sp"
                     android:textStyle="normal" />
 
 
@@ -778,7 +773,6 @@
                     android:id="@+id/imageEditPassword"
                     android:layout_width="@dimen/_28sdp"
                     android:layout_height="@dimen/_28sdp"
-
                     android:layout_alignParentEnd="true"
                     android:layout_margin="@dimen/_5sdp"
                     android:src="@drawable/ic_edit_icon"
@@ -1293,6 +1287,7 @@
                 android:fontFamily="@font/poppins_medium"
                 android:paddingHorizontal="@dimen/_95sdp"
                 android:paddingVertical="@dimen/_8sdp"
+                android:textSize="14sp"
                 android:text="Switch to Host"
                 android:textColor="@color/black"
                 app:layout_constraintBottom_toBottomOf="parent"

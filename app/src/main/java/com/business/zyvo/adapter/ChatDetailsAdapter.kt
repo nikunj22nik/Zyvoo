@@ -87,7 +87,7 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
         else{
             holder.binding.textMessage.visibility=View.GONE
             holder.binding.imglayout.visibility=View.VISIBLE
-            if (message.mediaFileName.contains(".pdf")){
+            if (!message.mediaFileName.isNullOrEmpty() && message.mediaFileName!!.contains(".pdf", ignoreCase = true)){
                 Glide.with(context)
                     .load(R.drawable.pdf_icon)
                     .addListener(object : RequestListener<Drawable?> {
@@ -118,7 +118,7 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
             }else{
                 message.getMediaContentTemporaryUrl { mediaContentUrl ->
                     Log.d("TAG", mediaContentUrl!!)
-                    Glide.with(context)
+                    Glide.with(holder.itemView.context)
                         .load(mediaContentUrl)
                         .addListener(object : RequestListener<Drawable?> {
                             override fun onLoadFailed(
