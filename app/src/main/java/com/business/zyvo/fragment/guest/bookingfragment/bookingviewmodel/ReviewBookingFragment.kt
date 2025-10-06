@@ -965,6 +965,8 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                         adapterReview.updateAdapter(it)
                                         // binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +")"
                                         //  binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
+                                    }else{
+                                        binding.showMoreReview.visibility = View.GONE
                                     }
                                 }
                                 data?.amenities?.let {
@@ -1330,6 +1332,8 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                         adapterReview.updateAdapter(it)
                                         //  binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +" )"
                                         //   binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
+                                    }else{
+                                        binding.showMoreReview.visibility = View.GONE
                                     }
                                 }
 

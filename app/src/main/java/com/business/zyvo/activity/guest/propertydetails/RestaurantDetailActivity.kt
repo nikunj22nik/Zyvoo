@@ -235,7 +235,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     override fun itemClick(obj: Int) {
 
                     }
-
                 })
 
             dialogAdapter.setOnItemClickListener(object : WishlistAdapter.onItemClickListener {
@@ -499,6 +498,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                             binding.tvShowMore.visibility = View.VISIBLE
                         }
                         Log.d("CheckAddOn", addOnList.toString())
+                    }
+                    else{
+                        binding.llAddOns.visibility = View.GONE
                     }
                 }
                 propertyData?.address?.let {

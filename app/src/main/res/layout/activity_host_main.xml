@@ -41,7 +41,6 @@
             android:weightSum="4">
 
             <RelativeLayout
-
                 android:id="@+id/navigationProperties"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

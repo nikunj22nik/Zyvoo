@@ -20,7 +20,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="0.51dp"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:background="#E5E5E5" />
 
@@ -47,8 +47,9 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
+                android:layout_height="0.51dp"
                 android:background="#E5E5E5" />
+
 
             <TextView
                 android:layout_width="wrap_content"
@@ -71,7 +72,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_marginTop="17dp"
                 android:background="@drawable/bg_four_side_grey_corner"
                 android:orientation="vertical">
 
@@ -330,13 +331,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:weightSum="1">
-
+                   >
                     <androidx.cardview.widget.CardView
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/_80sdp"
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
                         android:layout_marginVertical="@dimen/_10sdp"
-                        android:layout_weight="0.3"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:cardCornerRadius="@dimen/_7sdp">
 
                         <!-- Image Placeholder -->
@@ -359,7 +359,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_7sdp"
-                        android:layout_marginTop="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
                         android:layout_weight="0.7"
                         android:orientation="vertical">
 
@@ -368,7 +368,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins"
-                            android:hint="Cabin in Peshastin"
+                            android:hint="Cabin in Peshastins"
+                            android:singleLine="true"
                             android:textColor="@color/black"
                             android:textColorHint="@color/black"
                             android:textSize="17sp" />
@@ -409,7 +410,7 @@
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_3sdp"
+                            android:layout_marginTop="@dimen/_2sdp"
                             android:orientation="horizontal">
 
                             <!-- Star Rating Icon -->
@@ -450,7 +451,7 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_6sdp">
+                            android:layout_marginTop="@dimen/_5sdp">
 
                             <ImageView
                                 android:layout_width="@dimen/_16sdp"
@@ -739,7 +740,7 @@
                         android:layout_marginStart="@dimen/_13sdp"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:background="@drawable/bg_two_side_corner"
-                        android:paddingVertical="@dimen/_10sdp">
+                        android:paddingVertical="@dimen/_8sdp">
 
                         <ImageView
                             android:id="@+id/img_calendar"
@@ -812,7 +813,7 @@
                         android:layout_marginStart="@dimen/_13sdp"
                         android:layout_marginTop="@dimen/_10sdp"
                         android:background="@drawable/bg_two_side_corner"
-                        android:paddingVertical="@dimen/_10sdp">
+                        android:paddingVertical="@dimen/_8sdp">
 
                         <ImageView
                             android:id="@+id/clock_old"
@@ -1282,6 +1283,13 @@
                 android:layout_marginTop="20dp"
                 android:background="#E5E5E5" />
 
+        <LinearLayout
+            android:id="@+id/llAddOns"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -1328,6 +1336,7 @@
                 android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_15sdp"
                 android:background="#E5E5E5" />
+        </LinearLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -1496,7 +1505,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:id="@+id/rl_parking"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_38sdp"
-                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginHorizontal="@dimen/_11sdp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/bg_four_side_grey_corner_rule">
 
@@ -1533,7 +1542,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:id="@+id/tv_parking_rule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginHorizontal="@dimen/_11sdp"
                 android:background="@drawable/bg_four_side_grey_corner_rule"
                 android:visibility="gone">
 
@@ -1550,7 +1559,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:id="@+id/rl_host_rules"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_38sdp"
-                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginHorizontal="@dimen/_11sdp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_four_side_grey_corner_rule">
 
@@ -1587,7 +1596,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:id="@+id/tv_host_rule"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_16sdp"
+                android:layout_marginHorizontal="@dimen/_11sdp"
                 android:background="@drawable/bg_four_side_grey_corner_rule"
                 android:visibility="gone">
 

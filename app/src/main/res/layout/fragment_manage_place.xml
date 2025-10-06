@@ -102,7 +102,7 @@
                     android:paddingVertical="2dp"
                     android:text="Home Setup"
                     android:textColor="#3F3D56"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/tv_gallery"
@@ -114,7 +114,7 @@
                     android:paddingVertical="2dp"
                     android:text="Gallery &amp; Location"
                     android:textColor="#3F3D56"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/tv_availability"
@@ -127,7 +127,7 @@
                     android:paddingVertical="2dp"
                     android:text="Availability"
                     android:textColor="#3F3D56"
-                    android:textSize="13sp" />
+                    android:textSize="@dimen/_10sdp" />
             </LinearLayout>
 
             <View
@@ -1113,6 +1113,7 @@
                             app:spinner_arrow_padding="@dimen/_10sdp"
                             app:spinner_arrow_show="false"
                             app:spinner_divider_size="0.4dp"
+                            app:spinner_popup_start_padding="@dimen/_10sdp"
                             app:spinner_popup_animation="dropdown"
                             app:spinner_popup_background="@drawable/bg_four_side_corner_white_manage_place"
                             app:spinner_popup_elevation="14dp"
@@ -1867,7 +1868,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginVertical="2dp"
-                            android:layout_weight="0.9"
+                            android:layout_weight="1.2"
                             android:background="@drawable/bg_inner_select_white"
                             android:fontFamily="@font/inter"
                             android:gravity="center"
@@ -1878,10 +1879,7 @@
                             android:textSize="15sp" />
 
 
-                        <View
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="0.1"/>
+
 
                         <TextView
                             android:id="@+id/tvJan"
@@ -1890,11 +1888,11 @@
                             android:layout_gravity="center"
                             android:layout_marginVertical="2dp"
                             android:layout_toEndOf="@+id/tvAll"
-                            android:layout_weight="1.2"
+                            android:layout_weight="1.3"
                             android:fontFamily="@font/inter"
 
                             android:gravity="center"
-                            android:padding="4dp"
+                            android:padding="2dp"
 
                             android:text="Jan"
                             android:textColor="#3F3D56"
@@ -1937,7 +1935,7 @@
                             android:layout_gravity="center"
                             android:layout_marginVertical="2dp"
                             android:layout_toEndOf="@+id/tvMar"
-                            android:layout_weight="1"
+                            android:layout_weight="0.9"
                             android:fontFamily="@font/inter"
                             android:gravity="center"
                             android:paddingVertical="8dp"
@@ -1952,7 +1950,7 @@
                             android:layout_gravity="center"
                             android:layout_marginVertical="2dp"
                             android:layout_toEndOf="@+id/tvApr"
-                            android:layout_weight="1"
+                            android:layout_weight="0.9"
                             android:fontFamily="@font/inter"
                             android:gravity="center"
                             android:paddingVertical="8dp"

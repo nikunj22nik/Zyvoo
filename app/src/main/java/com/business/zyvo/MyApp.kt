@@ -2,6 +2,7 @@ package com.business.zyvo
 
 import android.app.Application
 import android.util.Log
+import androidx.appcompat.app.AppCompatDelegate
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.business.zyvo.chat.QuickstartConversationsManager
@@ -29,6 +30,7 @@ class MyApp :Application() {
 
     override fun onCreate() {
         super.onCreate()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         // Initialize global state here
         NetworkMonitorCheck.observeNetworkStatus(networkMonitor)
         AppContextProvider.initialize(this)

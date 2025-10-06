@@ -19,7 +19,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
+                android:layout_height="0.51dp"
                 android:layout_marginTop="@dimen/_6sdp"
                 android:background="@color/grey" />
             <RelativeLayout
@@ -44,7 +44,7 @@
             </RelativeLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_1dp"
+                android:layout_height="0.51dp"
                 android:background="#E5E5E5" />
             <TextView
                 android:layout_width="wrap_content"
@@ -522,13 +522,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_15sdp"
-                    android:weightSum="1">
+                    >
 
                     <androidx.cardview.widget.CardView
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/_80sdp"
+                        android:layout_width="@dimen/_70sdp"
+                        android:layout_height="@dimen/_70sdp"
                         android:layout_marginVertical="@dimen/_10sdp"
-                        android:layout_weight="0.3"
+
                         app:cardCornerRadius="@dimen/_7sdp">
 
                         <!-- Image Placeholder -->
@@ -551,7 +551,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_7sdp"
-                        android:layout_marginTop="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
                         android:layout_weight="0.7"
                         android:orientation="vertical">
 
@@ -561,6 +561,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/poppins"
                             android:hint="Cabin in Peshastin"
+                            android:singleLine="true"
                             android:textColor="@color/black"
                             android:textColorHint="@color/black"
                             android:textSize="17sp" />
@@ -601,7 +602,7 @@
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_3sdp"
+                            android:layout_marginTop="@dimen/_2sdp"
                             android:orientation="horizontal">
 
                             <!-- Star Rating Icon -->
@@ -642,7 +643,7 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/_6sdp">
+                            android:layout_marginTop="@dimen/_5sdp">
 
                             <ImageView
                                 android:layout_width="@dimen/_16sdp"
@@ -898,7 +899,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_17sdp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="52dp"
                     android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/black"
                     android:text="Booking Details"

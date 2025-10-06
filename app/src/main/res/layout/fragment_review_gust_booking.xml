@@ -1700,6 +1700,7 @@ android:weightSum="2"
                     android:layout_height="@dimen/_1sdp"
                     android:layout_marginHorizontal="@dimen/_10sdp"
                     android:layout_marginTop="@dimen/_10sdp"
+                   android:visibility="gone"
                     android:background="@color/grey" />
 
 
@@ -1708,7 +1709,7 @@ android:weightSum="2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_14sdp"
+                    android:layout_marginTop="40dp"
                     android:fontFamily="@font/poppins_medium"
                     android:text="Reviews"
                     android:textColor="@color/black"

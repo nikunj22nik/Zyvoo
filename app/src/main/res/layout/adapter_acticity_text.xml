@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:text="stays"
         android:textSize="12sp"
+        android:textColor="@color/black"
         android:fontFamily="@font/poppins"
         android:layout_marginStart="@dimen/_10sdp"
 

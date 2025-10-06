@@ -92,6 +92,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         holder.binding.viewpager2.setOffscreenPageLimit(1);
         // Observe ViewModel inside fragment and update adapter with images
         viewPagerAdapter.updateItem(list.get(position).property_images.toMutableList())
+        if (list.get(position).property_images.toMutableList().size == 1 ) holder.binding.tabLayoutForIndicator.visibility = View.GONE else holder.binding.tabLayoutForIndicator.visibility = View.VISIBLE
         // Tab layout mediator (no need to re-bind it every time)
         TabLayoutMediator(holder.binding.tabLayoutForIndicator, holder.binding.viewpager2) { _, _ -> }.attach()
         // Set TextView data
@@ -113,7 +114,6 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         Log.d("checkDataRating",rating.toString())
         Log.d("checkDataPrice",price.toString())
         holder.binding.textPricePerHours.text = price.toString()
-
 
         currentItem.distance_miles?.let {   holder.binding.textMiles.text = currentItem.distance_miles +" miles away" }
 
@@ -205,10 +205,6 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
     }
-
-
-
-
     fun dialogDelete(position :Int) {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
@@ -238,8 +234,4 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
             show()
         }
     }
-
-
-
-
 }

@@ -130,6 +130,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
         }
         session = SessionManager(this)
         binding.tvReadMoreLess.setCollapsedText("Read More")
+        binding.tvReadMoreLess.setExpandedText("Read Less")
         binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
 
         intent.extras?.let {
@@ -434,6 +435,9 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                             binding.tvShowMore.visibility = View.VISIBLE
                         }
                         Log.d("CheckAddOn", addOnList.toString())
+                    }
+                    else{
+                        binding.llAddOns.visibility = View.GONE
                     }
                 }
                 calculatePrice()

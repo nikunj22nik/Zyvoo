@@ -346,7 +346,7 @@
                 android:id="@+id/etAboutMe"
                 android:layout_width="match_parent"
                 android:layout_height="82sp"
-                android:layout_marginHorizontal="@dimen/_17sdp"
+                android:layout_marginHorizontal="@dimen/_13sdp"
                 android:layout_marginTop="@dimen/_5sdp"
                 android:background="@drawable/button_grey_complete_profile_line_bg"
                 android:enabled="false"

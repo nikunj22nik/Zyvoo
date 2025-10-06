@@ -61,6 +61,7 @@
                     android:fontFamily="@font/poppins_bold"
                     android:text="Emily James"
                     android:textColor="#3F3D56"
+                    android:singleLine="true"
                     android:id="@+id/txtName"
                     android:layout_centerVertical="true"
                     android:layout_toStartOf="@+id/ratingbar"
@@ -108,7 +109,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="3dp"
                 android:orientation="horizontal">
 
@@ -118,6 +119,7 @@
                     android:id="@+id/txtReviews"
                     android:text="Host was very helpful. thank you so much"
                     android:textSize="13sp"
+                    android:maxLines="3"
                     android:fontFamily="@font/poppins"
                     android:textColor="@color/black"/>
 

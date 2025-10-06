@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:text="Event Space"
         android:textSize="10sp"
+        android:textColor="@color/black"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/_5sdp"
         android:fontFamily="@font/poppins"

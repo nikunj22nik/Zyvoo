@@ -9,11 +9,12 @@
 
         <ImageView
             android:id="@+id/bank_img"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
+            android:layout_width="20dp"
+            android:layout_height="23dp"
             android:src="@drawable/ic_bank_name"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/bnk_name"
+            app:layout_constraintBottom_toBottomOf="@+id/textDes"
             android:layout_marginStart="@dimen/_10sdp"/>
 
 
@@ -22,10 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Bank Name"
-            android:textSize="@dimen/_11ssp"
-            android:fontFamily="@font/poppins"
+            android:textSize="10sp"
+            android:fontFamily="@font/poppins_medium"
             android:textColor="@color/black"
-            android:textStyle="bold"
+
             app:layout_constraintStart_toEndOf="@id/bank_img"
             android:layout_marginStart="@dimen/_10sdp"
             app:layout_constraintTop_toTopOf="parent"
@@ -37,10 +38,11 @@
             android:layout_height="wrap_content"
             android:text="Bill gilbert, Checking .....4898(USD)"
             android:textColor="#AEAEAE"
+            android:fontFamily="@font/poppins"
             app:layout_constraintStart_toEndOf="@id/bank_img"
             app:layout_constraintTop_toBottomOf="@id/bnk_name"
             android:layout_marginStart="@dimen/_10sdp"
-            android:textSize="@dimen/_9sdp"
+            android:textSize="10sp"
             />
 
 
@@ -48,14 +50,14 @@
             android:id="@+id/three_dot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_three_dots"
+            android:src="@drawable/ic_three_black_dots"
             android:layout_gravity="end"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="@dimen/_8sdp"
-            />
+            app:tint="@color/black" />
 
 
     <RelativeLayout
@@ -75,10 +77,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Preferred"
+            android:layout_centerHorizontal="true"
             android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="@dimen/_8sdp"
-            android:fontFamily="@font/poppins"
+            android:textSize="8sp"
+            android:fontFamily="@font/poppins_medium"
             />
     </RelativeLayout>
 
