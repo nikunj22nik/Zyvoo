@@ -148,12 +148,12 @@
     <string name="enter_confirm_password">Enter confirm password</string>
     <string name="register_now">Register Now</string>
     <string name="login_here">Login Here</string>
-    <string name="enter_your_phone_to_register_your_naccount">Enter your Phone to Register your\naccount</string>
-    <string name="enter_your_phone_to_login_your_naccount">Enter your Phone to login your\naccount</string>
+    <string name="enter_your_phone_to_register_your_naccount">Enter your phone number to register your\naccount</string>
+    <string name="enter_your_phone_to_login_your_naccount">Enter your phone number to login your\naccount</string>
     <string name="already_have_an_account">Already have an account?</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
-    <string name="enter_your_email_to_register_your_n_account">Enter your email to Register your\n account.</string>
-    <string name="enter_your_email_and_password_to_n_login_your_account">Enter your email and Password to\n login your account.</string>
+    <string name="enter_your_email_to_register_your_n_account">Enter your email to register your\n account.</string>
+    <string name="enter_your_email_and_password_to_n_login_your_account">Enter your email and password to\n login your account.</string>
     <string name="create_account">Create Account</string>
     <string name="contact_us">Contact us</string>
     <string name="we_ll_start_with_some_questions_and_get_nyou_to_the_right_place">We\'ll start with some questions and get \nyou to the right place.</string>

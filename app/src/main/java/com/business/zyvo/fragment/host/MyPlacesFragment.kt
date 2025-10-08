@@ -1,8 +1,14 @@
 package com.business.zyvo.fragment.host
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -199,11 +205,63 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                 }
             }
         } else {
-            permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+           // permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
+            alertBoxLocation1()
             //  locationHelper.requestLocationPermission(requireActivity())
         }
     }
+    private fun alertBoxLocation1() {
+//        val dialogView = layoutInflater.inflate(R.layout.dialog_location_permission, null)
+//
+//        val builder = AlertDialog.Builder(requireContext())
+//        builder.setView(dialogView)
+//
+//        val alertDialog = builder.create()
+//        alertDialog.setCancelable(false)
+//
+//        val btnAllow = dialogView.findViewById<TextView>(R.id.btnLocation)
+//        val btnCancel = dialogView.findViewById<TextView>(R.id.textNotnow)
+//
+//        btnAllow.setOnClickListener {
+//            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+//            val uri = Uri.fromParts("package", requireContext().packageName, null)
+//            intent.data = uri
+//            startActivityForResult(intent, 200)
+//            alertDialog.dismiss()
+//        }
+//
+//        btnCancel.setOnClickListener {
+//            alertDialog.dismiss()
+//        }
+//
+//        alertDialog.show()
 
+        val dialog = Dialog(requireActivity(), R.style.BottomSheetDialog)
+        dialog.setContentView(R.layout.dialog_location_permission)
+
+        dialog.window?.apply {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+
+        val btnTurnOnLocation = dialog.findViewById<TextView>(R.id.btnLocation)
+        val btnCancel = dialog.findViewById<TextView>(R.id.textNotnow)
+
+        btnTurnOnLocation.setOnClickListener {
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", requireContext().packageName, null)
+            intent.data = uri
+            startActivityForResult(intent, 200)
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        //dialog.setCancelable(false)
+        dialog.show()
+    }
     private fun myPlaceApi(latitude: Double?, longitude: Double?) {
         var userId = SessionManager(requireContext()).getUserId()
         LoadingUtils.showDialog(requireContext(), false)

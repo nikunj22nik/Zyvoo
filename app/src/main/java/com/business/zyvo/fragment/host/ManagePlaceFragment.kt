@@ -1269,15 +1269,15 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             showErrorDialog(requireContext(), "Please Enter Description of Space")
             return false
         }
-        if (!isValidDescription(str = descriptionResult.toString())) {
-            Log.d("Testing_discription_size","size"+descriptionResult.toString().length)
-            Log.d("Testing_discription_size",descriptionResult.toString())
-            showErrorDialog(
-                requireContext(),
-                "Description should be between 3 and 150 characters long."
-            )
-            return false
-        }
+//        if (!isValidDescription(str = descriptionResult.toString())) {
+//            Log.d("Testing_discription_size","size"+descriptionResult.toString().length)
+//            Log.d("Testing_discription_size",descriptionResult.toString())
+//            showErrorDialog(
+//                requireContext(),
+//                "Description should be between 3 and 150 characters long."
+//            )
+//            return false
+//        }
         if (street.isEmpty()) {
             showErrorDialog(requireContext(), "Please Enter Street")
             return false

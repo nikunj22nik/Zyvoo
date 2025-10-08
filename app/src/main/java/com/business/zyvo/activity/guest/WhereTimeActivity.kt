@@ -202,6 +202,8 @@ class WhereTimeActivity : AppCompatActivity() {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 selectedDate = LocalDate.now()
             }
+            // Clear time fields only when date is changed from calendarLayout1
+
             updateCalendar()
             updateCalendar1()
              selectedLatitude = 0.0
@@ -308,11 +310,27 @@ class WhereTimeActivity : AppCompatActivity() {
                     }
                 }
         }
+//        binding.rlView2.setOnClickListener {
+//            DateManager(this).showTimePickerDialog1(this) { selectedTime ->
+//                binding.text2.setText(selectedTime)
+//            }
+//        }
+
         binding.rlView2.setOnClickListener {
             DateManager(this).showTimePickerDialog1(this) { selectedTime ->
+                // Check if current date is selected and time is in past
+                if (selectdate && isCurrentDateSelected() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    if (!isTimeValid(selectedTime)) {
+                        // Show error for previous time selection
+                        LoadingUtils.showErrorDialog(this@WhereTimeActivity, "You cannot select previous time")
+                        return@showTimePickerDialog1
+                    }
+                }
                 binding.text2.setText(selectedTime)
             }
         }
+
+
 
     }
 
@@ -598,6 +616,7 @@ class WhereTimeActivity : AppCompatActivity() {
 
                     }
                     dateView.setOnClickListener {
+                        val previousSelectedDate = selectedDate
                         selectedDate = date1
                         if(!SessionManager(this).isDateGreaterOrEqual(selectedDate.toString())){
                            LoadingUtils.showErrorDialog(this@WhereTimeActivity,"You cannot select a past date from the calendar.")
@@ -605,7 +624,9 @@ class WhereTimeActivity : AppCompatActivity() {
                         }
 
                         Log.d("TESTING_DATE",selectedDate.toString())
-
+                        if (previousSelectedDate != selectedDate) {
+                            clearTimeFields()
+                        }
                         updateCalendar()
                         updateCalendar1()
                         // Toast.makeText(requireContext(), "Selected Date: ${date.dayOfMonth} ${date.month.name.lowercase().replaceFirstChar { it.uppercase() }} ${date.year}", Toast.LENGTH_SHORT).show()
@@ -705,4 +726,30 @@ class WhereTimeActivity : AppCompatActivity() {
         return actList
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun isTimeValid(selectedTime: String): Boolean {
+        try {
+            val formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+            val currentTime = LocalTime.now()
+            val selectedLocalTime = LocalTime.parse(selectedTime, formatter)
+
+            return !selectedLocalTime.isBefore(currentTime)
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "Time parsing error: ${e.message}")
+            return true // Default to valid if parsing fails
+        }
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun isCurrentDateSelected(): Boolean {
+        return selectedDate?.equals(LocalDate.now()) == true
+    }
+    @SuppressLint("SetTextI18n")
+    private fun clearTimeFields() {
+        binding.text1.text = "00:00 PM"
+        binding.text2.text = "00:00 PM"
+        start_time = ""
+        end_time = ""
+    }
 }

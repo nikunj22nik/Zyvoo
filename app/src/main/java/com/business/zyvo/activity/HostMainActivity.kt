@@ -70,6 +70,13 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
             insets
         }
 
+        if (intent.getBooleanExtra("OPEN_PROFILE_FRAGMENT", false)) {
+            // Delay slightly to ensure navigation is set up
+            binding.root.postDelayed({
+                openProfileFragment()
+            }, 50)
+        }
+
         guestViewModel = ViewModelProvider(this)[GuestMainActivityModel::class.java]
 
         tvCOUNT = binding.tvBookingCount
@@ -118,6 +125,17 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         callingBookingNumberApi()
         handlingDeepLink()
         showImage()
+    }
+
+    private fun openProfileFragment() {
+        val navController = findNavController(R.id.fragmentContainerView_main)
+        val destinationId = R.id.hostProfileFragment
+
+        if (navController.currentDestination?.id != destinationId) {
+            findNavController(R.id.fragmentContainerView_main).navigate(R.id.hostProfileFragment)
+            profileColor()
+            showImage()
+        }
     }
 
     @SuppressLint("SuspiciousIndentation")

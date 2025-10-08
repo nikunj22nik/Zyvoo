@@ -61,6 +61,13 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         binding.navigationWishlist.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
 
+        if (intent.getBooleanExtra("OPEN_PROFILE_FRAGMENT", false)) {
+            // Delay slightly to ensure navigation is set up
+            binding.root.postDelayed({
+                openProfileFragment()
+            }, 50)
+        }
+
         try {
             val app = application as? MyApp
             if (app?.conversationsManager != null) {
@@ -514,5 +521,15 @@ fun showImage(){
     }
 }
 
+    private fun openProfileFragment() {
+        val navController = findNavController(R.id.fragmentContainerView_main)
+        val destinationId = R.id.profileFragment
+
+        if (navController.currentDestination?.id != destinationId) {
+            findNavController(R.id.fragmentContainerView_main).navigate(R.id.profileFragment)
+            profileColor()
+            showImage()
+        }
+    }
 
 }

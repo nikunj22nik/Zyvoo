@@ -14,7 +14,7 @@ class AppConstant {
         val NOTIFICATION: String = "Notification"
         val FRIEND_ID: String? = "FRIENDiD"
         val CHANNEL_NAME: String = "Channel_Name"
-        val nameHelper : String = "nameHelper"
+        val nameHelper: String = "nameHelper"
         val HOST_ID: String? = "HOST_ID"
         val CHAT_TOKEN: String? = "chat_token"
         val PENDING: String = "pending"
@@ -43,16 +43,16 @@ class AppConstant {
         val Button = "button"
         val USER_ID: String? = "USER_ID"
         val PRICE: String = "PRICE"
-        val type:String? = "type"
-        val profileType:String = "street"
-        val article :String= "article"
-        val Id: String?="ID"
-        val NEEDMORE: String?="needmore"
-        val session: String?="UserSession"
-        val LATITUDE:String ="latitude"
-        val LATITUDEGUST:String ="latitudegust"
-        val LONGITUDE :String ="longitude"
-        val LONGITUDEGUST :String ="longitudegust"
+        val type: String? = "type"
+        val profileType: String = "street"
+        val article: String = "article"
+        val Id: String? = "ID"
+        val NEEDMORE: String? = "needmore"
+        val session: String? = "UserSession"
+        val LATITUDE: String = "latitude"
+        val LATITUDEGUST: String = "latitudegust"
+        val LONGITUDE: String = "longitude"
+        val LONGITUDEGUST: String = "longitudegust"
         val NAME: String? = "NAME"
         val MOVE: String = "MOVE"
         val DELETE: String = "delete"
@@ -190,14 +190,15 @@ class AppConstant {
         const val backimageError = "Please upload back image."
         const val validEmail: String = "Please Enter Valid Email Address"
         const val validPhoneNumber: String = "Please Enter Valid Phone Number"
+
         //const val Image : String = "image"
         const val propertyList: String = "propertyList"
-       const val  loginType : String  = "LoginType"
+        const val loginType: String = "LoginType"
         const val passwordMustConsist =
             "The password must consist of at least 8 characters and include at least 1 number, 1 uppercase letter, and 1 special character."
 
         const val validAvailability: String = "Please enter minimum set hours"
-
+        const val profileUpdateSuccussfully: String = "Your profile has been saved\n successfully"
     }
 
 

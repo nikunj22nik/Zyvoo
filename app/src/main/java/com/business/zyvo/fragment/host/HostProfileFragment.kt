@@ -364,6 +364,7 @@ import java.util.Arrays
             app.clearInstance()
             val intent = Intent(requireContext(), GuesMain::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            intent.putExtra("OPEN_PROFILE_FRAGMENT", true)
             startActivity(intent)
             requireActivity().finish()
         }

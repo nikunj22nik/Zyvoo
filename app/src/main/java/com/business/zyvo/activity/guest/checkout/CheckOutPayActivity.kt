@@ -1413,6 +1413,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                                     binding.tvHours.text.toString().replace(" Hours", "")
                                 )
                                 startActivity(intent)
+                                finish()
                                 showToast(this@CheckOutPayActivity, "Booking created successfully.")
                             }
                         }

@@ -316,6 +316,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             app.clearInstance()
             val intent = Intent(requireContext(), HostMainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            intent.putExtra("OPEN_PROFILE_FRAGMENT", true)
             startActivity(intent)
         }
 

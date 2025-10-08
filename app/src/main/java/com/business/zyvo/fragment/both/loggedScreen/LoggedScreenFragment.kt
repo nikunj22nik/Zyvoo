@@ -65,6 +65,7 @@ import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
+import com.business.zyvo.activity.MainActivity
 import com.business.zyvo.activity.guest.filter.FiltersActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
@@ -85,6 +86,7 @@ import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.TAG
 import com.business.zyvo.utils.MultipartUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.business.zyvo.utils.PermissionManager
 import com.business.zyvo.viewmodel.LoggedScreenViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -115,6 +117,7 @@ import java.util.regex.Pattern
 
 @AndroidEntryPoint
 class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, OnClickListener1 {
+    private  val LOCATION_SETTINGS_REQUEST_CODE = 200
     private lateinit var startSearchForResult: ActivityResultLauncher<Intent>
     private lateinit var startForResult: ActivityResultLauncher<Intent>
     lateinit var navController: NavController
@@ -184,23 +187,30 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             requireActivity().getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
 
         // This condition for check location run time permission
-        if (ContextCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-                requireActivity(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) == PackageManager.PERMISSION_GRANTED
-        ) {
+
+        if (!PermissionManager.hasLocationPermission(requireActivity())) {
+            alertBoxLocation1()
+        }else{
             getCurrentLocation()
-        } else {
-            requestPermissions(
-                arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ), 100
-            )
         }
+
+//        if (ContextCompat.checkSelfPermission(
+//                requireActivity(),
+//                Manifest.permission.ACCESS_FINE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+//                requireActivity(),
+//                Manifest.permission.ACCESS_COARSE_LOCATION
+//            ) == PackageManager.PERMISSION_GRANTED
+//        ) {
+//            getCurrentLocation()
+//        } else {
+//            requestPermissions(
+//                arrayOf(
+//                    Manifest.permission.ACCESS_FINE_LOCATION,
+//                    Manifest.permission.ACCESS_COARSE_LOCATION
+//                ), 100
+//            )
+//        }
 
         return binding.root
     }
@@ -2939,23 +2949,57 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         // Check condition
         if (requestCode == 100) {
             if (requestCode == 100 && grantResults.isNotEmpty() && (grantResults[0] + grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                displayLocationSettingsRequest(requireActivity())
+               // displayLocationSettingsRequest(requireActivity())
+                showCustomLocationDialog()
             } else {
-                alertBoxLocation()
+                alertBoxLocation1()
             }
         }
 
         if (requestCode == 1000) {
             if (requestCode == 1000 && grantResults.isNotEmpty() && (grantResults[0] + grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                displayLocationSettingsRequest11(requireActivity())
+             //   displayLocationSettingsRequest11(requireActivity())
+                showCustomLocationDialog()
             } else {
-                displayLocationSettingsRequest11(requireActivity())
+              //  displayLocationSettingsRequest11(requireActivity())
+                showCustomLocationDialog()
             }
         }
 
 
     }
+    private fun showCustomLocationDialog() {
+        val dialog = Dialog(requireActivity(), R.style.BottomSheetDialog)
+        dialog.setContentView(R.layout.dialog_location_permission)
 
+        dialog.window?.apply {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+
+        val btnTurnOnLocation = dialog.findViewById<TextView>(R.id.btnLocation)
+        val btnCancel = dialog.findViewById<TextView>(R.id.textNotnow)
+
+        btnTurnOnLocation.setOnClickListener {
+            // Location settings open करें
+            openLocationSettings()
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+            // Optional: Cancel पर कुछ action
+            Toast.makeText(requireActivity(), "Location is required for better experience", Toast.LENGTH_SHORT).show()
+        }
+
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
+    private fun openLocationSettings() {
+        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        startActivityForResult(intent, LOCATION_SETTINGS_REQUEST_CODE)
+    }
     private fun displayLocationSettingsRequest(context: Context) {
         val googleApiClient = GoogleApiClient.Builder(context)
             .addApi(LocationServices.API).build()
@@ -3094,6 +3138,57 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
     }
 
+    private fun alertBoxLocation1() {
+//        val dialogView = layoutInflater.inflate(R.layout.dialog_location_permission, null)
+//
+//        val builder = AlertDialog.Builder(requireContext())
+//        builder.setView(dialogView)
+//
+//        val alertDialog = builder.create()
+//        alertDialog.setCancelable(false)
+//
+//        val btnAllow = dialogView.findViewById<TextView>(R.id.btnLocation)
+//        val btnCancel = dialogView.findViewById<TextView>(R.id.textNotnow)
+//
+//        btnAllow.setOnClickListener {
+//            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+//            val uri = Uri.fromParts("package", requireContext().packageName, null)
+//            intent.data = uri
+//            startActivityForResult(intent, 200)
+//            alertDialog.dismiss()
+//        }
+//
+//        btnCancel.setOnClickListener {
+//            alertDialog.dismiss()
+//        }
+//
+//        alertDialog.show()
+        val dialog = Dialog(requireActivity(), R.style.BottomSheetDialog)
+        dialog.setContentView(R.layout.dialog_location_permission)
+
+        dialog.window?.apply {
+            setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+
+        val btnTurnOnLocation = dialog.findViewById<TextView>(R.id.btnLocation)
+        val btnCancel = dialog.findViewById<TextView>(R.id.textNotnow)
+
+        btnTurnOnLocation.setOnClickListener {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+            val uri = Uri.fromParts("package", requireContext().packageName, null)
+            intent.data = uri
+            startActivityForResult(intent, 200)
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+
+     //  dialog.setCancelable(false)
+        dialog.show()
+    }
     private fun loadHomeApi() {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
