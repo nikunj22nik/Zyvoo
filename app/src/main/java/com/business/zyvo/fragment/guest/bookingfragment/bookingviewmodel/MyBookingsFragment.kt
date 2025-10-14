@@ -93,12 +93,16 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
                             if (list != null) {
                                 bookingListModel = list.toMutableList()
                                 adapterMyBookingsAdapter.updateItem(list)
+                                binding.recyclerViewChat.visibility = View.VISIBLE
+                                binding.textNoBookingFound.visibility = View.GONE
                             }
                         }
                         is NetworkResult.Error -> {
                             Log.e(ErrorDialog.TAG, "Server Error: ${it.message}")
                             if (it.message == "No bookings found."){
-                                showSuccessDialog(requireContext(), it.message)
+                               // showSuccessDialog(requireContext(), it.message)
+                                binding.recyclerViewChat.visibility = View.GONE
+                                binding.textNoBookingFound.visibility = View.VISIBLE
                             }else{
                                 showErrorDialog(requireContext(), it.message ?: "Unknown error")
                             }

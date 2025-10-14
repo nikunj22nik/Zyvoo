@@ -115,6 +115,11 @@
         <attr name="textSizeTime" format="dimension" />
     </declare-styleable>
 
-
+    <declare-styleable name="ReadMoreTextView">
+        <attr name="maxCollapsedLines" format="integer" />
+        <attr name="readMoreText" format="string" />
+        <attr name="readLessText" format="string" />
+        <attr name="readMoreColor" format="color" />
+    </declare-styleable>
 
 </resources>

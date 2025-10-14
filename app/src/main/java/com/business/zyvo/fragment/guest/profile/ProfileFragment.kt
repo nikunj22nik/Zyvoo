@@ -221,6 +221,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     val latLng = place.latLng
                     getLocationDetails(requireContext(), latLng) { locationDetails ->
                         // Use city, state, zipCode here
+                        //Log.d("checkResult2",locationDetails.toString())
                         locationDetails?.let {
                             Log.d(ErrorDialog.TAG,
                                 "Street: ${it.streetAddress},City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}")
@@ -228,13 +229,20 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 !it.state.isNullOrEmpty()&&
                                 !it.zipCode.isNullOrEmpty()){
                                 var street = ""
+                               // Log.d("DEBUG", "Full Address: ${it.getAddressLine(0)}")
                                 if (it.streetAddress.isNullOrEmpty()){
                                     binding.streetEditText.setText(place.name ?: "")
                                     street = place.name ?: ""
                                 }else{
+                                    Log.d("checkResult2",it.toString())
                                     binding.streetEditText.setText(it.streetAddress ?: "")
                                     street = it.streetAddress ?: ""
                                 }
+//                                val addressList = geocoder.getFromLocation(lat, lng, 1)
+//                                if (!addressList.isNullOrEmpty()) {
+//                                    val address = addressList[0]
+//                                    Log.d("DEBUG", "Full Address: ${address.getAddressLine(0)}")
+//                                }
                                 binding.cityET.setText(it.city)
                                 binding.stateEt.setText(it.state)
                                 binding.zipEt.setText(it.zipCode)
@@ -489,7 +497,14 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     // Function to start the location picker using Autocomplete
     private fun startStreetLocationPicker() {
-        val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+      //  val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+        val fields = listOf(
+            Place.Field.ID,
+            Place.Field.NAME,
+            Place.Field.LAT_LNG,
+            Place.Field.ADDRESS,
+            Place.Field.ADDRESS_COMPONENTS
+        )
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
             .build(requireContext())
         startStreertAutocomplete.launch(intent)

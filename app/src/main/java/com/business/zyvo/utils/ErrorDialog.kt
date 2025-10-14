@@ -412,6 +412,7 @@ object ErrorDialog {
                     )
                 } else null
 
+                Log.d("checkResult", result.toString())
                 Handler(Looper.getMainLooper()).post {
                     callback(result)
                 }

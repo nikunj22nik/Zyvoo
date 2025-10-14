@@ -919,36 +919,20 @@
                 android:textSize="18sp" />
 
 
-            <!-- <com.colormoon.readmoretextview.ReadMoreTextView
-                 android:id="@+id/tvReadMoreLess"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_gravity="center"
-                 android:layout_marginHorizontal="@dimen/_15sdp"
-                 android:layout_marginTop="@dimen/_5sdp"
-                 android:fontFamily="@font/poppins"
-                 android:textColor="#000000"
-                 app:showTrimExpandedText="true"
-                 app:readMoreText="Read More"
-                 app:trimLines="3"
-                 app:readMoreColor="@color/green_color_bar"
-             android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-         has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
-                 android:textSize="@dimen/_13sdp" />-->
-
-            <kr.co.prnd.readmore.ReadMoreTextView
-                android:id="@+id/tvReadMoreLess"
+            <com.business.zyvo.activity.guest.ReadMoreTextView
+                android:id="@+id/readMoreTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_13sdp"
+                app:maxCollapsedLines="3"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:layout_marginTop="3dp"
-                android:fontFamily="@font/poppins"
-                android:textColor="#000000"
+                android:layout_marginTop="@dimen/_5sdp"
                 app:readMoreText="Read More"
-                app:readMoreColor="@color/green_color_bar"
-                android:textSize="14sp" >
-            </kr.co.prnd.readmore.ReadMoreTextView>
+                app:readLessText="Read Less"
+                app:readMoreColor="@color/green_color_bar" />
 
             <View
                 android:layout_width="match_parent"

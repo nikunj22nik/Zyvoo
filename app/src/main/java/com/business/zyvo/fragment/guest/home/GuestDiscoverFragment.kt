@@ -294,6 +294,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             }
             override fun onFinish() {
                 session?.setNeedMore(false)
+                Log.d("GuestBooking","GuestBooking4")
                 binding.clTimeLeftProgressBar.visibility = View.GONE
             }
         }.start()
@@ -891,14 +892,18 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                                 }
                                 bookings?.let { bookings: Bookings ->
                                     if (isAfterOrSame(bookings.booking_start)){
+                                        Log.d("GuestBooking","GuestBooking")
                                         session?.setFilterRequest("")
                                         session?.setSearchFilterRequest("")
+                                        Log.d("GuestBooking","GuestBooking2")
                                         binding.clTimeLeftProgressBar.visibility = View.VISIBLE
+                                        Log.d("GuestBooking","GuestBooking3")
                                         property?.let {
                                             if (!bookings.booking_start.isNullOrEmpty() &&
                                                 !bookings.final_booking_end.isNullOrEmpty()){
                                                 val booking_start = bookings.booking_start
-                                                val booking_end = bookings.final_booking_end
+                                              val booking_end = bookings.final_booking_end
+                                             // val booking_end = "2025-10-14 12:05:00"
                                                 try {
                                                     val differenceIntoMinutes  = calculateDifferenceInSeconds(
                                                         /* "2025-03-12 15:00:00"*/booking_start,/*"2025-03-12 17:30:00"*/booking_end)
@@ -923,7 +928,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                         }
                         is NetworkResult.Error -> {
                             binding.clTimeLeftProgressBar.visibility = View.GONE
-                            Log.d("******","run")
+                            Log.d("GuestBooking","run")
                             session?.setNeedMore(false)
                             val params = binding.rlShowMap.layoutParams as ConstraintLayout.LayoutParams
                             params.setMargins(params.leftMargin, params.topMargin, params.rightMargin, 300) // 50px bottom margin
@@ -1108,7 +1113,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         if (requestCode == 200) {
             getCurrentLocation()
         }
-
     }
 
     @Deprecated("Deprecated in Java")
@@ -1137,9 +1141,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 showCustomLocationDialog()
             }
         }
-
-
     }
+
     private fun showCustomLocationDialog() {
         val dialog = Dialog(requireActivity(), R.style.BottomSheetDialog)
         dialog.setContentView(R.layout.dialog_location_permission)
@@ -1304,7 +1307,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         alertDialog.setCancelable(false)
         alertDialog.show()
 
-        
     }
 
     private fun alertBoxLocation1() {
@@ -1473,7 +1475,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         }catch (e:Exception){
             e.message
         }
-
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -1553,7 +1554,4 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         startActivity(intent)
         return true
     }
-
-
-
 }

@@ -71,8 +71,8 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
     lateinit var adapterReview: AdapterProReview
     var hostID: String = "-1"
     lateinit var sessionManager: SessionManager
-    var pagination:Pagination?=null
-    var propertyList : MutableList<Property> = mutableListOf()
+    var pagination: Pagination? = null
+    var propertyList: MutableList<Property> = mutableListOf()
     var reviewList: MutableList<Review> = mutableListOf()
     var filter = "highest_review"
     val viewModel: HostDetailsViewModel by lazy {
@@ -120,14 +120,14 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
         super.onViewCreated(view, savedInstanceState)
         initialization()
         Log.d("hostId", hostID)
-        binding.textAboutDescription.setCollapsedTextColor(R.color.green_color_bar)
+        // binding.textAboutDescription.setCollapsedTextColor(R.color.green_color_bar)
         navController = Navigation.findNavController(view)
         binding.imgBack.setOnClickListener {
             navController.navigateUp()
         }
 
         binding.textReviewClick.setOnClickListener {
-            showPopupWindow(it,0)
+            showPopupWindow(it, 0)
         }
         hostDetailsList()
     }
@@ -149,17 +149,17 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemHighestReview).setOnClickListener {
 
-            binding.textReviewClick?.text ="Sort by: Highest Review"
+            binding.textReviewClick?.text = "Sort by: Highest Review"
             sortReviewsBy("Highest")
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemLowestReview).setOnClickListener {
-            binding.textReviewClick?.text ="Sort by: Lowest Review"
+            binding.textReviewClick?.text = "Sort by: Lowest Review"
             sortReviewsBy("Lowest")
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemRecentReview).setOnClickListener {
-            binding.textReviewClick?.text ="Sort by: Recent Review"
+            binding.textReviewClick?.text = "Sort by: Recent Review"
             sortReviewsBy("Recent")
             popupWindow.dismiss()
         }
@@ -204,8 +204,14 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
 
         // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+        popupWindow.showAsDropDown(
+            anchorView,
+            xOffset,
+            yOffset,
+            Gravity.END
+        )  // Adjust the Y offset dynamically
     }
+
     private fun sortReviewsBy(option: String) {
         when (option) {
             "Highest" -> reviewList.sortByDescending { it.review_rating }
@@ -244,9 +250,14 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                 when (it) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
-                            pagination = Gson().fromJson(resp.second.getAsJsonObject("pagination") , Pagination::class.java)
-                            val model = Gson().fromJson(resp.first.getAsJsonObject("data"),
-                                HostData::class.java)
+                            pagination = Gson().fromJson(
+                                resp.second.getAsJsonObject("pagination"),
+                                Pagination::class.java
+                            )
+                            val model = Gson().fromJson(
+                                resp.first.getAsJsonObject("data"),
+                                HostData::class.java
+                            )
                             Log.d("modelResponse", it.data.toString())
                             Log.d("modelResponse", model.toString())
                             model.let {
@@ -255,9 +266,20 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                     .error(R.drawable.ic_circular_img_user)
                                     .into(binding.imageProfilePicture)
 
-                                binding.textListing.setText(it.host?.name+"'s Listings")
-                                binding.textHostName.setText(it.host?.name)
+                                binding.textListing.text = it.host?.name + "'s Listings"
+                                binding.textHostName.text = it.host?.name
 
+                                it.properties?.let { list->
+                                    if (list.isNotEmpty()){
+                                        if (list[0].is_star_host == true){
+                                            binding.ivStar.visibility = View.VISIBLE
+                                        }else{
+                                            binding.ivStar.visibility = View.GONE
+                                        }
+                                    }else{
+                                        binding.ivStar.visibility = View.GONE
+                                    }
+                                }
 
                                 it.about_host?.host_profession?.let { professions ->
                                     if (professions.isNotEmpty()) {
@@ -270,7 +292,7 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                             firstProfession != null -> firstProfession
                                             else -> ""
                                         }
-                                    }else{
+                                    } else {
                                         binding.textMyWorkName.visibility = View.GONE
                                     }
                                 }
@@ -286,14 +308,14 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                 }*/
 
                                 if (it.about_host?.location != null) {
-                                    if (it.about_host?.location.isNotEmpty()){
+                                    if (it.about_host.location.isNotEmpty()) {
                                         binding.textLocationName.visibility = View.VISIBLE
-                                        binding.textLocationName.setText(it.about_host.location)
-                                    }else{
+                                        binding.textLocationName.text = it.about_host.location
+                                    } else {
                                         binding.textLocationName.visibility = View.GONE
                                     }
 
-                                }else{
+                                } else {
                                     binding.textLocationName.visibility = View.GONE
                                 }
                                 /*if (it.about_host?.language != null && it.about_host?.language.isNotEmpty()){
@@ -315,20 +337,22 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                             firstLanguage != null -> firstLanguage
                                             else -> ""
                                         }
-                                    }
-                                    else{
+                                    } else {
                                         binding.textLanguagesName.visibility = View.GONE
                                     }
                                 }
 
 
                                 if (it.about_host?.description != null) {
-                                    binding.textAboutDescription.setText(it.about_host?.description)
+                                    binding.textAboutDescription.setFullText(it.about_host.description.trimIndent())
                                 }
 
-                                it.properties?.let { it1 -> adapter.updateItem(it1)
+
+                                it.properties?.let { it1 ->
+                                    adapter.updateItem(it1)
                                 }
-                                if (it.properties != null){
+
+                                if (it.properties != null) {
                                     propertyList = it.properties
                                 }
 
@@ -337,23 +361,28 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                     val jsonList = gson.toJson(propertyList)
                                     val bundle = Bundle()
                                     bundle.putString(AppConstant.propertyList, jsonList)
-                                    findNavController().navigate(R.id.listingFragment,bundle)
+                                    findNavController().navigate(R.id.listingFragment, bundle)
                                 }
 
                                 it.total_host_review_count?.let {
-                                    binding.tvReviewTotal.text = "Reviews"+" ("+ formatConvertCount(it).trim()+")"
+                                    binding.tvReviewTotal.text =
+                                        "Reviews" + " (" + formatConvertCount(it).trim() + ")"
                                 }
                                 it.total_host_review_rating?.let {
                                     binding.proTotalrating.text = it.trim()
                                 }
 
-                                if(pagination == null){
+                                if (pagination == null) {
                                     binding.showMoreReview.visibility = View.GONE
                                 }
-                                if(it?.total_host_review_count.equals("0")) binding.showMoreReview.visibility = View.GONE
+                                if (it?.total_host_review_count.equals("0")) binding.showMoreReview.visibility =
+                                    View.GONE
 
                                 pagination?.let {
-                                    Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total_pages +" "+"Current Pages:- "+ it.current_page)
+                                    Log.d(
+                                        "PAGES_TOTAL",
+                                        "TOTAL PAGES :- " + it.total_pages + " " + "Current Pages:- " + it.current_page
+                                    )
                                     if (it.total_pages <= it.current_page) {
                                         binding.showMoreReview.visibility = View.GONE
                                     }
@@ -362,9 +391,10 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
 
                             }
                             val listType = object : TypeToken<List<Review>>() {}.type
-                            reviewList = Gson().fromJson(resp.second.getAsJsonArray("data"), listType)
+                            reviewList =
+                                Gson().fromJson(resp.second.getAsJsonArray("data"), listType)
                             reviewList?.let {
-                                if (it.isNotEmpty()){
+                                if (it.isNotEmpty()) {
                                     adapterReview.updateAdapter(it)
                                 }
                             }
@@ -375,6 +405,7 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                         showErrorDialog(requireContext(), it.message!!)
 
                     }
+
                     else -> {
 
                     }
@@ -394,51 +425,63 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
 
         binding.showMoreReview.setOnClickListener {
             pagination?.let {
-                if (it.current_page!=it.total_pages && it.current_page<it.total_pages) {
-                    loadMoreReview(filter,(it.current_page+1).toString())
+                if (it.current_page != it.total_pages && it.current_page < it.total_pages) {
+                    loadMoreReview(filter, (it.current_page + 1).toString())
                 }
             }
         }
     }
 
-    private fun loadMoreReview(filter :String,
-                               page :String) {
-        if (NetworkMonitorCheck._isConnected.value)   {
+    private fun loadMoreReview(
+        filter: String,
+        page: String
+    ) {
+        if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.filterHostReviews(hostID,
+                viewModel.filterHostReviews(
+                    hostID,
                     sessionManager.getGustLatitude(),
                     sessionManager.getGustLongitude(),
                     filter,
-                    page).collect {
+                    page
+                ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 val listType = object : TypeToken<List<Review>>() {}.type
-                                val localreviewList:MutableList<Review> = Gson().fromJson(resp.first, listType)
-                                pagination = Gson().fromJson(resp.second,
-                                    Pagination::class.java)
+                                val localreviewList: MutableList<Review> =
+                                    Gson().fromJson(resp.first, listType)
+                                pagination = Gson().fromJson(
+                                    resp.second,
+                                    Pagination::class.java
+                                )
                                 pagination?.let {
-                                    Log.d("PAGES_TOTAL","TOTAL PAGES :- "+it.total +" "+"Current Pages:- "+ it.current_page)
+                                    Log.d(
+                                        "PAGES_TOTAL",
+                                        "TOTAL PAGES :- " + it.total + " " + "Current Pages:- " + it.current_page
+                                    )
                                 }
-                                if(pagination == null){
+                                if (pagination == null) {
                                     binding.reviewMoreView.visibility = View.GONE
                                 }
 
                                 pagination?.let {
-                                    if(it.total_pages <= it.current_page){
+                                    if (it.total_pages <= it.current_page) {
                                         binding.showMoreReview.visibility = View.GONE
                                     }
                                 }
                                 reviewList.addAll(localreviewList)
                                 reviewList?.let {
-                                    if (it.isNotEmpty()){
+                                    if (it.isNotEmpty()) {
                                         adapterReview.updateAdapter(it)
-                                        binding.tvReviewTotal.text = "Reviews"+" ("+ formatConvertCount(reviewList.size.toString()).trim()+")"
+                                        binding.tvReviewTotal.text =
+                                            "Reviews" + " (" + formatConvertCount(reviewList.size.toString()).trim() + ")"
                                     }
                                 }
 
                             }
                         }
+
                         is NetworkResult.Error -> {
                             showErrorDialog(requireContext(), it.message!!)
                         }
@@ -449,9 +492,11 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                     }
                 }
             }
-        }else{
-            showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg))
+        } else {
+            showErrorDialog(
+                requireContext(),
+                resources.getString(R.string.no_internet_dialog_msg)
+            )
         }
 
 
@@ -468,10 +513,10 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
     }
 
     override fun itemClick(propertyId: Int, miles: String) {
-        if (propertyId != 0){
+        if (propertyId != 0) {
             val intent = Intent(requireActivity(), RestaurantDetailActivity::class.java)
-            intent.putExtra("propertyId",propertyId.toString())
-            intent.putExtra("propertyMile",miles)
+            intent.putExtra("propertyId", propertyId.toString())
+            intent.putExtra("propertyMile", miles)
             startActivity(intent)
         }
     }

@@ -71,6 +71,21 @@
             tools:listitem="@layout/layout_wishlist" />
 
 
+        <TextView
+            android:id="@+id/textNoWishlistFound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Wishlist found"
+            android:textSize="@dimen/_13sdp"
+            android:visibility="gone"
+            android:fontFamily="@font/montserrat_semibold"
+            app:layout_constraintTop_toBottomOf="@+id/viewTop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

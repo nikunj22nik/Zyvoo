@@ -53,5 +53,16 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/_65sdp"/>
 
+    <TextView
+        android:id="@+id/textNoBookingFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Booking found"
+        android:textSize="@dimen/_13sdp"
+        android:visibility="gone"
+        android:fontFamily="@font/montserrat_semibold"
+       android:layout_centerInParent="true"
+        />
+
 </RelativeLayout>
 </layout>

@@ -461,18 +461,10 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.proDiscount.text = "$proDiscountR% Off"
                 }
 
+
                 propertyData?.property_description?.let {
-                   /* binding.tvReadMoreLess.apply {
-                        text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet."//it
-                    //    setTrimLength(50) // Set max character length before collapsing
-                        setTrimLines(3)
-                        setCollapsedText("Read More") // Text for collapsed state
-                        setExpandedText("Read Less") // Text for expanded state
-                       binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
-                    }*/
-                    binding.tvReadMoreLess.apply {
-                        text = it
-                    }
+                    // Set the text
+                    binding.readMoreTextView.setFullText(it.trimIndent())
                 }
                 propertyData?.amenities?.let {
                     if (it.isNotEmpty()) {

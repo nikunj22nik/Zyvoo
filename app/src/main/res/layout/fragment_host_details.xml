@@ -54,20 +54,30 @@
                 android:background="@drawable/bg_four_side_corner_grey_slight_more_light"
                 android:orientation="vertical">
 
+                <RelativeLayout
+                    android:layout_width="@dimen/_90sdp"
+                    android:layout_gravity="center"
+                    android:layout_height="@dimen/_90sdp">
+
+
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imageProfilePicture"
                     android:layout_width="@dimen/_90sdp"
                     android:layout_height="@dimen/_90sdp"
-                    android:layout_gravity="center_horizontal"
                     android:background="@drawable/profle_picture_ring"
-                    android:padding="@dimen/_16sdp"
+                    android:src="@drawable/ic_circular_img_user" />
+                <ImageView
+                    android:id="@+id/ivStar"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:visibility="gone"
+                    android:layout_marginBottom="@dimen/_15sdp"
+                    android:layout_marginEnd="@dimen/_13sdp"
+                    android:src="@drawable/ic_badge_img" />
 
-
-                    android:src="@drawable/ic_circular_img_user"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
+                </RelativeLayout>
 
 
 
@@ -141,7 +151,6 @@
                     android:paddingHorizontal="@dimen/_10sdp"
                     android:paddingVertical="@dimen/_7sdp"
                     android:text=""
-
                     android:textColor="@color/black"
                     android:textSize="13sp"
                     app:drawableStartCompat="@drawable/ic_location_line" />
@@ -191,14 +200,19 @@
             </RelativeLayout>
 
 
-            <com.colormoon.readmoretextview.ReadMoreTextView
+
+
+            <com.business.zyvo.activity.guest.ReadMoreTextView
                 android:id="@+id/textAboutDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:textColor="#000000"
                 android:fontFamily="@font/poppins"
-                android:text=""
-                android:textColor="@color/black" />
+                app:maxCollapsedLines="3"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                app:readMoreText="Read More"
+                app:readLessText="Read Less"
+                app:readMoreColor="@color/green_color_bar" />
 
             <View
                 android:layout_width="match_parent"

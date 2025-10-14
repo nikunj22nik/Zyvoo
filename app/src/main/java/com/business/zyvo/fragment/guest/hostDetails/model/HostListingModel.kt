@@ -45,5 +45,7 @@ data class Property(
     val longitude: String? ="",
     val distance_miles: String? ="",
     val profile_image: String? ="",
-    val property_images: MutableList<String>?
+    val property_images: MutableList<String>?,
+    val is_star_host: Boolean? = false
+
 )

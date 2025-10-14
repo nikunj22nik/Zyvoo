@@ -20,9 +20,9 @@
         android:name=".MyApp"
         android:allowBackup="true"
         tools:replace="android:allowBackup"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/zyvo_app_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/zyvo_app_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.ZYVO"
         android:forceDarkAllowed="false"
@@ -30,6 +30,7 @@
         <activity
             android:name=".activity.ChatActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             />
         <activity android:name=".activity.guest.sorryresult.SorryActivity"
@@ -38,24 +39,30 @@
         </activity>
         <activity
             android:name=".activity.PlaceOpenActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.HostMainActivity"
             android:exported="false"
-            android:windowSoftInputMode="adjustPan" />
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity
             android:name="com.business.zyvo.activity.guest.extratime.ExtraTimeActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity
             android:name=".activity.guest.checkout.CheckOutPayActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".activity.guest.propertydetails.RestaurantDetailActivity"
+            android:screenOrientation="portrait"
             android:exported="false">
         </activity>
         <!-- <activity -->
@@ -65,16 +72,19 @@
 
         <activity
             android:name=".activity.guest.WhereTimeActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <activity
             android:name=".activity.guest.filter.FiltersActivity"
             android:exported="false"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan" />
 
         <activity
             android:name=".activity.GuesMain"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             tools:ignore="AppLinkUrlError">
          <!--   <intent-filter>
@@ -111,6 +121,7 @@
         </activity>
         <activity
             android:name=".activity.MainActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
 
         <meta-data

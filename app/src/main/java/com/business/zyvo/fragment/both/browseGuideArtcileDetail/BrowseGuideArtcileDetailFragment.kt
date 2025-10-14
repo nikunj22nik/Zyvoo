@@ -90,8 +90,10 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                         )
                     } else {
                         if (textType == "article") {
+                            binding.tvShareThisArticle.text = "Share This Article:"
                             getArticleDetails()
                         } else if (textType == "guides") {
+                            binding.tvShareThisArticle.text = "Share This Guide:"
                             getGuideDetails()
                         }
                     }
@@ -135,9 +137,9 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
 
                         if (model.data.description != null) {
                             binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
+                                Html.fromHtml(model.data.description.trim(), Html.FROM_HTML_MODE_LEGACY)
                             } else {
-                                Html.fromHtml(model.data.description)
+                                Html.fromHtml(model.data.description.trim())
                             }
                         }
                         if (model.data.author_name != null){

@@ -115,6 +115,11 @@ class WishlistFragment : Fragment() {
                                 wishlistItem = wish
                                 if (wishlistItem.isNotEmpty()) {
                                    adapter?.updateItem(wishlistItem)
+                                    binding.rvWishList.visibility = View.VISIBLE
+                                    binding.textNoWishlistFound.visibility = View.GONE
+                                }else{
+                                    binding.rvWishList.visibility = View.GONE
+                                    binding.textNoWishlistFound.visibility = View.VISIBLE
                                 }
                             }
                         }

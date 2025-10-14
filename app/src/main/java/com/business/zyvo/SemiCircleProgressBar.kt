@@ -27,7 +27,7 @@ class SemiCircleProgressBar @JvmOverloads constructor(
     private val progressPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var maxProgress: Double = 100.0
     private var currentProgress: Double = 0.0
-    private var strokeWidthDefault = 2f
+    private var strokeWidthDefault = 8f
     private var transparentStrokeWidthDefault = 80f
     private var endIcon: Drawable? = null
     private var endIconSize: Int = 40 // Default icon size in dp

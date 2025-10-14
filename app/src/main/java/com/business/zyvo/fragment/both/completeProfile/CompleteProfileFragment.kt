@@ -632,8 +632,9 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                             }
                           //  Log.d("imageCheck", session?.setUserImage(resp.third).toString())
                                 session?.setUserImage(resp.third)
-                            showSuccessDialog(requireContext(), AppConstant.profileUpdateSuccussfully)
-                          //  ErrorDialog.showToast(requireActivity(),resp.first)
+                           // showSuccessDialog(requireContext(), AppConstant.profileUpdateSuccussfully)
+                            ErrorDialog.showToast(requireActivity(),AppConstant.profileUpdateSuccussfully)
+                            //ErrorDialog.showToast(requireActivity(),resp.first)
                             val intent = Intent(requireContext(),GuesMain::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intent)
