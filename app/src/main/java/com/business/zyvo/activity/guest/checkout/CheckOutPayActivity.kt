@@ -962,13 +962,21 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
                 dismiss()
             }
             submitButton.setOnClickListener {
-                if (etCardHolderName.text.isEmpty()) {
+                if (etCardHolderName.text.trim().isEmpty()) {
                     showToast(this@CheckOutPayActivity, AppConstant.cardName)
-                } else if (textMonth.text.isEmpty()) {
+                }else if(etCardHolderName.text.toString().length >30){
+                    showToast(this@CheckOutPayActivity, "Please Enter Card Holder Name less than 30 character")
+                }
+                else if (etCardNumber.text.trim().isEmpty()) {
+                    showToast(this@CheckOutPayActivity, AppConstant.cardNubmer)
+                }else if (!ErrorDialog.isValidCardNumber(etCardNumber.text.toString())) {
+                    showToast(this@CheckOutPayActivity, AppConstant.cardValidNubmer)
+                }
+                else if (textMonth.text.isEmpty()) {
                     showToast(this@CheckOutPayActivity, AppConstant.cardMonth)
                 } else if (textYear.text.isEmpty()) {
                     showToast(this@CheckOutPayActivity, AppConstant.cardYear)
-                } else if (etCardCvv.text.isEmpty()) {
+                } else if (etCardCvv.text.trim().isEmpty()) {
                     showToast(this@CheckOutPayActivity, AppConstant.cardCVV)
                 } else {
                     LoadingUtils.showDialog(this@CheckOutPayActivity, false)
@@ -1502,6 +1510,8 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             }
         }
     }
+
+
 
 
 

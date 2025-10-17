@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -136,11 +137,19 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                         }
 
                         if (model.data.description != null) {
-                            binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                Html.fromHtml(model.data.description.trim(), Html.FROM_HTML_MODE_LEGACY)
+                            val htmlText = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                                Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
                             } else {
-                                Html.fromHtml(model.data.description.trim())
+                                Html.fromHtml(model.data.description)
                             }
+                            binding.textDescription.text = htmlText
+                            binding.textDescription.movementMethod = LinkMovementMethod.getInstance()
+
+//                            binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                Html.fromHtml(model.data.description.trim(), Html.FROM_HTML_MODE_LEGACY)
+//                            } else {
+//                                Html.fromHtml(model.data.description.trim())
+//                            }
                         }
                         if (model.data.author_name != null){
                             binding.textAuthorName.text = model.data.author_name

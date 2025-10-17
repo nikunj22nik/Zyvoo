@@ -35,6 +35,7 @@ import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.activity.ChatActivity
 import com.business.zyvo.activity.GuesMain
+import com.business.zyvo.activity.guest.checkout.CheckOutPayActivity
 import com.business.zyvo.activity.guest.checkout.model.MailingAddress
 import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.activity.guest.extratimecharges.viewmodel.ExtraTimeChargeViewModel
@@ -120,7 +121,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 bookingId = it.getString("bookingId")
                 propertyId = propertyData?.property_id.toString()
                 hostId = propertyData?.host_id.toString()
-                Log.d(ErrorDialog.TAG,date.toString())
+                Log.d(ErrorDialog.TAG, date.toString())
             }
         }
         // Observe the isLoading state
@@ -210,16 +211,15 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         setPropertyData()
         getUserCards()
         binding.rlMsgHost.setOnClickListener {
-           // callingJoinChannelApi()
+            // callingJoinChannelApi()
             callingMessageClickListner()
         }
     }
 
-    private fun callingMessageClickListner(){
+    private fun callingMessageClickListner() {
         if (binding.llMsgHost.visibility == View.VISIBLE) {
             binding.llMsgHost.visibility = View.GONE
-        }
-        else {
+        } else {
             binding.llMsgHost.visibility = View.VISIBLE
         }
 
@@ -256,27 +256,39 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
 
         }
 
-        var writeMessage =""
+        var writeMessage = ""
 
         binding.etShareMessage.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(charSequence: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun beforeTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                count: Int,
+                after: Int
+            ) {
+            }
 
-            override fun onTextChanged(charSequence: CharSequence?, start: Int, before: Int, count: Int) {
-                writeMessage+=charSequence.toString()
+            override fun onTextChanged(
+                charSequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                writeMessage += charSequence.toString()
                 binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
                 binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             }
+
             override fun afterTextChanged(editable: Editable?) {
 
             }
         })
         binding.rlSubmitMessage.setOnClickListener {
             val userInput = binding.etShareMessage.text.toString()
-            if(userInput.length>0){
+            if (userInput.length > 0) {
                 messageSend = userInput
             }
-            if (!messageSend.equals("other")  ){
-                propertyData?.let  { pro->
+            if (!messageSend.equals("other")) {
+                propertyData?.let { pro ->
                     bookingId?.let {
                         val propertyid = it
                         val hostId = pro.host_id
@@ -296,9 +308,9 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     }
 
                 }
-            }else{
-                if (userInput.trim().isNotEmpty()){
-                    propertyData?.let  { pro->
+            } else {
+                if (userInput.trim().isNotEmpty()) {
+                    propertyData?.let { pro ->
                         bookingId?.let {
                             val propertyid = it
                             val hostId = pro.host_id
@@ -317,8 +329,8 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                             callingJoinChannelApi(messageSend)
                         }
                     }
-                }else{
-                    binding.etShareMessage.error ="Please Enter something"
+                } else {
+                    binding.etShareMessage.error = "Please Enter something"
                 }
 
 
@@ -328,8 +340,8 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
     }
 
 
-    private fun callingJoinChannelApi(messageSend :String) {
-        if (hostId.equals("-1") == false && propertyId.equals("-1") ==false) {
+    private fun callingJoinChannelApi(messageSend: String) {
+        if (hostId.equals("-1") == false && propertyId.equals("-1") == false) {
             lifecycleScope.launch {
                 val session = SessionManager(this@ExtraTimeChargesActivity)
                 val userId = session.getUserId()
@@ -384,7 +396,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                                     intent.putExtra("friend_name", friendName).toString()
                                     intent.putExtra("user_name", userName)
                                     intent.putExtra("sender_id", hostId)
-                                    intent.putExtra("message",messageSend)
+                                    intent.putExtra("message", messageSend)
                                     startActivity(intent)
                                 } else if (it.data?.sender_id?.toInt() == loggedInId) {
                                     val userImage: String = it.data?.sender_avatar.toString()
@@ -416,7 +428,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                                     intent.putExtra("friend_name", friendName).toString()
                                     intent.putExtra("user_name", userName)
                                     intent.putExtra("sender_id", hostId)
-                                    intent.putExtra("message",messageSend)
+                                    intent.putExtra("message", messageSend)
                                     startActivity(intent)
                                 }
                             }
@@ -464,7 +476,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     }
                 }
                 propertyData?.min_booking_hours?.let {
-                   // binding.tvResponseTime.text = "Respond within " + convertHoursToHrMin(it.toDouble())
+                    // binding.tvResponseTime.text = "Respond within " + convertHoursToHrMin(it.toDouble())
                 }
                 propertyData?.images?.let {
                     if (it.isNotEmpty()) {
@@ -486,15 +498,15 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     binding.tvMiles.text = "$it miles away"
                 }
                 date?.let {
-                    Log.d(ErrorDialog.TAG,it)
+                    Log.d(ErrorDialog.TAG, it)
                     val dummyData = formatDateyyyyMMddToMMMMddyyyy(it)
                     binding.tvDate.text = dummyData
-                 //   binding.tvDate.text = date
+                    //   binding.tvDate.text = date
                 }
 
                 hour?.let { resp ->
                     edTime?.let {
-                        binding.tvTiming.text = "From $it to ${addHours(it,resp.toInt())}"
+                        binding.tvTiming.text = "From $it to ${addHours(it, resp.toInt())}"
                     }
                 }
                 propertyData?.parking_rules?.let {
@@ -516,7 +528,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
     }
 
 
-    private fun calculatePrice(){
+    private fun calculatePrice() {
         try {
             var totalPrice = 0.0
             var hourlyTotal = 0.0
@@ -535,38 +547,40 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 binding.tvCleaningFee.text = "$${truncateToTwoDecimalPlaces(it.toString())}"
                 totalPrice += it
             }
-            propertyData?.service_fee?.toDoubleOrNull()?.let {resp ->
+            propertyData?.service_fee?.toDoubleOrNull()?.let { resp ->
                 hourlyTotal?.let {
-                    val taxAmount = calculatePercentage(it,resp)
-                    binding.tvZyvoServiceFee.text = "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
+                    val taxAmount = calculatePercentage(it, resp)
+                    binding.tvZyvoServiceFee.text =
+                        "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
                     totalPrice += taxAmount
                 }
             }
-            propertyData?.tax?.toDoubleOrNull()?.let {resp ->
+            propertyData?.tax?.toDoubleOrNull()?.let { resp ->
                 hourlyTotal?.let {
-                    val taxAmount = calculatePercentage(it,resp)
-                    binding.tvTaxesPrice.text = "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
+                    val taxAmount = calculatePercentage(it, resp)
+                    binding.tvTaxesPrice.text =
+                        "$${truncateToTwoDecimalPlaces(taxAmount.toString())}"
                     totalPrice += taxAmount
 
                 }
             }
             addOnList?.let {
-                if (it.isNotEmpty()){
+                if (it.isNotEmpty()) {
                     binding.rladdOn.visibility = View.VISIBLE
                     val total = calculateTotalPrice(addOnList)
-                    if (total==0.0){
+                    if (total == 0.0) {
                         binding.rladdOn.visibility = View.GONE
                     }
                     binding.tvAddOnPrice.text = "$${truncateToTwoDecimalPlaces(total.toString())}"
                     totalPrice += total
-                }else{
+                } else {
                     binding.rladdOn.visibility = View.GONE
                 }
             }
             // Apply Discount if Hours Exceed Discount Hour
             var discountAmount = 0.0
             propertyData?.bulk_discount_hour?.let { h ->
-                hour?.let { cHr->
+                hour?.let { cHr ->
                     propertyData?.bulk_discount_rate?.let {
                         if (cHr.toInt() > h) {
                             discountAmount = (hourlyTotal * it.toDouble()) / 100
@@ -577,15 +591,16 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             }
             // Display Discount if Applied
             if (discountAmount > 0) {
-                binding.tvDiscount.text = "-$${truncateToTwoDecimalPlaces(discountAmount.toString())}"
+                binding.tvDiscount.text =
+                    "-$${truncateToTwoDecimalPlaces(discountAmount.toString())}"
                 binding.llDiscountLabel.visibility = View.VISIBLE
             } else {
                 binding.llDiscountLabel.visibility = View.GONE
             }
             // Final Total Price Display
             binding.tvTotalPrice.text = "$${truncateToTwoDecimalPlaces(totalPrice.toString())}"
-        }catch (e:Exception){
-            Log.d(ErrorDialog.TAG,"calculatePrice ${e.message}")
+        } catch (e: Exception) {
+            Log.d(ErrorDialog.TAG, "calculatePrice ${e.message}")
         }
     }
 
@@ -595,8 +610,14 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
     }
 
     private fun getBookingExtensionTimeAmount(
-        booking_id: String, extension_time: String, service_fee: String, tax: String,
-        cleaning_fee: String, extension_total_amount: String, extension_booking_amount: String, discount_amount: String
+        booking_id: String,
+        extension_time: String,
+        service_fee: String,
+        tax: String,
+        cleaning_fee: String,
+        extension_total_amount: String,
+        extension_booking_amount: String,
+        discount_amount: String
     ) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
@@ -646,7 +667,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
 
 
     private fun dialogAddCard() {
-        var street_address=""
+        var street_address = ""
         var city = ""
         var state = ""
         var zip_code = ""
@@ -672,12 +693,12 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             val checkBox: MaterialCheckBox = findViewById(R.id.checkBox)
             val imgcross: ImageView = findViewById(R.id.img_cross)
             checkBox.setOnClickListener {
-                if (checkBox.isChecked){
+                if (checkBox.isChecked) {
                     etStreet.setText(street_address)
                     etCity.setText(city)
                     etState.setText(state)
                     etZipCode.setText(zip_code)
-                }else{
+                } else {
                     etStreet.text.clear()
                     etCity.text.clear()
                     etState.text.clear()
@@ -741,13 +762,20 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 dismiss()
             }
             submitButton.setOnClickListener {
-                if (etCardHolderName.text.isEmpty()) {
+                if (etCardHolderName.text.trim().isEmpty()) {
                     showToast(this@ExtraTimeChargesActivity, AppConstant.cardName)
+                }else if(etCardHolderName.text.toString().length >30){
+                    showToast(this@ExtraTimeChargesActivity, "Please Enter Card Holder Name less than 30 character")
+                }
+                else if (etCardNumber.text.trim().isEmpty()) {
+                    showToast(this@ExtraTimeChargesActivity, AppConstant.cardNubmer)
+                } else if (!ErrorDialog.isValidCardNumber(etCardNumber.text.toString())) {
+                    showToast(this@ExtraTimeChargesActivity, AppConstant.cardValidNubmer)
                 } else if (textMonth.text.isEmpty()) {
                     showToast(this@ExtraTimeChargesActivity, AppConstant.cardMonth)
                 } else if (textYear.text.isEmpty()) {
                     showToast(this@ExtraTimeChargesActivity, AppConstant.cardYear)
-                } else if (etCardCvv.text.isEmpty()) {
+                } else if (etCardCvv.text.trim().isEmpty()) {
                     showToast(this@ExtraTimeChargesActivity, AppConstant.cardCVV)
                 } else {
                     LoadingUtils.showDialog(this@ExtraTimeChargesActivity, false)
@@ -759,7 +787,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                     val cardNumber: String =
                         Objects.requireNonNull(etCardNumber.text.toString().replace(" ", "").trim())
                             .toString()
-                    Log.d("checkCardNumber",cardNumber)
+                    Log.d("checkCardNumber", cardNumber)
 
 
                     val cvvNumber: String =
@@ -787,7 +815,8 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                         name,
                         address = billingAddress
                     )
-                    stripe?.createCardToken(card, null, null,
+                    stripe?.createCardToken(
+                        card, null, null,
                         object : ApiResultCallback<Token> {
                             override fun onError(e: Exception) {
                                 Log.d("******  Token Error :-", "${e.message}")
@@ -806,7 +835,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 }
             }
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            sameAsMailingAddress{mailingAddress ->
+            sameAsMailingAddress { mailingAddress ->
                 // Do something with the address here
                 if (mailingAddress != null) {
                     Log.d(ErrorDialog.TAG, mailingAddress.toString())
@@ -829,7 +858,6 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             show()
         }
     }
-
 
 
     private fun sameAsMailingAddress(
@@ -870,7 +898,6 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
             )
         }
     }
-
 
 
     private fun saveCardStripe(
@@ -976,7 +1003,7 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
                 this@ExtraTimeChargesActivity.hour = hour
                 hour?.let { resp ->
                     edTime?.let {
-                        binding.tvTiming.text = "From $it to ${addHours(it,resp.toInt())}"
+                        binding.tvTiming.text = "From $it to ${addHours(it, resp.toInt())}"
                     }
                 }
                 calculatePrice()

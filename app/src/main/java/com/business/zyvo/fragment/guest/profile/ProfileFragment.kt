@@ -63,6 +63,7 @@ import com.business.zyvo.R
 import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.HostMainActivity
+import com.business.zyvo.activity.guest.checkout.CheckOutPayActivity
 import com.business.zyvo.activity.guest.checkout.model.MailingAddress
 import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.adapter.AdapterAddPaymentCard
@@ -2329,11 +2330,17 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             })
             //end
             submitButton.setOnClickListener {
-                if (etCardHolderName.text.isEmpty()) {
+                if (etCardHolderName.text.trim().isEmpty()) {
                     LoadingUtils.showErrorDialog(requireContext(), AppConstant.cardName)
                 } else if(etCardHolderName.text.toString().length >30){
                     LoadingUtils.showErrorDialog(requireContext(),"Please Enter Card Holder Name less than 30 character")
-                } else if (textMonth.text.isEmpty()) {
+                }else if (etCardNumber.text.trim().isEmpty()) {
+                    showToast(requireContext(), AppConstant.cardNubmer)
+                }else if (!ErrorDialog.isValidCardNumber(etCardNumber.text.toString())) {
+                    showToast(requireContext(), AppConstant.cardValidNubmer)
+                }
+
+                else if (textMonth.text.isEmpty()) {
                     showToast(requireContext(), AppConstant.cardMonth)
                 } else if (textYear.text.isEmpty()) {
                     showToast(requireContext(), AppConstant.cardYear)

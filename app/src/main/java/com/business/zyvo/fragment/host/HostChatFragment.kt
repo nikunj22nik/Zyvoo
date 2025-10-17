@@ -999,8 +999,8 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         LoadingUtils.hideDialog()
         //updateAdapter()
          updateNewCode()
-
     }
+
     override fun showError(message: String?) {
         if (message != null && isAdded && !requireActivity().isFinishing) {
             LoadingUtils.hideDialog()
@@ -1015,8 +1015,4 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             SessionManager(requireContext()).getUserId().toString())
         quickstartConversationsManager.setListener(this@HostChatFragment)
     }
-
-
-
-
 }

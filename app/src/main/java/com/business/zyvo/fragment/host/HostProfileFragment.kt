@@ -134,6 +134,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.widget.addTextChangedListener
 import com.business.zyvo.AppConstant.Companion.passwordMustConsist
 import com.business.zyvo.activity.HostMainActivity
+import com.business.zyvo.activity.guest.checkout.CheckOutPayActivity
 import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.utils.MultipartUtils
 import com.google.android.gms.maps.model.LatLng
@@ -4542,7 +4543,7 @@ import java.util.Arrays
                     }
                 }
             }
-            //vipin
+
             etCardNumber.addTextChangedListener(object : TextWatcher {
                 private var isFormatting: Boolean = false
                 private var previousText: String = ""
@@ -4587,11 +4588,19 @@ import java.util.Arrays
             submitButton.setOnClickListener {
                 if (etCardHolderName.text.isEmpty()) {
                     showToast(requireContext(), AppConstant.cardName)
-                } else if (textMonth.text.isEmpty()) {
+                }else if(etCardHolderName.text.toString().length >30){
+                    showToast(requireContext(), "Please Enter Card Holder Name less than 30 character")
+                }
+                else if (etCardNumber.text.trim().isEmpty()) {
+                    showToast(requireContext(), AppConstant.cardNubmer)
+                }else if (!ErrorDialog.isValidCardNumber(etCardNumber.text.toString())) {
+                    showToast(requireContext(), AppConstant.cardValidNubmer)
+                }
+                else if (textMonth.text.isEmpty()) {
                     showToast(requireContext(), AppConstant.cardMonth)
                 } else if (textYear.text.isEmpty()) {
                     showToast(requireContext(), AppConstant.cardYear)
-                } else if (etCardCvv.text.isEmpty()) {
+                } else if (etCardCvv.text.trim().isEmpty()) {
                     showToast(requireContext(), AppConstant.cardCVV)
                 } else {
                     LoadingUtils.showDialog(requireContext(), false)

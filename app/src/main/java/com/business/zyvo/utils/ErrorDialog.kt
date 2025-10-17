@@ -593,6 +593,55 @@ object ErrorDialog {
         }
     }
 
+    fun isValidCardNumber(cardNumber: String): Boolean {
+        // Remove spaces and check if it's empty
+        val cleanedNumber = cardNumber.replace(" ", "").trim()
 
+        // Check if it contains only digits
+        if (!cleanedNumber.matches(Regex("\\d+"))) {
+            return false
+        }
+
+        // Check length (typically 13 to 19 digits)
+        if (cleanedNumber.length !in 13..19) {
+            return false
+        }
+
+        // Luhn algorithm check
+        return isValidLuhn(cleanedNumber)
+    }
+
+    fun isValidLuhn(number: String): Boolean {
+        var sum = 0
+        var alternate = false
+
+        for (i in number.length - 1 downTo 0) {
+            var digit = number[i] - '0'
+
+            if (alternate) {
+                digit *= 2
+                if (digit > 9) {
+                    digit = digit % 10 + 1
+                }
+            }
+
+            sum += digit
+            alternate = !alternate
+        }
+
+        return sum % 10 == 0
+    }
+
+    fun getCardType(cardNumber: String): String {
+        val cleanedNumber = cardNumber.replace(" ", "")
+
+        return when {
+            cleanedNumber.startsWith("4") -> "Visa"
+            cleanedNumber.startsWith("5") -> "MasterCard"
+            cleanedNumber.startsWith("34") || cleanedNumber.startsWith("37") -> "American Express"
+            cleanedNumber.startsWith("6") -> "Discover"
+            else -> "Unknown"
+        }
+    }
 
 }

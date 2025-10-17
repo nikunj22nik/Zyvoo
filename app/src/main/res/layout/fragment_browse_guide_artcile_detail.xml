@@ -134,16 +134,13 @@
                         android:layout_marginBottom="@dimen/_10sdp"
                         android:orientation="horizontal">
 
-
                         <ImageView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:background="@drawable/ic_calendar_white"
                             android:backgroundTint="@color/white"
                             android:src="@drawable/ic_clock_dot_new"
-                            app:tint="@color/white"
-
-                            />
+                            app:tint="@color/white" />
 
                         <TextView
                             android:id="@+id/textDate"
@@ -152,6 +149,7 @@
                             android:layout_marginStart="@dimen/_5sdp"
                             android:fontFamily="@font/poppins"
                             android:text="Mar 13, 2022"
+                            android:paddingTop="@dimen/_3sdp"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -171,6 +169,7 @@
                             android:layout_marginStart="@dimen/_5sdp"
                             android:fontFamily="@font/poppins"
                             android:text="3 min read"
+                            android:paddingTop="@dimen/_3sdp"
                             android:textColor="@color/white"
                             android:textSize="12sp" />
 
@@ -189,9 +188,8 @@
                 android:layout_marginTop="@dimen/_13sdp"
                 android:fontFamily="@font/poppins_light"
                 android:textColor="@color/black"
-                android:textAlignment="viewStart"
-                android:gravity="start"
                 android:justificationMode="inter_word"
+                android:includeFontPadding="false"
                 android:textSize="16sp" />
 
             <View
