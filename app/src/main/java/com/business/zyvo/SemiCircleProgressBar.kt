@@ -27,7 +27,7 @@ class SemiCircleProgressBar @JvmOverloads constructor(
     private val progressPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var maxProgress: Double = 100.0
     private var currentProgress: Double = 0.0
-    private var strokeWidthDefault = 8f
+    private var strokeWidthDefault = 10f
     private var transparentStrokeWidthDefault = 80f
     private var endIcon: Drawable? = null
     private var endIconSize: Int = 40 // Default icon size in dp
@@ -98,10 +98,10 @@ class SemiCircleProgressBar @JvmOverloads constructor(
 
         val positions = floatArrayOf(
             0.0f,   // Start with green
-            0.25f,  // Light yellow around 24% progress
-            0.40f,  // Yellow around 39% progress
-            0.58f,  // Orange around 68% progress
-            1.0f    // Red at the end of the progress (100%)
+            0.30f,  // Light yellow around 24% progress
+            0.35f,  // Yellow around 39% progress
+            0.40f,  // Orange around 68% progress
+            0.55f    // Red at the end of the progress (100%)
         )
 
         val shader = LinearGradient(

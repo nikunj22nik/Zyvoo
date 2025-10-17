@@ -290,6 +290,14 @@ class WhereTimeActivity : AppCompatActivity() {
     fun selectTime(){
         binding.rlView1.setOnClickListener {
                 DateManager(this).showTimePickerDialog1(this) { selectedTime ->
+                    if (binding.text2.text.toString() != "00:00 PM" && binding.text2.text.toString().isNotEmpty()) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            if (!isTimeRangeValid(selectedTime, binding.text2.text.toString() )) {
+                                LoadingUtils.showErrorDialog(this@WhereTimeActivity, "Please select time range minimum 2 hours.")
+                                return@showTimePickerDialog1
+                            }
+                        }
+                    }
                     binding.text1.setText(selectedTime)
                     val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
@@ -308,8 +316,8 @@ class WhereTimeActivity : AppCompatActivity() {
                         val formattedEndTime = endTime.format(formatter)
                         binding.text2.text = formattedEndTime.uppercase()
                     }
-                }
-        }
+                 }
+              }
 //        binding.rlView2.setOnClickListener {
 //            DateManager(this).showTimePickerDialog1(this) { selectedTime ->
 //                binding.text2.setText(selectedTime)
@@ -324,6 +332,16 @@ class WhereTimeActivity : AppCompatActivity() {
                         // Show error for previous time selection
                         LoadingUtils.showErrorDialog(this@WhereTimeActivity, "You cannot select previous time")
                         return@showTimePickerDialog1
+                    }
+                }
+
+                // Validate time range when both times are set
+                if (binding.text1.text.toString() != "00:00 PM" && binding.text1.text.toString().isNotEmpty()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        if (!isTimeRangeValid(binding.text1.text.toString(), selectedTime)) {
+                            LoadingUtils.showErrorDialog(this@WhereTimeActivity, "Please select time range minimum 2 hours.")
+                            return@showTimePickerDialog1
+                        }
                     }
                 }
                 binding.text2.setText(selectedTime)
@@ -751,5 +769,24 @@ class WhereTimeActivity : AppCompatActivity() {
         binding.text2.text = "00:00 PM"
         start_time = ""
         end_time = ""
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun isTimeRangeValid(startTime: String, endTime: String): Boolean {
+        return try {
+            val formatter = DateTimeFormatter.ofPattern("hh:mm a", Locale.ENGLISH)
+
+            val start = LocalTime.parse(startTime, formatter)
+            val end = LocalTime.parse(endTime, formatter)
+
+            // Calculate duration between start and end time
+            val duration = java.time.Duration.between(start, end)
+
+            // Check if duration is at least 2 hours
+            duration.toHours() >= 2
+        } catch (e: Exception) {
+            Log.e(ErrorDialog.TAG, "Time range validation error: ${e.message}")
+            false
+        }
     }
 }

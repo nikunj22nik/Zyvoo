@@ -871,6 +871,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun getUserBookings() {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
@@ -903,7 +904,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                                                 !bookings.final_booking_end.isNullOrEmpty()){
                                                 val booking_start = bookings.booking_start
                                               val booking_end = bookings.final_booking_end
-                                             // val booking_end = "2025-10-14 12:05:00"
+                                            //  val booking_end = "2025-10-17 15:12:00"
                                                 try {
                                                     val differenceIntoMinutes  = calculateDifferenceInSeconds(
                                                         /* "2025-03-12 15:00:00"*/booking_start,/*"2025-03-12 17:30:00"*/booking_end)

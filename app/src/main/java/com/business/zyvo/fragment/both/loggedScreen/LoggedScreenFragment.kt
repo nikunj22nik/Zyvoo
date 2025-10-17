@@ -1760,9 +1760,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
 
-            countDownTimer!!.cancel()
+           // countDownTimer!!.cancel()
+            countDownTimer!!.start()
 
-            textTimeResend.text = "${"00"}:${"00"} sec"
+            textTimeResend.text = "${"00"}:${"60"} sec"
 
             if (textTimeResend.text.toString() == "${"00"}:${"00"} sec") {
                 resendEnabled = true

@@ -1199,6 +1199,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                         it.data?.let { resp ->
                             binding.textConfirmNow1.visibility = GONE
                             binding.textVerified1.visibility = View.VISIBLE
+                          dialogSuccess(requireActivity(),"Your phone/ email has been verified\n successfully.")
+
                             dialog.dismiss()
                         }
                         toggleLoginButtonEnabled(true, text)
@@ -1231,6 +1233,8 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
                             binding.textConfirmNow.visibility = GONE
                             binding.textVerified.visibility = View.VISIBLE
+                            dialogSuccess(requireActivity(),"Your phone/ email has been verified\n successfully.")
+
                             dialog.dismiss()
                         }
 
@@ -1534,6 +1538,39 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                 requireContext(),
                 resources.getString(R.string.no_internet_dialog_msg)
             )
+        }
+    }
+
+    fun dialogSuccess(context: Context?, text: String) {
+        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
+        dialog?.apply {
+            setCancelable(false)
+            setContentView(R.layout.dialog_success)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            findViewById<ImageView>(R.id.imageCross).setOnClickListener {
+                dismiss()
+            }
+
+            findViewById<TextView>(R.id.text).text = text
+            findViewById<TextView>(R.id.textOkayButton).setOnClickListener {
+//                if (text == "Your account is registered \nsuccessfully") {
+//
+//                    Log.d("Navigation", "Navigating to turnNotificationsFragment")
+//                    navController?.navigate(R.id.turnNotificationsFragment)
+//
+//                } else if (text == "Your password has been changed\n" + " successfully.") {
+//                    dialogLoginEmail(context)
+//                }
+                dismiss()
+            }
+
+            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            show()
         }
     }
 
