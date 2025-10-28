@@ -143,7 +143,7 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
                             if (model.data.user_fname != null){
                                val  name = model.data.user_fname
                                 session?.setFirstName(name)
-                                binding.textTitle.setText("Hi $name, how can we help?")
+                                binding.textTitle.text = "Hi $name, how can we help?"
                             }
                             if (model.data.guides.isNotEmpty()){
                                 adapterAllGuides.updateItem(model.data.guides)

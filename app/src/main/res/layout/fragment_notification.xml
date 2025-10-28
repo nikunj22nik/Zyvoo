@@ -67,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins"
-            android:text="No Notification Found"
+            android:text="No Notifications Yet"
             android:textSize="@dimen/_12sdp"
             android:textStyle="bold"
             android:visibility="gone"
@@ -86,7 +86,6 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/viewTitle"
-
             tools:listitem="@layout/layout_notifications" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -124,17 +124,27 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
         }
 
         clickListeners()
-        binding.tvReadMoreLess.setCollapsedText("Read More")
-        binding.tvReadMoreLess.setExpandedText("Read Less")
+//        binding.tvReadMoreLess.setCollapsedText("Read More")
+//        binding.tvReadMoreLess.setExpandedText("Read Less")
        // binding.tvReadMoreLess.setCollapsedText("show more")
 
-        binding.tvReadMoreLess.setCollapsedTextColor(com.business.zyvo.R.color.green_color_bar)
+//        binding.tvReadMoreLess.setCollapsedTextColor(com.business.zyvo.R.color.green_color_bar)
         setPropertyData()
 
         binding.rlMsgHost.setOnClickListener {
             //  callingJoinChannelApi()
             Log.d("TESTING_ZYVOO","ON click of message host")
             callingMessageClickListner()
+        }
+
+        binding.readMore.setOnClickListener {
+            if ( binding.readMore.text.toString().equals("Read More",true)){
+                binding.readMore.text = "Read Less"
+                binding.tvReadMoreLess.maxLines = Integer.MAX_VALUE
+            }else{
+                binding.readMore.text = "Read More"
+                binding.tvReadMoreLess.maxLines = 3
+            }
         }
 
     }

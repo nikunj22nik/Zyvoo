@@ -16,8 +16,6 @@
         android:background="@color/white"
         android:orientation="vertical"
         tools:context=".fragment.host.BookingScreenHostFragment">
-
-
         <LinearLayout
             android:id="@+id/llHeader"
             android:layout_width="match_parent"
@@ -58,7 +56,6 @@
                 android:src="@drawable/ic_filter" />
 
         </LinearLayout>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewChat"
             android:layout_width="match_parent"
@@ -70,20 +67,17 @@
             android:orientation="vertical"
             android:visibility="visible"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-
         <TextView
             android:id="@+id/tv_noBooking"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/recyclerViewChat"
-            android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/_10sdp"
             android:text="No Booking Found"
-            android:textSize="@dimen/_15sdp"
+            android:textSize="@dimen/_13sdp"
+            android:fontFamily="@font/montserrat_semibold"
+            android:layout_centerInParent="true"
             android:textStyle="bold"
             android:visibility="gone" />
-
-
     </RelativeLayout>
 
 </layout>

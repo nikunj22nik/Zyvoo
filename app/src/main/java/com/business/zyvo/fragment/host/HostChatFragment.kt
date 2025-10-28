@@ -85,7 +85,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("TESTING_ZYVOO_Proj", "onCreate OF CHAT")
-        var sessionManager = SessionManager(requireContext())
+        val sessionManager = SessionManager(requireContext())
         loggedInUserId = sessionManager.getUserId()!!
 
     }
@@ -101,7 +101,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         _binding = FragmentChatBinding.inflate(LayoutInflater.from(requireContext()), container, false)
 
         try {
-
             val myApp = activity?.application as? MyApp
             quickstartConversationsManager = myApp?.conversationsManagerFragment ?: QuickstartConversationsManager()
             quickstartConversationsManager.setListener(this)
@@ -121,13 +120,14 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             }
         }
 
-        var sessionManager = SessionManager(requireContext())
+        val sessionManager = SessionManager(requireContext())
         sessionManager.getUserId().let {
              if (it != null) {
                  userId = it
              }
          }
         searchFuntionality()
+
         return binding.root
     }
 
@@ -218,7 +218,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                         }
                         else ->{
                             val intent = Intent(requireContext(), ChatActivity::class.java)
-                            var channelName: String = data.group_name.toString()
+                            val channelName: String = data.group_name.toString()
                             if (data.receiver_id.equals(userId.toString())) {
                                 intent.putExtra("user_img", data.receiver_image).toString()
                                 SessionManager(requireContext()).getUserId()

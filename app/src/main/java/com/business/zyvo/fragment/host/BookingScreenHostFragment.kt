@@ -62,7 +62,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentBookingScreenHostBinding.inflate(
             LayoutInflater.from(requireContext()),
             container,
@@ -190,16 +190,22 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
                         when (it) {
                             is NetworkResult.Success -> {
                                 adapterMyBookingsAdapter?.updateItem(viewModel.finishedList)
-                                it.data?.let { it1 -> adapterMyBookingsAdapter?.updateItem(it1) }
+                                it.data?.let {
+                                    it1 -> adapterMyBookingsAdapter?.updateItem(it1)
+                                    binding.tvNoBooking.visibility = View.GONE
+                                    binding.recyclerViewChat.visibility = View.VISIBLE
+                                }?:run {
+                                    binding.tvNoBooking.visibility = View.VISIBLE
+                                    binding.recyclerViewChat.visibility = View.GONE
+                                }
                                 callingResetData()
                             }
-
                             is NetworkResult.Error -> {
                                 LoadingUtils.hideDialog()
+                                binding.tvNoBooking.visibility = View.VISIBLE
+                                binding.recyclerViewChat.visibility = View.GONE
                                 callingResetData()
-                            }
-
-                            else -> {
+                            }else -> {
 
                             }
                         }
@@ -216,7 +222,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
 
     private fun callingResetData() {
         lifecycleScope.launch {
-            var sessionManager = SessionManager(requireContext())
+            val sessionManager = SessionManager(requireContext())
             sessionManager.getUserId()?.let {
                 viewModel.markHostBooking(it).collect {
                     when (it) {

@@ -133,52 +133,50 @@
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/textLocationName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="@dimen/_120sdp"
+                        android:layout_marginVertical="@dimen/_5sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:layout_toEndOf="@+id/textMyWorkName"
+                        android:background="@drawable/button_grey_line_bg"
+                        android:drawablePadding="@dimen/_5sdp"
+                        android:fontFamily="@font/poppins"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
+                        app:drawableStartCompat="@drawable/ic_location_line" />
+                    <TextView
+                        android:id="@+id/textMyWorkName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxWidth="@dimen/_150sdp"
+                        android:layout_marginVertical="@dimen/_5sdp"
+                        android:layout_marginStart="@dimen/_15sdp"
+                        android:background="@drawable/button_grey_line_bg"
+                        android:drawablePadding="@dimen/_5sdp"
+                        android:fontFamily="@font/poppins"
+                        android:maxLines="1"
+                        android:paddingHorizontal="@dimen/_10sdp"
+                        android:paddingVertical="@dimen/_7sdp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="13sp"
 
-                <TextView
-                    android:id="@+id/textLocationName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxWidth="@dimen/_120sdp"
-                    android:layout_marginVertical="@dimen/_5sdp"
-                    android:layout_marginStart="@dimen/_15sdp"
-                    android:layout_toEndOf="@+id/textMyWorkName"
-                    android:background="@drawable/button_grey_line_bg"
-                    android:drawablePadding="@dimen/_5sdp"
-                    android:fontFamily="@font/poppins"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/_10sdp"
-                    android:paddingVertical="@dimen/_7sdp"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="13sp"
-                    app:drawableStartCompat="@drawable/ic_location_line" />
-
-
-                <TextView
-                    android:id="@+id/textMyWorkName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxWidth="@dimen/_150sdp"
-                    android:layout_marginVertical="@dimen/_5sdp"
-                    android:layout_marginStart="@dimen/_15sdp"
-                    android:background="@drawable/button_grey_line_bg"
-
-                    android:drawablePadding="@dimen/_5sdp"
-                    android:fontFamily="@font/poppins"
-                    android:maxLines="1"
-                    android:paddingHorizontal="@dimen/_10sdp"
-                    android:paddingVertical="@dimen/_7sdp"
-                    android:text=""
-                    android:textColor="@color/black"
-                    android:textSize="13sp"
-
-                    app:drawableStartCompat="@drawable/ic_add_work_icon" />
-
-
+                        app:drawableStartCompat="@drawable/ic_add_work_icon" />
+                </LinearLayout>
                 <TextView
                     android:id="@+id/textLanguagesName"
                     android:layout_width="wrap_content"
@@ -197,12 +195,7 @@
                     android:textColor="@color/black"
                     android:textSize="13sp"
                     app:drawableStartCompat="@drawable/ic_add_language_icon" />
-
-
-            </RelativeLayout>
-
-
-
+            </LinearLayout>
 
             <com.business.zyvo.activity.guest.ReadMoreTextView
                 android:id="@+id/textAboutDescription"
@@ -211,10 +204,41 @@
                 android:textColor="#000000"
                 android:fontFamily="@font/poppins"
                 app:maxCollapsedLines="3"
+                android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 app:readMoreText="Read More"
                 app:readLessText="Read Less"
                 app:readMoreColor="@color/green_color_bar" />
+
+
+            <TextView
+                android:id="@+id/readMoreTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_13sdp"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="0dp"
+                android:lineSpacingMultiplier="1.0"
+                android:textAlignment="viewStart"
+                android:gravity="start" />
+
+            <TextView
+                android:id="@+id/readMore"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:textColor="@color/green_color_bar"
+                android:fontFamily="@font/poppins"
+                android:textSize="@dimen/_13sdp"
+                android:text="Read More"
+                android:layout_marginHorizontal="@dimen/_15sdp"
+                android:justificationMode="inter_word"
+                android:textAlignment="viewStart"
+                android:gravity="start" />
 
             <View
                 android:layout_width="match_parent"

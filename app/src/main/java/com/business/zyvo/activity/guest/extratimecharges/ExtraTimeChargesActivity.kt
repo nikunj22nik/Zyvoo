@@ -201,11 +201,21 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
 
 
 
-        binding.tvReadMoreLess.setCollapsedText("Read More")
-        binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
+//        binding.tvReadMoreLess.setCollapsedText("Read More")
+//        binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
+//
+//        binding.tvReadMoreLess.setCollapsedText("show more")
+//        binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
 
-        binding.tvReadMoreLess.setCollapsedText("show more")
-        binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
+        binding.readMore.setOnClickListener {
+            if ( binding.readMore.text.toString().equals("Read More",true)){
+                binding.readMore.text = "Read Less"
+                binding.tvReadMoreLess.maxLines = Integer.MAX_VALUE
+            }else{
+                binding.readMore.text = "Read More"
+                binding.tvReadMoreLess.maxLines = 3
+            }
+        }
 
 
         setPropertyData()

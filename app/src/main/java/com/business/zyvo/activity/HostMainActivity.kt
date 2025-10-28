@@ -350,7 +350,6 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                     val destinationId = R.id.bookingScreenHostFragment
                     if (navController.currentDestination?.id != destinationId) {
                         bookingResume()
-
                         findNavController(R.id.fragmentContainerView_main).navigate(R.id.bookingScreenHostFragment)
                     }
 

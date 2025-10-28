@@ -132,9 +132,9 @@ class CheckOutPayActivity : AppCompatActivity(),onClickSelectCard {
             insets
         }
         session = SessionManager(this)
-        binding.tvReadMoreLess.setCollapsedText("Read More")
-        binding.tvReadMoreLess.setExpandedText("Read Less")
-        binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
+//        binding.tvReadMoreLess.setCollapsedText("Read More")
+//        binding.tvReadMoreLess.setExpandedText("Read Less")
+//        binding.tvReadMoreLess.setCollapsedTextColor(R.color.green_color_bar)
 
         intent.extras?.let {
             propertyData = Gson().fromJson(it.getString("propertyData"), PropertyData::class.java)
@@ -164,6 +164,17 @@ class CheckOutPayActivity : AppCompatActivity(),onClickSelectCard {
         setPropertyData()
         getUserCards()
         callingMessageClickListner()
+
+
+        binding.readMore.setOnClickListener {
+            if ( binding.readMore.text.toString().equals("Read More",true)){
+                binding.readMore.text = "Read Less"
+                binding.tvReadMoreLess.maxLines = Integer.MAX_VALUE
+            }else{
+                binding.readMore.text = "Read More"
+                binding.tvReadMoreLess.maxLines = 3
+            }
+        }
 
 
 

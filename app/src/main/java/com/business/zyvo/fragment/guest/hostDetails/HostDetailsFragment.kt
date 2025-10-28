@@ -113,6 +113,18 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
         binding.recyclerReviews.isNestedScrollingEnabled = false
         binding.recyclerReviews.adapter = adapterReview
 
+
+        binding.readMore.setOnClickListener {
+            if ( binding.readMore.text.toString().equals("Read More",true)){
+                binding.readMore.text = "Read Less"
+                binding.readMoreTextView.maxLines = Integer.MAX_VALUE
+            }else{
+                binding.readMore.text = "Read More"
+                binding.readMoreTextView.maxLines = 3
+            }
+        }
+
+
         return binding.root
     }
 
@@ -346,10 +358,33 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                 }
 
 
-                                if (it.about_host?.description != null) {
-                                    binding.textAboutDescription.setFullText(it.about_host.description.trimIndent())
-                                }
+//                                if (it.about_host?.description != null) {
+//                                    binding.textAboutDescription.setFullText(it.about_host.description.trimIndent())
+//                                }
 
+
+                                it.about_host?.description?.let {
+                                    // Set the text
+//                    binding.readMoreTextView.setFullText(it.trimIndent())
+                                    binding.readMoreTextView.text = it.trim()
+                                    if (it.isNotEmpty()){
+                                        binding.readMoreTextView.post {
+                                            val totalLines = binding.readMoreTextView.lineCount
+                                            if (totalLines>3){
+                                                binding.readMore.visibility=View.VISIBLE
+                                                binding.readMore.text="Read More"
+                                                binding.readMoreTextView.maxLines=3
+                                            }else{
+                                                binding.readMore.visibility=View.GONE
+                                            }
+                                            Log.d("TextViewLines", "Total lines: $totalLines")
+                                        }
+                                    }else{
+                                        binding.readMore.visibility=View.GONE
+                                    }
+                                }?:run {
+                                    binding.readMore.visibility=View.GONE
+                                }
 
                                 it.properties?.let { it1 ->
                                     adapter.updateItem(it1)

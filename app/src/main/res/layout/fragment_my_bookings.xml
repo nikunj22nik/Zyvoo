@@ -57,11 +57,11 @@
         android:id="@+id/textNoBookingFound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No Booking found"
+        android:text="No Booking Found"
         android:textSize="@dimen/_13sdp"
         android:visibility="gone"
         android:fontFamily="@font/montserrat_semibold"
-       android:layout_centerInParent="true"
+        android:layout_centerInParent="true"
         />
 
 </RelativeLayout>
