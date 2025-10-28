@@ -954,4 +954,18 @@ interface ZyvoApi {
     @GET("get_property_price_range")
     suspend fun getPropertyPriceRange(
     ): Response<JsonObject>
+
+//    @POST("delete_payout_method")
+//    @FormUrlEncoded
+//    suspend fun deletePayoutMethod(
+//        @Field("user_id") userId :String,
+//        @Field("payout_method_id") payoutMethodId :String
+//    ) : Response<JsonObject>
+
+        @POST("delete_card_stripe")
+    @FormUrlEncoded
+    suspend fun deleteCard(
+        @Field("user_id") userId :String,
+        @Field("payment_method_id") paymentMethodId :String
+    ) : Response<JsonObject>
 }

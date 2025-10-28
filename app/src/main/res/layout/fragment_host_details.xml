@@ -57,6 +57,7 @@
                 <RelativeLayout
                     android:layout_width="@dimen/_90sdp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:layout_height="@dimen/_90sdp">
 
 
@@ -64,6 +65,7 @@
                     android:id="@+id/imageProfilePicture"
                     android:layout_width="@dimen/_90sdp"
                     android:layout_height="@dimen/_90sdp"
+
                     android:background="@drawable/profle_picture_ring"
                     android:src="@drawable/ic_circular_img_user" />
                 <ImageView

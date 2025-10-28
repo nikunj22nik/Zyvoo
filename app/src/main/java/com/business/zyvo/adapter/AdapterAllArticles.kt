@@ -16,7 +16,6 @@ import com.business.zyvo.model.AllArticlesModel
 
 class AdapterAllArticles(var context: Context,
     private var list: MutableList<Article>,
-    private val maxItemsToShow: Int? = null,
     private  val listener : OnClickListener1
 ) : RecyclerView.Adapter<AdapterAllArticles.ItemViewHolder>() {
 
@@ -58,8 +57,7 @@ class AdapterAllArticles(var context: Context,
     }
 
     override fun getItemCount(): Int {
-        return maxItemsToShow?.let { minOf(it, list.size) } ?: list.size
-
+        return list.size
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {

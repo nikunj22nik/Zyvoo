@@ -5746,5 +5746,42 @@ import javax.inject.Inject
      }
 
 
+     override suspend fun deleteCard(
+         userId: String,
+         paymentMethodId: String
+     ): Flow<NetworkResult<String>> = flow {
+         emit(NetworkResult.Loading())
+         try {
+             api.deleteCard(
+                 userId,paymentMethodId
+             ).apply {
+                 if (isSuccessful) {
+                     body()?.let { resp ->
+                         if (resp.has("success") && resp.get("success").asBoolean) {
+                             if (resp.has("message") &&     !resp.get("message").isJsonNull) {
+                                 emit(NetworkResult.Success(resp.get("message").asString))
+                             }
+
+                         } else {
+                             emit(NetworkResult.Error(resp.get("message").asString))
+                         }
+                     } ?: emit(NetworkResult.Error(AppConstant.unKnownError))
+                 } else {
+
+                     emit(
+                         NetworkResult.Error(
+                             ErrorHandler.handleErrorBody(
+                                 this.errorBody()?.string()
+                             )
+                         )
+                     )
+                 }
+             }
+         } catch (e: Exception) {
+             emit(NetworkResult.Error(ErrorHandler.emitError(e)))
+         }
+     }
+
+
  }
 

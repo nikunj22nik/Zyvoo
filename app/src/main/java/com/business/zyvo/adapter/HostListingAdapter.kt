@@ -35,7 +35,7 @@ class HostListingAdapter(private val context: Context, private val maxItemsToSho
             binding.imageAddWish.visibility = View.GONE
             binding.textInstantBook.visibility = View.GONE
             binding.imageReward.visibility = View.GONE
-
+            binding.rlBtmView.visibility = View.GONE
 
            /* binding.cl1.setOnClickListener {
                 //  listener.itemClick(position)
@@ -65,15 +65,12 @@ class HostListingAdapter(private val context: Context, private val maxItemsToSho
                         )
                     }
                 }
-
             })
 
             binding.viewpager2.adapter = viewPagerAdapter
-          binding.viewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            binding.viewpager2.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
             currentItem.property_images?.let { viewPagerAdapter.updateItem(it) }
-
-
             TabLayoutMediator(binding.tabLayoutForIndicator, binding.viewpager2) { _, _ -> }.attach()
 
             binding.textHotelName.text = currentItem.title
@@ -98,8 +95,6 @@ class HostListingAdapter(private val context: Context, private val maxItemsToSho
 
     override fun onBindViewHolder(holder: HostViewHolder, position: Int) {
        val currentItem = list.get(position)
-
-
 
         holder.bind(currentItem)
     }

@@ -47,7 +47,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.business.zyvo.AppConstant
 import com.business.zyvo.AppConstant.Companion.passwordMustConsist
 import com.business.zyvo.BuildConfig
@@ -63,7 +62,6 @@ import com.business.zyvo.R
 import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.HostMainActivity
-import com.business.zyvo.activity.guest.checkout.CheckOutPayActivity
 import com.business.zyvo.activity.guest.checkout.model.MailingAddress
 import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.adapter.AdapterAddPaymentCard
@@ -72,7 +70,6 @@ import com.business.zyvo.adapter.AddLanguageSpeakAdapter
 import com.business.zyvo.adapter.AddLocationAdapter
 import com.business.zyvo.adapter.AddPetsAdapter
 import com.business.zyvo.adapter.AddWorkAdapter
-import com.business.zyvo.adapter.SetPreferred
 import com.business.zyvo.adapter.selectLanguage.LocaleAdapter
 import com.business.zyvo.databinding.FragmentProfileBinding
 import com.business.zyvo.fragment.both.completeProfile.HasName
@@ -84,6 +81,7 @@ import com.business.zyvo.model.AddLanguageModel
 import com.business.zyvo.model.AddLocationModel
 import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.model.AddWorkModel
+import com.business.zyvo.onClickSelectCard
 import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
@@ -125,11 +123,10 @@ import kotlinx.coroutines.withContext
 import java.util.Arrays
 import java.util.Locale
 import java.util.Objects
-import java.util.regex.Pattern
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,
-    SetPreferred {
+    onClickSelectCard{
     private lateinit var binding: FragmentProfileBinding
     private lateinit var commonAuthWorkUtils: CommonAuthWorkUtils
     private lateinit var addLocationAdapter: AddLocationAdapter
@@ -1175,9 +1172,12 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
             startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
-            countDownTimer!!.cancel()
+//            countDownTimer!!.cancel()
+//
+//            textTimeResend.text = "${"00"}:${"00"} sec"
+            countDownTimer!!.start()
 
-            textTimeResend.text = "${"00"}:${"00"} sec"
+            textTimeResend.text = "${"00"}:${"60"} sec"
 
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true
@@ -2624,9 +2624,12 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-            countDownTimer!!.cancel()
+//            countDownTimer!!.cancel()
+//
+//            textTimeResend.text = "${"00"}:${"00"} sec"
+            countDownTimer!!.start()
 
-            textTimeResend.text = "${"00"}:${"00"} sec"
+            textTimeResend.text = "${"00"}:${"60"} sec"
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true
                 textResend.setTextColor(
@@ -2696,7 +2699,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
         }
     }
 
-    override fun set(position: Int) {
+     fun setPrimary(position: Int) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 profileViewModel.setPreferredCard(
@@ -2706,7 +2709,12 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                getUserCards()
+                                userCardsList.forEach { card ->
+                                    card.is_preferred = false
+                                }
+                                userCardsList[position].is_preferred = true
+                                selectuserCard = userCardsList[position]
+                                addPaymentCardAdapter.updateItem(userCardsList)
                                 showToast(requireContext(), resp.first)
                             }
                         }
@@ -3239,12 +3247,13 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-            countDownTimer!!.cancel()
+//            countDownTimer!!.cancel()
+//
+//            textTimeResend.text = "${"00"}:${"00"} sec"
 
+            countDownTimer!!.start()
 
-
-
-            textTimeResend.text = "${"00"}:${"00"} sec"
+            textTimeResend.text = "${"00"}:${"60"} sec"
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true
                 textResend.setTextColor(
@@ -4260,5 +4269,65 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     override fun onDestroyView() {
         super.onDestroyView()
+    }
+
+    override fun itemClickCard(pos: Int, type: String) {
+        val cardIdSelect=userCardsList[pos].card_id
+        when (type){
+            "delete" ->{
+                deleteCardMethods(cardIdSelect,pos)
+            }
+            "primary" ->{
+                setPrimary(pos)
+            }
+        }
+    }
+
+    private fun deleteCardMethods(id: String,pos:Int) {
+        lifecycleScope.launch {
+            profileViewModel.networkMonitor.isConnected
+                .distinctUntilChanged()
+                .collect { isConn ->
+                    if (!isConn) {
+                        LoadingUtils.showErrorDialog(
+                            requireContext(),
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        deleteCard(id,pos)
+                    }
+
+                }
+        }
+    }
+
+    private fun deleteCard(id: String,position: Int) {
+        Log.d("idType", id)
+        lifecycleScope.launch {
+            profileViewModel.deleteCard(session?.getUserId().toString(), id).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        userCardsList.removeAt(position)
+                        addPaymentCardAdapter.updateItem(userCardsList)
+                        it.data?.let { it1 -> showSuccessDialog(requireContext(), it1) }
+                        if (userCardsList.isNotEmpty()){
+                            binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
+                        }else{
+                            binding.recyclerViewPaymentCardList.visibility = View.GONE
+                        }
+                    }
+                    is NetworkResult.Error -> {
+                        showErrorDialog(requireContext(), it.message!!)
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+
+
+        }
     }
 }

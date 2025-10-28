@@ -7,7 +7,7 @@ data class UserCards(  val card_id: String = "",
                        val exp_year: String = "",
                        val cardholder_name: String = "",
                        val billing_address: BillingAddress?,
-                       val is_preferred: Boolean = false)
+                       var is_preferred: Boolean = false)
 
 data class BillingAddress(
     val city: String? = "",

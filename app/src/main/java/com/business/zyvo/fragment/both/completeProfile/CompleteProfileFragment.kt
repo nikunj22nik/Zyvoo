@@ -1087,9 +1087,12 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
 
             startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
-            countDownTimer!!.cancel()
+//            countDownTimer!!.cancel()
+//
+//            textTimeResend.text = "${"00"}:${"00"} sec"
+            countDownTimer!!.start()
 
-            textTimeResend.text = "${"00"}:${"00"} sec"
+            textTimeResend.text = "${"00"}:${"60"} sec"
 
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true

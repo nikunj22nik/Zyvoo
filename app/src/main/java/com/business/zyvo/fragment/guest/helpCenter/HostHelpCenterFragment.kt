@@ -27,6 +27,7 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlin.collections.take
 
 
 @AndroidEntryPoint
@@ -59,7 +60,7 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
         binding.recyclerViewGuests.adapter = adapterAllGuides
 
         adapterAllArticles =
-            AdapterAllArticles(requireContext(), arrayListOf(), maxItemsToShow = 3, this)
+            AdapterAllArticles(requireContext(), arrayListOf(),  this)
         binding.recyclerViewArticle.adapter = adapterAllArticles
 
         binding.textBrowseAllGuides.setOnClickListener(this)
@@ -139,17 +140,20 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
                                 it.data,
                                 HelpCenterResponse::class.java
                             )
-
                             if (model.data.user_fname != null){
                                val  name = model.data.user_fname
                                 session?.setFirstName(name)
                                 binding.textTitle.setText("Hi $name, how can we help?")
                             }
-
-                            adapterAllGuides.updateItem(model.data.guides)
-                            adapterAllArticles.updateItem(model.data.articles)
+                            if (model.data.guides.isNotEmpty()){
+                                adapterAllGuides.updateItem(model.data.guides)
+                            }
+                            if (model.data.articles.isNotEmpty()){
+                             //   val itemsToShow = model.data.articles.take(6)
+                              //  adapterAllArticles.updateItem(itemsToShow as MutableList)
+                                adapterAllArticles.updateItem(model.data.articles)
+                            }
                         }
-
                     }
 
                     is NetworkResult.Error -> {
@@ -160,11 +164,8 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
                     else -> {
 
                     }
-
                 }
             }
-
-
         }
     }
 

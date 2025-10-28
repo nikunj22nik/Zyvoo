@@ -734,6 +734,12 @@ interface ZyvoRepository {
     suspend fun getPropertyPriceRange(
     ) :Flow<NetworkResult<JsonObject>>
 
+
+
+    suspend fun deleteCard(
+        userId :String,
+        paymentMethodId :String,
+    ) : Flow<NetworkResult<String>>
 }
 
 

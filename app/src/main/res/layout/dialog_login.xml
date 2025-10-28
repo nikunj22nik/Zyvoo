@@ -240,7 +240,7 @@
         android:id="@+id/llSocail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:weightSum="3"
+        android:weightSum="4"
         android:layout_marginTop="@dimen/_10sdp"
         android:layout_marginHorizontal="@dimen/_60sdp"
         app:layout_constraintTop_toBottomOf="@id/textLoginWith"
@@ -257,6 +257,12 @@
             android:layout_height="@dimen/_25sdp"
             android:src="@drawable/ic_facebook_icon"
             android:id="@+id/facebookLogin"
+            android:layout_weight="1"/>
+        <ImageView
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:src="@drawable/ic_apple_login"
+            android:id="@+id/appleLogin"
             android:layout_weight="1"/>
         <ImageView
             android:id="@+id/imageEmailSocial"

@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.R
 import com.business.zyvo.databinding.AdapterCardNumbersBinding
+import com.business.zyvo.fragment.guest.profile.model.BankAccountPayout
 import com.business.zyvo.fragment.guest.profile.model.CardPayout
 import com.business.zyvo.model.CountryLanguage
 import com.business.zyvo.onItemClickData
@@ -75,6 +76,13 @@ class CardNumberAdapterPayout(private val context: Context, private var list: Mu
         notifyItemRangeInserted(startPosition, newItems.size)
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItem(listData: MutableList<CardPayout>)
+    {
+        list = listData
+        notifyDataSetChanged()
+    }
+
     private fun showPopupWindow(anchorView: View,position: Int, id: String) {
         // Inflate the custom layout for the popup menu
         val popupView =
@@ -85,7 +93,7 @@ class CardNumberAdapterPayout(private val context: Context, private var list: Mu
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemSetPrimary).setOnClickListener {
-            listner.itemClick(position ,"setPrimary",  id)
+            listner.itemClick(position ,"setPrimaryCard",  id)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
@@ -156,7 +164,7 @@ class CardNumberAdapterPayout(private val context: Context, private var list: Mu
 
 
             findViewById<RelativeLayout>(R.id.yes_btn).setOnClickListener {
-                listner.itemClick(position,"delete",id)
+                listner.itemClick(position,"deleteCard",id)
                 dismiss()
             }
             findViewById<RelativeLayout>(R.id.rl_cancel_btn).setOnClickListener {

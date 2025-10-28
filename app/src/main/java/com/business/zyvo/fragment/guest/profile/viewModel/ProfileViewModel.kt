@@ -1,9 +1,13 @@
 package com.business.zyvo.fragment.guest.profile.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
+import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.model.AddPaymentCardModel
 import com.business.zyvo.repository.ZyvoRepository
@@ -842,6 +846,23 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    suspend fun deleteCard( userId: String, paymentMethodId: String):
+            Flow<NetworkResult<String>>{
+        return repository.deleteCard(userId,paymentMethodId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
+
+
 
 
 }

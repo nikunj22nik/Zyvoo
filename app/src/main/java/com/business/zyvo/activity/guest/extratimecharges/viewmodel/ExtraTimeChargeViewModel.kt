@@ -121,4 +121,18 @@ class ExtraTimeChargeViewModel  @Inject constructor(private val repository: Zyvo
         }
     }
 
+    suspend fun deleteCard( userId: String, paymentMethodId: String):
+            Flow<NetworkResult<String>>{
+        return repository.deleteCard(userId,paymentMethodId).onEach {
+            when(it){
+                is NetworkResult.Loading -> {
+                    isLoading.value = true
+                } is NetworkResult.Success -> {
+                isLoading.value = false
+            } else -> {
+                isLoading.value = false
+            }
+            }
+        }
+    }
 }

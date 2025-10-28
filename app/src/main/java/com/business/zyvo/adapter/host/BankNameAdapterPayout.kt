@@ -1,5 +1,6 @@
 package com.business.zyvo.adapter.host
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
@@ -16,6 +17,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
+import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.databinding.AdapterBankNameBinding
 import com.business.zyvo.fragment.guest.profile.model.BankAccountPayout
 import com.business.zyvo.model.CountryLanguage
@@ -69,6 +71,13 @@ class BankNameAdapterPayout(private val context: Context, private var list: Muta
         list.clear()
         list.addAll(newItems)
         notifyItemRangeInserted(startPosition, newItems.size)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateItem(listData: MutableList<BankAccountPayout>)
+    {
+        list = listData
+        notifyDataSetChanged()
     }
 
     private fun showPopupWindow(anchorView: View,position: Int, id: String) {

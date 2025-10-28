@@ -39,6 +39,7 @@ import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
 import com.business.zyvo.activity.ChatActivity
@@ -54,6 +55,7 @@ import com.business.zyvo.adapter.SetPreferred
 import com.business.zyvo.adapter.guest.AdapterProAddOn
 import com.business.zyvo.databinding.ActivityCheckOutPayBinding
 import com.business.zyvo.locationManager.LocationManager
+import com.business.zyvo.onClickSelectCard
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
@@ -79,6 +81,7 @@ import com.stripe.android.model.CardParams
 import com.stripe.android.model.Token
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.Arrays
@@ -86,7 +89,7 @@ import java.util.Calendar
 import java.util.Objects
 
 @AndroidEntryPoint
-class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
+class CheckOutPayActivity : AppCompatActivity(),onClickSelectCard {
 
     lateinit var binding: ActivityCheckOutPayBinding
     lateinit var adapterAddon: AdapterProAddOn
@@ -1341,38 +1344,7 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
             .sumOf { it.price.toDoubleOrNull() ?: 0.0 }
     }
 
-    override fun set(position: Int) {
-        if (NetworkMonitorCheck._isConnected.value) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                checkOutPayViewModel.setPreferredCard(
-                    session?.getUserId().toString(),
-                    userCardsList?.get(position)?.card_id!!
-                ).collect {
-                    when (it) {
-                        is NetworkResult.Success -> {
-                            it.data?.let { resp ->
-                                getUserCards()
-                                showToast(this@CheckOutPayActivity, resp.first)
-                            }
-                        }
 
-                        is NetworkResult.Error -> {
-                            showErrorDialog(this@CheckOutPayActivity, it.message!!)
-                        }
-
-                        else -> {
-                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-                        }
-                    }
-                }
-            }
-        } else {
-            showErrorDialog(
-                this,
-                resources.getString(R.string.no_internet_dialog_msg)
-            )
-        }
-    }
 
     private fun bookProperty(
         property_id: String, booking_date: String, booking_start: String,
@@ -1512,7 +1484,95 @@ class CheckOutPayActivity : AppCompatActivity(), SetPreferred {
     }
 
 
+    override fun itemClickCard(pos: Int, type: String) {
+        val cardIdSelect=userCardsList[pos].card_id
+        when (type){
+            "delete" ->{
+                deleteCardMethods(cardIdSelect,pos)
+            }
+            "primary" ->{
+                setPrimary(pos)
+            }
+        }
+    }
+
+    fun setPrimary(position: Int) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                checkOutPayViewModel.setPreferredCard(
+                    session?.getUserId().toString(),
+                    userCardsList[position].card_id
+                ).collect {
+                    when (it) {
+                        is NetworkResult.Success -> {
+                            it.data?.let { resp ->
+                                userCardsList.forEach { card ->
+                                    card.is_preferred = false
+                                }
+                                userCardsList[position].is_preferred = true
+                                selectuserCard = userCardsList[position]
+                                addPaymentCardAdapter.updateItem(userCardsList)
+                                showToast(this@CheckOutPayActivity, resp.first)
+                            }
+                        }
+
+                        is NetworkResult.Error -> {
+                            showSuccessDialog(this@CheckOutPayActivity, it.message!!)
+                        }
+
+                        else -> {
+                            Log.v(ErrorDialog.TAG, "error::" + it.message)
+                        }
+                    }
+                }
+            }
+        } else {
+            showErrorDialog(this@CheckOutPayActivity, resources.getString(R.string.no_internet_dialog_msg))
+        }
+    }
+    private fun deleteCardMethods(id: String,pos:Int) {
+        lifecycleScope.launch {
+            if (!NetworkMonitorCheck._isConnected.value) {
+                        LoadingUtils.showErrorDialog(
+                            this@CheckOutPayActivity,
+                            resources.getString(R.string.no_internet_dialog_msg)
+                        )
+                    } else {
+                        deleteCard(id,pos)
+                    }
+
+                }
+        }
 
 
+    private fun deleteCard(id: String,position: Int) {
+        Log.d("idType", id)
+        lifecycleScope.launch {
+            checkOutPayViewModel.deleteCard(session?.getUserId().toString(), id).collect {
+                when (it) {
+                    is NetworkResult.Success -> {
+                        userCardsList.removeAt(position)
+                        addPaymentCardAdapter.updateItem(userCardsList)
+                        it.data?.let { it1 -> showSuccessDialog(this@CheckOutPayActivity, it1) }
+                        if (userCardsList.isNotEmpty()){
+                            binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
+                        }else{
+                            binding.recyclerViewPaymentCardList.visibility = View.GONE
+                        }
+                    }
+                    is NetworkResult.Error -> {
+                        showErrorDialog(this@CheckOutPayActivity, it.message!!)
+                    }
+
+                    else -> {
+
+                    }
+
+                }
+            }
+
+
+        }
+    }
 
 }

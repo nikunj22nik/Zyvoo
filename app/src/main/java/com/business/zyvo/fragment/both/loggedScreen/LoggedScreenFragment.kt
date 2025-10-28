@@ -104,6 +104,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResult
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.messaging.FirebaseMessaging
@@ -114,6 +115,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
+import com.google.firebase.auth.OAuthProvider
 
 @AndroidEntryPoint
 class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, OnClickListener1 {
@@ -699,6 +701,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val imageCross = findViewById<ImageView>(R.id.imageCross)
             val imageEmailSocial = findViewById<ImageView>(R.id.imageEmailSocial)
             val googleLoginBtn = findViewById<ImageView>(R.id.googleLogin)
+            val appleLoginBtn = findViewById<ImageView>(R.id.appleLogin)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
             val checkBox = findViewById<CheckBox>(R.id.checkBox)
@@ -830,8 +833,173 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     )
                 }
             }
+            appleLoginBtn.setOnClickListener{
+                if (NetworkMonitorCheck._isConnected.value) {
+                    dismiss()
+                    if (islogTypeMobile){
+                       // startGoogleSignIn("register")
+                        signInWithApple("register")
+                    }else{
+                      //  startGoogleSignIn("login")
+                        signInWithApple("login")
+                    }
+
+                } else {
+                    showErrorDialog(
+                        requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                }
+            }
+
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
+        }
+    }
+
+/*
+    fun signInWithApple() {
+        val provider = OAuthProvider.newBuilder("apple.com")
+        provider.addCustomParameter("locale", "en") // optional
+
+        val pending = auth.pendingAuthResult
+        if (pending != null) {
+            pending
+                .addOnSuccessListener { result ->
+                    val user = result.user
+                    Log.d("AppleLogin", "Existing sign-in: ${user?.email}")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("AppleLogin", "Error: ${e.message}")
+                }
+        } else {
+            auth.startActivityForSignInWithProvider(requireActivity(), provider.build())
+                .addOnSuccessListener { result ->
+                    val user = result.user
+                    val email = user?.email
+                    val name = user?.displayName
+                    Log.d("AppleLogin", "Apple sign-in success: $email")
+
+                    // TODO: agar backend me save karna hai to yahan call karo
+                }
+                .addOnFailureListener { e ->
+                    Log.e("AppleLogin", "Apple sign-in failed: ${e.message}")
+                }
+        }
+    }
+
+ */
+
+
+    fun signInWithApple(type: String) {
+    val provider = OAuthProvider.newBuilder("apple.com")
+    provider.addCustomParameter("locale", "en")
+
+    val pending = auth.pendingAuthResult
+    if (pending != null) {
+        pending
+            .addOnSuccessListener { result ->
+                handleAppleSignInSuccess(result, type)
+            }
+            .addOnFailureListener { e ->
+                Log.e("AppleLogin", "Error: ${e.message}")
+                showErrorDialog(requireContext(), "Apple sign-in failed: ${e.message}")
+            }
+    } else {
+        auth.startActivityForSignInWithProvider(requireActivity(), provider.build())
+            .addOnSuccessListener { result ->
+                handleAppleSignInSuccess(result, type)
+            }
+            .addOnFailureListener { e ->
+                Log.e("AppleLogin", "Apple sign-in failed: ${e.message}")
+                showErrorDialog(requireContext(), "Apple sign-in failed: ${e.message}")
+            }
+    }
+}
+
+private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
+    val user = result.user
+    val email = user?.email ?: ""
+    val displayName = user?.displayName ?: ""
+
+    // Apple se milne wala data
+    val firstName = displayName.substringBefore(" ")
+    val lastName = displayName.substringAfter(" ", "")
+    val appleId = user?.uid ?: ""
+
+    Log.d("AppleUser", """
+        ID: $appleId
+        Name: $displayName
+        First Name: $firstName
+        Last Name: $lastName
+        Email: $email
+    """.trimIndent())
+
+    callSocialApi1(firstName, lastName, signInType, "apple", appleId, email)
+}
+    private fun callSocialApi1(firstName: String, lastName: String, signInType: String, provider: String, socialId: String, email: String) {
+        if (NetworkMonitorCheck._isConnected.value) {
+            lifecycleScope.launch(Dispatchers.Main) {
+                try {
+                    loggedScreenViewModel.getSocialAPI(
+                        firstName,
+                        lastName,
+                        email,
+                        socialId,
+                        token,
+                        "Android"
+                    ).collect { result ->
+                        when (result) {
+                            is NetworkResult.Success -> {
+                                result.data?.let { resp ->
+                                    try {
+                                        val data: Data = Gson().fromJson(resp, Data::class.java)
+                                        sessionManager.setUserId(data.user_id)
+                                        sessionManager.setAuthToken(data.token)
+                                        data.user_image?.let { sessionManager.setUserImage(it) }
+
+                                        val bundle = Bundle().apply {
+                                            putString("data", Gson().toJson(data))
+                                            putString("type", provider)
+                                            putString("email", email)
+                                        }
+
+                                        if (signInType == "login") {
+                                            session?.setLoginType("emailAddress")
+                                            val intent = Intent(
+                                                requireActivity(),
+                                                GuesMain::class.java
+                                            ).apply {
+                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                            }
+                                            startActivity(intent)
+                                        } else if (signInType == "register") {
+                                            navController.navigate(
+                                                R.id.completeProfileFragment,
+                                                bundle
+                                            )
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.e("SocialLogin", "Error parsing response: ${e.localizedMessage}", e)
+                                        showErrorDialog(requireContext(), "Parsing error occurred")
+                                    }
+                                }
+                            }
+                            is NetworkResult.Error -> {
+                                showErrorDialog(requireContext(), result.message ?: "Unknown error")
+                            }
+                            else -> {
+                                Log.v("ErrorDialog", "Unexpected result: ${result.message}")
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.e("SocialApiError", "Exception occurred: ${e.localizedMessage}", e)
+                    showErrorDialog(requireContext(), "Unexpected error occurred")
+                }
+            }
+        } else {
+            showErrorDialog(requireContext(), getString(R.string.no_internet_dialog_msg))
         }
     }
 

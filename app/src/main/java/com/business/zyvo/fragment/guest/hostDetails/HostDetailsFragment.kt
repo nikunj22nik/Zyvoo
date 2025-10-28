@@ -266,7 +266,10 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                     .error(R.drawable.ic_circular_img_user)
                                     .into(binding.imageProfilePicture)
 
-                                binding.textListing.text = it.host?.name + "'s Listings"
+                              //  binding.textListing.text = it.host?.name + "'s Listings"
+                                val firstName = it.host?.name?.split(" ")?.firstOrNull() ?: ""
+                                binding.textListing.text = "$firstName's Listings"
+
                                 binding.textHostName.text = it.host?.name
 
                                 it.properties?.let { list->

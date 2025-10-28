@@ -48,7 +48,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.target.SimpleTarget
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -77,7 +76,6 @@ import com.business.zyvo.adapter.AddLanguageSpeakAdapter
 import com.business.zyvo.adapter.AddLocationAdapter
 import com.business.zyvo.adapter.AddPetsAdapter
 import com.business.zyvo.adapter.AddWorkAdapter
-import com.business.zyvo.adapter.SetPreferred
 import com.business.zyvo.adapter.host.BankNameAdapter
 import com.business.zyvo.adapter.host.BankNameAdapterPayout
 import com.business.zyvo.adapter.host.CardNumberAdapter
@@ -134,8 +132,8 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.widget.addTextChangedListener
 import com.business.zyvo.AppConstant.Companion.passwordMustConsist
 import com.business.zyvo.activity.HostMainActivity
-import com.business.zyvo.activity.guest.checkout.CheckOutPayActivity
 import com.business.zyvo.locationManager.LocationManager
+import com.business.zyvo.onClickSelectCard
 import com.business.zyvo.utils.MultipartUtils
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.widget.AutocompleteActivity
@@ -143,8 +141,7 @@ import java.util.Arrays
 
 
  @AndroidEntryPoint
- class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,
-    SetPreferred {
+ class HostProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickListener,onClickSelectCard{
 
     private var _binding: FragmentHostProfileBinding? = null
     private val binding get() = _binding!!
@@ -1125,11 +1122,16 @@ import java.util.Arrays
             }
 
             "setPrimary" -> {
-                setPrimaryPayoutMethods(enteredText)
+                setPrimaryPayoutMethods(enteredText,text,obj)
             }
-
+            "setPrimaryCard" -> {
+                setPrimaryPayoutMethods(enteredText,text,obj)
+            }
             "delete" -> {
-                deletePayoutMethods(enteredText)
+                deletePayoutMethods(enteredText,text,obj)
+            }
+            "deleteCard" -> {
+                deletePayoutMethods(enteredText,text,obj)
             }
         }
     }
@@ -1661,9 +1663,12 @@ import java.util.Arrays
             }
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-            countDownTimer!!.cancel()
+//            countDownTimer!!.cancel()
+//
+//            textTimeResend.text = "${"00"}:${"00"} sec"
+            countDownTimer!!.start()
 
-            textTimeResend.text = "${"00"}:${"00"} sec"
+            textTimeResend.text = "${"00"}:${"60"} sec"
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true
                 textResend.setTextColor(
@@ -2234,9 +2239,12 @@ import java.util.Arrays
 
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-            countDownTimer!!.cancel()
+//            countDownTimer!!.cancel()
+//
+//            textTimeResend.text = "${"00"}:${"00"} sec"
+            countDownTimer!!.start()
 
-            textTimeResend.text = "${"00"}:${"00"} sec"
+            textTimeResend.text = "${"00"}:${"60"} sec"
 
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true
@@ -2765,9 +2773,12 @@ import java.util.Arrays
 
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-            countDownTimer!!.cancel()
+//            countDownTimer!!.cancel()
+//
+//            textTimeResend.text = "${"00"}:${"00"} sec"
+            countDownTimer!!.start()
 
-            textTimeResend.text = "${"00"}:${"00"} sec"
+            textTimeResend.text = "${"00"}:${"60"} sec"
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true
                 textResend.setTextColor(
@@ -3312,9 +3323,12 @@ import java.util.Arrays
 
             startCountDownTimer(requireContext(), textTimeResend, rlResendLine, textResend)
 
-            countDownTimer!!.cancel()
+//            countDownTimer!!.cancel()
+//
+//            textTimeResend.text = "${"00"}:${"00"} sec"
+            countDownTimer!!.start()
 
-            textTimeResend.text = "${"00"}:${"00"} sec"
+            textTimeResend.text = "${"00"}:${"60"} sec"
 
             if (textTimeResend.text == "${"00"}:${"00"} sec") {
                 resendEnabled = true
@@ -4355,7 +4369,7 @@ import java.util.Arrays
     }
 
 
-    private fun setPrimaryPayoutMethods(id: String) {
+    private fun setPrimaryPayoutMethods(id: String, type: String, position: Int) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -4366,7 +4380,7 @@ import java.util.Arrays
                             resources.getString(R.string.no_internet_dialog_msg)
                         )
                     } else {
-                        setPrimaryPayoutApi(id)
+                        setPrimaryPayoutApi(id,type,position)
                     }
 
                 }
@@ -4374,7 +4388,7 @@ import java.util.Arrays
     }
 
 
-    private fun setPrimaryPayoutApi(id: String) {
+    private fun setPrimaryPayoutApi(id: String, type: String, position: Int) {
         Log.d("idType", id)
         lifecycleScope.launch {
             profileViewModel.setPrimaryPayoutMethod(session?.getUserId().toString(), id).collect {
@@ -4382,7 +4396,43 @@ import java.util.Arrays
 
                     is NetworkResult.Success -> {
                         it.data?.let { it1 -> showSuccessDialog(requireContext(), it1) }
-                        getPayoutApi()
+
+                        when(type){
+                            "setPrimary"->{
+                                bankListPayout.forEach { card ->
+                                    card.defaultForCurrency = false
+                                }
+                                bankListPayout[position].defaultForCurrency = true
+
+                                bankNameAdapterPayout.updateItem(bankListPayout)
+                                bankNameAdapterPayout.notifyDataSetChanged()
+                                cardListPayout.forEach { card ->
+                                    card.defaultForCurrency = false
+                                }
+                                cardNumberAdapterPayout.updateItem(cardListPayout)
+                                cardNumberAdapterPayout.notifyDataSetChanged()
+                            }
+                            "setPrimaryCard"->{
+                                cardListPayout.forEach { card ->
+                                    card.defaultForCurrency = false
+                                }
+                                cardListPayout[position].defaultForCurrency = true
+
+                                bankListPayout.forEach { card ->
+                                    card.defaultForCurrency = false
+                                }
+//                                bankListPayout[position].defaultForCurrency = true
+
+                                bankNameAdapterPayout.updateItem(bankListPayout)
+                                bankNameAdapterPayout.notifyDataSetChanged()
+
+                                cardNumberAdapterPayout.updateItem(cardListPayout)
+                                cardNumberAdapterPayout.notifyDataSetChanged()
+                            }
+                        }
+
+
+                 // getPayoutApi()
 
                     }
 
@@ -4400,7 +4450,7 @@ import java.util.Arrays
         }
     }
 
-    private fun deletePayoutMethods(id: String) {
+    private fun deletePayoutMethods(id: String, type: String, position: Int) {
         lifecycleScope.launch {
             profileViewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -4411,7 +4461,7 @@ import java.util.Arrays
                             resources.getString(R.string.no_internet_dialog_msg)
                         )
                     } else {
-                        deletePayoutApi(id)
+                        deletePayoutApi(id,type,position)
                     }
 
                 }
@@ -4419,7 +4469,7 @@ import java.util.Arrays
     }
 
 
-    private fun deletePayoutApi(id: String) {
+    private fun deletePayoutApi(id: String, type: String,position: Int) {
         Log.d("idType", id)
         lifecycleScope.launch {
             profileViewModel.deletePayoutMethod(session?.getUserId().toString(), id).collect {
@@ -4427,7 +4477,35 @@ import java.util.Arrays
 
                     is NetworkResult.Success -> {
                         it.data?.let { it1 -> showSuccessDialog(requireContext(), it1) }
-                        getPayoutApi()
+
+                        when (type) {
+                            "deleteCard" -> {
+                                // Card list se remove karein
+                                if (position < cardListPayout.size) {
+                                    cardListPayout.removeAt(position)
+                                    cardNumberAdapterPayout.updateItem(cardListPayout)
+
+                                    // Visibility update karein
+                                    if (cardListPayout.isEmpty()) {
+                                        binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
+                                        binding.textCardNoDataFound.visibility = View.VISIBLE
+                                    }
+                                }
+                            }
+                            "delete" -> {
+                                // Bank list se remove karein
+                                if (position < bankListPayout.size) {
+                                    bankListPayout.removeAt(position)
+                                    bankNameAdapterPayout.updateItem(bankListPayout)
+                                    // Visibility update karein
+                                    if (bankListPayout.isEmpty()) {
+                                        binding.recyclerViewPaymentCardListPayOut.visibility = View.GONE
+                                        binding.textBankNoDataFound.visibility = View.VISIBLE
+                                    }
+                                }
+                            }
+                        }
+                     //  getPayoutApi()
 
                     }
 
@@ -4763,35 +4841,40 @@ import java.util.Arrays
         }
     }
 
-    override fun set(position: Int) {
-        if (NetworkMonitorCheck._isConnected.value) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                profileViewModel.setPreferredCard(
-                    session?.getUserId().toString(),
-                    userCardsList[position].card_id
-                ).collect {
-                    when (it) {
-                        is NetworkResult.Success -> {
-                            it.data?.let { resp ->
-                                getUserCards()
-                                showToast(requireContext(), resp.first)
-                            }
-                        }
+     fun setPrimary(position: Int) {
+         if (NetworkMonitorCheck._isConnected.value) {
+             lifecycleScope.launch(Dispatchers.Main) {
+                 profileViewModel.setPreferredCard(
+                     session?.getUserId().toString(),
+                     userCardsList[position].card_id
+                 ).collect {
+                     when (it) {
+                         is NetworkResult.Success -> {
+                             it.data?.let { resp ->
+                                 userCardsList.forEach { card ->
+                                     card.is_preferred = false
+                                 }
+                                 userCardsList[position].is_preferred = true
+                                 selectuserCard = userCardsList[position]
+                                 addPaymentCardAdapter.updateItem(userCardsList)
+                                 showToast(requireContext(), resp.first)
+                             }
+                         }
 
-                        is NetworkResult.Error -> {
-                            showSuccessDialog(requireContext(), it.message!!)
-                        }
+                         is NetworkResult.Error -> {
+                             showSuccessDialog(requireContext(), it.message!!)
+                         }
 
-                        else -> {
-                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-                        }
-                    }
-                }
-            }
-        } else {
-            showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
-        }
-    }
+                         else -> {
+                             Log.v(ErrorDialog.TAG, "error::" + it.message)
+                         }
+                     }
+                 }
+             }
+         } else {
+             showErrorDialog(requireContext(), resources.getString(R.string.no_internet_dialog_msg))
+         }
+     }
 
     private fun launchVerifyIdentity() {
         val TEMPLATE_ID = BuildConfig.templateID
@@ -4968,6 +5051,66 @@ import java.util.Arrays
         super.onDestroyView()
         _binding = null
     }
-}
+
+     override fun itemClickCard(pos: Int, type: String) {
+         val cardIdSelect=userCardsList[pos].card_id
+         when (type){
+             "delete" ->{
+                 deleteCardMethods(cardIdSelect,pos)
+             }
+             "primary" ->{
+                 setPrimary(pos)
+             }
+         }
+     }
+
+     private fun deleteCardMethods(id: String,pos:Int) {
+         lifecycleScope.launch {
+             profileViewModel.networkMonitor.isConnected
+                 .distinctUntilChanged()
+                 .collect { isConn ->
+                     if (!isConn) {
+                         LoadingUtils.showErrorDialog(
+                             requireContext(),
+                             resources.getString(R.string.no_internet_dialog_msg)
+                         )
+                     } else {
+                         deleteCard(id,pos)
+                     }
+
+                 }
+         }
+     }
+
+     private fun deleteCard(id: String,position: Int) {
+         Log.d("idType", id)
+         lifecycleScope.launch {
+             profileViewModel.deleteCard(session?.getUserId().toString(), id).collect {
+                 when (it) {
+                     is NetworkResult.Success -> {
+                         userCardsList.removeAt(position)
+                         addPaymentCardAdapter.updateItem(userCardsList)
+                         it.data?.let { it1 -> showSuccessDialog(requireContext(), it1) }
+                         if (userCardsList.isNotEmpty()){
+                             binding.recyclerViewPaymentCardList.visibility = View.VISIBLE
+                         }else{
+                             binding.recyclerViewPaymentCardList.visibility = View.GONE
+                         }
+                     }
+                     is NetworkResult.Error -> {
+                         showErrorDialog(requireContext(), it.message!!)
+                     }
+
+                     else -> {
+
+                     }
+
+                 }
+             }
+
+
+         }
+     }
+ }
 
 
