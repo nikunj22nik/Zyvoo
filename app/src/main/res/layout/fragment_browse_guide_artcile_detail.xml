@@ -181,13 +181,16 @@
                 android:id="@+id/textDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10sdp"
+                android:layout_marginHorizontal="@dimen/_10sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:fontFamily="@font/poppins_light"
                 android:textColor="@color/black"
                 android:justificationMode="inter_word"
-                android:includeFontPadding="false"
-                android:textSize="16sp" />
+                android:textAlignment="viewStart"
+                android:gravity="start"
+                android:lineSpacingExtra="0dp"
+                android:lineSpacingMultiplier="1.0"
+                android:textSize="13sp" />
 
             <View
                 android:layout_width="match_parent"

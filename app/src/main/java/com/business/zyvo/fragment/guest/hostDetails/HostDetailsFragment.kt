@@ -294,6 +294,8 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                     }else{
                                         binding.ivStar.visibility = View.GONE
                                     }
+                                }?:run {
+                                    binding.ivStar.visibility = View.GONE
                                 }
 
                                 it.about_host?.host_profession?.let { professions ->
@@ -310,6 +312,8 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                     } else {
                                         binding.textMyWorkName.visibility = View.GONE
                                     }
+                                }?:run {
+                                    binding.textMyWorkName.visibility = View.GONE
                                 }
 
 
@@ -323,7 +327,7 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                 }*/
 
                                 if (it.about_host?.location != null) {
-                                    if (it.about_host.location.isNotEmpty()) {
+                                    if (it.about_host.location.trim().isNotEmpty()) {
                                         binding.textLocationName.visibility = View.VISIBLE
                                         binding.textLocationName.text = it.about_host.location
                                     } else {
@@ -357,11 +361,9 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                     }
                                 }
 
-
 //                                if (it.about_host?.description != null) {
 //                                    binding.textAboutDescription.setFullText(it.about_host.description.trimIndent())
 //                                }
-
 
                                 it.about_host?.description?.let {
                                     // Set the text

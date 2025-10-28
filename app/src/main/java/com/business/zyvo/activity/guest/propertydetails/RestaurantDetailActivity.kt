@@ -188,17 +188,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             showPopupWindow(it, 0)
         }
 
-
-        binding.readMore.setOnClickListener {
-            if ( binding.readMore.text.toString().equals("Read More",true)){
-                binding.readMore.text = "Read Less"
-                binding.readMoreTextView.maxLines = Integer.MAX_VALUE
-            }else{
-                binding.readMore.text = "Read More"
-                binding.readMoreTextView.maxLines = 3
-            }
-        }
-
         binding.tvWishlist.setOnClickListener {
             if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
                 showAddWishlistDialog(propertyId, -1)
