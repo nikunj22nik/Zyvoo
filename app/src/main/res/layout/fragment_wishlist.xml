@@ -75,7 +75,7 @@
             android:id="@+id/textNoWishlistFound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No Wishlist found"
+            android:text="No Wishlist Found"
             android:textSize="@dimen/_13sdp"
             android:visibility="gone"
             android:fontFamily="@font/montserrat_semibold"

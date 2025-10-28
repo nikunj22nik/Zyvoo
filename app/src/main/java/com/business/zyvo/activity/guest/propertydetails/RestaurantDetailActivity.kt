@@ -188,6 +188,17 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             showPopupWindow(it, 0)
         }
 
+
+        binding.readMore.setOnClickListener {
+            if ( binding.readMore.text.toString().equals("Read More",true)){
+                binding.readMore.text = "Read Less"
+                binding.readMoreTextView.maxLines = Integer.MAX_VALUE
+            }else{
+                binding.readMore.text = "Read More"
+                binding.readMoreTextView.maxLines = 3
+            }
+        }
+
         binding.tvWishlist.setOnClickListener {
             if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
                 showAddWishlistDialog(propertyId, -1)
@@ -464,8 +475,28 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 propertyData?.property_description?.let {
                     // Set the text
-                    binding.readMoreTextView.setFullText(it.trimIndent())
+//                    binding.readMoreTextView.setFullText(it.trimIndent())
+                    binding.readMoreTextView.text = it.trim()
+                    if (it.isNotEmpty()){
+                        binding.readMoreTextView.post {
+                            val totalLines = binding.readMoreTextView.lineCount
+                            if (totalLines>3){
+                                binding.readMore.visibility=View.VISIBLE
+                                binding.readMore.text="Read More"
+                                binding.readMoreTextView.maxLines=3
+                            }else{
+                                binding.readMore.visibility=View.GONE
+                            }
+                            Log.d("TextViewLines", "Total lines: $totalLines")
+                        }
+                    }else{
+                        binding.readMore.visibility=View.GONE
+                    }
+                }?:run {
+                    binding.readMore.visibility=View.GONE
                 }
+
+
                 propertyData?.amenities?.let {
                     if (it.isNotEmpty()) {
                         val propertyIncludedAdapter = PropertyIncludedAdapter(this, it)
