@@ -1,9 +1,11 @@
 package com.business.zyvo.fragment.both.browseGuideArtcileDetail
 
 import android.content.Intent
+import android.graphics.text.LineBreaker
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
+import android.text.Layout
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -137,13 +139,35 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                         }
 
                         if (model.data.description != null) {
+//                            val htmlText = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
+//                            } else {
+//                                Html.fromHtml(model.data.description)
+//                            }
+//                            binding.textDescription.text = htmlText
+//                            binding.textDescription.movementMethod = LinkMovementMethod.getInstance()
+
+                            Log.d("descriptiondescription","****"+model.data.description)
+                            binding.textDescription1.setJustifiedText(model.data.description ?: "")
+
+
                             val htmlText = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
                             } else {
                                 Html.fromHtml(model.data.description)
                             }
+
+
+
                             binding.textDescription.text = htmlText
                             binding.textDescription.movementMethod = LinkMovementMethod.getInstance()
+
+// Force justification again after layout
+                            binding.textDescription.post {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    binding.textDescription.justificationMode = LineBreaker.JUSTIFICATION_MODE_INTER_WORD
+                                }
+                            }
 
 //                            binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 //                                Html.fromHtml(model.data.description.trim(), Html.FROM_HTML_MODE_LEGACY)
@@ -205,11 +229,14 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                         }
 
                         if (model.data.description != null) {
-                            binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                                Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
-                            } else {
-                                Html.fromHtml(model.data.description)
-                            }
+//                            binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                                Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
+//                            } else {
+//                                Html.fromHtml(model.data.description)
+//                            }
+
+                            binding.textDescription1.setJustifiedText(model.data.description ?: "")
+
                         }
                         if (model.data.author_name != null){
                             binding.textAuthorName.text = model.data.author_name

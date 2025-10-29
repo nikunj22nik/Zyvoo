@@ -903,7 +903,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                                             if (!bookings.booking_start.isNullOrEmpty() &&
                                                 !bookings.final_booking_end.isNullOrEmpty()){
                                                 val booking_start = bookings.booking_start
-                                              val booking_end = bookings.final_booking_end
+                                                val booking_end = bookings.final_booking_end
                                             //  val booking_end = "2025-10-17 15:12:00"
                                                 try {
                                                     val differenceIntoMinutes  = calculateDifferenceInSeconds(

@@ -11,8 +11,7 @@ import com.business.zyvo.BuildConfig
 import com.business.zyvo.databinding.LayoutImageBinding
 import com.business.zyvo.fragment.guest.home.model.OnViewPagerImageClickListener
 
-class GuestViewPagerAdapter(private var list: MutableList<String>, var context: Context,
-                            var listner: OnViewPagerImageClickListener?
+class GuestViewPagerAdapter(private var list: MutableList<String>, var context: Context, var listner: OnViewPagerImageClickListener?
 ) : RecyclerView.Adapter<GuestViewPagerAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: LayoutImageBinding) : RecyclerView.ViewHolder(binding.root)
@@ -30,7 +29,6 @@ class GuestViewPagerAdapter(private var list: MutableList<String>, var context: 
         holder.itemView.setOnClickListener {
             listner?.itemClick(position)
         }
-
     }
 
     override fun getItemCount() = list?.size ?: 0

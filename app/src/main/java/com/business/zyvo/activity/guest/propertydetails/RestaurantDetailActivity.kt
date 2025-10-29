@@ -485,20 +485,21 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     binding.readMore.visibility=View.GONE
                 }
 
-
-                propertyData?.amenities?.let {
-                    if (it.isNotEmpty()) {
-                        val propertyIncludedAdapter = PropertyIncludedAdapter(this, it)
+                propertyData?.amenities?.let { data->
+                    if (data.isNotEmpty()) {
+                        val propertyIncludedAdapter = PropertyIncludedAdapter(this, data)
                         binding.proRvIncluded.adapter = propertyIncludedAdapter
-
                     }
                 }
+
                 propertyData?.parking_rules?.let {
                     binding.proParkingRule.text = it
                 }
+
                 propertyData?.host_rules?.let {
                     binding.proHostRule.text = it
                 }
+
                 propertyData?.add_ons?.let {
                     if (it.isNotEmpty()) {
                         addOnList = it.toMutableList()
@@ -515,9 +516,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         binding.llAddOns.visibility = View.GONE
                     }
                 }
+
                 propertyData?.address?.let {
                     binding.tvLocationName.text = it
                 }
+
                 // Add a marker in New York and move the camera
                 if (!propertyData?.latitude.equals("") && !propertyData?.longitude.equals("")) {
                     val newYork = LatLng(
@@ -543,9 +546,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     }
                 }
 
-                reviewList?.let {
-                    if (it.isNotEmpty()) {
-                        adapterReview.updateAdapter(it)
+                reviewList?.let { list->
+                    if (list.isNotEmpty()) {
+                        adapterReview.updateAdapter(list)
                     }
                 }
 
@@ -559,7 +562,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         }
                     }
                 }
-
             }
         } catch (e: Exception) {
             Log.d(ErrorDialog.TAG, e.message.toString())
