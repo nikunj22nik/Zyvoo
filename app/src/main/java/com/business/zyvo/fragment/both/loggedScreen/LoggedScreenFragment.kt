@@ -65,7 +65,6 @@ import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.activity.AuthActivity
 import com.business.zyvo.activity.GuesMain
-import com.business.zyvo.activity.MainActivity
 import com.business.zyvo.activity.guest.filter.FiltersActivity
 import com.business.zyvo.activity.guest.WhereTimeActivity
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
@@ -104,6 +103,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResult
 import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -156,6 +156,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private var logType = "login"
     private var islogTypeMobile = false
     private var islogTypeEmail = false
+    private lateinit var checkBox : MaterialCheckBox
 
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
@@ -490,7 +491,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         )
 
                         // Call your API with extracted information
-                        callSocialApi(firstName, lastName, signInType)
+                        callSocialApi(firstName, lastName, signInType,"google",personId,personEmail)
                     } else {
                         Log.w("AUTH", "signInWithCredential: failure", task.exception)
                         showErrorDialog(requireContext(), "Authentication failed")
@@ -504,14 +505,21 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         }
     }
 
-    private fun callSocialApi(firstName: String?, lastName: String?, signInType: String) {
+    private fun callSocialApi(
+        firstName: String?,
+        lastName: String?,
+        signInType: String,
+        loginType: String,
+        personId: String,
+        personEmail: String?
+    ) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 try {
                     loggedScreenViewModel.getSocialAPI(
                         firstName ?: "",
                         lastName ?: "",
-                        personEmail ?: "",
+                        personEmail.toString(),
                         personId,
                         token,
                         "Android"
@@ -525,16 +533,20 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                         sessionManager.setAuthToken(data.token)
                                             data.user_image?.let { Log.d("imageCheck", it) }
                                             data.user_image?.let { sessionManager.setUserImage(it) }
-                                       
-
                                         val bundle = Bundle().apply {
                                             putString("data", Gson().toJson(data))
-                                            putString("type", "google")
-                                            putString("email", personEmail)
+                                            putString("type", loginType)
+                                            putString("email",
+                                                this@LoggedScreenFragment.personEmail
+                                            )
                                         }
-
                                         if (signInType == "login") {
                                             session?.setLoginType("emailAddress")
+                                            if (checkBox != null && checkBox.isChecked) {
+                                                sessionManager.setUserSession(true)
+                                            }else{
+                                                sessionManager.setUserSession(false)
+                                            }
                                             val intent = Intent(
                                                 requireActivity(),
                                                 GuesMain::class.java
@@ -704,7 +716,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val appleLoginBtn = findViewById<ImageView>(R.id.appleLogin)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
-            val checkBox = findViewById<CheckBox>(R.id.checkBox)
+            checkBox = findViewById(R.id.checkBox)
             val textTitle = findViewById<TextView>(R.id.textTitle)
             val textForget = findViewById<TextView>(R.id.textForget)
             val textEnterYourEmail = findViewById<TextView>(R.id.textEnterYourEmail)
@@ -935,8 +947,11 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         Email: $email
     """.trimIndent())
 
-    callSocialApi1(firstName, lastName, signInType, "apple", appleId, email)
+//    callSocialApi1(firstName, lastName, signInType, "apple", appleId, email)
+    callSocialApi(firstName, lastName, signInType, "apple", appleId, email)
+
 }
+
     private fun callSocialApi1(firstName: String, lastName: String, signInType: String, provider: String, socialId: String, email: String) {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {

@@ -1,5 +1,6 @@
 package com.business.zyvo.fragment.both.browseGuideArtcileDetail
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.text.LineBreaker
 import android.os.Build
@@ -149,7 +150,7 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
 
                             Log.d("descriptiondescription","****"+model.data.description)
                             binding.textDescription1.setJustifiedText(model.data.description ?: "")
-
+                            setupWebView(model.data.description ?: "")
 
                             val htmlText = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
@@ -206,6 +207,56 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
     }
 
 
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setupWebView(htmlDescription: String) {
+        val webView = binding.webViewDescription
+
+        // WebView settings
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.settings.defaultTextEncodingName = "utf-8"
+        webView.setBackgroundColor(0x00000000) // transparent
+
+        // Make links clickable inside WebView
+        webView.webViewClient = android.webkit.WebViewClient()
+
+        // ✅ HTML with inline CSS for font, color, size, and justification
+        val justifiedHtml = """
+        <html>
+        <head>
+            <style>
+                @font-face {
+                    font-family: 'Poppins';
+                    src: url('file:///android_asset/fonts/poppins_light.ttf');
+                }
+                body {
+                    text-align: justify;
+                    font-size: 13px; /* Same as your TextView's 13sp */
+                    font-family: 'Poppins', sans-serif;
+                    color: #000000;
+                    line-height: 1.5;
+                    margin: 0;
+                    padding: 0;
+                }
+                a {
+                    color: #3b82f6; /* Same blue as your TextView link */
+                    text-decoration: none;
+                }
+                a:hover {
+                    text-decoration: underline;
+                }
+            </style>
+        </head>
+        <body>
+            $htmlDescription
+        </body>
+        </html>
+    """.trimIndent()
+
+        // ✅ Load HTML
+        webView.loadDataWithBaseURL(null, justifiedHtml, "text/html", "utf-8", null)
+    }
+
     private fun getArticleDetails() {
         lifecycleScope.launch {
             viewModel.getArticleDetails(id).collect {
@@ -236,6 +287,7 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
 //                            }
 
                             binding.textDescription1.setJustifiedText(model.data.description ?: "")
+                            setupWebView(model.data.description ?: "")
 
                         }
                         if (model.data.author_name != null){

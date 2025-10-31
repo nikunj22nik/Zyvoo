@@ -201,6 +201,18 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         getHomePropertyDetails()
+
+        binding.readMore.setOnClickListener {
+            if ( binding.readMore.text.toString().equals("Read More",true)){
+                binding.readMore.text = "Read Less"
+                binding.readMoreTextView.maxLines = Integer.MAX_VALUE
+            }else{
+                binding.readMore.text = "Read More"
+                binding.readMoreTextView.maxLines = 3
+            }
+        }
+
+
     }
 
     private fun settingMapScrollability(){
