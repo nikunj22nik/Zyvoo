@@ -1244,7 +1244,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_7sdp"
                     android:id="@+id/pro_Parking_Rule"
-                    android:text="The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy" />
+                    android:text="No Parking Rules" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -1299,7 +1299,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/_7sdp"
                     android:id="@+id/pro_Host_Rule"
-                    android:text="The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy" />
+                    android:text="No Host Rules" />
             </RelativeLayout>
 
             <View
