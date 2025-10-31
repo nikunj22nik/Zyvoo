@@ -194,7 +194,6 @@
                 android:lineSpacingMultiplier="1.0"
                 android:textSize="13sp" />
 
-
             <com.business.zyvo.fragment.guest.JustifiedTextView
                 android:id="@+id/textDescription1"
                 android:layout_width="match_parent"
