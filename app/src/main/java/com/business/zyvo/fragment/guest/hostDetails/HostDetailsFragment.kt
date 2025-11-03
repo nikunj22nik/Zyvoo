@@ -336,6 +336,7 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                 } else {
                                     binding.textLocationName.visibility = View.GONE
                                 }
+
                                 /*if (it.about_host?.language != null && it.about_host?.language.isNotEmpty()){
                                     if (it.about_host.language.get(0) != null && it.about_host?.language[1] != null) {
                                         binding.textLanguagesName.setText(it.about_host.language[0] + " ," + it.about_host.language[1])
