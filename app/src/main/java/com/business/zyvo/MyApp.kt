@@ -16,6 +16,8 @@ import com.business.zyvo.utils.AppContextProvider
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitor
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.facebook.FacebookSdk
+import com.facebook.appevents.AppEventsLogger
 import dagger.hilt.android.HiltAndroidApp
 import jakarta.inject.Inject
 
@@ -30,6 +32,8 @@ class MyApp :Application() {
 
     override fun onCreate() {
         super.onCreate()
+        FacebookSdk.sdkInitialize(applicationContext)
+        AppEventsLogger.activateApp(this)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         // Initialize global state here
         NetworkMonitorCheck.observeNetworkStatus(networkMonitor)

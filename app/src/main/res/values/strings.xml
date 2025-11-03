@@ -171,4 +171,9 @@
         <item>$70 per hour</item>
         <item>$80 per hour</item>
     </string-array>
+    <string name="facebook_app_id">1330960995429166</string>
+    <string name="fb_login_protocol_scheme">fb1330960995429166</string>
+    <string name="facebook_client_token">4b4f55714d96b788cdc52a075994f2d9</string>
+
+
 </resources>

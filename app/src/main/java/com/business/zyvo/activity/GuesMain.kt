@@ -3,9 +3,11 @@ package com.business.zyvo.activity
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +40,7 @@ import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.GuestMainActivityModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.security.MessageDigest
 
 @AndroidEntryPoint
 class GuesMain : AppCompatActivity(), OnClickListener,
@@ -66,6 +69,32 @@ class GuesMain : AppCompatActivity(), OnClickListener,
             binding.root.postDelayed({
                 openProfileFragment()
             }, 50)
+        }
+
+        try {
+            val info: PackageInfo = packageManager.getPackageInfo(
+                packageName,
+                PackageManager.GET_SIGNING_CERTIFICATES
+            )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                info.signingInfo?.apkContentsSigners?.forEach { signature ->
+                    val md = MessageDigest.getInstance("SHA")
+                    md.update(signature.toByteArray())
+                    val hashKey = Base64.encodeToString(md.digest(), Base64.DEFAULT).trim()
+                    Log.d("FacebookHashKey", "KeyHash: $hashKey")
+                }
+            } else {
+                val oldInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+                oldInfo.signatures.forEach { signature ->
+                    val md = MessageDigest.getInstance("SHA")
+                    md.update(signature.toByteArray())
+                    val hashKey = Base64.encodeToString(md.digest(), Base64.DEFAULT).trim()
+                    Log.d("FacebookHashKey", "KeyHash: $hashKey")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("FacebookHashKey", "Error getting hash key", e)
         }
 
         try {
