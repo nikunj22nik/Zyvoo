@@ -88,6 +88,13 @@ import com.business.zyvo.utils.MultipartUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PermissionManager
 import com.business.zyvo.viewmodel.LoggedScreenViewModel
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.FacebookSdk
+import com.facebook.GraphRequest
+import com.facebook.login.LoginManager
+import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -156,6 +163,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private var logType = "login"
     private var islogTypeMobile = false
     private var islogTypeEmail = false
+    private lateinit var callbackManager : CallbackManager
 
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
@@ -176,7 +184,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-
+        FacebookSdk.setClientToken("52e895a3b8b3e60b7259ae9791e5f000");
+        FacebookSdk.sdkInitialize(requireContext());
+        callbackManager = CallbackManager.Factory.create();
         Log.d("TESTING", "Inside On Create of LoggedScreen")
         navController = findNavController()
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(), navController)
@@ -701,6 +711,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             val imageCross = findViewById<ImageView>(R.id.imageCross)
             val imageEmailSocial = findViewById<ImageView>(R.id.imageEmailSocial)
             val googleLoginBtn = findViewById<ImageView>(R.id.googleLogin)
+            val facebookLoginBtn = findViewById<ImageView>(R.id.facebookLogin)
             val appleLoginBtn = findViewById<ImageView>(R.id.appleLogin)
             val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
             val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
@@ -833,6 +844,27 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     )
                 }
             }
+
+            facebookLoginBtn.setOnClickListener {
+                if (NetworkMonitorCheck._isConnected.value) {
+                    dismiss()
+//                    if (islogTypeMobile){
+//                        startGoogleSignIn("register")
+//                    }else{
+//                        startGoogleSignIn("login")
+//                    }
+
+                    startFacebookSignIn()
+
+                } else {
+                    showErrorDialog(
+                        requireContext(),
+                        resources.getString(R.string.no_internet_dialog_msg)
+                    )
+                }
+            }
+
+
             appleLoginBtn.setOnClickListener{
                 if (NetworkMonitorCheck._isConnected.value) {
                     dismiss()
@@ -1001,6 +1033,58 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         } else {
             showErrorDialog(requireContext(), getString(R.string.no_internet_dialog_msg))
         }
+    }
+
+    fun startFacebookSignIn(){
+        LoginManager.getInstance().logOut()
+
+        // Trigger Facebook Login
+        LoginManager.getInstance().logInWithReadPermissions(
+            this, // use "requireActivity()" if inside Fragment
+            listOf("email", "public_profile")
+        )
+
+        // Register Callback
+        LoginManager.getInstance().registerCallback(callbackManager,
+            object : FacebookCallback<LoginResult> {
+                override fun onError(exception: FacebookException) {
+                    exception.printStackTrace()
+                    Log.e("FB_LOGIN", "Login error: ${exception.message}")
+                    Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
+                }
+
+                override fun onSuccess(loginResult: LoginResult) {
+                    val request = GraphRequest.newMeRequest(
+                        loginResult.accessToken
+                    ) { `object`, _ ->
+                        try {
+                            val email = `object`?.optString("email", "") ?: ""
+                            val name = `object`?.optString("name", "") ?: ""
+                            val fbId = `object`?.optString("id", "") ?: ""
+
+                            val finalEmail =
+                                if (email.isNotEmpty()) email else "$fbId@facebookuser.com"
+
+                            Log.d("FB_LOGIN", "Email: $finalEmail, Name: $name")
+
+
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+
+                    val parameters = Bundle().apply {
+                        putString("fields", "id,name,email")
+                    }
+                    request.parameters = parameters
+                    request.executeAsync()
+                }
+
+                override fun onCancel() {
+                    Toast.makeText(requireContext(), "Facebook Login cancelled", Toast.LENGTH_SHORT).show()
+                    Log.d("FB_LOGIN", "Login cancelled")
+                }
+            })
     }
 
     private fun submitLogin(

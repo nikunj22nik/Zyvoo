@@ -162,6 +162,7 @@ dependencies {
     implementation("com.googlecode.libphonenumber:libphonenumber:8.13.19")
 
     implementation ("kr.co.prnd:readmore-textview:1.0.0")
+    implementation ("com.facebook.android:facebook-login:16.3.0")
 
 
 
