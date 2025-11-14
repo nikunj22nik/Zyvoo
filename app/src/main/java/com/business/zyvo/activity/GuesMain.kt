@@ -64,7 +64,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         binding.navigationWishlist.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
 
-        if (intent.getBooleanExtra("OPEN_PROFILE_FRAGMENT", false)) {
+        if (intent.getBooleanExtra(AppConstant.OPEN_PROFILE_FRAGMENT, false)) {
             // Delay slightly to ensure navigation is set up
             binding.root.postDelayed({
                 openProfileFragment()
@@ -79,7 +79,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 info.signingInfo?.apkContentsSigners?.forEach { signature ->
-                    val md = MessageDigest.getInstance("SHA")
+                    val md = MessageDigest.getInstance(AppConstant.SHA)
                     md.update(signature.toByteArray())
                     val hashKey = Base64.encodeToString(md.digest(), Base64.DEFAULT).trim()
                     Log.d("FacebookHashKey", "KeyHash: $hashKey")
@@ -87,7 +87,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
             } else {
                 val oldInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
                 oldInfo.signatures.forEach { signature ->
-                    val md = MessageDigest.getInstance("SHA")
+                    val md = MessageDigest.getInstance(AppConstant.SHA)
                     md.update(signature.toByteArray())
                     val hashKey = Base64.encodeToString(md.digest(), Base64.DEFAULT).trim()
                     Log.d("FacebookHashKey", "KeyHash: $hashKey")
@@ -146,21 +146,21 @@ class GuesMain : AppCompatActivity(), OnClickListener,
     @SuppressLint("SuspiciousIndentation")
     private fun handlingDeepLink() {
         if (intent.extras!=null){
-            val location = intent?.extras?.getString("location")
-            if (location.equals("PropertyDetails")){
-                val propertyId = intent?.extras?.getString("propertyId")
-                val propertyMile = intent?.extras?.getString("propertyMile")
+            val location = intent?.extras?.getString(AppConstant.LOCATION)
+            if (location.equals(AppConstant.PROPERTY_DETAILS)){
+                val propertyId = intent?.extras?.getString(AppConstant.PROPERTY_ID_TEXT)
+                val propertyMile = intent?.extras?.getString(AppConstant.PROPERTY_MILE)
                 if (propertyId!=null && propertyMile!=null){
                     val intent = Intent(this, RestaurantDetailActivity::class.java)
-                    intent.putExtra("propertyId",propertyId)
-                    intent.putExtra("propertyMile",propertyMile)
+                    intent.putExtra(AppConstant.PROPERTY_ID_TEXT,propertyId)
+                    intent.putExtra(AppConstant.PROPERTY_MILE,propertyMile)
                     startActivity(intent)
                 }
             }else{
-                val guideId = intent?.extras?.getString("guideId")
+                val guideId = intent?.extras?.getString(AppConstant.GUIDE_ID)
                 if (guideId!=null){
                     profileColor()
-                    val textType = intent?.extras?.getString("textType")
+                    val textType = intent?.extras?.getString(AppConstant.textType)
                     val bundle = Bundle()
                     bundle.apply {
                         putString(AppConstant.Id,guideId)
@@ -189,7 +189,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         val userId = sessionManager.getUserId()
         userId?.let {
             lifecycleScope.launch {
-                guestViewModel.getChatToken1(it, "guest").collect {
+                guestViewModel.getChatToken1(it, AppConstant.Guest).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             sessionManager.setChatToken(it.data.toString())
@@ -244,10 +244,10 @@ class GuesMain : AppCompatActivity(), OnClickListener,
         super.onResume()
         Log.d(ErrorDialog.TAG, "I am in the on resume")
         if (intent != null) {
-            val status: String = intent?.extras?.getString("key_name").toString()
+            val status: String = intent?.extras?.getString(AppConstant.KEY_NAME).toString()
             if (status!=null && status.equals("12345")) {
                 Log.d(ErrorDialog.TAG, "I" + status)
-                intent.removeExtra("key_name")
+                intent.removeExtra(AppConstant.KEY_NAME)
                 bookingResume()
                 findNavController(R.id.fragmentContainerView_main).navigate(R.id.myBookingsFragment)
             }
@@ -280,11 +280,9 @@ class GuesMain : AppCompatActivity(), OnClickListener,
                                     }
                                 }
                             }
-
                             is NetworkResult.Error -> {
 
                             }
-
                             else -> {
 
                             }
@@ -375,9 +373,6 @@ class GuesMain : AppCompatActivity(), OnClickListener,
     }
 
     fun discoverResume() {
-        //image color
-
-
         binding.imageDiscover.setImageResource(R.drawable.ic_discover_1)
         binding.imageInbox.setImageResource(R.drawable.ic_chat)
         binding.imageBooking.setImageResource(R.drawable.ic_booking_1)
@@ -535,7 +530,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
 
 
     override fun showError() {
-
+//display error
     }
 
 fun showImage(){

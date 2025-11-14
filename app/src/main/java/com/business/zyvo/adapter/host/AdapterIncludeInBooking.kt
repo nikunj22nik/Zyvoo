@@ -4,13 +4,10 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.business.zyvo.databinding.AdapterInnerPlaceOrderBinding
 import com.business.zyvo.databinding.RecyclerIncludeInBookingBinding
 
 class AdapterIncludeInBooking(private var list: List<String>,context: Context) : RecyclerView.Adapter<AdapterIncludeInBooking.ViewHolder>(){
-
-
-    class ViewHolder(var binding: RecyclerIncludeInBookingBinding) : RecyclerView.ViewHolder(binding.root){}
+    class ViewHolder(var binding: RecyclerIncludeInBookingBinding) : RecyclerView.ViewHolder(binding.root)
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterIncludeInBooking.ViewHolder {
@@ -31,6 +28,4 @@ class AdapterIncludeInBooking(private var list: List<String>,context: Context) :
         this.list = list;
         notifyDataSetChanged()
     }
-
-
 }

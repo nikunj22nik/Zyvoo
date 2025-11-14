@@ -1,38 +1,29 @@
 package com.business.zyvo.fragment.both.splash
 
-import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.HostMainActivity
-import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.databinding.FragmentSplashBinding
 import com.business.zyvo.session.SessionManager
-import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.MultipartUtils
-import retrofit2.http.Tag
 
 
 class SplashFragment : Fragment() {
 
   var binding : FragmentSplashBinding? = null
-      //  private var _binding: FragmentSplashBinding? = null
-
-    //private val binding get() = _binding!!
-
     private lateinit var handler: Handler
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +34,6 @@ class SplashFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         binding = FragmentSplashBinding.inflate(LayoutInflater.from(requireActivity()), container, false)
         return binding?.root
     }

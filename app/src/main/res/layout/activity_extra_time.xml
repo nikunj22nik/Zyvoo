@@ -316,7 +316,7 @@
 
             </LinearLayout>
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -374,162 +374,6 @@
                 android:background="@drawable/bg_four_side_grey_corner_white2"
                 android:orientation="vertical">
 
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginHorizontal="@dimen/_10sdp"-->
-                <!--                    android:weightSum="1">-->
-
-                <!--                    <androidx.cardview.widget.CardView-->
-                <!--                        android:layout_width="0dp"-->
-                <!--                        android:layout_height="@dimen/_65sdp"-->
-                <!--                        android:layout_marginVertical="@dimen/_10sdp"-->
-                <!--                        android:layout_weight="0.3"-->
-                <!--                        app:cardCornerRadius="@dimen/_7sdp">-->
-
-                <!--                        &lt;!&ndash; Image Placeholder &ndash;&gt;-->
-                <!--                        <ImageView-->
-                <!--                            android:id="@+id/ivProImage"-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="match_parent"-->
-                <!--                            android:scaleType="centerCrop"-->
-                <!--                            android:src="@drawable/image_hotel" />-->
-                <!--                    </androidx.cardview.widget.CardView>-->
-                <!--                    &lt;!&ndash; <com.google.android.material.imageview.ShapeableImageView-->
-                <!--                         android:layout_width="0dp"-->
-                <!--                         android:layout_height="@dimen/_65sdp"-->
-                <!--                         android:layout_marginVertical="@dimen/_10sdp"-->
-                <!--                         android:layout_weight="0.3"-->
-                <!--                         android:id="@+id/ivProImage"-->
-                <!--                         android:src="@drawable/ic_img_check_out_pay" />&ndash;&gt;-->
-
-                <!--                    <LinearLayout-->
-                <!--                        android:layout_width="0dp"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginStart="@dimen/_7sdp"-->
-                <!--                        android:layout_marginTop="@dimen/_10sdp"-->
-                <!--                        android:layout_weight="0.7"-->
-                <!--                        android:orientation="vertical">-->
-
-                <!--                        <TextView-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:fontFamily="@font/poppins"-->
-                <!--                            android:hint="Cabin in Peshastin"-->
-                <!--                            android:textColorHint="@color/black"-->
-                <!--                            android:textSize="17sp"-->
-                <!--                            android:id="@+id/tvProName" />-->
-
-                <!--                        &lt;!&ndash;                        <LinearLayout&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                            android:layout_width="wrap_content"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                            android:layout_height="wrap_content">&ndash;&gt;-->
-
-                <!--                        &lt;!&ndash;                            <ImageView&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:layout_width="wrap_content"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:layout_marginTop="@dimen/_3sdp"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:src="@drawable/ic_start_new" />&ndash;&gt;-->
-
-                <!--                        &lt;!&ndash;                            <TextView&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:layout_width="wrap_content"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:layout_marginStart="@dimen/_2sdp"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:hint="5.0"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:textAlignment="textEnd"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:textColorHint="@color/black"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:id="@+id/tvRating"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:textSize="@dimen/_12sdp"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:fontFamily="@font/poppins"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:textColor="#FCA800" />&ndash;&gt;-->
-
-                <!--                        &lt;!&ndash;                            <TextView&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:layout_width="wrap_content"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:layout_height="wrap_content"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:textAlignment="textStart"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:layout_marginStart="@dimen/_2sdp"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:hint="(1k+)"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:textColorHint="@color/black"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:id="@+id/tvTotalReview"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:textSize="@dimen/_12sdp"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:fontFamily="@font/poppins"&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                                android:textColor="#A4A4A4"  />&ndash;&gt;-->
-                <!--                        &lt;!&ndash;                        </LinearLayout>&ndash;&gt;-->
-
-                <!--                        <RelativeLayout-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:layout_marginTop="@dimen/_3sdp"-->
-                <!--                            android:orientation="horizontal">-->
-
-                <!--                            &lt;!&ndash; Star Rating Icon &ndash;&gt;-->
-                <!--                            <ImageView-->
-                <!--                                android:id="@+id/imageStar"-->
-                <!--                                android:layout_width="@dimen/_13sdp"-->
-                <!--                                android:layout_height="@dimen/_13sdp"-->
-                <!--                                android:layout_gravity="center_vertical"-->
-                <!--                                android:layout_marginTop="@dimen/_2sdp"-->
-                <!--                                android:src="@drawable/ic_start_new"-->
-                <!--                                app:tint="#FFBB00" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/tvRating"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_marginStart="@dimen/_4sdp"-->
-                <!--                                android:layout_toEndOf="@+id/imageStar"-->
-                <!--                                android:fontFamily="@font/inter"-->
-                <!--                                android:text="5.0"-->
-                <!--                                android:textColor="#FFBB00"-->
-                <!--                                android:textSize="14sp" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/tvTotalReview"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_toEndOf="@+id/tvRating"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:text=" (0)"-->
-                <!--                                android:textColor="#A4A4A4"-->
-                <!--                                android:textSize="14sp" />-->
-
-                <!--                            &lt;!&ndash; Distance &ndash;&gt;-->
-
-                <!--                        </RelativeLayout>-->
-
-                <!--                        <LinearLayout-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:layout_marginTop="@dimen/_6sdp">-->
-
-                <!--                            <ImageView-->
-                <!--                                android:layout_width="@dimen/_16sdp"-->
-                <!--                                android:layout_height="@dimen/_16sdp"-->
-                <!--                                android:src="@drawable/ic_location_icon" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_marginStart="@dimen/_7sdp"-->
-                <!--                                android:hint="0 miles away"-->
-                <!--                                android:id="@+id/tvMiles"-->
-                <!--                                android:textSize="14sp"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColorHint="@color/a4a4a4"-->
-                <!--                                android:textColor="@color/a4a4a4" />-->
-
-                <!--                        </LinearLayout>-->
-
-
-                <!--                    </LinearLayout>-->
-
-                <!--                    <RelativeLayout-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content">-->
-
-                <!--                    </RelativeLayout>-->
-
-
-                <!--                </LinearLayout>-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -550,13 +394,6 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/image_hotel" />
                     </androidx.cardview.widget.CardView>
-                    <!--<com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/_65sdp"
-                        android:layout_marginVertical="@dimen/_10sdp"
-                        android:layout_weight="0.3"
-                        android:id="@+id/ivProImage"
-                        android:src="@drawable/ic_img_check_out_pay" />-->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -577,39 +414,7 @@
                             android:textColorHint="@color/black"
                             android:textSize="17sp" />
 
-                        <!--                        <LinearLayout-->
-                        <!--                            android:layout_width="wrap_content"-->
-                        <!--                            android:layout_height="wrap_content">-->
 
-                        <!--                            <ImageView-->
-                        <!--                                android:layout_width="@dimen/_13sdp"-->
-                        <!--                                android:layout_height="@dimen/_13sdp"-->
-                        <!--                                android:layout_marginTop="@dimen/_3sdp"-->
-                        <!--                                android:src="@drawable/ic_start_new" />-->
-
-                        <!--                            <TextView-->
-                        <!--                                android:layout_width="wrap_content"-->
-                        <!--                                android:layout_height="wrap_content"-->
-                        <!--                                android:hint="5.0"-->
-                        <!--                                android:textAlignment="textEnd"-->
-                        <!--                                android:textColorHint="@color/black"-->
-                        <!--                                android:id="@+id/tvRating"-->
-                        <!--                                android:textSize="@dimen/_12sdp"-->
-                        <!--                                android:fontFamily="@font/poppins"-->
-                        <!--                                android:textColor="#FCA800" />-->
-
-                        <!--                            <TextView-->
-                        <!--                                android:layout_width="wrap_content"-->
-                        <!--                                android:layout_height="wrap_content"-->
-                        <!--                                android:textAlignment="textStart"-->
-                        <!--                                android:layout_marginStart="@dimen/_2sdp"-->
-                        <!--                                android:hint="(1k+)"-->
-                        <!--                                android:textColorHint="@color/black"-->
-                        <!--                                android:id="@+id/tvTotalReview"-->
-                        <!--                                android:textSize="@dimen/_12sdp"-->
-                        <!--                                android:fontFamily="@font/poppins"-->
-                        <!--                                android:textColor="#A4A4A4" />-->
-                        <!--                        </LinearLayout>-->
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

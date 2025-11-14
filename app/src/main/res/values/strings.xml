@@ -171,9 +171,11 @@
         <item>$70 per hour</item>
         <item>$80 per hour</item>
     </string-array>
-    <string name="facebook_app_id">1330960995429166</string>
-    <string name="fb_login_protocol_scheme">fb1330960995429166</string>
-    <string name="facebook_client_token">4b4f55714d96b788cdc52a075994f2d9</string>
+    <string name="facebook_app_id">1496652041603070</string>
+    <string name="fb_login_protocol_scheme">fb1496652041603070</string>
+    <string name="facebook_client_token">4c4b7980b87baf696da16619cb364744</string>
+    <string name="www_zyvo_com_is_requesting_access_to_your_device_s_location_please_enable_location_services_to_proceed">www.zyvo.com is requesting access to your device’s location. Please enable location services to proceed.</string>
+    <string name="lorem_ipsum_is_simply_dummy_text_of_the_printing_and_typesetting_industry_lorem_ipsum_has_been_the_industry_s_standard_dummy_text_ever_since_the_1500s_when_an_unknown_printer_took_a_galley_of_type_and_scrambled_it_to_make_a_type_specimen_book_it_has_survived_not_only_five_centuries_but_also_the_leap_into_electronic_typesetting_remaining_essentially_unchanged">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n\nIt has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</string>
 
 
 </resources>

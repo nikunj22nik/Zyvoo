@@ -167,7 +167,6 @@ import java.util.Arrays
 
     var customerId = ""
 
-    // private lateinit var addPaymentCardAdapter: AdapterAddPaymentCard
     private val paymentCardViewHolder: PaymentViewModel by lazy {
         ViewModelProvider(this)[PaymentViewModel::class.java]
     }
@@ -218,7 +217,6 @@ import java.util.Arrays
     var longitude: String = "0.00"
     private var cardDialog: Dialog? = null
 
-    // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -227,11 +225,8 @@ import java.util.Arrays
                     val placeName = place.name ?: AppConstant.unknownLocation
 
                     Log.d("@@@@@", "Location: $placeName")
-
                     val newLocation = AddLocationModel(placeName)
                     addLivePlace(place_name = placeName)
-
-
                     var flag =false
                     locationList.forEach {
                         if(it.name == placeName){
@@ -239,8 +234,6 @@ import java.util.Arrays
                         }
                     }
                     if(!flag) {
-
-                        // Update the list and notify adapter in one step
                         locationList.add(locationList.size - 1, newLocation)
                         // addLocationAdapter.notifyItemInserted(0)
                         addLocationAdapter.updateLocations(locationList)
@@ -264,12 +257,10 @@ import java.util.Arrays
         getInquiryResult = registerForActivityResult(Inquiry.Contract()) { result ->
             when (result) {
                 is InquiryResponse.Complete -> {
-                    // User identity verification completed successfully
                     verifyIdentityApi()
                 }
 
                 is InquiryResponse.Cancel -> {
-                    // User abandoned the verification process
                     binding.textConfirmNow2.visibility = View.VISIBLE
                     binding.textVerified2.visibility = GONE
                     Toast.makeText(requireContext(), "Request Cancelled", Toast.LENGTH_LONG).show()
@@ -330,7 +321,6 @@ import java.util.Arrays
         binding.rlPasswordTitle.setOnClickListener(this)
         binding.textBooking.setOnClickListener(this)
         binding.textCreateList.setOnClickListener(this)
-        //   binding.textTermServices.setOnClickListener(this)
         binding.textPrivacyPolicy.setOnClickListener(this)
         binding.textLogout.setOnClickListener(this)
         binding.textNotifications.setOnClickListener(this)
@@ -349,8 +339,6 @@ import java.util.Arrays
         adapterInitialize()
         paymentOpenCloseDropDown()
         payoutOpenCloseDropDown()
-        //getPayoutMethods()
-        // Initialize Places API if not already initialized
         if (!Places.isInitialized()) {
             Places.initialize(requireActivity(), apiKey)
         }
@@ -366,23 +354,11 @@ import java.util.Arrays
             startActivity(intent)
             requireActivity().finish()
         }
-//        binding.textAddNew.setOnClickListener {
-//          //  findNavController().navigate(R.id.payoutFragment)
-//        }
 
         binding.textAddNewPaymentMethod.setOnClickListener {
             findNavController().navigate(R.id.hostPayoutFragment)
         }
-        // Observe the isLoading state
-//        lifecycleScope.launch {
-//            profileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
-//                if (isLoading) {
-//                    LoadingUtils.showDialog(requireContext(), false)
-//                } else {
-//                    LoadingUtils.hideDialog()
-//                }
-//            }
-//        }
+
         getUserProfile()
 
         binding.rlEdit.setOnClickListener {
@@ -414,8 +390,6 @@ import java.util.Arrays
                 updateAddStreetAddress(binding.streetEditText.text.toString())
             }
             binding.streetEditText.isEnabled = false
-         //   binding.imageEditStreetAddress.visibility = View.VISIBLE
-         //   binding.imageStreetCheckedButton.visibility = GONE
         }
 
         binding.imageEditCityAddress.setOnClickListener {
@@ -430,8 +404,6 @@ import java.util.Arrays
                 updateCityAddress(binding.cityET.text.toString(), "")
             }
             binding.cityET.isEnabled = false
-          //  binding.imageEditCityAddress.visibility = View.VISIBLE
-         //   binding.CityCheckedButton.visibility = GONE
         }
 
         binding.imageEditStateAddress.setOnClickListener {
@@ -446,8 +418,7 @@ import java.util.Arrays
                 updateStateAddress("")
             }
             binding.stateEt.isEnabled = false
-          //  binding.imageEditStateAddress.visibility = View.VISIBLE
-        //    binding.stateCheckedButton.visibility = GONE
+
         }
 
         binding.imageEditZipAddress.setOnClickListener {
@@ -462,8 +433,6 @@ import java.util.Arrays
                 updateZipCode(binding.zipEt.text.toString(), "")
             }
             binding.zipEt.isEnabled = false
-         //   binding.imageEditZipAddress.visibility = View.VISIBLE
-        //    binding.zipCodeCheckedButton.visibility = GONE
 
         }
 
@@ -582,39 +551,15 @@ import java.util.Arrays
         bankNameAdapter.addItems(initialList1)
         cardNumberAdapter.addItems(initialList2)
 
-
-
-
         bankNameAdapterPayout = BankNameAdapterPayout(requireContext(), list = bankListPayout, this)
         cardNumberAdapterPayout =
             CardNumberAdapterPayout(requireContext(), list = cardListPayout, this)
         binding.recyclerViewPaymentCardListPayOut.adapter = bankNameAdapterPayout
         binding.recyclerViewCardNumberListPayOut.adapter = cardNumberAdapterPayout
-
-//        if (bankListPayout.isNotEmpty()) {
-//            bankNameAdapterPayout.addItems(bankListPayout)
-//            binding.recyclerViewPaymentCardListPayOut.visibility = View.VISIBLE
-//            binding.textBankNoDataFound.visibility = View.GONE
-//        }else{
-//            binding.recyclerViewPaymentCardListPayOut.visibility = View.GONE
-//            binding.textBankNoDataFound.visibility = View.VISIBLE
-//        }
-//
-//        if (cardListPayout.isNotEmpty()){
-//            cardNumberAdapterPayout.addItems(cardListPayout)
-//            binding.recyclerViewCardNumberListPayOut.visibility = View.VISIBLE
-//            binding.textCardNoDataFound.visibility = View.GONE
-//        }else{
-//            binding.recyclerViewCardNumberListPayOut.visibility = View.GONE
-//            binding.textCardNoDataFound.visibility = View.VISIBLE
-//        }
-
-
         addPetsAdapter = AddPetsAdapter(requireContext(), petsList, this, this)
     }
 
-    // this is used to get the userProfile and this func will provide the profile of the users there in the city
-    private fun getUserProfile() {
+     private fun getUserProfile() {
         if (NetworkMonitorCheck._isConnected.value) {
             lifecycleScope.launch(Dispatchers.Main) {
                 LoadingUtils.showDialog(requireContext(), false)
@@ -631,107 +576,6 @@ import java.util.Arrays
                                     "TESTING_PROFILE",
                                     "HERE IN A USER PROFILE ," + resp.toString()
                                 )
-//                                userProfile = Gson().fromJson(resp, UserProfile::class.java)
-//                                userProfile.let {
-//                                   it?.first_name?.let {
-//                                       name+=it+" "
-//                                       firstName = it
-//                                   }
-//                                    it?.last_name?.let {
-//                                        name+=it
-//                                        lastName = it
-//                                    }
-//
-//
-//                                    it?.name = name
-//                                    binding.user = it
-//                                    it?.email?.let {
-//                                        binding.etEmail.setText(it)
-//                                        binding.etEmail.isEnabled = false
-//                                    }
-//                                    it?.phone_number?.let {
-//                                        binding.etPhoneNumeber.setText(it)
-//                                        binding.etPhoneNumeber.isEnabled = false
-//                                    }
-//                                    it?.street?.let {
-//                                        binding.streetEditText.setText(it)
-//                                    }
-//
-//                                    it?.state?.let {
-//                                        binding.stateEt.setText(it)
-//                                    }
-//
-//                                    it?.zip_code?.let {
-//                                        binding.zipEt.setText(it)
-//                                    }
-//
-//                                    it?.city?.let {
-//                                        binding.cityET.setText(it)
-//                                    }
-//
-//                                    if (it?.profile_image != null) {
-//                                        Glide.with(requireContext())
-//                                            .asBitmap() // Convert the image into Bitmap
-//                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
-//                                            .into(object : SimpleTarget<Bitmap>() {
-//                                                override fun onResourceReady(
-//                                                    resource: Bitmap,
-//                                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
-//                                                ) {
-//                                                    // The 'resource' is the Bitmap
-//                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
-//                                                    binding.imageProfilePicture.setImageBitmap(
-//                                                        resource
-//                                                    )
-//                                                    imageBytes =
-//                                                        MediaUtils.bitmapToByteArray(resource)
-//                                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
-//                                                }
-//                                            })
-//                                    }
-//                                    if (it?.email_verified != null && it.email_verified == 1) {
-//                                        binding.textConfirmNow.visibility = GONE
-//                                        binding.textVerified.visibility =
-//                                            View.VISIBLE
-//                                    }
-//                                    if (it?.phone_verified != null && it.phone_verified == 1) {
-//                                        binding.textConfirmNow1.visibility = GONE
-//                                        binding.textVerified1.visibility =
-//                                            View.VISIBLE
-//                                    }
-//                                    if (it?.identity_verified != null && it.identity_verified == 1) {
-//                                        binding.textConfirmNow2.visibility = GONE
-//                                        binding.textVerified2.visibility =
-//                                            View.VISIBLE
-//                                    }
-//                                    if (it?.where_live != null && it.where_live.isNotEmpty()) {
-//                                        locationList = getObjectsFromNames(it.where_live) { name ->
-//                                            AddLocationModel(name)  // Using the constructor of MyObject to create instances
-//                                        }
-//
-//                                        val newLanguage = AddLocationModel(AppConstant.unknownLocation)
-//                                        locationList.add(newLanguage)
-//                                        addLocationAdapter.updateLocations(locationList)
-//                                    }
-//                                    if (it?.my_work != null && it.my_work.isNotEmpty()) {
-//                                        workList = getObjectsFromNames(it.my_work) { name ->
-//                                            AddWorkModel(name)  // Using the constructor of MyObject to create instances
-//                                        }
-//                                        val newLanguage = AddWorkModel(AppConstant.unknownLocation)
-//                                        workList.add(newLanguage)
-//                                        addWorkAdapter.updateWork(workList)
-//                                    }
-//                                    if (it?.languages != null && it.languages.isNotEmpty()) {
-//                                        languageList = getObjectsFromNames(it.languages) { name ->
-//                                            AddLanguageModel(name)  // Using the constructor of MyObject to create instances
-//                                        }
-//                                        val newLanguage =
-//                                            AddLanguageModel(AppConstant.unknownLocation)
-//                                        languageList.add(newLanguage)
-//                                        addLanguageSpeakAdapter.updateLanguage(languageList)
-//                                    }
-//
-//                                }
 
                                 settingDataToUi(resp)
                             }
@@ -790,25 +634,6 @@ import java.util.Arrays
                     add(AddLocationModel(AppConstant.unknownLocation))
                 } ?: emptyList()
 
-//                val transformedWorkList = it.my_work?.let {
-//                    getObjectsFromNames(it) { name -> AddWorkModel(name) }
-//                }?.apply {
-//                    add(AddWorkModel(AppConstant.unknownLocation))
-//                } ?: emptyList()
-
-
-          //  val transformedWorkList = userProfile.my_work?.let {
-//                workList = getObjectsFromNames(userProfile.my_work) { name ->
-//                    AddWorkModel(name)  // Using the constructor of MyObject to create instances
-//                }
-//                val newLanguage = AddWorkModel(AppConstant.unknownLocation)
-//                workList.add(newLanguage)
-
-              //  getObjectsFromNames(it) { name -> AddWorkModel(name) }
-//            }?.apply {
-//                add(AddWorkModel(AppConstant.unknownLocation))
-//            } ?: emptyList()
-
                                                 if (it.my_work != null && it.my_work.isNotEmpty()) {
                                         workList = getObjectsFromNames(it.my_work) { name ->
                                             AddWorkModel(name)  // Using the constructor of MyObject to create instances
@@ -826,17 +651,6 @@ import java.util.Arrays
 
                                     }
 
-//            val transformedLanguageList = userProfile.languages?.let {
-//                getObjectsFromNames(it) { name -> AddLanguageModel(name) }
-//            }?.apply {
-//                add(AddLanguageModel(AppConstant.unknownLocation))
-//            } ?: emptyList()
-
-//                val transformedLanguageList = it.languages?.let {
-//                    getObjectsFromNames(it) { name -> AddLanguageModel(name) }
-//                }?.apply {
-//                    add(AddLanguageModel(AppConstant.unknownLocation))
-//                } ?: emptyList()
 
                 // Now switch to UI thread
                 withContext(Dispatchers.Main) {
@@ -877,11 +691,9 @@ import java.util.Arrays
                     }
 
                     LoadingUtils.hideDialog()
-                    // Update adapters
                     addLocationAdapter.updateLocations(transformedLocationList.toMutableList())
           
                     addWorkAdapter.updateWork(workList)
-                    //  addLanguageSpeakAdapter.updateLanguage(transformedLanguageList.toMutableList())
                     addLanguageSpeakAdapter.updateLanguage(languageList)
             }
 
@@ -946,34 +758,21 @@ import java.util.Arrays
                         if (!languageList.contains(newLanguage)) {
                             languageList.add(languageList.size - 1, newLanguage)
                         }
-//                        else {
-//                            showErrorDialog(requireContext(),"Can't add one Same Language more than one.")
-//                        }
+
                     }else{
                         showErrorDialog(requireContext(),"You can only have \n two languages.")
                     }
-                    /*  }else{
-                          val index = languageList.indexOfFirst { it.name == local }
-                          val removedLang = languageList[index].name
-                          deleteLanguageApi(index)
-                          languageList.removeAt(index)
-                          SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
-                      }*/
-
 
                     Log.d("laguageListSize", languageList.toString())
                     addLanguageSpeakAdapter.updateLanguage(languageList)
-                    //addLanguageSpeakAdapter.notifyItemInserted(0)
 
-                    // Delay dismissing the dialog slightly to prevent UI issues
 
                     Handler(Looper.getMainLooper()).postDelayed({ dialog.dismiss() }, 200)
 
-                    // 200ms delay ensures smooth UI transition
                 }
 
 
-            }, PrepareData.languagesWithRegions/*, languageList*/)
+            }, PrepareData.languagesWithRegions)
 
             recyclerViewLanguages?.adapter = localeAdapter
 
@@ -992,11 +791,8 @@ import java.util.Arrays
         bottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog1)
         bottomSheetDialog!!.setContentView(R.layout.bottom_sheet_upload_image)
         bottomSheetDialog!!.show()
-
-
         val textCamera = bottomSheetDialog?.findViewById<TextView>(R.id.textCamera)
         val textGallery = bottomSheetDialog?.findViewById<TextView>(R.id.textGallery)
-
 
         textCamera?.setOnClickListener {
             profileImageCameraChooser()
@@ -1011,7 +807,6 @@ import java.util.Arrays
     }
 
     private fun paymentOpenCloseDropDown() {
-        // Set initial drawable
         binding.textPaymentMethod.setCompoundDrawablesWithIntrinsicBounds(
             0,
             0,
@@ -1105,8 +900,7 @@ import java.util.Arrays
                 if (obj == hobbiesList.size - 1) {
                     if (enteredText.isNotEmpty()) {
                         Log.d("@@@@@", "enteredText $enteredText")
-//                        addHobbiesApi(enteredText)
-//                        AddHobbiesModel(enteredText)
+
                     }
                 }
             }
@@ -1114,8 +908,7 @@ import java.util.Arrays
             "Pets" -> {
                 if (obj == petsList.size - 1) {
                     if (enteredText.isNotEmpty()) {
-//                        addPetApi(enteredText)
-//                        AddPetsModel(enteredText)
+
                     }
 
                 }
@@ -1146,7 +939,6 @@ import java.util.Arrays
 
             R.id.textCreateList -> {
                 findNavController().navigate(R.id.host_manage_property_frag)
-                //  startActivity(Intent(requireActivity(), PlaceOpenActivity::class.java))
 
             }
 
@@ -1176,11 +968,9 @@ import java.util.Arrays
             }
 
             R.id.textLanguage -> {
-                //  findNavController().navigate(R.id.language_fragment_host)
-             //   if (!languageDialogOpen) {
-                   // languageDialogOpen = true
+
                     dialogSelectLanguage()
-               // }
+
             }
 
             R.id.textNotifications -> {
@@ -1206,7 +996,6 @@ import java.util.Arrays
 
             R.id.imageInfoIcon -> {
                 showPopupHostInfoWindow(binding.imageInfoIcon)
-               /// binding.cvInfo.visibility = View.VISIBLE
             }
 
             R.id.clHead -> {
@@ -1223,14 +1012,11 @@ import java.util.Arrays
 
             R.id.textConfirmNow -> {
                 dialogEmailVerificationProfile(requireContext())
-//                binding.textConfirmNow.visibility = View.GONE
-//                binding.textVerified.visibility = View.VISIBLE
+
             }
 
             R.id.textConfirmNow1 -> {
                 dialogNumberVerification(requireContext())
-//                binding.textConfirmNow1.visibility = View.GONE
-//                binding.textVerified1.visibility = View.VISIBLE
             }
 
             R.id.textSaveButton -> {
@@ -1286,7 +1072,6 @@ import java.util.Arrays
                 }
 
             }
-
 
             btnAddPayment.setOnClickListener {
                 dismiss()
@@ -1353,20 +1138,6 @@ import java.util.Arrays
         spinneryear.spinnerPopupHeight = 400
         spinneryear.setItems(yearsStringList.subList(0, 16))
         spinneryear.setIsFocusable(true)
-//        binding.spinneryear.post {
-//            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
-//        }
-
-
-//        binding.endAmPm.post {
-//            binding.endAmPm.spinnerPopupWidth = binding.endAmPm.width
-//        }
-
-
-//        binding.startAmPm.post {
-//            binding.startAmPm.spinnerPopupWidth = binding.startAmPm.width
-//        }
-
 
         val recyclerView1 = spinneryear.getSpinnerRecyclerView()
         recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
@@ -1392,14 +1163,7 @@ import java.util.Arrays
 
                     // Load image into BottomSheetDialog's ImageView if available
                     binding.imageProfilePicture?.let {
-                        /*     Glide.with(this)
-                                 .load(uri)
-                                 .error(R.drawable.ic_profile_login)
-                                 .placeholder(R.drawable.ic_profile_login)
-                                 .into(it)
 
-                         */
-                        //vipin
                         Glide.with(this)
                             .asBitmap()
                             .load(uri)
@@ -1418,7 +1182,7 @@ import java.util.Arrays
                                 }
 
                                 override fun onLoadCleared(placeholder: Drawable?) {
-                                    // Handle placeholder if needed
+
                                 }
                             })
 
@@ -1450,40 +1214,6 @@ import java.util.Arrays
             }
     }
 
-    private fun dialogAddCard() {
-        val dialog = requireActivity()?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(true)
-            setContentView(R.layout.dialog_add_card_details)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-
-            val month: TextView = findViewById(R.id.textMonth)
-            val year: TextView = findViewById(R.id.textYear)
-            val submitButton: TextView = findViewById(R.id.textSubmitButton)
-            month.setOnClickListener {
-                dateManager.showMonthSelectorDialog { selectedMonth ->
-                    month.text = selectedMonth
-                }
-
-                year.setOnClickListener {
-                    dateManager.showYearPickerDialog { selectedYear ->
-                        year.text = selectedYear.toString()
-                    }
-                }
-            }
-
-            submitButton.setOnClickListener {
-                dismiss()
-            }
-
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }
-    }
 
     override fun onResume() {
         super.onResume()
@@ -1663,9 +1393,6 @@ import java.util.Arrays
             }
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-//            countDownTimer!!.cancel()
-//
-//            textTimeResend.text = "${"00"}:${"00"} sec"
             countDownTimer!!.start()
 
             textTimeResend.text = "${"00"}:${"60"} sec"
@@ -1915,7 +1642,6 @@ import java.util.Arrays
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etMobileNumber.text!!.isEmpty()) {
-//                                        etMobileNumber.error = "Mobile required"
                                         showErrorDialog(requireContext(), AppConstant.mobile)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     }else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),  countyCodePicker.selectedCountryCodeWithPlus)){
@@ -2019,15 +1745,6 @@ import java.util.Arrays
             }
             val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
             Glide.with(requireContext()).load(userProfileImage).into(imageProfilePicture)
-
-//            userProfile?.profile_image?.let { imagePath ->
-//                Glide.with(context)
-//                    .asBitmap()
-//                    .load(BuildConfig.MEDIA_URL + imagePath)
-//                    .into(imageProfilePicture)
-//            }
-
-
 
 
             val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
@@ -2239,9 +1956,6 @@ import java.util.Arrays
 
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-//            countDownTimer!!.cancel()
-//
-//            textTimeResend.text = "${"00"}:${"00"} sec"
             countDownTimer!!.start()
 
             textTimeResend.text = "${"00"}:${"60"} sec"
@@ -2572,11 +2286,9 @@ import java.util.Arrays
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
-//                                        etEmail.error = "Email Address required"
                                         showErrorDialog(requireContext(), AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else if (!isValidEmail(etEmail.text.toString())) {
-//                                        etEmail.error = "Invalid Email Address"
                                         showErrorDialog(requireContext(), AppConstant.invalideemail)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
@@ -2600,60 +2312,6 @@ import java.util.Arrays
         }
     }
 
-//    private fun dialogEmailVerification(context: Context?) {
-//        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-//        dialog?.apply {
-//            setCancelable(false)
-//            setContentView(R.layout.dialog_email_verification)
-//            window?.attributes = WindowManager.LayoutParams().apply {
-//                copyFrom(window?.attributes)
-//                width = WindowManager.LayoutParams.MATCH_PARENT
-//                height = WindowManager.LayoutParams.MATCH_PARENT
-//            }
-//            val imageCross = findViewById<ImageView>(R.id.imageCross)
-//
-//            val etEmail = findViewById<EditText>(R.id.etEmail)
-//            etEmail.setText(binding.etEmail.text.toString())
-//
-//            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
-//            textSubmitButton.setOnClickListener {
-//                toggleLoginButtonEnabled(false, textSubmitButton)
-//                lifecycleScope.launch {
-//                    profileViewModel.networkMonitor.isConnected
-//                        .distinctUntilChanged() // Ignore duplicate consecutive values
-//                        .collect { isConn ->
-//                            if (!isConn) {
-//                                showErrorDialog(
-//                                    requireContext(),
-//                                    resources.getString(R.string.no_internet_dialog_msg)
-//                                )
-//                                toggleLoginButtonEnabled(true, textSubmitButton)
-//                            } else {
-//                                lifecycleScope.launch(Dispatchers.Main) {
-//                                    if (etEmail.text!!.isEmpty()) {
-//                                        etEmail.error = "Email Address required"
-//                                        showErrorDialog(requireContext(), AppConstant.email)
-//                                        toggleLoginButtonEnabled(true, textSubmitButton)
-//                                    } else {
-//                                        emailVerification(
-//                                            session?.getUserId().toString(),
-//                                            etEmail.text.toString(),
-//                                            dialog,
-//                                            textSubmitButton
-//                                        )
-//                                    }
-//                                }
-//                            }
-//                        }
-//                }
-//            }
-//            imageCross.setOnClickListener {
-//                dismiss()
-//            }
-//            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-//            show()
-//        }
-//    }
 
     private fun emailVerification(
         userId: String,
@@ -2773,9 +2431,6 @@ import java.util.Arrays
 
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-//            countDownTimer!!.cancel()
-//
-//            textTimeResend.text = "${"00"}:${"00"} sec"
             countDownTimer!!.start()
 
             textTimeResend.text = "${"00"}:${"60"} sec"
@@ -3187,17 +2842,6 @@ import java.util.Arrays
                         return@setOnClickListener
                     }
 
-//                    when {
-//                        password.isEmpty() -> showErrorDialog(ctx, "Enter Password")
-//                        confirmPassword.isEmpty() -> showErrorDialog(ctx, "Enter Confirm Password")
-//                        password != confirmPassword -> showErrorDialog(ctx, "Password not match")
-//                        else -> {
-//                            dismiss()
-//                            callingOtpFetchApi(password, confirmPassword)
-//
-//                            // Dismiss the dialog after successful API call
-//                        }
-//                    }
 
                     if (password.isEmpty()) {
                         showErrorDialog(ctx, "Enter Password")
@@ -3323,9 +2967,6 @@ import java.util.Arrays
 
             startCountDownTimer(requireContext(), textTimeResend, rlResendLine, textResend)
 
-//            countDownTimer!!.cancel()
-//
-//            textTimeResend.text = "${"00"}:${"00"} sec"
             countDownTimer!!.start()
 
             textTimeResend.text = "${"00"}:${"60"} sec"
@@ -3378,14 +3019,7 @@ import java.util.Arrays
 
             findViewById<TextView>(R.id.text).text = text
             findViewById<TextView>(R.id.textOkayButton).setOnClickListener {
-//                if (text == "Your account is registered \nsuccessfully") {
-//
-//                    Log.d("Navigation", "Navigating to turnNotificationsFragment")
-//                    navController?.navigate(R.id.turnNotificationsFragment)
-//
-//                } else if (text == "Your password has been changed\n" + " successfully.") {
-//                    dialogLoginEmail(context)
-//                }
+
                 dismiss()
             }
 
@@ -3427,11 +3061,7 @@ import java.util.Arrays
 
                         }
                 }
-//                var sessionManager = SessionManager(context)
-//                sessionManager.setUserId(-1)
-//                var intent = Intent(context, AuthActivity::class.java)
-//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-//                context.startActivity(intent)
+
                 dismiss()
             }
 
@@ -3443,81 +3073,6 @@ import java.util.Arrays
         }
     }
 
-
-    private fun showPopupWindow(anchorView: View, position: Int) {
-        // Inflate the custom layout for the popup menu
-        val popupView =
-            LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
-
-        // Create PopupWindow with the custom layout
-        val popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-
-        // Set click listeners for each menu item in the popup layout
-        popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemUnread).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-
-
-        // Get the location of the anchor view (three-dot icon)
-        val location = IntArray(2)
-        anchorView.getLocationOnScreen(location)
-
-        // Get the height of the PopupView after inflating it
-        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val popupHeight = popupView.measuredHeight
-        val popupWeight = popupView.measuredWidth
-        val screenWidht = context?.resources?.displayMetrics?.widthPixels
-        val anchorX = location[1]
-        val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
-
-        val xOffset = if (popupWeight > spaceEnd!!) {
-            // If there is not enough space below, show it above
-            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
-            -(popupWeight + 20)
-        }
-        // Calculate the Y offset to make the popup appear above the three-dot icon
-        val screenHeight = context?.resources?.displayMetrics?.heightPixels
-        val anchorY = location[1]
-
-        // Calculate the available space above the anchorView
-        val spaceAbove = anchorY
-        val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
-
-        // Determine the Y offset
-        val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
-        }
-
-        // Show the popup window anchored to the view (three-dot icon)
-        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(
-            anchorView,
-            xOffset,
-            yOffset,
-            Gravity.END
-        )  // Adjust the Y offset dynamically
-    }
 
     private fun showPopupHostInfoWindow(anchorView: View) {
         val popupView = LayoutInflater.from(context).inflate(R.layout.pop_up_info, null)
@@ -3533,9 +3088,8 @@ import java.util.Arrays
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
 
-        // Optional: Slight X offset to align with anchor
         val xOffset = -popupView.measuredWidth / 2 + anchorView.width / 2
-        val yOffset = 8  // slight space between icon and popup
+        val yOffset = 8
 
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset)
     }
@@ -3546,7 +3100,6 @@ import java.util.Arrays
 
 
     fun isScreenLarge(context: Context): Boolean {
-        // Get the screen width
         val display =
             (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val width = display.width
@@ -3589,18 +3142,13 @@ import java.util.Arrays
 
             "Hobbies" -> {
                 if (obj < hobbiesList.size - 1) {
-//                    deleteHobbiesApi(obj)
-//                    hobbiesList.removeAt(obj)
-//                    addHobbiesAdapter.updateHobbies(hobbiesList)
                 }
 
             }
 
             "Pets" -> {
                 if (obj < petsList.size - 1) {
-//                    deletePetsApi(obj)
-//                    petsList.removeAt(obj)
-//                    addPetsAdapter.updatePets(petsList)
+
                 }
             }
 
@@ -4277,24 +3825,6 @@ import java.util.Arrays
         }
     }
 
-    private fun getPayoutMethods() {
-        lifecycleScope.launch {
-            profileViewModel.networkMonitor.isConnected
-                .distinctUntilChanged()
-                .collect { isConn ->
-                    if (!isConn) {
-                        LoadingUtils.showErrorDialog(
-                            requireContext(),
-                            resources.getString(R.string.no_internet_dialog_msg)
-                        )
-                    } else {
-                        getPayoutApi()
-                    }
-
-                }
-        }
-    }
-
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getPayoutApi() {
@@ -4345,8 +3875,7 @@ import java.util.Arrays
                                 }
                             }
                         } ?: run {
-                            // Handle case where `data` is null
-                            // showErrorDialog(requireContext(), "Payout data is unavailable")
+
                         }
 
 
@@ -4421,8 +3950,6 @@ import java.util.Arrays
                                 bankListPayout.forEach { card ->
                                     card.defaultForCurrency = false
                                 }
-//                                bankListPayout[position].defaultForCurrency = true
-
                                 bankNameAdapterPayout.updateItem(bankListPayout)
                                 bankNameAdapterPayout.notifyDataSetChanged()
 
@@ -4430,9 +3957,6 @@ import java.util.Arrays
                                 cardNumberAdapterPayout.notifyDataSetChanged()
                             }
                         }
-
-
-                 // getPayoutApi()
 
                     }
 
@@ -4456,7 +3980,7 @@ import java.util.Arrays
                 .distinctUntilChanged()
                 .collect { isConn ->
                     if (!isConn) {
-                        LoadingUtils.showErrorDialog(
+                        showErrorDialog(
                             requireContext(),
                             resources.getString(R.string.no_internet_dialog_msg)
                         )
@@ -4561,7 +4085,7 @@ import java.util.Arrays
 
     private fun dialogAddCardGuest() {
         if (cardDialog?.isShowing == true) {
-            return // Dialog is already showing, don't open another one
+            return
         }
         var street_address = ""
         var city = ""
@@ -4988,7 +4512,6 @@ import java.util.Arrays
 
         if (resultCode == Activity.RESULT_OK) {
             val place = Autocomplete.getPlaceFromIntent(data)
-            //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
             val addressComponents = place.addressComponents?.asList()
             var address: String = place.address
             // do query with address

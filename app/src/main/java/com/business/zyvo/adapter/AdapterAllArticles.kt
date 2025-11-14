@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutArticlesBinding
@@ -40,7 +41,7 @@ class AdapterAllArticles(var context: Context,
 
             binding.root.setOnClickListener{
                 if (currentItem.id != null){
-                    listener.itemClick(currentItem.id,"article")
+                    listener.itemClick(currentItem.id, AppConstant.ARTICLE_SMALL_TEXT)
                 }
 
             }

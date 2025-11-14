@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddTextBinding
@@ -30,40 +32,18 @@ class AddWorkAdapter(
 
     inner class WorkViewHolder(var binding: LayoutMyWorkBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        init {
-//            binding.root.setOnClickListener{
-//                listner.itemClick(adapterPosition)
-//            }
-        }
-
         fun bind(workItem: AddWorkModel) {
-
-
             binding.textMyWorkName.text = workItem.name
             binding.imageCross.setOnClickListener {
                 listner.itemClick(
                     adapterPosition,
-                    "work"
+                    AppConstant.WORK
                 ) // Handle delete (or any other action) for this location
             }
         }
 
     }
 
-//    inner class WorkViewHolderFixed(var binding: LayoutAddTextBinding) :
-//        RecyclerView.ViewHolder(binding.root) {
-//        init {
-//            binding.root.setOnClickListener {
-//                listner.itemClick(adapterPosition,"work") // Handle "Add New" button click
-//            }
-//        }
-//        fun bind() {
-////            binding.root.setOnClickListener {
-////                listner.itemClick(adapterPosition, "work") // Handle "Add New" button click
-////            }
-//        }
-//
-//    }
 
     inner class WorkViewHolderFixed(var binding: LayoutAddTextBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -87,10 +67,10 @@ class AddWorkAdapter(
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
                if(enteredText.length >20){
-                   LoadingUtils.showErrorDialog(binding.root.context,"Please enter a work name shorter than 20 characters.")
+                   LoadingUtils.showErrorDialog(binding.root.context, ErrorMessage.WORK_NAME_MUST_LESS_THAN_20_CHAR_LONG)
                }
                else if (enteredText.isNotEmpty()) {
-                    listner2.itemClick(position,"work",enteredText)
+                    listner2.itemClick(position, AppConstant.WORK,enteredText)
                     // Add the new work item to the list
                     list.add(list.size -1 , AddWorkModel(enteredText))
                     notifyDataSetChanged() // Notify adapter to update RecyclerView
@@ -103,7 +83,7 @@ class AddWorkAdapter(
                     binding.etType.text.clear()
                 }
                 else{
-                    LoadingUtils.showErrorDialog(binding.root.context,"Please Enter Work")
+                    LoadingUtils.showErrorDialog(binding.root.context, ErrorMessage.PLEASE_ENTER_WORK)
                 }
             }
         }
@@ -147,7 +127,7 @@ class AddWorkAdapter(
 
 
         if (list.isEmpty()) {
-            list.add(AddWorkModel("Add New")) // Placeholder for "Add New"
+            list.add(AddWorkModel(AppConstant.ADD_NEW)) // Placeholder for "Add New"
         }
         notifyDataSetChanged()
     }

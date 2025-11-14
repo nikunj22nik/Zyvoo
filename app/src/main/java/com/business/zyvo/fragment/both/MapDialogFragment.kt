@@ -1,13 +1,10 @@
 package com.business.zyvo.fragment.both
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.DialogFragment.STYLE_NO_TITLE
-import com.business.zyvo.R
 import com.business.zyvo.databinding.FragmentMapDialogBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap

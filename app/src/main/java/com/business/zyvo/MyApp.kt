@@ -27,12 +27,21 @@ class MyApp :Application() {
     lateinit var networkMonitor: NetworkMonitor
       var conversationsManager: QuickstartConversationsManager?=null
      var conversationsManagerOneTowOne: QuickstartConversationsManagerOneTowOne?=null
-    //lateinit var conversationsManagerFragment:  QuickstartConversationsManagerFragment
      var conversationsManagerFragment: com.business.zyvo.fragment.host.QuickstartConversationsManager?=null
 
     override fun onCreate() {
         super.onCreate()
-        FacebookSdk.sdkInitialize(applicationContext)
+        try {
+            FacebookSdk.setClientToken("4c4b7980b87baf696da16619cb364744")
+            FacebookSdk.sdkInitialize(applicationContext)
+            FacebookSdk.setAutoInitEnabled(true)
+            FacebookSdk.fullyInitialize()
+
+            Log.d("FB_LOGIN", "App: Facebook SDK Initialized: ${FacebookSdk.isInitialized()}")
+        } catch (e: Exception) {
+            Log.e("FB_LOGIN", "App: Facebook initialization failed: ${e.message}")
+        }
+
         AppEventsLogger.activateApp(this)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         // Initialize global state here
@@ -56,18 +65,6 @@ class MyApp :Application() {
         AppsFlyerLib.getInstance().start(this)
     }
 
-   /*  fun initializeTwilioClient(token:String) {
-         conversationsManager=QuickstartConversationsManager()
-         conversationsManagerOneTowOne=QuickstartConversationsManagerOneTowOne()
-         conversationsManagerFragment= com.business.zyvo.fragment.host.QuickstartConversationsManager()
-         token.let {
-             conversationsManager?.initializeWithAccessTokenBase(this, it)
-             conversationsManagerOneTowOne?.initializeWithAccessTokenBase(this, it)
-             conversationsManagerFragment?.initializeWithAccessToken(this, it,
-                 "general", "")
-             Log.d("******" ,"Chat token initialization")
-         }
-    }*/
    fun initializeTwilioClient(token: String) {
        if (conversationsManager != null &&
            conversationsManagerOneTowOne != null &&

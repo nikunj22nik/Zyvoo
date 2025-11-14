@@ -92,16 +92,11 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
         binding.rvTransactions.layoutManager = LinearLayoutManager(requireContext())
         adapter = TransactionAdapter(requireContext(), arrayListOf())
         binding.rvTransactions.adapter = adapter
-//        viewModel.list.observe(viewLifecycleOwner, Observer {
-//            adapter.updateItem(it)
-//        })
+
         adapter1 = PaymentAdapter(requireContext(), mutableListOf(), this)
 
         binding.rcvPaymentCard.adapter = adapter1
 
-//        viewModel.paymentCardList.observe(viewLifecycleOwner, Observer {
-//            adapter1.updateItem(it)
-//        })
 
         parentFragmentManager.setFragmentResultListener(
             "FilterPaymentStatus", viewLifecycleOwner
@@ -111,7 +106,6 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
             message?.let {
                 Log.d("statusCheck", it)
                 Log.d("i'm Here", "2")
-               // Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
                 filterStatus = it
                 paymentWithdrawalList()
             }
@@ -147,10 +141,8 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
 
         binding.imageFilter.setOnClickListener {
             val dialog1 = FilterPaymentStatusFragment()
-            // dialog1.setDialogListener(this)
-            dialog1.show(parentFragmentManager, "FilterPaymentStatusFragment")
 
-            //   findNavController().navigate(R.id.filterPaymentStatusFragment)
+            dialog1.show(parentFragmentManager, "FilterPaymentStatusFragment")
 
         }
         binding.btnWithdrawFunds.setOnClickListener {
@@ -203,7 +195,6 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
 
 
     private fun showPopupWindowForPets(anchorView: View) {
-        // Inflate the popup layout
         val inflater = LayoutInflater.from(requireContext())
         val popupView = inflater.inflate(R.layout.popup_layout_pets, null)
 
@@ -213,9 +204,6 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-
-        // Show the popup window at the bottom right of the TextView
-
         popupWindow.isOutsideTouchable = true
         popupWindow.isFocusable = true
         popupWindow.showAsDropDown(anchorView, anchorView.width, 0)
@@ -262,9 +250,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
                     parent: AdapterView<*>,
                     view: View, position: Int, id: Long
                 ) {
-//                    Toast.makeText(requireContext(),
-//                        getString(R.string.selected_item) + " " +
-//                                "" + items[position], Toast.LENGTH_SHORT).show()
+
                     selectedItem = customList[position].spinnerText
                 }
 
@@ -272,8 +258,6 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
                     selectedItem = null
                 }
             }
-
-            //  spinner.setSelection(0)
 
             imageCross.setOnClickListener { dismiss() }
             btnWithdraw.setOnClickListener {
@@ -314,135 +298,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
         }
         dialog.show()
     }
-    /*
-    private fun dialogSelectPaymentMethod() {
-        val dialog1 = Dialog(requireContext(), R.style.BottomSheetDialog)
-        dialog1.setContentView(R.layout.dialog_select_payment_host)
 
-        dialog1.setCancelable(false)
-        dialog1.apply {
-
-
-
-            val togglePaymentTypeSelectButton = findViewById<ToggleButton>(R.id.togglePaymentTypeSelectButton)
-            val rlBankAccount = findViewById<RelativeLayout>(R.id.rlBankAccount)
-            val llDebitCard = findViewById<LinearLayout>(R.id.llDebitCard)
-            val spinnermonth = findViewById<PowerSpinnerView>(R.id.spinnermonth)
-            val spinneryear = findViewById<PowerSpinnerView>(R.id.spinneryear)
-
-            val btnAddPayment = findViewById<TextView>(R.id.btnAddPayment)
-
-
-            callingSelectionOfDate(spinnermonth,spinneryear)
-
-
-           togglePaymentTypeSelectButton.setOnCheckedChangeListener{v1, isChecked->
-                if (!isChecked){
-                    llDebitCard.visibility = View.GONE
-                    rlBankAccount.visibility = View.VISIBLE
-
-                }
-                else {
-                    rlBankAccount.visibility = View.GONE
-                    llDebitCard.visibility = View.VISIBLE
-                }
-
-            }
-            btnAddPayment.setOnClickListener { dismiss() }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }
-
-    }
-
-     */
-/*
-    fun callingSelectionOfDate(spinnermonth: PowerSpinnerView, spinneryear: PowerSpinnerView) {
-        val months = listOf(
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December"
-        )
-        // val am_pm_list = listOf("AM","PM")
-        val years = (2024..2050).toList()
-        val yearsStringList = years.map { it.toString() }
-        Toast.makeText(
-            requireContext(),
-            "Year String List: " + yearsStringList.size,
-            Toast.LENGTH_LONG
-        ).show()
-        val days = resources.getStringArray(R.array.day).toList()
-
-
-        // Add item decoration for spacing
-        val spacing = 16 // Spacing in pixels
-
-
-        spinnermonth.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        spinnermonth.arrowAnimate = false
-        spinnermonth.spinnerPopupHeight = 400
-        spinnermonth.setItems(months)
-        spinnermonth.setIsFocusable(true)
-
-        val recyclerView3 = spinnermonth.getSpinnerRecyclerView()
-
-        recyclerView3.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                outRect.top = spacing
-            }
-        })
-
-        spinneryear.layoutDirection = View.LAYOUT_DIRECTION_LTR
-        spinneryear.arrowAnimate = false
-        spinneryear.spinnerPopupHeight = 400
-        spinneryear.setItems(yearsStringList.subList(0, 16))
-        spinneryear.setIsFocusable(true)
-//        binding.spinneryear.post {
-//            binding.spinneryear.spinnerPopupWidth = binding.spinneryear.width
-//        }
-
-
-//        binding.endAmPm.post {
-//            binding.endAmPm.spinnerPopupWidth = binding.endAmPm.width
-//        }
-
-
-//        binding.startAmPm.post {
-//            binding.startAmPm.spinnerPopupWidth = binding.startAmPm.width
-//        }
-
-
-        val recyclerView1 = spinneryear.getSpinnerRecyclerView()
-        recyclerView1.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                outRect.top = spacing
-            }
-
-        })
-
-
-    }
-
- */
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -518,8 +374,7 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
         } else {
             Log.d("startDateCheck4", filterStatus.toString())
         }
-        //session?.getUserId().toString()
-        // 78
+
         lifecycleScope.launch {
             viewModel.paymentWithdrawalList(
                 session?.getUserId().toString(),
@@ -598,28 +453,6 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
                         val model = Gson().fromJson(it.data, GetPayoutResponse::class.java)
 
                         Log.d("API_RESPONSE_Payout", it.data.toString())
-
-                        /*
-                        // Ensure data is not null before accessing its properties
-                        model.data?.let { payoutData ->
-                            payoutData.bankAccounts?.let { bankList ->
-                                if (bankList.isNotEmpty()) {
-                                    adapter1.updateItem(bankList)
-                                 //   bankNameAdapterPayout.addItems(bankList)
-                                }
-                            }
-
-                            payoutData.cards?.let { cardList ->
-                                if (cardList.isNotEmpty()) {
-                                    cardNumberAdapterPayout.addItems(cardList)
-                                }
-                            }
-                        } ?: run {
-                            // Handle case where `data` is null
-                            showErrorDialog(requireContext(), "Payout data is unavailable")
-                        }
-
-                         */
 
                         val mergedList = mutableListOf<PaymentCardModel>()
 
@@ -811,7 +644,6 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
                         it.data?.first.let { it1 -> binding.tvNextPayoutAmount.text = "$" + it1 }
                         it.data?.second.let { it1 -> binding.tvNextPayoutDate.text = "On " + it1 }
 
-
                     }
 
                     is NetworkResult.Error -> {
@@ -854,12 +686,8 @@ class PaymentsFragment : Fragment(), FilterPaymentStatusFragment.DialogListener,
                 when (it) {
 
                     is NetworkResult.Success -> {
-
-
                         it.data?.first.let { it1 -> totalAmount = "$" + it1 }
                         it.data?.second.let { it1 -> instantAmount = "$" + it1 }
-
-
                     }
 
                     is NetworkResult.Error -> {

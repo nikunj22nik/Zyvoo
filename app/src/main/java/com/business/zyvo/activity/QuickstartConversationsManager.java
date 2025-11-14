@@ -1,14 +1,8 @@
 package com.business.zyvo.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-
-
-import androidx.annotation.Nullable;
-
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.Gson;
 import com.twilio.conversations.Attributes;
 import com.twilio.conversations.CallbackListener;
 import com.twilio.conversations.Conversation;
@@ -21,57 +15,34 @@ import com.twilio.conversations.Participant;
 import com.twilio.conversations.ProgressListener;
 import com.twilio.conversations.StatusListener;
 import com.twilio.conversations.User;
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import kotlin.io.path.OnErrorResult;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
 interface QuickstartConversationsManagerListener {
     void receivedNewMessage();
-
     void messageSentCallback();
-
     void reloadMessages();
 }
 
 public class QuickstartConversationsManager {
-
-    //    private final static String DEFAULT_CONVERSATION_NAME = "anotherchanz_43_70";
     private String DEFAULT_CONVERSATION_NAME = "general";
     public final static String TAG = "TwilioConversations";
     private String identity;
-
     private String userid;
     private String typeApiValue;
     private String status = "0";
     String conversationSid = "";
-
     final private ArrayList<Message> messages = new ArrayList<>();
-
     private ConversationsClient conversationsClient;
-
     private Conversation conversation;
     private QuickstartConversationsManagerListener conversationsManagerListener;
-
-
     private String tokenURL = "";
-
     private class TokenResponse {
         String token;
     }
-
-
 
     void initializeWithAccessToken(final Context context, final String token, String DEFAULT_CONVERSATION_NAME, String identity, String userid, String typeApiValue) {
         this.DEFAULT_CONVERSATION_NAME = DEFAULT_CONVERSATION_NAME;
@@ -528,13 +499,5 @@ public class QuickstartConversationsManager {
 
 }
 
-
-//    conversation.getParticipantByIdentity("").getSid()
-//            conversation.setAllMessagesRead(new CallbackListener<Long>() {
-//                @Override
-//                public void onSuccess(Long result) {
-//
-//                }
-//            });
 
 

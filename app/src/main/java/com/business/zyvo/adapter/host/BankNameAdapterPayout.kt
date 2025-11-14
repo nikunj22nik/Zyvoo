@@ -15,12 +15,10 @@ import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.business.zyvo.OnClickListener1
+import com.business.zyvo.AppConstant
 import com.business.zyvo.R
-import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.databinding.AdapterBankNameBinding
 import com.business.zyvo.fragment.guest.profile.model.BankAccountPayout
-import com.business.zyvo.model.CountryLanguage
 import com.business.zyvo.onItemClickData
 
 class BankNameAdapterPayout(private val context: Context, private var list: MutableList<BankAccountPayout>, private var listner : onItemClickData) :
@@ -90,7 +88,7 @@ class BankNameAdapterPayout(private val context: Context, private var list: Muta
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemSetPrimary).setOnClickListener {
-            listner.itemClick(position ,"setPrimary",  id)
+            listner.itemClick(position , AppConstant.SET_PRIMARY,  id)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
@@ -128,16 +126,13 @@ class BankNameAdapterPayout(private val context: Context, private var list: Muta
 
         // Determine the Y offset
         val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
-        }
 
-        // Show the popup window anchored to the view (three-dot icon)
-        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+            -(popupHeight + 20)
+        } else {
+            20
+        }
+        popupWindow.elevation = 8.0f
+        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)
     }
 
     fun dialogDelete(position: Int,id : String) {
@@ -157,7 +152,7 @@ class BankNameAdapterPayout(private val context: Context, private var list: Muta
 
 
             findViewById<RelativeLayout>(R.id.yes_btn).setOnClickListener {
-                listner.itemClick(position,"delete",id)
+                listner.itemClick(position, AppConstant.DELETE,id)
                 dismiss()
             }
             findViewById<RelativeLayout>(R.id.rl_cancel_btn).setOnClickListener {

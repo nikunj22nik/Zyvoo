@@ -347,13 +347,6 @@
                             android:scaleType="centerCrop"
                             android:src="@drawable/image_hotel" />
                     </androidx.cardview.widget.CardView>
-                    <!--<com.google.android.material.imageview.ShapeableImageView
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/_65sdp"
-                        android:layout_marginVertical="@dimen/_10sdp"
-                        android:layout_weight="0.3"
-                        android:id="@+id/ivProImage"
-                        android:src="@drawable/ic_img_check_out_pay" />-->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -374,46 +367,14 @@
                             android:textColorHint="@color/black"
                             android:textSize="17sp" />
 
-                        <!--                        <LinearLayout-->
-                        <!--                            android:layout_width="wrap_content"-->
-                        <!--                            android:layout_height="wrap_content">-->
 
-                        <!--                            <ImageView-->
-                        <!--                                android:layout_width="@dimen/_13sdp"-->
-                        <!--                                android:layout_height="@dimen/_13sdp"-->
-                        <!--                                android:layout_marginTop="@dimen/_3sdp"-->
-                        <!--                                android:src="@drawable/ic_start_new" />-->
-
-                        <!--                            <TextView-->
-                        <!--                                android:layout_width="wrap_content"-->
-                        <!--                                android:layout_height="wrap_content"-->
-                        <!--                                android:hint="5.0"-->
-                        <!--                                android:textAlignment="textEnd"-->
-                        <!--                                android:textColorHint="@color/black"-->
-                        <!--                                android:id="@+id/tvRating"-->
-                        <!--                                android:textSize="@dimen/_12sdp"-->
-                        <!--                                android:fontFamily="@font/poppins"-->
-                        <!--                                android:textColor="#FCA800" />-->
-
-                        <!--                            <TextView-->
-                        <!--                                android:layout_width="wrap_content"-->
-                        <!--                                android:layout_height="wrap_content"-->
-                        <!--                                android:textAlignment="textStart"-->
-                        <!--                                android:layout_marginStart="@dimen/_2sdp"-->
-                        <!--                                android:hint="(1k+)"-->
-                        <!--                                android:textColorHint="@color/black"-->
-                        <!--                                android:id="@+id/tvTotalReview"-->
-                        <!--                                android:textSize="@dimen/_12sdp"-->
-                        <!--                                android:fontFamily="@font/poppins"-->
-                        <!--                                android:textColor="#A4A4A4" />-->
-                        <!--                        </LinearLayout>-->
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/_2sdp"
                             android:orientation="horizontal">
 
-                            <!-- Star Rating Icon -->
+
                             <ImageView
                                 android:id="@+id/imageStar"
                                 android:layout_width="@dimen/_13sdp"
@@ -444,7 +405,6 @@
                                 android:textColor="#A4A4A4"
                                 android:textSize="14sp" />
 
-                            <!-- Distance -->
 
                         </RelativeLayout>
 
@@ -602,9 +562,8 @@
                         android:textColor="@color/black"
                         android:textColorHint="@color/black"
                         android:textSize="15sp" />" />
-
                 </RelativeLayout>
-                <!--android:layout_marginBottom="@dimen/_10sdp"-->
+
                 <RelativeLayout
                     android:id="@+id/llDiscountLabel"
                     android:layout_width="match_parent"

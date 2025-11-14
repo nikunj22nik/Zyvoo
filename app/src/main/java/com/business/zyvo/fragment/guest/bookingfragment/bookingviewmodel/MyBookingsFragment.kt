@@ -14,9 +14,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.business.zyvo.AppConstant
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
-import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnItemAdapterClick
 import com.business.zyvo.R
@@ -99,23 +100,23 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
                         }
                         is NetworkResult.Error -> {
                             Log.e(ErrorDialog.TAG, "Server Error: ${it.message}")
-                            if (it.message == "No bookings found."){
+                            if (it.message == ErrorMessage.NO_BOOKING_FOUND ){
                                // showSuccessDialog(requireContext(), it.message)
                                 binding.recyclerViewChat.visibility = View.GONE
                                 binding.textNoBookingFound.visibility = View.VISIBLE
                             }else{
-                                showErrorDialog(requireContext(), it.message ?: "Unknown error")
+                                showErrorDialog(requireContext(), it.message ?: ErrorMessage.UNKNOWN_ERROR)
                             }
 
                         }
                         else -> {
-                            Log.v(ErrorDialog.TAG, "Unexpected error: ${it.message ?: "Unknown error"}")
+                            Log.v(ErrorDialog.TAG, "Unexpected error: ${it.message ?: ErrorMessage.UNKNOWN_ERROR}")
                         }
                     }
                 }
             } catch (e: Exception) {
                 Log.e(ErrorDialog.TAG, "Unexpected API error", e)
-                showErrorDialog(requireContext(), "Something went wrong. Please try again.")
+                showErrorDialog(requireContext(), ErrorMessage.SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN)
             }
         }
     }
@@ -159,15 +160,15 @@ class MyBookingsFragment : Fragment(), OnItemAdapterClick, View.OnClickListener 
     private fun sortBookingBy(option: String) {
         var filterBooking:MutableList<BookingModel> = mutableListOf()
         when (option) {
-            "All Bookings" -> filterBooking = bookingListModel/* bookingListModel.sortByDescending { it.booking_status }*/
-            "Confirmed" -> filterBooking =
-                bookingListModel.filter { it.booking_status == "Confirmed" }.toMutableList()
-            "Pending" -> filterBooking =
-                bookingListModel.filter { it.booking_status == "Pending" }.toMutableList()
-            "Finished" -> filterBooking =
-                bookingListModel.filter { it.booking_status == "Finished" }.toMutableList()
-            "Cancelled" -> filterBooking =
-                bookingListModel.filter { it.booking_status == "Cancelled" }.toMutableList()
+          AppConstant.ALL_BOOKINGS  -> filterBooking = bookingListModel
+           AppConstant.CONFIRMED_TEXT -> filterBooking =
+                bookingListModel.filter { it.booking_status == AppConstant.CONFIRMED_TEXT }.toMutableList()
+            AppConstant.PENDING_TEXT  -> filterBooking =
+                bookingListModel.filter { it.booking_status == AppConstant.PENDING_TEXT }.toMutableList()
+            AppConstant.FINISHED_TEXT  -> filterBooking =
+                bookingListModel.filter { it.booking_status == AppConstant.FINISHED_TEXT }.toMutableList()
+            AppConstant.CANCELLED_TEXT -> filterBooking =
+                bookingListModel.filter { it.booking_status == AppConstant.CANCELLED_TEXT }.toMutableList()
         }
         adapterMyBookingsAdapter.updateItem(filterBooking)
     }

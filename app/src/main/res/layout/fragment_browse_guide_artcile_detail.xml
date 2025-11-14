@@ -309,12 +309,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/tv_author"
-                        android:layout_marginStart="@dimen/_8sdp"
+                        android:layout_marginStart="@dimen/_4sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:layout_toEndOf="@id/img_author"
                         android:fontFamily="@font/poppins"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -322,6 +323,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_12sdp"
                     android:layout_marginTop="@dimen/_14sdp"
+                    android:layout_marginBottom="@dimen/_2dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_four_side_grey_corner"
                     android:paddingHorizontal="@dimen/_15sdp"
@@ -346,6 +348,7 @@
                         android:layout_marginTop="@dimen/_7sdp"
                         android:background="@drawable/circular_green"
                         android:src="@drawable/ic_share_composite" />
+
                 </RelativeLayout>
             </LinearLayout>
 

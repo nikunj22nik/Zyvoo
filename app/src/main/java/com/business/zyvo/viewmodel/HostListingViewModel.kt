@@ -16,11 +16,9 @@ class HostListingViewModel @Inject constructor(private val repository: ZyvoRepos
     val imageList: LiveData<MutableList<HostListingModel>> get() = _imageList
 
     init {
-        // Initialize the list in ViewModel
         loadImages()
     }
 
-    // Function to add images to the list
     private fun loadImages() {
         val images = mutableListOf<HostListingModel>(
             HostListingModel("Cabin in Peshastin","4.0", "(1k+)", "37 miles away", "\$12 / h"),
@@ -38,7 +36,5 @@ class HostListingViewModel @Inject constructor(private val repository: ZyvoRepos
         )
         _imageList.value = images
     }
-
-
 
 }

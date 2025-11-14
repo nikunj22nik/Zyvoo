@@ -1,13 +1,8 @@
 package com.business.zyvo.fragment.guest.profile.viewModel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
-import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
-import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.model.AddPaymentCardModel
 import com.business.zyvo.repository.ZyvoRepository
@@ -15,9 +10,7 @@ import com.business.zyvo.utils.NetworkMonitor
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import retrofit2.http.Field
 import javax.inject.Inject
 
@@ -30,13 +23,13 @@ class ProfileViewModel @Inject constructor(
     val isLoading = MutableLiveData<Boolean>()
 
 
-    private val _paymentCardList = MutableLiveData<MutableList<AddPaymentCardModel>>()
-    val paymentCardList: LiveData<MutableList<AddPaymentCardModel>> get() = _paymentCardList
+//    private val _paymentCardList = MutableLiveData<MutableList<AddPaymentCardModel>>()
+//    val paymentCardList: LiveData<MutableList<AddPaymentCardModel>> get() = _paymentCardList
+//
 
-
-    init {
-        loadPaymentDetail()
-    }
+//    init {
+//        loadPaymentDetail()
+//    }
 
 
     suspend fun updatePhoneNumber(
@@ -92,23 +85,23 @@ class ProfileViewModel @Inject constructor(
     }
 
 
-    private fun loadPaymentDetail() {
-        val paymentList = mutableListOf<AddPaymentCardModel>(
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888")
-        )
-
-        _paymentCardList.value = paymentList
-
-    }
+//    private fun loadPaymentDetail() {
+//        val paymentList = mutableListOf<AddPaymentCardModel>(
+//            AddPaymentCardModel("...458888"),
+//            AddPaymentCardModel("...458888"),
+//            AddPaymentCardModel("...458888"),
+//            AddPaymentCardModel("...458888"),
+//            AddPaymentCardModel("...458888"),
+//            AddPaymentCardModel("...458888"),
+//            AddPaymentCardModel("...458888"),
+//            AddPaymentCardModel("...458888"),
+//            AddPaymentCardModel("...458888"),
+//            AddPaymentCardModel("...458888")
+//        )
+//
+//        _paymentCardList.value = paymentList
+//
+//    }
 
 
     suspend fun updateEmail(
@@ -653,24 +646,6 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    suspend fun getPaymentMethodApi(userId: String):
-            Flow<NetworkResult<Pair<String, String>>> {
-        return repository.getPaymentMethods(userId).onEach {
-            when (it) {
-                is NetworkResult.Loading -> {
-                    isLoading.value = true
-                }
-
-                is NetworkResult.Success -> {
-                    isLoading.value = false
-                }
-
-                else -> {
-                    isLoading.value = false
-                }
-            }
-        }
-    }
 
     suspend fun getVerifyIdentityApi(userId: String, identity_verify: String):
             Flow<NetworkResult<Pair<String, String>>> {
@@ -861,8 +836,5 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
-
-
-
 
 }

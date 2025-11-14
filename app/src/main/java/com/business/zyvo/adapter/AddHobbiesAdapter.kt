@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
@@ -25,11 +27,7 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
 
     inner class HobbiesViewHolder(var binding: LayoutAddHobbiesBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        init {
-//            binding.root.setOnClickListener{
-//                listner.itemClick(adapterPosition)
-//            }
-        }
+
 
         fun bind(hobbiesItem: AddHobbiesModel) {
 
@@ -38,7 +36,7 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
             binding.imageCross.setOnClickListener {
                 listner.itemClick(
                     adapterPosition,
-                    "Hobbies"
+                    AppConstant.HOBBIES
                 ) // Handle delete (or any other action) for this location
             }
         }
@@ -70,13 +68,13 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
                 if(enteredText.length >20){
-                    LoadingUtils.showErrorDialog(binding.root.context,"Hobby must be less than 20 characters long.")
+                    LoadingUtils.showErrorDialog(binding.root.context, ErrorMessage.HOBBY_MUST_LESS_THAN_20_CHAR_LONG)
                     return@setOnClickListener
                 }
 
               else if (enteredText.isNotEmpty()) {
 
-                    listner2.itemClick(adapterPosition,"Hobbies",enteredText)
+                    listner2.itemClick(adapterPosition, AppConstant.HOBBIES,enteredText)
                     // Add the new work item to the list
                     list.add(list.size -1 , AddHobbiesModel(enteredText))
                     notifyDataSetChanged() // Notify adapter to update RecyclerView
@@ -105,7 +103,7 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
 
     override fun getItemCount() = list.size
     override fun getItemViewType(position: Int): Int {
-//        return super.getItemViewType(position)
+
         return if (list.size - 1 != position) {
             uploadHobbiesCode
         } else {
@@ -128,7 +126,7 @@ class AddHobbiesAdapter(var context: Context, var list : MutableList<AddHobbiesM
         this.list = newList
 
         if (list.isEmpty()) {
-            list.add(AddHobbiesModel("Add New")) // Placeholder for "Add New"
+            list.add(AddHobbiesModel(AppConstant.ADD_NEW)) // Placeholder for "Add New"
         }
         notifyDataSetChanged()
     }

@@ -119,16 +119,7 @@
 
 
         </RelativeLayout>
-            <!--<ImageView
-                android:id="@+id/imageReward"
-                android:layout_width="@dimen/_20sdp"
-                android:layout_height="@dimen/_20sdp"
-                android:src="@drawable/ic_reward"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_margin="@dimen/_8sdp"/>
--->
+
             <TextView
                 android:id="@+id/textInstantBook"
                 android:layout_width="@dimen/_93sdp"
@@ -174,7 +165,7 @@
         android:id="@+id/textHotelName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Cabin in Peshastin"
+        android:text=""
         android:fontFamily="@font/poppins"
         android:textColor="@color/black"
         android:layout_marginStart="@dimen/_3sdp"
@@ -201,7 +192,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/imageStar"
-        android:text="5.0"
+        android:text=""
         android:fontFamily="@font/poppins"
         android:layout_marginTop="@dimen/_4sdp"
         android:textSize="11sp"
@@ -242,7 +233,7 @@
         android:id="@+id/textPricePerHours"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0 miles away"
+        android:text=""
         android:textColor="#000"
         android:drawablePadding="@dimen/_4sdp"
         android:fontFamily="@font/poppins"

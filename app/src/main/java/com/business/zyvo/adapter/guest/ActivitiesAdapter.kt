@@ -8,16 +8,17 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.model.ActivityModel
 
 class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityModel>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var onItemClickListener: ((list: String/*MutableList<ActivityModel>*/, Int,Boolean) -> Unit)? = null
+    private var onItemClickListener: ((list: String, Int,Boolean) -> Unit)? = null
 
 
-    fun setOnItemClickListener(listener: (list: String/*MutableList<ActivityModel>*/, Int,Boolean) -> Unit) {
+    fun setOnItemClickListener(listener: (list: String, Int,Boolean) -> Unit) {
         onItemClickListener = listener
     }
 
@@ -61,7 +62,7 @@ class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityMode
                        var pair = list[position]
                         pair.checked = true
                         list[position] = pair
-                        //onItemClickListener?.invoke(list,position,true)
+
                         onItemClickListener?.invoke(pair.name,position,true)
                     }
                     else{
@@ -69,7 +70,7 @@ class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityMode
                         var pair = list[position]
                         pair.checked = false
                         list[position] = pair
-                        //onItemClickListener?.invoke(list,position,false)
+
                         onItemClickListener?.invoke(pair.name,position,false)
                     }
                 }
@@ -94,15 +95,13 @@ class ActivitiesAdapter(var context: Context, var list: MutableList<ActivityMode
     }
 
     class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        //        private val imageView: ImageView = itemView.findViewById(R.id.)
-//
         fun bind(activityModel: ActivityModel) {
 
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (list[position].name.equals("Other Activities")) 1 else 0
+        return if (list[position].name.equals(AppConstant.OTHER_ACTIVITIES)) 1 else 0
     }
 
 

@@ -37,16 +37,8 @@ class CustomDateSelectionSpinnerAdapter(
 
     override fun getItemCount(): Int = items.size
 
-    // Retrieve the item at a given position
-//    override fun getSpinnerItem(position: Int): String = items[position]
-
-
-    // Update the selected item index and notify the spinner
     override fun notifyItemSelected(index: Int) {
-//        this.index = index
-//        spinnerView.dismiss() // Close the dropdown after selection
-//        onSpinnerItemSelectedListener?.onItemSelected(index, items[index] )
-//        notifyDataSetChanged()
+
 
         val oldIndex = this.index
         val oldItem = if (oldIndex != -1) items[oldIndex] else null
@@ -55,7 +47,7 @@ class CustomDateSelectionSpinnerAdapter(
         this.index = index
         spinnerView.dismiss()
         onSpinnerItemSelectedListener?.onItemSelected(oldIndex, oldItem, index, newItem)
-        notifyDataSetChanged() // Refresh the adapter to update selection visuals
+        notifyDataSetChanged()
     }
 
     // Set new items to the adapter
@@ -63,8 +55,4 @@ class CustomDateSelectionSpinnerAdapter(
         items = itemList
         notifyDataSetChanged()
     }
-
-
 }
-
-

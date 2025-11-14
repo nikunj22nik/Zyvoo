@@ -251,63 +251,7 @@ private var cardNumberString : String = ""
                 .compress(1024)
                 .maxResultSize(1080, 1080)
                 .start()
-//            /*
-//
-//            //if (hasPermissions(requireContext(), *permissions())) {
-//            val dialog = Dialog(requireContext(), R.style.BottomSheetDialog)
-//            dialog.setContentView(R.layout.alert_box_gallery_pdf)
-//            val layoutParams = WindowManager.LayoutParams()
-//            layoutParams.copyFrom(dialog.window!!.attributes)
-//            layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-//            layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-//            dialog.window!!.attributes = layoutParams
-//            val laygallery: LinearLayout = dialog.findViewById(R.id.lay_gallery)
-//            val laycamera: LinearLayout = dialog.findViewById(R.id.lay_camera)
-//            val view1: View = dialog.findViewById(R.id.view1)
-//            val laypdf: LinearLayout = dialog.findViewById(R.id.lay_pdf)
-//            view1.visibility = View.VISIBLE
-//            laycamera.visibility = View.VISIBLE
-//            laycamera.setOnClickListener {
-//                dialog.dismiss()
-//                imgtype = "camera"
-//                ImagePicker.with(this)
-//                    .cameraOnly()
-//                    .crop(4f,4f)
-//                    .compress(1024)
-//                    .maxResultSize(1080, 1080)
-//                    .start()
-//            }
-//
-//            laygallery.setOnClickListener {
-//                dialog.dismiss()
-//                imgtype = "Gallery"
-//                ImagePicker.with(this)
-//                    .galleryOnly()
-//                    .crop(4f,4f)
-//                    .compress(1024)
-//                    .maxResultSize(1080, 1080)
-//                    .start()
-//            }
-//
-//            laypdf.setOnClickListener {
-//                imgtype = "pdffile"
-//                dialog.dismiss()
-//                //fileIntentMulti()
-//                //  onUploadPdfClick()
-//                openFilePicker()
-//            }
-//
-//            dialog.show()
-////            } else {
-////                Toast.makeText(
-////                    requireContext(),
-////                    "Please go to setting Enable Permission",
-////                    Toast.LENGTH_SHORT
-////                ).show()
-////            }
-//
-//            //  onUploadPdfClick()
-//         */
+
         }
 
 
@@ -408,13 +352,6 @@ private var cardNumberString : String = ""
                     val uri = data.data!!
                     bankuploadfile =
                         BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
-//                    bankuploadMultipart  = MultipartUtils.uriToMultipartBodyPart(requireContext(),uri,"bank_proof_document")
-//                    var fileName = ""
-//                    fileName = getFileNameFromUri(requireContext(), uri).toString()
-//                    Log.d("FileName", "Selected File Name: $fileName")
-//                    if (fileName != "") {
-//                        binding.textChooseBankProof.text = fileName
-//                    }
 
                     binding.textChooseBankProof.text = bankuploadfile.toString()
                     filebankid = "Yes"
@@ -422,8 +359,7 @@ private var cardNumberString : String = ""
 
                 if (imgtype.equals("Gallery", true)) {
                     val uri = data.data!!
-                    // bankuploadfile = BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
-                    //  bankuploadMultipart  = MultipartUtils.uriToMultipartBodyPart(requireContext(),uri,"bank_proof_document")
+
                     filebankid = "Yes"
                     bankuploadfile =
                         BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
@@ -457,19 +393,9 @@ private var cardNumberString : String = ""
                 val mimeType = context?.contentResolver?.getType(uri)
                 if (isValidMimeType(mimeType)) {
                     selectedFileUri = uri
-//                    var fileName = ""
-//                    fileName = getFileNameFromUri(requireContext(), uri).toString()
-//                    Log.d("FileName", "Selected File Name: $fileName")
-//                    if (fileName != "") {
-//                        binding.textChooseBankProof.text = fileName
-//                    }
-//val addpart = MultipartUtils.uriToMultipartBodyPart(requireContext(),uri,"bank_proof_document")
-//                    bankuploadMultipart  = addpart
-//Log.d("bankuploadMultipart",bankuploadMultipart.toString())
 
                     filebankid = "Yes"
                     bankuploadfile = resolveFile(requireContext(), uri)
-                    //   bankuploadfile = BaseApplication.getPath(requireContext(), uri)?.let { File(it) }
 
                     binding.textChooseBankProof.text = bankuploadfile.toString()
                 } else {
@@ -527,28 +453,6 @@ private var cardNumberString : String = ""
                 mimeType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     }
 
-    /*
-    private fun onSelectFromFolderResult(data: Intent?) {
-        if (data != null) {
-            try {
-                val files =
-                    data.getParcelableArrayListExtra<MediaFile>(FilePickerActivity.MEDIA_FILES)
-                Log.v("pdf", files!![0].uri.toString())
-                Log.v("pdf", files[0].name.toString())
-                bankuploadfile = CompressImage.from(requireContext(), files[0].uri)
-                filebankid = "Yes"
-                binding.textChooseBankProof.text = bankuploadfile.toString()
-
-            } catch (e: java.lang.Exception) {
-                e.printStackTrace()
-                Log.d("pdf not found", "no data :-" + e.message.toString())
-            }
-        }
-    }
-
-     */
-
-
     private fun permissions(): Array<String> {
         val p: Array<String> = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             storage_permissions_33
@@ -580,24 +484,6 @@ private var cardNumberString : String = ""
 
 
     private fun clickListener() {
-
-//        binding.textAddBank.setOnClickListener {
-//            //  binding.cvBankAccount2.visibility = View.GONE
-//            // binding.cvDebitCard3.visibility = View.GONE
-//            // binding.llBankAccount.visibility = View.GONE
-//            //   binding.llSavedBankAccountDetails4.visibility = View.VISIBLE
-//
-//
-//
-//        }
-//        binding.textAddCardDebitCard.setOnClickListener {
-//            //   binding.cvBankAccount2.visibility = View.GONE
-//            //  binding.cvDebitCard3.visibility = View.GONE
-//            //    binding.llBankAccount.visibility = View.GONE
-//            //    binding.llSavedBankAccountDetails4.visibility = View.VISIBLE
-//
-//        }
-
 
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
@@ -823,9 +709,7 @@ private var cardNumberString : String = ""
                     MultipartBody.Part.createFormData("dob[]", dobParts[1].toInt().toString()), // Day
                     MultipartBody.Part.createFormData("dob[]", dobParts[2].toInt().toString())  // Year
                 )
-               /* val idTypeBody = binding.spinnerSelectIDType.text.toString()
-                    .toRequestBody("multipart/form-data".toMediaTypeOrNull())*/
-            //  listOf("Driver license", "Passport")
+
             val selectedIdType = binding.spinnerSelectIDType.text.toString()
             val idType = when (selectedIdType) {
                 "Driver license" -> "driver_license"
@@ -906,11 +790,6 @@ private var cardNumberString : String = ""
                     null
                 }
 
-//            val filePart: MultipartBody.Part = bankuploadfile.let {
-//                val requestFile = bankuploadfile!!.asRequestBody("application/pdf".toMediaTypeOrNull())
-//                MultipartBody.Part.createFormData("bank_proof_document", bankuploadfile!!.path, requestFile)
-//            }
-
                 viewModel.addPayOut(
                     userIdPart, firstNameBody, lastNameBody, emailBody, phoneBody,
                     dobList, idTypeBody, ssnBody, personalIdentificationNobody, addressBody,
@@ -978,87 +857,7 @@ private var cardNumberString : String = ""
         }
 
 
-//        binding.spinnerSelectCountryDebitCard.setItems(
-//            listOf("USA", "UK","INDIA", "BRAZIL", "RUSSIA","CHINA")
-//        )
 
-        /*
-                binding.spinnerSelectCountryDebitCard.setOnFocusChangeListener { _, b ->
-                    closeSelectCountryCard = if (b) {
-                        1
-                    } else {
-                        0
-                    }
-                }
-
-                when (closeSelectCountryCard) {
-                    0 -> {
-                        binding.spinnerSelectCountryDebitCard.dismiss()
-                    }
-                    1 -> {
-                        binding.spinnerSelectCountryDebitCard.show()
-                    }
-                }
-
-                binding.spinnerSelectCountryDebitCard.setIsFocusable(true)
-
-                binding.spinnerSelectCountryDebitCard.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-
-                }
-
-                binding.spinnerSelectStateDebitCard.setOnFocusChangeListener { _, b ->
-                    closeSelectStateCard = if (b) {
-                        1
-                    } else {
-                        0
-                    }
-                }
-
-                when (closeSelectStateCard) {
-                    0 -> {
-                        binding.spinnerSelectStateDebitCard.dismiss()
-                    }
-                    1 -> {
-                        binding.spinnerSelectStateDebitCard.show()
-                    }
-                }
-
-                binding.spinnerSelectStateDebitCard.setIsFocusable(true)
-
-                binding.spinnerSelectState.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-                    statetCode = stateList.get(newIndex).iso2
-                    callingCityApi()
-                }
-                binding.spinnerSelectCityDebitCard.setItems(
-                    listOf("NEW DELHI", "MUMBAI","KANPUR", "NOIDA")
-                )
-
-
-                binding.spinnerSelectCity.setOnFocusChangeListener { _, b ->
-                    closeSelectCityCard = if (b) {
-                        1
-                    } else {
-                        0
-                    }
-                }
-
-                when (closeSelectCityCard) {
-                    0 -> {
-                        binding.spinnerSelectCity.dismiss()
-                    }
-                    1 -> {
-                        binding.spinnerSelectCity.show()
-                    }
-                }
-
-                binding.spinnerSelectCity.setIsFocusable(true)
-
-                binding.spinnerSelectCity.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-                    cityCode = cityListStr.get(newIndex)
-
-                }
-
-         */
         binding.spinnerSelectCountryDebitCard.setOnFocusChangeListener { _, b ->
             closeSelectCountryCard = if (b) {
                 1
@@ -1084,9 +883,7 @@ private var cardNumberString : String = ""
             selectState(countryCode)
         }
 
-//        binding.spinnerSelectState.setItems(
-//            listOf("UP", "MP","HARYANA", "PUNJAB", "ODISHA")
-//        )
+
 
 
         binding.spinnerSelectStateDebitCard.setOnFocusChangeListener { _, b ->

@@ -5,13 +5,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.databinding.LayoutIncludedBinding
-import com.business.zyvo.model.ActivityModel
 
 class PropertyIncludedAdapter(var context : Context, var list :List<String>) :
 RecyclerView.Adapter<PropertyIncludedAdapter.ViewHolder>()
 {
 
-    class ViewHolder(var binding: LayoutIncludedBinding) : RecyclerView.ViewHolder(binding.root){}
+    class ViewHolder(var binding: LayoutIncludedBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)

@@ -125,7 +125,7 @@ we will send 4 digits code to your number."
             android:hint="@string/enter_your_number_here"
             android:inputType="phone"
 
-            android:paddingHorizontal="@dimen/_10sdp"
+            android:paddingHorizontal="@dimen/_5sdp"
             android:textSize="12sp"
             android:textColor="#000000"
             android:textColorHint="#7A7A7A" />

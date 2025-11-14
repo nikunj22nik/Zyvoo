@@ -169,16 +169,6 @@ class ScheduleView(context: Context, attrs: AttributeSet?) : View(context, attrs
     }
 
     private fun drawEvent(canvas: Canvas, event: ScheduleEvent) {
-    //    val paddingTopBottom = 15
-//        val left = (dayColumnWidth + daySpacing) * event.column + 10
-//        val top = headerHeight + (rowHeight * event.row) + 40
-//        val right = left + dayColumnWidth - 20
-//        val bottom = top +  rowHeight - 18
-
-//        val left = (dayColumnWidth + daySpacing) * event.column + 10
-//        val top = headerHeight + ((rowHeight + 30) * event.row) + 40 + paddingTopBottom
-//        val right = left + dayColumnWidth - 20
-//        val bottom = top + (rowHeight + 15)- 20 - (2 * (paddingTopBottom - 5 ))
 
         val left = (dayColumnWidth + daySpacing) * event.column + tenSpace
         val top = headerHeight + ((rowHeight + thirtySpace) * event.row) + fourtySpace + fifteenSpace
@@ -245,12 +235,6 @@ class ScheduleView(context: Context, attrs: AttributeSet?) : View(context, attrs
         val top = headerHeight + ((rowHeight + thirtySpace) * row) + fourtySpace + fifteenSpace
         val right = left + dayColumnWidth - twontySpace
         val bottom = top + (rowHeight + fifteenSpace)- fourtySpace // Subtracting twice to balance padding
-
-//        val left = (dayColumnWidth + daySpacing) * column
-//        // val top = headerHeight + ((rowHeight + 30) * row) + 40 + paddingTopBottom
-//        val top = headerHeight + (rowHeight  * row)
-//        val right = left + dayColumnWidth
-//        val bottom = top + rowHeight
 
         val placeholderDrawable = ContextCompat.getDrawable(context, R.drawable.empty_event_icon)
         placeholderDrawable?.setBounds(left.toInt(), top.toInt(), right.toInt(), bottom.toInt())

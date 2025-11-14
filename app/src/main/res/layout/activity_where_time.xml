@@ -57,10 +57,6 @@
                 android:layout_height="1dp"
                 android:background="#E5E5E5" />
 
-            <!--            <View-->
-            <!--                  android:layout_height="@dimen/_1dp"-->
-            <!--                android:layout_marginTop="@dimen/_8sdp"-->
-            <!--                android:background="#E5E5E5" />-->
 
 
             <RelativeLayout
@@ -135,11 +131,6 @@
                         android:textColor="@color/black"
                         android:textColorHint="@color/black" />
 
-                    <!--  <EditText
-                          android:id="@+id/et_search_location"
-                          android:layout_width="match_parent"
-                          android:layout_height="match_parent"
-                          android:background="@null" />-->
 
                 </RelativeLayout>
 

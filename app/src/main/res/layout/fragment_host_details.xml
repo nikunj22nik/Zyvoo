@@ -378,14 +378,7 @@
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:background="@color/grey" />
 
-           <!-- <ImageView
-                android:id="@+id/show_more_review"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginVertical="@dimen/_15sdp"
-                android:layout_marginBottom="@dimen/_50sdp"
-                android:src="@drawable/ic_show_more_review" />-->
+
             <RelativeLayout
                 android:id="@+id/showMoreReview"
                 android:layout_width="wrap_content"

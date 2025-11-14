@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center_vertical"
     android:background="@drawable/dialog_bg"
-android:layout_gravity="center_vertical"
-    android:backgroundTint="#B3020720"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:backgroundTint="#B3020720">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginVertical="@dimen/_15sdp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:orientation="vertical"
-        tools:listitem="@layout/layout_text_with_radio"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHeight_max="@dimen/_250sdp"/>
+        app:layout_constraintHeight_max="@dimen/_250sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/layout_text_with_radio" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,12 +6,9 @@ import android.content.SharedPreferences
 import com.business.zyvo.AppConstant
 import com.business.zyvo.MyApp
 import com.business.zyvo.model.AddLanguageModel
-import com.business.zyvo.model.ChannelListModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.regex.Pattern
 
@@ -206,33 +203,10 @@ class SessionManager(var context: Context) {
     }
 
 
-    fun saveChannelListToPreferences(context: Context, key: String, channelList: MutableList<ChannelListModel>) {
-        // Convert MutableList<ChannelListModel> to JSON string
-        val gson = Gson()
-        val jsonString = gson.toJson(channelList)
-
-        // Save the JSON string to SharedPreferences
-        editor?.putString(key, jsonString)
-        editor?.apply()
-    }
-
-    fun getChannelListFromPreferences(context: Context, key: String): MutableList<ChannelListModel>? {
-        val jsonString = pref?.getString(key, null)
-
-        if (jsonString != null) {
-            // Convert JSON string back to MutableList<ChannelListModel>
-            val gson = Gson()
-            val type = object : TypeToken<MutableList<ChannelListModel>>() {}.type
-            return gson.fromJson(jsonString, type)
-        }
-
-        return null // Return null if no data found
-    }
-    // Remove a language from the stored list
     fun removeLanguage(context: Context, languageName: String) {
         val languages = getLanguages(context).toMutableList()
 
-        // Remove the language by name
+
         val languageToRemove = languages.find { it.name == languageName }
         if (languageToRemove != null) {
             languages.remove(languageToRemove)
@@ -246,30 +220,21 @@ class SessionManager(var context: Context) {
 
     // Save a list of AddLanguageModel to SharedPreferences
     fun saveLanguages(context: Context, languages: List<AddLanguageModel>) {
-
-
-        // Convert the list to a JSON string
         val gson = Gson()
         val json = gson.toJson(languages)
 
-        // Save the JSON string to SharedPreferences
         editor?.putString(LANGUAGES_KEY, json)
         editor?.apply()
     }
 
     // Fetch the list of AddLanguageModel from SharedPreferences
     fun getLanguages(context: Context): List<AddLanguageModel> {
-
-
-        // Get the stored JSON string
         val json = pref?.getString(LANGUAGES_KEY, null)
 
-        // If no data, return an empty list
         if (json == null) {
             return emptyList()
         }
 
-        // Deserialize the JSON string into a list of AddLanguageModel objects
         val gson = Gson()
         val type = object : TypeToken<List<AddLanguageModel>>() {}.type
         return gson.fromJson(json, type)
@@ -312,30 +277,6 @@ class SessionManager(var context: Context) {
         }
     }
 
-    fun isValidEmailOrPhone(input: String): Boolean {
-        val pattern = """^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$|^\+?[0-9]{10,15}$"""
-        val regex = Pattern.compile(pattern)
-        val matcher = regex.matcher(input)
-        return matcher.matches()
-    }
-
-    fun isValidPassword(password: String): Boolean {
-        // val pattern = """^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"""
-        val pattern = """^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"""
-        val regex = Pattern.compile(pattern)
-        val matcher = regex.matcher(password)
-        return matcher.matches()
-    }
-
-    fun isPhoneNumber(input: String): Boolean {
-        val phonePattern = """^\+?[0-9]{10,15}$"""
-        val regex = Pattern.compile(phonePattern)
-        return regex.matcher(input).matches()
-    }
-
-
-
-
     fun setLoginType(loginType :String){
         editor?.putString(AppConstant.loginType,loginType)
         editor?.apply()
@@ -344,6 +285,5 @@ class SessionManager(var context: Context) {
     fun getLoginType(): String{
         return pref?.getString(AppConstant.loginType,"")?: ""
     }
-
 
 }

@@ -31,11 +31,6 @@ class AdapterNotificationScreen(var context: Context,var list: MutableList<Notif
             binding.textNotificationsTitle.text = notification.text1
             binding.textDescription.setResizableText(notification.text2, 4, true)
 
-//            // Set an OnClickListener if needed
-//            binding.root.setOnClickListener {
-//                // Trigger the click listener from the adapter
-//                listner.onClick(binding.root)
-//            }
 
             binding.imageCross.setOnClickListener {
                 // Remove the item from the list and notify the adapter

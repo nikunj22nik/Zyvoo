@@ -60,34 +60,7 @@
                 android:textSize="14sp"
                 />
 
-<!--            <RelativeLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="@dimen/_30sdp"-->
-<!--                android:layout_marginHorizontal="@dimen/_10sdp"-->
-<!--                android:layout_marginTop="@dimen/_10sdp"-->
-<!--                android:background="@drawable/bg_two_side_corner"-->
-<!--                >-->
-<!--                <TextView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Name"-->
-<!--                    android:textSize="@dimen/_12sdp"-->
-<!--                    android:layout_marginStart="@dimen/_10sdp"-->
-<!--                    android:layout_centerVertical="true"-->
-<!--                    android:fontFamily="@font/poppins"-->
-<!--                    />-->
 
-<!--                <ImageView-->
-<!--                    android:layout_width="@dimen/_10sdp"-->
-<!--                    android:layout_height="@dimen/_7sdp"-->
-<!--                    android:src="@drawable/ic_drop_down"-->
-<!--                    android:layout_alignParentEnd="true"-->
-<!--                    android:rotation="180"-->
-<!--                    android:layout_marginEnd="@dimen/_12sdp"-->
-<!--                    android:layout_centerVertical="true"-->
-<!--                    />-->
-
-<!--            </RelativeLayout>-->
             <com.skydoves.powerspinner.PowerSpinnerView
                 android:id="@+id/spinnerView1"
                 android:layout_width="match_parent"

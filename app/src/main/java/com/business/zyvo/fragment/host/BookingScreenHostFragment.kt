@@ -1,7 +1,5 @@
 package com.business.zyvo.fragment.host
 
-import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,10 +14,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
-import com.business.zyvo.BookingRemoveListener
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
@@ -33,12 +29,7 @@ import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.viewmodel.host.HostBookingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
-
-
 
 @AndroidEntryPoint
 class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListener {
@@ -49,14 +40,11 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     private lateinit var viewModel: HostBookingsViewModel
     private var list: MutableList<MyBookingsModel> = mutableListOf()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
         }
     }
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,13 +58,9 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         )
 
         viewModel = ViewModelProvider(this)[HostBookingsViewModel::class.java]
-
         adapterMyBookingsAdapter = HostBookingsAdapter(requireContext(), mutableListOf(), this)
-
         setUpAdapterMyBookings()
-
         binding.recyclerViewChat.adapter = adapterMyBookingsAdapter
-
         viewModel.list.observe(viewLifecycleOwner, Observer { list1 ->
             adapterMyBookingsAdapter!!.updateItem(list1)
             list = list1
@@ -158,25 +142,9 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         super.onViewCreated(view, savedInstanceState)
         binding.imageFilter.setOnClickListener(this)
         callingBookingData()
-//        GlobalScope.launch {
-//            delay(3000) // Delay of 3 seconds (3000 milliseconds)
-//            // Call your function after the delay
-//            sendMessageToActivity()
-//        }
 
     }
 
-
-    private fun sendMessageToActivity() {
-
-        // Create an Intent to send the message
-        val intent = Intent("com.example.broadcast.ACTION_SEND_MESSAGE")
-        intent.putExtra("message", "Hello from Fragment")
-
-        // Send the broadcast using LocalBroadcastManager
-        LocalBroadcastManager.getInstance(requireContext()).sendBroadcast(intent)
-
-    }
 
     private fun callingBookingData() {
         if (NetworkMonitorCheck._isConnected.value) {
@@ -249,7 +217,6 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     }
 
     private fun showPopupWindow(anchorView: View, position: Int) {
-        // Inflate the custom layout for the popup menu
         val popupView =
             LayoutInflater.from(context).inflate(R.layout.popup_all_booking_host_filter, null)
 
@@ -389,10 +356,7 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
     }
 
     override fun itemClick(obj: Int) {
-
         //  Toast.makeText(requireContext(),obj.toString(),Toast.LENGTH_LONG).show()
-
-
     }
 
     override fun onClick(p0: View?) {
@@ -407,6 +371,5 @@ class BookingScreenHostFragment : Fragment(), OnClickListener, View.OnClickListe
         super.onResume()
         (activity as? HostMainActivity)?.bookingResume()
     }
-
 
 }

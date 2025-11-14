@@ -1,12 +1,10 @@
 package com.business.zyvo.adapter.guest
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.databinding.LayoutImageBinding
 import com.business.zyvo.fragment.guest.home.model.OnViewPagerImageClickListener

@@ -9,16 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.business.zyvo.DateManager.DateManager
-
 import com.business.zyvo.R
 import com.business.zyvo.databinding.FragmentPayoutBinding
 
 
 class PayoutFragment : Fragment() {
-
     private var _binding : FragmentPayoutBinding? = null
     private  val binding get() = _binding!!
-
     private var closeSelectIDType = 0
     private var closeSelectCountry = 0
     private var closeSelectState = 0
@@ -27,9 +24,6 @@ class PayoutFragment : Fragment() {
     private lateinit var dateManager: DateManager
 
     lateinit var navController: NavController
-    // TODO: Rename and change types of parameters
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -58,8 +52,6 @@ class PayoutFragment : Fragment() {
 
     }
     private fun toggleBankAccountAndDebitCard(){
-
-
         binding.textBankAccountToggle.setOnClickListener {
             binding.textDebitCardToggle.setBackgroundColor(Color.TRANSPARENT)
             binding.textBankAccountToggle.setBackgroundResource(R.drawable.selected_green_toogle_bg)
@@ -67,8 +59,6 @@ class PayoutFragment : Fragment() {
             binding.textDebitCardToggle.setTextColor(Color.parseColor("#06C169"))
             binding.cvBankAccount2.visibility = View.VISIBLE
             binding.cvDebitCard3.visibility = View.GONE
-
-
         }
 
         binding.textDebitCardToggle.setOnClickListener {
@@ -79,44 +69,24 @@ class PayoutFragment : Fragment() {
             binding.cvBankAccount2.visibility = View.GONE
             binding.cvDebitCard3.visibility = View.VISIBLE
         }
-
-
     }
 
 
     private fun clickListener(){
-
         binding.textAddBank.setOnClickListener {
-          //  binding.cvBankAccount2.visibility = View.GONE
-           // binding.cvDebitCard3.visibility = View.GONE
-           // binding.llBankAccount.visibility = View.GONE
-         //   binding.llSavedBankAccountDetails4.visibility = View.VISIBLE
-
-
             navController.navigateUp()
         }
         binding.textAddCardDebitCard.setOnClickListener {
-         //   binding.cvBankAccount2.visibility = View.GONE
-          //  binding.cvDebitCard3.visibility = View.GONE
-        //    binding.llBankAccount.visibility = View.GONE
-        //    binding.llSavedBankAccountDetails4.visibility = View.VISIBLE
             navController.navigateUp()
         }
-
-
         binding.imageBackIcon.setOnClickListener {
             navController.navigateUp()
         }
 
         binding.etMonth.setOnClickListener {
-
                 dateManager.showMonthSelectorDialog { selectedMonth ->
                     binding.etMonth.text = selectedMonth
-
-
                 }
-
-
         }
 
         binding.etYear.setOnClickListener {
@@ -124,18 +94,12 @@ class PayoutFragment : Fragment() {
                 binding.etYear.text = selectedYear.toString()
             }
         }
-
-
     }
 
     fun spinners(){
-
-
         binding.spinnerSelectIDType.setItems(
             listOf("Driver license", "Passport")
         )
-
-
         binding.spinnerSelectIDType.setOnFocusChangeListener { _, b ->
             closeSelectIDType = if (b) {
                 1
@@ -152,11 +116,8 @@ class PayoutFragment : Fragment() {
                 binding.spinnerSelectIDType.show()
             }
         }
-
         binding.spinnerSelectIDType.setIsFocusable(true)
-
         binding.spinnerSelectIDType.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
-
         }
 
 

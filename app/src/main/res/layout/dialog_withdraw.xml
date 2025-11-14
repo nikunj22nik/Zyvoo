@@ -132,12 +132,6 @@
             android:textSize="12sp"
           />
 
-<!--        <ImageView-->
-<!--            android:layout_width="@dimen/_20sdp"-->
-<!--            android:layout_height="@dimen/_20sdp"-->
-<!--            android:padding="@dimen/_5sdp"-->
-
-<!--            android:src="@drawable/drop_down_black" />-->
 
     </LinearLayout>
 

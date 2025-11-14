@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class ViewImageFragment : Fragment() ,OnClickListener{
+class ViewImageFragment : Fragment(), OnClickListener {
 
     private var _binding: FragmentViewImageBinding? = null
     private val binding get() = _binding!!
@@ -39,11 +39,10 @@ class ViewImageFragment : Fragment() ,OnClickListener{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-binding.imageBack.setOnClickListener(this)
-        // Initialize the ViewPager adapter after binding has been set
-        adapter = ViewPagerAdapter(mutableListOf(),requireContext(),null)
+        binding.imageBack.setOnClickListener(this)
+        adapter = ViewPagerAdapter(mutableListOf(), requireContext(), null)
         binding.viewpager.adapter = adapter
-        adapter?.setOnItemClickListener(object:ViewPagerAdapter.onItemClickListener{
+        adapter?.setOnItemClickListener(object : ViewPagerAdapter.onItemClickListener {
             override fun onItemClick() {
 
             }
@@ -52,21 +51,18 @@ binding.imageBack.setOnClickListener(this)
 
 
         binding.viewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-
-        // Observe the data in ViewModel and update the adapter
         imagePopViewModel.imageList.observe(viewLifecycleOwner, Observer { images ->
-           // adapter?.updateItem(images)
         })
 
-        // Set up the TabLayout mediator
+
         TabLayoutMediator(binding.tabLayoutForIndicator, binding.viewpager) { tab, position ->
-            // Tab configuration if needed
+
         }.attach()
 
-        // Handle back press within the fragment
+
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // Handle back press logic here
+
                 findNavController().navigateUp()
             }
         }
@@ -79,10 +75,10 @@ binding.imageBack.setOnClickListener(this)
     }
 
     override fun onClick(p0: View?) {
-       when(p0?.id){
-           R.id.imageBack->{
-               findNavController().navigateUp()
-           }
-       }
+        when (p0?.id) {
+            R.id.imageBack -> {
+                findNavController().navigateUp()
+            }
+        }
     }
 }

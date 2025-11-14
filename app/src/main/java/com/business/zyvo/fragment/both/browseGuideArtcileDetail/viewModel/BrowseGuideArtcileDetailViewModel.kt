@@ -18,16 +18,6 @@ import javax.inject.Inject
         val networkMonitor: NetworkMonitor
     ) : ViewModel() {
 
-        /*
-            private val _list = MutableLiveData<ArrayList<AllGuidesModel>>()
-            val list : LiveData<ArrayList<AllGuidesModel>> get() = _list
-
-            private val _articlesList = MutableLiveData<ArrayList<AllArticlesModel>>()
-            val articlesList : LiveData<ArrayList<AllArticlesModel>> get() =  _articlesList
-
-
-         */
-
         val isLoading = MutableLiveData<Boolean>()
 
         suspend fun getGuideDetails(guide_id: String):

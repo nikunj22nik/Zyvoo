@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddLanguageBinding
 import com.business.zyvo.databinding.LayoutAddTextBinding
@@ -27,7 +28,7 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
             binding.textMyWorkName.text = languageItem.name
 
             binding.imageCross.setOnClickListener {
-                listner.itemClick(adapterPosition, "language")
+                listner.itemClick(adapterPosition, AppConstant.LANGUAGE)
             }
 
         }
@@ -38,13 +39,11 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
 
         init {
             binding.root.setOnClickListener {
-                listner2.itemClick(adapterPosition,"language","") // Handle "Add New" button click
+                listner2.itemClick(adapterPosition,AppConstant.LANGUAGE,"") // Handle "Add New" button click
             }
         }
         fun bind() {
-//            binding.root.setOnClickListener {
-//                listner.itemClick(adapterPosition, "work") // Handle "Add New" button click
-//            }
+
 
             if (list.size >= 3) {
                 binding.textAddNew.visibility = View.GONE
@@ -85,19 +84,14 @@ class AddLanguageSpeakAdapter(var context: Context, var list : MutableList<AddLa
             holder.bind()
             textAddNew = holder.binding.textAddNew
         }
-
     }
 
     fun updateLanguage(newList: MutableList<AddLanguageModel>) {
         this.list = newList
 
         if (list.isEmpty()) {
-            list.add(AddLanguageModel("Add New")) // Placeholder for "Add New"
+            list.add(AddLanguageModel(AppConstant.ADD_NEW)) // Placeholder for "Add New"
         }
-
         notifyDataSetChanged()
     }
-
-
-
 }

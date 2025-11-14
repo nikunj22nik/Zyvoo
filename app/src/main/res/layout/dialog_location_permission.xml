@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
@@ -47,7 +45,7 @@
         android:layout_marginBottom="@dimen/_10sdp"
         android:fontFamily="@font/poppins"
         android:layout_gravity="center"
-        android:text="@string/dialogMessage"
+        android:text="@string/www_zyvo_com_is_requesting_access_to_your_device_s_location_please_enable_location_services_to_proceed"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="15sp" />

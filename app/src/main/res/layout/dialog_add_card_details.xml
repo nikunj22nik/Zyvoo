@@ -148,7 +148,6 @@
         app:layout_constraintTop_toBottomOf="@+id/textYear"
         tools:ignore="MissingConstraints" />
 
-
     <TextView
         android:id="@+id/textAddBillingAddress"
         android:layout_width="wrap_content"
@@ -163,8 +162,6 @@
         android:layout_marginTop="@dimen/_10ssp"
         />
 
-
-
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkBox"
         android:layout_width="wrap_content"
@@ -176,7 +173,6 @@
         android:text="Same as Mailing Address"
         android:fontFamily="@font/poppins"
         android:textSize="11sp"/>
-
 
     <EditText
         android:id="@+id/etStreet"
@@ -198,7 +194,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:paddingVertical="@dimen/_4sdp"/>
 
-
     <EditText
         android:id="@+id/etCity"
         android:layout_width="@dimen/_105sdp"
@@ -218,8 +213,6 @@
         android:layout_marginStart="@dimen/_11ssp"
         app:layout_constraintEnd_toEndOf="@+id/etCardNumber"
         android:paddingVertical="@dimen/_4sdp"/>
-
-
 
     <EditText
         android:id="@+id/etState"
@@ -264,10 +257,6 @@
         android:paddingVertical="@dimen/_4sdp"/>
 
 
-
-
-
-
     <TextView
         android:id="@+id/textSubmitButton"
         android:layout_width="wrap_content"
@@ -285,18 +274,5 @@
         android:textColor="@color/black"
         android:paddingHorizontal="@dimen/_40sdp"
         android:paddingVertical="@dimen/_10ssp"/>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

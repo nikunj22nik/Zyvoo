@@ -12,13 +12,14 @@
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        android:layout_marginBottom="@dimen/_70sdp">
+        android:layout_marginBottom="@dimen/_70sdp"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +62,19 @@
                 android:fontFamily="@font/poppins"
                 android:text="@string/lorem_ipsum_short"
                 android:textColor="@color/black"
-                android:textSize="13sp" />
+                android:textSize="13sp"
+                android:visibility="gone" />
+
+            <WebView
+                android:id="@+id/webViewIntroText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_13sdp"
+                android:background="@android:color/transparent"
+                android:isScrollContainer="false"
+                android:overScrollMode="never"
+                tools:ignore="WebViewLayout" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -105,8 +118,8 @@
                         android:layout_marginHorizontal="@dimen/_10sdp"
                         android:layout_marginTop="@dimen/_5sdp"
                         android:fontFamily="@font/poppins"
-                        android:inputType="textCapSentences"
                         android:hint="Your Name"
+                        android:inputType="textCapSentences"
                         android:textSize="12sp" />
 
                     <EditText
@@ -141,12 +154,12 @@
                             android:id="@+id/etMessage"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:padding="@dimen/_5ssp"
-                            android:fontFamily="@font/poppins"
-                            android:textSize="12sp"
-                            android:gravity="top|start"
                             android:layout_marginHorizontal="@dimen/_10sdp"
-                            android:background="@null" />
+                            android:background="@null"
+                            android:fontFamily="@font/poppins"
+                            android:gravity="top|start"
+                            android:padding="@dimen/_5ssp"
+                            android:textSize="12sp" />
 
                     </RelativeLayout>
 
@@ -164,9 +177,9 @@
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
                             android:fontFamily="@font/poppins"
-                            android:textSize="14sp"
                             android:text="Submit"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
 
                     </RelativeLayout>
 
@@ -296,12 +309,12 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/_19sdp"
                             android:layout_marginTop="@dimen/_2sdp"
+                            android:layout_marginBottom="@dimen/_20sdp"
                             android:fontFamily="@font/poppins"
                             android:text="info@yopmail.com"
                             android:textColor="@color/white"
                             android:textSize="@dimen/_12ssp"
                             android:textStyle="bold"
-                            android:layout_marginBottom="@dimen/_20sdp"
                             app:layout_constraintStart_toEndOf="@id/email_icon"
                             app:layout_constraintTop_toBottomOf="@id/tv_email" />
 
@@ -359,32 +372,12 @@
 
             </androidx.cardview.widget.CardView>
 
-
-<!--            <RelativeLayout-->
-<!--                android:id="@+id/rl_map_view"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_below="@+id/clSearch"-->
-<!--                android:visibility="visible"-->
-<!--                android:layout_marginTop="@dimen/_20sdp"-->
-<!--                android:layout_marginHorizontal="@dimen/_10sdp">-->
-
-<!--                <com.google.android.gms.maps.MapView-->
-<!--                    android:id="@+id/map"-->
-<!--                    android:name="com.google.android.gms.maps.SupportMapFragment"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="@dimen/_200sdp" />-->
-
-<!--            </RelativeLayout>-->
-
-
-            <!-- Updated map container - now uses FrameLayout for fragment -->
             <FrameLayout
                 android:id="@+id/rl_map_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_200sdp"
-                android:layout_marginTop="@dimen/_20sdp"
                 android:layout_marginHorizontal="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_20sdp"
                 android:visibility="visible" />
         </LinearLayout>
     </ScrollView>

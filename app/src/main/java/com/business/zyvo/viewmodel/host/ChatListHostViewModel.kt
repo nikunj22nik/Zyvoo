@@ -23,9 +23,6 @@ class ChatListHostViewModel @Inject constructor(private val repository: ZyvoRepo
      var chatChannel :MutableList<ChannelListModel> = mutableListOf()
      val isLoading = MutableLiveData<Boolean>()
 
-
-
-    // Method to remove item at a specific position
     fun removeItemAt(position: Int) {
         _list.value?.let {
             if (position in it.indices) {

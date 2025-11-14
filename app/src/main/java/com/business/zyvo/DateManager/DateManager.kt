@@ -35,10 +35,8 @@ class DateManager(var context: Context) {
     )
 
     fun getHoursAndMinutes(timeString: String): String {
-        // Split the time string using ':' as the separator
-        val timeParts = timeString.split(":")
 
-        // Return the hours and minutes part (ignoring seconds)
+        val timeParts = timeString.split(":")
         return "${timeParts[0]}:${timeParts[1]}"
     }
 
@@ -61,48 +59,7 @@ class DateManager(var context: Context) {
             .show()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun isFromTimeLessThanToTime(fromTime: String, toTime: String): Boolean {
 
-        val formatter24Hour = DateTimeFormatter.ofPattern("HH:mm") // 24-hour format
-        val formatter12Hour = DateTimeFormatter.ofPattern("hh:mm a") // 12-hour format (AM/PM)
-
-        // Trim any extra spaces from the input time strings
-        val trimmedFromTime = fromTime.trim()
-        val trimmedToTime = toTime.trim()
-
-        // Declare LocalTime variables
-        val from: LocalTime
-        val to: LocalTime
-
-        try {
-            // Try parsing "from" time in 12-hour format (AM/PM)
-            from =
-                if (trimmedFromTime.contains("AM", true) || trimmedFromTime.contains("PM", true)) {
-                    LocalTime.parse(trimmedFromTime, formatter12Hour)
-                } else {
-                    // Otherwise, try 24-hour format
-                    LocalTime.parse(trimmedFromTime, formatter24Hour)
-                }
-
-            // Try parsing "to" time in 12-hour format (AM/PM)
-            to = if (trimmedToTime.contains("AM", true) || trimmedToTime.contains("PM", true)) {
-                LocalTime.parse(trimmedToTime, formatter12Hour)
-            } else {
-                // Otherwise, try 24-hour format
-                LocalTime.parse(trimmedToTime, formatter24Hour)
-            }
-
-            // If no exception is thrown, compare times
-            return from.isBefore(to)
-
-        } catch (e: DateTimeParseException) {
-            // Catch and handle parsing errors if the time format is not valid
-
-            Log.d("TESTING_ZYVOO", "Inside the error of time")
-            return false // You can return false or handle it according to your needs
-        }
-    }
 
     fun showYearPickerDialog(onYearSelected: (Int) -> Unit) {
         val yearPicker = NumberPicker(context).apply {
@@ -146,21 +103,7 @@ class DateManager(var context: Context) {
 
     }
 
-    fun generateTimeList(): List<String> {
-        val timeList = mutableListOf<String>()
 
-        // Generate times from 12:00 AM to 11:59 PM
-        for (hour in 0..23) {
-            for (minute in 0..59 step 5) { // Using step 5 to have time in 5-minute intervals
-                val ampm = if (hour < 12) "AM" else "PM"
-                val hourIn12Format = if (hour % 12 == 0) 12 else hour % 12
-                val timeString = String.format("%02d:%02d $ampm", hourIn12Format, minute)
-                timeList.add(timeString)
-            }
-        }
-
-        return timeList
-    }
 
 
     fun generateHourList(): List<String> {
@@ -178,59 +121,6 @@ class DateManager(var context: Context) {
     }
 
 
-    /*
-        fun  getRangeSelectedDateWithYear(
-            fragmentManager: FragmentManager,
-            onDateRangeSelected: (Pair<Pair<String, String>, Int>?) -> Unit
-        ): Pair<Pair<String, String>, Int>? {
-            // Initialize the MaterialDatePicker
-            val datePicker = MaterialDatePicker.Builder.dateRangePicker().build()
-
-            // Variable to hold the selected start and end dates and the year
-            var selectedData: Pair<Pair<String, String>, Int>? = null
-
-            // Show the DatePicker
-            datePicker.show(fragmentManager, "DatePicker")
-
-            // Set up the event for when the OK button is clicked
-            datePicker.addOnPositiveButtonClickListener { selection ->
-                // Extract start and end dates from the selection
-                val startDate = selection?.first?.let { java.util.Date(it) }
-                val endDate = selection?.second?.let { java.util.Date(it) }
-
-                // Format the dates into readable strings
-                val dateFormat = java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.getDefault())
-                val startDateString = startDate?.let { dateFormat.format(it) }
-                val endDateString = endDate?.let { dateFormat.format(it) }
-
-                // Extract the year from the startDate (or endDate, as they should be in the same year)
-                val calendar = java.util.Calendar.getInstance()
-                startDate?.let { calendar.time = it }
-                val year = calendar.get(java.util.Calendar.YEAR)
-
-                // Display the selected date range
-                Toast.makeText(context, "${datePicker.headerText }  $year is selected", Toast.LENGTH_LONG).show()
-
-                // Assign the startDate, endDate, and year to the result
-                if (startDateString != null && endDateString != null) {
-                    selectedData = Pair(Pair(startDateString, endDateString), year)
-                }
-            }
-
-            // Set up the event for when the cancel button is clicked
-            datePicker.addOnNegativeButtonClickListener {
-                Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
-            }
-
-            // Set up the event for when the back button is pressed
-            datePicker.addOnCancelListener {
-                Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
-            }
-
-            return selectedData
-        }
-
-     */
     fun getRangeSelectedDateWithYear(
         fragmentManager: FragmentManager,
         onDateRangeSelected: (Pair<Pair<String, String>, Int>?) -> Unit
@@ -246,8 +136,7 @@ class DateManager(var context: Context) {
             val startDate = selection?.first?.let { java.util.Date(it) }
             val endDate = selection?.second?.let { java.util.Date(it) }
 
-            //val dateFormat = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
-            //val dateFormat1 = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault())
+
             val dateFormat = java.text.SimpleDateFormat("MMM dd yyyy", java.util.Locale.getDefault())
             val dateFormat1 = java.text.SimpleDateFormat("MMM dd yyyy", java.util.Locale.getDefault())
             val startDateString = startDate?.let { dateFormat.format(it) }
@@ -266,14 +155,12 @@ class DateManager(var context: Context) {
         }
 
         datePicker.addOnNegativeButtonClickListener {
-           // Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
             onDateRangeSelected(null)
         }
 
 
 
         datePicker.addOnCancelListener {
-       //     Toast.makeText(context, "Date Picker Cancelled", Toast.LENGTH_LONG).show()
             onDateRangeSelected(null)
         }
     }
@@ -283,28 +170,7 @@ class DateManager(var context: Context) {
         return months.indexOf(monthName).takeIf { it >= 0 }?.plus(1)
     }
 
-    fun showTimePickerDialog(context: Context, onTimeSelected: (String) -> Unit) {
-        val calendar = Calendar.getInstance()
-        val currentHour = calendar.get(Calendar.HOUR_OF_DAY)
-        val currentMinute = calendar.get(Calendar.MINUTE)
 
-        val timePickerDialog = TimePickerDialog(
-            context,
-            { _, hourOfDay, minute ->
-                // Convert to AM/PM format
-                val amPm = if (hourOfDay < 12) "AM" else "PM"
-                val hourIn12HourFormat = if (hourOfDay % 12 == 0) 12 else hourOfDay % 12
-                val formattedTime = String.format("%02d:%02d %s", hourIn12HourFormat, minute, amPm)
-
-                // Return the formatted time via the callback
-                onTimeSelected(formattedTime)
-            },
-            currentHour,
-            currentMinute,
-            false // Use 12-hour format
-        )
-        timePickerDialog.show()
-    }
 
     fun showTimePickerDialog1(context: Context, onTimeSelected: (String) -> Unit) {
         val calendar = Calendar.getInstance()
@@ -327,8 +193,6 @@ class DateManager(var context: Context) {
                     formattedHour = 12 // Midnight edge case
                 }
 
-                //   val formattedTime = "$formattedHour:${convertDate(minute1)} $period"
-                //   val formattedTime = String.format("%02d:%02d %s", formattedHour, minute1, period)
                 val formattedTime = "${convertDate(formattedHour)}:${convertDate(minute1)} $period"
 
 
@@ -410,51 +274,6 @@ class DateManager(var context: Context) {
 
 
 
-
-    /*
-    fun showHourSelectionDialog(context: Context, onHourSelected: (String) -> Unit) {
-//        val numberPicker = NumberPicker(context).apply {
-//            minValue = 1
-//            maxValue = 24
-//            wrapSelectorWheel = true
-//        }
-//
-//        AlertDialog.Builder(context)
-//            .setTitle("Select Hours")
-//            .setView(numberPicker)
-//            .setPositiveButton("OK") { _, _ ->
-//                val selectedHour = numberPicker.value
-//                val result = "$selectedHour hour${if (selectedHour > 1) "s" else ""}"
-//                onHourSelected(result) // Return the selected hour as a string
-//            }
-//            .setNegativeButton("Cancel", null)
-//            .show()
-
-
-        val timeOptions = mutableListOf("30 minutes").apply {
-            addAll((1..24).map { "$it hour${if (it > 1) "s" else ""}" })
-        }.toTypedArray()
-
-        val numberPicker = NumberPicker(context).apply {
-            minValue = 0
-            maxValue = timeOptions.size - 1
-            displayedValues = timeOptions
-            wrapSelectorWheel = true
-        }
-
-        AlertDialog.Builder(context)
-            .setTitle("Select Time")
-            .setView(numberPicker)
-            .setPositiveButton("OK") { _, _ ->
-                val selectedTime = timeOptions[numberPicker.value]
-               selectedTime // Return the selected time as a string
-            }
-            .setNegativeButton("Cancel", null)
-            .show()
-    }
-
-     */
-
     fun selectDateManager(onDateSelected: (String) -> Unit) {
         val today = Calendar.getInstance()
         val c = Calendar.getInstance()
@@ -474,20 +293,8 @@ class DateManager(var context: Context) {
             today.get(Calendar.YEAR),
             today.get(Calendar.MONTH),
             today.get(Calendar.DAY_OF_MONTH)
-           /* year,   // ✅ Year first
-            month,  // ✅ Then month
-            day     // ✅ Then day*/
-            /*  month,
-              day,
-              year*/
+
         )
-      /*  // ✅ Set max date to today (no future dates)
-        datePickerDialog.datePicker.maxDate = today.timeInMillis
-        // Set minimum year to 100 years ago (e.g., 1925 if current year is 2025)
-        val minCalendar = Calendar.getInstance()
-        minCalendar.set(1900, 0, 1) // Jan 1, (year - 100)
-        // 🔒 Disable past dates
-        datePickerDialog.datePicker.minDate = c.timeInMillis*/
 
         // Set min date to Jan 1, 1900
         val minDate = Calendar.getInstance()
@@ -497,8 +304,6 @@ class DateManager(var context: Context) {
         datePickerDialog.datePicker.minDate = minDate.timeInMillis
         datePickerDialog.datePicker.maxDate = today.timeInMillis
 
-        // Restrict date range to only past years (birth year style)
-      //  datePickerDialog.datePicker.minDate = minCalendar.timeInMillis
         datePickerDialog.show() // Show the dialog
     }
 

@@ -150,7 +150,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         binding.imageFilter.setOnClickListener(this)
         adapterChatList = AdapterChatList(requireContext(), chatList,object : OnClickListener {
             override fun itemClick(obj: Int) {
-             //   findNavController().navigate(R.id.hostChatDetailsFragment)
             }
 
         },null)
@@ -160,7 +159,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
         binding.recyclerViewChat.adapter = adapterChatList
         viewModel.list.observe(viewLifecycleOwner, Observer { list ->
 
-          //  adapterChatList.updateItem(list)
         })
 
         binding.etSearchButton.addTextChangedListener(object : TextWatcher {
@@ -174,8 +172,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                 filter(query)
             }
         })
-
-        //callingGetChatUser("")
 
     }
 
@@ -307,9 +303,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             val et_addiotnal_detail : EditText = findViewById(R.id.et_addiotnal_detail)
             val powerSpinner : PowerSpinnerView = findViewById(R.id.spinnerView1)
             submit.setOnClickListener {
-                /*if (txtSubmit.text.toString().trim().equals("Submitted") == false) {
-                    txtSubmit.text = "Submitted"
-                }else*/  if(powerSpinner.text.toString().isEmpty()){
+                 if(powerSpinner.text.toString().isEmpty()){
                 showToast(requireActivity(),AppConstant.spinner)
             }else if (et_addiotnal_detail.text.isEmpty()){
                 showToast(requireActivity(),AppConstant.additional)
@@ -382,15 +376,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
     }
 
     fun filter(query: String) {
-//        filteredList = if (query.isEmpty()) {
-//            chatList.toMutableList()
-//        } else {
-//            chatList.filter {
-//
-//            }
-//        }
-//
-//        adapterChatList.updateItem(filteredList)
 
     }
 
@@ -680,7 +665,6 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
 
     private fun showPopupWindow(anchorView: View, position: Int) {
-        // Inflate the custom layout for the popup menu
         val popupView =
             LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
 
@@ -896,12 +880,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             try {
                 chatList.clear()
                 Log.d("*******", ""+quickstartConversationsManager.messages.size + " SIZE OF MESSAGE")
-              //  if (quickstartConversationsManager.messages.size > 0 || quickstartConversationsManager.messages != null) {
-                   /* quickstartConversationsManager.messages.forEach {
-                        Log.d("*******","m 8888"+it.messageBody)
-                      //  Log.d("*******","j 8888"+it.participant.conversation.state)
-                        Log.d("*******","u 88888"+it.conversation.uniqueName)
-                    }*/
+
                     for (conversation  in quickstartConversationsManager.conversationsClient?.myConversations!!) {
                         try {
                             if (map.containsKey(conversation.uniqueName)) {
@@ -918,10 +897,8 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                                                     TimeUtils.updateLastMsgTime(dateUpdated)
                                                 obj?.date = dateUpdated
                                             }
-                                           /* obj?.lastMessageTime =
-                                                TimeUtils.updateLastMsgTime(conversation.dateCreated)*/
+
                                             obj?.isOnline = false
-                                          //  obj?.date = conversation.dateCreated
 
                                             if (obj != null) {
                                                 chatList.add(obj)
@@ -938,7 +915,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                         }
 
                     }
-            //    }
+
             }catch (e:Exception){
                 Log.d("******","msg :- "+e.message)
             }
@@ -997,14 +974,14 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
     override fun reloadMessages() {
         Log.d("*******", "reloadMessages" )
         LoadingUtils.hideDialog()
-        //updateAdapter()
+
          updateNewCode()
     }
 
     override fun showError(message: String?) {
         if (message != null && isAdded && !requireActivity().isFinishing) {
             LoadingUtils.hideDialog()
-          //  LoadingUtils.showSuccessDialog(requireContext(), message)
+
         }
     }
 

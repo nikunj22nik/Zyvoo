@@ -9,7 +9,6 @@ class CustomScrollView(context: Context, attrs: AttributeSet) : ScrollView(conte
 
     private var shouldIntercept = true
 
-    // This method will allow you to set whether the ScrollView should intercept touch events
     fun setShouldIntercept(intercept: Boolean) {
         shouldIntercept = intercept
     }

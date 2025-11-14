@@ -12,6 +12,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.databinding.FragmentTurnNotificationsBinding
 
@@ -29,9 +30,9 @@ private var  _binding: FragmentTurnNotificationsBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            data = requireArguments().getString("data")!!
-            type = requireArguments().getString("type")!!
-            email = requireArguments().getString("email")!!
+            data = requireArguments().getString(AppConstant.DATA_SMALL_TEXT)!!
+            type = requireArguments().getString(AppConstant.type)!!
+            email = requireArguments().getString(AppConstant.EMAIL_SMALL_TEXT)!!
         }
     }
 
@@ -50,15 +51,15 @@ private var  _binding: FragmentTurnNotificationsBinding? = null
         requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
                 val bundle = Bundle()
-                bundle.putString("data",data)
-                bundle.putString("type",type)
-                bundle.putString("email",email)
+                bundle.putString(AppConstant.DATA_SMALL_TEXT,data)
+                bundle.putString(AppConstant.type,type)
+                bundle.putString(AppConstant.EMAIL_SMALL_TEXT,email)
                 findNavController().navigate(R.id.turnLocationFragment,bundle)
             }else{
                 val bundle = Bundle()
-                bundle.putString("data",data)
-                bundle.putString("type",type)
-                bundle.putString("email",email)
+                bundle.putString(AppConstant.DATA_SMALL_TEXT,data)
+                bundle.putString(AppConstant.type,type)
+                bundle.putString(AppConstant.EMAIL_SMALL_TEXT,email)
                 findNavController().navigate(R.id.turnLocationFragment,bundle)
             }
 
@@ -66,9 +67,9 @@ private var  _binding: FragmentTurnNotificationsBinding? = null
 
         binding.textNotnow.setOnClickListener{
             val bundle = Bundle()
-            bundle.putString("data",data)
-            bundle.putString("type",type)
-            bundle.putString("email",email)
+            bundle.putString(AppConstant.DATA_SMALL_TEXT,data)
+            bundle.putString(AppConstant.type,type)
+            bundle.putString(AppConstant.EMAIL_SMALL_TEXT,email)
             findNavController().navigate(R.id.turnLocationFragment,bundle)
         }
 
@@ -78,9 +79,9 @@ private var  _binding: FragmentTurnNotificationsBinding? = null
                     PackageManager.PERMISSION_GRANTED
                 ) {
                     val bundle = Bundle()
-                    bundle.putString("data",data)
-                    bundle.putString("type",type)
-                    bundle.putString("email",email)
+                    bundle.putString(AppConstant.DATA_SMALL_TEXT,data)
+                    bundle.putString(AppConstant.type,type)
+                    bundle.putString(AppConstant.EMAIL_SMALL_TEXT,email)
                     findNavController().navigate(R.id.turnLocationFragment,bundle)
                 }
                 else {
@@ -88,9 +89,9 @@ private var  _binding: FragmentTurnNotificationsBinding? = null
                 }
             }else{
                 val bundle = Bundle()
-                bundle.putString("data",data)
-                bundle.putString("type",type)
-                bundle.putString("email",email)
+                bundle.putString(AppConstant.DATA_SMALL_TEXT,data)
+                bundle.putString(AppConstant.type,type)
+                bundle.putString(AppConstant.EMAIL_SMALL_TEXT,email)
                 findNavController().navigate(R.id.turnLocationFragment,bundle)
             }
 

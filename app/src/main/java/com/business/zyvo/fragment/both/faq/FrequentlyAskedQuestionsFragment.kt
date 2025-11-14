@@ -1,13 +1,11 @@
 package com.business.zyvo.fragment.both.faq
 
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -20,7 +18,6 @@ import com.business.zyvo.adapter.FaqAdapter
 import com.business.zyvo.databinding.FragmentFrequentlyAskedQuestionsBinding
 import com.business.zyvo.fragment.both.faq.model.FaqModel
 import com.business.zyvo.fragment.both.faq.viewModel.FaqViewModel
-import com.business.zyvo.fragment.guest.termAndCondition.viewModel.TermsViewModel
 import com.business.zyvo.utils.NetworkMonitorCheck
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers

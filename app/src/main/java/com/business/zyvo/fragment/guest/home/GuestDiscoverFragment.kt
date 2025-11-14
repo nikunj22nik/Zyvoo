@@ -3,11 +3,9 @@ package com.business.zyvo.fragment.guest.home
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Bitmap
@@ -47,15 +45,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MapStyleOptions
-import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.AppConstant
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -63,10 +54,10 @@ import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
 import com.business.zyvo.activity.GuesMain
+import com.business.zyvo.activity.guest.WhereTimeActivity
 import com.business.zyvo.activity.guest.extratimecharges.ExtraTimeChargesActivity
 import com.business.zyvo.activity.guest.filter.FiltersActivity
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
-import com.business.zyvo.activity.guest.WhereTimeActivity
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.activity.guest.propertydetails.model.PropertyData
 import com.business.zyvo.activity.guest.sorryresult.SorryActivity
@@ -82,8 +73,8 @@ import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.fragment.guest.home.viewModel.GuestDiscoverViewModel
 import com.business.zyvo.model.FilterRequest
 import com.business.zyvo.model.SearchFilterRequest
-import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculateDifferenceInSeconds
 import com.business.zyvo.utils.ErrorDialog.convertTo12HourFormat
@@ -93,19 +84,21 @@ import com.business.zyvo.utils.ErrorDialog.isAfterOrSame
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PermissionManager
-import com.google.android.gms.common.api.GoogleApiClient
-import com.google.android.gms.common.api.PendingResult
-import com.google.android.gms.common.api.Status
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsResult
-import com.google.android.gms.location.LocationSettingsStatusCodes
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
@@ -173,9 +166,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 if (result.resultCode == Activity.RESULT_OK) {
                     val data = result.data
                     if (data!=null) {
-                        if (data.extras?.getString("type").equals("filter")) {
+                        if (data.extras?.getString(AppConstant.type/*"type"*/).equals(AppConstant.FILTER/*"filter"*/)) {
                             val value: FilterRequest = Gson().fromJson(
-                                data.extras?.getString("requestData"), FilterRequest::class.java
+                                data.extras?.getString(AppConstant.REQUEST_DATA/*"requestData"*/), FilterRequest::class.java
                             )
                             value.let {
                                 Log.d(ErrorDialog.TAG, Gson().toJson(value))
@@ -195,9 +188,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             try {
                 if (result.resultCode == Activity.RESULT_OK) {
                     val data = result.data
-                                  // Handle the resultl
                     if (data!=null) {
-                        if (data.extras?.getString("type").equals("filter")) {
+                        if (data.extras?.getString(AppConstant.type/*"type"*/).equals(AppConstant.FILTER/*"filter"*/)) {
                             val value: SearchFilterRequest = Gson().fromJson(
                                 data.extras?.getString("SearchrequestData"),
                                 SearchFilterRequest::class.java
@@ -229,7 +221,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
         binding.filterIcon.setOnClickListener {
             val intent = Intent(requireContext(), FiltersActivity::class.java)
-           // startActivity(intent)
             startForResult.launch(intent)
         }
 
@@ -241,30 +232,15 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
 
-        // This is use for LocationServices declaration
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         locationManager = requireActivity().getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
 
-
-        // This condition for check location run time permission
-//        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//            getCurrentLocation()
-//        } else {
-//            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 100)
-//        }
 
         if (!PermissionManager.hasLocationPermission(requireActivity())) {
             alertBoxLocation1()
         }else{
             getCurrentLocation()
         }
-
-     /*   val filterData = arguments?.getParcelable<FilterRequest>("filter_data")
-        filterData?.let {
-            Log.d("FilterData", "User ID: ${it.user_id}, Location: ${it.location}, Price: ${it.minimum_price} - ${it.maximum_price}")
-
-            filteredDataAPI(it)
-        }*/
 
         if (runnable==null) {
             getUserBookings()
@@ -286,7 +262,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
     }
 
     private fun startCountdown(remaning:String) {
-        // Countdown timer for 20 seconds with 1-second intervals
         object : CountDownTimer(remaning.toLong()*(1000*60), 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secondsRemaining = (millisUntilFinished / 1000).toInt()
@@ -350,7 +325,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                                         .title("$${location.hourly_rate.toDouble().toInt()}/h")
                                     val marker = googleMap.addMarker(markerOptions)
                                     marker?.tag = location.property_id  // 🔑 Save property_id in tag
-                                    // Move and zoom the camera to the first location
                                     googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         LatLng(location.latitude.toDouble(), location.longitude.toDouble()), 12f))
                                 }
@@ -407,9 +381,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         Log.d(ErrorDialog.TAG,"I AM HERE IN DEVELOPMENT")
         Log.d("checkPropertyId",homePropertyData?.get(position)?.property_id.toString())
         val intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
-        intent.putExtra("LoginType","Logging")
-        intent.putExtra("propertyId",homePropertyData?.get(position)?.property_id.toString())
-        intent.putExtra("propertyMile",homePropertyData?.get(position)?.distance_miles.toString())
+        intent.putExtra(AppConstant.LOGIN_TYPE/*"LoginType"*/,"Logging")
+        intent.putExtra(AppConstant.PROPERTY_ID_TEXT/*"propertyId"*/,homePropertyData?.get(position)?.property_id.toString())
+        intent.putExtra(AppConstant.PROPERTY_MILE/*"propertyMile"*/,homePropertyData?.get(position)?.distance_miles.toString())
         startActivity(intent)
     }
 
@@ -705,14 +679,14 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
     override fun itemClick(obj: Int, text: String) {
         when(text){
-            "Add Wish"->{
+            AppConstant.ADD_WISH/*"Add Wish"*/->{
                 //vipin
                 if (wishOpen){
                     return
                 }
                 showAddWishlistDialog(homePropertyData?.get(obj)?.property_id.toString(),obj)
             }
-            "Remove Wish"->{
+            AppConstant.REMOVE_WISH /*"Remove Wish"*/->{
                 removeItemFromWishlist(homePropertyData?.get(obj)?.property_id.toString(),obj)
             }
         }
@@ -724,9 +698,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         (activity as? GuesMain)?.discoverResume()
     }
 
-
-
-
     private fun getCurrentLocation() {
         val sessionManager = SessionManager(requireContext())
         // Initialize Location manager
@@ -737,8 +708,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                 LocationManager.NETWORK_PROVIDER
             )
         ) {
-            // When location service is enabled
-            // Get last location
+
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -747,13 +717,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+
                 return
             }
             mFusedLocationClient.lastLocation.addOnCompleteListener { task ->
@@ -788,7 +752,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                             }
                         }
                     }
-//                    // Request location updates
+                    // Request location updates
                     mFusedLocationClient.requestLocationUpdates(
                         locationRequest,
                         locationCallback,
@@ -961,8 +925,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                     filterRequest.hour,
                     ErrorDialog.convertDateToTimeFormat(filterRequest.start_time),
                     ErrorDialog.convertDateToTimeFormat(filterRequest.end_time),
-                   /* filterRequest.start_time,
-                    filterRequest.end_time,*/
                     filterRequest.activity,
                     filterRequest.property_price).collect {
                     when (it) {
@@ -1007,7 +969,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                             }
                         }
                         is NetworkResult.Error -> {
-                           // showErrorDialog(requireContext(), it.message!!)
                             requireActivity().startActivity(Intent(requireActivity(),SorryActivity::class.java))
                         }
 
@@ -1085,7 +1046,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                         }
                         is NetworkResult.Error -> {
                             requireActivity().startActivity(Intent(requireActivity(),SorryActivity::class.java))
-                           // showErrorDialog(requireContext(), it.message!!)
+
                         }
 
                         else -> {
@@ -1107,8 +1068,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             if (Activity.RESULT_OK == resultCode) {
                 getCurrentLocation()
             } else {
-                Toast.makeText(requireContext(), "Please turn on location", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(requireContext(), ErrorMessage.PLEASE_TURN_ON_LOCATION/*"Please turn on location"*/, Toast.LENGTH_SHORT).show()
             }
         }
         if (requestCode == 200) {
@@ -1126,7 +1086,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         // Check condition
         if (requestCode == 100) {
             if (requestCode == 100 && grantResults.isNotEmpty() && (grantResults[0] + grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-               // displayLocationSettingsRequest(requireActivity())
+
                 showCustomLocationDialog()
             } else {
                 alertBoxLocation1()
@@ -1135,10 +1095,9 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
         if (requestCode == 1000) {
             if (requestCode == 1000 && grantResults.isNotEmpty() && (grantResults[0] + grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-              //  displayLocationSettingsRequest11(requireActivity())
+
                 showCustomLocationDialog()
             } else {
-               // displayLocationSettingsRequest11(requireActivity())
                 showCustomLocationDialog()
             }
         }
@@ -1164,8 +1123,7 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
 
         btnCancel.setOnClickListener {
             dialog.dismiss()
-            // Optional: Cancel पर कुछ action
-            Toast.makeText(requireActivity(), "Location is required for better experience", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireActivity(), ErrorMessage.LOCATION_IS_REQUIRED_BETTER_EXPERIENCE/*"Location is required for better experience"*/, Toast.LENGTH_SHORT).show()
         }
 
         dialog.setCancelable(false)
@@ -1176,165 +1134,8 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         startActivityForResult(intent, LOCATION_SETTINGS_REQUEST_CODE)
     }
-    private fun displayLocationSettingsRequest(context: Context) {
-        val googleApiClient = GoogleApiClient.Builder(context)
-            .addApi(LocationServices.API).build()
-        googleApiClient.connect()
-        val locationRequest: LocationRequest = LocationRequest.create()
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 10000
-        locationRequest.fastestInterval = 1000
-        locationRequest.numUpdates = 1
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        builder.setAlwaysShow(true)
-        val result: PendingResult<LocationSettingsResult> =
-            LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
-        result.setResultCallback { result ->
-            val status: Status = result.status
-            when (status.statusCode) {
-                LocationSettingsStatusCodes.SUCCESS -> {
-                    Log.i(ErrorDialog.TAG, "All location settings are satisfied.")
-                    getCurrentLocation()
-                }
-                LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
-                    Log.i(
-                        ErrorDialog.TAG,
-                        "Location settings are not satisfied. Show the user a dialog to upgrade location settings "
-                    )
-                    try {
-                        // Show the dialog by calling startResolutionForResult(), and check the result
-                        // in onActivityResult().
-                        status.resolution?.let {
-                            startIntentSenderForResult(
-                                it.intentSender,
-                                100,
-                                null,
-                                0,
-                                0,
-                                0,
-                                null
-                            )
-                        }
-
-                    } catch (e: SendIntentException) {
-                        Log.i(ErrorDialog.TAG, "PendingIntent unable to execute request.")
-                    }
-                }
-                LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> Log.i(
-                    ErrorDialog.TAG,
-                    "Location settings are inadequate, and cannot be fixed here. Dialog not created."
-                )
-
-            }
-        }
-    }
-
-    private fun displayLocationSettingsRequest11(context: Context) {
-        val googleApiClient = GoogleApiClient.Builder(context)
-            .addApi(LocationServices.API).build()
-        googleApiClient.connect()
-        val locationRequest: LocationRequest = LocationRequest.create()
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 10000
-        locationRequest.fastestInterval = 1000
-        locationRequest.numUpdates = 1
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        builder.setAlwaysShow(true)
-        val result: PendingResult<LocationSettingsResult> =
-            LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
-        result.setResultCallback { result ->
-            val status: Status = result.status
-            when (status.statusCode) {
-                LocationSettingsStatusCodes.SUCCESS -> {
-                    Log.i(ErrorDialog.TAG, "All location settings are satisfied.")
-                    getCurrentLocation()
-                }
-                LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
-                    Log.i(
-                        ErrorDialog.TAG,
-                        "Location settings are not satisfied. Show the user a dialog to upgrade location settings "
-                    )
-                    try {
-                        // Show the dialog by calling startResolutionForResult(), and check the result
-                        // in onActivityResult().
-                        status.resolution?.let {
-                            startIntentSenderForResult(
-                                it.intentSender,
-                                1000,
-                                null,
-                                0,
-                                0,
-                                0,
-                                null
-                            )
-                        }
-
-                    } catch (e: SendIntentException) {
-                        Log.i(ErrorDialog.TAG, "PendingIntent unable to execute request.")
-                    }
-                }
-                LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> Log.i(
-                    ErrorDialog.TAG,
-                    "Location settings are inadequate, and cannot be fixed here. Dialog not created."
-                )
-
-            }
-        }
-    }
-
-    private fun alertBoxLocation() {
-        val builder = AlertDialog.Builder(requireContext())
-        //set title for alert dialog
-        builder.setTitle("Alert")
-        //set message for alert dialog
-        builder.setMessage(R.string.dialogMessage)
-        builder.setIcon(android.R.drawable.ic_dialog_alert)
-
-        //performing positive action
-        builder.setPositiveButton("Yes") { _, _ ->
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri = Uri.fromParts("package", requireContext().packageName, null)
-            intent.data = uri
-            startActivityForResult(intent, 200)
-        }
-        //performing cancel action
-        builder.setNeutralButton("Cancel") { _, _ ->
-
-        }
-
-        // Create the AlertDialog
-        val alertDialog: AlertDialog = builder.create()
-        // Set other dialog properties
-        alertDialog.setCancelable(false)
-        alertDialog.show()
-
-    }
 
     private fun alertBoxLocation1() {
-//        val dialogView = layoutInflater.inflate(R.layout.dialog_location_permission, null)
-//
-//        val builder = AlertDialog.Builder(requireContext())
-//        builder.setView(dialogView)
-//
-//        val alertDialog = builder.create()
-//        alertDialog.setCancelable(false)
-//
-//        val btnAllow = dialogView.findViewById<TextView>(R.id.btnLocation)
-//        val btnCancel = dialogView.findViewById<TextView>(R.id.textNotnow)
-//
-//        btnAllow.setOnClickListener {
-//            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-//            val uri = Uri.fromParts("package", requireContext().packageName, null)
-//            intent.data = uri
-//            startActivityForResult(intent, 200)
-//            alertDialog.dismiss()
-//        }
-//
-//        btnCancel.setOnClickListener {
-//            alertDialog.dismiss()
-//        }
-//
-//        alertDialog.show()
 
         val dialog = Dialog(requireActivity(), R.style.BottomSheetDialog)
         dialog.setContentView(R.layout.dialog_location_permission)
@@ -1359,52 +1160,22 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
             dialog.dismiss()
         }
 
-        //  dialog.setCancelable(false)
         dialog.show()
-    }
-
-    private fun startProgressUpdate() {
-        try {
-            val startTime = System.currentTimeMillis() - (initialstartTime * 1000)
-            val elapsedMinutes = ((System.currentTimeMillis() - startTime) /1000).toDouble() // Convert ms to minutes
-            binding.customProgressBar.setMax(totalDuration.toDouble()) // Set max progress as 10,800
-            binding.customProgressBar.setProgress(elapsedMinutes) // ✅ Show actual progress done
-            Log.e(ErrorDialog.TAG,"$startTime")
-
-            runnable = object : Runnable {
-                override fun run() {
-                    val elapsedTime = ((System.currentTimeMillis() - startTime) / (1000)).toInt()
-                    val remainingNow = (totalDuration - elapsedTime).coerceAtLeast(0)
-                    if (remainingNow>0/*elapsedTime <= totalDuration*/) {
-                        binding.customProgressBar.setProgress(elapsedTime.toDouble()) // Update progress
-                        handler.postDelayed(this, 1000) // Update every second
-                        Log.e(ErrorDialog.TAG,"Update $elapsedTime")
-                    }else {
-                        handler.removeCallbacks(this) // Stop updating when progress is complete
-                        Log.d(ErrorDialog.TAG,"Progress completed, handler stopped.")
-                    }
-                }
-            }
-            handler.post(runnable!!)
-        }catch (e:Exception){
-            Log.e(ErrorDialog.TAG,e.message!!)
-        }
     }
 
 
     private fun startProgressUpdateMinute() {
         try {
-            val startTime = System.currentTimeMillis() - (initialstartTime * 60000) // Adjusting for initial offset
-            val elapsedMinutes = ((System.currentTimeMillis() - startTime) / 60000.0) // Convert ms to minutes
+            val startTime = System.currentTimeMillis() - (initialstartTime * 60000)
+            val elapsedMinutes = ((System.currentTimeMillis() - startTime) / 60000.0)
 
-            binding.customProgressBar.setMax(totalDuration.toDouble()) // Set max progress in minutes
-            binding.customProgressBar.setProgress(elapsedMinutes) // ✅ Show actual progress in minutes
+            binding.customProgressBar.setMax(totalDuration.toDouble())
+            binding.customProgressBar.setProgress(elapsedMinutes)
             Log.e(ErrorDialog.TAG, "Start Time: $startTime, Elapsed: $elapsedMinutes min")
             runnable = object : Runnable {
                 override fun run() {
-                    val elapsedTimeMinutes = ((System.currentTimeMillis() - startTime) / 60000.0) // Convert to minutes
+                    val elapsedTimeMinutes = ((System.currentTimeMillis() - startTime) / 60000.0)
                     val remainingNow = (totalDuration - elapsedTimeMinutes).coerceAtLeast(0.0)
-                  //  session?.setNeedMore(false)
                     if (remainingNow > 0) {
                         binding.customProgressBar.setProgress(elapsedTimeMinutes) // Update progress
                         handler.postDelayed(this, 1000*60) // Update every minute
@@ -1505,7 +1276,6 @@ class GuestDiscoverFragment : Fragment(),View.OnClickListener,OnMapReadyCallback
                             val edTime = bookings.final_booking_end.split(" ")[1]
                             intent.putExtra("edTime",convertTo12HourFormat(edTime))
                             val add:List<AddOn> = bookings.selected_add_ons!!
-                            // Updating the item where name == "Bacon"
                             val updatedList = add.map {it.copy(checked = true)}
                             it.add_ons = updatedList
                             intent.putExtra("propertyData",Gson().toJson(it))

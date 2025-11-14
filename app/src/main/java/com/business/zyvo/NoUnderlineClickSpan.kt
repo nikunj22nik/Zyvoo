@@ -26,7 +26,7 @@ open class NoUnderlineClickSpan(val context: Context) : ClickableSpan() {
 }
 
 @SuppressLint("SetTextI18n")
-@Suppress("DEPRECATION") // It has been replaced by a Builder, which is minAPI 28, so OK for now
+@Suppress("DEPRECATION")
 fun TextView.setResizableText(
     fullText: String,
     maxLines: Int,
@@ -41,10 +41,8 @@ fun TextView.setResizableText(
         return
     }
     movementMethod = LinkMovementMethod.getInstance()
-    // Since we take the string character by character, we don't want to break up the Windows-style
-    // line endings.
+
     val adjustedText = fullText.replace("\r\n", "\n")
-    // Check if even the text has to be resizable.
     val textLayout = StaticLayout(
         adjustedText,
         paint,

@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
@@ -29,18 +31,14 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
 
     inner class PetsViewHolder(var binding: LayoutAddPetsBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        init {
-//            binding.root.setOnClickListener{
-//                listner.itemClick(adapterPosition)
-//            }
-        }
+
 
         fun bind(petsItem: AddPetsModel) {
 
             binding.textMyWorkName.text = petsItem.name
 
             binding.imageCross.setOnClickListener {
-                listner.itemClick(adapterPosition, "Pets")
+                listner.itemClick(adapterPosition, AppConstant.PETS)
             // Handle delete (or any other action) for this location
             }
 
@@ -72,11 +70,11 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
             binding.imageCheckedButton.setOnClickListener {
                 val enteredText = binding.etType.text.toString()
                 if(enteredText.length >20){
-                   LoadingUtils.showErrorDialog(binding.root.context,"Pet name must be less than 20 characters long.")
+                   LoadingUtils.showErrorDialog(binding.root.context, ErrorMessage.PET_NAME_MUST_LESS_THAN_20_CHAR_LONG)
                 return@setOnClickListener
                 }
                 else if (enteredText.isNotEmpty()) {
-                    listner2.itemClick(adapterPosition,"Pets",enteredText)
+                    listner2.itemClick(adapterPosition, AppConstant.PETS,enteredText)
                     // Add the new work item to the list
                     list.add(list.size -1 , AddPetsModel(enteredText))
                     notifyDataSetChanged() // Notify adapter to update RecyclerView
@@ -105,7 +103,6 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
 
     override fun getItemCount() = list.size
     override fun getItemViewType(position: Int): Int {
-//        return super.getItemViewType(position)
         return if (list.size - 1 != position) {
             uploadPetsCode
         } else {
@@ -128,7 +125,7 @@ class AddPetsAdapter(var context: Context, var list : MutableList<AddPetsModel>,
 
         this.list = newList
         if (list.isEmpty()) {
-            list.add(AddPetsModel("Add New")) // Placeholder for "Add New"
+            list.add(AddPetsModel(AppConstant.ADD_NEW)) // Placeholder for "Add New"
         }
         notifyDataSetChanged()
     }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.google.android.material.tabs.TabLayoutMediator
 import com.business.zyvo.OnClickListener1
@@ -18,7 +19,6 @@ import com.business.zyvo.fragment.guest.home.model.OnViewPagerImageClickListener
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
-import java.text.DecimalFormat
 
 class HomeScreenAdapter(
     private val context: Context, private var list: MutableList<HomePropertyData>,
@@ -44,10 +44,10 @@ class HomeScreenAdapter(
         val currentItem = list[position]
 
         holder.binding.imageAddWish.setOnClickListener{
-                listener2.itemClick(position,"Add Wish")
+                listener2.itemClick(position, AppConstant.ADD_WISH)
         }
         holder.binding.imageWishFull.setOnClickListener{
-            listener2.itemClick(position,"Remove Wish")
+            listener2.itemClick(position, AppConstant.REMOVE_WISH)
         }
 
         holder.binding.cl1.setOnClickListener {
@@ -95,11 +95,9 @@ class HomeScreenAdapter(
             holder.binding.textMiles.text = "${currentItem.distance_miles} miles away"
             holder.binding.textMiles.visibility = View.VISIBLE
         }
-      /*  currentItem.distance_miles?.let {
-            holder.binding.textMiles.text = "$it miles away"
-        }*/
+
         currentItem.hourly_rate?.let {
-            holder.binding.textPricePerHours.text = "$${truncateToTwoDecimalPlaces(it)} / h"
+            holder.binding.textPricePerHours.text = "$${truncateToTwoDecimalPlaces(it)}/h"
         }
 
         currentItem.is_instant_book?.let {

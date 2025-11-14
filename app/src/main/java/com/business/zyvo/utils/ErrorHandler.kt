@@ -12,10 +12,6 @@ import java.io.IOException
 
 object ErrorHandler {
 
-
-
-
-
     fun emitError(e: Exception) :String {
         when (e) {
             is IOException -> {

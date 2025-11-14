@@ -51,6 +51,7 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.AppConstant.Companion.passwordMustConsist
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
@@ -196,9 +197,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
                         addLivePlace(place_name = placeName)
 
-                        // Update the list and notify adapter in one step
+
                         locationList.add(locationList.size - 1, newLocation)
-                        // addLocationAdapter.notifyItemInserted(0)
+
                         addLocationAdapter.updateLocations(locationList)
                     }
 
@@ -218,8 +219,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     val place = Autocomplete.getPlaceFromIntent(intent)
                     val latLng = place.latLng
                     getLocationDetails(requireContext(), latLng) { locationDetails ->
-                        // Use city, state, zipCode here
-                        //Log.d("checkResult2",locationDetails.toString())
+
                         locationDetails?.let {
                             Log.d(ErrorDialog.TAG,
                                 "Street: ${it.streetAddress},City: ${it.city}, State: ${it.state}, Zip: ${it.zipCode}")
@@ -236,11 +236,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     binding.streetEditText.setText(it.streetAddress ?: "")
                                     street = it.streetAddress ?: ""
                                 }
-//                                val addressList = geocoder.getFromLocation(lat, lng, 1)
-//                                if (!addressList.isNullOrEmpty()) {
-//                                    val address = addressList[0]
-//                                    Log.d("DEBUG", "Full Address: ${address.getAddressLine(0)}")
-//                                }
+
                                 binding.cityET.setText(it.city)
                                 binding.stateEt.setText(it.state)
                                 binding.zipEt.setText(it.zipCode)
@@ -279,14 +275,14 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     // User abandoned the verification process
                     binding.textConfirmNow2.visibility = View.VISIBLE
                     binding.textVerified2.visibility = GONE
-                    Toast.makeText(requireContext(), "Request Cancelled", Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), ErrorMessage.REQUEST_CANCELLED/*"Request Cancelled"*/, Toast.LENGTH_LONG).show()
                 }
 
                 is InquiryResponse.Error -> {
                     // Error occurred during identity verification
                     binding.textConfirmNow2.visibility = View.VISIBLE
                     binding.textVerified2.visibility = GONE
-                    Toast.makeText(requireContext(), "Error Occurred, Try Again", Toast.LENGTH_LONG)
+                    Toast.makeText(requireContext(), ErrorMessage.ERROR_OCCURRED/*"Error Occurred, Try Again"*/, Toast.LENGTH_LONG)
                         .show()
                     Log.d("personaError", result.errorCode.toString())
                     Log.d("personaError", result.cause.toString())
@@ -303,16 +299,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     ): View? {
 
         dateManager = DateManager(requireContext())
-
-
         // Inflate the layout for this fragment
         binding =
             FragmentProfileBinding.inflate(LayoutInflater.from(requireContext()), container, false)
-
-        // val newLocation = AddLocationModel(AppConstant.unknownLocation)
-
-        //  val newLocation = AddLocationModel(AppConstant.unknownLocation)
-
 
         binding.switchHost.setOnClickListener {
             val app = activity?.application as MyApp
@@ -325,31 +314,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             intent.putExtra("OPEN_PROFILE_FRAGMENT", true)
             startActivity(intent)
         }
-
-        // locationList.add(newLocation)
-//        val newWork = AddWorkModel(AppConstant.unknownLocation)
-//        workList.add(newWork)
-//        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
-//        languageList.add(newLanguage)
-//        val newHobbies = AddHobbiesModel(AppConstant.unknownLocation)
-//
-//        hobbiesList.add(newHobbies)
-//        val newPets = AddPetsModel(AppConstant.unknownLocation)
-//
-//        petsList.add(newPets)
-
-//        locationList.add(newLocation)
-//       val newWork = AddWorkModel(AppConstant.unknownLocation)
-//        workList.add(newWork)
-//        val newLanguage = AddLanguageModel(AppConstant.unknownLocation)
-//        languageList.add(newLanguage)
-//        val newHobbies = AddHobbiesModel(AppConstant.unknownLocation)
-//
-//        hobbiesList.add(newHobbies)
-//        val newPets = AddPetsModel(AppConstant.unknownLocation)
-//
-//        petsList.add(newPets)
-
 
         addPaymentCardAdapter = AdapterAddPaymentCard(requireContext(), mutableListOf(), this)
         binding.recyclerViewPaymentCardList.adapter = addPaymentCardAdapter
@@ -419,7 +383,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
             imageStreetCheckedButton.setOnClickListener {
                 if (streetEditText.text.isEmpty()) {
-                    showErrorDialog(requireContext(), "Street Cannot be Empty")
+                    showErrorDialog(requireContext(), ErrorMessage.STREET_CANNOT_BE_EMPTY/*"Street Cannot be Empty"*/)
                 } else {
                     updateAddStreetAddress(streetEditText.text.toString())
                 }
@@ -435,7 +399,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
             CityCheckedButton.setOnClickListener {
                 if (cityET.text.isEmpty()) {
-                    showErrorDialog(requireContext(), "City Cannot be Empty")
+                    showErrorDialog(requireContext(), ErrorMessage.CITY_CANNOT_BE_EMPTY/*"City Cannot be Empty"*/)
                 } else {
                     updateCityAddress(cityET.text.toString(), "")
                 }
@@ -451,7 +415,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
             stateCheckedButton.setOnClickListener {
                 if (stateEt.text.isEmpty()) {
-                    showErrorDialog(requireContext(), "State Cannot be Empty")
+                    showErrorDialog(requireContext(), ErrorMessage.STATE_CANNOT_BE_EMPTY/*"State Cannot be Empty"*/)
                 } else {
                     updateStateAddress("")
                 }
@@ -467,7 +431,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
             zipCodeCheckedButton.setOnClickListener {
                 if (zipEt.text.isEmpty()) {
-                    showErrorDialog(requireContext(), "Zip Cannot be Empty")
+                    showErrorDialog(requireContext(), ErrorMessage.ZIP_CANNOT_BE_EMPTY/*"Zip Cannot be Empty"*/)
                 } else {
                     updateZipCode(zipEt.text.toString(), "")
                 }
@@ -493,9 +457,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     }
 
-    // Function to start the location picker using Autocomplete
     private fun startStreetLocationPicker() {
-      //  val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+
         val fields = listOf(
             Place.Field.ID,
             Place.Field.NAME,
@@ -510,9 +473,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     private fun launchVerifyIdentity() {
         val TEMPLATE_ID = BuildConfig.templateID
-
         val inquiry = Inquiry.fromTemplate(TEMPLATE_ID)
-            .environment(Environment.SANDBOX) // Use Environment.PRODUCTION for live verification
+            .environment(Environment.SANDBOX)
             .referenceId(session?.getUserId().toString()) // Link the inquiry to a specific user
             .fields(
                 Fields.Builder()
@@ -552,25 +514,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     binding.user = it
 
                                     if (it?.profile_image != null) {
-
-//                                        Glide.with(requireContext())
-//                                            .asBitmap() // Convert the image into Bitmap
-//                                            .load(BuildConfig.MEDIA_URL + it.profile_image) // User profile image URL
-//                                            .into(object : SimpleTarget<Bitmap>() {
-//                                                override fun onResourceReady(
-//                                                    resource: Bitmap,
-//                                                    transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
-//                                                ) {
-//                                                    // The 'resource' is the Bitmap
-//                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
-//                                                    binding.imageProfilePicture.setImageBitmap(
-//                                                        resource
-//                                                    )
-//                                                    imageBytes =
-//                                                        MediaUtils.bitmapToByteArray(resource)
-//                                                    Log.d(ErrorDialog.TAG, imageBytes.toString())
-//                                                }
-//                                            })
 
                                         profileImageString = BuildConfig.MEDIA_URL + it.profile_image
 
@@ -697,19 +640,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             Places.initialize(requireActivity(), apiKey)
         }
 
-        // Set listeners
-
-
-//        binding.filterIcon.setOnClickListener {
-//            startActivity(Intent(requireActivity(), FiltersActivity::class.java))
-//        }
-//
-//        binding.rlFind.setOnClickListener {
-//
-//            startActivity(Intent(requireActivity(), WhereTimeActivity::class.java))
-//        }
-
-
     }
 
     // Function to initialize the adapter for adding locations
@@ -792,8 +722,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     // Add the new language to the list
                     Log.d("laguageListSize", languageList.size.toString())
 
-                 //   languageList.add(languageList.size - 1, newLanguage)
-                  /*  if (type == "add") {*/
                         if (languageList.size < 3) {
                             var flag = false
                             languageList.forEach {
@@ -806,17 +734,9 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 addLanguageApi(newLanguage.name)
                             }
                         }
-                   /* }else{
-                        val index = languageList.indexOfFirst { it.name == local }
-                        val removedLang = languageList[index].name
-                        deleteLanguageApi(index)
-                        languageList.removeAt(index)
-                        SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
-                    }*/
-                    addLanguageSpeakAdapter.updateLanguage(languageList)
-                    //addLanguageSpeakAdapter.notifyItemInserted(0)
 
-                    // Delay dismissing the dialog slightly to prevent UI issues
+                    addLanguageSpeakAdapter.updateLanguage(languageList)
+
                     Handler(Looper.getMainLooper()).postDelayed({
                         dialog.dismiss()
                     }, 200) // 200ms delay ensures smooth UI transition
@@ -834,7 +754,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
     private fun bottomSheetUploadImage() {
-
         bottomSheetDialog = BottomSheetDialog(requireActivity(), R.style.BottomSheetDialog1)
         bottomSheetDialog!!.setContentView(R.layout.bottom_sheet_upload_image)
         bottomSheetDialog!!.show()
@@ -891,13 +810,13 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     override fun itemClick(obj: Int, text: String, enteredText: String) {
         when (text) {
-            "location" -> {
+           AppConstant.LOCATION /*"location"*/ -> {
                 if (obj == locationList.size - 1) {
                     startLocationPicker()
                 }
             }
 
-            "work" -> {
+            AppConstant.WORK   /*"work" */-> {
                 if (obj == workList.size - 1) {
                     if (enteredText.isNotEmpty()) {
                         addMyWork(enteredText)
@@ -906,13 +825,13 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 }
             }
 
-            "language" -> {
+            AppConstant.LANGUAGE  /*"language"*/ -> {
                 if (obj == languageList.size - 1) {
                     dialogSelectLanguage()
                 }
             }
 
-            "Hobbies" -> {
+           AppConstant.HOBBIES /*"Hobbies"*/ -> {
                 if (obj == hobbiesList.size - 1) {
                     if (enteredText.isNotEmpty()) {
                         Log.d("@@@@@", "enteredText $enteredText")
@@ -922,7 +841,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 }
             }
 
-            "Pets" -> {
+            AppConstant.PETS /*"Pets"*/ -> {
                 if (obj == petsList.size - 1) {
                     if (enteredText.isNotEmpty()) {
                         addPetApi(enteredText)
@@ -948,7 +867,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
 
             R.id.rlPasswordTitle -> {
-                var text = "Your password has been changed successfully"
+                var text = ErrorMessage.YOUR_PASSWORD_HAS_BEEN_CHANGED_SUCCESSFULLY/*"Your password has been changed successfully"*/
                 dialogNewPassword(requireContext(), text)
             }
 
@@ -1046,11 +965,11 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 if (NetworkMonitorCheck._isConnected.value) {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
-//                                        etEmail.error = "Email Address required"
+
                                         showErrorDialog(requireContext(),AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     }else if (!isValidEmail(etEmail.text.toString())){
-//                                        etEmail.error = "Invalid Email Address"
+
                                         showErrorDialog(requireContext(),AppConstant.invalideemail)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
@@ -1172,9 +1091,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
             startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
-//            countDownTimer!!.cancel()
-//
-//            textTimeResend.text = "${"00"}:${"00"} sec"
+
             countDownTimer!!.start()
 
             textTimeResend.text = "${"00"}:${"60"} sec"
@@ -1216,10 +1133,10 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                                 findViewById<EditText>(R.id.otp_digit2).text.toString()+
                                                 findViewById<EditText>(R.id.otp_digit3).text.toString()+
                                                 findViewById<EditText>(R.id.otp_digit4).text.toString()
-                                        if ("mobile".equals(type)){
+                                        if (AppConstant.MOBILE_SMALL_TEXT/*"mobile"*/.equals(type)){
                                             otpVerifyPhoneVerificationProfile(session?.getUserId().toString(),otp,dialog,textSubmitButton)
                                         }
-                                        if ("email".equals(type)){
+                                        if (AppConstant.EMAIL_SMALL_TEXT/*"email"*/.equals(type)){
                                             otpVerifyEmailVerificationProfile(session?.getUserId().toString(),otp,dialog,textSubmitButton)
                                         }
                                     }
@@ -1236,13 +1153,13 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 findViewById<EditText>(R.id.otp_digit3).text.clear()
                 findViewById<EditText>(R.id.otp_digit4).text.clear()
                 if (NetworkMonitorCheck._isConnected.value) {
-                                if ("email".equals(type)){
+                                if (AppConstant.EMAIL_SMALL_TEXT/*"email"*/.equals(type)){
                                     if (resendEnabled) {
                                         resendEmailVerificationProfile(userId,number,textResend,
                                             rlResendLine,incorrectOtp,textTimeResend)
                                     }
                                 }
-                                if ("mobile".equals(type)){
+                                if (AppConstant.MOBILE_SMALL_TEXT/*"mobile"*/.equals(type)){
                                     resendPhoneVerificationProfile(userId,code,number,textResend,
                                         rlResendLine,incorrectOtp,textTimeResend)
                                 }
@@ -1406,7 +1323,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                             it.data?.let { resp ->
                                                 Toast.makeText(
                                                     requireContext(),
-                                                    "Street Address added successfully",
+                                                    ErrorMessage.STREET_ADDRESS_ADDED_SUCCESSFULLY /*"Street Address added successfully"*/,
                                                     Toast.LENGTH_SHORT
                                                 ).show()
                                             }
@@ -1443,7 +1360,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                                 if (!type.equals(AppConstant.profileType)) {
                                                     Toast.makeText(
                                                         requireContext(),
-                                                        "City added successfully",
+                                                        ErrorMessage.CITY_ADDED_SUCCESSFULLY  /*"City added successfully"*/,
                                                         Toast.LENGTH_SHORT
                                                     ).show()
                                                 }
@@ -1481,7 +1398,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                                 if (!type.equals(AppConstant.profileType)) {
                                                     Toast.makeText(
                                                         requireContext(),
-                                                        "State added successfully",
+                                                        ErrorMessage.STATE_ADDED_SUCCESSFULLY /* "State added successfully"*/,
                                                         Toast.LENGTH_SHORT
                                                     ).show()
                                                 }
@@ -1520,7 +1437,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                                 if (!type.equals(AppConstant.profileType)) {
                                                     Toast.makeText(
                                                         requireContext(),
-                                                        "Zipcode added successfully.",
+                                                        ErrorMessage.ZIPCODE_ADDED_SUCCESSFULLY  /*"Zipcode added successfully."*/,
                                                         Toast.LENGTH_SHORT
                                                     ).show()
                                                 }
@@ -1586,7 +1503,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.data?.let { uri ->
 
-                    // Load image into BottomSheetDialog's ImageView if available
                     binding.imageProfilePicture?.let {
                         Glide.with(this)
                             .load(uri)
@@ -2227,7 +2143,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     private fun dialogAddCard() {
         if (cardDialog?.isShowing == true) {
-            return // Dialog is already showing, don't open another one
+            return
         }
         var street_address = ""
         var city = ""
@@ -2289,7 +2205,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 }
             }
 
-            //vipin
+
             etCardNumber.addTextChangedListener(object : TextWatcher {
                 private var isFormatting: Boolean = false
                 private var previousText: String = ""
@@ -2333,7 +2249,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 if (etCardHolderName.text.trim().isEmpty()) {
                     LoadingUtils.showErrorDialog(requireContext(), AppConstant.cardName)
                 } else if(etCardHolderName.text.toString().length >30){
-                    LoadingUtils.showErrorDialog(requireContext(),"Please Enter Card Holder Name less than 30 character")
+                    LoadingUtils.showErrorDialog(requireContext(), ErrorMessage.ENTER_CARD_HOLDER_NAME/*"Please Enter Card Holder Name less than 30 character"*/)
                 }else if (etCardNumber.text.trim().isEmpty()) {
                     showToast(requireContext(), AppConstant.cardNubmer)
                 }else if (!ErrorDialog.isValidCardNumber(etCardNumber.text.toString())) {
@@ -2351,8 +2267,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     val stripe = Stripe(requireContext(), BuildConfig.STRIPE_KEY)
                     var month: Int? = null
                     var year: Int? = null
-                    //  val cardNumber: String = Objects.requireNonNull(etCardNumber.text.toString().trim()).toString()
-                    //vipin
+
                     val cardNumber: String =
                         Objects.requireNonNull(etCardNumber.text.toString().replace(" ", "").trim())
                             .toString()
@@ -2404,7 +2319,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
             sameAsMailingAddress { mailingAddress ->
-                // Do something with the address here
+
                 if (mailingAddress != null) {
                     Log.d(ErrorDialog.TAG, mailingAddress.toString())
                     mailingAddress?.let {
@@ -2542,7 +2457,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
             textContinueButton.setOnClickListener {
-                var text = "Login Successful"
+                var text = ErrorMessage.LOGIN_SUCCESSFUL/*"Login Successful"*/
 
                 var textHeaderOfOtpVerfication =
                     "Please type the verification code send \n to +1 999 999 9999"
@@ -2624,9 +2539,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-//            countDownTimer!!.cancel()
-//
-//            textTimeResend.text = "${"00"}:${"00"} sec"
+
             countDownTimer!!.start()
 
             textTimeResend.text = "${"00"}:${"60"} sec"
@@ -2655,7 +2568,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
                 if (text == "Your password has been changed\n" + " successfully.") {
                     dialogNewPassword(context, text)
-                } else if (text.equals("Login Successful")) {
+                } else if (text.equals(ErrorMessage.LOGIN_SUCCESSFUL/*"Login Successful"*/)) {
                     var session = SessionManager(context)
                     session.setUserId(1)
                     var intent = Intent(context, GuesMain::class.java)
@@ -2663,7 +2576,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
                     context.startActivity(intent)
                 } else {
-                    if (text == "Your password has been changed successfully") {
+                    if (text == ErrorMessage.YOUR_PASSWORD_HAS_BEEN_CHANGED_SUCCESSFULLY /*"Your password has been changed successfully"*/) {
                         dialogNewPassword(context, text)
                     } else {
                         dialogSuccess(context, text)
@@ -2760,7 +2673,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
 
             textContinueButton.setOnClickListener {
-                var text = "Your account is registered \nsuccessfully"
+                var text = ErrorMessage.ACCOUNT_REGISTERED_SUCCESSFULLY/*"Your account is registered \nsuccessfully"*/
                 var textHeaderOfOtpVerfication =
                     "Please type the verification code send \n to +1 999 999 9999"
                 dialogOtpLoginRegister(context, text, textHeaderOfOtpVerfication)
@@ -2881,7 +2794,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 dismiss()
             }
             textCreateAccountButton.setOnClickListener {
-                var text = "Your account is registered \nsuccessfully"
+                var text = ErrorMessage.ACCOUNT_REGISTERED_SUCCESSFULLY /*"Your account is registered \nsuccessfully"*/
 
                 var textHeaderOfOtpVerfication =
                     "Please type the verification code send \nto abc@gmail.com"
@@ -2914,7 +2827,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             var etEmail = findViewById<EditText>(R.id.etEmail)
             var textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
-                var text = "Your password has been changed\n successfully."
+                var text = ErrorMessage.PASSWORD_CHANGED_SUCCESSFULLY /*"Your password has been changed\n successfully."*/
 
                 var textHeaderOfOtpVerfication =
                     "Please type the verification code send \nto abc@gmail.com"
@@ -3081,11 +2994,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             }
             val imageProfilePicture = findViewById<CircleImageView>(R.id.imageProfilePicture)
             Glide.with(requireContext()).load(profileImageString).into(imageProfilePicture)
-//
-//            if (imageBytes.isNotEmpty()) {
-//                MediaUtils.setImageFromByteArray(imageBytes, imageProfilePicture)
-//            }
-
 
             val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
             val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
@@ -3102,7 +3010,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     Log.d("Testing_name_size","size"+editTextFirstName.text.toString().length)
                     showErrorDialog(
                         requireContext(),
-                        "First name should be between 3 and 20 characters long."
+                        /*"First name should be between 3 and 20 characters long."*/ErrorMessage.FIRST_NAME_BETWEEN_3_20_CHARACTERS
                     )
                 }
                 else if (editTextLastName.text.isEmpty()) {
@@ -3110,7 +3018,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 }
                 else if (!isValidName(str = editTextLastName.text.toString())) {
                     Log.d("Testing_name_size","size"+editTextLastName.text.toString().length)
-                    showErrorDialog(requireContext(), "Last name should be between 3 and 20 characters long.")
+                    showErrorDialog(requireContext(), ErrorMessage.LAST_NAME_BETWEEN_3_20_CHARACTERS/*"Last name should be between 3 and 20 characters long."*/)
                 }
                 else {
                     toggleLoginButtonEnabled(false, textSaveChangesButton)
@@ -3140,18 +3048,18 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
             val imageCross = findViewById<ImageView>(R.id.imageCross)
 
             val etEmail = findViewById<EditText>(R.id.etEmail)
-           // etEmail.setText(binding.etEmail.text.toString())
+
             val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
                 if (NetworkMonitorCheck._isConnected.value) {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
-//                                        etEmail.error = "Email Address required"
+
                                         showErrorDialog(requireContext(), AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else if (!isValidEmail(etEmail.text.toString())) {
-//                                        etEmail.error = "Invalid Email Address"
+
                                         showErrorDialog(requireContext(), AppConstant.invalideemail)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
@@ -3247,9 +3155,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
-//            countDownTimer!!.cancel()
-//
-//            textTimeResend.text = "${"00"}:${"00"} sec"
 
             countDownTimer!!.start()
 
@@ -3296,7 +3201,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                                     findViewById<EditText>(R.id.otp_digit2).text.toString() +
                                                     findViewById<EditText>(R.id.otp_digit3).text.toString() +
                                                     findViewById<EditText>(R.id.otp_digit4).text.toString()
-                                        if ("mobile".equals(type)) {
+                                        if (AppConstant.MOBILE_SMALL_TEXT/*"mobile"*/.equals(type)) {
                                             otpVerifyPhoneVerification(
                                                 userId,
                                                 otp,
@@ -3305,7 +3210,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                                 textSubmitButton
                                             )
                                         }
-                                        if ("email".equals(type)) {
+                                        if (AppConstant.EMAIL_SMALL_TEXT/*"email"*/.equals(type)) {
                                             otpVerifyEmailVerification(
                                                 userId,
                                                 otp,
@@ -3329,7 +3234,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 findViewById<EditText>(R.id.otp_digit4).text.clear()
                 lifecycleScope.launch {
                     if (NetworkMonitorCheck._isConnected.value) {
-                        if ("email".equals(type)) {
+                        if (AppConstant.EMAIL_SMALL_TEXT/*"email"*/.equals(type)) {
                             if (resendEnabled) {
                                 resendEmailVerification(
                                     userId, number, textResend,
@@ -3337,7 +3242,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                 )
                             }
                         }
-                        if ("mobile".equals(type)) {
+                        if (AppConstant.MOBILE_SMALL_TEXT/*"mobile"*/.equals(type)) {
                             resendPhoneVerification(
                                 userId, code, number, textResend,
                                 rlResendLine, incorrectOtp, textTimeResend
@@ -3478,26 +3383,17 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                     val password = etPassword.text.toString().trim()
                     val confirmPassword = etConfirmPassword.text.toString().trim()
 
-//                    when {
-//                        password.isEmpty() -> showErrorDialog(ctx, "Enter Password")
-//                        confirmPassword.isEmpty() -> showErrorDialog(ctx, "Enter Confirm Password")
-//                        password != confirmPassword -> showErrorDialog(ctx, "Password not match")
-//                        else -> {
-//                            updatePasswordApi(password, confirmPassword)
-//                            dismiss() // Dismiss the dialog after successful API call
-//                        }
-//                    }
                     if (password.isEmpty()) {
-                        showErrorDialog(ctx, "Enter Password")
+                        showErrorDialog(ctx, AppConstant.ENTER_PASSWORD/*"Enter Password"*/)
                     } else if (!isValidPassword(password)){
                         showErrorDialog(
                             requireContext(), passwordMustConsist
                         )
                     }
                     else if (confirmPassword.isEmpty()) {
-                        showErrorDialog(ctx, "Enter Confirm Password")
+                        showErrorDialog(ctx, ErrorMessage.ENTER_CONFIRM_PASSWORD/*"Enter Confirm Password"*/)
                     } else if (password != confirmPassword) {
-                        showErrorDialog(ctx, "Password not match")
+                        showErrorDialog(ctx, ErrorMessage.PASSWORD_NOT_MATCH/*"Password not match"*/)
                     } else {
                         updatePasswordApi(password, confirmPassword)
                         dismiss() // Dismiss the dialog after successful API call
@@ -3527,7 +3423,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
             findViewById<TextView>(R.id.text).text = text
             findViewById<TextView>(R.id.textOkayButton).setOnClickListener {
-                if (text == "Your account is registered \nsuccessfully") {
+                if (text == ErrorMessage.ACCOUNT_REGISTERED_SUCCESSFULLY /*"Your account is registered \nsuccessfully"*/) {
 
                     Log.d("Navigation", "Navigating to turnNotificationsFragment")
                     navController?.navigate(R.id.turnNotificationsFragment)
@@ -3601,7 +3497,8 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     when (it) {
                                         is NetworkResult.Success -> {
                                             it.data?.let { resp ->
-                                               LoadingUtils.showSuccessDialog(requireContext(),"Your password has been changed \n successfully.")
+                                               LoadingUtils.showSuccessDialog(requireContext(),
+                                                   ErrorMessage.YOUR_PASSWORD_HAS_BEEN_CHANGED_LINE_SUCCESSFULLY/*"Your password has been changed \n successfully."*/)
                                             }
                                         }
 
@@ -3687,7 +3584,7 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                                     countryCode,
                                     phoneNumber,
                                     textHeaderOfOtpVerfication,
-                                    "mobile"
+                                    AppConstant.MOBILE_SMALL_TEXT/*"mobile"*/
                                 )
                             }
                             dialog.dismiss()
@@ -3971,81 +3868,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
     }
 
 
-    private fun showPopupWindow(anchorView: View, position: Int) {
-        // Inflate the custom layout for the popup menu
-        val popupView =
-            LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
-
-        // Create PopupWindow with the custom layout
-        val popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-
-        // Set click listeners for each menu item in the popup layout
-        popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemUnread).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-
-
-        // Get the location of the anchor view (three-dot icon)
-        val location = IntArray(2)
-        anchorView.getLocationOnScreen(location)
-
-        // Get the height of the PopupView after inflating it
-        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val popupHeight = popupView.measuredHeight
-        val popupWeight = popupView.measuredWidth
-        val screenWidht = context?.resources?.displayMetrics?.widthPixels
-        val anchorX = location[1]
-        val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
-
-        val xOffset = if (popupWeight > spaceEnd!!) {
-            // If there is not enough space below, show it above
-            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
-            -(popupWeight + 20)
-        }
-        // Calculate the Y offset to make the popup appear above the three-dot icon
-        val screenHeight = context?.resources?.displayMetrics?.heightPixels
-        val anchorY = location[1]
-
-        // Calculate the available space above the anchorView
-        val spaceAbove = anchorY
-        val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
-
-        // Determine the Y offset
-        val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
-        }
-
-        // Show the popup window anchored to the view (three-dot icon)
-        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(
-            anchorView,
-            xOffset,
-            yOffset,
-            Gravity.END
-        )  // Adjust the Y offset dynamically
-    }
-
     fun isScreenLarge(context: Context): Boolean {
         // Get the screen width
         val display =
@@ -4088,14 +3910,14 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
     override fun itemClick(obj: Int, text: String) {
         when (text) {
-            "location" -> {
+            AppConstant.LOCATION/*"location"*/ -> {
                 if (obj < locationList.size) {
                     deleteLivePlace(obj)
 
                 }
             }
 
-            "work" -> {
+            AppConstant.WORK /*"work"*/ -> {
                 if (obj < workList.size - 1) {
                     deleteMyWork(obj)
 
@@ -4106,9 +3928,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
                 if (obj < languageList.size - 1) {
                     val removedLang = languageList[obj].name
                     deleteLanguageApi(obj)
-                   /* languageList.removeAt(obj)
-                    SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
-                    addLanguageSpeakAdapter.updateLanguage(languageList)*/
 
                 }
             }
@@ -4206,7 +4025,6 @@ class ProfileFragment : Fragment(), OnClickListener1, onItemClickData, OnClickLi
 
         if (resultCode == Activity.RESULT_OK) {
             val place = Autocomplete.getPlaceFromIntent(data)
-            //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
             val addressComponents = place.addressComponents?.asList()
             var address: String = place.address
             // do query with address

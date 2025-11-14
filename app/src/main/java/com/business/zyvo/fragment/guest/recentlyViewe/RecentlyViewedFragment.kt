@@ -51,7 +51,7 @@ class RecentlyViewedFragment : Fragment() , OnClickListener1, onItemClickListene
     private var  _binding : FragmentRecentlyViewedBinding? = null
     private val binding get() = _binding!!
     lateinit var  navController: NavController
-    //private var adapter : RecentViewAdapter? = null
+
     var edit : Boolean = false
     private var wishlistItem: MutableList<WishlistItem> = mutableListOf()
     var session: SessionManager?=null
@@ -104,15 +104,7 @@ class RecentlyViewedFragment : Fragment() , OnClickListener1, onItemClickListene
     }
 
     private fun setupRecyclerView() {
-       /* adapter = RecentViewAdapter(requireContext(), wishlistItem, edit,
-            object: OnClickListener
-            {
-                override fun itemClick(obj: Int) {
-                    deleteWishlist(wishlistItem?.get(obj)?.last_saved_property_id.toString(),obj)
-                }
 
-            })
-        binding.rvWishList.adapter = adapter*/
         homeadapter = HomeScreenAdapter(requireContext(), homePropertyData,
             this,this)
 
@@ -125,7 +117,7 @@ class RecentlyViewedFragment : Fragment() , OnClickListener1, onItemClickListene
         binding.textEdit.setOnClickListener {
             // Toggle the edit state
             edit = !edit
-         //   adapter?.updateEditMode(edit) // Notify the adapter about the new edit state
+
         }
     }
 
@@ -149,24 +141,7 @@ class RecentlyViewedFragment : Fragment() , OnClickListener1, onItemClickListene
                                       val listType = object : TypeToken<List<HomePropertyData>>() {}.type
                                       val properties: MutableList<HomePropertyData> = Gson().fromJson(arr, listType)
 
-                                     /* arr?.forEach {
-                                          var newObj = it.asJsonObject
-                                         var key = newObj.get("images").asJsonArray
-                                          var url =""
-                                          if(key.size()> 0) {
-                                              url =  key.get(0).asString
-                                              Log.d("TESTING_URL", "URL IS "+ url)
-                                          }
-                                          var wishItem = WishlistItem(
-                                              newObj.get("wishlist_item_id").asInt,
-                                              newObj.get("title").asString,
-                                          0,
-                                          newObj.get("property_id").asInt,
-                                              url
-                                          )
-                                          list.add(wishItem)
-                                      }
-                                      wishlistItem = list*/
+
                                       homePropertyData = properties
                                       Log.d("checkHomePropertyData",it.data.toString())
 
@@ -194,34 +169,6 @@ class RecentlyViewedFragment : Fragment() , OnClickListener1, onItemClickListene
         }
     }
 
-    private fun deleteWishlist(wishlist_id: String, pos: Int) {
-        if (NetworkMonitorCheck._isConnected.value) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                viewModel.removeItemFromWishlist(session?.getUserId().toString(),wishlist_id
-                    ).collect {
-                    when (it) {
-                        is NetworkResult.Success -> {
-                            it.data?.let { resp ->
-                                showToast(requireContext(),resp.first)
-                                wishlistItem.removeAt(pos) // Remove the item from the list
-                                //adapter?.notifyItemRemoved(pos) // Notify the adapter
-                             //   adapter?.notifyItemRangeChanged(pos, wishlistItem.size) // Optional: updates positions of remaining items
-                            }
-                        }
-                        is NetworkResult.Error -> {
-                            showErrorDialog(requireContext(), it.message!!)
-                        }
-                        else -> {
-                            Log.v(ErrorDialog.TAG, "error::" + it.message)
-                        }
-                    }
-                }
-            }
-        }else{
-            showErrorDialog(requireContext(),
-                resources.getString(R.string.no_internet_dialog_msg))
-        }
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

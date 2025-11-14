@@ -7,9 +7,6 @@
     tools:context=".fragment.both.turnNotifications.TurnNotificationsFragment">
 
 
-
-
-
         <ImageView
             android:id="@+id/imageLocation"
             android:layout_width="@dimen/_130sdp"
@@ -18,9 +15,7 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/_45sdp"
-            android:src="@drawable/ic_notification_icon_frag"
-
-            />
+            android:src="@drawable/ic_notification_icon_frag" />
 
 
 

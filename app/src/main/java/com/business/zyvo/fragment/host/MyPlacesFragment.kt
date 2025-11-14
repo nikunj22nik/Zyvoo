@@ -188,9 +188,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     private fun locationTask() {
         locationHelper = LocationHelper(requireContext())
 
-        // Check if location permission is granted
         if (locationHelper.checkLocationPermission()) {
-            // If permission granted, fetch location
             locationHelper.getLocationInBackground(lifecycle) { location ->
                 if (location != null) {
                     val latitude = location.latitude
@@ -205,37 +203,10 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                 }
             }
         } else {
-           // permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
             alertBoxLocation1()
-            //  locationHelper.requestLocationPermission(requireActivity())
         }
     }
     private fun alertBoxLocation1() {
-//        val dialogView = layoutInflater.inflate(R.layout.dialog_location_permission, null)
-//
-//        val builder = AlertDialog.Builder(requireContext())
-//        builder.setView(dialogView)
-//
-//        val alertDialog = builder.create()
-//        alertDialog.setCancelable(false)
-//
-//        val btnAllow = dialogView.findViewById<TextView>(R.id.btnLocation)
-//        val btnCancel = dialogView.findViewById<TextView>(R.id.textNotnow)
-//
-//        btnAllow.setOnClickListener {
-//            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-//            val uri = Uri.fromParts("package", requireContext().packageName, null)
-//            intent.data = uri
-//            startActivityForResult(intent, 200)
-//            alertDialog.dismiss()
-//        }
-//
-//        btnCancel.setOnClickListener {
-//            alertDialog.dismiss()
-//        }
-//
-//        alertDialog.show()
-
         val dialog = Dialog(requireActivity(), R.style.BottomSheetDialog)
         dialog.setContentView(R.layout.dialog_location_permission)
 
@@ -259,7 +230,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
             dialog.dismiss()
         }
 
-        //dialog.setCancelable(false)
         dialog.show()
     }
     private fun myPlaceApi(latitude: Double?, longitude: Double?) {
@@ -303,51 +273,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     }
 
 
-    private fun loadImages(): MutableList<ViewpagerModel> {
-        val images = mutableListOf<ViewpagerModel>(
-            ViewpagerModel(R.drawable.ic_image_for_viewpager),
-            ViewpagerModel(R.drawable.ic_image_for_viewpager),
-            ViewpagerModel(R.drawable.ic_image_for_viewpager),
-            ViewpagerModel(R.drawable.ic_image_for_viewpager),
-            ViewpagerModel(R.drawable.image_hotel),
-            ViewpagerModel(R.drawable.image_hotel),
-            ViewpagerModel(R.drawable.image_hotel)
-        )
-        return images
-    }
-
-
-    private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-            if (isGranted) {
-                // Permission granted, fetch location
-                locationHelper.getLocationInBackground(viewLifecycleOwner.lifecycle) { location ->
-                    if (location != null) {
-                        val latitude = location.latitude
-                        val longitude = location.longitude
-
-                        var sessionManager = SessionManager(requireContext())
-
-                        sessionManager.setLatitude(latitude.toString())
-                        sessionManager.setLongitude(longitude.toString())
-
-                        myPlaceApi(latitude, longitude)
-                    } else {
-                        myPlaceApi(null, null)
-                    }
-                }
-            } else {
-                // Permission denied, show a message
-                Toast.makeText(
-                    requireContext(),
-                    "Location permission is required.",
-                    Toast.LENGTH_SHORT
-                ).show()
-                myPlaceApi(null, null)
-            }
-        }
-
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -357,8 +282,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
         Log.d("TESTING", "Inside ZYVOO Permission")
         // Check if the permission is granted
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            // Permission granted, proceed with fetching the location
-
 
             locationHelper.getLocationInBackground(lifecycle) { location ->
                 if (location != null) {
@@ -379,8 +302,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
                 }
             }
         } else {
-            // Permission denied, handle accordingly
-            // You can show a message to the user explaining that the permission is required
             Toast.makeText(requireContext(), "Location permission denied", Toast.LENGTH_SHORT)
                 .show()
         }
@@ -399,10 +320,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
-
-        // Set click listeners for each menu item in the popup layout
-
-        popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
+            popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
             totalEarningApi()
             popupWindow.dismiss()
         }
@@ -489,7 +407,7 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     private fun totalEarningApi() {
         lifecycleScope.launch {
             binding.rlPrice.visibility = View.VISIBLE
-            val sessionManager: SessionManager = SessionManager(requireContext())
+            val sessionManager = SessionManager(requireContext())
             val hostId = sessionManager.getUserId()
             if (hostId != null) {
                 LoadingUtils.showDialog(requireContext(), false)
@@ -517,7 +435,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     private fun showPopupWindowPrice(anchorView: View, position: Int) {
         val popupView = LayoutInflater.from(context).inflate(R.layout.popup_layout_pets, null)
 
-        // Create PopupWindow with the custom layout
         val popupWindow = PopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -525,20 +442,10 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
             true
         )
 
-        // Set click listeners for each menu item in the popup layout
-
-//        popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
-//            popupWindow.dismiss()
-//        }
-//
-//        popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
-//            popupWindow.dismiss()
-//        }
 
         val location = IntArray(2)
         anchorView.getLocationOnScreen(location)
 
-        // Get the height of the PopupView after inflating it
         popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         val popupHeight = popupView.measuredHeight
         val popupWeight = popupView.measuredWidth
@@ -591,8 +498,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
             }
 
             R.id.tv_places -> {
-//                var intent = Intent(requireContext(), PlaceOpenActivity::class.java)
-//                startActivity(intent)
             }
 
             R.id.rl_price -> {
@@ -604,7 +509,6 @@ class MyPlacesFragment : Fragment(), View.OnClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
 
-       // _binding = null
     }
 
 }

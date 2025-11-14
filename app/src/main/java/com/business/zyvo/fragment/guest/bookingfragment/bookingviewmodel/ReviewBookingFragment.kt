@@ -3,14 +3,10 @@ package com.business.zyvo.fragment.guest.bookingfragment.bookingviewmodel
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
 import android.text.SpannableString
 import android.text.Spanned
@@ -18,7 +14,6 @@ import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,9 +25,8 @@ import android.widget.RatingBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.FileProvider
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -44,22 +38,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.appsflyer.share.LinkGenerator
 import com.appsflyer.share.ShareInviteHelper
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.business.zyvo.R
 import com.business.zyvo.activity.ChatActivity
-import com.business.zyvo.activity.GuesMain
 import com.business.zyvo.activity.guest.propertydetails.model.Pagination
 import com.business.zyvo.activity.guest.propertydetails.model.Review
 import com.business.zyvo.adapter.AdapterAddOn
@@ -72,22 +59,22 @@ import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.ErrorDialog
-import com.business.zyvo.utils.ErrorDialog.formatConvertCount
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
 import com.business.zyvo.utils.NetworkMonitorCheck
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.material.imageview.ShapeableImageView
-import com.google.android.material.shape.CornerFamily
-import com.google.android.material.shape.ShapeAppearanceModel
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.io.FileOutputStream
 
 @AndroidEntryPoint
 class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
@@ -162,7 +149,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
 
         binding.rlNeedHelp.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("type", "Guest")
+                putString(AppConstant.type, "Guest")
             }
             findNavController().navigate(R.id.helpCenterFragment_host, bundle)
         }
@@ -525,11 +512,11 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
         }
 
 
-        var messageSend = "I have a doubt"
+        var messageSend = AppConstant.HAVE_DOUBT
         binding.doubt.setOnClickListener {
             binding.etShareMessage.setText("")
             binding.tvShareMessage.visibility = View.GONE
-            messageSend = "I have a doubt"
+            messageSend =AppConstant.HAVE_DOUBT
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
@@ -540,7 +527,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
         binding.tvAvailableDay.setOnClickListener {
             binding.etShareMessage.setText("")
             binding.tvShareMessage.visibility = View.GONE
-            messageSend = "Available days"
+            messageSend = AppConstant.AVAILABLE_DAYS
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
@@ -550,7 +537,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
         binding.tvOtherReason.setOnClickListener {
 
             binding.tvShareMessage.visibility = View.VISIBLE
-            messageSend = "other"
+            messageSend = AppConstant.OTHER
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
@@ -587,7 +574,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
             if (userInput.length > 0) {
                 messageSend = userInput
             }
-            if (!messageSend.equals("other")) {
+            if (!messageSend.equals(AppConstant.OTHER)) {
                 bookingId?.let {
                     callingJoinChannelApi(messageSend)
 
@@ -599,7 +586,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
 
                     }
                 } else {
-                    binding.etShareMessage.error = "Please Enter something"
+                    binding.etShareMessage.error = AppConstant.PLEASE_ENTER_SOMETHING
                 }
 
 
@@ -639,7 +626,6 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
 
 
         binding.imageShare.setOnClickListener {
-            //shareApp()
             generateDeepLink()
         }
         binding.textReviewClick.setOnClickListener {
@@ -674,7 +660,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun generateDeepLink() {
-        // Your OneLink base URL and campaign details
+
         val currentCampaign = "property_share"
         val oneLinkId = "scFp" // Replace with your OneLink ID
         val brandDomain = "zyvobusiness.onelink.me" // Your OneLink domain
@@ -748,19 +734,18 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 binding.tvStatus.text =
                                     status?.replaceFirstChar { it.uppercaseChar() } ?: ""
 
-                                //Set background based on booking status
                                 when (data.status) {
-                                    "Confirmed" -> {
+                                   AppConstant.CONFIRMED_TEXT -> {
                                         binding.tvStatus.setBackgroundResource(R.drawable.blue_button_bg)
                                         binding.textCancelTheHostButton.isEnabled = true
                                     }
 
-                                    "Waiting Payment" -> {
+                                    AppConstant.WAITING_PAYMENT -> {
                                         binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
                                         binding.textCancelTheHostButton.isEnabled = true
                                     }
 
-                                    "Cancelled" -> {
+                                   AppConstant.CANCELLED_TEXT  -> {
                                         binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
                                         binding.textCancelTheHostButton.text = "  Cancelled  "
                                         binding.textCancelTheHostButton.isEnabled = false
@@ -769,7 +754,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                     else -> binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
                                 }
 
-                                if (data.status == "Finished") {
+                                if (data.status == AppConstant.FINISHED_TEXT ) {
                                     binding.textReviewBookingButton.visibility = View.VISIBLE
                                     binding.textCancelTheHostButton.visibility = View.GONE
                                 } else {
@@ -779,10 +764,6 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 binding.textMiles.text =
                                     (data.distance_miles ?: "N/A").toString() + " miles away"
 
-                                //     binding.textRatingStar.text =
-                                //                                    "${truncateToTwoDecimalPlaces(String.format("%.1f", data.total_rating ?: "0".toFloat()))}"
-//                                binding.textRatingStar.text =
-//                                    "${truncateToTwoDecimalPlaces(data.total_rating ?: "0")}"
 
                                 binding.textRatingStar.text =
                                     String.format("%.1f", (data.total_rating ?: "0").toString().toFloat())
@@ -827,7 +808,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                     binding.endRatingTv.text = formattedRating
                                 }
 
-                                //image loading from glide
+
                                 Glide.with(requireContext())
                                     .load(BuildConfig.MEDIA_URL + data.host_profile_image)
                                     .error(R.drawable.ic_circular_img_user)
@@ -941,9 +922,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                         "TESTING_PAGINATION",
                                         "Total :- " + pagination!!.total + " Current Page:- " + pagination!!.current_page
                                     )
-                                    /*  if (pagination!!.total <= pagination!!.current_page) {
-                                          binding.showMoreReview.visibility = View.GONE
-                                      }*/
+
                                     if (pagination?.total != null) {
                                         binding.textK.setText("(" + pagination?.total.toString() + ")")
                                         binding.tvReviewsCount.text =
@@ -963,8 +942,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 reviewList?.let {
                                     if (it.isNotEmpty()) {
                                         adapterReview.updateAdapter(it)
-                                        // binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +")"
-                                        //  binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
+
                                     }else{
                                         binding.showMoreReview.visibility = View.GONE
                                     }
@@ -980,27 +958,25 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
 
                                     }
                                 }
-                                // data.activities?.let { it1 -> adapterInclude.updateItems(it1) }
-                                // data.amenities?.let { it1 -> adapterAddon.updateAdapter(it1) }
                             } else {
                                 Log.e("API_ERROR", "Empty or null data received")
-                                showErrorDialog(requireContext(), "No booking details found.")
+                                showErrorDialog(requireContext(), ErrorMessage.NO_BOOKING_DETAILS_FOUND)
                             }
                         }
 
                         is NetworkResult.Error -> {
                             Log.e("API_ERROR", "Server Error: ${it.message}")
-                            showErrorDialog(requireContext(), it.message ?: "Unknown error")
+                            showErrorDialog(requireContext(), it.message ?: ErrorMessage.UNKNOWN_ERROR)
                         }
 
                         else -> {
-                            Log.v("API_ERROR", "Unexpected error: ${it.message ?: "Unknown error"}")
+                            Log.v("API_ERROR", "Unexpected error: ${it.message ?: ErrorMessage.UNKNOWN_ERROR}")
                         }
                     }
                 }
             } catch (e: Exception) {
                 Log.e("API_EXCEPTION", "Unexpected API error", e)
-                showErrorDialog(requireContext(), "Something went wrong. Please try again.")
+                showErrorDialog(requireContext(), ErrorMessage.SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN)
             }
         }
     }
@@ -1024,7 +1000,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
 
                 bookingViewModel.joinChatChannel(
                     userId, Integer.parseInt(hostId),
-                    channelName, "guest"
+                    channelName, AppConstant.GUEST_CHANNEL_TYPE  //"guest"
                 ).collect {
                     when (it) {
                         is NetworkResult.Success -> {
@@ -1053,11 +1029,11 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 Log.d(ErrorDialog.TAG, "REVIEW HOST" + channelName)
                                 intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
                                 intent.putExtra(AppConstant.FRIEND_ID, hostId)
-                                intent.putExtra("friend_img", friendImage).toString()
-                                intent.putExtra("friend_name", friendName).toString()
-                                intent.putExtra("user_name", userName)
-                                intent.putExtra("sender_id", hostId)
-                                intent.putExtra("message", messageSend)
+                                intent.putExtra(AppConstant.FRIEND_IMG, friendImage).toString()
+                                intent.putExtra(AppConstant.FRIEND_NAME/*"friend_name"*/, friendName).toString()
+                                intent.putExtra(AppConstant.USER_NAME/*"user_name"*/, userName)
+                                intent.putExtra(AppConstant.SENDER_ID/*"sender_id"*/, hostId)
+                                intent.putExtra(AppConstant.MESSAGE/*"message"*/, messageSend)
                                 startActivity(intent)
                             } else if (it.data?.sender_id?.toInt() == loggedInId) {
                                 var userImage: String = it.data?.sender_avatar.toString()
@@ -1071,7 +1047,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 var userName = ""
                                 userName = it.data?.sender_name.toString()
                                 val intent = Intent(requireContext(), ChatActivity::class.java)
-                                intent.putExtra("user_img", userImage).toString()
+                                intent.putExtra(AppConstant.USER_IMG/*"user_img"*/, userImage).toString()
                                 SessionManager(requireContext()).getUserId()?.let { it1 ->
                                     intent.putExtra(
                                         AppConstant.USER_ID,
@@ -1081,11 +1057,11 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 Log.d("TESTING", "REVIEW HOST" + channelName)
                                 intent.putExtra(AppConstant.CHANNEL_NAME, channelName)
                                 intent.putExtra(AppConstant.FRIEND_ID, hostId)
-                                intent.putExtra("friend_img", friendImage).toString()
-                                intent.putExtra("friend_name", friendName).toString()
-                                intent.putExtra("user_name", userName)
-                                intent.putExtra("sender_id", hostId)
-                                intent.putExtra("message", messageSend)
+                                intent.putExtra(AppConstant.FRIEND_IMG/*"friend_img"*/, friendImage).toString()
+                                intent.putExtra(AppConstant.FRIEND_NAME/*"friend_name"*/, friendName).toString()
+                                intent.putExtra(AppConstant.USER_NAME/*"user_name"*/, userName)
+                                intent.putExtra(AppConstant.SENDER_ID/*"sender_id"*/, hostId)
+                                intent.putExtra(AppConstant.MESSAGE/*"message"*/, messageSend)
                                 startActivity(intent)
                             }
 
@@ -1129,20 +1105,20 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 Log.d("TAG", "reviewPublishAPI: ${result.data} ")
                                 Toast.makeText(
                                     requireContext(),
-                                    "Thanks for your review",
+                                    ErrorMessage.THANKS_FOR_YOUR_REVIEW /*"Thanks for your review"*/,
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
 
                             is NetworkResult.Error -> {
                                 Log.e("API_ERROR", "Server Error: ${result.message}")
-                                showErrorDialog(requireContext(), result.message ?: "Unknown error")
+                                showErrorDialog(requireContext(), result.message ?: ErrorMessage.UNKNOWN_ERROR/*"Unknown error"*/)
                             }
 
                             else -> {
                                 Log.v(
                                     "API_ERROR",
-                                    "Unexpected error: ${result.message ?: "Unknown error"}"
+                                    "Unexpected error: ${result.message ?: ErrorMessage.UNKNOWN_ERROR/*"Unknown error"*/}"
                                 )
                             }
                         }
@@ -1151,7 +1127,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Log.e("API_EXCEPTION", "Unexpected API error", e)
-                    showErrorDialog(requireContext(), "Something went wrong. Please try again.")
+                    showErrorDialog(requireContext(), ErrorMessage.SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN/*"Something went wrong. Please try again."*/)
                 }
             }
         }
@@ -1159,7 +1135,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun showingMoreText() {
-        val text = "Show More"
+        val text = AppConstant.SHOW_MORE/*"Show More"*/
         val spannableString = SpannableString(text).apply {
             setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
@@ -1173,7 +1149,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun showingLessText() {
-        val text = "Show Less"
+        val text = AppConstant.SHOW_LESS/*"Show Less"*/
         val spannableString = SpannableString(text).apply {
             setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
@@ -1182,7 +1158,6 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
         binding.tvShowMore.paint.isAntiAlias = true
         binding.tvShowMore.setOnClickListener {
 
-//            adapterAddon.updateAdapter(getAddOnList().subList(0, 4))
             showingMoreText()
         }
     }
@@ -1203,18 +1178,18 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemHighestReview).setOnClickListener {
 
-            binding.textReviewClick.text = "Sort by: Highest Review"
-            sortReviewsBy("Highest")
+            binding.textReviewClick.text = ErrorMessage.SORT_BY_HIGHEST_REVIEW/*"Sort by: Highest Review"*/
+            sortReviewsBy(AppConstant.HIGHEST/*"Highest"*/)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemLowestReview).setOnClickListener {
-            binding.textReviewClick.text = "Sort by: Lowest Review"
-            sortReviewsBy("Lowest")
+            binding.textReviewClick.text = ErrorMessage.SORT_BY_LOWEST_REVIEW /*"Sort by: Lowest Review"*/
+            sortReviewsBy(AppConstant.LOWEST/*"Lowest"*/)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemRecentReview).setOnClickListener {
-            binding.textReviewClick.text = "Sort by: Recent Review"
-            sortReviewsBy("Recent")
+            binding.textReviewClick.text = ErrorMessage.SORT_BY_RECENT_REVIEW /*"Sort by: Recent Review"*/
+            sortReviewsBy(AppConstant.RECENT/*"Recent"*/)
             popupWindow.dismiss()
         }
 
@@ -1267,25 +1242,13 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
 
     private fun sortReviewsBy(option: String) {
         when (option) {
-            "Highest" -> reviewList.sortByDescending { it.review_rating }
-            "Lowest" -> reviewList.sortBy { it.review_rating }
-            "Recent" -> reviewList.sortByDescending { it.review_date }
+            AppConstant.HIGHEST /*"Highest"*/ -> reviewList.sortByDescending { it.review_rating }
+            AppConstant.LOWEST /*"Lowest"*/ -> reviewList.sortBy { it.review_rating }
+            AppConstant.RECENT/*"Recent"*/ -> reviewList.sortByDescending { it.review_date }
         }
         adapterReview.updateAdapter(reviewList)
     }
 
-    private fun shareApp() {
-        val appPackageName = requireActivity().packageName
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_TEXT,
-                "Buy this best app at: https://play.google.com/store/apps/details?id=$appPackageName"
-            )
-            type = "text/plain"
-        }
-        startActivity(sendIntent)
-    }
 
     private fun loadMoreReview(
         filter: String,
@@ -1318,9 +1281,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                         "TESTING_PAGINATION",
                                         "Total :- " + pagination!!.total + " Current Page:- " + pagination!!.current_page
                                     )
-                                    /* if (pagination!!.total <= pagination!!.current_page) {
-                                         binding.showMoreReview.visibility = View.GONE
-                                     }*/
+
                                     if (pagination!!.current_page == pagination?.total_pages) {
                                         binding.showMoreReview.visibility = View.GONE
                                     } else {
@@ -1330,8 +1291,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                                 reviewList?.let {
                                     if (it.isNotEmpty()) {
                                         adapterReview.updateAdapter(it)
-                                        //  binding.textK.text = "("+ formatConvertCount(reviewList.size.toString()) +" )"
-                                        //   binding.tvReviewsCount.text = "Reviews "+"("+formatConvertCount(reviewList.size.toString()) +")"
+
                                     }else{
                                         binding.showMoreReview.visibility = View.GONE
                                     }
@@ -1402,8 +1362,6 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
         binding.recyclerAddOn.isNestedScrollingEnabled = false
 
         adapterInclude = BookingIncludeAdapter(mutableListOf())
-        //   binding.recyclerIncludeBooking.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        //    binding.recyclerIncludeBooking.adapter = adapterInclude
 
         binding.recyclerReviews.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -1494,47 +1452,6 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
     }
 
 
-    fun shapeTopBottomRightCorners(shapeableImageView: ShapeableImageView) {
-        val shapeAppearanceModel = ShapeAppearanceModel.Builder()
-            .setTopRightCorner(CornerFamily.ROUNDED, 20f) // Set top-right corner radius to 60dp
-            .setBottomRightCorner(
-                CornerFamily.ROUNDED,
-                20f
-            ) // Set bottom-right corner radius to 60dp
-            .setTopLeftCorner(CornerFamily.CUT, 0f) // Keep top-left corner sharp
-            .setBottomLeftCorner(CornerFamily.CUT, 0f) // Keep bottom-left corner sharp
-            .build()
-
-        shapeableImageView.setShapeAppearanceModel(shapeAppearanceModel)
-    }
-
-    fun shapeTopBottomRightLeftCorners(shapeableImageView: ShapeableImageView) {
-
-        val shapeAppearanceModel = ShapeAppearanceModel.Builder()
-            .setTopRightCorner(CornerFamily.ROUNDED, 20f)
-            .setBottomRightCorner(CornerFamily.ROUNDED, 20f)
-            .setTopLeftCorner(CornerFamily.CUT, 20f)
-            .setBottomLeftCorner(CornerFamily.CUT, 20f)
-            .build()
-
-        shapeableImageView.setShapeAppearanceModel(shapeAppearanceModel)
-
-    }
-
-    fun shapeTopBottomLeftCorner(shapeableImageView: ShapeableImageView) {
-        val shapeAppearanceModel = ShapeAppearanceModel.Builder()
-            .setTopRightCorner(CornerFamily.ROUNDED, 0f) // Set top-right corner radius to 60dp
-            .setBottomRightCorner(
-                CornerFamily.ROUNDED,
-                0f
-            ) // Set bottom-right corner radius to 60dp
-            .setTopLeftCorner(CornerFamily.CUT, 20f) // Keep top-left corner sharp
-            .setBottomLeftCorner(CornerFamily.CUT, 20f) // Keep bottom-left corner sharp
-            .build()
-
-        shapeableImageView.setShapeAppearanceModel(shapeAppearanceModel)
-    }
-
     private fun openImageDialog(imageUrls: List<String>) {
 
         val dialogFragment = ViewImageDialogFragment()
@@ -1543,7 +1460,7 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                 putStringArrayList("image_list", java.util.ArrayList(it))
             }
             dialogFragment.arguments = bundle
-            dialogFragment.show(requireActivity().supportFragmentManager, "exampleDialog")
+            dialogFragment.show(requireActivity().supportFragmentManager, AppConstant.EXAMPLE_DIALOG/*"exampleDialog"*/)
         }
     }
 

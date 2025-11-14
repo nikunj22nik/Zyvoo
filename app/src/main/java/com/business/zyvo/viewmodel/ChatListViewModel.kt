@@ -27,20 +27,8 @@ class ChatListViewModel @Inject constructor(private val repository: ZyvoReposito
            ChatListModel(R.drawable.ic_mia_pic,"Host by Mia","3 minutes ago","Hello can we talk aboutsfdfsdf"),
            ChatListModel(R.drawable.ic_mia_pic,"Host by Mia","3 minutes ago","Hello can we talk aboutsfdfsdf"),
            ChatListModel(R.drawable.ic_mia_pic,"Host by Mia","3 minutes ago","Hello can we talk aboutsfdfsdf")
-         //  ChatListModel(R.drawable.ic_support_team_image,"Support Team","3 minutes ago","Hello can we talk aboutsfdfsdf")
        )
         _list.value = listItem
     }
 
-    // Method to remove item at a specific position
-    fun removeItemAt(position: Int) {
-        _list.value?.let {
-            if (position in it.indices) {
-                it.removeAt(position)
-                _list.value = it // Trigger observer to update the adapter
-
-            }
-
-        }
-    }
 }

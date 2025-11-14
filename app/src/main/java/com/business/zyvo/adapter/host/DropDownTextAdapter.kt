@@ -24,7 +24,6 @@ class DropDownTextAdapter(
         fun bind(item: ItemDropDown, position: Int) {
             textView.text = item.text
             itemView.setOnClickListener {
-                // Set the current item as selected
                 notifyItemChanged(position)
                 listener.itemClick(position)
                 onItemClick(item.text)

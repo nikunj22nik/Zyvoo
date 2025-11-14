@@ -23,12 +23,6 @@ class LoggedScreenViewModel @Inject constructor(
 ) : ViewModel() {
     val isLoading = MutableLiveData<Boolean>()
 
-    /*fun signupPhoneNumber(code:String,number :String){
-          viewModelScope.launch {
-             val result = repository.signUpPhoneNumber(code, number)
-             phoneSignUpLiveData.value = result
-          }
-   }*/
     suspend fun signupPhoneNumber(code: String, number: String):
             Flow<NetworkResult<Pair<String, String>>> {
         return repository.signUpPhoneNumber(number, code).onEach {

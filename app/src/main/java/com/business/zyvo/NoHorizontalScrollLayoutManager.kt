@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 class NoHorizontalScrollLayoutManager(context: Context) : LinearLayoutManager(context) {
 
     override fun canScrollHorizontally(): Boolean {
-        return false // Disable horizontal scrolling for the RecyclerView
+        return false
     }
 
 }

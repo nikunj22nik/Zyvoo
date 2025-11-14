@@ -1,4 +1,5 @@
 package com.business.zyvo.activity.guest.checkout.viewmodel
+
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.business.zyvo.NetworkResult
@@ -14,10 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class CheckOutPayViewModel  @Inject constructor(private val repository: ZyvoRepository) : ViewModel(){
     val isLoading = MutableLiveData<Boolean>()
-    private val _paymentCardList = MutableLiveData<MutableList<AddPaymentCardModel>>()
-    init {
-        loadPaymentDetail()
-    }
 
     suspend fun joinChatChannel(
         senderId :Int, receiverId :Int, groupChannel :String, user_type: String
@@ -27,24 +24,6 @@ class CheckOutPayViewModel  @Inject constructor(private val repository: ZyvoRepo
         }
     }
 
-
-    private fun loadPaymentDetail(){
-        val paymentList = mutableListOf<AddPaymentCardModel>(
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888"),
-            AddPaymentCardModel("...458888")
-        )
-
-        _paymentCardList.value = paymentList
-
-    }
 
     suspend fun getUserCards( userId: String):
             Flow<NetworkResult<JsonObject>>{

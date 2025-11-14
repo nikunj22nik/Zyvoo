@@ -44,10 +44,8 @@ open class LoadingUtils {
 
 
         fun showErrorDialog(context: Context?, text: String) {
-
             if (context == null) return
 
-             // Inflate the custom layout
             val inflater = LayoutInflater.from(context)
             val dialogView = inflater.inflate(R.layout.dialog_error, null)
 
@@ -65,11 +63,6 @@ open class LoadingUtils {
                 .setView(dialogView)
                 .setCancelable(false)
                 .create()
-
-            // Add animation to the error icon
-//            val animation = AnimationUtils.loadAnimation(context, R.anim.shake)
-//            errorIcon.startAnimation(animation)
-
 
             cancelBtn.setOnClickListener {
                 dialog.dismiss()
@@ -90,7 +83,6 @@ open class LoadingUtils {
 
         fun showSuccessDialog(context: Context?, text: String) {
             if (context == null) return
-            // Inflate the custom layout
             val inflater = LayoutInflater.from(context)
             val dialogView = inflater.inflate(R.layout.dialog_success, null)
 

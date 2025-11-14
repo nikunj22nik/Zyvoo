@@ -17,11 +17,11 @@ import com.business.zyvo.databinding.AdapterReviewsBinding
 class AdapterProReview(var context : Context, var list :MutableList<Review>) :
 RecyclerView.Adapter<AdapterProReview.ViewHolder>() {
 
-    class ViewHolder(var binding: AdapterReviewsBinding) : RecyclerView.ViewHolder(binding.root) {}
+    class ViewHolder(var binding: AdapterReviewsBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding: AdapterReviewsBinding = AdapterReviewsBinding.inflate(inflater, parent, false);
+        val binding: AdapterReviewsBinding = AdapterReviewsBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 

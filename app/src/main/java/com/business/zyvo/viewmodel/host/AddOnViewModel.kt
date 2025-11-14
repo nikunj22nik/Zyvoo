@@ -25,6 +25,4 @@ class AddOnViewModel @Inject constructor(var repository: ZyvoRepository): ViewMo
         _list.value = listItem
     }
 
-
-
 }

@@ -16,8 +16,6 @@ import com.google.android.material.imageview.ShapeableImageView
 
 
 class GallaryAdapter(private var items: MutableList<Uri>,var context : Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-
     var showImage :Int =0
 
     var uploadImage :Int =1
@@ -64,9 +62,7 @@ class GallaryAdapter(private var items: MutableList<Uri>,var context : Context) 
 
     // ViewHolder for header
     class HeaderViewHolder(itemView: View,context:Context) : RecyclerView.ViewHolder(itemView) {
-
         private val rlMain: RelativeLayout = itemView.findViewById(R.id.main)
-
         fun bind(mListener: onItemClickListener) {
             rlMain.setOnClickListener {
               mListener.onItemClick(adapterPosition-1, AppConstant.ADD_IMAGE)
@@ -74,10 +70,8 @@ class GallaryAdapter(private var items: MutableList<Uri>,var context : Context) 
         }
     }
 
-    // ViewHolder for regular items
     class RegularViewHolder(itemView: View,var context: Context) : RecyclerView.ViewHolder(itemView) {
         private val deleteImage: ImageView = itemView.findViewById(R.id.delete_image)
-
         private val shpImg:ShapeableImageView = itemView.findViewById(R.id.shapeableImageView)
         fun bind(item: Uri, mListener: onItemClickListener) {
             deleteImage.setOnClickListener {
@@ -87,21 +81,15 @@ class GallaryAdapter(private var items: MutableList<Uri>,var context : Context) 
             Glide.with(context)
                 .load(item)               // Your image URL or resource
                 .error(R.drawable.ic_error)  // Placeholder if the image fails to load
-                .into(shpImg);
-
-//            Glide.with(context).load(item).into(shpImg)
-
+                .into(shpImg)
         }
     }
 
     public fun updateAdapter(items: List<Uri>){
         this.items = items.toMutableList()
         val dummyUri = Uri.parse("https://example.com/dummy_image.jpg")
-
         this.items.add(dummyUri)
         Log.d("TESTING","ITEMS IN A LIST ARE "+items.size)
         notifyDataSetChanged()
     }
-
-
 }

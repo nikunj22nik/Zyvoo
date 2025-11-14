@@ -434,12 +434,6 @@
                 </LinearLayout>
 
 
-                <!-- phone number-->
-
-
-                <!-- verify identify-->
-
-
             </LinearLayout>
 
             <TextView
@@ -1034,22 +1028,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/rlMailingZipCodeTitle" />
 
 
-            <!--   <TextView-->
-            <!--       android:id="@+id/textPaymentMethod"-->
-            <!--       android:layout_width="wrap_content"-->
-            <!--       android:layout_height="wrap_content"-->
-            <!--       android:layout_marginStart="@dimen/_15sdp"-->
-            <!--       android:layout_marginTop="@dimen/_20sdp"-->
-            <!--       android:fontFamily="@font/poppins"-->
-            <!--       android:text="Payment Method"-->
-            <!--       android:layout_marginBottom="@dimen/_40sdp"-->
-            <!--       android:textColor="@color/black"-->
-            <!--       android:textSize="@dimen/_13sdp"-->
-            <!--       android:textStyle="bold"-->
-            <!--       android:drawablePadding="@dimen/_10ssp"-->
-            <!--       app:drawableEndCompat="@drawable/ic_dropdown_close"-->
-            <!--       app:layout_constraintStart_toStartOf="parent"-->
-            <!--       app:layout_constraintTop_toBottomOf="@+id/viewMailingAddress"/>-->
 
 
             <TextView
@@ -1077,25 +1055,6 @@
                 android:background="#E5E5E5"
                 app:layout_constraintTop_toBottomOf="@+id/textPaymentMethod" />
 
-
-            <!--        <TextView-->
-            <!--            android:id="@+id/textAddNewPaymentCard"-->
-            <!--            android:layout_width="wrap_content"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_marginStart="@dimen/_20sdp"-->
-            <!--            android:layout_marginTop="@dimen/_10ssp"-->
-            <!--            android:layout_marginEnd="@dimen/_15sdp"-->
-            <!--            android:background="@drawable/button_grey_line_bg"-->
-            <!--            android:drawablePadding="@dimen/_5sdp"-->
-            <!--            android:fontFamily="@font/poppins"-->
-            <!--            android:padding="@dimen/_7sdp"-->
-            <!--            android:text="Add New"-->
-            <!--            android:textColor="@color/black"-->
-            <!--            android:textSize="@dimen/_11sdp"-->
-            <!--            android:visibility="gone"-->
-            <!--            app:drawableEndCompat="@drawable/ic_plus_add_button"-->
-            <!--            app:layout_constraintStart_toStartOf="parent"-->
-            <!--            app:layout_constraintTop_toBottomOf="@+id/rlBankNameAndCardName" />-->
 
 
             <RelativeLayout

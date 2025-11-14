@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.business.zyvo.AppConstant
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -49,14 +50,10 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentNotificationBinding.inflate(inflater, container, false)
-        // Set up RecyclerView and Adapter
-
             adapterNotificationScreen =
                 AdapterNotificationScreen(requireContext(), arrayListOf(), this)
-           // binding.recyclerView.adapter = adapterNotificationScreen  // Ensure the RecyclerView ID is correct
 
             adapterGuestNotification = GuestNotificationAdapter(requireContext(), arrayListOf(), this)
-         //   binding.recyclerView.adapter = adapterGuestNotification
 
         sessionManager = SessionManager(requireContext())
         if (sessionManager.getUserType() == AppConstant.Guest) {
@@ -65,10 +62,8 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
             binding.recyclerView.adapter = adapterNotificationScreen
         }
 
-
-        // Bind the ViewModel to the layout
         binding.viewModel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner  // Important for LiveData to work in the layout
+        binding.lifecycleOwner = viewLifecycleOwner
 
         return binding.root
     }
@@ -140,19 +135,19 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                         is NetworkResult.Error -> {
                             LoadingUtils.hideDialog()
                             Log.e("API_ERROR", "Server Error: ${result.message}")
-                            showErrorDialog(requireContext(), result.message ?: "Unknown error")
+                            showErrorDialog(requireContext(), result.message ?: ErrorMessage.UNKNOWN_ERROR)
                         }
 
                         else -> {
                             LoadingUtils.hideDialog()
-                            Log.v("API_ERROR", "Unexpected error: ${result.message ?: "Unknown error"}")
+                            Log.v("API_ERROR", "Unexpected error: ${result.message ?: ErrorMessage.UNKNOWN_ERROR}")
                         }
                     }
                 }
             } catch (e: Exception) {
                 LoadingUtils.hideDialog()
                 Log.e("API_EXCEPTION", "Unexpected API error", e)
-                showErrorDialog(requireContext(), "Something went wrong. Please try again.")
+                showErrorDialog(requireContext(), ErrorMessage.SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN)
             }
         }
     }
@@ -171,20 +166,19 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                             LoadingUtils.hideDialog()
                             val list = result.data // Ensure non-null list
                             Log.d("API_RESPONSE", "Raw Response: $list")
-                          //  Toast.makeText(requireContext(),"Marked Read",Toast.LENGTH_LONG).show()
                         }
                         is NetworkResult.Error -> {
                             Log.e("API_ERROR", "Server Error: ${result.message}")
-                            showErrorDialog(requireContext(), result.message ?: "Unknown error")
+                            showErrorDialog(requireContext(), result.message ?: ErrorMessage.UNKNOWN_ERROR)
                         }
                         else -> {
-                            Log.v("API_ERROR", "Unexpected error: ${result.message ?: "Unknown error"}")
+                            Log.v("API_ERROR", "Unexpected error: ${result.message ?: ErrorMessage.UNKNOWN_ERROR}")
                         }
                     }
                 }
             } catch (e: Exception) {
                 Log.e("API_EXCEPTION", "Unexpected API error", e)
-                showErrorDialog(requireContext(), "Something went wrong. Please try again.")
+                showErrorDialog(requireContext(),ErrorMessage.SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN )
             }
         }
     }
@@ -208,16 +202,16 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                         }
                         is NetworkResult.Error -> {
                             Log.e("API_ERROR", "Server Error: ${result.message}")
-                            showErrorDialog(requireContext(), result.message ?: "Unknown error")
+                            showErrorDialog(requireContext(), result.message ?: ErrorMessage.UNKNOWN_ERROR)
                         }
                         else -> {
-                            Log.v("API_ERROR", "Unexpected error: ${result.message ?: "Unknown error"}")
+                            Log.v("API_ERROR", "Unexpected error: ${result.message ?: ErrorMessage.UNKNOWN_ERROR}")
                         }
                     }
                 }
             } catch (e: Exception) {
                 Log.e("API_EXCEPTION", "Unexpected API error", e)
-                showErrorDialog(requireContext(), "Something went wrong. Please try again.")
+                showErrorDialog(requireContext(), ErrorMessage.SOMETHING_WENT_WRONG_PLEASE_TRY_AGAIN)
             }
         }
     }
@@ -233,14 +227,6 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                         when (it) {
                             is NetworkResult.Success -> {
                                 LoadingUtils.hideDialog()
-//                                val newList = mutableListOf<NotificationScreenModel>()
-//                                list.forEach {
-//                                    if (it.notificationId != obj.notificationId) {
-//                                        newList.add(it)
-//                                    }
-//                                }
-//                                adapterNotificationScreen.updateItem(newList)
-//                                list = newList
                                 callingNotificationApiHost(userId)
                             }
 
@@ -257,7 +243,7 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                     }
                 }
             }else{
-                showErrorDialog(requireContext(),"Please Check Your Internet")
+                showErrorDialog(requireContext(), ErrorMessage.CHECK_INTERNET_CONNECTION)
             }
         }
 
@@ -284,16 +270,6 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                                 adapterNotificationScreen.updateItem(list.toMutableList())
                                 Log.d("API_RESPONSE", "Empty list received.")
                             }
-//                            if (it.data != null){
-//                                Log.d("checkDataList",it.data.toString())
-//                                adapterNotificationScreen.updateItem(it.data)
-//
-//                                list = it.data
-//
-//                            } else{
-//                                binding.tvNoData.visibility =View.VISIBLE
-//                                binding.recyclerView.visibility =View.GONE
-//                            }
 
                             LoadingUtils.hideDialog()
                         }
@@ -308,7 +284,7 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
                     }
                 }
             }else{
-                showErrorDialog(requireContext(),"Please Check Your Internet")
+                showErrorDialog(requireContext(), ErrorMessage.CHECK_INTERNET_CONNECTION)
             }
         }
     }
@@ -316,11 +292,10 @@ class NotificationFragment : Fragment(),OnClickListener,NotificationListener,Vie
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        // Clean up view references and other UI-related resources
+
     }
 
     override fun itemClick(obj: Int) {
-      //  viewModel.removeItemAt(obj) // Update the adapter with the new list
     }
 
     override fun onClick(p0: View?) {

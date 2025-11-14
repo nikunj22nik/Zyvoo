@@ -16,6 +16,8 @@ import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.R
 import com.business.zyvo.activity.guest.checkout.model.UserCards
 import com.business.zyvo.databinding.LayoutPaymentCardlistBinding
@@ -51,17 +53,6 @@ class AdapterAddPaymentCard(var context : Context, var list: MutableList<UserCar
 
 
             }
-
-
-            /*if (currentItem.is_preferred) {
-                binding.root.setOnClickListener(null) // remove click listener
-            } else {
-                binding.root.setOnClickListener {
-                    setpreferred.set(position)
-                }
-            }*/
-
-
 
         }
 
@@ -101,7 +92,7 @@ class AdapterAddPaymentCard(var context : Context, var list: MutableList<UserCar
         }
 
         popupView.findViewById<TextView>(R.id.itemSetPrimary).setOnClickListener {
-            onItemClickData.itemClickCard(pos = position , type = "primary")
+            onItemClickData.itemClickCard(pos = position , type = AppConstant.PRIMARY_CARD)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
@@ -152,7 +143,7 @@ class AdapterAddPaymentCard(var context : Context, var list: MutableList<UserCar
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
-              findViewById<TextView>(R.id.textCard).text = "Are you sure you want to delete this card?"
+              findViewById<TextView>(R.id.textCard).text = ErrorMessage.SURE_WANT_DELETE_CARD
 
 
             findViewById<ImageView>(R.id.imgCross).setOnClickListener {
@@ -160,7 +151,7 @@ class AdapterAddPaymentCard(var context : Context, var list: MutableList<UserCar
             }
 
             findViewById<RelativeLayout>(R.id.yes_btn).setOnClickListener {
-                onItemClickData.itemClickCard(pos = position , type = "delete")
+                onItemClickData.itemClickCard(pos = position , type = AppConstant.DELETE_CARD)
                 dismiss()
             }
             findViewById<RelativeLayout>(R.id.rl_cancel_btn).setOnClickListener {

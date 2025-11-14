@@ -28,16 +28,15 @@ class MyBookingsAdapter(
 
             binding.textName.text = currentItem.property_name
             binding.textDate.text = currentItem.booking_date
-            //binding.textStatus.text = currentItem.booking_status
             val status = currentItem.booking_status
             binding.textStatus.text = status?.replaceFirstChar { it.uppercaseChar() } ?: ""
 
             // Set background based on booking status
             when (currentItem.booking_status) {
-                "Confirmed" -> binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
-                "Waiting Payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-                "Pending" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-                "Cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
+               AppConstant.CONFIRMED_TEXT -> binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
+               AppConstant.WAITING_PAYMENT -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+               AppConstant.PENDING_TEXT  -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+               AppConstant.CANCELLED_TEXT -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
                 else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg)
             }
 

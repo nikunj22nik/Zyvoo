@@ -25,6 +25,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
+import com.business.zyvo.ErrorMessage
 import com.skydoves.powerspinner.PowerSpinnerView
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
@@ -58,7 +59,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogListener {
-
     lateinit var binding :ActivityExtraTimeBinding
     var propertyData: PropertyData?=null
     var hour:String?=null
@@ -81,28 +81,22 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        Log.d("TESTING_ZYVOO","ON CREATE OF Extra Time ")
         binding = ActivityExtraTimeBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
         session = SessionManager(this)
         intent.extras?.let {
-            propertyData = Gson().fromJson(it.getString("propertyData"), PropertyData::class.java)
-            hour = it.getString("hour")
-            price = it.getString("price")
-            stTime = it.getString("stTime")
-            edTime = it.getString("edTime")
-            propertyMile = it.getString("propertyMile")
-            date = it.getString("date")
-            bookingId = it.getString("bookingId")
+            propertyData = Gson().fromJson(it.getString(AppConstant.PROPERTY_DATA), PropertyData::class.java)
+            hour = it.getString(AppConstant.HOUR)
+            price = it.getString(AppConstant.PRICE_TEXT)
+            stTime = it.getString(AppConstant.ST_TIME)
+            edTime = it.getString(AppConstant.ED_TIME)
+            propertyMile = it.getString(AppConstant.PROPERTY_MILE)
+            date = it.getString(AppConstant.DATE)
+            bookingId = it.getString(AppConstant.BOOKING_ID_TEXT)
             propertyId = propertyData?.property_id.toString()
             hostId = propertyData?.host_id.toString()
-
-            Log.d("TESTING_PROPERTY_DATA","PROPERTY_ID :- "+propertyId +" HostId :-"+hostId)
-
         }
 
-
-        // Observe the isLoading state
         lifecycleScope.launch {
             extraTimeViewModel.isLoading.observe(this@ExtraTimeActivity) { isLoading ->
                 if (isLoading) {
@@ -124,25 +118,19 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
         }
 
         clickListeners()
-//        binding.tvReadMoreLess.setCollapsedText("Read More")
-//        binding.tvReadMoreLess.setExpandedText("Read Less")
-       // binding.tvReadMoreLess.setCollapsedText("show more")
-
-//        binding.tvReadMoreLess.setCollapsedTextColor(com.business.zyvo.R.color.green_color_bar)
         setPropertyData()
 
         binding.rlMsgHost.setOnClickListener {
             //  callingJoinChannelApi()
-            Log.d("TESTING_ZYVOO","ON click of message host")
             callingMessageClickListner()
         }
 
         binding.readMore.setOnClickListener {
-            if ( binding.readMore.text.toString().equals("Read More",true)){
-                binding.readMore.text = "Read Less"
+            if ( binding.readMore.text.toString().equals(AppConstant.READ_MORE,true)){
+                binding.readMore.text = AppConstant.READ_LESS
                 binding.tvReadMoreLess.maxLines = Integer.MAX_VALUE
             }else{
-                binding.readMore.text = "Read More"
+                binding.readMore.text = AppConstant.READ_MORE
                 binding.tvReadMoreLess.maxLines = 3
             }
         }
@@ -157,37 +145,30 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 binding.llMsgHost.visibility = View.VISIBLE
         }
 
-
-        var messageSend = "I have a doubt"
+        var messageSend = AppConstant.HAVE_DOUBT
         binding.doubt.setOnClickListener {
             binding.etShareMessage.setText("")
             binding.tvShareMessage.visibility = View.GONE
-            messageSend = "I have a doubt"
+            messageSend = AppConstant.HAVE_DOUBT
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-
-
         }
 
         binding.tvAvailableDay.setOnClickListener {
             binding.etShareMessage.setText("")
             binding.tvShareMessage.visibility = View.GONE
-            messageSend = "Available days"
+            messageSend = AppConstant.AVAILABLE_DAYS
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
-
-
         }
         binding.tvOtherReason.setOnClickListener {
-
             binding.tvShareMessage.visibility = View.VISIBLE
-            messageSend = "other"
+            messageSend = AppConstant.OTHER
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
             binding.tvOtherReason.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
-
         }
 
         var writeMessage =""
@@ -209,17 +190,11 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             if(userInput.length>0){
                 messageSend = userInput
             }
-            if (!messageSend.equals("other")  ){
+            if (!messageSend.equals(AppConstant.OTHER)  ){
                 propertyData?.let  { pro->
                     bookingId?.let {
                         val propertyid = it
                         val hostId = pro.host_id
-                        val userId = SessionManager(this).getUserId()
-                        var channelName = if (userId!! < hostId) {
-                            "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
-                        } else {
-                            "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyid
-                        }
 
                         Log.d(
                             TAG,
@@ -228,7 +203,6 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
 
                         callingJoinChannelApi(messageSend)
                     }
-
                 }
             }else{
                 if (userInput.trim().isNotEmpty()){
@@ -236,35 +210,20 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                         bookingId?.let {
                             val propertyid = it
                             val hostId = pro.host_id
-                            val userId = SessionManager(this).getUserId()
-                            var channelName = if (userId!! < hostId) {
-                                "ZYVOOPROJ_" + userId + "_" + hostId + "_" + propertyid
-                            } else {
-                                "ZYVOOPROJ_" + hostId + "_" + userId + "_" + propertyid
-                            }
 
                             Log.d(
                                 "TESTING_IDS",
                                 "PropertyId :- " + propertyid.toString() + " Hostid" + hostId
                             )
-
                             callingJoinChannelApi(messageSend)
-
                         }
                     }
                 }else{
-                    binding.etShareMessage.error ="Please Enter something"
+                    binding.etShareMessage.error = ErrorMessage.PLEASE_ENTER_SOMETHING
                 }
-
-
             }
-
         }
-
     }
-
-
-
 
     private fun callingJoinChannelApi(messageSend: String) {
         if(hostId.equals("-1") == false && propertyId.equals("-1") ==false){
@@ -275,22 +234,21 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                     LoadingUtils.showDialog(this@ExtraTimeActivity,true)
                     var channelName :String =""
                     if (userId < Integer.parseInt(hostId)) {
-                        channelName = "ZYVOOPROJ_" + userId + "_" + hostId +"_"+bookingId
+                        channelName = AppConstant.ZYVOOPROJ + userId + "_" + hostId +"_"+bookingId
                     }
                     else {
-                        channelName = "ZYVOOPROJ_" + hostId + "_" + userId +"_"+bookingId
+                        channelName = AppConstant.ZYVOOPROJ + hostId + "_" + userId +"_"+bookingId
                     }
 
-                    extraTimeViewModel.joinChatChannel(userId,Integer.parseInt(hostId),channelName,"guest").collect{
+                    extraTimeViewModel.joinChatChannel(userId,Integer.parseInt(hostId),channelName,
+                        AppConstant.GUEST_CHANNEL_TYPE).collect{
                         when(it){
                             is NetworkResult.Success ->{
                                 LoadingUtils.hideDialog()
                                 val loggedInId = SessionManager(this@ExtraTimeActivity).getUserId()
                                 if(it.data?.receiver_id?.toInt() == loggedInId){
                                     val userImage :String =  it.data?.receiver_avatar.toString()
-                                    Log.d("TESTING_PROFILE_HOST",userImage)
                                     val friendImage :String = it.data?.sender_avatar.toString()
-                                    Log.d("TESTING_PROFILE_HOST",friendImage)
                                     var friendName :String = ""
                                     if(it.data?.sender_name != null){
                                         friendName = it.data.sender_name
@@ -298,16 +256,16 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                                     var userName = ""
                                     userName = it.data?.receiver_name.toString()
                                     val intent = Intent(this@ExtraTimeActivity, ChatActivity::class.java)
-                                    intent.putExtra("user_img",userImage).toString()
+                                    intent.putExtra(AppConstant.USER_IMG,userImage).toString()
                                     SessionManager(this@ExtraTimeActivity).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
                                     Log.d("TESTING","REVIEW HOST"+channelName)
                                     intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
                                     intent.putExtra(AppConstant.FRIEND_ID,hostId)
-                                    intent.putExtra("friend_img",friendImage).toString()
-                                    intent.putExtra("friend_name",friendName).toString()
-                                    intent.putExtra("user_name",userName)
-                                    intent.putExtra("sender_id", hostId)
-                                    intent.putExtra("message",messageSend)
+                                    intent.putExtra(AppConstant.FRIEND_IMG,friendImage).toString()
+                                    intent.putExtra(AppConstant.FRIEND_NAME,friendName).toString()
+                                    intent.putExtra(AppConstant.USER_NAME,userName)
+                                    intent.putExtra(AppConstant.SENDER_ID, hostId)
+                                    intent.putExtra(AppConstant.MESSAGE,messageSend)
                                     startActivity(intent)
                                 }
                                 else if(it.data?.sender_id?.toInt() == loggedInId){
@@ -322,16 +280,16 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                                     var userName = ""
                                     userName = it.data?.sender_name.toString()
                                     val intent = Intent(this@ExtraTimeActivity, ChatActivity::class.java)
-                                    intent.putExtra("user_img",userImage).toString()
+                                    intent.putExtra(AppConstant.USER_IMG,userImage).toString()
                                     SessionManager(this@ExtraTimeActivity).getUserId()?.let { it1 -> intent.putExtra(AppConstant.USER_ID, it1.toString()) }
                                     Log.d("TESTING","REVIEW HOST"+channelName)
                                     intent.putExtra(AppConstant.CHANNEL_NAME,channelName)
                                     intent.putExtra(AppConstant.FRIEND_ID,hostId)
-                                    intent.putExtra("friend_img",friendImage).toString()
-                                    intent.putExtra("friend_name",friendName).toString()
-                                    intent.putExtra("user_name",userName)
-                                    intent.putExtra("sender_id", hostId)
-                                    intent.putExtra("message",messageSend)
+                                    intent.putExtra(AppConstant.FRIEND_IMG,friendImage).toString()
+                                    intent.putExtra(AppConstant.FRIEND_NAME,friendName).toString()
+                                    intent.putExtra(AppConstant.USER_NAME,userName)
+                                    intent.putExtra(AppConstant.SENDER_ID, hostId)
+                                    intent.putExtra(AppConstant.MESSAGE,messageSend)
                                     startActivity(intent)
                                 }
                             }
@@ -346,11 +304,8 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                     }
                 }
             }
-
-
-
         }else{
-            Toast.makeText(this@ExtraTimeActivity,"Error in Loading Chat",Toast.LENGTH_LONG).show()
+            Toast.makeText(this@ExtraTimeActivity, ErrorMessage.ERROR_LOADING_CHAT,Toast.LENGTH_LONG).show()
         }
     }
 
@@ -382,8 +337,6 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             }
         }
 
-
-
         binding.doubt.setOnClickListener {
             binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
             binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
@@ -411,7 +364,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
 
         binding.myBooking.setOnClickListener {
             val intent = Intent(this, GuesMain::class.java)
-            intent.putExtra("key_name","12345")
+            intent.putExtra(AppConstant.KEY_NAME,"12345")
             startActivity(intent)
            finish()
         }
@@ -689,44 +642,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
 
     }
 
-    private fun openDialogNotification(){
-
-        val dialog=Dialog(this, R.style.BottomSheetDialog)
-        dialog?.apply {
-            setCancelable(true)
-            setContentView(R.layout.dialog_notification_report_submit)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-
-            val okBtn :ImageView = findViewById<ImageView>(R.id.img_cross)
-            val cross :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
-            okBtn.setOnClickListener {
-                dialog.dismiss()
-            }
-            cross.setOnClickListener {
-                openDialogSuccess()
-                dialog.dismiss()
-            }
-
-            okBtn.setOnClickListener {
-
-                openDialogSuccess()
-                dialog.dismiss()
-            }
-            window?.setLayout(
-                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
-                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
-            )
-            window?.setBackgroundDrawableResource(android.R.color.transparent)
-            show()
-        }
-    }
-
     private fun openDialogSuccess(){
-
         val dialog=Dialog(this, R.style.BottomSheetDialog)
         dialog?.apply {
                 setCancelable(true)
@@ -851,15 +767,15 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                 dialog.dismiss()
                 val intent = Intent(this@ExtraTimeActivity
                     ,ExtraTimeChargesActivity::class.java)
-                intent.putExtra("price",hourlTotal)
-                intent.putExtra("stTime",stTime)
-                intent.putExtra("edTime",edTime)
-                intent.putExtra("propertyData",Gson().toJson(propertyData))
-                intent.putExtra("propertyMile",propertyMile)
-                intent.putExtra("date",date)
-                intent.putExtra("hour",hour)
-                intent.putExtra("type","Booking")
-                intent.putExtra("bookingId",bookingId)
+                intent.putExtra(AppConstant.PRICE_TEXT,hourlTotal)
+                intent.putExtra(AppConstant.ST_TIME,stTime)
+                intent.putExtra(AppConstant.ED_TIME,edTime)
+                intent.putExtra(AppConstant.PROPERTY_DATA,Gson().toJson(propertyData))
+                intent.putExtra(AppConstant.PROPERTY_MILE,propertyMile)
+                intent.putExtra(AppConstant.DATE,date)
+                intent.putExtra(AppConstant.HOUR,hour)
+                intent.putExtra(AppConstant.type,"Booking")
+                intent.putExtra(AppConstant.BOOKING_ID_TEXT,bookingId)
                 startActivity(intent)
             }
 

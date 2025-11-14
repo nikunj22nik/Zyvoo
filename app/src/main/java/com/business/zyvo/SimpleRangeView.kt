@@ -793,10 +793,6 @@ class SimpleRangeView @JvmOverloads constructor(
     }
 
 
-    //
-    // Animations
-    //
-
     private val fadeInAnim: ValueAnimator = ValueAnimator.ofFloat(0f, 1f)
     private val fadeOutAnim: ValueAnimator = ValueAnimator.ofFloat(1f, 0f)
 
@@ -814,11 +810,7 @@ class SimpleRangeView @JvmOverloads constructor(
                 removeAllListeners()
                 removeAllUpdateListeners()
             }
-//            override fun onAnimationEnd(animation: Animator?) {
-//                value.value = normalValue
-//                removeAllListeners()
-//                removeAllUpdateListeners()
-//            }
+
         })
         start()
     }
@@ -838,19 +830,12 @@ class SimpleRangeView @JvmOverloads constructor(
                 removeAllListeners()
                 removeAllUpdateListeners()
             }
-//            override fun onAnimationEnd(animation: Animator?) {
-//                value.value = 0f
-//                removeAllListeners()
-//                removeAllUpdateListeners()
-//            }
+
         })
 
         start()
     }
 
-    //
-    // Internal classes
-    //
 
     class ValueWrapper<T>(var value: T)
 
@@ -1132,10 +1117,6 @@ class SimpleRangeView @JvmOverloads constructor(
         }
     }
 
-    //
-    // Delegated properties
-    //
-
     private fun <T> updatePaintsAndRedraw(initialValue: T): ReadWriteProperty<SimpleRangeView, T> {
         return Delegates.observable(initialValue) { _, _, _ ->
             initPaints()
@@ -1159,9 +1140,6 @@ class SimpleRangeView @JvmOverloads constructor(
         }
     }
 
-    //
-    // Callbacks
-    //
 
     interface OnChangeRangeListener {
         fun onRangeChanged(rangeView: SimpleRangeView, start: Int, end: Int)
@@ -1176,9 +1154,6 @@ class SimpleRangeView @JvmOverloads constructor(
         fun getLabelTextForPosition(rangeView: SimpleRangeView, pos: Int, state: State): String?
     }
 
-    //
-    // Builder
-    //
 
     class Builder(private val context: Context) {
         private var labelColor: Int? = null

@@ -57,9 +57,7 @@ class ViewImageDialogFragment : DialogFragment(), OnClickListener {
         })
         binding.viewpager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
 
-        // Set up the TabLayout mediator
         TabLayoutMediator(binding.tabLayoutForIndicator, binding.viewpager) { tab, position ->
-            // Tab configuration if needed
         }.attach()
 
         arguments.let {
@@ -69,10 +67,8 @@ class ViewImageDialogFragment : DialogFragment(), OnClickListener {
             }
         }
 
-        // Handle back press within the fragment
         val callback: OnBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                // Handle back press logic here
                 findNavController().navigateUp()
             }
         }

@@ -12,8 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
-
-
     @HiltViewModel
     class HostDetailsViewModel @Inject constructor(private val repository: ZyvoRepository,
                                                 val networkMonitor: NetworkMonitor

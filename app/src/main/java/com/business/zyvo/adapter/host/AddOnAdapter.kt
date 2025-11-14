@@ -6,43 +6,33 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.databinding.LayoutAddOnHostBinding
 import com.business.zyvo.databinding.LayoutAddOnTextHostBinding
-import com.business.zyvo.model.AddPetsModel
 import com.business.zyvo.model.host.AddOnModel
 
 
 class AddOnAdapter(var context: Context, var list : MutableList<AddOnModel>, var listner : OnClickListener1): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val uploadOnCode = 1 // Represents normal location entries
+    private val uploadOnCode = 1
     private val uploadOnFixed = 0
     private  var textAddNew : TextView? = null
 
 
     inner class AddOnViewHolder(var binding: LayoutAddOnHostBinding) :
         RecyclerView.ViewHolder(binding.root) {
-        init {
-//            binding.root.setOnClickListener{
-//                listner.itemClick(adapterPosition)
-//            }
-        }
+
 
         fun bind(item: AddOnModel) {
-
-//            if (list.size >= 3) {
-//                textAddNew?.visibility = View.GONE
-//            } else {
-//                textAddNew?.visibility  = View.VISIBLE
-//            }
 
             binding.textName.text = item.name
             binding.textRupees.text = "$" +item.price
             binding.imageCross.setOnClickListener {
                 listner.itemClick(
                     adapterPosition,
-                    "add On Cross"
-                ) // Handle delete (or any other action) for this location
+                    AppConstant.ADD_ON_CROSS
+                )
             }
         }
 
@@ -54,13 +44,11 @@ class AddOnAdapter(var context: Context, var list : MutableList<AddOnModel>, var
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                listner.itemClick(adapterPosition,"add On") // Handle "Add New" button click
+                listner.itemClick(adapterPosition, AppConstant.ADD_ON) // Handle "Add New" button click
             }
         }
         fun bind() {
-//            binding.root.setOnClickListener {
-//                listner.itemClick(adapterPosition, "work") // Handle "Add New" button click
-//            }
+
         }
     }
 
@@ -100,10 +88,8 @@ class AddOnAdapter(var context: Context, var list : MutableList<AddOnModel>, var
     fun updateAddOn(newList: MutableList<AddOnModel>) {
         this.list = newList
         if (list.isEmpty()) {
-            list.add(AddOnModel("","")) // Placeholder for "Add New"
+            list.add(AddOnModel("",""))
         }
         notifyDataSetChanged()
     }
-    // Update data in the adapter
-
 }

@@ -13,6 +13,7 @@ import android.widget.Filterable
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
@@ -20,10 +21,8 @@ import com.business.zyvo.databinding.LayoutHostBookingBinding
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.utils.ErrorDialog
 
-
 class HostBookingsAdapter (var context: Context, var list: MutableList<MyBookingsModel>, var listner: OnClickListener)
     : RecyclerView.Adapter<HostBookingsAdapter.MyBookingsViewHolder>(), Filterable {
-
 
         private lateinit var mListener: onItemClickListener
         private var filteredList: List<MyBookingsModel> = list
@@ -60,7 +59,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     binding.llAcceptRequest.visibility = View.GONE
                     binding.fl.visibility = View.VISIBLE
                     val bookingId = list.get(position).booking_id
-                    val status = "approve"
+                    val status = AppConstant.APPROVE
                     val message = binding.tvShareMessage.text.toString()
                     val extensionId = currentItem?.extension_id?.let { extId ->
                         if (extId == 0) "" else extId.toString()
@@ -72,10 +71,10 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     binding.llDeclineRequest.visibility = View.GONE
                     binding.llAcceptRequest.visibility = View.GONE
                 }
-                var reason ="other"
+                var reason = AppConstant.OTHER
 
                 binding.doubt.setOnClickListener {
-                   reason = "I'm overbooked"
+                   reason = AppConstant.IM_OVERBOOKED
                     binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
                     binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
                 }
@@ -92,7 +91,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                 })
 
                 binding.tvAvailableDay.setOnClickListener {
-                    reason ="Maintenance day"
+                    reason = AppConstant.MAINTENANCE_DAY
                     binding.doubt.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box_grey_light)
                     binding.tvAvailableDay.setBackgroundResource(R.drawable.bg_four_side_corner_msg_box)
                 }
@@ -105,7 +104,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     val extensionId = currentItem?.extension_id?.let { extId ->
                         if (extId == 0) "" else extId.toString()
                     } ?: ""
-                    mListener.onItemClick(list.get(position).booking_id,"decline",msg,reason,
+                    mListener.onItemClick(list.get(position).booking_id, AppConstant.DECLINE,msg,reason,
                         extensionId)
 
                 }
@@ -123,7 +122,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                 textStatus = binding.textStatus
 
                 Glide.with(context).load(BuildConfig.MEDIA_URL+currentItem.guest_avatar).into( binding.imagePicture)
-                if(currentItem.booking_status.equals("Pending")){
+                if(currentItem.booking_status.equals(AppConstant.PENDING)){
                     binding.llApproveAndDecline.visibility = View.VISIBLE
                     binding.textStatus.visibility = View.GONE
                     binding.textDate.visibility = View.GONE
@@ -135,11 +134,11 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
                     binding.fl.visibility = View.VISIBLE
                 }
                 when (filteredList.get(position).booking_status) {
-                    "Confirmed" ->  binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
+                    AppConstant.CONFIRMED_TEXT  ->  binding.textStatus.setBackgroundResource(R.drawable.blue_button_bg)
 
-                    "Awaiting Payment" -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                    AppConstant.AWAITING_PAYMENT_TEXT -> binding.textStatus.setBackgroundResource(R.drawable.yellow_button_bg)
 
-                    "Cancelled" -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                    AppConstant.CANCELLED_TEXT  -> binding.textStatus.setBackgroundResource(R.drawable.grey_button_bg)
 
                     else -> binding.textStatus.setBackgroundResource(R.drawable.button_bg) // Optional fallback
                 }
@@ -158,7 +157,7 @@ class HostBookingsAdapter (var context: Context, var list: MutableList<MyBooking
 
                 currentItem?.type?.let {
                     when(it){
-                        "extension"-> binding.imageOverlay.visibility = View.VISIBLE
+                       AppConstant.EXTENSION -> binding.imageOverlay.visibility = View.VISIBLE
                         else -> binding.imageOverlay.visibility = View.GONE
                     }
                 }?: run {

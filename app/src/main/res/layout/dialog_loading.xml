@@ -6,16 +6,6 @@
     android:layout_gravity="center"
     >
 
-    <!--    <com.github.ybq.android.spinkit.SpinKitView-->
-    <!--        xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--        android:id="@+id/spin_kit"-->
-    <!--        style="@style/SpinKitView.Large.Wave"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        app:SpinKit_Color="@color/colorAccent"-->
-    <!--        android:layout_centerHorizontal="true"-->
-    <!--        android:layout_centerVertical="true"/>-->
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lt_javrvis"

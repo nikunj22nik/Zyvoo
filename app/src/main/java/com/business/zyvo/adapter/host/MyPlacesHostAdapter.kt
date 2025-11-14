@@ -52,7 +52,7 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         val currentItem = list[position]
 
         Log.d("TESTING_ID","Here in a adapter "+list.get(position).property_id.toString())
-//is_instant_book
+       //is_instant_book
        var commonAuthWorkUtils = CommonAuthWorkUtils(context,null)
 
         if(!commonAuthWorkUtils.isScreenLarge(context)){
@@ -75,9 +75,6 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
         // Setup ViewPager and its adapter
         val viewPagerAdapter = ViewPagerAdapter(mutableListOf(),context, object : OnLogClickListener {
             override fun itemClick(items: MutableList<ViewpagerModel>) {
-                //  listener.itemClick(position)
-//                mListener.onItemClick(position)
-
 
             }
         })
@@ -109,12 +106,8 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
              price ="$"+priceInt+" / h"
         }
 
-
         holder.binding.textRating.text = rating
-        Log.d("checkDataRating",rating.toString())
-        Log.d("checkDataPrice",price.toString())
         holder.binding.textPricePerHours.text = price.toString()
-
         currentItem.distance_miles?.let {   holder.binding.textMiles.text = currentItem.distance_miles +" miles away" }
 
         if(list.get(position).fname ==null){
@@ -161,8 +154,6 @@ class MyPlacesHostAdapter(private val context: Context, private var list: Mutabl
             dialogDelete(position)
             popupWindow.dismiss()
         }
-
-
 
         // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)

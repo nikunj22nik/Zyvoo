@@ -90,8 +90,6 @@ interface ZyvoRepository {
 
     suspend fun getUserProfile(userId: String): Flow<NetworkResult<JsonObject>>
 
-
-    // Host Api's
     suspend fun addPropertyData(property: PropertyDetailsSave): Flow<NetworkResult<Pair<String, Int>>>
 
 

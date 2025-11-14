@@ -1,33 +1,21 @@
 package com.business.zyvo.viewmodel.host
 
-import android.net.http.HttpException
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagingSource
-import androidx.paging.PagingState
 import com.business.zyvo.AppConstant
-import com.business.zyvo.LoadingUtils
 import com.business.zyvo.NetworkResult
-import com.business.zyvo.R
 import com.business.zyvo.model.MyBookingsModel
 import com.business.zyvo.model.host.ChannelModel
-import com.business.zyvo.model.host.HostReviewModel
-import com.business.zyvo.model.host.PaginationModel
 import com.business.zyvo.model.host.ReviewerProfileModel
 import com.business.zyvo.model.host.hostdetail.HostDetailModel
-import com.business.zyvo.model.host.hostdetail.Review
 import com.business.zyvo.repository.ZyvoRepository
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.onEach
-import retrofit2.http.Field
-import java.io.IOException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,7 +29,6 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     var reviewerProfileList = mutableListOf<ReviewerProfileModel>()
     var hashMapPageNumber = HashMap<Int,Boolean>()
     var filter = "recent_review"
-  //  pending,waiting_payment,confirmed,cancelled,finished
    var reviewListLiveData = MutableLiveData<MutableList<Pair<Int,String>>>()
     var pendingList = mutableListOf<MyBookingsModel>()
     var waitingPaymentList = mutableListOf<MyBookingsModel>()
@@ -139,19 +126,9 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     ): Flow<NetworkResult<Pair<String, HostDetailModel>>> {
         return repository.hostBookingDetails(bookingId, latitude, longitude,
             extensionId).onEach {
-
         }
     }
 
-    suspend fun propertyFilterReviews(
-        propertyId: Int, filter: String, page: Int
-    ): Flow<NetworkResult<Pair<PaginationModel, MutableList<HostReviewModel>>>> {
-
-
-        return repository.propertyFilterReviews(propertyId, filter, page).onEach {
-
-        }
-    }
 
     suspend fun reportListReason() : Flow<NetworkResult<MutableList<Pair<Int,String>>>>{
         return repository.reportListReason().onEach {
@@ -211,23 +188,18 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
     }
 
     fun sortedByDescending (list :MutableList<ReviewerProfileModel>){
-
         val sortedReviews = list.sortedWith { a, b ->
             val ratingA = a.review_rating?.toDoubleOrNull() ?: Double.MIN_VALUE // Treat null/invalid as a small value
             val ratingB = b.review_rating?.toDoubleOrNull() ?: Double.MIN_VALUE
             ratingB.compareTo(ratingA) // Compare decimal ratings (reverse the order for high to low)
         }
-
         highestReviewList= sortedReviews.toMutableList()
-
         highestReviewList.forEach {
             Log.d("TESTING_REVIEW","Review Rating Highest"+it.review_rating.toString())
         }
-
     }
 
     fun sortByAscendingOrder(list :MutableList<ReviewerProfileModel>){
-
         val sortedReviews1 = list.sortedWith { a, b ->
             val ratingA = a.review_rating?.toDoubleOrNull() ?: Double.MAX_VALUE // Treat null/invalid as a large value
             val ratingB = b.review_rating?.toDoubleOrNull() ?: Double.MAX_VALUE
@@ -240,8 +212,5 @@ class HostBookingsViewModel @Inject constructor(private var repository: ZyvoRepo
         lowestReviewList.forEach {
             Log.d("TESTING_REVIEW","Review Rating Lowest"+it.review_rating.toString())
         }
-
     }
-
-
 }

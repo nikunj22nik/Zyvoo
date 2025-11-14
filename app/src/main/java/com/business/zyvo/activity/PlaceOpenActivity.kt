@@ -28,7 +28,6 @@ class PlaceOpenActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         binding = ActivityPlaceOpenBinding.inflate(LayoutInflater.from(this))
-        initialization()
         setContentView(binding.root)
         list = mutableListOf()
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -36,18 +35,10 @@ class PlaceOpenActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-
-
-
         binding.imageBackButton.setOnClickListener {
             onBackPressed()
         }
-
-
-
         fillDataInCalendar()
-
         settingRecyclerViewData()
     }
 
@@ -89,14 +80,7 @@ class PlaceOpenActivity : AppCompatActivity() {
     }
 
     fun generateRandomNumber(): Int {
-        return Random.nextInt(1, 8) // Generates a random number between 1 (inclusive) and 8 (exclusive)
+        return Random.nextInt(1, 8)
     }
-
-    fun initialization() {
-
-
-    }
-
-
 
 }

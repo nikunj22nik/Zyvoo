@@ -28,6 +28,7 @@ import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BookingRemoveListener
 import com.business.zyvo.BuildConfig
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
@@ -70,7 +71,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
             insets
         }
 
-        if (intent.getBooleanExtra("OPEN_PROFILE_FRAGMENT", false)) {
+        if (intent.getBooleanExtra(AppConstant.OPEN_PROFILE_FRAGMENT , false)) {
             // Delay slightly to ensure navigation is set up
             binding.root.postDelayed({
                 openProfileFragment()
@@ -90,12 +91,6 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         binding.navigationBookings.setOnClickListener(this)
         binding.icProfile.setOnClickListener(this)
 
-        /*try {
-            quickstartConversationsManager = (application as MyApp).conversationsManager!!
-            quickstartConversationsManager.setListener(this)
-        } catch (e: Exception) {
-            Log.e("******", "Error setting QuickstartConversationsManager listener", e)
-        }*/
         try {
             val app = application as? MyApp
             if (app?.conversationsManager != null) {
@@ -141,10 +136,10 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
     @SuppressLint("SuspiciousIndentation")
     private fun handlingDeepLink() {
         if (intent.extras!=null){
-            val location = intent?.extras?.getString("location")
-            if (location.equals("Article")){
-                val guideId = intent?.extras?.getString("guideId")
-                val textType = intent?.extras?.getString("textType")
+            val location = intent?.extras?.getString(AppConstant.LOCATION)
+            if (location.equals(AppConstant.ARTICLE)){
+                val guideId = intent?.extras?.getString(AppConstant.GUIDE_ID)
+                val textType = intent?.extras?.getString(AppConstant.textType)
                 if (guideId!=null) {
                     profileColor()
                     val bundle = Bundle()
@@ -202,12 +197,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         }
     }
 
-    fun resetBookingCountToZero(){
 
-    }
-    fun hideView() {
-        binding.lay1.visibility = View.GONE
-    }
 
     // Function to show the view again when the fragment is destroyed or replaced
     fun showView() {
@@ -220,7 +210,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         var userId = sessionManager.getUserId()
         userId?.let {
             lifecycleScope.launch {
-                guestViewModel.getChatToken(it, "host").collect {
+                guestViewModel.getChatToken(it, AppConstant.Host).collect {
                     when (it) {
                         is NetworkResult.Success -> {
                             Log.d("TESTING_TOKEN",it.data.toString()+" Token inside success")
@@ -354,7 +344,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                     }
 
                 }else{
-                    LoadingUtils.showErrorDialog(this@HostMainActivity,"Please Check Your Internet Connection")
+                    LoadingUtils.showErrorDialog(this@HostMainActivity, ErrorMessage.CHECK_INTERNET_CONNECTION)
                 }
 
             }
@@ -409,7 +399,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
     inner class MyReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             binding.rlBookingCount.visibility = View.VISIBLE
-            val message = intent.getStringExtra("message")
+            val message = intent.getStringExtra(AppConstant.MESSAGE)
 //          // Do something with the message (e.g., show it in a Toast)
             var TVcOUNT = binding.tvBookingCount
             TVcOUNT.setText(message.toString())
@@ -422,47 +412,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver)
     }
 
-    /*private fun getTotalUnreadMessages(){
-        var totalUnreadCount:Long = 0
-        runOnUiThread {
-            try {
-                val conversations =
-                    quickstartConversationsManager?.conversationsClient?.myConversations
-                if (!conversations.isNullOrEmpty()) {
-                    Log.d(ErrorDialog.TAG, "No conversations found.")
-                    quickstartConversationsManager?.conversationsClient?.myConversations!!.forEach {
-                        //  Log.d(ErrorDialog.TAG,"m 8888"+it.friendlyName +" M "+it.uniqueName)
-                    }
 
-                    if (quickstartConversationsManager?.conversationsClient?.myConversations!!.size > 0) {
-                        for (i in quickstartConversationsManager?.conversationsClient?.myConversations!!) {
-                            try {
-                                if (map.containsKey(i.uniqueName)) {
-                                    //  Log.d(ErrorDialog.TAG,"m 8888"+i.friendlyName +" M "+i.uniqueName)
-                                    i.getUnreadMessagesCount { re ->
-                                        if (re != null) {
-                                            Log.d(ErrorDialog.TAG, re.toString())
-                                            totalUnreadCount += re
-                                            Log.d(
-                                                ErrorDialog.TAG,
-                                                "total " + totalUnreadCount.toString()
-                                            )
-                                            binding.tvbabadge.text = "$totalUnreadCount"
-                                        }
-                                    }
-                                }
-                            } catch (e: Exception) {
-                                Log.d(ErrorDialog.TAG, "data :-" + e.message)
-                            }
-                        }
-                        //  binding.tvbabadge.text = "$totalUnreadCount"
-                    }
-                }
-                } catch (e:Exception){
-                    Log.d(ErrorDialog.TAG, "msg :- " + e.message)
-                }
-        }
-    }*/
     private fun getTotalUnreadMessages() {
         var totalUnreadCount: Long = 0
         val conversations = quickstartConversationsManager?.conversationsClient?.myConversations
@@ -535,12 +485,7 @@ class HostMainActivity : AppCompatActivity(), View.OnClickListener ,BookingRemov
                                         map.put(it.group_name.toString(),it)
                                     }
                                     Log.d("*******",map.size.toString() +" Map Size is ")
-                                    /*  if (quickstartConversationsManager.conversationsClient==null){
-                                          quickstartConversationsManager.initializeWithAccessTokenBase(this@HostMainActivity
-                                              ,sessionManager.getChatToken().toString())
-                                      }else{
-                                          quickstartConversationsManager.loadChatList()
-                                      }*/
+
                                     quickstartConversationsManager.conversationsClient?.let {
                                         quickstartConversationsManager.loadChatList()
                                     } ?: quickstartConversationsManager.initializeWithAccessTokenBase(

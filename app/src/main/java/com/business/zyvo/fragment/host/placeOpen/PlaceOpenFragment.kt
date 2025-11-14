@@ -119,9 +119,6 @@ class PlaceOpenFragment : Fragment() {
             }
         }
 
-//        binding.scheduleView.setDays(daysOfWeek)
-
-
         binding.imageBackButton.setOnClickListener {
             findNavController().navigateUp()
         }
@@ -207,13 +204,9 @@ class PlaceOpenFragment : Fragment() {
                     val (startDate1, endDate1) = dateRange
                     startDate = startDate1 //+ " " + year
                     endDate = endDate1 //+ " " + year
-                    //binding.tvDateRange.text = "$startDate1 - $endDate1 $year"
+
                     binding.tvDateRange.text = "$startDate1 - $endDate1"
-//                    Toast.makeText(
-//                        this,
-//                        "Range: $startDate to $endDate, Year: $year",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
+
 
                     lifecycleScope.launch {
                         viewModel.networkMonitor.isConnected
@@ -227,15 +220,6 @@ class PlaceOpenFragment : Fragment() {
                                 } else {
                                     try {
                                         val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-
-//                                    val startDate1 = LocalDate.parse(
-//                                        "$startDate $year",
-//                                        DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH)
-//                                    )
-//                                        .format(outputFormatter)
-
-//                                    val formattedStartDate = "$startDate $year".replace(Regex("\\s+"), " ") // Ensure proper spacing
-//                                    val formattedEndDate = "$endDate $year".replace(Regex("\\s+"), " ") // Ensure proper spacing
 
 
                                         Log.d("checkDates", startDate!!)
@@ -375,9 +359,8 @@ class PlaceOpenFragment : Fragment() {
                         val model = Gson().fromJson(it.data, PropertyResponse::class.java)
 
                         val daysOfWeek = getDaysOfWeek(start_date, end_date)
-                        // Set days in schedule view
                         binding.scheduleView.setDays(daysOfWeek)
-                        // Final event list
+
                         val events = mutableListOf<ScheduleEvent>()
 
                         // Get all bookings
@@ -388,9 +371,7 @@ class PlaceOpenFragment : Fragment() {
                             val referenceEndDate =
                                 LocalDate.parse(booking.booking_date, dateFormatter)
 
-                            // val column = if (booking.booking_date == start_date) 0 else 1 // Adjust as needed
-
-                            val column =
+                              val column =
                                 ChronoUnit.DAYS.between(referenceStartDate, referenceEndDate)
                                     .toInt()
 
@@ -465,11 +446,8 @@ class PlaceOpenFragment : Fragment() {
                     else -> {
 
                     }
-
                 }
             }
-
-
         }
     }
 
@@ -503,7 +481,6 @@ class PlaceOpenFragment : Fragment() {
             }
             pos++
         }
-
     }
 
     fun getNewListOfData(): MutableList<String> {
@@ -523,11 +500,10 @@ class PlaceOpenFragment : Fragment() {
         return Random.nextInt(
             1,
             8
-        ) // Generates a random number between 1 (inclusive) and 8 (exclusive)
+        )
     }
 
     fun initialization() {
-
 
     }
 
@@ -535,6 +511,5 @@ class PlaceOpenFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 
 }

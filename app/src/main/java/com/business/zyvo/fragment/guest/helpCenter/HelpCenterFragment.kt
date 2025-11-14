@@ -1,15 +1,10 @@
 package com.business.zyvo.fragment.guest.helpCenter
 
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -51,33 +46,18 @@ class HelpCenterFragment : Fragment() ,View.OnClickListener, OnClickListener{
         // Inflate the layout for this fragment
         _binding = FragmentHelpCenterBinding.inflate(layoutInflater,container,false)
         session = SessionManager(requireContext())
-//        adapterAllGuides = AdapterAllGuides(requireContext(), arrayListOf(),maxItemsToShow = 4,this)
-//        binding!!.recyclerViewGuests.adapter = adapterAllGuides
-////        viewModel.list.observe(viewLifecycleOwner, Observer {
-////            list -> adapterAllGuides.updateItem(list)
-////        })
-//
-//        adapterAllArticles = AdapterAllArticles(requireContext(), arrayListOf(),maxItemsToShow = 3,this)
-//        binding!!.recyclerViewArticle.adapter = adapterAllArticles
-
-//        viewModel.articlesList.observe(viewLifecycleOwner, Observer {
-//             articleList -> adapterAllArticles.updateItem(articleList)
-//        })
-
-
-        binding!!.imageBackIcon.setOnClickListener {
+        binding.imageBackIcon.setOnClickListener {
             findNavController().navigateUp()
         }
 
 
 
-        return binding!!.root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
-        //val toggleGroup = findViewById<RadioGroup>(R.id.toggleGroup)
         lifecycleScope.launch {
             viewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -100,9 +80,9 @@ class HelpCenterFragment : Fragment() ,View.OnClickListener, OnClickListener{
                 }
             }
         }
-        binding!!.textBrowseAllGuides.setOnClickListener(this)
-        binding!!.textBrowseAllArticle.setOnClickListener(this)
-        binding!!.toggleGroup.setOnCheckedChangeListener { _, checkedId ->
+        binding.textBrowseAllGuides.setOnClickListener(this)
+        binding.textBrowseAllArticle.setOnClickListener(this)
+        binding.toggleGroup.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
                 R.id.radioGuest -> {
                     // Handle Guest selected
@@ -112,7 +92,7 @@ class HelpCenterFragment : Fragment() ,View.OnClickListener, OnClickListener{
                 }
             }
         }
-        binding!!.radioGuest.isChecked = true
+        binding.radioGuest.isChecked = true
 
 
     }
@@ -153,12 +133,12 @@ class HelpCenterFragment : Fragment() ,View.OnClickListener, OnClickListener{
 
            R.id.textBrowseAllGuides->{
                val bundle = Bundle()
-               bundle.putString(AppConstant.textType,"Guides for Guests")
+               bundle.putString(AppConstant.textType, AppConstant.GUIDES_FOR_GUEST/*"Guides for Guests"*/)
                findNavController().navigate(R.id.browseAllGuidesAndArticlesFragment,bundle)
            }
            R.id.textBrowseAllArticle->{
                val bundle = Bundle()
-               bundle.putString(AppConstant.textType,"Guides for Articles")
+               bundle.putString(AppConstant.textType,AppConstant.GUIDES_FOR_ARTICLES/*"Guides for Articles"*/)
                findNavController().navigate(R.id.browseAllGuidesAndArticlesFragment,bundle)
            }
        }

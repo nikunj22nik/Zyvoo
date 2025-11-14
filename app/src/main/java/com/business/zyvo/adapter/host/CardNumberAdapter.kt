@@ -31,11 +31,11 @@ class CardNumberAdapter (private val context: Context, private var list: Mutable
         mListener = listener
     }
 
-    class ViewHolder(var binding: AdapterCardNumbersBinding) : RecyclerView.ViewHolder(binding.root){}
+    class ViewHolder(var binding: AdapterCardNumbersBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding:AdapterCardNumbersBinding = AdapterCardNumbersBinding.inflate(inflater,parent,false);
+        val binding:AdapterCardNumbersBinding = AdapterCardNumbersBinding.inflate(inflater,parent,false)
         return CardNumberAdapter.ViewHolder(binding)
     }
 
@@ -45,9 +45,6 @@ class CardNumberAdapter (private val context: Context, private var list: Mutable
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         var currentItem = list[position]
-
-
-
         holder.binding.textCard.text = currentItem.country
         holder.binding.textCardNumber.text = currentItem.language
 
@@ -63,14 +60,11 @@ class CardNumberAdapter (private val context: Context, private var list: Mutable
     }
 
     private fun showPopupWindow(anchorView: View, position: Int) {
-        // Inflate the custom layout for the popup menu
         val popupView =
             LayoutInflater.from(context).inflate(R.layout.popup_primary_delete, null)
 
-        // Create PopupWindow with the custom layout
         val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
 
-        // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemSetPrimary).setOnClickListener {
 
             popupWindow.dismiss()
@@ -82,13 +76,9 @@ class CardNumberAdapter (private val context: Context, private var list: Mutable
             popupWindow.dismiss()
         }
 
-
-
-        // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)
         anchorView.getLocationOnScreen(location)
 
-        // Get the height of the PopupView after inflating it
         popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         val popupHeight = popupView.measuredHeight
         val popupWeight = popupView.measuredWidth
@@ -155,6 +145,4 @@ class CardNumberAdapter (private val context: Context, private var list: Mutable
             show()
         }
     }
-
-
 }

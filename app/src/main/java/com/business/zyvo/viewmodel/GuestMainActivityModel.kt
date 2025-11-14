@@ -57,11 +57,6 @@ class GuestMainActivityModel @Inject constructor(private val repository: ZyvoRep
 
     suspend fun getHostUnreadBookings(@Field("user_id") userId :Int) : Flow<NetworkResult<Int>>{
         return repository.getHostUnreadBookings(userId).onEach {
-
         }
-
     }
-
-
-
 }

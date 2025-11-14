@@ -9,8 +9,8 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.util.AttributeSet
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatTextView
+import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 
 
@@ -23,8 +23,8 @@ class ReadMoreTextView @JvmOverloads constructor(
     private var fullText: String = ""
     private var isExpanded = false
     private var maxCollapsedLines = 3
-    private var readMoreText = "Read More"
-    private var readLessText = "Read Less"
+    private var readMoreText = AppConstant.READ_MORE
+    private var readLessText = AppConstant.READ_LESS
     private var readMoreColor = Color.BLUE
     private var collapsedText: String = ""
 
@@ -37,8 +37,8 @@ class ReadMoreTextView @JvmOverloads constructor(
         ).apply {
             try {
                 maxCollapsedLines = getInt(R.styleable.ReadMoreTextView_maxCollapsedLines, 3)
-                readMoreText = getString(R.styleable.ReadMoreTextView_readMoreText) ?: "Read More"
-                readLessText = getString(R.styleable.ReadMoreTextView_readLessText) ?: "Read Less"
+                readMoreText = getString(R.styleable.ReadMoreTextView_readMoreText) ?: AppConstant.READ_MORE
+                readLessText = getString(R.styleable.ReadMoreTextView_readLessText) ?: AppConstant.READ_LESS
                 readMoreColor = getColor(R.styleable.ReadMoreTextView_readMoreColor, Color.BLUE)
             } catch (e: Exception) {
                 // attrs.xml not found, use defaults

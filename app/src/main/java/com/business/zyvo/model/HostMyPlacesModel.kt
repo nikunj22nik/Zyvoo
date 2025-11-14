@@ -17,6 +17,4 @@ data class HostMyPlacesModel(
     val property_rating : String,
     val property_review_count : String,
     val title: String
-
-
 )

@@ -1,11 +1,8 @@
 package com.business.zyvo.viewmodel
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.business.zyvo.NetworkResult
-import com.business.zyvo.R
-import com.business.zyvo.model.ChatMessageModel
 import com.business.zyvo.repository.ZyvoRepository
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject

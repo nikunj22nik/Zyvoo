@@ -103,7 +103,6 @@ import java.util.Locale
 @AndroidEntryPoint
 class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
-    // variables for availability
 
     var minimumHourValue = 2
     var hourlyPrice = 10
@@ -116,8 +115,6 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
     var cleaningCharges: String = ""
     var addonPrice: MutableList<String> = mutableListOf()
     var deleteImage: MutableList<Int> = mutableListOf()
-
-    // variables for homeSetup
 
     var spaceType: String = "entire_home"
     var propertySize: Int = 0
@@ -328,7 +325,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
         Log.d("TESTING", "User Id is " + session.getUserId())
 
-        Log.d("TESTING_TIME","From_Hour"+fromHour +" "+"To_Hour"+toHour+" min_booking_hours"+minimumHourValue)
+        Log.d(
+            "TESTING_TIME",
+            "From_Hour" + fromHour + " " + "To_Hour" + toHour + " min_booking_hours" + minimumHourValue
+        )
         requestBody.title = titleResult
         requestBody.space_type = spaceType
         requestBody.property_size = propertySize
@@ -461,11 +461,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         } else if (binding.tvHours1.text.isEmpty()) {
             showErrorDialog(requireActivity(), AppConstant.edTime)
             return false
-        }else if(getHourDifference(fromHour, toHour)<minimumHourValue){
+        } else if (getHourDifference(fromHour, toHour) < minimumHourValue) {
             showErrorDialog(requireActivity(), AppConstant.minimumHour)
             return false
-        }
-        else if (!isWithin24Hours(fromHour, toHour)) {
+        } else if (!isWithin24Hours(fromHour, toHour)) {
             showErrorDialog(requireActivity(), AppConstant.avabilty)
             return false
         }
@@ -672,10 +671,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         if (!latitude.equals("00") && !longitude.equals("00")) {
             Log.d("TESTING_LATITUDE", latitude.toString() + " " + longitude.toString())
             val location = LatLng(latitude.toDouble(), longitude.toDouble())
-            // Move the camera to the specified location
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
             // Add a marker at that location
-            mMap?.addMarker(MarkerOptions().position(location).icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon)))
+            mMap?.addMarker(
+                MarkerOptions().position(location)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_icon))
+            )
         }
 
         val resultList = mutableListOf<Uri>()
@@ -851,8 +852,12 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
                 twoPeopleCount()
             } else if (count == 3) {
                 peopleCount3()
+            } else if (count == 4) {
+                peopleCount4()
             } else if (count == 5) {
                 peopleCount5()
+            } else if (count == 6) {
+                peopleCount6()
             } else if (count == 7) {
                 peopleCount7()
             }
@@ -913,38 +918,10 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             showErrorDialog(requireContext(), "Please Select Availability Hours")
             return false
         }
-        //   var value =DateManager(requireContext()).isFromTimeLessThanToTime(fromHour,toHour)
-        //  if(!value){
-        // LoadingUtils.showErrorDialog(requireContext(),"The 'from' time ($fromHour) is NOT earlier than the 'to' time ($toHour).")
-        // return false
-//vipin 02-07-2025
-//        if(!isTimeRangeGreaterThanMinimum(fromHour,toHour,minimumHourValue)){
-//            showErrorDialog(requireContext(),"The selected time range is less than the minimum required duration.")
-//            return false
-//        }
-
 
         return true
     }
 
-    fun isTimeRangeGreaterThanMinimum(
-        startTime: String,
-        endTime: String,
-        minDiscountHours: Int
-    ): Boolean {
-        // Parse time strings into hours (e.g., "18:32" → 18.5333)
-        fun parseTime(time: String): Double {
-            val (hours, minutes) = time.split(":").map { it.toInt() }
-            return hours + (minutes / 60.0)
-        }
-
-        val start = parseTime(startTime)
-        val end = parseTime(endTime)
-        val diffHours = end - start
-
-        Log.d("TESTING_TIME","DIFFhOURS"+diffHours+" "+"Min Discount Hour"+minDiscountHours)
-        return diffHours > minDiscountHours
-    }
 
     private fun galleryTextField() {
         binding.textType.addTextChangedListener(object : TextWatcher {
@@ -1163,7 +1140,7 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
             override fun afterTextChanged(editable: Editable?) {
                 if (editable != null && editable.isNotEmpty()) {
                     street = editable.toString()
-                }else{
+                } else {
                     street = ""
                 }
             }
@@ -1171,7 +1148,6 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
 
     }
 
-    // For handling the result of the Autocomplete Activity
     private val startStreertAutocomplete =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == RESULT_OK && result.data != null) {
@@ -1224,30 +1200,13 @@ class ManagePlaceFragment : Fragment(), OnMapReadyCallback, OnClickListener1 {
         }
 
 
-    // Function to start the location picker using Autocomplete
-    private fun startStreetLocationPicker() {
-        val fields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
-        val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields)
-            .build(requireContext())
-        startStreertAutocomplete.launch(intent)
-    }
     fun isValidName(minLength: Int = 2, maxLength: Int = 25, str: String): Boolean {
         val trimmed = str.trim()
         return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
     }
-//    fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): Boolean {
-//        val trimmed = str.trim()
-//        return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
-//    }
-fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): Boolean {
-    val trimmed = str.trim()
-    return trimmed.length in minLength..maxLength &&
-            trimmed.matches("^[\\p{L}\\p{N}\\s'\".,!?@#\\$%^&*()\\[\\]-]+$".toRegex())
-}
 
 
     private fun checkingGalleryValidation(): Boolean {
-
         if (galleryList.size == 0) {
             showErrorDialog(requireContext(), "Please Upload location Images")
             return false
@@ -1258,7 +1217,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             return false
         }
         if (!isValidName(str = titleResult.toString())) {
-            Log.d("Testing_name_size","size"+titleResult.toString().length)
+            Log.d("Testing_name_size", "size" + titleResult.toString().length)
             showErrorDialog(
                 requireContext(),
                 "Title of Space should be between 3 and 25 characters long."
@@ -1269,15 +1228,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             showErrorDialog(requireContext(), "Please Enter Description of Space")
             return false
         }
-//        if (!isValidDescription(str = descriptionResult.toString())) {
-//            Log.d("Testing_discription_size","size"+descriptionResult.toString().length)
-//            Log.d("Testing_discription_size",descriptionResult.toString())
-//            showErrorDialog(
-//                requireContext(),
-//                "Description should be between 3 and 150 characters long."
-//            )
-//            return false
-//        }
+
         if (street.isEmpty()) {
             showErrorDialog(requireContext(), "Please Enter Street")
             return false
@@ -1363,8 +1314,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             override fun onItemClick(position: Int, type: String) {
 
                 if (type.equals(AppConstant.DELETE)) {
-                    //callImageDeleteApi(galleryListId.get(position),position)
-
                     imageList.removeAt(position)
                     galleryList.removeAt(position)
                     if (galleryListId.size - 1 >= position) {
@@ -1375,11 +1324,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
 
 
                 } else {
-//                    if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-//                        openGallery()
-//                    } else {
-//                        permissionLauncher.launch(android.Manifest.permission.READ_EXTERNAL_STORAGE)
-//                    }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S_V2) {
                         Log.d("nikunjcheckPosition", position.toString())
@@ -1423,26 +1367,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
 
     }
 
-//    fun callImageDeleteApi(id:Int,position :Int){
-//        lifecycleScope.launch {
-//            LoadingUtils.showDialog(requireContext(),false)
-//            viewModel.propertyImageDelete(id).collect{
-//                when(it){
-//                    is NetworkResult.Success ->{
-//                        LoadingUtils.hideDialog()
-//
-//                    }
-//                    is NetworkResult.Error ->{
-//                        LoadingUtils.hideDialog()
-//                        LoadingUtils.showErrorDialog(requireContext(),it.message.toString())
-//                    }
-//                    else ->{
-//                    }
-//                }
-//            }
-//
-//        }
-//    }
 
     private fun requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -1506,98 +1430,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         mapView.onCreate(savedInstanceState)
         mapView.getMapAsync(this)
     }
-    /*
-        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-            super.onActivityResult(requestCode, resultCode, data)
-
-            if (resultCode == RESULT_OK && requestCode == PICK_IMAGES_REQUEST) {
-                val imageUris: ArrayList<Uri> = ArrayList()
-
-                // Handle multiple image selection
-                if (data?.clipData != null) {
-                    val count = data.clipData!!.itemCount
-                    Log.d("TESTING_ZYVOO", "Counting is " + count)
-
-                    for (i in 0 until count) {
-                        val imageUri = data.clipData!!.getItemAt(i).uri
-                        val bitmapString =
-                            PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
-
-                        imageList.add(0, imageUri)
-                        if (bitmapString != null) {
-                            galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
-                        }
-                    }
-                    galleryAdapter.updateAdapter(imageList)
-                    Toast.makeText(requireContext(), "$count images selected", Toast.LENGTH_SHORT)
-                        .show()
-                } else if (data?.data != null) {
-                    // Single image selected
-                    val imageUri = data.data
-
-                    imageUris.add(imageUri!!)
-                    Log.d("ImageDataVipin", imageUri.toString())
-                    // Toast.makeText(requireContext(), "1 image selectedd", Toast.LENGTH_SHORT).show()
-
-                    val bitmapString =
-                        PrepareData.uriToBase64(imageUri, requireContext().contentResolver)
-
-                    imageList.add(0, imageUri)
-                    if (bitmapString != null) {
-                        galleryList.add(0, Pair<String, Boolean>(bitmapString, true))
-                    }
-
-
-                    galleryAdapter.updateAdapter(imageList)
-                    Toast.makeText(requireContext(), "1 images selected", Toast.LENGTH_SHORT)
-                        .show()
-                }
-
-                // You can now handle the selected image URIs in the imageUris list
-            } else if (requestCode == 103) {
-
-                if (resultCode == Activity.RESULT_OK) {
-                    val place = Autocomplete.getPlaceFromIntent(data)
-                    //  Toast.makeText(this, "ID: " + place.getId() + "address:" + place.getAddress() + "Name:" + place.getName() + " latlong: " + place.getLatLng(), Toast.LENGTH_LONG).show();
-                    val addressComponents = place.addressComponents?.asList()
-                    var address: String = place.address
-                    // do query with address
-
-                    val latLng = place.latLng
-
-                    latitude = latLng.latitude.toString()
-                    longitude = latLng.longitude.toString()
-                    val location = LatLng(latitude.toDouble(), longitude.toDouble())
-                    // Move the camera to the specified location
-                    mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 10f))
-                    // Add a marker at that location
-                    mMap?.addMarker(MarkerOptions().position(location))
-                    fetchAddressDetails(address,latitude.toDouble(), longitude.toDouble())
-                    binding.etCity.isEnabled = true
-                    if (latitude == null) {
-                        latitude = "0.0001"
-                    }
-
-                    if (longitude == null) {
-                        longitude = "0.0001"
-                    }
-
-
-                    var add = address
-    //                setmarkeronMAp(latitude,longitude);
-                    //  setmarkeronMAp(latitude,longitude,0);
-                } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                    binding.etCity.isEnabled = true
-                    // TODO: Handle the error.
-                    val status = Autocomplete.getStatusFromIntent(data)
-                    Toast.makeText(activity, "Error: " + status.statusMessage, Toast.LENGTH_LONG)
-                        .show()
-    //                Log.i(TAG, status.getStatusMessage());
-                }
-            }
-        }
-
-     */
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -1689,8 +1521,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
 
 
                 var add = address
-//                setmarkeronMAp(latitude,longitude);
-                //  setmarkeronMAp(latitude,longitude,0);
+
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 binding.etCity.isEnabled = true
                 // TODO: Handle the error.
@@ -1820,16 +1651,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         settingClickListenertoSpaceManagePlace()
     }
 
-    /*private fun savingActivityBackground(adapterActivity: MutableList<ActivityModel>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            adapterActivity.forEach {
-                if (it.checked) {
-                    Log.d("TESTING", "cHECKING nAME IS " + it.name)
-                    activityListResult.add(it.name)
-                }
-            }
-        }
-    }*/
     private fun savingActivityBackground(adapterActivity: String, status: Boolean) {
         CoroutineScope(Dispatchers.IO).launch {
             if (status) {
@@ -1897,7 +1718,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         }
 
         binding.allowPets.setOnClickListener {
-            showPopupWindowForPets(binding.allowPets,"pet")
+            showPopupWindowForPets(binding.allowPets, "pet")
         }
 
         binding.allowCancel.setOnClickListener {
@@ -1917,8 +1738,9 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
         val textView = popupView.findViewById<TextView>(R.id.text)
-        if (text == "cancel"){
-            textView.text = "Guest can cancel within selected time \nframe before confirmed booking time \n(only ONE selection can be made)"
+        if (text == "cancel") {
+            textView.text =
+                "Guest can cancel within selected time \nframe before confirmed booking time \n(only ONE selection can be made)"
         }
 
         // Show the popup window at the bottom right of the TextView
@@ -1936,6 +1758,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
@@ -1948,6 +1771,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         bathroomCount = 0
@@ -1960,6 +1784,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         bathroomCount = 1
@@ -1972,6 +1797,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         bathroomCount = 2
@@ -1984,6 +1810,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         bathroomCount = 3
@@ -1996,6 +1823,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         bathroomCount = 4
@@ -2008,9 +1836,23 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         bathroomCount = 5
+    }
+
+    private fun bathRoom6Select() {
+        binding.tvAnyBathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bathrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        bathroomCount = 6
     }
 
     private fun bathroom7Select() {
@@ -2020,6 +1862,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         bathroomCount = 7
@@ -2032,6 +1875,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bathroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bathroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         bathroomCount = 8
@@ -2061,6 +1905,11 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv5Bathroom.setOnClickListener {
             bathRoomFifthSelect()
         }
+
+        binding.tv6Bathroom.setOnClickListener {
+            bathRoom6Select()
+        }
+
         binding.tv7Bathroom.setOnClickListener {
             bathroom7Select()
         }
@@ -2174,6 +2023,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         badroomCount = 0
@@ -2187,6 +2037,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         badroomCount = 1
@@ -2199,6 +2050,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         badroomCount = 2
@@ -2211,6 +2063,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         badroomCount = 3
@@ -2223,6 +2076,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         badroomCount = 4
@@ -2235,9 +2089,23 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         badroomCount = 5
+    }
+
+    private fun bedRoom6Select() {
+        binding.tvAnyBedrooms.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        badroomCount = 6
     }
 
     private fun bedroom7Select() {
@@ -2247,6 +2115,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         badroomCount = 7
@@ -2259,6 +2128,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_inner_select_white)
         badroomCount = 8
@@ -2289,6 +2159,10 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
 
         binding.tv5Bedroom.setOnClickListener {
             bedRoomFifthSelect()
+        }
+
+        binding.tv6Bedroom.setOnClickListener {
+            bedRoom6Select()
         }
 
 
@@ -2333,6 +2207,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv3Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv4Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv8Bedroom.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
@@ -2492,7 +2367,9 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
         peopleCount = 0
     }
@@ -2502,7 +2379,9 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv1.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
         peopleCount = 1
     }
@@ -2512,7 +2391,9 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_inner_select_white)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
         peopleCount = 2
     }
@@ -2522,9 +2403,23 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv4.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
         peopleCount = 3
+    }
+
+    private fun peopleCount4() {
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        peopleCount = 4
     }
 
     private fun peopleCount5() {
@@ -2532,9 +2427,23 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv6.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
         peopleCount = 5
+    }
+
+    private fun peopleCount6() {
+        binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6.setBackgroundResource(R.drawable.bg_inner_select_white)
+        binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        peopleCount = 6
     }
 
     private fun peopleCount7() {
@@ -2542,7 +2451,9 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_inner_select_white)
         peopleCount = 7
     }
@@ -2565,8 +2476,16 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             peopleCount3()
         }
 
+        binding.tv4.setOnClickListener {
+            peopleCount4()
+        }
+
         binding.tv5.setOnClickListener {
             peopleCount5()
+        }
+
+        binding.tv6.setOnClickListener {
+            peopleCount6()
         }
 
         binding.tv7.setOnClickListener {
@@ -2593,16 +2512,7 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
 
             override fun afterTextChanged(editable: Editable?) {
                 val finalText = editable.toString()
-//                var finalText1 = "0"
-//                if (finalText.isNotEmpty()) {
-//                    finalText1 =   finalText
-//                } else {
-//                    finalText1 = "0"
-//                    propertyRoomAnySelect()
-//                }
                 peopleCount = if (finalText.isNotEmpty()) finalText.toInt() else 0
-                // peopleCount =  finalText1.toInt()
-
                 clearPeopleCountBackground()
             }
         })
@@ -2613,7 +2523,9 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
@@ -2681,9 +2593,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
 
     override fun onMapReady(p0: GoogleMap) {
         mMap = p0
-//        val newYork = LatLng(40.7128, -74.0060)
-//        mMap?.addMarker(MarkerOptions().position(newYork).title("Marker in New York"))
-//        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(newYork, 10f))
     }
 
     override fun onResume() {
@@ -2715,12 +2624,8 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
 
             "add On Cross" -> {
                 if (obj == addOnList.size - 1) {
-                    //  dialogSelectLanguage()
                 } else {
                     addOnList.removeAt(obj)
-//                    addonlist.removeAt(obj)
-                    //vipin check later
-                    //    addonPrice.removeAt(obj)
                     addOnAdapter.updateAddOn(addOnList)
 
                 }
@@ -2772,20 +2677,18 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
                     var flag = false
 
                     addOnList.forEach {
-                        if(it.name == newAddOn.name){
+                        if (it.name == newAddOn.name) {
                             flag = true
                         }
                     }
 
-                    if(!flag) {
+                    if (!flag) {
 
                         addOnList.add(0, newAddOn)
-                        // addonlist.add(itemName)
-                        //    addonPrice.add(itemPrice)
                         Log.d("checkAddonData", addOnList.toString())
                         Log.d("checkAddonData", addonPrice.toString())
                         addOnAdapter.updateAddOn(addOnList)
-                        //  addOnAdapter.notifyDataSetChanged()
+
                         addOnAdapter.notifyItemInserted(0)
                         dialog.dismiss()
                     }
@@ -3041,7 +2944,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
     }
 
     private fun settingBackgroundAllMonth() {
-        //No of people
         binding.tvAll.setOnClickListener {
             anyMonth()
         }
@@ -3147,20 +3049,8 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
 
     }
 
-    private fun getItemListForRadioHoursText(): MutableList<ItemRadio> {
-        val items = PrepareData.getHourMinimumList()
-
-        // Restore the previously selected item's state
-        if (minimumHourIndex != -1 && minimumHourIndex < items.size) {
-            items[minimumHourIndex].isSelected = true
-        }
-        return items
-    }
-
-
     private fun getItemListForRadioPerHoursRuppesText(): MutableList<ItemRadio> {
         val items = PrepareData.getPriceAndHourList()
-        // Restore the previously selected item's state
         if (priceIndex != -1 && priceIndex < items.size) {
             items[priceIndex].isSelected = true
         }
@@ -3180,7 +3070,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
     private fun getItemListForRadioPerHoursDiscountText(): MutableList<ItemRadio> {
         val items = PrepareData.getDiscountList()
 
-        // Restore the previously selected item's state
         if (discountPriceIndex != -1 && discountPriceIndex < items.size) {
             items[discountPriceIndex].isSelected = true
         }
@@ -3188,25 +3077,40 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
     }
 
     fun onClickDialogOpenner() {
-        binding.llHours.setOnClickListener {     /* val items = getItemListForRadioHoursText()      showSelectedDialog(          requireContext(),          items,          binding.tvHoursSelect,          AppConstant.MINIMUM_HOUR      )*/
+        binding.llHours.setOnClickListener {
             val items =
                 getNewHourMinimumList()
-            createDropdown (items, AppConstant.MINIMUM_HOUR, binding.llHours)
+            createDropdown(items, AppConstant.MINIMUM_HOUR, binding.llHours)
         }
-        binding.llHoursRupees . setOnClickListener {     /* val items = getItemListForRadioPerHoursRuppesText()      showSelectedDialog(          requireContext(),          items,          binding.tvHoursRupeesSelect,          AppConstant.PRICE      )      */
+        binding.llHoursRupees.setOnClickListener {
             val items =
                 getItemListForRadioPerHoursRuppesText()
-            createDropdown1 (items, AppConstant.PRICE, binding.tvHoursRupeesSelect, binding.llHoursRupees)
+            createDropdown1(
+                items,
+                AppConstant.PRICE,
+                binding.tvHoursRupeesSelect,
+                binding.llHoursRupees
+            )
         }
-        binding . llHoursBulk . setOnClickListener {   /*   val items = getItemListForRadioPerHoursBulkText()      showSelectedDialog(          requireContext(),          items,          binding.tvHoursBulkSelect,          AppConstant.BULK_HOUR      )    */
+        binding.llHoursBulk.setOnClickListener {
             val items =
                 getItemListForRadioPerHoursBulkText()
-            createDropdown1 (items, AppConstant.BULK_HOUR, binding.tvHoursBulkSelect, binding.llHoursBulk)
+            createDropdown1(
+                items,
+                AppConstant.BULK_HOUR,
+                binding.tvHoursBulkSelect,
+                binding.llHoursBulk
+            )
         }
-        binding.llDiscount.setOnClickListener {/*      val items = getItemListForRadioPerHoursDiscountText()      showSelectedDialog(          requireContext(),          items,          binding.tvDiscountSelect,          AppConstant.DISCOUNT      ) */
+        binding.llDiscount.setOnClickListener {
             val items =
                 getItemListForRadioPerHoursDiscountText()
-            createDropdown1 (items, AppConstant.DISCOUNT, binding.tvDiscountSelect, binding.llDiscount)
+            createDropdown1(
+                items,
+                AppConstant.DISCOUNT,
+                binding.tvDiscountSelect,
+                binding.llDiscount
+            )
         }
 
         binding.llAvailabilityFromHours.setOnClickListener {
@@ -3221,17 +3125,19 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             DateManager(requireContext()).showTimePickerDialog1(requireContext()) { selectedHour ->
                 binding.tvHours1.text = selectedHour
                 toHour = DateManager(requireContext()).convertTo24HourFormat(selectedHour)
-                val hr = DateManager(requireContext()).getTimeDifferenceInHrFormat(binding.tvHours.text.toString(),
-                    binding.tvHours1.text.toString())
+                val hr = DateManager(requireContext()).getTimeDifferenceInHrFormat(
+                    binding.tvHours.text.toString(),
+                    binding.tvHours1.text.toString()
+                )
                 hr.let {
-                    if (it.isNotBlank()){
-                    if (hr.toInt()>=minimumHourValue){
-                        Log.d(ErrorDialog.TAG,hr)
-                    }else{
-                        Log.d(ErrorDialog.TAG,AppConstant.validAvailability)
-                        Log.d(ErrorDialog.TAG,hr)
-                    }
-                    }else{
+                    if (it.isNotBlank()) {
+                        if (hr.toInt() >= minimumHourValue) {
+                            Log.d(ErrorDialog.TAG, hr)
+                        } else {
+                            Log.d(ErrorDialog.TAG, AppConstant.validAvailability)
+                            Log.d(ErrorDialog.TAG, hr)
+                        }
+                    } else {
 
                     }
                 }
@@ -3250,7 +3156,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         val inflater = layoutInflater
         val view = inflater.inflate(R.layout.popup_menu_layout, null)
 
-        // Setup your RecyclerView adapter here
         val popupWindow = PopupWindow(
             view,
             llHours.width, // Match width of the anchor view
@@ -3261,7 +3166,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         popupWindow.isOutsideTouchable = true
         popupWindow.elevation = 10f
 
-// Show popup below llHours
         popupWindow.showAsDropDown(llHours, 0, 0)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
@@ -3271,19 +3175,14 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             override fun itemClick(selectedIndex: Int) {
                 if (type.equals(AppConstant.MINIMUM_HOUR, true)) {
                     minimumHourIndex = selectedIndex
-                    //minimumHourValue = selectedIndex + 1;
-                    //Vipin
+
                     minimumHourValue = selectedIndex + 2
                 } else if (type.equals(AppConstant.PRICE, true)) {
                     priceIndex = selectedIndex
-                    // hourlyPrice = (selectedIndex + 1) * 10
-                    //Vipin
+
                     hourlyPrice = (selectedIndex + 1) * 10
                 } else if (type.equals(AppConstant.DISCOUNT, true)) {
                     discountPriceIndex = selectedIndex
-                    // bulkDiscountPrice = (selectedIndex + 1) * 10
-                    //Vipin
-//                    bulkDiscountPrice = (selectedIndex +1) * 5
 
                     if (selectedIndex != 10) {
                         bulkDiscountPrice = (selectedIndex + 1) * 5
@@ -3292,13 +3191,11 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
                     }
                 } else if (type.equals(AppConstant.BULK_HOUR, true)) {
                     discountHourIndex = selectedIndex
-                    // bulkDiscountHour = (selectedIndex + 1)
-                    //Vipin
+
                     bulkDiscountHour = (selectedIndex + 2)
                 }
             }
         }) { selectedText ->
-            // Update TextView with the selected text
             binding.tvHoursSelect.text = selectedText
             popupWindow.dismiss()
         }
@@ -3326,7 +3223,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         popupWindow.isOutsideTouchable = true
         popupWindow.elevation = 10f
 
-// Show popup below llHours
         popupWindow.showAsDropDown(llSelect, 0, 0)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recyclerView)
@@ -3336,18 +3232,12 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
             override fun itemClick(selectedIndex: Int) {
                 if (type.equals(AppConstant.MINIMUM_HOUR, true)) {
                     minimumHourIndex = selectedIndex
-                    //minimumHourValue = selectedIndex + 1;
-                    //Vipin
                     minimumHourValue = selectedIndex + 2
                 } else if (type.equals(AppConstant.PRICE, true)) {
                     priceIndex = selectedIndex
-                    // hourlyPrice = (selectedIndex + 1) * 10
-                    //Vipin
                     hourlyPrice = (selectedIndex + 1) * 10
                 } else if (type.equals(AppConstant.DISCOUNT, true)) {
                     discountPriceIndex = selectedIndex
-                    // bulkDiscountPrice = (selectedIndex + 1) * 10
-                    //Vipin
                     if (selectedIndex != 10) {
                         bulkDiscountPrice = (selectedIndex + 1) * 5
                     } else {
@@ -3356,8 +3246,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
 
                 } else if (type.equals(AppConstant.BULK_HOUR, true)) {
                     discountHourIndex = selectedIndex
-                    // bulkDiscountHour = (selectedIndex + 1)
-                    //Vipin
                     bulkDiscountHour = (selectedIndex + 2)
                 }
             }
@@ -3368,74 +3256,6 @@ fun isValidDescription(minLength: Int = 2, maxLength: Int = 150, str: String): B
         }
         recyclerView.adapter = adapter
         popupWindow.showAsDropDown(llSelect)
-    }
-
-    fun showSelectedDialog(
-        context: Context,
-        items: MutableList<ItemRadio>,
-        text: TextView,
-        type: String
-    ) {
-        val dialog = Dialog(context, R.style.BottomSheetDialog)
-        dialog.apply {
-            setCancelable(true)
-            setContentView(R.layout.dialog_for_select_radio_text)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.WRAP_CONTENT
-            }
-
-            val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-
-            recyclerView.layoutManager = LinearLayoutManager(context)
-            val adapter = RadioTextAdapter(items, object : OnClickListener {
-                override fun itemClick(selectedIndex: Int) {
-                    if (type.equals(AppConstant.MINIMUM_HOUR)) {
-                        minimumHourIndex = selectedIndex
-                        //minimumHourValue = selectedIndex + 1;
-                        //Vipin
-                        minimumHourValue = selectedIndex + 2
-                    } else if (type.equals(AppConstant.PRICE)) {
-                        priceIndex = selectedIndex
-                        // hourlyPrice = (selectedIndex + 1) * 10
-                        //Vipin
-                        hourlyPrice = (selectedIndex + 2) * 10
-                    } else if (type.equals(AppConstant.DISCOUNT)) {
-                        discountPriceIndex = selectedIndex
-                        // bulkDiscountPrice = (selectedIndex + 1) * 10
-                        //Vipin
-                        bulkDiscountPrice = (selectedIndex + 2) * 10
-                    } else if (type.equals(AppConstant.BULK_HOUR)) {
-                        discountHourIndex = selectedIndex
-                        // bulkDiscountHour = (selectedIndex + 1)
-                        //Vipin
-                        bulkDiscountHour = (selectedIndex + 2)
-                    }
-                }
-            }) { selectedText ->
-                // Update TextView with the selected text
-                text.text = selectedText
-                dismiss()
-            }
-
-            recyclerView.adapter = adapter
-
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }
-    }
-
-    fun getCountryCode(countryName: String): String? {
-        val locales = Locale.getISOCountries()
-
-        for (countryCode in locales) {
-            val locale = Locale("", countryCode)
-            if (locale.displayCountry.equals(countryName, ignoreCase = true)) {
-                return countryCode
-            }
-        }
-        return null
     }
 
     override fun onDestroyView() {

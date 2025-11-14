@@ -42,7 +42,6 @@ class ViewPagerAdapter(
         val currentItem = list[position]
 
         Log.d("TESTING_ZYVOO", BuildConfig.MEDIA_URL + currentItem)
-//        Glide.with(context).load(BuildConfig.MEDIA_URL + currentItem).into(holder.binding.image)
         Glide.with(context)
             .load(BuildConfig.MEDIA_URL + currentItem)
             .error(R.drawable.ic_circular_img_user)

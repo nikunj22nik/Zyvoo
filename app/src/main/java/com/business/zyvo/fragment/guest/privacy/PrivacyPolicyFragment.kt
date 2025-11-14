@@ -40,10 +40,7 @@ class PrivacyPolicyFragment : Fragment(), OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            //  param1 = it.getString(ARG_PARAM1)
             privacy = it.getInt("privacy")
-
-
         }
     }
 

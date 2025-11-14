@@ -19,8 +19,6 @@ class SelectHourFragmentDialog : DialogFragment() {
     private  val binding  get() =  _binding!!
     private var hour = ""
 
-
-
     interface DialogListener {
         fun onSubmitClicked(hour:String) // Callback when the submit button is clicked
     }
@@ -43,13 +41,8 @@ class SelectHourFragmentDialog : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
 
         _binding = FragmentSelectHourDialogBinding.inflate(LayoutInflater.from(requireActivity()),container,false)
-       // _binding = DataBindingUtil.inflate(inflater,R.layout.fragment_select_hour_dialog, container, false)
-
-
-
 
         return binding.root
     }

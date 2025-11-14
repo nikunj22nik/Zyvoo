@@ -3,33 +3,26 @@ package com.business.zyvo.fragment.both.completeProfile
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.Editable
 import android.text.TextWatcher
-import android.transition.Transition
 import android.util.Log
-import android.view.Gravity
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageView
-import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -38,6 +31,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -48,16 +42,11 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.target.SimpleTarget
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.NetworkResult
-import com.github.dhaval2404.imagepicker.ImagePicker
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.OnLocalListener
 import com.business.zyvo.R
@@ -81,13 +70,17 @@ import com.business.zyvo.onItemClickData
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
-import com.business.zyvo.utils.ErrorDialog.TAG
-import com.business.zyvo.utils.ErrorDialog.customDialog
 import com.business.zyvo.utils.ErrorDialog.isValidEmail
 import com.business.zyvo.utils.MediaUtils
 import com.business.zyvo.utils.MultipartUtils
 import com.business.zyvo.utils.NetworkMonitorCheck
 import com.business.zyvo.utils.PrepareData
+import com.github.dhaval2404.imagepicker.ImagePicker
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.hbb20.CountryCodePicker
@@ -101,6 +94,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import java.util.Locale
+
 @AndroidEntryPoint
 class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , OnClickListener{
 
@@ -148,7 +142,6 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         ViewModelProvider(this)[CompleteProfileViewModel::class.java]
     }
 
-    // For handling the result of the Autocomplete Activity
     private val startAutocomplete =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result: ActivityResult ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -158,20 +151,13 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     etSearch?.text = place.name
                     val newLocation = AddLocationModel(place.name ?: AppConstant.unknownLocation)
 
-                    // Add the new location to the list and notify the adapter
                     locationList.add(locationList.size-1, newLocation)
-
-                    //   Toast.makeText(requireContext(),"count${locationList.size}",Toast.LENGTH_LONG).show()
-                    // Check if we need to hide the "Add New" button
-
-                    //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
                     addLocationAdapter.updateLocations(locationList)
-                    //  addLocationAdapter.notifyItemInserted(locationList.size - 1)
 
                     Log.i(ErrorDialog.TAG, "Place: ${place.name}, ${place.id}")
                 }
             } else if (result.resultCode == Activity.RESULT_CANCELED) {
-                // The user canceled the operation.
+
                 Log.i(ErrorDialog.TAG, "User canceled autocomplete")
             }
         }
@@ -185,23 +171,22 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         getInquiryResult = registerForActivityResult(Inquiry.Contract()) { result ->
             when (result) {
                 is InquiryResponse.Complete -> {
-                    // User identity verification completed successfully
                     binding.textConfirmNow2.visibility = GONE
                     binding.textVerified2.visibility = View.VISIBLE
                     identityVerified = 1
-                    Toast.makeText(requireContext(), "Verified Successfully!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), ErrorMessage.VERIFIED_SUCCESSFULLY, Toast.LENGTH_SHORT).show()
                 }
                 is InquiryResponse.Cancel -> {
-                    // User abandoned the verification process
+
                     binding.textConfirmNow2.visibility = View.VISIBLE
                     binding.textVerified2.visibility = GONE
-                    Toast.makeText(requireContext(),"Request Cancelled",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), ErrorMessage.REQUEST_CANCELLED,Toast.LENGTH_LONG).show()
                 }
                 is InquiryResponse.Error -> {
-                    // Error occurred during identity verification
+
                     binding.textConfirmNow2.visibility = View.VISIBLE
                     binding.textVerified2.visibility = GONE
-                    Toast.makeText(requireContext(),"Error Occurred, Try Again",Toast.LENGTH_LONG).show()
+                    Toast.makeText(requireContext(), ErrorMessage.ERROR_OCCURRED,Toast.LENGTH_LONG).show()
 
                 }
             }
@@ -240,15 +225,15 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         }
 
         arguments?.let {
-            val data = Gson().fromJson(requireArguments().getString("data")!!,JsonObject::class.java)
-            userId = data.get("user_id").asInt.toString()
+            val data = Gson().fromJson(requireArguments().getString(AppConstant.DATA_SMALL_TEXT)!!,JsonObject::class.java)
+            userId = data.get(AppConstant.USER_ID_SMALL_TEXT).asInt.toString()
             session!!.setUserId(userId.toInt())
-            token = data.get("token").asString
+            token = data.get(AppConstant.TOKEN_SMALL_TEXT).asString
             token.let {
                 session?.setAuthToken(it)
             }
-            type = requireArguments().getString("type")!!
-            email = requireArguments().getString("email")!!
+            type = requireArguments().getString(AppConstant.type)!!
+            email = requireArguments().getString(AppConstant.EMAIL_SMALL_TEXT)!!
             Log.d(ErrorDialog.TAG,userId+"\n"+type+"\n"+email+"\n"+token)
         }
 
@@ -260,7 +245,6 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             }
         }
 
-        // Observe the isLoading state
         lifecycleScope.launch {
             completeProfileViewModel.isLoading.observe(viewLifecycleOwner) { isLoading ->
                 if (isLoading) {
@@ -291,18 +275,15 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             fullName = session?.getName().toString()
         }
 
-        // Initialize Places API if not already initialized
         if (!Places.isInitialized()) {
             Places.initialize(requireActivity(), apiKey)
         }
 
-        // Set listeners
         setCheckVerified()
         getUserProfile()
         val callback: OnBackPressedCallback =
-            object : OnBackPressedCallback(true /* enabled by default */) {
+            object : OnBackPressedCallback(true ) {
                 override fun handleOnBackPressed() {
-                    // Handle back press logic here
                     requireActivity().finishAffinity()
                 }
             }
@@ -313,13 +294,13 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         val TEMPLATE_ID = BuildConfig.templateID
 
         val inquiry = Inquiry.fromTemplate(TEMPLATE_ID)
-            .environment(Environment.SANDBOX) // Use Environment.PRODUCTION for live verification
-            .referenceId(session?.getUserId().toString()) // Link the inquiry to a specific user
+            .environment(Environment.SANDBOX)
+            .referenceId(session?.getUserId().toString())
             .fields(
                 Fields.Builder()
                     .build()
             )
-            .locale(Locale.getDefault().language) // Set the locale for the verification process
+            .locale(Locale.getDefault().language)
             .build()
 
         getInquiryResult.launch(inquiry)
@@ -327,25 +308,22 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     }
 
     private fun setCheckVerified() {
-        if ("mobile".equals(type)){
+        if (AppConstant.MOBILE_SMALL_TEXT.equals(type)){
 
             binding.textConfirmNow1.visibility = GONE
             binding.textVerified1.visibility = View.VISIBLE
         }
-        if ("email".equals(type)){
+        if (AppConstant.EMAIL_SMALL_TEXT.equals(type)){
 
             binding.textConfirmNow.visibility = GONE
             binding.textVerified.visibility = View.VISIBLE
         }
     }
 
-    // Function to initialize the adapter for adding locations
     private fun adapterInitialize() {
 
         addLocationAdapter = AddLocationAdapter(requireContext(), locationList, this,this)
         binding.recyclerViewLocation.adapter = addLocationAdapter
-
-        // Update the adapter with the initial location list (if any)
         addLocationAdapter.updateLocations(locationList)
         addWorkAdapter = AddWorkAdapter(requireContext(), workList, this,this)
         binding.recyclerViewWork.adapter = addWorkAdapter
@@ -362,7 +340,6 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
     }
 
-    // Function to start the location picker using Autocomplete
     private fun startLocationPicker() {
         val fields = listOf(Place.Field.ID, Place.Field.NAME)
         val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.OVERLAY, fields).build(requireContext())
@@ -394,7 +371,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             // Filter locales where the region is not empty
             locales = locales.filter { locale ->
                 val regionCode = locale.country
-                regionCode.isNotEmpty() // Ensures that locales with no country/region are filtered out
+                regionCode.isNotEmpty()
             }
 
             // Set the adapter for RecyclerView
@@ -403,25 +380,14 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                 override fun onItemClick(local: String/*,type: String*/) {
                     val newLanguage = AddLanguageModel(local)
 
-                    // Add the new location to the list and notify the adapter
-                    //  languageList.add(0, newLanguage)
-                    //  addLocationAdapter.updateLocations(locationList)  // Notify adapter here
-                    /*  if (type == "add") {*/
                     languageList.add(languageList.size - 1, newLanguage)
                     addLanguageSpeakAdapter.updateLanguage(languageList)
                     callingLanguageApi(local)
-                    /* }else{
-                         val index = languageList.indexOfFirst { it.name == local }
-                         val removedLang = languageList[index].name
-                         deleteLanguageApi(index)
-                         languageList.removeAt(index)
-                         SessionManager(requireContext()).removeLanguage(requireContext(), removedLang)
-                     }*/
-                    //  addLocationAdapter.notifyItemInserted(locationList.size - 1)
+
                     dismiss()
                 }
 
-            }, PrepareData.languagesWithRegions/*, languageList*/)
+            }, PrepareData.languagesWithRegions)
             recyclerViewLanguages?.adapter = localeAdapter
 
             imageCross?.setOnClickListener { dismiss() }
@@ -494,34 +460,33 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
     override fun itemClick(obj: Int, text: String, enteredText: String)  {
         when (text) {
-            "location" -> {
+           AppConstant.LOCATION -> {
                 if (obj == locationList.size - 1) {
                     startLocationPicker()
                 }
             }
 
-            "work" -> {
+           AppConstant.WORK  -> {
                 if (obj == workList.size - 1) {
-//                    var text: String = "Add Your Work Here"
-//                    dialogAddItem(text)
+
                 }
             }
 
-            "language" ->{
+            AppConstant.LANGUAGE  ->{
                 if (obj == languageList.size - 1) {
                     dialogSelectLanguage()
                 }
 
             }
 
-            "Hobbies"->{
+           AppConstant.HOBBIES ->{
                 if (obj == hobbiesList.size - 1) {
 
 
                 }
             }
 
-            "Pets"->{
+           AppConstant.PETS ->{
                 if (obj == petsList.size - 1) {
 
 
@@ -612,7 +577,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                     startActivity(intent)
                     requireActivity().finish()
                 }else{
-                    showErrorDialog(requireContext(),"Kindly update at least your name.")
+                    showErrorDialog(requireContext(), ErrorMessage.KINDLY_UPDATE_YOUR_NAME)
                 }
             }
         }
@@ -630,11 +595,11 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                 session?.setUserId(userId.toInt())
                                 Log.d("CheckUserIdComplete",session?.getUserId().toString())
                             }
-                          //  Log.d("imageCheck", session?.setUserImage(resp.third).toString())
+
                                 session?.setUserImage(resp.third)
-                           // showSuccessDialog(requireContext(), AppConstant.profileUpdateSuccussfully)
+
                             ErrorDialog.showToast(requireActivity(),AppConstant.profileUpdateSuccussfully)
-                            //ErrorDialog.showToast(requireActivity(),resp.first)
+
                             val intent = Intent(requireContext(),GuesMain::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             startActivity(intent)
@@ -664,14 +629,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
                 result.data?.data?.let { uri ->
                     if (uri!=null) {
-                        // Load image into BottomSheetDialog's ImageView if available
-                        /* binding.imageProfilePicture.let {
-                             Glide.with(this)
-                                 .load(uri)
-                                 .error(R.drawable.ic_profile_login)
-                                 .placeholder(R.drawable.ic_profile_login)
-                                 .into(it)
-                         }*/
+
                         Glide.with(this)
                             .asBitmap()
                             .load(uri)
@@ -747,7 +705,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etMobileNumber.text!!.isEmpty()) {
-                                        etMobileNumber.error = "Mobile required"
+                                        etMobileNumber.error = ErrorMessage.MOBILE_REQUIRED
                                         showErrorDialog(requireContext(),AppConstant.mobile)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     }else if(!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),  countyCodePicker.selectedCountryCodeWithPlus)){
@@ -773,47 +731,6 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             show()
         }}
 
-    /*
-        @SuppressLint("SetTextI18n")
-        private fun dialogChangeName(context: Context?){
-            val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-            dialog?.apply {
-                setCancelable(true)
-                setCanceledOnTouchOutside(true)
-                setContentView(R.layout.dialog_change_names)
-                window?.attributes = WindowManager.LayoutParams().apply {
-                    copyFrom(window?.attributes)
-                    width = WindowManager.LayoutParams.MATCH_PARENT
-                    height = WindowManager.LayoutParams.MATCH_PARENT
-                }
-
-
-                val textSaveChangesButton =  findViewById<TextView>(R.id.textSaveChangesButton)
-                val editTextFirstName =  findViewById<EditText>(R.id.editTextFirstName)
-                val editTextLastName =  findViewById<EditText>(R.id.editTextLastName)
-                val imageProfilePicture =  findViewById<CircleImageView>(R.id.imageProfilePicture)
-                if (imageBytes.isNotEmpty()){
-                    MediaUtils.setImageFromByteArray(imageBytes,imageProfilePicture)
-                }
-                textSaveChangesButton.setOnClickListener{
-                    if (editTextFirstName.text.isEmpty()){
-                        showErrorDialog(requireContext(),AppConstant.firstName)
-                    }else if (editTextLastName.text.isEmpty()){
-                        showErrorDialog(requireContext(),AppConstant.lastName)
-                    }else{
-                        dismiss()
-                        completeProfileReq.first_name =editTextFirstName.text.toString()
-                        completeProfileReq.last_name =editTextLastName.text.toString()
-                        binding.textName.text = editTextFirstName.text.toString()+" "+editTextLastName.text.toString()
-                    }
-
-                }
-
-                window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                show()
-            }}
-
-     */
     fun isValidName(minLength: Int = 2, maxLength: Int = 15, str: String): Boolean {
         val trimmed = str.trim()
         return trimmed.length in minLength..maxLength && trimmed.matches("^[A-Za-z\\s'-]+$".toRegex())
@@ -839,31 +756,24 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
             val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
             val editTextFirstName = findViewById<EditText>(R.id.editTextFirstName)
             val editTextLastName = findViewById<EditText>(R.id.editTextLastName)
-//        if (fullName != ""){
-//            val nameParts = fullName.trim().split(" ", limit = 2)
-//            editTextFirstName.setText(nameParts[0]) // First name
-//            editTextLastName.setText(if (nameParts.size > 1) nameParts[1] else "")
-//        }
+
             editTextFirstName.setText(firstName)
             editTextLastName.setText(lastName)
             textSaveChangesButton.setOnClickListener {
-                Log.d("ZyvoTag", "1")
+
                 if (editTextFirstName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.firstName)
                 } else if (!isValidName(str = editTextFirstName.text.toString())) {
-                    Log.d("ZyvoTag", "2")
-                    Log.d("Testing_name_size","size"+editTextFirstName.text.toString().length)
+
                     showErrorDialog(
-                        requireContext(),
-                        "First name should be between 3 and 20 characters long."
+                        requireContext(), ErrorMessage.FIRST_NAME_BETWEEN_3_20_CHARACTERS
                     )
                 }
                 else if (editTextLastName.text.isEmpty()) {
                     showErrorDialog(requireContext(), AppConstant.lastName)
                 } else if (!isValidName(str = editTextLastName.text.toString())) {
-                    Log.d("ZyvoTag", "3")
-                    Log.d("Testing_name_size","size"+editTextLastName.text.toString().length)
-                    showErrorDialog(requireContext(), "Last name should be between 3 and 20 characters long.")
+
+                    showErrorDialog(requireContext(), ErrorMessage.LAST_NAME_BETWEEN_3_20_CHARACTERS)
                 }else {
                     Log.d("ZyvoTag", "4")
                     toggleLoginButtonEnabled(false, textSaveChangesButton)
@@ -929,11 +839,11 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                             } else {
                                 lifecycleScope.launch(Dispatchers.Main) {
                                     if (etEmail.text!!.isEmpty()) {
-                                        etEmail.error = "Email Address required"
+                                        etEmail.error = ErrorMessage.EMAIL_ADDRESS_REQUIRED
                                         showErrorDialog(requireContext(),AppConstant.email)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     }else if (!isValidEmail(etEmail.text.toString())){
-                                        etEmail.error = "Invalid Email Address"
+                                        etEmail.error = ErrorMessage.INVALID_EMAIL_ADDRESS
                                         showErrorDialog(requireContext(),AppConstant.invalideemail)
                                         toggleLoginButtonEnabled(true, textSubmitButton)
                                     } else {
@@ -1087,9 +997,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
 
             startCountDownTimer(context,textTimeResend,rlResendLine,textResend)
-//            countDownTimer!!.cancel()
-//
-//            textTimeResend.text = "${"00"}:${"00"} sec"
+
             countDownTimer!!.start()
 
             textTimeResend.text = "${"00"}:${"60"} sec"
@@ -1140,10 +1048,10 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                                 findViewById<EditText>(R.id.otp_digit2).text.toString()+
                                                 findViewById<EditText>(R.id.otp_digit3).text.toString()+
                                                 findViewById<EditText>(R.id.otp_digit4).text.toString()
-                                        if ("mobile".equals(type)){
+                                        if (AppConstant.MOBILE_SMALL_TEXT.equals(type)){
                                             otpVerifyPhoneVerification(session?.getUserId().toString(),otp,dialog,textSubmitButton)
                                         }
-                                        if ("email".equals(type)){
+                                        if (AppConstant.EMAIL_SMALL_TEXT.equals(type)){
                                             otpVerifyEmailVerification(session?.getUserId().toString(),otp,dialog,textSubmitButton)
                                         }
                                     }
@@ -1167,13 +1075,13 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                     requireContext(),resources.getString(R.string.no_internet_dialog_msg)
                                 )
                             } else {
-                                if ("email".equals(type)){
+                                if (AppConstant.EMAIL_SMALL_TEXT.equals(type)){
                                     if (resendEnabled) {
                                         resendEmailVerification(userId,number,textResend,
                                             rlResendLine,incorrectOtp,textTimeResend)
                                     }
                                 }
-                                if ("mobile".equals(type)){
+                                if (AppConstant.MOBILE_SMALL_TEXT.equals(type)){
                                     resendPhoneVerification(userId,code,number,textResend,
                                         rlResendLine,incorrectOtp,textTimeResend)
                                 }
@@ -1202,7 +1110,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                         it.data?.let { resp ->
                             binding.textConfirmNow1.visibility = GONE
                             binding.textVerified1.visibility = View.VISIBLE
-                          dialogSuccess(requireActivity(),"Your phone/ email has been verified\n successfully.")
+                          dialogSuccess(requireActivity(), ErrorMessage.PHONE_EMAIL_VERIFIED_SUCCESSFULLY)
 
                             dialog.dismiss()
                         }
@@ -1236,7 +1144,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
                             binding.textConfirmNow.visibility = GONE
                             binding.textVerified.visibility = View.VISIBLE
-                            dialogSuccess(requireActivity(),"Your phone/ email has been verified\n successfully.")
+                            dialogSuccess(requireActivity(), ErrorMessage.PHONE_EMAIL_VERIFIED_SUCCESSFULLY)
 
                             dialog.dismiss()
                         }
@@ -1401,7 +1309,6 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         }
     }
 
-    // Function to extract 'name' from a list of HasName objects
     fun <T : HasName> getNames(objectsList: MutableList<T>): MutableList<String> {
         return objectsList.map { it.name }
             .filter { it != AppConstant.unknownLocation }  // Remove "Unknown Location"
@@ -1410,26 +1317,26 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
     override fun itemClick(obj: Int, text: String) {
         when (text) {
-            "location" -> {
+           AppConstant.LOCATION  -> {
                 locationList.removeAt(obj)
                 addLocationAdapter.updateLocations(locationList)
             }
 
-            "work" -> {
+           AppConstant.WORK  -> {
                 workList.removeAt(obj)
                 addWorkAdapter.updateWork(workList)
             }
 
-            "language" ->{
+           AppConstant.LANGUAGE  ->{
                 deleteLanguageApi(obj)
             }
 
-            "Hobbies"->{
+           AppConstant.HOBBIES ->{
                 hobbiesList.removeAt(obj)
                 addHobbiesAdapter.updateHobbies(hobbiesList)
             }
 
-            "Pets"->{
+           AppConstant.PETS ->{
                 petsList.removeAt(obj)
                 addPetsAdapter.updatePets(petsList)
             }
@@ -1458,11 +1365,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                         is NetworkResult.Success -> {
                                             it.data?.let {
                                                     resp ->
-//                                                Toast.makeText(
-//                                                requireContext(),
-//                                                    resp.toString(),
-//                                                    Toast.LENGTH_SHORT
-//                                                ).show()
+
                                                 languageList.removeAt(index)
                                                 addLanguageSpeakAdapter.updateLanguage(languageList)
                                                 var savingList = mutableListOf<AddLanguageModel>()
@@ -1513,8 +1416,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                             is NetworkResult.Success -> {
                                 it.data?.let { resp ->
                                     showSuccessDialog(requireContext(), resp.first)
-//                                    userProfile?.name = first_name + " " + last_name
-//                                    binding.user = userProfile
+
                                     binding.textName.text = first_name + " " + last_name
                                     session?.setName(first_name + " " + last_name)
                                     Log.d("checkthisResponse", resp.toString())
@@ -1561,14 +1463,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
 
             findViewById<TextView>(R.id.text).text = text
             findViewById<TextView>(R.id.textOkayButton).setOnClickListener {
-//                if (text == "Your account is registered \nsuccessfully") {
-//
-//                    Log.d("Navigation", "Navigating to turnNotificationsFragment")
-//                    navController?.navigate(R.id.turnNotificationsFragment)
-//
-//                } else if (text == "Your password has been changed\n" + " successfully.") {
-//                    dialogLoginEmail(context)
-//                }
+
                 dismiss()
             }
 
@@ -1613,8 +1508,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                                 override fun onResourceReady(
                                                     resource: Bitmap, transition: com.bumptech.glide.request.transition.Transition<in Bitmap>?
                                                 ) {
-                                                    // The 'resource' is the Bitmap
-                                                    // Now you can use the Bitmap (e.g., set it to an ImageView, or process it)
+
                                                     binding.imageProfilePicture.setImageBitmap(
                                                         resource
                                                     )
@@ -1674,7 +1568,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                     }
                                     if (it?.hobbies != null && it.hobbies.isNotEmpty()) {
                                         hobbiesList = getObjectsFromNames(it.hobbies) { name ->
-                                            AddHobbiesModel(name)  // Using the constructor of MyObject to create instances
+                                            AddHobbiesModel(name)
                                         }
                                         val newLanguage =
                                             AddHobbiesModel(AppConstant.unknownLocation)
@@ -1683,7 +1577,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
                                     }
                                     if (it?.pets != null && it.pets.isNotEmpty()) {
                                         petsList = getObjectsFromNames(it.pets) { name ->
-                                            AddPetsModel(name)  // Using the constructor of MyObject to create instances
+                                            AddPetsModel(name)
                                         }
                                         val newLanguage = AddPetsModel(AppConstant.unknownLocation)
                                         petsList.add(newLanguage)
@@ -1717,7 +1611,7 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
     ): MutableList<T> {
         return names.mapNotNull {
             if (it != AppConstant.unknownLocation) {
-                constructor(it) // Create an object of type T using the constructor
+                constructor(it)
             } else {
                 null
             }
@@ -1729,7 +1623,3 @@ class CompleteProfileFragment : Fragment(),OnClickListener1, onItemClickData , O
         _binding = null
     }
 }
-
-
-
-

@@ -37,17 +37,7 @@ class HostListingAdapter(private val context: Context, private val maxItemsToSho
             binding.imageReward.visibility = View.GONE
             binding.rlBtmView.visibility = View.GONE
 
-           /* binding.cl1.setOnClickListener {
-                //  listener.itemClick(position)
-                mListener.onItemClick(currentItem.property_id?: 0)
-                Log.d("Adapter", "cl1 clicked at position $position")
-            }*/
-            // Disable user interaction on ViewPager2
-            // holder.binding.viewpager2.isUserInputEnabled = false
-//        holder.binding.viewpager2.setOnClickListener{
-//            listener.itemClick(position)
-//            Log.d("vipin","click")
-//        }
+
 
 
 

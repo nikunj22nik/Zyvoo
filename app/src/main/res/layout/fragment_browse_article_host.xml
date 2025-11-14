@@ -72,6 +72,17 @@
             android:visibility="invisible" />
     </LinearLayout>
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_1dp"
+        android:background="@color/grey"
+        app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginHorizontal="@dimen/_13sdp" />
+
+
     <!-- Title -->
     <TextView
         android:id="@+id/tv_view_title"
@@ -85,18 +96,57 @@
         app:layout_constraintTop_toBottomOf="@id/toolbarLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_12sdp" />
+        android:layout_marginTop="@dimen/_19sdp" />
 
     <!-- Divider -->
-    <View
-        android:layout_width="0dp"
-        android:layout_height="@dimen/_1dp"
-        android:background="@color/grey"
-        app:layout_constraintTop_toBottomOf="@id/tv_view_title"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginHorizontal="@dimen/_13sdp" />
+
+    <LinearLayout
+        android:id="@+id/llToggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8ssp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/tv_view_title">
+
+        <RadioGroup
+            android:id="@+id/toggleGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioGuest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_5sdp"
+                android:background="@drawable/toggle_selector"
+                android:button="@null"
+                android:clickable="false"
+                android:fontFamily="@font/poppins"
+                android:paddingHorizontal="@dimen/_10sdp"
+                android:text="Guest"
+                android:textAlignment="center"
+                android:textColor="@drawable/toggle_text_selector"
+                android:textSize="@dimen/_14sp" />
+
+            <RadioButton
+                android:id="@+id/radioHost"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:background="@drawable/toggle_selector"
+                android:button="@null"
+                android:clickable="false"
+                android:fontFamily="@font/poppins"
+                android:paddingHorizontal="@dimen/_12sdp"
+                android:text="Host"
+                android:textAlignment="center"
+                android:textColor="@drawable/toggle_text_selector"
+                android:textSize="@dimen/_14sp" />
+
+        </RadioGroup>
+    </LinearLayout>
 
     <!-- Sub-title -->
     <TextView
@@ -107,10 +157,10 @@
         android:textColor="@color/black"
         android:textSize="16sp"
         android:fontFamily="@font/poppins"
-        app:layout_constraintTop_toBottomOf="@id/tv_view_title"
+        app:layout_constraintTop_toBottomOf="@id/llToggle"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="@dimen/_16sdp"
-        android:layout_marginTop="@dimen/_30sdp" />
+        android:layout_marginTop="@dimen/_15sdp" />
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
@@ -150,8 +200,8 @@
         android:text="Contact Us"
         android:textColor="@color/black"
         android:fontFamily="@font/poppins"
-        android:paddingHorizontal="@dimen/_7sdp"
-        android:paddingVertical="@dimen/_6sdp"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="9dp"
         android:background="@drawable/button_bg"
         android:backgroundTint="#4AEAB1"
         android:textSize="14sp"

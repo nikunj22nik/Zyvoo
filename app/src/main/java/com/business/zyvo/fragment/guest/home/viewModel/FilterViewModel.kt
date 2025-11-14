@@ -12,10 +12,11 @@ import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
 @HiltViewModel
-class FilterViewModel @Inject constructor(private val repository: ZyvoRepository, val networkMonitor: NetworkMonitor) : ViewModel() {
+class FilterViewModel @Inject constructor(
+    private val repository: ZyvoRepository,
+    val networkMonitor: NetworkMonitor
+) : ViewModel() {
 
     val isLoading = MutableLiveData<Boolean>()
-
-
 
 }

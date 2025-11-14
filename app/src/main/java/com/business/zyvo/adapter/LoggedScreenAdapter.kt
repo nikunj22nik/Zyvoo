@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.google.android.material.tabs.TabLayoutMediator
 import com.business.zyvo.OnClickListener
@@ -58,10 +59,10 @@ class LoggedScreenAdapter(
         val currentItem = list[position]
 
         holder.binding.imageAddWish.setOnClickListener{
-            listener2.itemClick(position,"Add Wish")
+            listener2.itemClick(position, AppConstant.ADD_WISH)
         }
         holder.binding.imageWishFull.setOnClickListener{
-            listener2.itemClick(position,"Remove Wish")
+            listener2.itemClick(position, AppConstant.REMOVE_WISH)
         }
 
         holder.binding.cl1.setOnClickListener {
@@ -91,7 +92,6 @@ class LoggedScreenAdapter(
         currentItem.rating?.let {
             val formattedRating = String.format("%.1f", it.toFloat())
             holder.binding.textRating.text = formattedRating
-            // holder.binding.textRating.text = String.format("%.1f", it)
         }
         currentItem.review_count?.let {
             holder.binding.textTotal.text = "("+ formatConvertCount(it) +")"

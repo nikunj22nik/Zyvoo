@@ -13,7 +13,7 @@ class AdapterOuterPlaceOrder(private var context : Context, private var list: Mu
     private var scrollPosition = 0
 
 
-    class ViewHolder(var binding: AdapterOuterPlaceOrderBinding) : RecyclerView.ViewHolder(binding.root) {}
+    class ViewHolder(var binding: AdapterOuterPlaceOrderBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterOuterPlaceOrder.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -27,10 +27,7 @@ class AdapterOuterPlaceOrder(private var context : Context, private var list: Mu
 
     override fun onBindViewHolder(holder: AdapterOuterPlaceOrder.ViewHolder, position: Int) {
        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-      //  val layoutManager = NoHorizontalScrollLayoutManager(context)
-//        holder.binding.recyclerInnerPlaceOrder.layoutManager = layoutManager
-//
-//        var adapter = AdapterInnerPlaceOrder(list.get(position).second)
+
        if(position ==0){
            holder.binding.tvTime.visibility = View.INVISIBLE
           //  adapter.firstRow = true

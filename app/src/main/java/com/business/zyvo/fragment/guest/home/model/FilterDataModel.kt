@@ -4,5 +4,5 @@ data class FilterDataMode<T>(
     val success: Boolean = false,
     val message: String? = null,
     val code: Int = 0,
-    val data: T? = null // Nullable data to avoid crashes
+    val data: T? = null
 )

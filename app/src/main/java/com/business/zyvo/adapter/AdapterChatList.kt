@@ -259,16 +259,7 @@ class AdapterChatList(
         )  // Adjust the Y offset dynamically
     }
 
-//    fun filter(query: String) {
-//        filteredList = if (query.isEmpty()) {
-//            list.toMutableList()
-//        } else {
-//            list.filter {
-//                it.textUserName.contains(query, ignoreCase = true) || it.textDescription.contains(query, ignoreCase = true)
-//            }.toMutableList()
-//        }
-//        notifyDataSetChanged()
-//    }
+
 
 
 

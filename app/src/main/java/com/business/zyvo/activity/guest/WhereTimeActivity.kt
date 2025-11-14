@@ -31,6 +31,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.business.zyvo.AppConstant
 import com.business.zyvo.CircularSeekBar.OnSeekBarChangeListener
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.R
 import com.business.zyvo.adapter.AdapterActivityText
@@ -86,31 +87,23 @@ class WhereTimeActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityWhereTimeBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
-        Places.initialize(applicationContext, "AIzaSyC9NuN_f-wESHh3kihTvpbvdrmKlTQurxw")
+        Places.initialize(applicationContext, AppConstant.PLACES_INITIALIZE_ID)
         placesClient = Places.createClient(applicationContext)
         actList = mutableListOf()
         sessionManager = SessionManager(this)
         adapterIntialization()
-
-
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         callingWhereSeach()
-
         displayTextView.setOnClickListener {
             showEditText()
         }
-
-
         binding.imageBack.setOnClickListener {
             onBackPressed()
         }
-
         binding.rlTiming.setOnClickListener {
             if(binding.llTime.visibility == View.GONE){
                 binding.llTime.visibility = View.VISIBLE
@@ -138,27 +131,18 @@ class WhereTimeActivity : AppCompatActivity() {
         })
 
         binding.imgSearch.setOnClickListener {
-            if (!binding.text1.text.toString().equals("00:00 PM")){
+            if (!binding.text1.text.toString().equals(AppConstant.PM_00_00)){
                 start_time   = binding.text1.text.toString()
                 start_time = "$date $start_time"
-//                val formattedTime = ErrorDialog.convertTo24HourFormat(start_time)
-//                formattedTime?.let {
-//                    start_time = it
-//                    Log.d("checkDateFormate", "Formatted: $end_time")
-//                }
+
             }else{
                 start_time = ""
             }
-            if (!binding.text2.text.toString().equals("00:00 PM")){
+            if (!binding.text2.text.toString().equals(AppConstant.PM_00_00)){
                 Log.d("checkDateFormate",end_time)
                 end_time   = binding.text2.text.toString()
                 Log.d("checkDateFormate",end_time)
                 end_time = "$date $end_time"
-//                val formattedTime = ErrorDialog.convertTo24HourFormat(end_time)
-//                formattedTime?.let {
-//                    end_time = it
-//                    Log.d("checkDateFormate", "Formatted: $end_time")
-//                }
 
             }else{
                 end_time = ""
@@ -180,8 +164,8 @@ class WhereTimeActivity : AppCompatActivity() {
                 property_price = property_price)
             sessionManager.setSearchFilterRequest(Gson().toJson(requestData))
             val intent = Intent()
-            intent.putExtra("type","filter")
-            intent.putExtra("SearchrequestData",Gson().toJson(requestData))
+            intent.putExtra(AppConstant.type, AppConstant.FILTER)
+            intent.putExtra(AppConstant.SEARCH_REQUEST_DATA,Gson().toJson(requestData))
             setResult(Activity.RESULT_OK, intent)
             finish() // Close the activity
         }
@@ -214,18 +198,17 @@ class WhereTimeActivity : AppCompatActivity() {
               end_time = ""
              activity = ""
             binding.circularSeekBar.endHours = 2f
-            binding.text1.text = "00:00 PM"
-            binding.text2.text = "00:00 PM"
+            binding.text1.text = AppConstant.PM_00_00
+            binding.text2.text = AppConstant.PM_00_00
             binding.etSearchLocation.post {
                 binding.etSearchLocation.text.clear()
             }
-            binding.tvActivityName.text = "Activity"
+            binding.tvActivityName.text = AppConstant.ACTIVITY_TEXT
             sessionManager.setSearchFilterRequest(Gson().toJson(requestData))
             val intent = Intent()
-            intent.putExtra("type","clearAllBtn")
+            intent.putExtra(AppConstant.type,"clearAllBtn")
             setResult(Activity.RESULT_OK, intent)
-            finish() // Close the activity
-
+            finish()
         }
 
         updateCalendar()
@@ -290,10 +273,10 @@ class WhereTimeActivity : AppCompatActivity() {
     fun selectTime(){
         binding.rlView1.setOnClickListener {
                 DateManager(this).showTimePickerDialog1(this) { selectedTime ->
-                    if (binding.text2.text.toString() != "00:00 PM" && binding.text2.text.toString().isNotEmpty()) {
+                    if (binding.text2.text.toString() != AppConstant.PM_00_00 && binding.text2.text.toString().isNotEmpty()) {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             if (!isTimeRangeValid(selectedTime, binding.text2.text.toString() )) {
-                                LoadingUtils.showErrorDialog(this@WhereTimeActivity, "Please select time range minimum 2 hours.")
+                                LoadingUtils.showErrorDialog(this@WhereTimeActivity, ErrorMessage.SELECT_TIME_RANGE_MINIMUM_2_HOURS)
                                 return@showTimePickerDialog1
                             }
                         }
@@ -318,11 +301,6 @@ class WhereTimeActivity : AppCompatActivity() {
                     }
                  }
               }
-//        binding.rlView2.setOnClickListener {
-//            DateManager(this).showTimePickerDialog1(this) { selectedTime ->
-//                binding.text2.setText(selectedTime)
-//            }
-//        }
 
         binding.rlView2.setOnClickListener {
             DateManager(this).showTimePickerDialog1(this) { selectedTime ->
@@ -330,16 +308,16 @@ class WhereTimeActivity : AppCompatActivity() {
                 if (selectdate && isCurrentDateSelected() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     if (!isTimeValid(selectedTime)) {
                         // Show error for previous time selection
-                        LoadingUtils.showErrorDialog(this@WhereTimeActivity, "You cannot select previous time")
+                        LoadingUtils.showErrorDialog(this@WhereTimeActivity, ErrorMessage.CANNOT_SELECT_PREVIOUS_TIME)
                         return@showTimePickerDialog1
                     }
                 }
 
                 // Validate time range when both times are set
-                if (binding.text1.text.toString() != "00:00 PM" && binding.text1.text.toString().isNotEmpty()) {
+                if (binding.text1.text.toString() != AppConstant.PM_00_00  && binding.text1.text.toString().isNotEmpty()) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         if (!isTimeRangeValid(binding.text1.text.toString(), selectedTime)) {
-                            LoadingUtils.showErrorDialog(this@WhereTimeActivity, "Please select time range minimum 2 hours.")
+                            LoadingUtils.showErrorDialog(this@WhereTimeActivity, ErrorMessage.SELECT_TIME_RANGE_MINIMUM_2_HOURS )
                             return@showTimePickerDialog1
                         }
                     }
@@ -413,9 +391,6 @@ class WhereTimeActivity : AppCompatActivity() {
                 binding.rlActivityRecy.visibility = View.VISIBLE
             }
         }
-
-
-
     }
 
     private fun bydefaultSelect(){
@@ -597,9 +572,7 @@ class WhereTimeActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     private fun addMonthView(parentLayout: LinearLayout, yearMonth: YearMonth) {
-        // Adds a view for the specified month to the parent layout.
-
-        val params = LinearLayout.LayoutParams(
+         val params = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
@@ -637,7 +610,7 @@ class WhereTimeActivity : AppCompatActivity() {
                         val previousSelectedDate = selectedDate
                         selectedDate = date1
                         if(!SessionManager(this).isDateGreaterOrEqual(selectedDate.toString())){
-                           LoadingUtils.showErrorDialog(this@WhereTimeActivity,"You cannot select a past date from the calendar.")
+                           LoadingUtils.showErrorDialog(this@WhereTimeActivity, ErrorMessage.CANNOT_SELECT_PAST_DATE )
                            return@setOnClickListener
                         }
 
@@ -732,14 +705,14 @@ class WhereTimeActivity : AppCompatActivity() {
 
     private fun getActivityData() :MutableList<String>{
         actList = mutableListOf<String>()
-        actList.add("Stays")
-        actList.add("Event Space")
-        actList.add("Photo Shoot")
-        actList.add("Meeting")
-        actList.add("Party")
-        actList.add("Pool")
-        actList.add("Film Shoot")
-        actList.add("Wedding")
+        actList.add(AppConstant.STAYS)
+        actList.add(AppConstant.EVENT_SPACE)
+        actList.add(AppConstant.PHOTO_SHOOT_TEXT)
+        actList.add(AppConstant.MEETING)
+        actList.add(AppConstant.PARTY)
+        actList.add(AppConstant.POOL)
+        actList.add(AppConstant.FILM_SHOOT)
+        actList.add(AppConstant.WEDDING)
 
         return actList
     }
@@ -765,8 +738,8 @@ class WhereTimeActivity : AppCompatActivity() {
     }
     @SuppressLint("SetTextI18n")
     private fun clearTimeFields() {
-        binding.text1.text = "00:00 PM"
-        binding.text2.text = "00:00 PM"
+        binding.text1.text = AppConstant.PM_00_00
+        binding.text2.text = AppConstant.PM_00_00
         start_time = ""
         end_time = ""
     }

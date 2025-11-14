@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="@dimen/_8sdp"
+    android:layout_marginTop="@dimen/_8sdp"
+    android:layout_marginBottom="@dimen/_2sdp"
     android:layout_marginHorizontal="@dimen/_14ssp">
-
 
     <TextView
         android:id="@+id/textTitle"
@@ -20,30 +20,26 @@
 
     <TextView
         android:id="@+id/textDescription"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/poppins"
-        android:text=""
         android:textSize="16sp"
         android:justificationMode="inter_word"
         android:textAlignment="viewStart"
         android:gravity="start"
         android:lineSpacingExtra="0dp"
         android:lineSpacingMultiplier="1.0"
+        android:includeFontPadding="false"
         android:textColor="#ACACAC"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textTitle"/>
-
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/_2sdp"
+        android:layout_marginTop="-20dp"
         android:background="#DADADA"
-        android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintTop_toBottomOf="@id/textDescription"/>
-
-
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

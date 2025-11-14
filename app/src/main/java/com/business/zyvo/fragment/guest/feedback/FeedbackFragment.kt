@@ -71,26 +71,19 @@ class FeedbackFragment : Fragment() {
             listOf(AppConstant.Host, AppConstant.Guest)
         )
 
-
-
-
-
     if (session?.getCurrentPanel().equals(AppConstant.Host)){
         binding.spinnerFeedback.isEnabled = false
-        binding.spinnerFeedback.setText("Host")
-        type = "host"
+        binding.spinnerFeedback.setText(AppConstant.HOST_TEXT/*"Host"*/)
+        type = AppConstant.Host/*"host"*/
         binding.etAddDetails.visibility = View.VISIBLE
         binding.textAddDetails.visibility = View.VISIBLE
     }else {
         binding.spinnerFeedback.isEnabled = false
-        binding.spinnerFeedback.setText("Guest")
-        type = "guest"
+        binding.spinnerFeedback.setText(AppConstant.GUEST_TEXT/*"Guest"*/)
+        type = AppConstant.Guest/*"guest"*/
         binding.etAddDetails.visibility = View.VISIBLE
         binding.textAddDetails.visibility = View.VISIBLE
     }
-
-
-
 
 
         binding.spinnerFeedback.setOnFocusChangeListener { _, b ->
@@ -115,12 +108,12 @@ class FeedbackFragment : Fragment() {
 
         binding.spinnerFeedback.setOnSpinnerItemSelectedListener<String> { oldIndex, oldItem, newIndex, newItem ->
             Log.d("checkItem", newItem)
-            if (newItem == "Host"){
-                type = "host"
-            }else if(newItem == "Guest"){
-                type = "guest"
+            if (newItem == AppConstant.HOST_TEXT/*"Host"*/){
+                type = AppConstant.Host /*"host"*/
+            }else if(newItem == AppConstant.GUEST_TEXT /*"Guest"*/){
+                type = AppConstant.Guest/*"guest"*/
             }
-            if (newItem == "Please select") {
+            if (newItem == AppConstant.PLEASE_SELECT /*"Please select"*/) {
                 binding.etAddDetails.visibility = View.GONE
                 binding.textAddDetails.visibility = View.GONE
             } else {
@@ -159,6 +152,7 @@ class FeedbackFragment : Fragment() {
                 }
             }
         }
+        setupWebView(getString(R.string.lorem_ipsum_is_simply_dummy_text_of_the_printing_and_typesetting_industry_lorem_ipsum_has_been_the_industry_s_standard_dummy_text_ever_since_the_1500s_when_an_unknown_printer_took_a_galley_of_type_and_scrambled_it_to_make_a_type_specimen_book_it_has_survived_not_only_five_centuries_but_also_the_leap_into_electronic_typesetting_remaining_essentially_unchanged))
     }
 
     private fun feedback() {
@@ -195,6 +189,56 @@ class FeedbackFragment : Fragment() {
             return false
         }
         return true
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun setupWebView(htmlDescription: String) {
+        val webView = binding.webViewIntroText
+
+        // WebView settings
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.settings.defaultTextEncodingName = "utf-8"
+        webView.setBackgroundColor(0x00000000) // transparent
+
+        // Make links clickable inside WebView
+        webView.webViewClient = android.webkit.WebViewClient()
+
+        // ✅ HTML with inline CSS for font, color, size, and justification
+        val justifiedHtml = """
+        <html>
+        <head>
+            <style>
+                @font-face {
+                    font-family: 'Poppins';
+                    src: url('file:///android_asset/fonts/poppins_light.ttf');
+                }
+                body {
+                    text-align: justify;
+                    font-size: 13px; /* Same as your TextView's 13sp */
+                    font-family: 'Poppins', sans-serif;
+                    color: #000000;
+                    line-height: 1.5;
+                    margin: 0;
+                    padding: 0;
+                }
+                a {
+                    color: #3b82f6; /* Same blue as your TextView link */
+                    text-decoration: none;
+                }
+                a:hover {
+                    text-decoration: underline;
+                }
+            </style>
+        </head>
+        <body>
+            $htmlDescription
+        </body>
+        </html>
+    """.trimIndent()
+
+        // ✅ Load HTML
+        webView.loadDataWithBaseURL(null, justifiedHtml, "text/html", "utf-8", null)
     }
 
     override fun onDestroyView() {

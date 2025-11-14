@@ -23,12 +23,6 @@ class FilterPaymentStatusFragment : DialogFragment() {
         fun onSubmitClicked()
     }
 
-    private var listener: DialogListener? = null
-
-    fun setDialogListener(listener: DialogListener) {
-        this.listener = listener
-    }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

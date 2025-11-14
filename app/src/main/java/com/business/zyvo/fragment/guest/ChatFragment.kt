@@ -118,23 +118,12 @@ class ChatFragment : Fragment(), View.OnClickListener, QuickstartConversationsMa
                 filter(query)
             }
         })
-        // Add text change listener for search bar
-//        binding.etSearchButton.addTextChangedListener { text ->
-//           // Call filter function in adapter
-//        }
+
 
     }
 
 
     fun filter(query: String) {
-//        filteredList = if (query.isEmpty()) {
-//            chatList.toMutableList()
-//        } else {
-//            chatList.filter {
-//                it.textUserName.contains(query, ignoreCase = true) ||
-//                        it.textDescription.contains(query, ignoreCase = true)
-//            }.toMutableList()
-//        }
 
         adapterChatList.updateItem(filteredList)
 
@@ -171,12 +160,7 @@ class ChatFragment : Fragment(), View.OnClickListener, QuickstartConversationsMa
                                     map.put(it.group_name.toString(), it)
                                 }
                                 Log.d("TESTING", map.size.toString() + " Map Size is ")
-//                                quickstartConversationsManager.initializeWithAccessToken(requireContext(),
-//                                    sessionManager.getChatToken(), "general",
-//                                    sessionManager.getUserId().toString()
-//                                )
 
-//                                reloadMessages()
                             }
                         }
 

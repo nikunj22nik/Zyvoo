@@ -7,7 +7,7 @@
     android:layout_marginHorizontal="@dimen/_5sdp"
     android:layout_marginTop="@dimen/_10sdp"
     android:orientation="vertical">
-<!--    android:paddingBottom="@dimen/_8sdp"-->
+
 
     <RelativeLayout
         android:id="@+id/ll1"

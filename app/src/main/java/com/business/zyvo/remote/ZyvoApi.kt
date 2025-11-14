@@ -1,13 +1,9 @@
 package com.business.zyvo.remote
 
-import com.business.zyvo.activity.guest.checkout.model.ReqAddOn
-import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.model.host.PropertyDetailsSave
-import com.google.android.gms.common.annotation.KeepForSdkWithMembers
 import com.google.gson.JsonObject
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -16,12 +12,9 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
-
 import retrofit2.http.PUT
-
 import retrofit2.http.Part
 import retrofit2.http.Path
-import java.nio.file.DirectoryStream.Filter
 
 
 interface ZyvoApi {
@@ -955,12 +948,6 @@ interface ZyvoApi {
     suspend fun getPropertyPriceRange(
     ): Response<JsonObject>
 
-//    @POST("delete_payout_method")
-//    @FormUrlEncoded
-//    suspend fun deletePayoutMethod(
-//        @Field("user_id") userId :String,
-//        @Field("payout_method_id") payoutMethodId :String
-//    ) : Response<JsonObject>
 
         @POST("delete_card_stripe")
     @FormUrlEncoded

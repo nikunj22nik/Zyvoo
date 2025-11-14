@@ -1,7 +1,6 @@
 package com.business.zyvo.fragment.both.loggedScreen
 
 import android.Manifest
-
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
@@ -12,9 +11,7 @@ import android.content.IntentSender.SendIntentException
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-
 import android.location.LocationManager
-
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -41,13 +38,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
-
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -57,6 +51,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.AppConstant.Companion.passwordMustConsist
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -71,14 +66,11 @@ import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.sorryresult.SorryActivity
 import com.business.zyvo.adapter.LoggedScreenAdapter
 import com.business.zyvo.databinding.FragmentLoggedScreenBinding
-
 import com.business.zyvo.model.Data
 import com.business.zyvo.model.SocialLoginModel
-
 import com.business.zyvo.fragment.guest.home.model.HomePropertyData
 import com.business.zyvo.model.FilterRequest
 import com.business.zyvo.model.SearchFilterRequest
-
 import com.business.zyvo.session.SessionManager
 import com.business.zyvo.utils.CommonAuthWorkUtils
 import com.business.zyvo.utils.ErrorDialog
@@ -140,7 +132,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private lateinit var adapter: LoggedScreenAdapter
     private var commonAuthWorkUtils: CommonAuthWorkUtils? = null
     private val REQ_ONE_TAP = 2  // Can be any integer unique to the Activity
-
     private var personName: String? = ""
     private var personGivenName: String? = ""
     private var personFamilyName: String? = ""
@@ -165,17 +156,14 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     private var islogTypeEmail = false
     private lateinit var checkBox : MaterialCheckBox
     private lateinit var callbackManager : CallbackManager
-
-
     private val loggedScreenViewModel: LoggedScreenViewModel by lazy {
         ViewModelProvider(this)[LoggedScreenViewModel::class.java]
     }
-
     private val activityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
-            val showDialog = result.data?.getBooleanExtra("SHOW_DIALOG", false) ?: false
+            val showDialog = result.data?.getBooleanExtra(AppConstant.SHOW_DIALOG, false) ?: false
             if (showDialog) {
                 dialogLogin(requireContext()) // Open your dialog
             }
@@ -186,9 +174,18 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        FacebookSdk.setClientToken("52e895a3b8b3e60b7259ae9791e5f000");
+        FacebookSdk.setClientToken("4c4b7980b87baf696da16619cb364744");
         FacebookSdk.sdkInitialize(requireContext());
         callbackManager = CallbackManager.Factory.create();
+
+        // Add this line to check initialization
+        if (!FacebookSdk.isInitialized()) {
+            FacebookSdk.sdkInitialize(requireContext())
+        }
+
+        Log.d("FB_LOGIN", "Facebook SDK Initialized: ${FacebookSdk.isInitialized()}")
+        Log.d("FB_LOGIN", "CallbackManager created: $callbackManager")
+
         Log.d("TESTING", "Inside On Create of LoggedScreen")
         navController = findNavController()
         commonAuthWorkUtils = CommonAuthWorkUtils(requireActivity(), navController)
@@ -200,31 +197,12 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
         locationManager =
             requireActivity().getSystemService(AppCompatActivity.LOCATION_SERVICE) as LocationManager
 
-        // This condition for check location run time permission
 
         if (!PermissionManager.hasLocationPermission(requireActivity())) {
             alertBoxLocation1()
         }else{
             getCurrentLocation()
         }
-
-//        if (ContextCompat.checkSelfPermission(
-//                requireActivity(),
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//            ) == PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
-//                requireActivity(),
-//                Manifest.permission.ACCESS_COARSE_LOCATION
-//            ) == PackageManager.PERMISSION_GRANTED
-//        ) {
-//            getCurrentLocation()
-//        } else {
-//            requestPermissions(
-//                arrayOf(
-//                    Manifest.permission.ACCESS_FINE_LOCATION,
-//                    Manifest.permission.ACCESS_COARSE_LOCATION
-//                ), 100
-//            )
-//        }
 
         return binding.root
     }
@@ -252,7 +230,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     val data = result.data
                     // Handle the resultl
                     if (data != null) {
-                        if (data.extras?.getString("type").equals("filter")) {
+                        if (data.extras?.getString(AppConstant.type).equals(AppConstant.FILTER)) {
                             val value: SearchFilterRequest = Gson().fromJson(
                                 data.extras?.getString("SearchrequestData"),
                                 SearchFilterRequest::class.java
@@ -281,9 +259,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         val data = result.data
                         // Handle the resultl
                         if (data != null) {
-                            if (data.extras?.getString("type").equals("filter")) {
+                            if (data.extras?.getString(AppConstant.type).equals(AppConstant.FILTER)) {
                                 val value: FilterRequest = Gson().fromJson(
-                                    data.extras?.getString("requestData"), FilterRequest::class.java
+                                    data.extras?.getString(AppConstant.REQUEST_DATA), FilterRequest::class.java
                                 )
                                 value.let {
                                     Log.d(TAG, Gson().toJson(value))
@@ -457,7 +435,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             try {
                 val account = task.getResult(ApiException::class.java)
                 val signInType =
-                    data?.getStringExtra("SIGN_IN_TYPE") ?: "login" // Default to "login"
+                    data?.getStringExtra(AppConstant.SIGN_IN_TYPE) ?: AppConstant.LOGIN_SMALL_TEXT // Default to "login"
                 firebaseAuthWithGoogle(account, signInType)
             } catch (e: ApiException) {
                 Log.w("AUTH", "Google sign-in failed", e)
@@ -466,7 +444,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
 
     private fun startGoogleSignIn(type: String) {
-        val signInIntent = googleSignInClient.signInIntent.putExtra("SIGN_IN_TYPE", type)
+        val signInIntent = googleSignInClient.signInIntent.putExtra(AppConstant.SIGN_IN_TYPE, type)
         googleSignInLauncher.launch(signInIntent)
 
 
@@ -533,7 +511,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                         personEmail.toString(),
                         personId,
                         token,
-                        "Android"
+                        AppConstant.ANDROID_TEXT
                     ).collect { result ->
                         when (result) {
                             is NetworkResult.Success -> {
@@ -545,13 +523,13 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                                             data.user_image?.let { Log.d("imageCheck", it) }
                                             data.user_image?.let { sessionManager.setUserImage(it) }
                                         val bundle = Bundle().apply {
-                                            putString("data", Gson().toJson(data))
-                                            putString("type", loginType)
-                                            putString("email",
+                                            putString(AppConstant.DATA_SMALL_TEXT, Gson().toJson(data))
+                                            putString(AppConstant.type, loginType)
+                                            putString(AppConstant.EMAIL_SMALL_TEXT,
                                                 this@LoggedScreenFragment.personEmail
                                             )
                                         }
-                                        if (signInType == "login") {
+                                        if (signInType == AppConstant.LOGIN_SMALL_TEXT) {
                                             session?.setLoginType("emailAddress")
                                             if (checkBox != null && checkBox.isChecked) {
                                                 sessionManager.setUserSession(true)
@@ -567,7 +545,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 //                                                putExtras(bundle)
                                             }
                                             startActivity(intent)
-                                        } else if (signInType == "register") {
+                                        } else if (signInType == AppConstant.REGISTER) {
                                             navController.navigate(
                                                 R.id.completeProfileFragment,
                                                 bundle
@@ -626,9 +604,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 Log.d(TAG,"I AM HERE IN DEVELOPMENT")
                 Log.d("checkPropertyId", homePropertyData.get(position)?.property_id.toString())
                 val intent = Intent(requireContext(), RestaurantDetailActivity::class.java)
-                intent.putExtra("LoginType","NotLogging")
-                intent.putExtra("propertyId", homePropertyData.get(position)?.property_id.toString())
-                intent.putExtra("propertyMile", homePropertyData.get(position)?.distance_miles.toString())
+                intent.putExtra(AppConstant.LOGIN_TYPE, AppConstant.NOT_LOGGING)
+                intent.putExtra(AppConstant.PROPERTY_ID_TEXT, homePropertyData.get(position)?.property_id.toString())
+                intent.putExtra(AppConstant.PROPERTY_MILE, homePropertyData.get(position)?.distance_miles.toString())
 
                 activityResultLauncher.launch(intent)
             }
@@ -699,7 +677,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
 
     override fun itemClick(obj: Int, text: String) {
         when (text) {
-            "Add Wish" -> {
+            AppConstant.ADD_WISH -> {
                 dialogLogin(requireContext())
             }
         }
@@ -738,7 +716,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             countyCodePicker.setFlagSize(resources.getDimensionPixelSize(R.dimen.default_twentySpacing)) // yaha flag size set hoga
             // Set IME options for password field
             etMobileNumber.imeOptions = EditorInfo.IME_ACTION_DONE
-            etMobileNumber.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
+            etMobileNumber.setImeActionLabel(AppConstant.LOGIN_TEXT, EditorInfo.IME_ACTION_DONE)
 
             // Handle keyboard "Done" action
             etMobileNumber.setOnEditorActionListener { _, actionId, _ ->
@@ -766,8 +744,7 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     textDontHaveAnAccount.text = getString(R.string.already_have_an_account)
                     islogTypeMobile = true
                 }
-              //  dialogRegister(context)
-             //   dismiss()
+
             }
 
             textForget.setOnClickListener {
@@ -845,9 +822,9 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                 if (NetworkMonitorCheck._isConnected.value) {
                     dismiss()
                     if (islogTypeMobile){
-                        startGoogleSignIn("register")
+                        startGoogleSignIn(AppConstant.REGISTER)
                     }else{
-                        startGoogleSignIn("login")
+                        startGoogleSignIn(AppConstant.LOGIN_SMALL_TEXT)
                     }
 
                 } else {
@@ -861,13 +838,15 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             facebookLoginBtn.setOnClickListener {
                 if (NetworkMonitorCheck._isConnected.value) {
                     dismiss()
-//                    if (islogTypeMobile){
-//                        startGoogleSignIn("register")
-//                    }else{
-//                        startGoogleSignIn("login")
-//                    }
 
-                    startFacebookSignIn()
+
+                    if (islogTypeMobile){
+                        startFacebookSignIn(AppConstant.REGISTER)
+                    }else{
+                        startFacebookSignIn(AppConstant.LOGIN_SMALL_TEXT)
+                    }
+
+
 
                 } else {
                     showErrorDialog(
@@ -883,10 +862,10 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
                     dismiss()
                     if (islogTypeMobile){
                        // startGoogleSignIn("register")
-                        signInWithApple("register")
+                        signInWithApple(AppConstant.REGISTER)
                     }else{
                       //  startGoogleSignIn("login")
-                        signInWithApple("login")
+                        signInWithApple(AppConstant.LOGIN_SMALL_TEXT)
                     }
 
                 } else {
@@ -901,39 +880,6 @@ class LoggedScreenFragment : Fragment(), OnClickListener, View.OnClickListener, 
             show()
         }
     }
-
-/*
-    fun signInWithApple() {
-        val provider = OAuthProvider.newBuilder("apple.com")
-        provider.addCustomParameter("locale", "en") // optional
-
-        val pending = auth.pendingAuthResult
-        if (pending != null) {
-            pending
-                .addOnSuccessListener { result ->
-                    val user = result.user
-                    Log.d("AppleLogin", "Existing sign-in: ${user?.email}")
-                }
-                .addOnFailureListener { e ->
-                    Log.e("AppleLogin", "Error: ${e.message}")
-                }
-        } else {
-            auth.startActivityForSignInWithProvider(requireActivity(), provider.build())
-                .addOnSuccessListener { result ->
-                    val user = result.user
-                    val email = user?.email
-                    val name = user?.displayName
-                    Log.d("AppleLogin", "Apple sign-in success: $email")
-
-                    // TODO: agar backend me save karna hai to yahan call karo
-                }
-                .addOnFailureListener { e ->
-                    Log.e("AppleLogin", "Apple sign-in failed: ${e.message}")
-                }
-        }
-    }
-
- */
 
 
     fun signInWithApple(type: String) {
@@ -980,96 +926,38 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         Email: $email
     """.trimIndent())
 
-//    callSocialApi1(firstName, lastName, signInType, "apple", appleId, email)
-    callSocialApi(firstName, lastName, signInType, "apple", appleId, email)
+    callSocialApi(firstName, lastName, signInType, AppConstant.APPLE_SMALL_TEXT, appleId, email)
 
 }
 
-    private fun callSocialApi1(firstName: String, lastName: String, signInType: String, provider: String, socialId: String, email: String) {
-        if (NetworkMonitorCheck._isConnected.value) {
-            lifecycleScope.launch(Dispatchers.Main) {
-                try {
-                    loggedScreenViewModel.getSocialAPI(
-                        firstName,
-                        lastName,
-                        email,
-                        socialId,
-                        token,
-                        "Android"
-                    ).collect { result ->
-                        when (result) {
-                            is NetworkResult.Success -> {
-                                result.data?.let { resp ->
-                                    try {
-                                        val data: Data = Gson().fromJson(resp, Data::class.java)
-                                        sessionManager.setUserId(data.user_id)
-                                        sessionManager.setAuthToken(data.token)
-                                        data.user_image?.let { sessionManager.setUserImage(it) }
 
-                                        val bundle = Bundle().apply {
-                                            putString("data", Gson().toJson(data))
-                                            putString("type", provider)
-                                            putString("email", email)
-                                        }
-
-                                        if (signInType == "login") {
-                                            session?.setLoginType("emailAddress")
-                                            val intent = Intent(
-                                                requireActivity(),
-                                                GuesMain::class.java
-                                            ).apply {
-                                                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                                            }
-                                            startActivity(intent)
-                                        } else if (signInType == "register") {
-                                            navController.navigate(
-                                                R.id.completeProfileFragment,
-                                                bundle
-                                            )
-                                        }
-                                    } catch (e: Exception) {
-                                        Log.e("SocialLogin", "Error parsing response: ${e.localizedMessage}", e)
-                                        showErrorDialog(requireContext(), "Parsing error occurred")
-                                    }
-                                }
-                            }
-                            is NetworkResult.Error -> {
-                                showErrorDialog(requireContext(), result.message ?: "Unknown error")
-                            }
-                            else -> {
-                                Log.v("ErrorDialog", "Unexpected result: ${result.message}")
-                            }
-                        }
-                    }
-                } catch (e: Exception) {
-                    Log.e("SocialApiError", "Exception occurred: ${e.localizedMessage}", e)
-                    showErrorDialog(requireContext(), "Unexpected error occurred")
-                }
-            }
-        } else {
-            showErrorDialog(requireContext(), getString(R.string.no_internet_dialog_msg))
-        }
-    }
-
-    fun startFacebookSignIn(){
+    fun startFacebookSignIn(type: String){
+        try {
+        Log.d("FB_LOGIN", "Starting Facebook Sign In")
         LoginManager.getInstance().logOut()
 
-        // Trigger Facebook Login
-        LoginManager.getInstance().logInWithReadPermissions(
-            this, // use "requireActivity()" if inside Fragment
-            listOf("email", "public_profile")
-        )
+        // Check if callback manager is properly initialized
+        if (callbackManager == null) {
+            callbackManager = CallbackManager.Factory.create()
+            Log.d("FB_LOGIN", "Re-initialized callbackManager")
+        }
+
+        Log.d("FB_LOGIN", "I'M HERE, START - Before registerCallback")
+
 
         // Register Callback
-        LoginManager.getInstance().registerCallback(callbackManager,
+        LoginManager.getInstance().registerCallback(
+            callbackManager,
             object : FacebookCallback<LoginResult> {
+
                 override fun onError(exception: FacebookException) {
                     exception.printStackTrace()
-                    Log.e("FB_LOGIN", "Login error: ${exception.message}")
+                    Log.d("FB_LOGIN", "Login error: ${exception.message}")
                     Toast.makeText(requireContext(), exception.message, Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onSuccess(loginResult: LoginResult) {
+                    Log.d("FB_LOGIN", "I'M HERE, SUCCESS")
                     val request = GraphRequest.newMeRequest(
                         loginResult.accessToken
                     ) { `object`, _ ->
@@ -1077,12 +965,21 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                             val email = `object`?.optString("email", "") ?: ""
                             val name = `object`?.optString("name", "") ?: ""
                             val fbId = `object`?.optString("id", "") ?: ""
+                            val firstName = name.substringBefore(" ")
+                            val lastName = name.substringAfter(" ", "")
 
                             val finalEmail =
                                 if (email.isNotEmpty()) email else "$fbId@facebookuser.com"
 
                             Log.d("FB_LOGIN", "Email: $finalEmail, Name: $name")
-
+                            callSocialApi(
+                                firstName,
+                                lastName ?: "",
+                                type,
+                                AppConstant.FACEBOOK_SMALL_TEXT ,
+                                fbId,
+                                finalEmail
+                            )
 
                         } catch (e: Exception) {
                             e.printStackTrace()
@@ -1097,10 +994,23 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                 }
 
                 override fun onCancel() {
-                    Toast.makeText(requireContext(), "Facebook Login cancelled", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), ErrorMessage.FACEBOOK_LOGIN_CANCELLED , Toast.LENGTH_SHORT)
+                        .show()
                     Log.d("FB_LOGIN", "Login cancelled")
                 }
             })
+
+            Log.d("FB_LOGIN", "Callback registered successfully")
+        // Trigger Facebook Login
+        LoginManager.getInstance().logInWithReadPermissions(
+            this, // use "requireActivity()" if inside Fragment
+            listOf("email", "public_profile")
+        )
+            Log.d("FB_LOGIN", "Login triggered")
+        } catch (e: Exception) {
+            Log.e("FB_LOGIN", "Exception in startFacebookSignIn: ${e.message}", e)
+            Toast.makeText(requireContext(), ErrorMessage.FACEBOOK_LOGIN_ERROR, Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun submitLogin(
@@ -1114,22 +1024,18 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                 when (it) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
-                            val text = "Login Successful"
+                            val text = ErrorMessage.LOGIN_SUCCESSFUL
                             val textHeaderOfOtpVerfication =
                                 "Please type the verification code send \n to $code$number"
                             dialog.dismiss()
                             val userId = resp.second
 
-//                            dialogOtp(
-//                                requireActivity(), text, textHeaderOfOtpVerfication,
-//                                code, number, userId, checkBox, "loginPhone"
-//                            )
+
 
                             dialogOtp(
                                 requireActivity(), text, textHeaderOfOtpVerfication,
-                                code, number, userId, checkBox, "loginPhone"
+                                code, number, userId, checkBox, AppConstant.LOGIN_PHONE
                             )
-                            Toast.makeText(requireContext(), resp.first, Toast.LENGTH_LONG).show()
 
                         }
 
@@ -1152,109 +1058,6 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
             }
         }
 
-    }
-
-
-    @SuppressLint("MissingInflatedId")
-    private fun dialogRegister(context: Context?) {
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_registration)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            val imageCross = findViewById<ImageView>(R.id.imageCross)
-            val imageEmailSocial = findViewById<ImageView>(R.id.imageEmailSocial)
-            val etMobileNumber = findViewById<EditText>(R.id.etMobileNumber)
-            val textContinueButton = findViewById<TextView>(R.id.textContinueButton)
-            val checkBox = findViewById<CheckBox>(R.id.checkBox)
-            val googleRegBtn = findViewById<ImageView>(R.id.googleRegLogin)
-            val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
-
-            val textLoginButton = findViewById<TextView>(R.id.textLoginButton)
-
-            val countyCodePicker = findViewById<CountryCodePicker>(R.id.countyCodePicker)
-
-
-            etMobileNumber.imeOptions = EditorInfo.IME_ACTION_DONE
-            etMobileNumber.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
-
-            // Handle keyboard "Done" action
-            etMobileNumber.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    // Perform the same action as login button click
-                    textContinueButton.performClick()
-                    true
-                } else {
-                    false
-                }
-            }
-
-            textLoginButton.setOnClickListener {
-                dialogLogin(context)
-                dismiss()
-            }
-            textContinueButton.setOnClickListener {
-                toggleLoginButtonEnabled(false, textContinueButton)
-                if (NetworkMonitorCheck._isConnected.value) {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        if (etMobileNumber.text!!.isEmpty()) {
-                            toggleLoginButtonEnabled(true, textContinueButton)
-                            showErrorDialog(requireContext(), AppConstant.mobile)
-
-                        } else if (!MultipartUtils.isPhoneNumberMatchingCountryCode(etMobileNumber.text.toString(),countyCodePicker.selectedCountryCodeWithPlus)) {
-                            showErrorDialog(requireContext(), AppConstant.VALID_PHONE)
-                            toggleLoginButtonEnabled(true, textContinueButton)
-                        } else {
-                            val phoneNumber = etMobileNumber.text.toString()
-                            Log.d(TAG, phoneNumber)
-                            val countryCode = countyCodePicker.selectedCountryCodeWithPlus
-                            Log.d(TAG, countryCode)
-                            callingRegisterPhone(
-                                countryCode,
-                                phoneNumber,
-                                dialog,
-                                textContinueButton,
-                                checkBox
-                            )
-                        }
-                    }
-                } else {
-                    showErrorDialog(
-                        requireContext(),
-                        resources.getString(R.string.no_internet_dialog_msg)
-                    )
-                    toggleLoginButtonEnabled(true, textContinueButton)
-                }
-
-            }
-            imageEmailSocial.setOnClickListener {
-                dialogRegisterEmail(context)
-                dismiss()
-            }
-            googleRegBtn.setOnClickListener {
-                if (NetworkMonitorCheck._isConnected.value) {
-                    startGoogleSignIn("register")
-                    dismiss()
-                } else {
-                    showErrorDialog(
-                        requireContext(),
-                        resources.getString(R.string.no_internet_dialog_msg)
-                    )
-                }
-            }
-
-            imageCross.setOnClickListener {
-                dismiss()
-            }
-
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-
-            show()
-        }
     }
 
     private fun callingRegisterPhone(
@@ -1303,20 +1106,16 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                             val otp = resp.first
                             val temp = resp.second
                             Log.d(TAG, otp.toString())
-                            val text = "Your account is registered \nsuccessfully"
+                            val text = ErrorMessage.ACCOUNT_REGISTERED_SUCCESSFULLY
                             val textHeaderOfOtpVerfication =
                                 "Please type the verification code send \n to " + code + " " + number
                             dialogOtp(
                                 requireContext(), text, textHeaderOfOtpVerfication, code,
                                 number,
 
-                                temp, checkBox, "RegisterPhone"
+                                temp, checkBox, AppConstant.REGISTER_PHONE
                             )
-
-
-                            Toast.makeText(requireContext(), resp.first, Toast.LENGTH_LONG).show()
-
-                        }
+      }
                         dialog.dismiss()
                         toggleLoginButtonEnabled(true, text)
                     }
@@ -1365,7 +1164,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
 
             // Set IME options for password field
             etLoginPassword.imeOptions = EditorInfo.IME_ACTION_DONE
-            etLoginPassword.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
+            etLoginPassword.setImeActionLabel(AppConstant.LOGIN_TEXT, EditorInfo.IME_ACTION_DONE)
 
             // Handle keyboard "Done" action
             etLoginPassword.setOnEditorActionListener { _, actionId, _ ->
@@ -1399,8 +1198,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     textLoginButton.text = getString(R.string.create_account)
                     textForget.visibility = View.GONE
                 }
-             //   dialogRegisterEmail(context)
-             //   dismiss()
+
             }
 
             textForget.setOnClickListener {
@@ -1413,15 +1211,15 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     if (islogTypeEmail){
                         lifecycleScope.launch(Dispatchers.Main) {
                             if (etLoginEmail.text.isEmpty()) {
-                                etLoginEmail.error = "Email Address required"
+                                etLoginEmail.error = ErrorMessage.EMAIL_ADDRESS_REQUIRED
                                 showErrorDialog(requireContext(), AppConstant.email)
                                 toggleLoginButtonEnabled(true, textLoginButton)
                             } else if (!isValidEmail(etLoginEmail.text.toString())) {
-                                etLoginEmail.error = "Invalid Email Address"
+                                etLoginEmail.error = ErrorMessage.INVALID_EMAIL_ADDRESS
                                 showErrorDialog(requireContext(), AppConstant.invalideemail)
                                 toggleLoginButtonEnabled(true, textLoginButton)
                             } else if (etLoginPassword.text.isEmpty()) {
-                                etLoginPassword.error = "Password required"
+                                etLoginPassword.error = ErrorMessage.PASSWORD_REQUIRED
                                 showErrorDialog(requireContext(), AppConstant.password)
                                 toggleLoginButtonEnabled(true, textLoginButton)
                             } else if (!checkPasswordValidity(etLoginPassword.text.toString())) {
@@ -1439,15 +1237,15 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     }else {
                         lifecycleScope.launch(Dispatchers.Main) {
                             if (etLoginEmail.text!!.isEmpty()) {
-                                etLoginEmail.error = "Email address required"
+                                etLoginEmail.error = ErrorMessage.EMAIL_ADDRESS_REQUIRED
                                 showErrorDialog(requireContext(), AppConstant.email)
                                 toggleLoginButtonEnabled(true, textLoginButton)
                             } else if (!isValidEmail(etLoginEmail.text.toString())) {
-                                etLoginEmail.error = "Invalid email address"
+                                etLoginEmail.error = ErrorMessage.INVALID_EMAIL_ADDRESS
                                 showErrorDialog(requireContext(), AppConstant.invalideemail)
                                 toggleLoginButtonEnabled(true, textLoginButton)
                             } else if (etLoginPassword.text!!.isEmpty()) {
-                                etLoginPassword.error = "Password required"
+                                etLoginPassword.error = ErrorMessage.PASSWORD_REQUIRED
                                 showErrorDialog(requireContext(), AppConstant.password)
                                 toggleLoginButtonEnabled(true, textLoginButton)
                             } else if (!checkPasswordValidity(etLoginPassword.text.toString())) {
@@ -1481,18 +1279,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
     }
 
 
-    private fun validationEmailPassword(email: String, password: String): Boolean {
 
-        if (!SessionManager(requireContext()).isValidEmailOrPhone(email)) {
-            showErrorDialog(requireContext(), AppConstant.VALID_EMAIL)
-            return false
-        } else if (!SessionManager(requireContext()).isValidPassword(password)) {
-            showErrorDialog(requireContext(), AppConstant.VALID_PASSWORD)
-            return false
-        }
-
-        return true
-    }
 
     private fun loginEmail(
         email: String,
@@ -1511,8 +1298,8 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             val session: SessionManager = SessionManager(requireActivity())
-                            if (resp.has("is_profile_complete") &&
-                                resp.get("is_profile_complete").asBoolean
+                            if (resp.has(AppConstant.IS_PROFILE_COMPLETE) &&
+                                resp.get(AppConstant.IS_PROFILE_COMPLETE).asBoolean
                             ) {
                                 if (resp.has("user_id")) {
                                     if (checkBox != null && checkBox.isChecked) {
@@ -1531,7 +1318,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                                         "Response Token is " + resp.get("token").asString
                                     )
                                     session.setLoginType("emailAddress")
-                                    if (resp.get("user_image") != null){
+                                    if (resp.get("user_image") != null && !resp.get("user_image").isJsonNull){
                                         session.setUserImage(resp.get("user_image").asString)
                                     }
                                     session.setCurrentPanel(AppConstant.Guest)
@@ -1594,113 +1381,6 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         }
     }
 
-    private fun dialogRegisterEmail(context: Context?) {
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_register_email)
-
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            val imageCross = findViewById<ImageView>(R.id.imageCross)
-
-            val textCreateAccountButton = findViewById<TextView>(R.id.textCreateAccountButton)
-            val checkBox = findViewById<CheckBox>(R.id.checkBox)
-            val textKeepLogged = findViewById<TextView>(R.id.textKeepLogged)
-            val textLoginHere = findViewById<TextView>(R.id.textLoginHere)
-
-            val etRegisterEmail = findViewById<EditText>(R.id.etRegisterEmail)
-            val etRegisterPassword = findViewById<EditText>(R.id.etRegisterPassword)
-
-            val imgHidePass = findViewById<ImageView>(R.id.imgHidePass)
-            val imgShowPass = findViewById<ImageView>(R.id.imgShowPass)
-            val imgCorrect = findViewById<ImageView>(R.id.imgCorrect)
-            val imgWrong = findViewById<ImageView>(R.id.imgWrong)
-            etRegisterPassword.imeOptions = EditorInfo.IME_ACTION_DONE
-            etRegisterPassword.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
-
-            // Handle keyboard "Done" action
-            etRegisterPassword.setOnEditorActionListener { _, actionId, _ ->
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    // Perform the same action as login button click
-                    textCreateAccountButton.performClick()
-                    true
-                } else {
-                    false
-                }
-            }
-
-            etRegisterPassword.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-                override fun afterTextChanged(s: Editable?) {
-                    val password = s.toString()
-                    if (checkPasswordValidity1(password)) {
-                        // Show correct icon and hide wrong icon
-                        imgCorrect.visibility = View.VISIBLE
-                        imgWrong.visibility = View.GONE
-                    } else {
-                        // Show wrong icon and hide correct icon
-                        imgCorrect.visibility = View.GONE
-                        imgWrong.visibility = View.VISIBLE
-                    }
-                }
-            })
-
-            eyeHideShow(imgHidePass, imgShowPass, etRegisterPassword)
-
-            textLoginHere.setOnClickListener {
-                dialogLoginEmail(context)
-                dismiss()
-            }
-            textCreateAccountButton.setOnClickListener {
-                toggleLoginButtonEnabled(false, textCreateAccountButton)
-                if (NetworkMonitorCheck._isConnected.value) {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        if (etRegisterEmail.text.isEmpty()) {
-                            etRegisterEmail.error = "Email Address required"
-                            showErrorDialog(requireContext(), AppConstant.email)
-                            toggleLoginButtonEnabled(true, textCreateAccountButton)
-                        } else if (!isValidEmail(etRegisterEmail.text.toString())) {
-                            etRegisterEmail.error = "Invalid Email Address"
-                            showErrorDialog(requireContext(), AppConstant.invalideemail)
-                            toggleLoginButtonEnabled(true, textCreateAccountButton)
-                        } else if (etRegisterPassword.text.isEmpty()) {
-                            etRegisterPassword.error = "Password required"
-                            showErrorDialog(requireContext(), AppConstant.password)
-                            toggleLoginButtonEnabled(true, textCreateAccountButton)
-                        } else if (!checkPasswordValidity(etRegisterPassword.text.toString())) {
-                            toggleLoginButtonEnabled(true, textCreateAccountButton)
-                            return@launch
-                        }  else {
-                            signupEmail(
-                                etRegisterEmail.text.toString(),
-                                etRegisterPassword.text.toString(),
-                                dialog, textCreateAccountButton,
-                                checkBox
-                            )
-                        }
-                    }
-                } else {
-                    showErrorDialog(
-                        requireContext(),
-                        resources.getString(R.string.no_internet_dialog_msg)
-                    )
-                    toggleLoginButtonEnabled(true, textCreateAccountButton)
-                }
-            }
-
-            imageCross.setOnClickListener {
-                dismiss()
-            }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }
-    }
 
     private fun signupEmail(
         email: String,
@@ -1720,7 +1400,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                             val otp = resp.first
                             val temp = resp.second
                             Log.d(TAG, otp.toString())
-                            val text = "Your account is registered \nsuccessfully"
+                            val text = ErrorMessage.ACCOUNT_REGISTERED_SUCCESSFULLY
                             val textHeaderOfOtpVerfication =
                                 "Please type the verification code send \nto " + email
                             dialogOtp(
@@ -1731,7 +1411,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                                 password,
                                 temp,
                                 checkBox,
-                                "RegisterEmail"
+                                AppConstant.REGISTER_EMAIL
                             )
                         }
                         dialog.dismiss()
@@ -1769,7 +1449,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
 
             // Set IME options for password field
             etEmail.imeOptions = EditorInfo.IME_ACTION_DONE
-            etEmail.setImeActionLabel("Login", EditorInfo.IME_ACTION_DONE)
+            etEmail.setImeActionLabel(AppConstant.LOGIN_TEXT, EditorInfo.IME_ACTION_DONE)
 
             // Handle keyboard "Done" action
             etEmail.setOnEditorActionListener { _, actionId, _ ->
@@ -1800,7 +1480,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                             }
                         }
                     } else {
-                        showErrorDialog(requireContext(), "Please enter a valid email.")
+                        showErrorDialog(requireContext(), ErrorMessage.ENTER_VALID_EMAIL)
                         toggleLoginButtonEnabled(true, textSubmitButton)
                     }
 
@@ -1822,101 +1502,6 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         }
     }
 
-
-    fun dialogNumberVerification(context: Context?) {
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_number_verification)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            val imageCross = findViewById<ImageView>(R.id.imageCross)
-            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
-
-            textSubmitButton.setOnClickListener {
-
-                val text = "Your Phone has been Verified\n  successfully."
-
-                val textHeaderOfOtpVerfication =
-                    "Please type the verification code send \nto +1 999 999 9999"
-                dialogOtp(
-                    context, text, textHeaderOfOtpVerfication, "", "",
-                    "", null, ""
-                )
-
-
-                dismiss()
-            }
-            imageCross.setOnClickListener {
-                dismiss()
-            }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }
-    }
-
-
-    fun dialogChangeName(context: Context?) {
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_change_names)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-
-
-            val textSaveChangesButton = findViewById<TextView>(R.id.textSaveChangesButton)
-            textSaveChangesButton.setOnClickListener {
-
-                dismiss()
-            }
-
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }
-    }
-
-
-    fun dialogEmailVerification(context: Context?, text: String) {
-        val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
-        dialog?.apply {
-            setCancelable(false)
-            setContentView(R.layout.dialog_email_verification)
-            window?.attributes = WindowManager.LayoutParams().apply {
-                copyFrom(window?.attributes)
-                width = WindowManager.LayoutParams.MATCH_PARENT
-                height = WindowManager.LayoutParams.MATCH_PARENT
-            }
-            val imageCross = findViewById<ImageView>(R.id.imageCross)
-
-            val textSubmitButton = findViewById<TextView>(R.id.textSubmitButton)
-            textSubmitButton.setOnClickListener {
-                val text2 = "Your Email has been Verified\n  successfully."
-
-                val texter = if (text != null.toString()) text else text2
-
-                val textHeaderOfOtpVerfication =
-                    "Please type the verification code send \nto abc@gmail.com"
-                dialogOtp(
-                    context, texter, textHeaderOfOtpVerfication, "", "",
-                    "", null, ""
-                )
-
-                dismiss()
-            }
-            imageCross.setOnClickListener {
-                dismiss()
-            }
-            window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            show()
-        }
-    }
 
 
     @SuppressLint("SuspiciousIndentation", "CutPasteId")
@@ -1958,7 +1543,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     if (otp.length == 4 && otp.all { it.isDigit() }) {
                         textSubmitButton.performClick()
                     } else {
-                        Toast.makeText(context, "Please enter the complete OTP.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, ErrorMessage.ENTER_COMPLETE_OTP, Toast.LENGTH_SHORT).show()
                     }
                     true
                 } else {
@@ -2013,12 +1598,6 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                             }
                         }
 
-                        /* if (s.length == 1 && index < otpDigits.size - 1) {
-                             otpDigits.get(index + 1).requestFocus()
-
-                         } else if (s.length == 0 && index > 0) {
-                             otpDigits.get(index - 1).requestFocus()
-                         }*/
                     }
 
                     override fun afterTextChanged(s: Editable) {}
@@ -2028,7 +1607,6 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
 
             startCountDownTimer(context, textTimeResend, rlResendLine, textResend)
 
-           // countDownTimer!!.cancel()
             countDownTimer!!.start()
 
             textTimeResend.text = "${"00"}:${"60"} sec"
@@ -2043,13 +1621,9 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
             }
 
             textSubmitButton.setOnClickListener {
-                //   toggleLoginButtonEnabled(false, textSubmitButton)
-              /*  if (textTimeResend.text.toString() == "${"00"}:${"00"} sec") {
-                    resendEnabled = true
-                    textResend.setTextColor(
-                        ContextCompat.getColor(context, R.color.scroll_bar_color))*/
 
-                    if (text == "Your password has been changed\n successfully.") {
+
+                    if (text == ErrorMessage.PASSWORD_CHANGED_SUCCESSFULLY ) {
                         if (NetworkMonitorCheck._isConnected.value) {
 
                             lifecycleScope.launch(Dispatchers.Main) {
@@ -2081,7 +1655,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                                     } else {
                                         showErrorDialog(
                                             requireContext(),
-                                            "Please enter the complete OTP."
+                                            ErrorMessage.ENTER_COMPLETE_OTP
                                         )
                                     }
 
@@ -2095,7 +1669,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                             toggleLoginButtonEnabled(true, textSubmitButton)
                         }
                     }
-                    else if (text.equals("Login Successful")) {
+                    else if (text.equals(ErrorMessage.LOGIN_SUCCESSFUL)) {
                         if (NetworkMonitorCheck._isConnected.value) {
                             lifecycleScope.launch(Dispatchers.Main) {
                                 if (findViewById<EditText>(R.id.otp_digit1).text.toString()
@@ -2126,7 +1700,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                                     } else {
                                         showErrorDialog(
                                             requireContext(),
-                                            "Please enter the complete OTP."
+                                            ErrorMessage.ENTER_COMPLETE_OTP
                                         )
                                     }
                                 }
@@ -2140,7 +1714,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                         }
 
 
-                    } else if (text.equals("Your account is registered \nsuccessfully")) {
+                    } else if (text.equals(ErrorMessage.ACCOUNT_REGISTERED_SUCCESSFULLY)) {
                         if (NetworkMonitorCheck._isConnected.value) {
                             lifecycleScope.launch(Dispatchers.Main) {
                                 if (findViewById<EditText>(R.id.otp_digit1).text.toString()
@@ -2160,7 +1734,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                                                 findViewById<EditText>(R.id.otp_digit2).text.toString() +
                                                 findViewById<EditText>(R.id.otp_digit3).text.toString() +
                                                 findViewById<EditText>(R.id.otp_digit4).text.toString()
-                                    if (otpType.equals("RegisterPhone")) {
+                                    if (otpType.equals(AppConstant.REGISTER_PHONE)) {
                                         otpVerifySignupPhone(
                                             userId,
                                             otp,
@@ -2169,22 +1743,22 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                                             checkBox,
                                             text,
                                             number,
-                                            "mobile"
+                                            AppConstant.MOBILE_SMALL_TEXT
                                         )
                                     }
-                                    if (otpType.equals("RegisterEmail")) {
+                                    if (otpType.equals(AppConstant.REGISTER_EMAIL)) {
                                         if (otp.length == 4) {
                                             otpVerifySignupEmail(
                                                 userId, otp, dialog, textSubmitButton,
                                                 checkBox,
                                                 text,
                                                 number,
-                                                "email"
+                                                AppConstant.EMAIL_SMALL_TEXT
                                             )
                                         } else {
                                             showErrorDialog(
                                                 requireContext(),
-                                                "Please enter the complete OTP."
+                                                ErrorMessage.ENTER_COMPLETE_OTP
                                             )
                                         }
 
@@ -2201,14 +1775,14 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     }
 
                 }
-         //   }
+
 
             textResend.setOnClickListener {
                 findViewById<EditText>(R.id.otp_digit1).text.clear()
                 findViewById<EditText>(R.id.otp_digit2).text.clear()
                 findViewById<EditText>(R.id.otp_digit3).text.clear()
                 findViewById<EditText>(R.id.otp_digit4).text.clear()
-                if (text.equals("Login Successful")) {
+                if (text.equals(ErrorMessage.LOGIN_SUCCESSFUL)) {
                     if (NetworkMonitorCheck._isConnected.value) {
                         if (resendEnabled) {
                             resendLoginMobile(
@@ -2222,11 +1796,9 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                             resources.getString(R.string.no_internet_dialog_msg)
                         )
                     }
-
-
-                } else if (text.equals("Your account is registered \nsuccessfully")) {
+                } else if (text.equals(ErrorMessage.ACCOUNT_REGISTERED_SUCCESSFULLY)) {
                     if (NetworkMonitorCheck._isConnected.value) {
-                        if (otpType.equals("RegisterPhone")) {
+                        if (otpType.equals(AppConstant.REGISTER_PHONE)) {
                             if (resendEnabled) {
                                 resendRegisterMobile(
                                     code, number, rlResendLine,
@@ -2234,7 +1806,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                                 )
                             }
                         }
-                        if (otpType.equals("RegisterEmail")) {
+                        if (otpType.equals(AppConstant.REGISTER_EMAIL)) {
                             if (resendEnabled) {
                                 resendSignupEmail(
                                     code, number,
@@ -2250,7 +1822,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                         )
                     }
 
-                } else if (text == "Your password has been changed\n successfully.") {
+                } else if (text == ErrorMessage.PASSWORD_CHANGED_SUCCESSFULLY) {
                     if (NetworkMonitorCheck._isConnected.value) {
                         if (resendEnabled) {
                             resendForgotPassword(
@@ -2395,7 +1967,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                             }else{
                                 session.setUserSession(false)
                             }
-                            session.setLoginType("emailAddress")
+                            session.setLoginType(AppConstant.EMAIL_ADDRESS)
                             dialogSuccess(context, dialogtext, Gson().toJson(resp), number, type)
                         }
                         dialog.dismiss()
@@ -2469,9 +2041,9 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                 when (it) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
-                            val session: SessionManager = SessionManager(requireActivity())
-                            if (resp.has("is_profile_complete") &&
-                                resp.get("is_profile_complete").asBoolean
+                            val session = SessionManager(requireActivity())
+                            if (resp.has(AppConstant.IS_PROFILE_COMPLETE) &&
+                                resp.get(AppConstant.IS_PROFILE_COMPLETE).asBoolean
                             ) {
                                 if (resp.has("user_id")) {
                                     if (checkBox != null && checkBox.isChecked) {
@@ -2483,7 +2055,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                                     session.setAuthToken(resp.get("token").asString)
                                     session.setLoginType("mobileNumber")
 
-                                    if (resp.get("user_image") != null){
+                                    if (resp.get("user_image") != null && !resp.get("user_image").isJsonNull){
                                         Log.d("imageCheck", resp.get("user_image").asString)
                                         session.setUserImage(resp.get("user_image").asString)
                                     }
@@ -2505,10 +2077,13 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                                     session.setName(resp.get("full_name").asString)
                                 }
                                 session.setLoginType("mobileNumber")
+
                                 Log.d("checkLoginType","i get this mobileNumber"+session.getLoginType())
-                                if (resp.get("user_image") != null){
-                                    Log.d("imageCheck", resp.get("user_image").asString)
-                                    session.setUserImage(resp.get("user_image").asString)
+                                if (resp.get("user_image") != null && !resp.get("user_image").isJsonNull) {
+                                    Log.d("imageCheck", resp.get("user_image").asString);
+                                    session.setUserImage(resp.get("user_image").asString);
+                                } else {
+                                    Log.d("imageCheck", "user_image is null");
                                 }
                                 val bundle = Bundle()
                                 bundle.putString("data", Gson().toJson(resp))
@@ -2547,7 +2122,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     is NetworkResult.Success -> {
                         it.data?.let { resp ->
                             val userId = resp.second
-                            val text = "Your password has been changed\n successfully."
+                            val text = ErrorMessage.PASSWORD_CHANGED_SUCCESSFULLY
                             val textHeaderOfOtpVerfication =
                                 "Please type the verification code send \nto " + email
                             dialogOtp(
@@ -2837,7 +2412,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                 val confirmPassword = etConfirmPassword.text.toString()
 
                 if (!NetworkMonitorCheck._isConnected.value) {
-                    ErrorDialog.showErrorDialog(requireContext(),"No internet connection")
+                    ErrorDialog.showErrorDialog(requireContext(), ErrorMessage.NO_INTERNET_CONNECTION)
                     toggleLoginButtonEnabled(true, textSubmitButton)
                     return@setOnClickListener
                 }
@@ -2846,22 +2421,22 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     var isValid = true
 
                     if (password.isEmpty()) {
-                        etPassword.error = "Password is required"
+                        etPassword.error = ErrorMessage.PASSWORD_IS_REQUIRED
                         etPassword.requestFocus()
                         isValid = false
                     } else if (!isValidPassword(password)) {
                         etPassword.error =
-                            "Password must be 8+ characters with uppercase, lowercase, number, and symbol"
+                            ErrorMessage.PASSWORD_8_PLUS_REQUIRED
                         etPassword.requestFocus()
                         isValid = false
                     }
 
                     if (confirmPassword.isEmpty()) {
-                        etConfirmPassword.error = "Confirm password is required"
+                        etConfirmPassword.error = ErrorMessage.CONFIRM_PASSWORD_IS_REQUIRED
                         etConfirmPassword.requestFocus()
                         isValid = false
                     } else if (password != confirmPassword) {
-                        etConfirmPassword.error = "Passwords do not match"
+                        etConfirmPassword.error = ErrorMessage.PASSWORD_DO_NOT_MATCH
                         etConfirmPassword.requestFocus()
                         isValid = false
                     }
@@ -2891,32 +2466,15 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         val isPasswordValid = pattern.matcher(password).matches()
 
         if (!isPasswordValid) {
-            //showErrorDialog(ErrorMessages.passwordMustConsist)
             showErrorDialog(
                 requireContext(), passwordMustConsist
             )
-           // binding.etPassword.requestFocus()
+
         }
 
         return isPasswordValid
     }
 
-    private fun checkPasswordValidity1(password: String): Boolean {
-        val passwordPattern = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[!@#\$%^&*()-+=])[a-zA-Z0-9!@#\$%^&*()-+=]{8,}$"
-        val pattern = Pattern.compile(passwordPattern)
-        val isPasswordValid = pattern.matcher(password).matches()
-
-        if (!isPasswordValid) {
-            //showErrorDialog(ErrorMessages.passwordMustConsist)
-//            showErrorDialog(
-//                requireContext(), passwordMustConsist
-//            )
-            return false
-            // binding.etPassword.requestFocus()
-        }
-
-        return isPasswordValid
-    }
 
 
     private fun resetPassword(
@@ -2980,7 +2538,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
 
             findViewById<TextView>(R.id.text).text = text
             findViewById<TextView>(R.id.textOkayButton).setOnClickListener {
-                if (text == "Your account is registered \nsuccessfully") {
+                if (text == ErrorMessage.ACCOUNT_REGISTERED_SUCCESSFULLY ) {
                     Log.d("Navigation", "Navigating to turnNotificationsFragment")
                     val bundle = Bundle()
                     bundle.putString("data", data)
@@ -2988,7 +2546,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     bundle.putString("email", number)
                     navController.navigate(R.id.turnNotificationsFragment, bundle)
 
-                } else if (text == "Your password has been changed\n successfully.") {
+                } else if (text == ErrorMessage.PASSWORD_CHANGED_SUCCESSFULLY ) {
                     dialogLoginEmail(context)
                 }
                 dismiss()
@@ -3034,92 +2592,14 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
     }
 
 
-    private fun showPopupWindow(anchorView: View, position: Int) {
-        // Inflate the custom layout for the popup menu
-        val popupView =
-            LayoutInflater.from(context).inflate(R.layout.popup_filter_all_conversations, null)
-
-        // Create PopupWindow with the custom layout
-        val popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-
-        // Set click listeners for each menu item in the popup layout
-        popupView.findViewById<TextView>(R.id.itemAllConversations).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemArchived).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemUnread).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-
-
-        // Get the location of the anchor view (three-dot icon)
-        val location = IntArray(2)
-        anchorView.getLocationOnScreen(location)
-
-        // Get the height of the PopupView after inflating it
-        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val popupHeight = popupView.measuredHeight
-        val popupWeight = popupView.measuredWidth
-        val screenWidht = context?.resources?.displayMetrics?.widthPixels
-        val anchorX = location[1]
-        val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
-
-        val xOffset = if (popupWeight > spaceEnd!!) {
-            // If there is not enough space below, show it above
-            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
-            -(popupWeight + 20)
-        }
-        // Calculate the Y offset to make the popup appear above the three-dot icon
-        val screenHeight = context?.resources?.displayMetrics?.heightPixels
-        val anchorY = location[1]
-
-        // Calculate the available space above the anchorView
-        val spaceAbove = anchorY
-        val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
-
-        // Determine the Y offset
-        val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
-        }
-
-        // Show the popup window anchored to the view (three-dot icon)
-        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(
-            anchorView,
-            xOffset,
-            yOffset,
-            Gravity.END
-        )  // Adjust the Y offset dynamically
-    }
-
     fun isScreenLarge(context: Context): Boolean {
-        // Get the screen width
         val display =
             (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
         val width = display.width
 
-        // Convert pixels to dp
         val density = context.resources.displayMetrics.density
         val widthInDp = (width / density).toInt()
 
-        // Check if the screen width is greater than 600dp (typical for tablets)
         return widthInDp > 600
     }
 
@@ -3128,7 +2608,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         lifecycleScope.launch(Dispatchers.Main) {
             try {
                 text.isEnabled = isEnabled
-                //text.isEnabled = true
+
             } catch (e: Exception) {
                 Log.e(TAG, "exception toggleLoginButtonEnabled ${e.message}")
             }
@@ -3136,16 +2616,15 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
     }
 
     private fun getCurrentLocation() {
-        // Initialize Location manager
+
         val locationManager =
             requireActivity().getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        // Check condition
+
         if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
                 LocationManager.NETWORK_PROVIDER
             )
         ) {
-            // When location service is enabled
-            // Get last location
+
             if (ActivityCompat.checkSelfPermission(
                     requireContext(),
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -3154,19 +2633,13 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                // TODO: Consider calling
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+
                 return
             }
             mFusedLocationClient.lastLocation.addOnCompleteListener { task ->
-                // Initialize location
+
                 val location = task.result
-                // Check condition
+
                 if (location != null) {
                     latitude = location.latitude.toString()
                     longitude = location.longitude.toString()
@@ -3218,7 +2691,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         // Check condition
         if (requestCode == 100) {
             if (requestCode == 100 && grantResults.isNotEmpty() && (grantResults[0] + grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-               // displayLocationSettingsRequest(requireActivity())
+
                 showCustomLocationDialog()
             } else {
                 alertBoxLocation1()
@@ -3227,10 +2700,10 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
 
         if (requestCode == 1000) {
             if (requestCode == 1000 && grantResults.isNotEmpty() && (grantResults[0] + grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-             //   displayLocationSettingsRequest11(requireActivity())
+
                 showCustomLocationDialog()
             } else {
-              //  displayLocationSettingsRequest11(requireActivity())
+
                 showCustomLocationDialog()
             }
         }
@@ -3250,15 +2723,13 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         val btnCancel = dialog.findViewById<TextView>(R.id.textNotnow)
 
         btnTurnOnLocation.setOnClickListener {
-            // Location settings open करें
             openLocationSettings()
             dialog.dismiss()
         }
 
         btnCancel.setOnClickListener {
             dialog.dismiss()
-            // Optional: Cancel पर कुछ action
-            Toast.makeText(requireActivity(), "Location is required for better experience", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireActivity(), ErrorMessage.LOCATION_IS_REQUIRED_BETTER_EXPERIENCE, Toast.LENGTH_SHORT).show()
         }
 
         dialog.setCancelable(false)
@@ -3269,169 +2740,8 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
         startActivityForResult(intent, LOCATION_SETTINGS_REQUEST_CODE)
     }
-    private fun displayLocationSettingsRequest(context: Context) {
-        val googleApiClient = GoogleApiClient.Builder(context)
-            .addApi(LocationServices.API).build()
-        googleApiClient.connect()
-        val locationRequest: LocationRequest = LocationRequest.create()
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 10000
-        locationRequest.fastestInterval = 1000
-        locationRequest.numUpdates = 1
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        builder.setAlwaysShow(true)
-        val result: PendingResult<LocationSettingsResult> =
-            LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
-        result.setResultCallback { result ->
-            val status: Status = result.status
-            when (status.statusCode) {
-                LocationSettingsStatusCodes.SUCCESS -> {
-                    Log.i(TAG, "All location settings are satisfied.")
-                    getCurrentLocation()
-                }
-
-                LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
-                    Log.i(
-                        TAG,
-                        "Location settings are not satisfied. Show the user a dialog to upgrade location settings "
-                    )
-                    try {
-                        // Show the dialog by calling startResolutionForResult(), and check the result
-                        // in onActivityResult().
-                        status.resolution?.let {
-                            startIntentSenderForResult(
-                                it.intentSender,
-                                100,
-                                null,
-                                0,
-                                0,
-                                0,
-                                null
-                            )
-                        }
-
-                    } catch (e: SendIntentException) {
-                        Log.i(TAG, "PendingIntent unable to execute request.")
-                    }
-                }
-
-                LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> Log.i(
-                    TAG,
-                    "Location settings are inadequate, and cannot be fixed here. Dialog not created."
-                )
-
-            }
-        }
-    }
-
-    private fun displayLocationSettingsRequest11(context: Context) {
-        val googleApiClient = GoogleApiClient.Builder(context)
-            .addApi(LocationServices.API).build()
-        googleApiClient.connect()
-        val locationRequest: LocationRequest = LocationRequest.create()
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 10000
-        locationRequest.fastestInterval = 1000
-        locationRequest.numUpdates = 1
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        builder.setAlwaysShow(true)
-        val result: PendingResult<LocationSettingsResult> =
-            LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build())
-        result.setResultCallback { result ->
-            val status: Status = result.status
-            when (status.statusCode) {
-                LocationSettingsStatusCodes.SUCCESS -> {
-                    Log.i(TAG, "All location settings are satisfied.")
-                    getCurrentLocation()
-                }
-
-                LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
-                    Log.i(
-                        TAG,
-                        "Location settings are not satisfied. Show the user a dialog to upgrade location settings "
-                    )
-                    try {
-                        // Show the dialog by calling startResolutionForResult(), and check the result
-                        // in onActivityResult().
-                        status.resolution?.let {
-                            startIntentSenderForResult(
-                                it.intentSender,
-                                1000,
-                                null,
-                                0,
-                                0,
-                                0,
-                                null
-                            )
-                        }
-
-                    } catch (e: SendIntentException) {
-                        Log.i(TAG, "PendingIntent unable to execute request.")
-                    }
-                }
-
-                LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> Log.i(
-                    TAG,
-                    "Location settings are inadequate, and cannot be fixed here. Dialog not created."
-                )
-
-            }
-        }
-    }
-
-    private fun alertBoxLocation() {
-        val builder = AlertDialog.Builder(requireContext())
-        //set title for alert dialog
-        builder.setTitle("Alert")
-        //set message for alert dialog
-        builder.setMessage(R.string.dialogMessage)
-        builder.setIcon(android.R.drawable.ic_dialog_alert)
-
-        //performing positive action
-        builder.setPositiveButton("Yes") { _, _ ->
-            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-            val uri = Uri.fromParts("package", requireContext().packageName, null)
-            intent.data = uri
-            startActivityForResult(intent, 200)
-        }
-        //performing cancel action
-        builder.setNeutralButton("Cancel") { _, _ ->
-
-        }
-
-        // Create the AlertDialog
-        val alertDialog: AlertDialog = builder.create()
-        // Set other dialog properties
-        alertDialog.setCancelable(false)
-        alertDialog.show()
-
-    }
 
     private fun alertBoxLocation1() {
-//        val dialogView = layoutInflater.inflate(R.layout.dialog_location_permission, null)
-//
-//        val builder = AlertDialog.Builder(requireContext())
-//        builder.setView(dialogView)
-//
-//        val alertDialog = builder.create()
-//        alertDialog.setCancelable(false)
-//
-//        val btnAllow = dialogView.findViewById<TextView>(R.id.btnLocation)
-//        val btnCancel = dialogView.findViewById<TextView>(R.id.textNotnow)
-//
-//        btnAllow.setOnClickListener {
-//            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-//            val uri = Uri.fromParts("package", requireContext().packageName, null)
-//            intent.data = uri
-//            startActivityForResult(intent, 200)
-//            alertDialog.dismiss()
-//        }
-//
-//        btnCancel.setOnClickListener {
-//            alertDialog.dismiss()
-//        }
-//
-//        alertDialog.show()
         val dialog = Dialog(requireActivity(), R.style.BottomSheetDialog)
         dialog.setContentView(R.layout.dialog_location_permission)
 
@@ -3455,7 +2765,6 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
             dialog.dismiss()
         }
 
-     //  dialog.setCancelable(false)
         dialog.show()
     }
     private fun loadHomeApi() {
@@ -3480,7 +2789,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
 
                         is NetworkResult.Error -> {
 
-                            showErrorDialog(requireContext(), "We didn’t find any properties close to your location.")
+                            showErrorDialog(requireContext(), ErrorMessage.WE_NOT_FIND_ANY_PROPERTIES_CLOSE)
 
                         }
 
@@ -3500,11 +2809,15 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+
+        Log.d("FB_LOGIN", "onActivityResult called: $requestCode, $resultCode")
         if (requestCode == 100) {
             if (Activity.RESULT_OK == resultCode) {
                 getCurrentLocation()
             } else {
-                Toast.makeText(requireContext(), "Please turn on location", Toast.LENGTH_SHORT)
+                Toast.makeText(requireContext(), ErrorMessage.PLEASE_TURN_ON_LOCATION, Toast.LENGTH_SHORT)
                     .show()
             }
         }
@@ -3513,12 +2826,6 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         }
     }
 
-    fun isValidEmailOrPhone(input: String): Boolean {
-        val pattern = """^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$|^\+?[0-9]{10,15}$"""
-        val regex = Pattern.compile(pattern)
-        val matcher = regex.matcher(input)
-        return matcher.matches()
-    }
 
     fun isValidPassword(password: String): Boolean {
         // val pattern = """^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"""
@@ -3528,11 +2835,6 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
         return matcher.matches()
     }
 
-    fun isPhoneNumber(input: String): Boolean {
-        val phonePattern = """^\+?[0-9]{10,15}$"""
-        val regex = Pattern.compile(phonePattern)
-        return regex.matcher(input).matches()
-    }
 
     private fun isValidEmail(email: String): Boolean {
         val emailPattern = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\$"

@@ -36,16 +36,11 @@ class AdapterLocationSearch(var context : Context,var list : MutableList<String>
             onItemClickListener?.invoke(suggestion)
         }
 
-//        holder.binding.tvLocation.setOnClickListener {
-//            listner.itemClick(position,"selected location")
-//        }
     }
 
     fun updateAdapter(list : MutableList<String>){
         this.list = list
         notifyDataSetChanged()
     }
-
-
 
 }

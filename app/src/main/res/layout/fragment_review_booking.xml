@@ -4,11 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".fragment.guest.bookingfragment.bookingviewmodel.ReviewBookingFragment">
 
-    <data>
-        <!--        <variable-->
-        <!--            name="viewmodels"-->
-        <!--            type="" />-->
-    </data>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,44 +40,13 @@
                         android:padding="@dimen/_6sdp"
                         android:src="@drawable/ic_back_icon" />
 
-                    <!--                    &lt;!&ndash; Search Bar &ndash;&gt;-->
-                    <!--                    <EditText-->
-                    <!--                        android:id="@+id/etSearchButton"-->
-                    <!--                        android:layout_width="0dp"-->
-                    <!--                        android:layout_height="@dimen/_36sdp"-->
-                    <!--                        android:layout_gravity="center_vertical"-->
-                    <!--                        android:layout_marginVertical="@dimen/_10sdp"-->
-                    <!--                        android:layout_marginStart="@dimen/_5ssp"-->
-                    <!--                        android:layout_weight="1"-->
-                    <!--                        android:background="@drawable/search_bar_bg"-->
-                    <!--                        android:drawableEnd="@drawable/ic_search_bar_icon22"-->
-                    <!--                        android:drawablePadding="@dimen/_6sdp"-->
-                    <!--                        android:fontFamily="@font/poppins"-->
-                    <!--                        android:hint="Search..."-->
-                    <!--                        android:inputType="text"-->
-                    <!--                        android:padding="@dimen/_8sdp"-->
-                    <!--                        android:textColor="#000"-->
-                    <!--                        android:textColorHint="#000"-->
-                    <!--                        android:textSize="@dimen/_11ssp" />-->
-
-                    <!--                    &lt;!&ndash; Menu Icon &ndash;&gt;-->
-                    <!--                    <ImageView-->
-                    <!--                        android:id="@+id/imageFilter"-->
-                    <!--                        android:layout_width="@dimen/_42sdp"-->
-                    <!--                        android:layout_height="@dimen/_42sdp"-->
-                    <!--                        android:layout_gravity="center_vertical"-->
-                    <!--                        android:contentDescription="Menu"-->
-                    <!--                        android:padding="@dimen/_6sdp"-->
-                    <!--                        android:src="@drawable/ic_filter" />-->
 
                 </LinearLayout>
 
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-
-                    >
+                    android:layout_height="wrap_content">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imageProfilePicture"
@@ -317,349 +281,6 @@
                     android:textSize="15sp" />
 
 
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginHorizontal="@dimen/_10sdp"-->
-                <!--                    android:background="@drawable/bg_four_side_grey_corner_white2"-->
-
-                <!--                    android:orientation="vertical"-->
-                <!--                    android:padding="@dimen/_10sdp">-->
-
-                <!--                    &lt;!&ndash; Image, Title, Rating, and Distance &ndash;&gt;-->
-                <!--                    <LinearLayout-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:orientation="horizontal">-->
-
-                <!--                        <androidx.cardview.widget.CardView-->
-                <!--                            android:layout_width="@dimen/_60sdp"-->
-                <!--                            android:layout_height="@dimen/_65sdp"-->
-                <!--                            app:cardCornerRadius="@dimen/_7sdp">-->
-
-
-                <!--                            &lt;!&ndash; Image Placeholder &ndash;&gt;-->
-                <!--                            <ImageView-->
-                <!--                                android:id="@+id/img_profile_hotel"-->
-                <!--                                android:layout_width="match_parent"-->
-                <!--                                android:layout_height="match_parent"-->
-                <!--                                android:scaleType="centerCrop"-->
-                <!--                                android:src="@drawable/image_hotel" />-->
-                <!--                        </androidx.cardview.widget.CardView>-->
-
-                <!--                        <LinearLayout-->
-                <!--                            android:layout_width="0dp"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:layout_marginStart="8dp"-->
-                <!--                            android:layout_weight="1"-->
-                <!--                            android:orientation="vertical">-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/tv_name_place"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:text="Cabin in Peshastin"-->
-                <!--                                android:textColor="#000"-->
-                <!--                                android:textSize="17sp" />-->
-
-                <!--                            <RelativeLayout-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_marginTop="@dimen/_3sdp"-->
-                <!--                                android:orientation="horizontal">-->
-
-                <!--                                &lt;!&ndash; Star Rating Icon &ndash;&gt;-->
-                <!--                                <ImageView-->
-                <!--                                    android:id="@+id/imageStar"-->
-                <!--                                    android:layout_width="@dimen/_13sdp"-->
-                <!--                                    android:layout_height="@dimen/_13sdp"-->
-                <!--                                    android:layout_gravity="center_vertical"-->
-                <!--                                    android:layout_marginTop="@dimen/_2sdp"-->
-                <!--                                    android:src="@drawable/ic_star"-->
-                <!--                                    app:tint="#FFBB00" />-->
-
-                <!--                                <TextView-->
-                <!--                                    android:id="@+id/textRatingStar"-->
-                <!--                                    android:layout_width="wrap_content"-->
-                <!--                                    android:layout_height="wrap_content"-->
-                <!--                                    android:layout_marginStart="@dimen/_2sdp"-->
-                <!--                                    android:layout_toEndOf="@+id/imageStar"-->
-                <!--                                    android:fontFamily="@font/inter"-->
-                <!--                                    android:text="5.0"-->
-                <!--                                    android:textColor="#FFBB00"-->
-                <!--                                    android:textSize="14sp" />-->
-
-                <!--                                <TextView-->
-                <!--                                    android:id="@+id/textK"-->
-                <!--                                    android:layout_width="wrap_content"-->
-                <!--                                    android:layout_height="wrap_content"-->
-                <!--                                    android:layout_toEndOf="@+id/textRatingStar"-->
-                <!--                                    android:fontFamily="@font/inter"-->
-                <!--                                    android:text=" (1k+)"-->
-                <!--                                    android:textColor="#A4A4A4"-->
-                <!--                                    android:textSize="14sp" />-->
-
-                <!--                                <ImageView-->
-                <!--                                    android:id="@+id/imageMilesIcon"-->
-                <!--                                    android:layout_width="@dimen/_20sdp"-->
-                <!--                                    android:layout_height="@dimen/_20sdp"-->
-                <!--                                    android:layout_below="@+id/textK"-->
-                <!--                                    android:src="@drawable/ic_location_hotel"-->
-                <!--                                    android:textColor="#A4A4A4"-->
-                <!--                                    android:textSize="@dimen/_13ssp" />-->
-
-                <!--                                <TextView-->
-                <!--                                    android:id="@+id/textMiles"-->
-                <!--                                    android:layout_width="wrap_content"-->
-                <!--                                    android:layout_height="wrap_content"-->
-                <!--                                    android:layout_below="@id/textK"-->
-                <!--                                    android:layout_marginStart="@dimen/_2sdp"-->
-                <!--                                    android:layout_marginTop="@dimen/_1sdp"-->
-                <!--                                    android:layout_toEndOf="@+id/imageMilesIcon"-->
-                <!--                                    android:fontFamily="@font/inter"-->
-                <!--                                    android:text="37 miles away"-->
-                <!--                                    android:textColor="#A4A4A4"-->
-                <!--                                    android:textSize="14sp"-->
-                <!--                                    app:layout_constraintEnd_toEndOf="parent" />-->
-                <!--                                &lt;!&ndash; Distance &ndash;&gt;-->
-
-                <!--                            </RelativeLayout>-->
-
-                <!--                        </LinearLayout>-->
-                <!--                    </LinearLayout>-->
-
-                <!--                    &lt;!&ndash; Divider &ndash;&gt;-->
-                <!--                    <View-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="@dimen/_1dp"-->
-                <!--                        android:layout_marginVertical="8dp"-->
-                <!--                        android:background="#DDDDDD" />-->
-
-                <!--                    &lt;!&ndash; Pricing Breakdown &ndash;&gt;-->
-                <!--                    <LinearLayout-->
-                <!--                        android:layout_width="match_parent"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:orientation="vertical">-->
-
-                <!--                        <LinearLayout-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:orientation="horizontal"-->
-                <!--                            android:gravity="center_vertical">-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/time"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:text=""-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="@dimen/_13ssp" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/Htime"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_marginStart="4dp"-->
-                <!--                                android:text="Hours"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-
-                <!--                            <View-->
-                <!--                                android:layout_width="0dp"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_weight="1" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/money"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:text="$0"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-                <!--                        </LinearLayout>-->
-
-
-                <!--                        &lt;!&ndash; Additional Fees &ndash;&gt;-->
-                <!--                        <LinearLayout-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:orientation="horizontal">-->
-
-                <!--                            &lt;!&ndash; Repeat these lines for each fee type &ndash;&gt;-->
-                <!--                            <TextView-->
-                <!--                                android:layout_width="0dp"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_weight="1"-->
-                <!--                                android:text="Cleaning Fee"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/tv_cleaning_fee"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:text="$0"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp"/>-->
-
-                <!--                            &lt;!&ndash; Additional fees here &ndash;&gt;-->
-
-                <!--                        </LinearLayout>-->
-
-                <!--                        <LinearLayout-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:orientation="horizontal">-->
-
-                <!--                            &lt;!&ndash; Repeat these lines for each fee type &ndash;&gt;-->
-                <!--                            <TextView-->
-                <!--                                android:layout_width="0dp"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_weight="1"-->
-                <!--                                android:text="Zyvo Service Fee"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/tv_service_fee"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:text="$0"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-
-                <!--                            &lt;!&ndash; Additional fees here &ndash;&gt;-->
-
-                <!--                        </LinearLayout>-->
-
-                <!--                        <LinearLayout-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:orientation="horizontal">-->
-
-                <!--                            &lt;!&ndash; Repeat these lines for each fee type &ndash;&gt;-->
-                <!--                            <TextView-->
-                <!--                                android:layout_width="0dp"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_weight="1"-->
-                <!--                                android:text="Taxes"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/tv_taxes"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:text="$0"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-
-                <!--                            &lt;!&ndash; Additional fees here &ndash;&gt;-->
-
-                <!--                        </LinearLayout>-->
-
-                <!--                        <LinearLayout-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:orientation="horizontal">-->
-
-                <!--                            &lt;!&ndash; Repeat these lines for each fee type &ndash;&gt;-->
-                <!--                            <TextView-->
-                <!--                                android:layout_width="0dp"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_weight="1"-->
-                <!--                                android:text="Add-on"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/tv_add_on"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:text="$0"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-
-
-                <!--                        </LinearLayout>-->
-
-                <!--                        <LinearLayout-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:visibility="visible"-->
-                <!--                            android:id="@+id/lldiscount"-->
-                <!--                            android:orientation="horizontal">-->
-
-                <!--                            &lt;!&ndash; Repeat these lines for each fee type &ndash;&gt;-->
-                <!--                            <TextView-->
-                <!--                                android:layout_width="0dp"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_weight="1"-->
-                <!--                                android:text="Discount"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp"/>-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/tv_discount"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:text="$0"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="15sp" />-->
-
-
-                <!--                        </LinearLayout>-->
-
-                <!--                        <View-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="@dimen/_1dp"-->
-                <!--                            android:layout_marginTop="@dimen/_5sdp"-->
-                <!--                            android:background="#E5E5E5" />-->
-
-                <!--                        <LinearLayout-->
-                <!--                            android:layout_width="match_parent"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:orientation="horizontal">-->
-
-                <!--                            &lt;!&ndash; Repeat these lines for each fee type &ndash;&gt;-->
-                <!--                            <TextView-->
-                <!--                                android:layout_width="0dp"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:layout_weight="1"-->
-                <!--                                android:text="Total"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="16sp" />-->
-
-                <!--                            <TextView-->
-                <!--                                android:id="@+id/tv_total_price"-->
-                <!--                                android:layout_width="wrap_content"-->
-                <!--                                android:layout_height="wrap_content"-->
-                <!--                                android:text="$0"-->
-                <!--                                android:fontFamily="@font/poppins"-->
-                <!--                                android:textColor="@color/black"-->
-                <!--                                android:textSize="16sp" />-->
-
-
-                <!--                        </LinearLayout>-->
-
-                <!--                    </LinearLayout>-->
-                <!--                </LinearLayout>-->
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -785,7 +406,6 @@
                                         android:textColor="#A4A4A4"
                                         android:textSize="14sp"
                                         app:layout_constraintEnd_toEndOf="parent" />
-                                    <!-- Distance -->
 
                                 </RelativeLayout>
 
@@ -794,14 +414,7 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Divider -->
-                    <!--                    <View-->
-                    <!--                        android:layout_width="match_parent"-->
-                    <!--                        android:layout_height="1dp"-->
-                    <!--                        android:layout_marginVertical="8dp"-->
-                    <!--                        android:background="#DDDDDD" />-->
 
-                    <!-- Pricing Breakdown -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -850,13 +463,11 @@
                         </LinearLayout>
 
 
-                        <!-- Additional Fees -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <!-- Repeat these lines for each fee type -->
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
@@ -1064,64 +675,6 @@
                         android:textSize="13sp" />
                 </LinearLayout>
 
-                <!-- Action Icons -->
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginHorizontal="@dimen/_10sdp"-->
-                <!--                    android:orientation="horizontal">-->
-
-                <!--                    &lt;!&ndash; Share Icon &ndash;&gt;-->
-                <!--                    <LinearLayout-->
-                <!--                        android:id="@+id/llShare"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginHorizontal="@dimen/_10sdp"-->
-                <!--                        android:orientation="horizontal">-->
-
-
-                <!--                        <ImageView-->
-                <!--                            android:id="@+id/imageShare"-->
-                <!--                            android:layout_width="@dimen/_15sdp"-->
-                <!--                            android:layout_height="@dimen/_15sdp"-->
-                <!--                            android:src="@drawable/ic_share_icon"-->
-                <!--                            app:tint="#000" />-->
-
-                <!--                        <TextView-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:fontFamily="@font/poppins_light"-->
-                <!--                            android:text="Share"-->
-                <!--                            android:layout_marginStart="@dimen/_3sdp"-->
-                <!--                            android:textColor="#000"-->
-                <!--                            android:textSize="12sp" />-->
-                <!--                    </LinearLayout>-->
-
-                <!--                    &lt;!&ndash; Favorite Icon &ndash;&gt;-->
-
-                <!--                    <LinearLayout-->
-                <!--                        android:id="@+id/llFavorite"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginHorizontal="@dimen/_10sdp"-->
-                <!--                        android:orientation="horizontal">-->
-
-
-                <!--                        <ImageView-->
-                <!--                            android:layout_width="@dimen/_17sdp"-->
-                <!--                            android:layout_height="@dimen/_17sdp"-->
-                <!--                            android:src="@drawable/ic_favourite_icon" />-->
-
-                <!--                        <TextView-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:layout_marginStart="@dimen/_3sdp"-->
-                <!--                            android:fontFamily="@font/poppins_light"-->
-                <!--                            android:text="Favorite"-->
-                <!--                            android:textColor="#000"-->
-                <!--                            android:textSize="12sp" />-->
-                <!--                    </LinearLayout>-->
-                <!--                </LinearLayout>-->
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -1250,10 +803,6 @@
                         android:orientation="vertical"
                         android:visibility="visible">
 
-                        <!--<androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_75sdp">-->
-
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/prImageTwo"
                             android:layout_width="match_parent"
@@ -1263,14 +812,6 @@
                             app:shapeAppearanceOverlay="@style/RoundedCornerImageThree" />
 
 
-                        <!-- </androidx.cardview.widget.CardView>-->
-
-
-                        <!--<androidx.cardview.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="@dimen/_75sdp"
-                            android:layout_marginTop="@dimen/_4sdp">-->
-
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/prImageThree"
                             android:layout_width="match_parent"
@@ -1279,7 +820,7 @@
                             android:scaleType="fitXY"
                             android:src="@drawable/ic_dummy_img_3"
                             app:shapeAppearanceOverlay="@style/RoundedCornerImageThree" />
-                        <!--  </androidx.cardview.widget.CardView>-->
+
                         <TextView
                             android:id="@+id/proImageMore"
                             android:layout_width="wrap_content"
@@ -1301,9 +842,6 @@
                         android:orientation="vertical"
                         android:visibility="gone">
 
-                        <!-- <androidx.cardview.widget.CardView
-                             android:layout_width="match_parent"
-                             android:layout_height="match_parent">-->
 
                         <com.google.android.material.imageview.ShapeableImageView
                             android:id="@+id/proImageTwo"
@@ -1314,157 +852,11 @@
                             app:shapeAppearanceOverlay="@style/RoundedCornerImageThree" />
 
 
-                        <!--  </androidx.cardview.widget.CardView>-->
-                    </LinearLayout>
+                       </LinearLayout>
 
                 </LinearLayout>
 
-                <!-- <LinearLayout
-                     android:id="@+id/ll_hotel_views"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:weightSum="1"
-                     android:visibility="gone"
-                     android:layout_marginHorizontal="@dimen/_10sdp"
-                     android:layout_marginTop="@dimen/_10sdp"
-                     >
-                     <androidx.cardview.widget.CardView
-                         android:layout_width="0dp"
-                         android:layout_height="wrap_content"
-                         android:background="@drawable/rounded_left_corners"
-                         android:layout_weight="0.49"
-                         >
-                         <com.google.android.material.imageview.ShapeableImageView
-                             android:id="@+id/shapeableImageView"
-                             android:layout_width="match_parent"
-                             android:layout_height="@dimen/_155sdp"
-                             android:src="@drawable/ic_dummy_img_1"
-                             app:shapeAppearanceOverlay="@style/RoundedCornerImageBigThree"
-                             android:scaleType="fitXY"
-                             />
-                     </androidx.cardview.widget.CardView>
 
-
-                     <RelativeLayout
-                         android:layout_width="0dp"
-                         android:layout_height="wrap_content"
-                         android:layout_weight="0.03"
-                         />
-                     <LinearLayout
-                         android:layout_width="0dp"
-                         android:layout_height="wrap_content"
-                         android:layout_weight="0.45"
-                         android:orientation="vertical"
-                         >
-                         <androidx.cardview.widget.CardView
-                             android:layout_width="match_parent"
-                             android:layout_height="@dimen/_75sdp"
-                             android:background="@drawable/rounded_right_corners"
-                             >
-                             <com.google.android.material.imageview.ShapeableImageView
-                                 android:id="@+id/img1"
-                                 android:layout_width="match_parent"
-                                 android:layout_height="@dimen/_72sdp"
-                                 android:src="@drawable/ic_dummy_img_2"
-                                 app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
-                                 android:scaleType="fitXY"
-                                 />
-
-
-                         </androidx.cardview.widget.CardView>
-
-
-                         <androidx.cardview.widget.CardView
-                             android:layout_width="match_parent"
-                             android:layout_height="@dimen/_70sdp"
-                             android:background="@drawable/rounded_right_corners"
-                             android:layout_marginTop="@dimen/_4sdp"
-                             >
-                             <com.google.android.material.imageview.ShapeableImageView
-                                 android:id="@+id/img2"
-                                 android:layout_width="match_parent"
-                                 android:layout_height="@dimen/_75sdp"
-                                 android:src="@drawable/ic_dummy_img_3"
-                                 app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
-                                 android:scaleType="fitXY"
-                                 />
-                         </androidx.cardview.widget.CardView>
-
-                     </LinearLayout>
-
-
-                 </LinearLayout>
-
-                 <LinearLayout
-                     android:id="@+id/ll_two_img_view"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:visibility="gone"
-                     android:layout_margin="@dimen/_10sdp">
-                     <LinearLayout
-                         android:layout_width="0dp"
-                         android:layout_height="wrap_content"
-                         android:layout_weight="0.49"
-                         >
-                         <com.google.android.material.imageview.ShapeableImageView
-                             android:id="@+id/shapeableImageView_2_1"
-                             android:layout_width="match_parent"
-                             android:layout_height="@dimen/_155sdp"
-                             android:scaleType="fitXY"
-                             app:shapeAppearanceOverlay="@style/RoundedCornerImageBigThree"
-                             android:src="@drawable/ic_dummy_img_1"
-                             />
-                     </LinearLayout>
-
-                     <LinearLayout
-                         android:layout_width="0dp"
-                         android:layout_height="wrap_content"
-                         android:layout_weight="0.03" />
-
-                     <LinearLayout
-                         android:layout_width="0dp"
-                         android:layout_height="wrap_content"
-                         android:layout_weight="0.49">
-                         <com.google.android.material.imageview.ShapeableImageView
-                             android:id="@+id/shapeableImageView_2_2"
-                             android:layout_width="match_parent"
-                             android:layout_height="@dimen/_155sdp"
-                             android:src="@drawable/ic_dummy_img_1"
-                             android:scaleType="fitXY"
-                             app:shapeAppearanceOverlay="@style/RoundedCornerImageThree"
-                             />
-                     </LinearLayout>
-
-                 </LinearLayout>
-
-                 <LinearLayout
-                     android:id="@+id/ll_single_img"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:orientation="vertical"
-                     android:layout_marginHorizontal="@dimen/_15sdp"
-                     android:layout_marginTop="@dimen/_10sdp"
-                     >
-
-                     <com.google.android.material.card.MaterialCardView
-                         android:layout_width="match_parent"
-                         android:layout_height="@dimen/_155sdp"
-                         app:cardCornerRadius="@dimen/_15sdp">
-
-
-                         <com.google.android.material.imageview.ShapeableImageView
-                             android:id="@+id/shapeableImageView_1_1"
-                             android:layout_width="match_parent"
-                             android:layout_height="match_parent"
-                             android:src="@drawable/ic_dummy_img_1"
-                             android:visibility="visible"
-                             android:scaleType="fitXY"
-
-                             />
-                     </com.google.android.material.card.MaterialCardView>
-
-
-                 </LinearLayout>-->
 
                 <View
                     android:layout_width="match_parent"
@@ -1473,7 +865,7 @@
                     android:layout_marginTop="36dp"
                     android:background="#E5E5E5" />
 
-                <!-- Booking Details Section -->
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -1485,109 +877,7 @@
                     android:textSize="18sp" />
 
 
-                <!--                &lt;!&ndash; Date and Duration &ndash;&gt;-->
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginHorizontal="@dimen/_10sdp"-->
-                <!--                    android:layout_marginTop="@dimen/_5sdp"-->
-                <!--                    android:gravity="center_vertical"-->
-                <!--                    android:orientation="horizontal">-->
 
-
-                <!--                    <LinearLayout-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-
-                <!--                        android:layout_marginTop="@dimen/_5sdp"-->
-                <!--                        android:background="@drawable/button_grey_line_bg"-->
-                <!--                        android:gravity="center_vertical"-->
-                <!--                        android:orientation="horizontal"-->
-                <!--                        android:layout_marginBottom="@dimen/_2sdp"-->
-                <!--                        android:paddingHorizontal="@dimen/_8sdp"-->
-                <!--                        android:paddingVertical="@dimen/_5sdp">-->
-
-                <!--                        <ImageView-->
-                <!--                            android:layout_width="@dimen/_15sdp"-->
-                <!--                            android:layout_height="@dimen/_14sdp"-->
-                <!--                            android:src="@drawable/ic_calendar_icon" />-->
-
-                <!--                        <TextView-->
-                <!--                            android:id="@+id/tv_booking_date"-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:layout_marginStart="@dimen/_5sdp"-->
-                <!--                            android:text="October 22, 2023"-->
-                <!--                            android:textColor="#000"-->
-                <!--                            android:fontFamily="@font/inter"-->
-                <!--                            android:textSize="13sp" />-->
-                <!--                    </LinearLayout>-->
-                <!--                    &lt;!&ndash; Date Icon and Text &ndash;&gt;-->
-
-
-                <!--                    &lt;!&ndash; Duration Badge &ndash;&gt;-->
-
-                <!--                    <LinearLayout-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_marginHorizontal="@dimen/_10sdp"-->
-                <!--                        android:layout_marginTop="@dimen/_5sdp"-->
-                <!--                        android:layout_marginBottom="@dimen/_2sdp"-->
-                <!--                        android:paddingHorizontal="@dimen/_10sdp"-->
-                <!--                        android:paddingVertical="@dimen/_6sdp"-->
-
-                <!--                        android:background="@drawable/button_grey_line_bg"-->
-                <!--                        android:gravity="center_vertical"-->
-                <!--                        android:orientation="horizontal">-->
-
-                <!--                        <ImageView-->
-                <!--                            android:layout_width="@dimen/_13sdp"-->
-                <!--                            android:layout_height="@dimen/_13sdp"-->
-
-                <!--                            android:src="@drawable/ic_clock_new" />-->
-
-                <!--                        <TextView-->
-                <!--                            android:id="@+id/tv_booking_total_time"-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:text="2 Hours"-->
-                <!--                            android:layout_marginStart="@dimen/_3sdp"-->
-                <!--                            android:textColor="#000"-->
-                <!--                            android:fontFamily="@font/inter"-->
-                <!--                            android:textSize="13sp" />-->
-                <!--                    </LinearLayout>-->
-
-                <!--                </LinearLayout>-->
-
-                <!--                &lt;!&ndash; Time Slot &ndash;&gt;-->
-                <!--                <LinearLayout-->
-                <!--                    android:layout_width="wrap_content"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginHorizontal="@dimen/_10sdp"-->
-                <!--                    android:layout_marginTop="@dimen/_5sdp"-->
-                <!--                    android:paddingHorizontal="@dimen/_10sdp"-->
-                <!--                    android:paddingVertical="@dimen/_6sdp"-->
-
-                <!--                    android:background="@drawable/button_grey_line_bg"-->
-                <!--                    android:gravity="center_vertical"-->
-                <!--                    android:orientation="horizontal">-->
-
-                <!--                    <ImageView-->
-                <!--                        android:layout_width="@dimen/_13sdp"-->
-                <!--                        android:layout_height="@dimen/_13sdp"-->
-
-                <!--                        android:src="@drawable/ic_clock_new" />-->
-
-                <!--                    <TextView-->
-                <!--                        android:id="@+id/booking_from_to"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:text="From 01pm to 03pm"-->
-                <!--                        android:layout_marginStart="@dimen/_3sdp"-->
-                <!--                        android:textColor="#000"-->
-                <!--                        android:fontFamily="@font/inter"-->
-                <!--                        android:textSize="13sp" />-->
-                <!--                </LinearLayout>-->
 
                 <!-- Date and Duration -->
                 <LinearLayout
@@ -1628,8 +918,6 @@
                     <!-- Date Icon and Text -->
 
 
-                    <!-- Duration Badge -->
-
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -1638,7 +926,6 @@
                         android:layout_marginBottom="@dimen/_2sdp"
                         android:background="@drawable/button_grey_line_bg"
                         android:gravity="center_vertical"
-
                         android:orientation="horizontal"
                         android:paddingHorizontal="@dimen/_10sdp"
                         android:paddingVertical="@dimen/_6sdp">
@@ -2188,71 +1475,6 @@
 
                 </RelativeLayout>
 
-                <!--                <RelativeLayout-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content"-->
-                <!--                    android:layout_marginHorizontal="@dimen/_12sdp"-->
-                <!--                    android:layout_marginTop="@dimen/_3sdp">-->
-
-                <!--                    <LinearLayout-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:gravity="start">-->
-
-                <!--                        <ImageView-->
-                <!--                            android:layout_width="@dimen/_14sdp"-->
-                <!--                            android:layout_height="@dimen/_14sdp"-->
-                <!--                            android:layout_gravity="center_vertical"-->
-                <!--                            android:src="@drawable/ic_start_new" />-->
-
-                <!--                        <TextView-->
-                <!--                            android:id="@+id/end_rating_tv"-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:layout_marginStart="@dimen/_8sdp"-->
-                <!--                            android:text="4.9"-->
-                <!--                            android:fontFamily="@font/poppins_medium"-->
-                <!--                            android:textColor="#FCA800"-->
-                <!--                            android:textSize="15sp" />-->
-
-                <!--                        <TextView-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:layout_marginStart="@dimen/_7sdp"-->
-                <!--                            android:fontFamily="@font/inter"-->
-                <!--                            android:text="Rating"-->
-                <!--                            android:textColor="@color/black"-->
-                <!--                            android:textSize="15sp" />-->
-                <!--                    </LinearLayout>-->
-
-                <!--                    <RelativeLayout-->
-                <!--                        android:id="@+id/rlTextReviewClick"-->
-                <!--                        android:layout_width="wrap_content"-->
-                <!--                        android:layout_height="wrap_content"-->
-                <!--                        android:layout_gravity="end"-->
-                <!--                        >-->
-                <!--                        <TextView-->
-                <!--                            android:id="@+id/textReviewClick"-->
-                <!--                            android:layout_width="wrap_content"-->
-                <!--                            android:layout_height="wrap_content"-->
-                <!--                            android:layout_toStartOf="@+id/imageDropDown"-->
-                <!--                            android:fontFamily="@font/inter"-->
-                <!--                            android:text="Sort by: Positive Reviews"-->
-                <!--                            android:textColor="@color/black"-->
-                <!--                            android:textSize="15sp"-->
-                <!--                            />-->
-
-                <!--                        <ImageView-->
-                <!--                            android:id="@+id/imageDropDown"-->
-                <!--                            android:layout_width="@dimen/_9sdp"-->
-                <!--                            android:layout_height="@dimen/_10sdp"-->
-                <!--                            android:src="@drawable/drop_down_black"-->
-                <!--                            android:layout_marginStart="@dimen/_4sdp"-->
-                <!--                            android:layout_marginTop="@dimen/_4sdp"-->
-                <!--                            android:layout_alignParentEnd="true"/>-->
-                <!--                    </RelativeLayout>-->
-
-                <!--                </RelativeLayout>-->
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_reviews"

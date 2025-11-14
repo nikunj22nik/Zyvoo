@@ -90,11 +90,6 @@ class NotificationViewModel  @Inject constructor(private val repository: ZyvoRep
         _list.value = listItem
     }
 
-    // Method to remove item at a specific position
-    fun removeItemAt(position: Int) {
-        _list.value?.removeAt(position)
-        _list.value = _list.value // Trigger observer by setting the value again
-    }
 
     suspend fun getNotificationHost(userId: Int): Flow<NetworkResult<MutableList<NotificationScreenModel>>> {
         return repository.getNotificationHost(userId).onEach {

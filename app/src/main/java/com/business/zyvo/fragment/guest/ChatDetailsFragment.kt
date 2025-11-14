@@ -36,8 +36,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class ChatDetailsFragment : Fragment(), View.OnClickListener{
 
     private var _binding: FragmentChatDetailsBinding? = null
-
-
     private val binding get() = _binding!!
     private var chatDetailsAdapter: ChatDetailsAdapter? = null
     private val viewModel: ChatDetailsViewModel by viewModels()
@@ -54,20 +52,15 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            //  param1 = it.getString(ARG_PARAM1)
-            // param2 = it.getString(ARG_PARAM2)
+
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         _binding = FragmentChatDetailsBinding.inflate(LayoutInflater.from(requireContext()), container, false)
-        // requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
 
-    //    binding.viewModel = viewModel
         binding.lifecycleOwner = viewLifecycleOwner
-
-     //   var context: Context, var quickstartConversationsManager: QuickstartConversationsManager, var user_id: String, var profile_image:String, var friend_profile_image:String, var typelogin:String
 
         val session :SessionManager = SessionManager(requireContext())
 
@@ -102,15 +95,7 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
         }
 
         binding.sendBtn.setOnClickListener{
-//            if(binding.etMsg.text.toString().length >0){
-//                if (NetworkMonitorCheck._isConnected.value) {
-//                    quickstartConversationsManager.sendMessage(binding.etMsg.text.toString())
-//                    binding.etMsg.text.clear()
-//                }
-//            }
-//            else{
-//                LoadingUtils.showErrorDialog(requireContext(),"Please Check Your Internet Connection")
-//            }
+
         }
 
         return binding.getRoot()
@@ -150,90 +135,6 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
 
     }
 
-
-    private fun showAllBookingPopupWindow(anchorView: View, position: Int) {
-        // Inflate the custom layout for the popup menu
-        val popupView =
-            LayoutInflater.from(context).inflate(R.layout.popup_all_booking_filter, null)
-
-        // Create PopupWindow with the custom layout
-        val popupWindow = PopupWindow(
-            popupView,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            true
-        )
-
-        // Set click listeners for each menu item in the popup layout
-        popupView.findViewById<TextView>(R.id.itemAllBookings).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemConfirmed).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemPending).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemFinished).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-        popupView.findViewById<TextView>(R.id.itemCancelled).setOnClickListener {
-
-            popupWindow.dismiss()
-        }
-
-        // Get the location of the anchor view (three-dot icon)
-        val location = IntArray(2)
-        anchorView.getLocationOnScreen(location)
-
-        // Get the height of the PopupView after inflating it
-        popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val popupHeight = popupView.measuredHeight
-        val popupWeight = popupView.measuredWidth
-        val screenWidht = context?.resources?.displayMetrics?.widthPixels
-        val anchorX = location[1]
-        val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
-
-        val xOffset = if (popupWeight > spaceEnd!!) {
-            // If there is not enough space below, show it above
-            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
-            -(popupWeight + 20)
-        }
-        // Calculate the Y offset to make the popup appear above the three-dot icon
-        val screenHeight = context?.resources?.displayMetrics?.heightPixels
-        val anchorY = location[1]
-
-        // Calculate the available space above the anchorView
-        val spaceAbove = anchorY
-        val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
-
-        // Determine the Y offset
-        val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
-        } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
-        }
-
-        // Show the popup window anchored to the view (three-dot icon)
-        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(
-            anchorView,
-            xOffset,
-            yOffset,
-            Gravity.END
-        )  // Adjust the Y offset dynamically
-    }
-
-
     private fun showPopupWindow(anchorView: View, position: Int) {
         // Inflate the custom layout for the popup menu
         val popupView =
@@ -249,28 +150,23 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemMute).setOnClickListener {
-            // Handle mute action
-            // listner.onMute(position)
+
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemReport).setOnClickListener {
-            // Handle report action
-            // listner.onReport(position)
+
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
-            // Handle delete action
-            // listner.onDelete(position)
 
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemBlock).setOnClickListener {
-            // Handle block action
-            // listner.onBlock(position)
+
             popupWindow.dismiss()
         }
 
-        // Get the location of the anchor view (three-dot icon)
+
         val location = IntArray(2)
         anchorView.getLocationOnScreen(location)
 
@@ -283,28 +179,27 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
         val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
 
         val xOffset = if (popupWeight > spaceEnd!!) {
-            // If there is not enough space below, show it above
-            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+
+            -(popupWeight + 20)
         } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
+
             -(popupWeight + 20)
         }
         // Calculate the Y offset to make the popup appear above the three-dot icon
         val screenHeight = context?.resources?.displayMetrics?.heightPixels
         val anchorY = location[1]
 
-        // Calculate the available space above the anchorView
+
         val spaceAbove = anchorY
         val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
 
-        // Determine the Y offset
+
         val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+
+            -(popupHeight + 20)
         } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
+
+            20
         }
 
         // Show the popup window anchored to the view (three-dot icon)
@@ -329,11 +224,6 @@ class ChatDetailsFragment : Fragment(), View.OnClickListener{
                 showPopupWindow(binding.imageThreeDots, 0)
             }
 
-
-//            R.id.imageFilter -> {
-//
-//                showAllBookingPopupWindow(binding.imageFilter, 0)
-//            }
         }
 
     }

@@ -1,6 +1,5 @@
 package com.business.zyvo.fragment.guest.feedback.viewModel
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.business.zyvo.NetworkResult
@@ -11,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 
- @HiltViewModel
+@HiltViewModel
     class FeedbackViewModel @Inject constructor(
         private val repository: ZyvoRepository,
         val networkMonitor: NetworkMonitor

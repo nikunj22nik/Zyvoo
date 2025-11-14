@@ -15,8 +15,6 @@ class PaymentViewModel @Inject constructor(private var repository: ZyvoRepositor
 
     private var _list = MutableLiveData<ArrayList<TransactionModel>>()
     val list get() = _list
-    private var _paymentCardList =MutableLiveData<ArrayList<PaymentCardModel>>()
-    val paymentCardList get() = _paymentCardList
 
     init {
         load()
@@ -48,19 +46,6 @@ class PaymentViewModel @Inject constructor(private var repository: ZyvoRepositor
 
         _list.value = transactions
 
-//        val cards = ArrayList<PaymentCardModel>().apply {
-//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-//            add(PaymentCardModel("Indian Bank","1243","1243","James Bond"))
-//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-//            add(PaymentCardModel("Indusland","1243","1243","James Bond"))
-//        }
-
-      //  _paymentCardList.value = cards
-
     }
-
-
 
 }

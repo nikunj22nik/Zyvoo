@@ -37,7 +37,6 @@
             android:layout_height="75dp"
             android:orientation="horizontal"
             android:layout_marginHorizontal="@dimen/_10sdp"
-
             android:weightSum="4">
 
             <RelativeLayout

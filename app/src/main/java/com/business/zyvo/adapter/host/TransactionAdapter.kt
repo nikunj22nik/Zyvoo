@@ -10,11 +10,11 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutTransactionBinding
 import com.business.zyvo.fragment.host.payments.model.GetBookingList
-import com.business.zyvo.model.TransactionModel
 
 
 class TransactionAdapter(
@@ -52,11 +52,11 @@ class TransactionAdapter(
                 setHeaderBg(binding.rlMain)
 
 
-                binding.tvAmount.text = "Amount"
-                binding.tvStatus.text = "Status"
+                binding.tvAmount.text = AppConstant.AMOUNT
+                binding.tvStatus.text = AppConstant.STATUS
                 binding.tvStatus.setBackgroundResource(android.R.color.transparent)
-                binding.tvGuestName.text = "Guest Name"
-                binding.tvDate.text = "Date"
+                binding.tvGuestName.text = AppConstant.GUEST_NAME
+                binding.tvDate.text = AppConstant.DATE_TEXT
             }
 
         } else
@@ -74,8 +74,8 @@ class TransactionAdapter(
                 var status = ""
                 if (modal.status != null) {
                     status = modal.status.uppercase()
-                    if (modal.status == "finished"){
-                        binding.tvStatus.text = "COMPLETED"
+                    if (modal.status == AppConstant.FINISHED){
+                        binding.tvStatus.text = AppConstant.COMPLETED_TEXT
                     }else{
                         binding.tvStatus.text = status
                     }
@@ -105,49 +105,45 @@ class TransactionAdapter(
             }
             if (rowPos != 0){
                 when (modal.status) {
-                    "pending" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
-                    "completed" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
-                    "cancelled" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
-                    "finished" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
-                    "confirmed" -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
-                    "Status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
-                    "status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                   AppConstant.PENDING -> holder.binding.tvStatus.setBackgroundResource(R.drawable.yellow_button_bg)
+                    AppConstant.COMPLETED_SMALL_TEXT -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
+                    AppConstant.CANCEL -> holder.binding.tvStatus.setBackgroundResource(R.drawable.grey_button_bg)
+                   AppConstant.FINISHED -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
+                   AppConstant.CONFIRMED  -> holder.binding.tvStatus.setBackgroundResource(R.drawable.button_bg)
+                   AppConstant.STATUS -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                   AppConstant.STATUS_SMALL_TEXT -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
                     else -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
                 }
             }else{
                 when (modal.status) {
-                    "Status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
-                    "status" -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                    AppConstant.STATUS -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
+                   AppConstant.STATUS_SMALL_TEXT -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
                     else -> holder.binding.tvStatus.setBackgroundResource(android.R.color.transparent)
                 }
             }
 
 
         }
-//        binding.tvAmount.text = "Amount"
-//        binding.tvStatus.text = "Status"
-//        binding.tvStatus.setBackgroundResource(android.R.color.transparent)
-//        binding.tvGuestName.text = "Guest Name"
-//        binding.tvDate.text = "Date"
-        if (holder.binding.tvAmount.text == "Amount" ){
+
+        if (holder.binding.tvAmount.text == AppConstant.AMOUNT ){
             holder.binding.tvAmount.setTextColor(Color.parseColor("#000000"))
         }else{
             holder.binding.tvAmount.setTextColor(Color.parseColor("#252849"))
         }
 
-        if (holder.binding.tvStatus.text == "Status" ){
+        if (holder.binding.tvStatus.text == AppConstant.STATUS ){
             holder.binding.tvStatus.setTextColor(Color.parseColor("#000000"))
         }else{
             holder.binding.tvStatus.setTextColor(Color.parseColor("#252849"))
         }
 
-        if (holder.binding.tvGuestName.text == "Guest Name" ){
+        if (holder.binding.tvGuestName.text == AppConstant.GUEST_NAME ){
             holder.binding.tvGuestName.setTextColor(Color.parseColor("#000000"))
         }else{
             holder.binding.tvGuestName.setTextColor(Color.parseColor("#252849"))
         }
 
-        if (holder.binding.tvDate.text == "Date" ){
+        if (holder.binding.tvDate.text == AppConstant.DATE_TEXT ){
             holder.binding.tvDate.setTextColor(Color.parseColor("#000000"))
         }else{
             holder.binding.tvDate.setTextColor(Color.parseColor("#252849"))

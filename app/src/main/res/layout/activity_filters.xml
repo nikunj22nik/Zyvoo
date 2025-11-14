@@ -508,7 +508,7 @@
                 android:background="@drawable/bg_outer_manage_place"
                 android:paddingStart="@dimen/_4sdp"
                 android:paddingEnd="@dimen/_3sdp"
-                android:weightSum="8">
+                android:weightSum="9.9">
 
                 <TextView
                     android:id="@+id/tv_any_people"
@@ -538,24 +538,14 @@
                     android:layout_marginVertical="5dp"
                     android:textSize="13sp"  />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="0"
-                    android:fontFamily="@font/poppins"
-                    android:gravity="center"
-                    android:paddingVertical="8dp"
-                    android:textColor="#3F3D56"
-                    android:layout_marginVertical="2dp"
-                    android:textSize="13sp"  />
+
 
                 <TextView
                     android:id="@+id/tv_2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1.1"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -566,11 +556,11 @@
 
                 <TextView
                     android:id="@+id/tv_3"
-                    android:layout_width="52dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginVertical="5dp"
-                    android:layout_weight="0.79"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -579,11 +569,25 @@
                     android:textSize="13sp" />
 
                 <TextView
+                    android:id="@+id/tv_4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="5dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:text="4"
+                    android:textColor="@color/black"
+                    android:textSize="13sp" />
+
+                <TextView
                     android:id="@+id/tv_5"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1.1"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -592,6 +596,19 @@
                     android:layout_marginVertical="5dp"
                     android:textSize="13sp"  />
 
+                <TextView
+                    android:id="@+id/tv_6"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:text="6"
+                    android:textColor="@color/black"
+                    android:layout_marginVertical="5dp"
+                    android:textSize="13sp"  />
 
                 <TextView
                     android:id="@+id/tv_7"
@@ -607,10 +624,6 @@
                     android:layout_marginVertical="5dp"
                     android:textSize="13sp"  />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.1"/>
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -995,7 +1008,7 @@
                 android:paddingStart="@dimen/_4sdp"
                 android:paddingEnd="@dimen/_3sdp"
                 android:id="@+id/llbadrooms"
-                android:weightSum="9">
+                android:weightSum="10.9">
 
                 <TextView
                     android:id="@+id/tv_any_bedrooms"
@@ -1016,7 +1029,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1030,7 +1043,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1044,7 +1057,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1058,7 +1071,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1072,11 +1085,25 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
                     android:text="5"
+                    android:textColor="@color/black"
+                    android:layout_marginVertical="5dp"
+                    android:textSize="13sp"  />
+
+                <TextView
+                    android:id="@+id/tv_6_bedroom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:text="6"
                     android:textColor="@color/black"
                     android:layout_marginVertical="5dp"
                     android:textSize="13sp"  />
@@ -1100,7 +1127,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1108,10 +1135,6 @@
                     android:textColor="@color/black"
                     android:layout_marginVertical="5dp"
                     android:textSize="13sp"  />
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.15"/>
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -1166,7 +1189,7 @@
                 android:background="@drawable/bg_outer_manage_place"
                 android:paddingStart="@dimen/_4sdp"
                 android:paddingEnd="@dimen/_3sdp"
-                android:weightSum="9">
+                android:weightSum="10.9">
 
                 <TextView
                     android:id="@+id/tv_any_bathroom"
@@ -1187,7 +1210,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1201,7 +1224,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1215,7 +1238,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1229,7 +1252,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1243,11 +1266,25 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="0.75"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
                     android:text="5"
+                    android:textColor="@color/black"
+                    android:layout_marginVertical="5dp"
+                    android:textSize="13sp"  />
+
+                <TextView
+                    android:id="@+id/tv_6_bathroom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins"
+                    android:gravity="center"
+                    android:paddingVertical="8dp"
+                    android:text="6"
                     android:textColor="@color/black"
                     android:layout_marginVertical="5dp"
                     android:textSize="13sp"  />
@@ -1271,7 +1308,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1.2"
+                    android:layout_weight="1"
                     android:fontFamily="@font/poppins"
                     android:gravity="center"
                     android:paddingVertical="8dp"
@@ -1279,10 +1316,6 @@
                     android:textColor="@color/black"
                     android:layout_marginVertical="5dp"
                     android:textSize="13sp"  />
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.15"/>
 
 
                 <RelativeLayout

@@ -84,7 +84,6 @@
 
             </LinearLayout>
 
-            <!-- Menu Icon -->
             <ImageView
                 android:id="@+id/imageFilter"
                 android:layout_width="@dimen/_42sdp"
@@ -123,7 +122,7 @@
                     android:layout_width="@dimen/_60sdp"
                     android:layout_height="@dimen/_65sdp"
                     app:cardCornerRadius="@dimen/_7sdp">
-                    <!-- Image Placeholder -->
+
                     <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -182,7 +181,6 @@
                             android:fontFamily="@font/poppins"
                             android:text=" (1k+)"
                             android:textColor="#A4A4A4"
-
                             android:textSize="@dimen/_11ssp" />
 
                         <ImageView
@@ -267,10 +265,6 @@
 
         </LinearLayout>
 
-        <!--            <HorizontalScrollView-->
-        <!--                android:layout_width="match_parent"-->
-        <!--                android:layout_height="wrap_content"-->
-        <!--                >-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_place_order"
             android:layout_width="match_parent"
@@ -278,7 +272,7 @@
             android:layout_marginHorizontal="@dimen/_13sdp"
             android:layout_marginTop="@dimen/_10sdp"
             android:nestedScrollingEnabled="false" />
-        <!--            </HorizontalScrollView>-->
+
     </LinearLayout>
 
 </LinearLayout>

@@ -57,17 +57,11 @@ class LocationManager(var applicationContext : Context, var applicationActivity 
     @SuppressLint("ClickableViewAccessibility")
     fun autoCompleteLocationWork(autocompleteTextView :AutoCompleteTextView){
         this.autocompleteTextView =autocompleteTextView
-
         autocompleteTextView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-
         val width: Int = autocompleteTextView.getMeasuredWidth()
-
         Log.d("TESTING_WIDTH", width.toString())
 
-
-        // autocompleteTextView.dropDownWidth = width
-
-        autocompleteTextView.threshold = 1 // Start suggesting after 1 character
+        autocompleteTextView.threshold = 1
 
         autocompleteTextView.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -181,32 +175,7 @@ class LocationManager(var applicationContext : Context, var applicationActivity 
             }
     }
 
-    fun getLatLngFromPlaceId(context: Context, placeId: String, callback: (Location?) -> Unit) {
-        val placesClient = Places.createClient(context)
-
-        val placeRequest = FetchPlaceRequest.newInstance(placeId, listOf(Place.Field.LAT_LNG))
-        placesClient.fetchPlace(placeRequest)
-            .addOnSuccessListener { response ->
-                val place = response.place
-                place.latLng?.let {
-                    callback(Location("").apply {
-                        latitude = it.latitude
-                        longitude = it.longitude
-                    })
-                } ?: callback(null)
-            }
-            .addOnFailureListener { exception ->
-                Log.e("LocationError", "Error fetching place details: ${exception.message}")
-                callback(null)
-            }
-    }
-
-
-
-
     private val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(applicationContext)
-
-    // Define a callback interface to return the location data
     interface LocationCallback {
         fun onLocationFetched(latitude: Double, longitude: Double)
         fun onLocationError(error: String)
@@ -222,50 +191,17 @@ class LocationManager(var applicationContext : Context, var applicationActivity 
                 // Permission granted, fetch location
                 fetchLocationInBackground()
             } else {
-                // Handle permission denial, show a message or fallback
                 locationCallback?.onLocationError("Location permissions denied")
             }
         }
 
-    // Request permissions at runtime
-    fun checkAndRequestPermissions(callback: LocationCallback) {
-        locationCallback = callback
-
-        val permissionsNeeded = mutableListOf<String>()
-
-        // Check if permission is granted for foreground location
-        if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionsNeeded.add(Manifest.permission.ACCESS_FINE_LOCATION)
-            permissionsNeeded.add(Manifest.permission.ACCESS_COARSE_LOCATION)
-        }
-
-        // Check if permission is granted for background location (Android 10 and above)
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q &&
-            ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            permissionsNeeded.add(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
-        }
-
-        if (permissionsNeeded.isNotEmpty()) {
-            requestPermissionLauncher?.launch(permissionsNeeded.toTypedArray())
-        } else {
-            // Permissions already granted, fetch location
-            fetchLocationInBackground()
-        }
-    }
-
-    // Fetch the current location in a background thread
     @OptIn(DelicateCoroutinesApi::class)
     private fun fetchLocationInBackground() {
-        // Use Kotlin Coroutines to run the task in the background thread
         GlobalScope.launch(Dispatchers.Main) {
             val location = withContext(Dispatchers.IO) {
                 getCurrentLocation()
             }
-
-            // Now that location is fetched, invoke the callback
             location?.let {
-                // Callback with latitude and longitude
                 locationCallback?.onLocationFetched(it.latitude, it.longitude)
             } ?: run {
                 // Handle the case where location is null (e.g., location not available)
@@ -274,20 +210,17 @@ class LocationManager(var applicationContext : Context, var applicationActivity 
         }
     }
 
-    // Fetch the current location using FusedLocationProviderClient
     suspend fun getCurrentLocation(): android.location.Location? {
         return if (ContextCompat.checkSelfPermission(applicationContext, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             val locationTask: Task<android.location.Location> = fusedLocationClient.lastLocation
 
             try {
-                val location = locationTask.await() // Suspend until we get the location
+                val location = locationTask.await()
                 location
             } catch (e: Exception) {
-                // Handle any errors (e.g., task failed, no location available)
                 null
             }
         } else {
-            // Permissions not granted, return null
             null
         }
     }

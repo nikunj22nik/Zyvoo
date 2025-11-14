@@ -2,10 +2,10 @@ package com.business.zyvo.fragment.guest.helpCenter
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -27,7 +27,6 @@ import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import kotlin.collections.take
 
 
 @AndroidEntryPoint
@@ -75,14 +74,14 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
             ) {
                 binding.radioGuest.isChecked = true
                 binding.radioHost.isChecked = false
-                type = "guest"
+                type = AppConstant.Guest/*"guest"*/
                 Log.d("TESTING_ANDROID", "Guest")
 
             } else {
                 binding.radioHost.isChecked = true
                 binding.radioGuest.isChecked = false
                 Log.d("TESTING_ANDROID", "Host")
-                type = "host"
+                type = AppConstant.Host/*"host"*/
             }
         }
 
@@ -102,7 +101,6 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
         }
         val userType = session?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
         binding.textGuidesForGuests.text = "Guides for $userType"
-      //  binding.textGuidesForGuests.setText("Guides for "+ (session?.getUserType()?.toUpperCase() ?: ""))
         lifecycleScope.launch {
             viewModel.networkMonitor.isConnected
                 .distinctUntilChanged()
@@ -149,8 +147,6 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
                                 adapterAllGuides.updateItem(model.data.guides)
                             }
                             if (model.data.articles.isNotEmpty()){
-                             //   val itemsToShow = model.data.articles.take(6)
-                              //  adapterAllArticles.updateItem(itemsToShow as MutableList)
                                 adapterAllArticles.updateItem(model.data.articles)
                             }
                         }
@@ -173,13 +169,13 @@ class HostHelpCenterFragment : Fragment(), View.OnClickListener, OnClickListener
         when (p0?.id) {
             R.id.textBrowseAllGuides -> {
                 val bundle = Bundle()
-                bundle.putString(AppConstant.type, "Guides")
+                bundle.putString(AppConstant.type, AppConstant.GUIDES_TEXT/*"Guides"*/)
                 findNavController().navigate(R.id.browse_article_host, bundle)
             }
 
             R.id.textBrowseAllArticle -> {
                 val bundle = Bundle()
-                bundle.putString(AppConstant.type, "Article")
+                bundle.putString(AppConstant.type, AppConstant.ARTICLE/*"Article"*/)
                 findNavController().navigate(R.id.browse_article_host, bundle)
             }
         }

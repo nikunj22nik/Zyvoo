@@ -30,6 +30,7 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.MyApp
@@ -120,26 +121,26 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             imm.showSoftInput(binding.etmassage, InputMethodManager.SHOW_IMPLICIT)
         }
         if (intent.extras != null) {
-            profileImage = intent?.extras?.getString("user_img").toString()
+            profileImage = intent?.extras?.getString(AppConstant.USER_IMG).toString()
             providertoken = sessionManagement.getChatToken().toString()
             userId = intent?.extras?.getInt(AppConstant.USER_ID).toString()
             groupName = intent?.extras?.getString(AppConstant.CHANNEL_NAME).toString()
             Log.d(ErrorDialog.TAG,groupName)
             friendId = intent?.extras?.getString(AppConstant.FRIEND_ID).toString()
-            friendprofileimage = intent?.extras?.getString("friend_img","")?:""
-            friend_name = intent?.extras?.getString("friend_name","")?:""
-            userName = intent?.extras?.getString("user_name","")?:""
-            is_blocked = intent?.extras?.getInt("is_blocked",0)?:0
-            is_favorite = intent?.extras?.getInt("is_favorite",0)?:0
-            is_muted = intent?.extras?.getInt("is_muted",0)?:0
-            is_archived = intent?.extras?.getInt("is_archived",0)?:0
-            userName = intent?.extras?.getString("user_name","")?:""
-            sender_id = intent?.extras?.getString("sender_id","")?:""
+            friendprofileimage = intent?.extras?.getString(AppConstant.FRIEND_IMG,"")?:""
+            friend_name = intent?.extras?.getString(AppConstant.FRIEND_NAME,"")?:""
+            userName = intent?.extras?.getString(AppConstant.USER_NAME,"")?:""
+            is_blocked = intent?.extras?.getInt(AppConstant.IS_BLOCKED,0)?:0
+            is_favorite = intent?.extras?.getInt(AppConstant.IS_FAVORITE,0)?:0
+            is_muted = intent?.extras?.getInt(AppConstant.IS_MUTED,0)?:0
+            is_archived = intent?.extras?.getInt(AppConstant.IS_ARCHIVED,0)?:0
+            userName = intent?.extras?.getString(AppConstant.USER_NAME,"")?:""
+            sender_id = intent?.extras?.getString(AppConstant.SENDER_ID,"")?:""
             binding.tvStatus.setText(friend_name)
             Log.d(ErrorDialog.TAG,"$friend_name $userName $friendId $userId $groupName")
-            if(intent?.extras?.containsKey("message") == true){
+            if(intent?.extras?.containsKey(AppConstant.MESSAGE) == true){
                 Log.d("ZYVOO-TESTING"," Message Send in CHAT SCREEN")
-                previousScreenMessage = intent?.extras?.getString("message").toString()
+                previousScreenMessage = intent?.extras?.getString(AppConstant.MESSAGE).toString()
 
             }
             if (is_blocked==1){
@@ -189,7 +190,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             }
 
         }else{
-            LoadingUtils.showSuccessDialog(this,"Please check your internet connection")
+            LoadingUtils.showSuccessDialog(this, ErrorMessage.CHECK_INTERNET_CONNECTION)
         }
 
         binding.imageThreeDots.setOnClickListener {
@@ -234,58 +235,43 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                     if (binding.etmassage.text.toString().trim().isNotEmpty()) {
                         quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
                     } else {
-                        LoadingUtils.showErrorDialog(this, "Message can't be empty")
+                        LoadingUtils.showErrorDialog(this, ErrorMessage.MESSAGE_CANNOT_EMPTY)
                     }
                 } else {
-                    LoadingUtils.showSuccessDialog(this, "Please check your internet connection")
+                    LoadingUtils.showSuccessDialog(this, ErrorMessage.CHECK_INTERNET_CONNECTION)
                 }
             }
         }
 
     }
-
-    private fun hasPermissions(context: Context?, vararg permissions: String?): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null && permissions != null) {
-            for (permission in permissions) {
-                if (ActivityCompat.checkSelfPermission(
-                        context,
-                        permission!!
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-
 
     private fun browsePicture() {
-        val items = arrayOf<CharSequence>("Choose from gallery", "Take a photo", "Cancel")
+        val items = arrayOf<CharSequence>(AppConstant.CHOOSE_FROM_GALLERY, AppConstant.TAKE_PHOTO,
+            AppConstant.CANCEL_TEXT)
         val builder = AlertDialog.Builder(this@ChatActivity)
-        builder.setTitle("Select Image")
+        builder.setTitle(AppConstant.SELECT_IMAGE)
         builder.setItems(items) { dialog: DialogInterface, item: Int ->
-            if (items[item] == "Choose from gallery") {
+            if (items[item] == AppConstant.CHOOSE_FROM_GALLERY) {
                 try {
                     galleryIntent()
                 } catch (e: Exception) {
                     Log.v("Exception", e.message!!)
                 }
-            } else if (items[item] == "Take a photo") {
+            } else if (items[item] == AppConstant.TAKE_PHOTO) {
                 try {
                     cameraIntent()
                 }
                 catch (e: Exception) {
                     Log.v("Exception", e.message!!)
                 }
-            } else if (items[item] == "File") {
+            } else if (items[item] == AppConstant.FILE_TEXT ) {
                 try {
                     fileIntent()
                 }
                 catch (e: Exception) {
                     Log.v("Exception", e.message!!)
                 }
-            } else if (items[item] == "Cancel") {
+            } else if (items[item] == AppConstant.CANCEL_TEXT ) {
                 dialog.dismiss()
             }
         }
@@ -413,7 +399,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
     override fun onlineOffline(value:String) {
         value?.let {
             Log.d("*******",it)
-            if (it.equals("Online")){
+            if (it.equals(AppConstant.ONLINE)){
                 isOnline = true
             }else{
                 isOnline = false
@@ -494,11 +480,9 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
 
     private fun showPopupWindow(anchorView: View) {
-        // Inflate the custom layout for the popup menu
         val popupView =
             LayoutInflater.from(this).inflate(R.layout.layout_custom_popup_menu, null)
 
-        // Create PopupWindow with the custom layout
         val popupWindow = PopupWindow(
             popupView,
             ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -574,11 +558,8 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             toggleArchiveUnarchive(groupName)
         }
 
-        // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)
         anchorView.getLocationOnScreen(location)
-
-        // Get the height of the PopupView after inflating it
         popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         val popupHeight = popupView.measuredHeight
         val popupWeight = popupView.measuredWidth
@@ -587,31 +568,24 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         val spaceEnd = screenWidht - (anchorX + anchorView.width)
 
         val xOffset = if (popupWeight > spaceEnd) {
-            // If there is not enough space below, show it above
-            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+
+            -(popupWeight + 20)
         } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
             -(popupWeight + 20)
         }
-        // Calculate the Y offset to make the popup appear above the three-dot icon
+
         val screenHeight = resources.displayMetrics.heightPixels
         val anchorY = location[1]
 
-        // Calculate the available space above the anchorView
         val spaceAbove = anchorY
         val spaceBelow = screenHeight - (anchorY + anchorView.height)
 
-        // Determine the Y offset
         val yOffset = if (popupHeight > spaceBelow) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+            -(popupHeight + 20)
         } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
+            20
         }
 
-        // Show the popup window anchored to the view (three-dot icon)
         popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
         popupWindow.showAsDropDown(
             anchorView,
@@ -677,7 +651,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                             is NetworkResult.Success -> {
                                 it.data?.let {
                                     finish()
-                                    showToast(this@ChatActivity, it.get("message").asString)
+                                    showToast(this@ChatActivity, it.get(AppConstant.MESSAGE).asString)
                                 }
                             }
                             is NetworkResult.Error -> {
@@ -765,7 +739,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                                     dialog.dismiss()
                                     showToast(
                                         this@ChatActivity,
-                                        it.get("message").asString
+                                        it.get(AppConstant.MESSAGE).asString
                                     )
                                 }
                             }
@@ -777,15 +751,11 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                                     Toast.LENGTH_LONG
                                 ).show()
                             }
-
                             else -> {
-
                             }
                         }
                     }
-
                 }
-
             }
         }else{
             showErrorDialog(this,
@@ -945,7 +915,6 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                         }
                     }
                 }
-
             }
         }
         }else{
@@ -974,9 +943,6 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                                         binding.imageUnFavourite.visibility = View.VISIBLE
                                         binding.imageFavourite.visibility = View.GONE
                                     }
-                                  //  binding.imageUnFavourite.visibility = View.GONE
-                                  //  binding.imageFavourite.visibility = View.VISIBLE
-
                                 }
                             }
 
@@ -1019,11 +985,6 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
 
                                 is NetworkResult.Error -> {
                                     LoadingUtils.hideDialog()
-                                    /*Toast.makeText(
-                                        this@ChatActivity,
-                                        it.message.toString(),
-                                        Toast.LENGTH_LONG
-                                    ).show()*/
                                 }
 
                                 else -> {

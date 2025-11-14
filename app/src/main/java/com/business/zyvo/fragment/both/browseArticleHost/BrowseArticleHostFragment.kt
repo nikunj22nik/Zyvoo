@@ -62,20 +62,30 @@ class BrowseArticleHostFragment : Fragment() {
 
         arguments?.let {
             if (it.containsKey(AppConstant.type)) {
-                if (it.getString(AppConstant.type).equals("Article")) {
-                    type = "article"
+                if (it.getString(AppConstant.type).equals(AppConstant.ARTICLE)) {
+                    type = AppConstant.ARTICLE_SMALL_TEXT
                     binding.tvViewTitle.setText("Hi ${sessionManager.getFirstName()}, how can we help?")
                     val userType =
                         sessionManager?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
                     binding.textLabel.setText("Articles for " + userType)
                 } else {
-                    type = "guides"
+                    type = AppConstant.GUIDES
                     binding.tvViewTitle.setText("Hi ${sessionManager.getFirstName()}, how can we help?")
                     val userType =
                         sessionManager?.getUserType()?.replaceFirstChar { it.uppercase() } ?: ""
                     binding.textLabel.setText("Guides for " + userType)
                 }
             }
+        }
+
+        if (SessionManager(requireActivity()).getCurrentPanel().equals(AppConstant.Host)){
+            binding.radioHost.isChecked = true
+            binding.radioGuest.isChecked = false
+            Log.d("TESTING_ANDROID", "Host")
+        }else{
+            binding.radioGuest.isChecked = true
+            binding.radioHost.isChecked = false
+            Log.d("TESTING_ANDROID", "Guest")
         }
 
         binding.imgBack.setOnClickListener {
@@ -87,15 +97,15 @@ class BrowseArticleHostFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        adapter = ExploreArticlesAdapter(requireContext(), mutableListOf(), type ?: "article")
+        adapter = ExploreArticlesAdapter(requireContext(), mutableListOf(), type ?: AppConstant.ARTICLE_SMALL_TEXT)
         binding.recyclerNewArticles.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         binding.recyclerNewArticles.adapter = adapter
 
         adapter.setOnItemClickListener(object : ExploreArticlesAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                if (type == "guides") {
-                    val textType = "guides"
+                if (type == AppConstant.GUIDES) {
+                    val textType = AppConstant.GUIDES
                     val bundle = Bundle()
                     bundle.apply {
                         putString(AppConstant.Id, position.toString())
@@ -103,7 +113,7 @@ class BrowseArticleHostFragment : Fragment() {
                     }
                     findNavController().navigate(R.id.browse_aricle_details, bundle)
                 } else {
-                    val textType = "article"
+                    val textType = AppConstant.ARTICLE_SMALL_TEXT
                     val bundle = Bundle()
                     bundle.apply {
                         putString(AppConstant.Id, position.toString())
@@ -125,7 +135,7 @@ class BrowseArticleHostFragment : Fragment() {
                             resources.getString(R.string.no_internet_dialog_msg)
                         )
                     } else {
-                        if (type == "guides") {
+                        if (type == AppConstant.GUIDES) {
                             getGuideList("")
                         } else {
                             getArticleList("")
@@ -148,7 +158,7 @@ class BrowseArticleHostFragment : Fragment() {
         binding.imageSearchButton.setOnClickListener {
             val searchBar = binding.etSearch.text.toString().trim()
 
-            if (type == "guides") {
+            if (type == AppConstant.GUIDES) {
                 getGuideList(searchBar)
             } else {
                 getArticleList(searchBar)
@@ -158,7 +168,7 @@ class BrowseArticleHostFragment : Fragment() {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 val searchBar = binding.etSearch.text.toString().trim()
                 // Handle search here
-                if (type == "guides") {
+                if (type == AppConstant.GUIDES) {
                     getGuideList(searchBar)
                 } else {
                     getArticleList(searchBar)
@@ -216,10 +226,6 @@ class BrowseArticleHostFragment : Fragment() {
 
                     is NetworkResult.Success -> {
                         val model = Gson().fromJson(it.data, BrowseArticleModel::class.java)
-
-//                        if (model.data != null) {
-//                            adapter.updateItem(model.data)
-//                        }
 
                         if (!model.data.isNullOrEmpty()) {
                             binding.textNoDataFound.visibility = View.GONE

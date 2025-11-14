@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
@@ -41,7 +42,7 @@ class AdapterAllGuides(
 
             binding.root.setOnClickListener {
                 if (currentItem.id != null){
-                    listener.itemClick(currentItem.id,"guides")
+                    listener.itemClick(currentItem.id, AppConstant.GUIDES)
                 }
 
             }
@@ -64,9 +65,6 @@ class AdapterAllGuides(
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val currentItem = items[position]
 
-//        holder.binding.main.setOnClickListener {
-//            listener.itemClick(position,"guides")
-//        }
         holder.bind(currentItem)
     }
 

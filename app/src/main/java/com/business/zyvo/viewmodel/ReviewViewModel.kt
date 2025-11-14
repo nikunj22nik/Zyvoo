@@ -7,7 +7,5 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReviewViewModel @Inject constructor(private val repository: ZyvoRepository) : ViewModel(){
-  //  private  var _list = MutableLiveData<<>>
-
 
 }

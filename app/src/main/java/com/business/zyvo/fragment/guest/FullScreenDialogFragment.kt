@@ -18,8 +18,6 @@ class FullScreenDialogFragment : DialogFragment() {
     private val displayDuration: Long = 3000
     private val handler = Handler(Looper.getMainLooper()) // Global Handler
 
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?) : View? {
         return inflater.inflate(R.layout.fragment_full_screen_dialog, container, false)
     }

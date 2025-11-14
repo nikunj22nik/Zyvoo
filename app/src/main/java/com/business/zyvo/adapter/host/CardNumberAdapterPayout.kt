@@ -16,6 +16,7 @@ import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.databinding.AdapterCardNumbersBinding
 import com.business.zyvo.fragment.guest.profile.model.BankAccountPayout
@@ -61,7 +62,7 @@ class CardNumberAdapterPayout(private val context: Context, private var list: Mu
             holder.binding.rlThreeDot.visibility = View.VISIBLE
         }
 //        val des = currentItem.accountHolderName + ",.....${currentItem.lastFourDigits}(${currentItem.currency?.uppercase()})"
-      holder.binding.textCard.text = "Card Number"
+      holder.binding.textCard.text = AppConstant.CARD_NUMBER
       holder.binding.textCardNumber.text = "**** **** **** **" + currentItem.lastFourDigits?.takeLast(2)
 
         holder.binding.rlThreeDot.setOnClickListener {
@@ -93,23 +94,17 @@ class CardNumberAdapterPayout(private val context: Context, private var list: Mu
 
         // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemSetPrimary).setOnClickListener {
-            listner.itemClick(position ,"setPrimaryCard",  id)
+            listner.itemClick(position , AppConstant.SET_PRIMARY_CARD,  id)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
             dialogDelete(position ,id)
-
-
             popupWindow.dismiss()
         }
 
-
-
-        // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)
         anchorView.getLocationOnScreen(location)
 
-        // Get the height of the PopupView after inflating it
         popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         val popupHeight = popupView.measuredHeight
         val popupWeight = popupView.measuredWidth
@@ -118,33 +113,25 @@ class CardNumberAdapterPayout(private val context: Context, private var list: Mu
         val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
 
         val xOffset = if (popupWeight > spaceEnd!!) {
-            // If there is not enough space below, show it above
             -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
         } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
+
             -(popupWeight + 20)
         }
-        // Calculate the Y offset to make the popup appear above the three-dot icon
+
         val screenHeight = context?.resources?.displayMetrics?.heightPixels
         val anchorY = location[1]
 
-        // Calculate the available space above the anchorView
         val spaceAbove = anchorY
         val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
 
-        // Determine the Y offset
         val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+            -(popupHeight + 20)
         } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
+            20
         }
-
-        // Show the popup window anchored to the view (three-dot icon)
-        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
-        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)  // Adjust the Y offset dynamically
+        popupWindow.elevation = 8.0f
+        popupWindow.showAsDropDown(anchorView, xOffset, yOffset, Gravity.END)
     }
 
     fun dialogDelete(position: Int,id : String) {
@@ -162,20 +149,15 @@ class CardNumberAdapterPayout(private val context: Context, private var list: Mu
                 dismiss()
             }
 
-
             findViewById<RelativeLayout>(R.id.yes_btn).setOnClickListener {
-                listner.itemClick(position,"deleteCard",id)
+                listner.itemClick(position, AppConstant.DELETE_CARD_TEXT,id)
                 dismiss()
             }
             findViewById<RelativeLayout>(R.id.rl_cancel_btn).setOnClickListener {
-
                 dismiss()
             }
-
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
     }
-
-
 }

@@ -9,15 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.R
-
 import com.business.zyvo.databinding.AdapterExploreArticlesBinding
 import com.business.zyvo.fragment.both.browseArticleHost.model.Article
-import com.business.zyvo.fragment.both.browseArticleHost.model.BrowseArticleModel
-import com.business.zyvo.fragment.guest.helpCenter.model.Guide
-
-import com.business.zyvo.model.TransactionModel
 
 class ExploreArticlesAdapter(var context: Context,
                              private var list: MutableList<Article>,
@@ -51,7 +47,7 @@ class ExploreArticlesAdapter(var context: Context,
         if (currentItem.title != null){
             holder.binding.textTitle.text = currentItem.title
         }
-        if (contentType == "guides") {
+        if (contentType == AppConstant.GUIDES) {
             holder.binding.textDescription.visibility = View.GONE
         if (currentItem.description != null && !currentItem.description.equals("")){
             holder.binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {

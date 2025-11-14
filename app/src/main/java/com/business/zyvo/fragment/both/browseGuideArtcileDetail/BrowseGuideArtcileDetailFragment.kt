@@ -93,11 +93,11 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                             resources.getString(R.string.no_internet_dialog_msg)
                         )
                     } else {
-                        if (textType == "article") {
-                            binding.tvShareThisArticle.text = "Share This Article:"
+                        if (textType == AppConstant.ARTICLE_SMALL_TEXT ) {
+                            binding.tvShareThisArticle.text = AppConstant.SHARE_THIS_ARTICLE
                             getArticleDetails()
-                        } else if (textType == "guides") {
-                            binding.tvShareThisArticle.text = "Share This Guide:"
+                        } else if (textType == AppConstant.GUIDES) {
+                            binding.tvShareThisArticle.text = AppConstant.SHARE_THIS_GUIDE
                             getGuideDetails()
                         }
                     }
@@ -140,13 +140,6 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                         }
 
                         if (model.data.description != null) {
-//                            val htmlText = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                                Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
-//                            } else {
-//                                Html.fromHtml(model.data.description)
-//                            }
-//                            binding.textDescription.text = htmlText
-//                            binding.textDescription.movementMethod = LinkMovementMethod.getInstance()
 
                             Log.d("descriptiondescription","****"+model.data.description)
                             binding.textDescription1.setJustifiedText(model.data.description ?: "")
@@ -163,18 +156,12 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                             binding.textDescription.text = htmlText
                             binding.textDescription.movementMethod = LinkMovementMethod.getInstance()
 
-// Force justification again after layout
                             binding.textDescription.post {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     binding.textDescription.justificationMode = LineBreaker.JUSTIFICATION_MODE_INTER_WORD
                                 }
                             }
 
-//                            binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                                Html.fromHtml(model.data.description.trim(), Html.FROM_HTML_MODE_LEGACY)
-//                            } else {
-//                                Html.fromHtml(model.data.description.trim())
-//                            }
                         }
                         if (model.data.author_name != null){
                             binding.textAuthorName.text = model.data.author_name
@@ -280,12 +267,6 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
                         }
 
                         if (model.data.description != null) {
-//                            binding.textDescription.text = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                                Html.fromHtml(model.data.description, Html.FROM_HTML_MODE_LEGACY)
-//                            } else {
-//                                Html.fromHtml(model.data.description)
-//                            }
-
                             binding.textDescription1.setJustifiedText(model.data.description ?: "")
                             setupWebView(model.data.description ?: "")
 
@@ -321,19 +302,6 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
         }
     }
 
-    fun shareApp() {
-        val appPackageName = "com.business.zyvo"
-        val sendIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            putExtra(
-                Intent.EXTRA_TEXT,
-                "Buy this best app at: https://play.google.com/store/apps/details?id=$appPackageName"
-            )
-            type = "text/plain"
-        }
-        startActivity(sendIntent)
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -342,13 +310,13 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
 
     private fun generateDeepLink() {
         // Your OneLink base URL and campaign details
-        val currentCampaign = "property_share"
-        val oneLinkId = "scFp" // Replace with your OneLink ID
+        val currentCampaign = AppConstant.PROPERTY_SHARE
+        val oneLinkId = AppConstant.SCFP // Replace with your OneLink ID
         val brandDomain = "zyvobusiness.onelink.me" // Your OneLink domain
 
         val session = SessionManager(requireContext())
         val type = session.getCurrentPanel()
-        val location = "Article"
+        val location = AppConstant.ARTICLE
 
         // Prepare the deep link values
         val deepLink = "zyvoo://property"
@@ -390,7 +358,7 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
             putExtra(Intent.EXTRA_TEXT, message)
             type = "text/plain"
         }
-        val shareIntent = Intent.createChooser(sendIntent, "Share via")
+        val shareIntent = Intent.createChooser(sendIntent, AppConstant.SHARE_VIA)
         startActivity(shareIntent)
     }
 

@@ -153,9 +153,6 @@ class ChatDetailsAdapter(var context: Context, var quickstartConversationsManage
 
     }
 
-    fun updateItem(newList : MutableList<ChatMessageModel>){
-//        this.list = newList
-//        notifyDataSetChanged()
-    }
+
 
 }

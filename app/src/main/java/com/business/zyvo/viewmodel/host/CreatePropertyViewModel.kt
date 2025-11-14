@@ -20,10 +20,6 @@ class CreatePropertyViewModel @Inject constructor(
 ) : ViewModel() {
 
     val isLoading = MutableLiveData<Boolean>()
-    var firstScreen: Boolean = true
-    var secondScreen: Boolean = false
-    var thirdScreen: Boolean = false
-    var pageAfterPageWork :Boolean = false
     var numberSelectMap = mutableMapOf<Int,Int>()
     var propertyMap = mutableMapOf<Int,Int>()
 
@@ -44,13 +40,6 @@ class CreatePropertyViewModel @Inject constructor(
         propertyMap.put(750,6)
 
     }
-
-//     suspend fun propertyImageDelete(imageId: Int) : Flow<NetworkResult<String>> {
-//        return repository.propertyImageDelete(imageId).onEach {
-//
-//        }
-//     }
-
 
     suspend fun addProperty(code: PropertyDetailsSave): Flow<NetworkResult<Pair<String, Int>>> {
         return repository.addPropertyData(code).onEach {

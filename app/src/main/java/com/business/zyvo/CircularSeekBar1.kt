@@ -438,38 +438,6 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
     }
 
 
-
-
-    /*
-    private fun getClickedDotIndex(x: Float, y: Float): Int {
-        val dotCount = 12 // Number of dots (12 hours or customized)
-        val clickRadius = 40f // Adjust this value for better sensitivity
-
-        for (i in 0 until dotCount) {
-            // Calculate each dot's position
-            val angle = Math.toRadians(START_ANGLE + i * (SWEEP_ANGLE / dotCount).toDouble())
-            val dotX = centerX + radius * cos(angle)
-            val dotY = centerY + radius * sin(angle)
-
-            // Check if the touch is within the proximity of the dot
-            if (sqrt((x - dotX).pow(2) + (y - dotY).pow(2)) <= clickRadius) {
-                return i
-            }
-        }
-        return -1
-    }
-
-     */
-
-
-
-    private fun isTouchNearDot(touchX: Float, touchY: Float, dotX: Float, dotY: Float): Boolean {
-        val touchRadius = 40f // Allowable distance to consider the touch on a dot
-        val dx = touchX - dotX
-        val dy = touchY - dotY
-        return sqrt(dx * dx + dy * dy) <= touchRadius
-    }
-
     private fun mapDotIndexToHour(dotIndex: Int): Float {
         return if (is24HR) dotIndex * 2f else dotIndex.toFloat()
     }
@@ -520,10 +488,7 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
                 R.styleable.CircularSeekBar_cc_tickTextColor,
                 _tickTextColor
             )
-//            _startIconResource = it.getResourceId(
-//                R.styleable.ClockSlider_cc_startIconResource,
-//                _startIconResource
-//            )
+
             _endIconResource = it.getResourceId(
                 R.styleable.CircularSeekBar_cc_endIconResource,
                 _endIconResource
@@ -589,16 +554,6 @@ override fun onTouchEvent(event: MotionEvent): Boolean {
     }
 
     private fun renderBorderStart(canvas: Canvas) {
-//        startIcon?.apply {
-//            val hour = if (is24HR) startHours / 2 else startHours
-//
-//            setBounds(
-//                (centerX - _iconWidth + (centerX - _borderWidth / 2) * cos(mapTextToAngle(hour).toRadian())).toInt(),
-//                (centerY - _iconWidth - (centerY - _borderWidth / 2) * sin(mapTextToAngle(hour).toRadian())).toInt(),
-//                (centerX + _iconWidth + (centerX - _borderWidth / 2) * cos(mapTextToAngle(hour).toRadian())).toInt(),
-//                (centerY + _iconWidth - (centerY - _borderWidth / 2) * sin(mapTextToAngle(hour).toRadian())).toInt()
-//            )
-//            draw(canvas)
 
         getHoursMinute(startHours)
         // }

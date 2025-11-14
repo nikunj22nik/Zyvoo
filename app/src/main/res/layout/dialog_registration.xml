@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="@dimen/_15sdp"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_gravity="center"
     android:background="@drawable/dialog_bg">
 
@@ -143,17 +142,6 @@
 
     </RelativeLayout>
 
-    <!--    <ImageButton-->
-    <!--        android:layout_width="@dimen/_22sdp"-->
-    <!--        android:layout_height="@dimen/_22sdp"-->
-    <!--        android:layout_marginStart="@dimen/_73sdp"-->
-    <!--        android:layout_marginTop="@dimen/_5sdp"-->
-    <!--        android:backgroundTint="@color/white"-->
-    <!--        android:clickable="false"-->
-    <!--        android:src="@drawable/drop_down_black"-->
-    <!--        app:layout_constraintLeft_toLeftOf="parent"-->
-    <!--        app:layout_constraintTop_toTopOf="@id/rlPhoneNumber"-->
-    <!--        tools:ignore="ContentDescription" />-->
 
     <TextView
         android:id="@+id/textContinueButton"

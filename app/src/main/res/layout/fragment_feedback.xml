@@ -8,12 +8,9 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:background="#FFFFFF"
             android:orientation="vertical">
 
@@ -29,7 +26,6 @@
                     android:id="@+id/imageBackIcon"
                     android:layout_width="@dimen/_25sdp"
                     android:layout_height="@dimen/_25sdp"
-
                     android:src="@drawable/ic_back_icon"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -52,7 +48,6 @@
                 android:background="#E5E5E5" />
 
 
-            <!-- Introductory Text -->
             <TextView
                 android:id="@+id/tvIntroText"
                 android:layout_width="match_parent"
@@ -61,9 +56,21 @@
                 android:layout_marginTop="@dimen/_10ssp"
                 android:fontFamily="@font/poppins"
                 android:letterSpacing=".01"
-                android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.\n\nIt has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged."
+                android:visibility="gone"
+                android:text="@string/lorem_ipsum_is_simply_dummy_text_of_the_printing_and_typesetting_industry_lorem_ipsum_has_been_the_industry_s_standard_dummy_text_ever_since_the_1500s_when_an_unknown_printer_took_a_galley_of_type_and_scrambled_it_to_make_a_type_specimen_book_it_has_survived_not_only_five_centuries_but_also_the_leap_into_electronic_typesetting_remaining_essentially_unchanged"
                 android:textColor="@color/_000000"
                 android:textSize="13sp" />
+
+            <WebView
+                android:id="@+id/webViewIntroText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_18sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@android:color/transparent"
+                android:overScrollMode="never"
+                android:isScrollContainer="false"
+                tools:ignore="WebViewLayout" />
 
             <!-- Feedback Topic Dropdown -->
             <TextView
@@ -75,16 +82,6 @@
                 android:text="What's your feedback about?"
                 android:textColor="@color/_000000"
                 android:textSize="13sp" />
-
-            <!--        <Spinner-->
-            <!--            android:id="@+id/spinnerFeedback"-->
-            <!--            android:layout_width="match_parent"-->
-            <!--            android:layout_height="wrap_content"-->
-            <!--            android:layout_marginTop="@dimen/_6sdp"-->
-            <!--android:drawableEnd="@drawable/ic_dropdown_close"-->
-            <!--            android:background="@drawable/spinner_background"-->
-            <!--            android:popupBackground="@drawable/spinner_item_selector"-->
-            <!--             />-->
 
 
             <com.skydoves.powerspinner.PowerSpinnerView
@@ -171,11 +168,10 @@
                 android:layout_marginHorizontal="@dimen/_18sdp"
                 android:layout_marginTop="@dimen/_12ssp"
                 android:background="@drawable/text_bg1"
-                android:paddingStart="@dimen/_28sdp"
-                android:paddingEnd="@dimen/_28sdp"
+                android:paddingHorizontal="@dimen/_21sdp"
                 android:text="@string/contact_us"
                 android:textSize="14sp"
-                android:padding="@dimen/_8ssp"
+                android:paddingVertical="@dimen/_8sdp"
                 android:elevation="@dimen/_15ssp"
                 android:fontFamily="@font/poppins"
                 android:textColor="@color/_000000"
@@ -196,13 +192,11 @@
                 android:layout_marginHorizontal="@dimen/_18sdp"
                 android:layout_marginTop="@dimen/_13sdp"
                 android:layout_marginBottom="@dimen/_85sdp"
-                android:background="@drawable/button_bg"
+                android:background="@drawable/button_bg_feedback"
                 android:backgroundTint="#4AEAB1"
-                android:elevation="@dimen/_2sdp"
                 android:textSize="14sp"
-                android:padding="@dimen/_8ssp"
-                android:paddingStart="@dimen/_28sdp"
-                android:paddingEnd="@dimen/_28sdp"
+                android:paddingVertical="@dimen/_7sdp"
+                android:paddingHorizontal="@dimen/_32sdp"
                 android:fontFamily="@font/poppins"
                 android:text="Submit"
                 android:textColor="@color/_000000" />

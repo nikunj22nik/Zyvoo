@@ -44,29 +44,12 @@ class BrowseAllGuidesAndArticlesFragment : Fragment(), OnClickListener1, View.On
             AdapterAllGuides(requireContext(), arrayListOf(), maxItemsToShow = null, this)
         binding.recyclerViewGuests.adapter = adapterAllGuides
 
-//        viewModel.list.observe(viewLifecycleOwner, Observer {
-//                list ->
-//            adapterAllGuides.updateItem(list)
-//        })
-
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //val toggleGroup = findViewById<RadioGroup>(R.id.toggleGroup)
         binding.imageBackIcon.setOnClickListener(this)
-//        binding.toggleGroup.setOnCheckedChangeListener { _, checkedId ->
-//            when (checkedId) {
-//                R.id.radioGuest -> {
-//                    // Handle Guest selected
-//                }
-//                R.id.radioHost -> {
-//                    // Handle Host selected
-//                }
-//            }
-//        }
 
     }
 
@@ -82,6 +65,5 @@ class BrowseAllGuidesAndArticlesFragment : Fragment(), OnClickListener1, View.On
     override fun itemClick(obj: Int, text: String) {
         findNavController().navigate(R.id.browseAllGuidesArticleOpenFragment)
     }
-
 
 }

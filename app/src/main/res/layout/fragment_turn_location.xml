@@ -45,7 +45,7 @@
         android:layout_marginBottom="@dimen/_20sdp"
         android:fontFamily="@font/poppins"
         android:layout_gravity="center"
-        android:text="Lorem Ipsum is dummy text of the printing and typesetting industry, derived from a Latin passage by Cicero. Learn about its history, usage, variations and sources"
+        android:text="@string/www_zyvo_com_is_requesting_access_to_your_device_s_location_please_enable_location_services_to_proceed"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textSize="15sp" />

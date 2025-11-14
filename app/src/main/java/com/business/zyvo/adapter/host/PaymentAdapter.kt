@@ -16,6 +16,7 @@ import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.databinding.LayoutPaymentDetailsBinding
 import com.business.zyvo.model.PaymentCardModel
@@ -25,7 +26,6 @@ class PaymentAdapter(
     var context: Context,
     var list: MutableList<PaymentCardModel>, private var listner : onItemClickData
 ) : RecyclerView.Adapter<PaymentAdapter.PaymentViewHolder>() {
-
 
     inner class PaymentViewHolder(var binding: LayoutPaymentDetailsBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -45,10 +45,6 @@ class PaymentAdapter(
     override fun onBindViewHolder(holder: PaymentViewHolder, position: Int) {
         val currentItem = list.get(position)
         with(holder.binding) {
-//            binding.textCardHolderName.text = currentItem.cardHolderName
-//            binding.textBankAccount.text = currentItem.bankName
-//            binding.textStartNumber.text = currentItem.cardFirstNumber
-//            binding.textEndNumber.text = currentItem.cardEndNumber
 
             if (currentItem.isBankAccount) {
                 textCardHolderName.visibility = View.VISIBLE  // Hide cardholder name for bank accounts
@@ -106,16 +102,16 @@ class PaymentAdapter(
     }
 
     private fun showPopupWindow(anchorView: View,position: Int, id: String) {
-        // Inflate the custom layout for the popup menu
+
         val popupView =
             LayoutInflater.from(context).inflate(R.layout.popup_primary_delete, null)
 
-        // Create PopupWindow with the custom layout
+
         val popupWindow = PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true)
 
-        // Set click listeners for each menu item in the popup layout
+
         popupView.findViewById<TextView>(R.id.itemSetPrimary).setOnClickListener {
-            listner.itemClick(position ,"setPrimary",  id)
+            listner.itemClick(position , AppConstant.SET_PRIMARY,  id)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemDelete).setOnClickListener {
@@ -124,8 +120,6 @@ class PaymentAdapter(
 
             popupWindow.dismiss()
         }
-
-
 
         // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)
@@ -186,7 +180,7 @@ class PaymentAdapter(
 
 
             findViewById<RelativeLayout>(R.id.yes_btn).setOnClickListener {
-                listner.itemClick(position,"delete",id)
+                listner.itemClick(position, AppConstant.DELETE,id)
                 dismiss()
             }
             findViewById<RelativeLayout>(R.id.rl_cancel_btn).setOnClickListener {

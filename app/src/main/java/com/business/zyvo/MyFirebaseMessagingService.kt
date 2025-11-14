@@ -55,40 +55,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     private fun sendNotification(title: String?, messageBody: String?) {
         val channelId = "com.business.zyvo"
-     /*    if(messageBody =="Your booking has been approved."*//*"Your booking  will start in 30 minutes."*//*){
-             //startCountdownService()
-           //  startCountTwo()
-             val countdownDuration = 30 * 60 * 1000L
-             val endTime = System.currentTimeMillis() + countdownDuration
-             Log.d(ErrorDialog.TAG,"Yes"+messageBody)
-            val notificationBuilder = NotificationCompat.Builder(this, channelId)
-                .setContentTitle(title)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setWhen(endTime)
-                .setUsesChronometer(true)
-                .setChronometerCountDown(true)
-                .setOngoing(true)
-                .setContentText(messageBody)
-                .setAutoCancel(true)
 
-             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-
-             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                 val channel = NotificationChannel(channelId, "Channel human readable title", NotificationManager.IMPORTANCE_DEFAULT)
-                 notificationManager.createNotificationChannel(channel)
-             }
-
-             var con= AppContextProvider.getContext()
-
-             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                 if (ContextCompat.checkSelfPermission(con, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
-                     notificationManager.notify(getRandomNumber(), notificationBuilder.build())
-                 }
-             }
-             else{
-                 notificationManager.notify(getRandomNumber(), notificationBuilder.build())
-             }
-         } else{*/
             val notificationBuilder = NotificationCompat.Builder(this, channelId)
                 .setContentTitle(title)
                 .setSmallIcon(R.drawable.notification_icon)
@@ -112,21 +79,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
              else{
                  notificationManager.notify(getRandomNumber(), notificationBuilder.build())
              }
-     //   }
+
     }
 
-
-    private fun startCountdownService() {
-        Log.d(ErrorDialog.TAG,"Yes")
-        val countdownDuration = 30 * 60 * 1000L // 30 minutes
-        // Start the countdown service (CountdownService)
-       // val intent = Intent(this, CountdownService::class.java)
-      //  intent.putExtra("duration", countdownDuration)
-        //   ContextCompat.startForegroundService(this, intent)
-        ContextCompat.startForegroundService(this, Intent(this, CountdownService::class.java).apply {
-            putExtra("duration", 30 * 60 * 1000L)
-        })
-    }
 
     fun getRandomNumber(): Int {
         val rand = Random()

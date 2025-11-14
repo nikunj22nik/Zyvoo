@@ -17,14 +17,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
-import com.business.zyvo.AppConstant
 import com.business.zyvo.R
 import com.business.zyvo.databinding.CustomDialogBinding
 import com.business.zyvo.model.LocationDetails
 import com.google.android.gms.maps.model.LatLng
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -51,7 +47,6 @@ object ErrorDialog {
 
     const val TAG = "*****ZYVO"
     fun showErrorDialog(activity: Context, message: String) {
-        // Create and build the AlertDialog
         val dialog = AlertDialog.Builder(activity)
             .setTitle("Error") // Title of the dialog
             .setMessage(message) // Error message to show
@@ -61,48 +56,9 @@ object ErrorDialog {
             }
             .create()
 
-        // Show the dialog
         dialog.show()
     }
 
-    fun customDialog(string: String?, context: Context? = null) {
-        try {
-            string?.let {
-                val dialogBinding: CustomDialogBinding? =
-                    DataBindingUtil.inflate(
-                        LayoutInflater.from(context),
-                        R.layout.custom_dialog,
-                        null,
-                        false
-                    )
-                val customDialog = AlertDialog.Builder(context!!, 0).create()
-                customDialog.apply {
-                    window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                    setView(dialogBinding?.root)
-                    setCancelable(false)
-                }.show()
-                val timer = Timer()
-                timer.schedule(object : TimerTask() {
-                    override fun run() {
-                        try {
-                            if (customDialog.isShowing) {
-                                customDialog.dismissSafe()
-                            }
-                            timer.cancel()
-                        } catch (e: Exception) { }
-                    }
-                }, 3500)
-                dialogBinding?.textViewcustomdialog?.text = string
-                dialogBinding?.imageView29?.setSafeOnClickListener {
-                    if (customDialog.isShowing) {
-                        customDialog.dismissSafe()
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("dialog","dialog exception ${e.message}")
-        }
-    }
     fun AlertDialog.dismissSafe() {
         window?.let {
             if (it.decorView != null && it.decorView.parent != null) {
@@ -213,13 +169,11 @@ object ErrorDialog {
     }
 
     fun convertDateFormatMMMMddyyyytoyyyyMMdd(dateStr: String): String {
-     //   val fixedDateStr = dateStr.replace(",", ", ") // Ensure space after comma
-
         val inputFormatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH)
         } else {
             TODO("VERSION.SDK_INT < O")
-        } // Input format
+        }
         val outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd") // Output format
         return LocalDate.parse(dateStr, inputFormatter).format(outputFormatter)
     }
@@ -251,17 +205,6 @@ object ErrorDialog {
         return value
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun convertDateToTimeFormat1(time: String): String {
-        var value  = ""
-
-        if (!time.equals("")) {
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm a", Locale.ENGLISH) // Input format
-            val outputFormatter = DateTimeFormatter.ofPattern("HH:mm:ss") // Output format
-            value =  LocalTime.parse(time, formatter).format(outputFormatter)
-        }
-        return value
-    }
 
     fun calculatePercentage(value: Double?, percentage: Double?): Double  {
         return if (value != null && percentage != null) {
@@ -317,14 +260,6 @@ object ErrorDialog {
 
 
     fun calculateDifferenceInSeconds(startTime: String, endTime: String): Long {
-       /* val startInstant = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            Instant.parse(startTime)
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }  // Parse ISO 8601 timestamp
-        val endInstant = Instant.parse(endTime)      // Parse ISO 8601 timestamp
-
-        return Duration.between(startInstant, endInstant).toMinutes()  // Get difference in seconds*/
 
         val formatter = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
@@ -347,7 +282,6 @@ object ErrorDialog {
             TODO("VERSION.SDK_INT < O")
         }
 
-        // Parse the target time and convert to Instant
         val targetInstant = LocalDateTime.parse(targetTime, formatter)
             .atZone(ZoneId.systemDefault()) // Convert to system default timezone
             .toInstant()
@@ -358,16 +292,6 @@ object ErrorDialog {
         return Duration.between(targetInstant, currentInstant).toMinutes()
     }
 
-
-    /*fun truncateToTwoDecimalPlaces(value: String): String {
-        return try {
-            BigDecimal(value)
-                .setScale(2, RoundingMode.DOWN) // Truncate without rounding
-                .toPlainString() // Ensures no scientific notation
-        } catch (e: NumberFormatException) {
-            "0.00" // Default value if input is invalid
-        }
-    }*/
     fun truncateToTwoDecimalPlaces(value: String): String {
         return try {
             val bigDecimal = BigDecimal(value).setScale(2, RoundingMode.DOWN)
@@ -381,14 +305,6 @@ object ErrorDialog {
         }
     }
 
-    fun isFutureOrToday(date: LocalDate): Boolean {
-        val today = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LocalDate.now()
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
-        return date.isEqual(today) || date.isAfter(today)
-    }
 
     fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
@@ -500,31 +416,6 @@ object ErrorDialog {
     }
 
 
-    fun convertTo24HourFormat(inputDate: String): String? {
-        return try {
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-            val dateObj = inputFormat.parse(inputDate)
-            outputFormat.format(dateObj)
-        } catch (e: ParseException) {
-            Log.e("DateFormatter", "Error parsing date: ${e.message}")
-            null
-        }
-
-
-    }
-    fun convertTo24HourFormatSecond(inputDate: String): String {
-        val inputFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
-        val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-        return try {
-            val date = inputFormat.parse(inputDate)
-            outputFormat.format(date)
-        } catch (e: Exception) {
-            Log.e("DateConvert", "Error: ${e.message}")
-            "" // Return original if error occurs
-        }
-    }
-
     fun getUpdatedTimeZoneId(): String {
         val aliasMap = mapOf(
             "Asia/Calcutta" to "Asia/Kolkata",
@@ -594,19 +485,15 @@ object ErrorDialog {
     }
 
     fun isValidCardNumber(cardNumber: String): Boolean {
-        // Remove spaces and check if it's empty
         val cleanedNumber = cardNumber.replace(" ", "").trim()
 
-        // Check if it contains only digits
         if (!cleanedNumber.matches(Regex("\\d+"))) {
             return false
         }
 
-        // Check length (typically 13 to 19 digits)
         if (cleanedNumber.length !in 13..19) {
             return false
         }
-
         // Luhn algorithm check
         return isValidLuhn(cleanedNumber)
     }
@@ -630,18 +517,6 @@ object ErrorDialog {
         }
 
         return sum % 10 == 0
-    }
-
-    fun getCardType(cardNumber: String): String {
-        val cleanedNumber = cardNumber.replace(" ", "")
-
-        return when {
-            cleanedNumber.startsWith("4") -> "Visa"
-            cleanedNumber.startsWith("5") -> "MasterCard"
-            cleanedNumber.startsWith("34") || cleanedNumber.startsWith("37") -> "American Express"
-            cleanedNumber.startsWith("6") -> "Discover"
-            else -> "Unknown"
-        }
     }
 
 }

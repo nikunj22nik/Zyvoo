@@ -39,6 +39,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.AppConstant
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -146,7 +147,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         }
 
         sessionManager = SessionManager(this)
-
         selectedItemTextView = binding.tvHour
         // settingDataToActivityModel()
         binding.imgBack.setOnClickListener {
@@ -176,10 +176,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             appLocationManager.fetchPlaceDetails(selectedLocation) { latitude, longitude ->
                 selectedLatitude = latitude
                 selectedLongitude = longitude
-
                 Log.d("FilterActivity", "Selected Location: Lat=$latitude, Lng=$longitude")
-
-                // Yahan pe API call ya kisi aur jagah data pass kar sakte ho
+            // Yahan pe API call ya kisi aur jagah data pass kar sakte ho
             }
         }
 
@@ -206,15 +204,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 if (!s.toString().startsWith("$")) {
                     binding.tvMaximumValue.setText("$")
                     binding.tvMaximumValue.setSelection(binding.tvMaximumValue.text?.length ?: 0)
-                    //Shrawan
-                   /* val originalLeft = binding.tvMinimumVal.text.toString().replace("$", "")
-                        .toFloat().toInt()?.div(100)?.times(2)
-                    val originalRight = binding.tvMaximumValue.text.toString().replace("$", "")
-                        .toFloat().toInt()?.div(100)?.times(2)
-                    binding.seekBar.setSelectedEntries(
-                        originalLeft!!.toInt(),
-                        originalRight!!.toInt()
-                    )*/
                 }
             }
 
@@ -227,19 +216,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 if (!s.toString().startsWith("$")) {
                     binding.tvMinimumVal.setText("$")
                     binding.tvMinimumVal.setSelection(binding.tvMinimumVal.text?.length ?: 0)
-                    /* if (binding.tvMinimumVal.text.toString().replace("$","")
-                         .isNotEmpty()) {
-                         val originalLeft = binding.tvMinimumVal.text.toString().replace("$",
-                             "")
-                             .toInt()?.div(2)?.times(100)
-                         val originalRight = binding.tvMaximumValue.text.toString().replace("$",
-                             "")
-                             .toInt()?.div(2)?.times(100)
-                         binding.seekBar.setSelectedEntries(
-                             originalLeft!!.toInt(),
-                             originalRight!!.toInt()
-                         )
-                     }*/
                 }
             }
 
@@ -258,23 +234,23 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 Log.d(ErrorDialog.TAG, Gson().toJson(value))
                 //Set place type data
                 when (it.place_type) {
-                    "any" -> {
-                        selectedOption = "any"
+                    AppConstant.ANY -> {
+                        selectedOption = AppConstant.ANY
                         Log.d("TESTING_VOOPON", "Here in the home setup")
                         binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
                         binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                         binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
                     }
 
-                    "private_room" -> {
-                        selectedOption = "private_room"
+                    AppConstant.PRIVATE_ROOM -> {
+                        selectedOption = AppConstant.PRIVATE_ROOM
                         binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                         binding.tvRoom.setBackgroundResource(R.drawable.bg_inner_manage_place)
                         binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
                     }
 
-                    "entire_home" -> {
-                        selectedOption = "entire_home"
+                    AppConstant.ENTIRE_HOME -> {
+                        selectedOption = AppConstant.ENTIRE_HOME
                         binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                         binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                         binding.tvEntireHome.setBackgroundResource(R.drawable.bg_inner_manage_place)
@@ -313,7 +289,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 }
                 //Set Time Value
                 if (!it.time.equals("")) {
-                    binding.tvHour.text = "${it.time} hour${if (it.time.toInt() == 1) "" else "s"}"//toString().replace(" hours","")
+                    binding.tvHour.text = "${it.time} hour${if (it.time.toInt() == 1) "" else "s"}"
                 }
                 //Set No Of People
                 when (it.people_count) {
@@ -411,8 +387,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     for (i in 0 until languageList.size) {
                         if (saveactivity.equals(languageList.get(i).first)) {
                             val updatedPair =
-                                languageList[i].copy(second = true) // Create a new Pair
-                            languageList[i] = updatedPair // Update the list with the new Pair
+                                languageList[i].copy(second = true)
+                            languageList[i] = updatedPair
                         }
                     }
                 }
@@ -468,6 +444,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             binding.tv3Bedroom to "3",
             binding.tv4Bedroom to "4",
             binding.tv5Bedroom to "5",
+            binding.tv6Bedroom to "6",
             binding.tv7Bedroom to "7",
             binding.tv8Bedroom to "8"
         )
@@ -509,16 +486,18 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             binding.tv3Bathroom to "3",
             binding.tv4Bathroom to "4",
             binding.tv5Bathroom to "5",
+            binding.tv6Bathroom to "6",
             binding.tv7Bathroom to "7",
             binding.tv8Bathroom to "8",
         )
+
+
         bathroomOptions.forEach { (textView, value) ->
             textView.setOnClickListener {
                 clearSelections(bathroomOptions)
                 textView.setBackgroundResource(R.drawable.bg_inner_select_white)
                 bathroomCount = value
                 binding.etBathroom.text.clear()
-
                 Log.d("bathroomCount", "Selected: $bathroomCount")
             }
         }
@@ -621,12 +600,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             binding.tv3Bathroom to "3",
             binding.tv4Bathroom to "4",
             binding.tv5Bathroom to "5",
+            binding.tv6Bathroom to "6",
             binding.tv7Bathroom to "7",
             binding.tv8Bathroom to "8",
         )
 
-        // Set the default selection based on the provided value
-        bathroomCount = defaultValue ?: "any" // If null, default to "any"
+        bathroomCount = defaultValue ?: "any"
         setSelectedProperty(bathroomCount, bathroomOptions)
 
 
@@ -656,6 +635,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             binding.tv3Bedroom to "3",
             binding.tv4Bedroom to "4",
             binding.tv5Bedroom to "5",
+            binding.tv6Bedroom to "6",
             binding.tv7Bedroom to "7",
             binding.tv8Bedroom to "8"
         )
@@ -709,13 +689,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     Log.d("propertySize", "Manual Input: $propertySize")
                 }
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 
-    // Function to highlight the selected TextView based on value
+
     private fun setSelectedProperty(
         selectedValue: String,
         propertyOptions: List<Pair<TextView, String>>
@@ -745,7 +724,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.tv1.setOnClickListener { updateSelection(1) }
         binding.tv2.setOnClickListener { updateSelection(2) }
         binding.tv3.setOnClickListener { updateSelection(3) }
+        binding.tv4.setOnClickListener { updateSelection(4) }
         binding.tv5.setOnClickListener { updateSelection(5) }
+        binding.tv6.setOnClickListener { updateSelection(6) }
         binding.tv7.setOnClickListener { updateSelection(7) }
         binding.tvAnyPeople.setOnClickListener { updateSelection(0) }
 
@@ -773,7 +754,9 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             1 -> binding.tv1.setBackgroundResource(R.drawable.bg_inner_select_white)
             2 -> binding.tv2.setBackgroundResource(R.drawable.bg_inner_select_white)
             3 -> binding.tv3.setBackgroundResource(R.drawable.bg_inner_select_white)
+            4 -> binding.tv4.setBackgroundResource(R.drawable.bg_inner_select_white)
             5 -> binding.tv5.setBackgroundResource(R.drawable.bg_inner_select_white)
+            6 -> binding.tv6.setBackgroundResource(R.drawable.bg_inner_select_white)
             7 -> binding.tv7.setBackgroundResource(R.drawable.bg_inner_select_white)
             0 -> binding.tvAnyPeople.setBackgroundResource(R.drawable.bg_inner_select_white)
         }
@@ -788,100 +771,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.tv1.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv2.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv3.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv4.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv5.setBackgroundResource(R.drawable.bg_outer_manage_place)
+        binding.tv6.setBackgroundResource(R.drawable.bg_outer_manage_place)
         binding.tv7.setBackgroundResource(R.drawable.bg_outer_manage_place)
     }
 
-    private fun settingBackgroundTaskToParking() {
-        binding.tvAnyParkingSpace.setOnClickListener {
-            binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv1Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv1Parking.setOnClickListener {
-            binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Parking.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv2Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv2Parking.setOnClickListener {
-            binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Parking.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv3Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv3Parking.setOnClickListener {
-            binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Parking.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv4Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-
-        binding.tv4Parking.setOnClickListener {
-            binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Parking.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv5Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv5Parking.setOnClickListener {
-            binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Parking.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv7Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv7Parking.setOnClickListener {
-            binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Parking.setBackgroundResource(R.drawable.bg_inner_select_white)
-            binding.tv8Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-        }
-
-        binding.tv8Parking.setOnClickListener {
-            binding.tvAnyParkingSpace.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv1Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv2Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv3Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv4Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv5Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv7Parking.setBackgroundResource(R.drawable.bg_outer_manage_place)
-            binding.tv8Parking.setBackgroundResource(R.drawable.bg_inner_select_white)
-        }
-    }
 
     @SuppressLint("SetTextI18n", "DefaultLocale")
     @RequiresApi(Build.VERSION_CODES.O)
@@ -946,7 +841,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         adapterActivity.setOnItemClickListener { list, _, status ->
 
             if (status) {
-                //selectedActivityName.add(activity.name)
                 selectedActivityName.add(list)
             } else {
 
@@ -954,7 +848,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     selectedActivityName.remove(list)
                 }
             }
-            if (selectedActivityName.contains("Stays")) {
+            if (selectedActivityName.contains(AppConstant.STAYS)) {
                 binding.tvbadroom.visibility = View.VISIBLE
                 binding.llbadrooms.visibility = View.VISIBLE
             } else {
@@ -962,14 +856,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 binding.llbadrooms.visibility = View.GONE
             }
             Log.d("Selected Activity", "List: " + TextUtils.join(",", selectedActivityName))
-
         }
 
         // Capture Other selected activities
         adapterActivity2.setOnItemClickListener { list, _, status ->
 
             if (status) {
-                //selectedActivityName.add(activity.name)
                 selectedActivityName.add(list)
             } else {
 
@@ -977,7 +869,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     selectedActivityName.remove(list)
                 }
             }
-            if (selectedActivityName.contains("Stays")) {
+            if (selectedActivityName.contains(AppConstant.STAYS)) {
                 binding.tvbadroom.visibility = View.VISIBLE
                 binding.llbadrooms.visibility = View.VISIBLE
             } else {
@@ -1034,8 +926,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
                     if (selectedCal.before(currentCal)) {
                         showErrorDialog(
-                            this@FiltersActivity,
-                            "You cannot select a past date from the calendar."
+                            this@FiltersActivity, ErrorMessage.CANNOT_SELECT_PAST_DATE
                         )
 
                     } else {
@@ -1072,85 +963,12 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         }
     }
 
-    private fun setCurrentDate() {
-        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-        // Set date in TextView
-        binding.tvDateSelect.text = currentDate
-    }
+
     @SuppressLint("SetTextI18n")
-//    private fun callingPriceRangeGraphSelection() {
-//        val barEntrys = ArrayList<BarEntry>()
-//        val seekBar = binding.seekBar
-//        val heights = arrayOf(
-//            3f,
-//            1f,
-//            2f,
-//            4f,
-//            4.5f,
-//            10f,
-//            8f,
-//            6f,
-//            5f,
-//            3f,
-//            9f,
-//            8f,
-//            7.5f,
-//            6f,
-//            4f,
-//            6.5f,
-//            5f,
-//            3f,
-//            4.5f,
-//            5.5f,
-//            3.5f,
-//            2.5f,
-//            1.5f,
-//            2f,
-//            3.5f,
-//            4f,
-//            7.5f,
-//            6.5f,
-//            6f,
-//            5f,
-//            2.5f,
-//            8.5f,
-//            8f,
-//            6.5f,
-//            6f,
-//            4f,
-//            6.5f,
-//            5f,
-//            3f,
-//            4.5f,
-//            5.5f,
-//            3.5f
-//        )
-//
-//        for (i in heights.indices) {
-//            barEntrys.add(BarEntry(i.toFloat(), heights[i]))
-//        }
-//        val roundedRenderer = RoundedBarChartRenderer(
-//            seekBar,
-//            seekBar.animator,
-//            seekBar.viewPortHandler
-//        )
-//        roundedRenderer.setRadius(12f) // Set corner radius (adjust as needed)
-//        seekBar.renderer = roundedRenderer
-//        seekBar.setEntries(barEntrys)
-//
-//        seekBar.onRangeChanged = { leftPinValue, rightPinValue ->
-//            val leftVal = (leftPinValue?.toInt()?.div(2))?.times(100)
-//            val rightVal = (rightPinValue?.toInt()?.div(2))?.times(100)
-//            binding.tvMinimumVal.setText("$" + leftVal.toString())
-//            min = leftVal.toString()
-//            binding.tvMaximumValue.setText("$" + rightVal.toString())
-//            max = rightVal.toString()
-//        }
-//    }
+
     private fun callingPriceRangeGraphSelection() {
         val seekBar = binding.seekBar
 
-        // Create sample data (replace with your actual data)
         val barEntries = ArrayList<BarEntry>()
         val heights = arrayOf(
             3f, 1f, 2f, 4f, 4.5f, 10f, 8f, 6f, 5f, 3f,
@@ -1163,15 +981,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         for (i in heights.indices) {
             barEntries.add(BarEntry(i.toFloat(), heights[i]))
         }
-
-        // Create and set the custom renderer with rounded tops
-//        val roundedRenderer = RoundedBarChartRenderer(
-//            seekBar,
-//            seekBar.animator,
-//            seekBar.viewPortHandler
-//        )
-//        roundedRenderer.setRadius(12f) // Set corner radius
-//        seekBar.renderer = roundedRenderer
 
         // Set the data
         seekBar.setEntries(barEntries)
@@ -1213,39 +1022,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         barChart.invalidate()
     }
 
-    /*private fun callingPriceRangeGraphSelection() {
-    val seekBar = binding.seekBar
-
-    // Get the actual min/max from your API response or set defaults
-   // val minPrice = min.toFloatOrNull() ?: 10f
-   // val maxPrice = max.toFloatOrNull() ?: 140f
-    val minPrice = binding.tvMinimumVal.text.toString().replace("$","").toFloat()
-    val maxPrice = binding.tvMaximumValue.text.toString().replace("$","").toFloat()
-    Log.d("checktvMinimumVal",binding.tvMinimumVal.text.toString())
-    Log.d("checktvMinimumVal",binding.tvMaximumValue.text.toString())
-    // Create entries that match your actual price range
-    val barEntries = ArrayList<BarEntry>()
-    val step = (maxPrice - minPrice) / 20 // Adjust 40 based on how many bars you want
-
-    for (i in 0..20) {
-        val price = minPrice + (i * step)
-        // You might want to adjust the height based on your data distribution
-        barEntries.add(BarEntry(i.toFloat(), (10f + i % 5))) // Example height pattern
-    }
-
-    seekBar.setEntries(barEntries)
-
-    seekBar.onRangeChanged = { leftPinValue, rightPinValue ->
-        // Calculate actual prices based on the pin positions
-        val leftVal = minPrice + (leftPinValue?.toFloat() ?: 0f) * step
-        val rightVal = minPrice + (rightPinValue?.toFloat() ?: 40f) * step
-
-        binding.tvMinimumVal.setText("$${leftVal.toInt()}")
-        min = leftVal.toInt().toString()
-        binding.tvMaximumValue.setText("$${rightVal.toInt()}")
-        max = rightVal.toInt().toString()
-    }
-}*/
 
     @SuppressLint("SetTextI18n")
     private fun clickListenerCalls() {
@@ -1256,9 +1032,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             tvEntireHome.setOnClickListener(this@FiltersActivity)
             llDate.setOnClickListener(this@FiltersActivity)
             llTime.setOnClickListener {
-               /* DateManager(this@FiltersActivity).showHourSelectionDialog(this@FiltersActivity) { selectedHour ->
-                    tvHour.text = selectedHour
-                }*/
+
                 val items = getNewHourList()
 
                 createDropdown (items,  binding.llTime)
@@ -1294,8 +1068,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     )
                     sessionManager.setFilterRequest(Gson().toJson(requestData))
                     val intent = Intent()
-                    intent.putExtra("type", "filter")
-                    intent.putExtra("requestData", Gson().toJson(requestData))
+                    intent.putExtra(AppConstant.type, "filter")
+                    intent.putExtra(AppConstant.REQUEST_DATA, Gson().toJson(requestData))
                     setResult(Activity.RESULT_OK, intent)
                     finish() // Close the activity
 
@@ -1340,7 +1114,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 )
                 sessionManager.setFilterRequest(Gson().toJson(requestData))
                 val intent = Intent()
-                intent.putExtra("type", "clearAllBtn")
+                intent.putExtra(AppConstant.type, "clearAllBtn")
                 setResult(Activity.RESULT_OK, intent)
                 finish() // Close the activity
 
@@ -1361,7 +1135,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     }
 
     private fun showingMoreText() {
-        val text = "Show More"
+        val text = AppConstant.SHOW_MORE
         val spannableString = SpannableString(text).apply {
             setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
@@ -1370,31 +1144,16 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         binding.underlinedTextView.paint.isAntiAlias = true
         binding.underlinedTextView.setOnClickListener {
             languageAdapter.updateAdapter(languageList)
-
-           // showingLessText()
+            // showingLessText()
             isExpanded = !isExpanded
             languageAdapter.toggleExpand()
             // Update button text
-            binding.underlinedTextView.text = if (isExpanded) "Show Less" else "Show More"
-        }
-    }
-
-    private fun showingLessText() {
-        val text = "Show Less"
-        val spannableString = SpannableString(text).apply {
-            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        binding.underlinedTextView.text = spannableString
-        binding.underlinedTextView.paint.flags = Paint.UNDERLINE_TEXT_FLAG
-        binding.underlinedTextView.paint.isAntiAlias = true
-        binding.underlinedTextView.setOnClickListener {
-            languageAdapter.updateAdapter(languageList.subList(0, 4))
-            showingMoreText()
+            binding.underlinedTextView.text = if (isExpanded) AppConstant.SHOW_LESS else AppConstant.SHOW_MORE
         }
     }
 
     private fun showingMoreAmText() {
-        val text = "Show More"
+        val text = AppConstant.SHOW_MORE
         val spannableString = SpannableString(text).apply {
             setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
         }
@@ -1407,23 +1166,8 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             amenitiesAdapter.toggleExpand()
 
             // Update button text
-            binding.underlinedTextView1.text = if (isExpanded1) "Show Less" else "Show More"
+            binding.underlinedTextView1.text = if (isExpanded1) AppConstant.SHOW_LESS else AppConstant.SHOW_MORE
 
-        }
-
-    }
-
-    private fun showingLessAmText() {
-        val text = "Show Less"
-        val spannableString = SpannableString(text).apply {
-            setSpan(UnderlineSpan(), 0, text.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
-        }
-        binding.underlinedTextView1.text = spannableString
-        binding.underlinedTextView1.paint.flags = Paint.UNDERLINE_TEXT_FLAG
-        binding.underlinedTextView1.paint.isAntiAlias = true
-        binding.underlinedTextView1.setOnClickListener {
-            amenitiesAdapter.updateAdapter(amenitiesList.subList(0, 6))
-            showingMoreAmText()
         }
 
     }
@@ -1431,75 +1175,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
     private fun byDefaultSelect() {
         binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
-    }
-
-    private fun showDropdown(anchorView: View) {
-
-        val dropdownView = LayoutInflater.from(this).inflate(R.layout.dropdown_item_time, null)
-
-        // Create the PopupWindow
-        popupWindow = PopupWindow(
-            dropdownView,
-            250,
-            400,
-            true
-        )
-
-        // Set up click listeners for each item in the dropdown
-        dropdownView.findViewById<TextView>(R.id.item_1).setOnClickListener {
-            selectedItemTextView.text = "1 Hour"
-            popupWindow.dismiss()
-
-        }
-
-        dropdownView.findViewById<TextView>(R.id.item_2).setOnClickListener {
-            selectedItemTextView.text = "2 Hour"
-            popupWindow.dismiss()
-
-        }
-
-        dropdownView.findViewById<TextView>(R.id.item_3).setOnClickListener {
-            selectedItemTextView.text = "3 Hour"
-            if (popupWindow != null && popupWindow.isShowing()) {
-                popupWindow.dismiss();
-            }
-
-        }
-        dropdownView.findViewById<TextView>(R.id.item_4).setOnClickListener {
-            selectedItemTextView.text = "4 Hour"
-            if (popupWindow != null && popupWindow.isShowing()) {
-                popupWindow.dismiss();
-            }
-
-        }
-        dropdownView.findViewById<TextView>(R.id.item_5).setOnClickListener {
-            selectedItemTextView.text = "5 Hour"
-            if (popupWindow != null && popupWindow.isShowing()) {
-                popupWindow.dismiss();
-            }
-
-        }
-        dropdownView.findViewById<TextView>(R.id.item_6).setOnClickListener {
-            selectedItemTextView.text = "6 Hour"
-            if (popupWindow != null && popupWindow.isShowing()) {
-                popupWindow.dismiss();
-            }
-
-        }
-
-        dropdownView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-        val dropdownHeight = dropdownView.measuredHeight
-
-        // Get the location of the anchor view on the screen
-        val location = IntArray(2)
-        anchorView.getLocationOnScreen(location)
-
-        // Calculate the Y position to show the PopupWindow below the anchor view
-        val yPosition = location[1] + anchorView.height // Bottom of the anchor view
-
-        // Show the PopupWindow at the calculated position
-        popupWindow.showAtLocation(anchorView.rootView, Gravity.NO_GRAVITY, location[0], yPosition)
-
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
@@ -1514,7 +1189,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.tv_home_setup -> {
-                selectedOption = "any"
+                selectedOption = AppConstant.ANY
                 Log.d("TESTING_VOOPON", "Here in the home setup")
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
@@ -1522,14 +1197,14 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
             }
 
             R.id.tv_room -> {
-                selectedOption = "private_room"
+                selectedOption = AppConstant.PRIVATE_ROOM
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_inner_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_outer_manage_place)
             }
 
             R.id.tv_entire_home -> {
-                selectedOption = "entire_home"
+                selectedOption = AppConstant.ENTIRE_HOME
                 binding.tvHomeSetup.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvRoom.setBackgroundResource(R.drawable.bg_outer_manage_place)
                 binding.tvEntireHome.setBackgroundResource(R.drawable.bg_inner_manage_place)
@@ -1544,100 +1219,97 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
 
 
         val model1 = ActivityModel()
-        model1.name = "Stays"
+        model1.name = AppConstant.STAYS
         model1.image = R.drawable.ic_stays
         activityList.add(model1)
 
         var model2 = ActivityModel()
-        model2.name = "Event Space"
+        model2.name = AppConstant.EVENT_SPACE
         model2.image = R.drawable.ic_event_space
         activityList.add(model2)
 
         var model3 = ActivityModel()
-        model3.name = "Photo shoot"
+        model3.name = AppConstant.PHOTO_SHOOT
         model3.image = R.drawable.ic_photo_shoot
         activityList.add(model3)
 
         var model4 = ActivityModel()
-        model4.name = "Meeting"
+        model4.name = AppConstant.MEETING
         model4.image = R.drawable.ic_meeting
         activityList.add(model4)
 
 
         var model5 = ActivityModel()
-        model5.name = "Party"
+        model5.name = AppConstant.PARTY
         model5.image = R.drawable.ic_party
         activityList.add(model5)
 
         var model6 = ActivityModel()
-        model6.name = "Pool"
+        model6.name = AppConstant.POOL
         model6.image = R.drawable.pool_water
         activityList.add(model6)
 
 
         var model7 = ActivityModel()
-        model7.name = "Film Shoot"
+        model7.name = AppConstant.FILM_SHOOT
         model7.image = R.drawable.ic_film_shoot
         activityList.add(model7)
 
         var model8 = ActivityModel()
-        model8.name = "Performance"
+        model8.name = AppConstant.PERFORMANCE
         model8.image = R.drawable.ic_performance
         activityList.add(model8)
 
         var model9 = ActivityModel()
-        model9.name = "Workshop"
+        model9.name = AppConstant.WORKSHOP
         model9.image = R.drawable.ic_workshop
         activityList.add(model9)
 
         var model10 = ActivityModel()
-        model10.name = "Corporate Event"
+        model10.name = AppConstant.CORPORATE_EVENT
         model10.image = R.drawable.ic_corporate_event
         activityList.add(model10)
 
         var model11 = ActivityModel()
-        model11.name = "Wedding"
+        model11.name = AppConstant.WEDDING
         model11.image = R.drawable.ic_weding
         activityList.add(model11)
 
 
 
         var model12 = ActivityModel()
-        model12.name = "Retreat"
+        model12.name = AppConstant.RETREAT
         model12.image = R.drawable.ic_retreat
         activityList.add(model12)
 
 
         var model13 = ActivityModel()
-        model13.name = "Pop-up"
+        model13.name = AppConstant.POP_UP
         model13.image = R.drawable.ic_popup_people
         activityList.add(model13)
 
         var model14 = ActivityModel()
-        model14.name = "Networking"
+        model14.name = AppConstant.NETWORKING
         model14.image = R.drawable.ic_networking
         activityList.add(model14)
 
         var model15 = ActivityModel()
-        model15.name = "Fitness Class"
+        model15.name = AppConstant.FITNESS_CLASS
         model15.image = R.drawable.ic_fitness_class
         activityList.add(model15)
 
         var model16 = ActivityModel()
-        model16.name = "Audio Recording"
+        model16.name = AppConstant.AUDIO_RECORDING
         model16.image = R.drawable.ic_audio_recording
         activityList.add(model16)
 
         var model17 = ActivityModel()
-        model17.name = "Dinner"
+        model17.name = AppConstant.DINNER
         model17.image = R.drawable.ic_dinner
         activityList.add(model17)
 
     }
 
-    private fun getNationalLanguages(): MutableList<Pair<String, Boolean>> {
-        return PrepareData.getLanguagePairs()
-    }
 
     private fun showPopupWindowForPets(anchorView: View) {
 
@@ -1669,24 +1341,15 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                     when (it) {
                         is NetworkResult.Success -> {
 
-
-                            if (it.data?.has("minimum_price") == true && !it.data.get("minimum_price")!!.isJsonNull) {
-//                                binding.tvMinimumVal.setText("$"+it.data.get("minimum_price")!!.asString.toDouble().toInt().toString())
-//                               min = it.data.get("minimum_price")!!.asString.toDouble().toInt().toString()
-//                                Log.d("checkValue",it.data.get("minimum_price")!!.asString)
-                                min = it.data.get("minimum_price")!!.asString.toDouble().toInt().toString()
+                            if (it.data?.has(AppConstant.MINIMUM_PRICE) == true && !it.data.get(AppConstant.MINIMUM_PRICE)!!.isJsonNull) {
+                                min = it.data.get(AppConstant.MINIMUM_PRICE)!!.asString.toDouble().toInt().toString()
                                 binding.tvMinimumVal.setText("$$min")
 
                             }
-                            if (it.data?.has("maximum_price") == true && !it.data.get("maximum_price")!!.isJsonNull) {
-//                                binding.tvMaximumValue.setText("$"+it.data.get("maximum_price")!!.asString.toDouble().toInt().toString())
-//                               max = it.data.get("maximum_price")!!.asString.toDouble().toInt().toString()
-//                                Log.d("checkValue",it.data.get("maximum_price")!!.asString)
-                                max = it.data.get("maximum_price")!!.asString.toDouble().toInt().toString()
+                            if (it.data?.has(AppConstant.MAXIMUM_PRICE) == true && !it.data.get(AppConstant.MAXIMUM_PRICE)!!.isJsonNull) {
+                                max = it.data.get(AppConstant.MAXIMUM_PRICE)!!.asString.toDouble().toInt().toString()
                                 binding.tvMaximumValue.setText("$$max")
                             }
-                           // setMinMax((10/10),(50/10))
-
 
                         }
 
@@ -1706,19 +1369,6 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
                 resources.getString(R.string.no_internet_dialog_msg)
             )
         }
-    }
-
-    fun setMinMax(min: Int, max: Int) {
-        if (min >= max) {
-            Log.e("RangeBarWithChart", "Min value cannot be greater than or equal to max value.")
-            return
-        }
-
-        val entries = ArrayList<BarEntry>()
-        for (i in min..max) {
-            entries.add(BarEntry(i.toFloat(), i.toFloat())) // or some other Y value
-        }
-        binding.seekBar.setEntries(entries)
     }
 
     private fun createDropdown(
@@ -1747,10 +1397,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
         recyclerView.layoutManager = LinearLayoutManager(this)
         val adapter = DropDownTextAdapter(items, object : OnClickListener {
             override fun itemClick(selectedIndex: Int) {
-                 //   minimumHourIndex = selectedIndex
-                    //minimumHourValue = selectedIndex + 1;
-                    //Vipin
-              //      minimumHourValue = selectedIndex + 2
+
             }
         }) { selectedText ->
             // Update TextView with the selected text
@@ -1762,8 +1409,7 @@ class FiltersActivity : AppCompatActivity(), AmenitiesAdapter.onItemClickListene
     }
 
     fun getNewHourList(): MutableList<ItemDropDown> {
-        return (1..23).map { ItemDropDown("$it hour${if (it >= 2) "s" else ""}")/* ItemDropDown("$it hour")*/ }.toMutableList()
+        return (1..23).map { ItemDropDown("$it hour${if (it >= 2) "s" else ""}") }.toMutableList()
     }
-
 
 }

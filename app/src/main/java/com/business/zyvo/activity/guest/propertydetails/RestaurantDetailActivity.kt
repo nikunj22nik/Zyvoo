@@ -48,6 +48,7 @@ import com.business.zyvo.AppConstant
 import com.business.zyvo.BuildConfig
 import com.business.zyvo.CircularSeekBar.OnSeekBarChangeListener
 import com.business.zyvo.DateManager.DateManager
+import com.business.zyvo.ErrorMessage
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
@@ -132,11 +133,9 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         intent.extras?.let {
-            propertyId = intent.extras?.getString("propertyId") ?: ""
-            propertyMile = intent.extras?.getString("propertyMile") ?: ""
-            checkLoginType = intent.extras?.getString("LoginType") ?: ""
-            //var status: String = intent.getStringExtra("key_name").toString()
-            // Log.d(ErrorDialog.TAG, status)
+            propertyId = intent.extras?.getString(AppConstant.PROPERTY_ID_TEXT) ?: ""
+            propertyMile = intent.extras?.getString(AppConstant.PROPERTY_MILE) ?: ""
+            checkLoginType = intent.extras?.getString(AppConstant.loginType) ?: ""
         }
         binding = ActivityRestaurantDetailBinding.inflate(LayoutInflater.from(this))
 
@@ -189,7 +188,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.tvWishlist.setOnClickListener {
-            if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
+            if (!AppConstant.NOT_LOGGING.equals(checkLoginType, ignoreCase = false)) {
                 showAddWishlistDialog(propertyId, -1)
             } else {
                 val resultIntent = Intent().apply {
@@ -203,11 +202,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         getHomePropertyDetails()
 
         binding.readMore.setOnClickListener {
-            if ( binding.readMore.text.toString().equals("Read More",true)){
-                binding.readMore.text = "Read Less"
+            if ( binding.readMore.text.toString().equals(AppConstant.READ_MORE,true)){
+                binding.readMore.text = AppConstant.READ_LESS
                 binding.readMoreTextView.maxLines = Integer.MAX_VALUE
             }else{
-                binding.readMore.text = "Read More"
+                binding.readMore.text = AppConstant.READ_MORE
                 binding.readMoreTextView.maxLines = 3
             }
         }
@@ -225,7 +224,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 else if (event.action == MotionEvent.ACTION_UP) {
                     v.parent.requestDisallowInterceptTouchEvent(false)
                 }
-                false // Return false to let the MapView still handle the touch
+                false
             }
         }
     }
@@ -309,7 +308,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                                 propertyData?.min_booking_hours?.let {
 
                                     binding.minTimeTxt.setText(
-                                        it.toDouble().toInt().toString() + "hr minimum"
+                                        it.toDouble().toInt().toString() + AppConstant.HR_MINIMUM
                                     )
                                     binding.circularSeekBar.endHours = it.toFloat()
                                 }
@@ -475,15 +474,13 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
                 propertyData?.property_description?.let {
-                    // Set the text
-//                    binding.readMoreTextView.setFullText(it.trimIndent())
                     binding.readMoreTextView.text = it.trim()
                     if (it.isNotEmpty()){
                         binding.readMoreTextView.post {
                             val totalLines = binding.readMoreTextView.lineCount
                             if (totalLines>3){
                                 binding.readMore.visibility=View.VISIBLE
-                                binding.readMore.text="Read More"
+                                binding.readMore.text= AppConstant.READ_MORE
                                 binding.readMoreTextView.maxLines=3
                             }else{
                                 binding.readMore.visibility=View.GONE
@@ -539,10 +536,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         propertyData?.latitude!!.toDouble(),
                         propertyData?.longitude!!.toDouble()
                     )
-//                    mMap?.addMarker(
-//                        MarkerOptions().position(newYork)
-//                            .title("Marker in ${propertyData?.address}")
-//                    )
+
                     mMap?.addMarker(
                         MarkerOptions().position(newYork)
                             .title("Marker in ${propertyData?.address}")
@@ -584,40 +578,33 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("MissingInflatedId", "SetTextI18n")
     private fun showPopupWindow(anchorView: View, position: Int) {
-        // Inflate the custom layout for the popup menu
         val popupView = LayoutInflater.from(this).inflate(R.layout.popup_positive_review, null)
-
-        // Create PopupWindow with the custom layout
         val popupWindow = PopupWindow(
             popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true
         )
-
-        // Set click listeners for each menu item in the popup layout
         popupView.findViewById<TextView>(R.id.itemHighestReview).setOnClickListener {
 
             binding.textReviewClick?.text =
-                getString(R.string.sort_by_highest_review)//"Sort by: Highest Review"
-            sortReviewsBy("Highest")
+                getString(R.string.sort_by_highest_review)
+            sortReviewsBy(AppConstant.HIGHEST)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemLowestReview).setOnClickListener {
             binding.textReviewClick?.text =
-                getString(R.string.sort_by_lowest_review)//"Sort by: Lowest Review"
-            sortReviewsBy("Lowest")
+                getString(R.string.sort_by_lowest_review)
+            sortReviewsBy(AppConstant.LOWEST)
             popupWindow.dismiss()
         }
         popupView.findViewById<TextView>(R.id.itemRecentReview).setOnClickListener {
             binding.textReviewClick?.text =
-                getString(R.string.sort_by_recent_review)//"Sort by: Recent Review"
-            sortReviewsBy("Recent")
+                getString(R.string.sort_by_recent_review)
+            sortReviewsBy(AppConstant.RECENT)
             popupWindow.dismiss()
         }
 
-        // Get the location of the anchor view (three-dot icon)
         val location = IntArray(2)
         anchorView.getLocationOnScreen(location)
 
-        // Get the height of the PopupView after inflating it
         popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
         val popupHeight = popupView.measuredHeight
         val popupWeight = popupView.measuredWidth
@@ -626,71 +613,55 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         val spaceEnd = screenWidht?.minus((anchorX + anchorView.width))
 
         val xOffset = if (popupWeight > spaceEnd!!) {
-            // If there is not enough space below, show it above
-            -(popupWeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+            -(popupWeight + 20)
         } else {
-            // Otherwise, show it below
-            // 20 // This adds a small gap between the popup and the anchor view
+
             -(popupWeight + 20)
         }
-
-        // Calculate the Y offset to make the popup appear above the three-dot icon
         val screenHeight = resources?.displayMetrics?.heightPixels
         val anchorY = location[1]
 
-        // Calculate the available space above the anchorView
         val spaceAbove = anchorY
         val spaceBelow = screenHeight?.minus((anchorY + anchorView.height))
 
-        // Determine the Y offset
         val yOffset = if (popupHeight > spaceBelow!!) {
-            // If there is not enough space below, show it above
-            -(popupHeight + 20) // Adjust this value to add a gap between the popup and the anchor view
+            -(popupHeight + 20)
         } else {
-            // Otherwise, show it below
-            20 // This adds a small gap between the popup and the anchor view
+            20
         }
 
-        // Show the popup window anchored to the view (three-dot icon)
-        popupWindow.elevation = 8.0f  // Optional: Add elevation for shadow effect
+        popupWindow.elevation = 8.0f
         popupWindow.showAsDropDown(
             anchorView,
             xOffset,
             yOffset,
             Gravity.END
-        )  // Adjust the Y offset dynamically
+        )
     }
 
     private fun generateDeepLink() {
-        // Your OneLink base URL and campaign details
-        val currentCampaign = "property_share"
-        val oneLinkId = "scFp" // Replace with your OneLink ID
-        val brandDomain = "zyvobusiness.onelink.me" // Your OneLink domain
+        val currentCampaign = AppConstant.PROPERTY_SHARE
+        val oneLinkId = AppConstant.SCFP // Replace with your OneLink ID
+        val brandDomain = AppConstant.BRAND_DOMAIN //"zyvobusiness.onelink.me"
         val session = SessionManager(this)
         val type = session.getCurrentPanel()
-        val location = "PropertyDetails"
+        val location = AppConstant.PROPERTY_DETAILS
 
-        // Prepare the deep link values
-        //?propertyId=$propertyId
-        ///propertyId=$propertyId
-        val deepLink = "zyvoo://property"
-        val webLink =
-            "https://zyvo.tgastaging.com/property" // Web fallback link
+        val deepLink = AppConstant.DEEP_LINK
+        val webLink = AppConstant.WEB_LINK
 
         // Create the link generator
         val linkGenerator = ShareInviteHelper.generateInviteUrl(this)
             .setBaseDeeplink("https://$brandDomain/$oneLinkId")
             .setCampaign(currentCampaign)
-            .addParameter("af_dp", deepLink) // App deep link
-            .addParameter("af_web_dp", webLink) // Web fallback URL
-            .addParameter("propertyId", propertyId)     // Custom key 1
-            .addParameter("user_type", type ?: "default")    // Custom key 2
-            .addParameter("location", location)         // Custom key 3
+            .addParameter(AppConstant.AF_DP, deepLink) // App deep link
+            .addParameter(AppConstant.AF_WEB_DP, webLink) // Web fallback URL
+            .addParameter(AppConstant.PROPERTY_ID_TEXT, propertyId)     // Custom key 1
+            .addParameter(AppConstant.USER_TYPE, type ?: "default")    // Custom key 2
+            .addParameter(AppConstant.LOCATION, location)         // Custom key 3
 
-        // Generate the link
         linkGenerator.generateLink(this, object : LinkGenerator.ResponseListener {
             override fun onResponse(s: String) {
-                // Successfully generated the link
                 Log.d(ErrorDialog.TAG, s)
                 // Example share message with the generated link
                 val message = "Check out this property: $s"
@@ -704,7 +675,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             }
 
             override fun onResponseError(s: String) {
-                // Handle error if link generation fails
                 Log.e("Error", "Error Generating Link: $s")
             }
         })
@@ -721,7 +691,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 ) {
                     val imageFile = File(
                         getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                        "property_share.jpg"
+                        AppConstant.PROPERTY_SHARE_JPG
                     )
                     val outputStream = FileOutputStream(imageFile)
                     resource.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
@@ -741,7 +711,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     }
 
-                    startActivity(Intent.createChooser(shareIntent, "Share via"))
+                    startActivity(Intent.createChooser(shareIntent, AppConstant.SHARE_VIA))
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
@@ -756,18 +726,17 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_TEXT, message)
-            type = "text/plain"
+            type = AppConstant.TEXT_PLAIN
         }
-        val shareIntent = Intent.createChooser(sendIntent, "Share via")
+        val shareIntent = Intent.createChooser(sendIntent, AppConstant.SHARE_VIA)
         startActivity(shareIntent)
     }
 
-
     private fun sortReviewsBy(option: String) {
         when (option) {
-            "Highest" -> reviewList.sortByDescending { it.review_rating }
-            "Lowest" -> reviewList.sortBy { it.review_rating }
-            "Recent" -> reviewList.sortByDescending { it.review_date }
+            AppConstant.HIGHEST -> reviewList.sortByDescending { it.review_rating }
+            AppConstant.LOWEST -> reviewList.sortBy { it.review_rating }
+            AppConstant.RECENT -> reviewList.sortByDescending { it.review_date }
         }
         adapterReview.updateAdapter(reviewList)
     }
@@ -783,14 +752,11 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-
-        // Show the popup window at the bottom right of the TextView
-
         popupWindow.isOutsideTouchable = true
         popupWindow.isFocusable = true
         // Set X and Y offset
-        val xOffset = anchorView.width - 30   // Add 20dp extra to move right (gap from left)
-        val yOffset = 10                      // Already given
+        val xOffset = anchorView.width - 30
+        val yOffset = 10
 
         // Show the popup with left side gap
         popupWindow.showAsDropDown(anchorView, xOffset, yOffset)
@@ -814,7 +780,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.proNoWishLists.setOnClickListener {
-            if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
+            if (!AppConstant.NOT_LOGGING.equals(checkLoginType, ignoreCase = false)) {
                 showAddWishlistDialog()
             } else {
                 val resultIntent = Intent().apply {
@@ -826,7 +792,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         binding.proAddWishLists.setOnClickListener {
-            if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
+            if (!AppConstant.NOT_LOGGING.equals(checkLoginType, ignoreCase = false)) {
                 removeItemFromWishlist(propertyId)
             } else {
                 val resultIntent = Intent().apply {
@@ -840,20 +806,20 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             val dialogFragment = ViewImageDialogFragment()
             propertyData?.images.let {
                 val bundle = Bundle().apply {
-                    putStringArrayList("image_list", java.util.ArrayList(it))
+                    putStringArrayList(AppConstant.IMAGE_LIST, java.util.ArrayList(it))
                 }
                 dialogFragment.arguments = bundle
-                dialogFragment.show(supportFragmentManager, "exampleDialog")
+                dialogFragment.show(supportFragmentManager, AppConstant.EXAMPLE_DIALOG)
             }
         }
         binding.proImageMore.setOnClickListener {
             val dialogFragment = ViewImageDialogFragment()
             propertyData?.images.let {
                 val bundle = Bundle().apply {
-                    putStringArrayList("image_list", java.util.ArrayList(it))
+                    putStringArrayList(AppConstant.IMAGE_LIST, java.util.ArrayList(it))
                 }
                 dialogFragment.arguments = bundle
-                dialogFragment.show(supportFragmentManager, "exampleDialog")
+                dialogFragment.show(supportFragmentManager, AppConstant.EXAMPLE_DIALOG)
             }
         }
         binding.circularSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
@@ -919,7 +885,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                         dialog
                     )
                 }
-
             })
 
             val rvWishList: RecyclerView = findViewById<RecyclerView>(R.id.rvWishList)
@@ -1125,17 +1090,17 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     fun share() {
         binding.llShare.setOnClickListener {
-            shareText(this, "Here is Zyvoo Promo Code")
+            shareText(this, AppConstant.ZYVO_PROMO_CODE)
         }
     }
 
     fun shareText(context: Context, text: String) {
         val shareIntent = Intent(Intent.ACTION_SEND).apply {
-            type = "text/plain" // Set the type to plain text
+            type = AppConstant.TEXT_PLAIN // Set the type to plain text
             putExtra(Intent.EXTRA_TEXT, text) // Add the text to be shared
         }
 
-        context.startActivity(Intent.createChooser(shareIntent, "Share via"))
+        context.startActivity(Intent.createChooser(shareIntent, AppConstant.SHARE_VIA))
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -1155,11 +1120,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerReviews.isNestedScrollingEnabled = false
         binding.recyclerReviews.adapter = adapterReview
+        binding.readMore.paintFlags = binding.readMore.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         val textView = binding.tvShowMore
         textView.paintFlags = textView.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         binding.tvLocationName.paintFlags =
             binding.tvLocationName.paintFlags or Paint.UNDERLINE_TEXT_FLAG
-        if (addOnList.size <= 3){
+        if (addOnList.size <= 4){
             binding.tvShowMore.visibility = View.GONE
 
         }else{
@@ -1168,18 +1134,18 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.tvShowMore.setOnClickListener {
             adapterAddon.toggleList()
 
-            if (binding.tvShowMore.text.equals("Show More")) {
-                binding.tvShowMore.text = "Show Less"
+            if (binding.tvShowMore.text.equals(AppConstant.SHOW_MORE)) {
+                binding.tvShowMore.text = AppConstant.SHOW_LESS
             } else {
-                binding.tvShowMore.text = "Show More"
+                binding.tvShowMore.text = AppConstant.SHOW_MORE
             }
 
         }
 
         binding.startBooking.setOnClickListener {
-            if (!"NotLogging".equals(checkLoginType, ignoreCase = false)) {
-                if (binding.tvBookingTxt.text.toString().equals("Start Booking")) {
-                    binding.tvBookingTxt.setText("Proceed to Checkout")
+            if (!AppConstant.NOT_LOGGING.equals(checkLoginType, ignoreCase = false)) {
+                if (binding.tvBookingTxt.text.toString().equals(ErrorMessage.START_BOOKING)) {
+                    binding.tvBookingTxt.setText(ErrorMessage.PROCEED_CHECKOUT)
                     binding.tvDay.setBackgroundResource(R.drawable.bg_inner_manage_place)
                     binding.tvHour.setBackgroundResource(R.drawable.bg_outer_manage_place)
                     binding.cv1.visibility = View.GONE
@@ -1231,22 +1197,22 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                     when (it) {
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
-                                if (resp.has("is_available") && resp.get("is_available").asBoolean) {
+                                if (resp.has(AppConstant.IS_AVAILABLE) && resp.get(AppConstant.IS_AVAILABLE).asBoolean) {
                                     val intent =
                                         Intent(
                                             this@RestaurantDetailActivity,
                                             CheckOutPayActivity::class.java
                                         )
                                     intent.putExtra(
-                                        "hour",
+                                        AppConstant.HOUR,
                                         binding.textHr.text.toString().replace(" hour", "")
                                     )
-                                    intent.putExtra("price", binding.textPrice.text.toString())
-                                    intent.putExtra("stTime", binding.textstart.text.toString())
-                                    intent.putExtra("edTime", binding.textend.text.toString())
-                                    intent.putExtra("propertyData", Gson().toJson(propertyData))
-                                    intent.putExtra("propertyMile", propertyMile)
-                                    intent.putExtra("date", selectedDate.toString())
+                                    intent.putExtra(AppConstant.PRICE_TEXT, binding.textPrice.text.toString())
+                                    intent.putExtra(AppConstant.ST_TIME, binding.textstart.text.toString())
+                                    intent.putExtra(AppConstant.ED_TIME, binding.textend.text.toString())
+                                    intent.putExtra(AppConstant.PROPERTY_DATA, Gson().toJson(propertyData))
+                                    intent.putExtra(AppConstant.PROPERTY_MILE, propertyMile)
+                                    intent.putExtra(AppConstant.DATE, selectedDate.toString())
                                     startActivity(intent)
                                 } else {
                                     showErrorDialog(this@RestaurantDetailActivity, it.message ?: "")
@@ -1329,11 +1295,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("SetTextI18n")
     private fun clickListeners() {
-
         binding.tvHour.setBackgroundResource(R.drawable.bg_inner_manage_place)
-
         binding.tvDay.setBackgroundResource(R.drawable.bg_outer_manage_place)
-
         binding.showMoreReview.setOnClickListener {
             pagination?.let {
                 if (it.current_page != it.total_pages && it.current_page < it.total_pages) {
@@ -1358,7 +1321,7 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.tvHour.setOnClickListener {
             binding.tvDay.setBackgroundResource(R.drawable.bg_outer_manage_place)
             binding.tvHour.setBackgroundResource(R.drawable.bg_inner_manage_place)
-            binding.tvBookingTxt.setText("Start Booking")
+            binding.tvBookingTxt.setText(AppConstant.START_BOOKING)
             binding.cv1.visibility = View.VISIBLE
             binding.calendarLayout.visibility = View.GONE
             binding.llday.visibility = View.GONE
@@ -1497,15 +1460,12 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         try {
             mMap = googleMap
-
         } catch (e: Resources.NotFoundException) {
             Log.e(ErrorDialog.TAG, "Can't find style. Error: ", e)
         }
     }
 
     private fun updateCalendar() {
-        // Updates the calendar layout with the current and next month views.
-
         val calendarLayout = binding.calendarLayout
         calendarLayout.removeAllViews()
         val topMonths = mutableListOf<YearMonth>()
@@ -1523,18 +1483,14 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 topMonths.add(month)
             }
         }
-
         addMonthView(calendarLayout, currentMonth)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n")
     private fun addMonthView(parentLayout: LinearLayout, yearMonth: YearMonth) {
-        // Adds a view for the specified month to the parent layout.
         val monthView = layoutInflater.inflate(R.layout.calendar_month, parentLayout, false)
-
         val monthTitle = monthView.findViewById<TextView>(R.id.month_title)
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             monthTitle.text =
                 "${yearMonth.month.name.lowercase().replaceFirstChar { it.uppercase() }}"
@@ -1594,7 +1550,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             weeksLayout.addView(weekLayout)
         }
-        // Display llPreviousAndNextMonth only for the current month
         if (yearMonth == currentMonth) {
             val previous = monthView.findViewById<ImageButton>(R.id.button_previous)
             previous.setOnClickListener {
@@ -1611,20 +1566,13 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun generateCalendarWeeks(yearMonth: YearMonth): List<List<LocalDate?>> {
-        // Generates a list of weeks, each containing dates for the specified month.
-
         val weeks = ArrayList<List<LocalDate?>>()
-
         var week = ArrayList<LocalDate?>()
-
         val firstDayOfMonth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             yearMonth.atDay(1).dayOfWeek.value % 7
         } else {
             TODO("VERSION.SDK_INT < O")
         }
-
-        // Add null values for the days before the start of the month
-
         for (i in 0 until firstDayOfMonth) {
             week.add(null)
         }
@@ -1641,9 +1589,6 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
                 week = ArrayList()
             }
         }
-
-        // Add null values for the days after the end of the month
-
         while (week.size < 7) {
             week.add(null)
         }
@@ -1654,5 +1599,4 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         return weeks
     }
-
 }

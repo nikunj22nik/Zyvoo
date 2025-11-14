@@ -16,8 +16,7 @@ object BaseApplication {
         val needToCheckUri = Build.VERSION.SDK_INT >= 19
         var selection: String? = null
         var selectionArgs: Array<String>? = null
-        // Uri is different in versions after KITKAT (Android 4.4), we need to
-        // deal with different Uris.
+
         if (needToCheckUri && DocumentsContract.isDocumentUri(context, uri)) {
             if (isExternalStorageDocument(uri)) {
                 val docId = DocumentsContract.getDocumentId(uri)
