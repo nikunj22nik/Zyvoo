@@ -1068,7 +1068,7 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                             userId,
                             bookingId,
                             propertyId,
-                            reviewlist.get(selectedPosition).first,
+                            reviewlist[selectedPosition].first,
                             additionalTxt
                         ).collect {
                             when (it) {
@@ -1090,8 +1090,6 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
                         }
                     }
                 }
-
-                // }
             }
 
             crossButton.setOnClickListener {

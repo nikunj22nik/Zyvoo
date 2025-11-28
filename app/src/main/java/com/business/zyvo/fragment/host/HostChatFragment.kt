@@ -10,6 +10,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupWindow
@@ -24,6 +25,7 @@ import androidx.navigation.fragment.findNavController
 import com.business.zyvo.AppConstant
 import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
+import com.business.zyvo.LoadingUtils.Companion.showSuccessDialog
 import com.business.zyvo.MyApp
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
@@ -631,10 +633,11 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                                     it.data?.let {
                                         Log.d("******", "toggleArchiveUnarchive")
                                         dialog.dismiss()
-                                        showToast(
-                                            requireContext(),
-                                            it.get("message").asString
-                                        )
+//                                        showToast(
+//                                            requireContext(),
+//                                            it.get("message").asString
+//                                        )
+                                        openDialogSuccess()
                                     }
                                 }
                                 is NetworkResult.Error -> {
@@ -662,7 +665,37 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
     }
 
+    private fun openDialogSuccess(){
+        val dialog=Dialog(requireContext(), R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(R.layout.dialog_success_report_submit)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
 
+            val okBtn :ImageView = findViewById<ImageView>(R.id.img_cross)
+            val cross :RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            cross.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
+        }
+    }
 
     private fun showPopupWindow(anchorView: View, position: Int) {
         val popupView =

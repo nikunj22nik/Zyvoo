@@ -32,7 +32,7 @@ object ErrorMessage {
     const val FACEBOOK_LOGIN_CANCELLED = "Facebook Login cancelled"
     const val FACEBOOK_LOGIN_ERROR = "Facebook login error"
     const val LOGIN_SUCCESSFUL = "Login Successful"
-    const val ACCOUNT_REGISTERED_SUCCESSFULLY = "Your account is registered \nsuccessfully"
+    const val ACCOUNT_REGISTERED_SUCCESSFULLY = "Your account is registered \nsuccessfully."
     const val PASSWORD_REQUIRED = "Password required"
     const val ENTER_VALID_EMAIL = "Please enter a valid email."
     const val EMAIL_VERIFIED_SUCCESSFULLY = "Your Email has been Verified\n  successfully."

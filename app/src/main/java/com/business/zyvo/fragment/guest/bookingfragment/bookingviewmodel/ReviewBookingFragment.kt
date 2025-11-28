@@ -1326,17 +1326,23 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
         val dialog = context?.let { Dialog(it, R.style.BottomSheetDialog) }
         dialog?.apply {
             setCancelable(true)
+            setCanceledOnTouchOutside(true)
+
             setContentView(R.layout.dialog_review)
+
             window?.attributes = WindowManager.LayoutParams().apply {
                 copyFrom(window?.attributes)
                 width = WindowManager.LayoutParams.MATCH_PARENT
                 height = WindowManager.LayoutParams.MATCH_PARENT
             }
+
             val responseRate = findViewById<RatingBar>(R.id.ratingbar)
             val communication = findViewById<RatingBar>(R.id.ratingbar2)
             val onTime = findViewById<RatingBar>(R.id.ratingbar3)
             val textPublishReview = findViewById<TextView>(R.id.textPublishReview)
             val etMessage = findViewById<TextView>(R.id.etMessage)
+            val cross = findViewById<ImageView>(R.id.imageCross)
+
             textPublishReview.setOnClickListener {
                 reviewPublishAPI(
                     responseRate.rating.toInt(),
@@ -1346,10 +1352,15 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
                 )
             }
 
+            cross.setOnClickListener {
+                dismiss()
+            }
+
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             show()
         }
     }
+
 
     private fun initialization() {
 

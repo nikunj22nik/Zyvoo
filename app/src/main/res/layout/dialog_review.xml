@@ -9,6 +9,16 @@
     android:orientation="vertical">
 
 
+    <ImageView
+        android:id="@+id/imageCross"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_cross"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_15sdp"/>
+
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -60,13 +70,14 @@
         android:layout_marginVertical="@dimen/_5sdp">
 
         <TextView
+            android:id="@+id/tvCommunication"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:fontFamily="@font/poppins"
             android:text="Communication"
             android:textColor="@color/black"
-            android:textSize="14sp"  />
-
+            android:textSize="14sp" />
 
         <RatingBar
             android:id="@+id/ratingbar2"
@@ -74,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_gravity="center_vertical"
+            android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/_8sdp"
             android:isIndicator="false"
             android:rating="0"
@@ -82,20 +93,22 @@
 
     </RelativeLayout>
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/_20sdp">
+        android:layout_marginHorizontal="@dimen/_20sdp"
+        android:layout_marginVertical="@dimen/_5sdp">
 
         <TextView
+            android:id="@+id/tvOnTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/_5sdp"
-            android:fontFamily="@font/poppins"
+            android:layout_centerVertical="true"
             android:text="On Time"
             android:textColor="@color/black"
-            android:textSize="14sp"  />
-
+            android:fontFamily="@font/poppins"
+            android:textSize="14sp"/>
 
         <RatingBar
             android:id="@+id/ratingbar3"
@@ -104,13 +117,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/_8sdp"
             android:isIndicator="false"
             android:rating="0"
             android:stepSize="1" />
 
     </RelativeLayout>
+
 
 
     <EditText

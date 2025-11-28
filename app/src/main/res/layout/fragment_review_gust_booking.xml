@@ -1429,7 +1429,7 @@ android:weightSum="2"
                             android:layout_marginTop="@dimen/_2sdp"
                             android:layout_toStartOf="@+id/imageDropDown"
                             android:fontFamily="@font/poppins"
-                            android:text="Sort by: Positive Reviews"
+                            android:text="Sort by: Highest Review"
                             android:textColor="@color/black"
                             android:textSize="15sp" />
 
