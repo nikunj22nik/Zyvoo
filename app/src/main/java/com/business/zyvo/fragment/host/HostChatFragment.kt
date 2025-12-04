@@ -52,6 +52,8 @@ import com.twilio.conversations.Message
 import com.twilio.conversations.StatusListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -75,7 +77,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
     private var filteredList: MutableList<ChannelListModel> = chatList.toMutableList()
 
     private var quickstartConversationsManager = QuickstartConversationsManager()
-
+    private var autoOpenDialog2Job: Job? = null
 
     private var map:HashMap<String,ChannelListModel> = HashMap()
 
@@ -384,6 +386,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
     private fun callingGetChatUser(archive_status:String) {
         if (NetworkMonitorCheck._isConnected.value) {
+            Log.d("*******28-11-2025","i'm here")
             lifecycleScope.launch {
                 var sessionManager = SessionManager(requireContext())
                 LoadingUtils.showDialog(requireContext(),false)
@@ -394,6 +397,7 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
                         viewModel.getChatUserChannelList(userId,userType,archive_status).collect {
                             when (it) {
                                 is NetworkResult.Success -> {
+                                    Log.d("*******28-11-2025","28-11-2025")
                                     if(it.data ==null  || it.data.size ==0){
                                         LoadingUtils.hideDialog()
                                     }
@@ -422,7 +426,11 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 
                                 is NetworkResult.Error -> {
                                     LoadingUtils.hideDialog()
-                                    Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
+                                    if (it.message.toString().equals("No chat found for this user")){
+                                        Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
+                                    }
+                                //    Toast.makeText(requireContext(),it.message.toString(),Toast.LENGTH_LONG).show()
+                                    Log.d("*******28-11-2025",it.message.toString())
                                 }
 
                                 else -> {
@@ -637,7 +645,8 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
 //                                            requireContext(),
 //                                            it.get("message").asString
 //                                        )
-                                        openDialogSuccess()
+                                       // openDialogSuccess()
+                                        openDialogNotification()
                                     }
                                 }
                                 is NetworkResult.Error -> {
@@ -686,6 +695,48 @@ class HostChatFragment : Fragment() , View.OnClickListener, QuickstartConversati
             }
 
             okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
+        }
+    }
+
+
+    private fun openDialogNotification() {
+
+        val dialog = Dialog(requireContext(), com.business.zyvo.R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(com.business.zyvo.R.layout.dialog_notification_report_submit)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            autoOpenDialog2Job = viewLifecycleOwner.lifecycleScope.launch {
+                delay(3000) // 3 seconds
+                dismiss()
+                openDialogSuccess()
+            }
+
+
+            var cross: ImageView = findViewById<ImageView>(com.business.zyvo.R.id.img_cross)
+            var okBtn: RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+//            okBtn.setOnClickListener {
+//                dialog.dismiss()
+//            }
+            cross.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+                autoOpenDialog2Job?.cancel()
+                openDialogSuccess()
                 dialog.dismiss()
             }
             window?.setLayout(

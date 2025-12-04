@@ -1455,7 +1455,6 @@ has been the industry's standard dummy text ever the industry's standard dummy .
 has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever the industry's standard dummy .Lorem Ipsum is simply dummy text of the printing and typesetting industry."
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:justificationMode="inter_word"
                 android:maxLines="3"
                 android:lineSpacingExtra="0dp"
                 android:lineSpacingMultiplier="1.0"
@@ -1470,9 +1469,9 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:textColor="@color/green_color_bar"
                 android:fontFamily="@font/poppins"
                 android:textSize="@dimen/_13sdp"
-                android:text="Read More"
+                android:text="Read more"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:justificationMode="inter_word"
+
                 android:textAlignment="viewStart"
                 android:gravity="start" />
 

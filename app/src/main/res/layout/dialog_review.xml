@@ -20,11 +20,11 @@
 
 
     <TextView
+        android:id="@+id/textHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
 
-        android:layout_marginTop="@dimen/_30sdp"
         android:fontFamily="@font/poppins_medium"
         android:text="Review Guest"
         android:textColor="@color/black"

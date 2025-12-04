@@ -891,9 +891,14 @@ class ReviewBookingHostFragment : Fragment(), OnMapReadyCallback {
             val ratingbar = findViewById<RatingBar>(R.id.ratingbar)
             val ratingbar2 = findViewById<RatingBar>(R.id.ratingbar2)
             val ratingbar3 = findViewById<RatingBar>(R.id.ratingbar3)
+            val imageCross = findViewById<ImageView>(R.id.imageCross)
             val textPublishReview = findViewById<TextView>(R.id.textPublishReview)
             val etMessage = findViewById<TextView>(R.id.etMessage)
             var message: String = ""
+
+            imageCross.setOnClickListener {
+                dismiss()
+            }
             etMessage.addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     charSequence: CharSequence?,

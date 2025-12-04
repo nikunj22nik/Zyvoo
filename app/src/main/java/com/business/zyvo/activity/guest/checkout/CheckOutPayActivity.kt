@@ -57,6 +57,7 @@ import com.business.zyvo.databinding.ActivityCheckOutPayBinding
 import com.business.zyvo.locationManager.LocationManager
 import com.business.zyvo.onClickSelectCard
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.BadWordsFilter
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
 import com.business.zyvo.utils.ErrorDialog.formatConvertCount
@@ -243,6 +244,13 @@ class CheckOutPayActivity : AppCompatActivity(), onClickSelectCard {
 
         binding.rlSubmitMessage.setOnClickListener {
             val userInput = binding.etShareMessage.text.toString()
+
+            if (BadWordsFilter.containsBadWords(userInput)) {
+                showErrorDialog(this, "This message contains inappropriate words and is not allowed.")
+                binding.etShareMessage.setText("")
+                return@setOnClickListener
+            }
+
             if (userInput.length > 0) {
                 messageSend = userInput
             }

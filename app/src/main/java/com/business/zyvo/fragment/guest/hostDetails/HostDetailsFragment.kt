@@ -27,6 +27,7 @@ import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
 import com.business.zyvo.R
+import com.business.zyvo.TextJustifyUtil.Companion.justifyText
 import com.business.zyvo.activity.guest.propertydetails.RestaurantDetailActivity
 import com.business.zyvo.activity.guest.propertydetails.model.Pagination
 import com.business.zyvo.activity.guest.propertydetails.model.Review
@@ -323,6 +324,7 @@ class HostDetailsFragment : Fragment(), OnClickListener, OnClickListener1 {
                                 }
                                 it.about_host?.description?.let {
                                     binding.readMoreTextView.text = it.trim()
+                                    binding.readMoreTextView.justifyText()
                                     if (it.isNotEmpty()){
                                         binding.readMoreTextView.post {
                                             val totalLines = binding.readMoreTextView.lineCount

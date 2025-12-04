@@ -11,10 +11,12 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.text.LineBreaker
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.text.Editable
+import android.text.Layout
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
@@ -54,6 +56,7 @@ import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.R
+import com.business.zyvo.TextJustifyUtil.Companion.justifyText
 import com.business.zyvo.activity.guest.checkout.CheckOutPayActivity
 import com.business.zyvo.activity.guest.propertydetails.model.AddOn
 import com.business.zyvo.activity.guest.propertydetails.model.Pagination
@@ -474,7 +477,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
                 propertyData?.property_description?.let {
-                    binding.readMoreTextView.text = it.trim()
+                    binding.readMoreTextView.setText( it.trim())
+                   binding.readMoreTextView.justifyText()
                     if (it.isNotEmpty()){
                         binding.readMoreTextView.post {
                             val totalLines = binding.readMoreTextView.lineCount
@@ -1599,4 +1603,8 @@ class RestaurantDetailActivity : AppCompatActivity(), OnMapReadyCallback {
 
         return weeks
     }
+
+
+
+
 }

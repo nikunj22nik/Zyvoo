@@ -41,6 +41,7 @@ import com.business.zyvo.activity.guest.propertydetails.model.PropertyData
 import com.business.zyvo.databinding.ActivityExtraTimeBinding
 import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.BadWordsFilter
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.TAG
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
@@ -54,6 +55,8 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -73,7 +76,7 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
     var session: SessionManager?=null
     var propertyId :String ="-1"
     var hostId :String ="-1"
-
+    private var autoOpenDialog2Job: Job? = null
     private val extraTimeViewModel: ExtraTimeViewModel by lazy {
         ViewModelProvider(this)[ExtraTimeViewModel::class.java]
     }
@@ -187,6 +190,12 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
 
         binding.rlSubmitMessage.setOnClickListener {
             val userInput = binding.etShareMessage.text.toString()
+            if (BadWordsFilter.containsBadWords(userInput)) {
+                showErrorDialog(this, "This message contains inappropriate words and is not allowed.")
+                binding.etShareMessage.setText("")
+                return@setOnClickListener
+            }
+
             if(userInput.length>0){
                 messageSend = userInput
             }
@@ -389,8 +398,8 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
                         is NetworkResult.Success -> {
                             it.data?.let { resp ->
                                 dialog.dismiss()
-                                //openDialogNotification()
-                                openDialogSuccess()
+                                openDialogNotification()
+                              //  openDialogSuccess()
                             }
                         }
                         is NetworkResult.Error -> {
@@ -791,5 +800,47 @@ class ExtraTimeActivity : AppCompatActivity(),SelectHourFragmentDialog.DialogLis
             show()
         }
     }
+
+    private fun openDialogNotification() {
+
+        val dialog = Dialog(this, com.business.zyvo.R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(com.business.zyvo.R.layout.dialog_notification_report_submit)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            autoOpenDialog2Job = lifecycleScope.launch {
+                delay(3000) // 3 seconds
+                dismiss()
+                openDialogSuccess()
+            }
+
+
+            var cross: ImageView = findViewById<ImageView>(com.business.zyvo.R.id.img_cross)
+            var okBtn: RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+//            okBtn.setOnClickListener {
+//                dialog.dismiss()
+//            }
+            cross.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+                autoOpenDialog2Job?.cancel()
+                openDialogSuccess()
+                dialog.dismiss()
+            }
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
+        }
+    }
+
 
 }

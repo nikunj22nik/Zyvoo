@@ -2405,6 +2405,7 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                 } else false
             }
 
+            /*
             textSubmitButton.setOnClickListener {
                 toggleLoginButtonEnabled(false, textSubmitButton)
 
@@ -2445,6 +2446,61 @@ private fun handleAppleSignInSuccess(result: AuthResult, signInType: String) {
                         resetPassword(userId, password, confirmPassword, dialog, textSubmitButton, text)
                     } else {
                         toggleLoginButtonEnabled(true, textSubmitButton)
+                    }
+                }
+            }
+
+             */
+
+            textSubmitButton.setOnClickListener {
+                toggleLoginButtonEnabled(false, textSubmitButton)
+
+                val password = etPassword.text.toString()
+                val confirmPassword = etConfirmPassword.text.toString()
+
+                if (!NetworkMonitorCheck._isConnected.value) {
+                    ErrorDialog.showErrorDialog(requireContext(), ErrorMessage.NO_INTERNET_CONNECTION)
+                    toggleLoginButtonEnabled(true, textSubmitButton)
+                    return@setOnClickListener
+                }
+
+                lifecycleScope.launch(Dispatchers.Main) {
+                    var hasError = false
+
+                    // Clear previous errors
+                    etPassword.error = null
+                    etConfirmPassword.error = null
+
+                    // Password validation
+                    if (password.isEmpty()) {
+                        etPassword.error = ErrorMessage.PASSWORD_IS_REQUIRED
+                        hasError = true
+                    } else if (!isValidPassword(password)) {
+                        etPassword.error = ErrorMessage.PASSWORD_8_PLUS_REQUIRED
+                        hasError = true
+                    }
+
+                    // Confirm password validation
+                    if (confirmPassword.isEmpty()) {
+                        etConfirmPassword.error = ErrorMessage.CONFIRM_PASSWORD_IS_REQUIRED
+                        hasError = true
+                    } else if (password.isNotEmpty() && password != confirmPassword) {
+                        etConfirmPassword.error = ErrorMessage.PASSWORD_DO_NOT_MATCH
+                        hasError = true
+                    }
+
+                    if (hasError) {
+                        // Agar password empty hai to uspe focus rakho
+                        if (password.isEmpty()) {
+                            etPassword.requestFocus()
+                        }
+                        // Agar password valid hai lekin confirm password empty hai
+                        else if (confirmPassword.isEmpty() || password != confirmPassword) {
+                            etConfirmPassword.requestFocus()
+                        }
+                        toggleLoginButtonEnabled(true, textSubmitButton)
+                    } else {
+                        resetPassword(userId, password, confirmPassword, dialog, textSubmitButton, text)
                     }
                 }
             }

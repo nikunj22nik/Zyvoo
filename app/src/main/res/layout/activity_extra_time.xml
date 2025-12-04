@@ -924,7 +924,7 @@ has been the industry's standard dummy text ever the industry's standard dummy .
                 android:textColor="@color/green_color_bar"
                 android:fontFamily="@font/poppins"
                 android:textSize="@dimen/_13sdp"
-                android:text="Read More"
+                android:text="Read more"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:justificationMode="inter_word"
                 android:textAlignment="viewStart"

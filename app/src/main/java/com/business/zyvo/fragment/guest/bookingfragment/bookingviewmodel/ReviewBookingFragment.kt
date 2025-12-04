@@ -58,6 +58,7 @@ import com.business.zyvo.databinding.FragmentReviewGustBookingBinding
 import com.business.zyvo.fragment.both.viewImage.ViewImageDialogFragment
 import com.business.zyvo.fragment.guest.home.model.WishlistItem
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.BadWordsFilter
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.business.zyvo.utils.ErrorDialog.truncateToTwoDecimalPlaces
@@ -571,6 +572,11 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
 
         binding.rlSubmitMessage.setOnClickListener {
             val userInput = binding.etShareMessage.text.toString()
+            if (BadWordsFilter.containsBadWords(userInput)) {
+                showErrorDialog(requireActivity(), "This message contains inappropriate words and is not allowed.")
+                binding.etShareMessage.setText("")
+                return@setOnClickListener
+            }
             if (userInput.length > 0) {
                 messageSend = userInput
             }
@@ -1341,7 +1347,12 @@ class ReviewBookingFragment : Fragment(), OnMapReadyCallback {
             val onTime = findViewById<RatingBar>(R.id.ratingbar3)
             val textPublishReview = findViewById<TextView>(R.id.textPublishReview)
             val etMessage = findViewById<TextView>(R.id.etMessage)
+            val textHeader = findViewById<TextView>(R.id.textHeader)
+            val tvOnTime = findViewById<TextView>(R.id.tvOnTime)
             val cross = findViewById<ImageView>(R.id.imageCross)
+
+            textHeader.setText("Review Host")
+            tvOnTime.setText("Property")
 
             textPublishReview.setOnClickListener {
                 reviewPublishAPI(

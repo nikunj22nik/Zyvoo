@@ -16,6 +16,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
@@ -54,6 +55,7 @@ import com.business.zyvo.chat.QuickstartConversationsManagerListenerOneTowOne
 import com.business.zyvo.chat.QuickstartConversationsManagerOneTowOne
 import com.business.zyvo.fragment.host.QuickstartConversationsManager
 import com.business.zyvo.model.ChannelListModel
+import com.business.zyvo.utils.BadWordsFilter
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.showToast
 import com.google.gson.Gson
@@ -66,6 +68,8 @@ import com.twilio.conversations.Message
 import com.twilio.conversations.StatusListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -95,6 +99,7 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
     private val updateInterval = 30000L // 30 seconds
     private var isPolling = false // Flag to track polling state
     private var previousScreenMessage =""
+    private var autoOpenDialog2Job: Job? = null
     private val viewModel: ChatDetailsViewModel by lazy {
         ViewModelProvider(this)[ChatDetailsViewModel::class.java]
     }
@@ -231,15 +236,36 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
             if (is_blocked==2){
                 showErrorDialog(this, "You are blocked by $friend_name.")
             }else {
+//                if (NetworkMonitorCheck._isConnected.value) {
+//
+//                    if (binding.etmassage.text.toString().trim().isNotEmpty()) {
+//                        quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
+//                    } else {
+//                        LoadingUtils.showErrorDialog(this, ErrorMessage.MESSAGE_CANNOT_EMPTY)
+//                    }
+//                } else {
+//                    LoadingUtils.showSuccessDialog(this, ErrorMessage.CHECK_INTERNET_CONNECTION)
+//                }
                 if (NetworkMonitorCheck._isConnected.value) {
-                    if (binding.etmassage.text.toString().trim().isNotEmpty()) {
-                        quickstartConversationsManager.sendMessage(binding.etmassage.text.toString())
-                    } else {
-                        LoadingUtils.showErrorDialog(this, ErrorMessage.MESSAGE_CANNOT_EMPTY)
-                    }
-                } else {
-                    LoadingUtils.showSuccessDialog(this, ErrorMessage.CHECK_INTERNET_CONNECTION)
+                val message = binding.etmassage.text.toString().trim()
+
+                // ✅ Check for bad words before sending
+                if (BadWordsFilter.containsBadWords(message)) {
+                    showErrorDialog(this, "This message contains inappropriate words and is not allowed.")
+                    binding.etmassage.setText("")
+                    return@setOnClickListener
                 }
+
+
+                if (message.isNotEmpty()) {
+                    quickstartConversationsManager.sendMessage(message)
+                    binding.etmassage.text.clear()
+                } else {
+                    LoadingUtils.showErrorDialog(this, ErrorMessage.MESSAGE_CANNOT_EMPTY)
+                }
+            } else {
+            LoadingUtils.showSuccessDialog(this, ErrorMessage.CHECK_INTERNET_CONNECTION)
+        }
             }
         }
 
@@ -737,10 +763,11 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
                                 it.data?.let {
                                     Log.d("******", "toggleArchiveUnarchive")
                                     dialog.dismiss()
-                                    showToast(
-                                        this@ChatActivity,
-                                        it.get(AppConstant.MESSAGE).asString
-                                    )
+//                                    showToast(
+//                                        this@ChatActivity,
+//                                        it.get(AppConstant.MESSAGE).asString
+//                                    )
+                                    openDialogNotification()
                                 }
                             }
                             is NetworkResult.Error -> {
@@ -1007,6 +1034,80 @@ class ChatActivity : AppCompatActivity(),QuickstartConversationsManagerListenerO
         handler?.let {
             it.removeCallbacksAndMessages(null)
             Log.d("******","stopUserStatusPolling")
+        }
+    }
+
+    private fun openDialogNotification() {
+
+        val dialog = Dialog(this, com.business.zyvo.R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(com.business.zyvo.R.layout.dialog_notification_report_submit)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+            autoOpenDialog2Job = lifecycleScope.launch {
+                delay(3000) // 3 seconds
+                dismiss()
+                openDialogSuccess()
+            }
+
+
+            var cross: ImageView = findViewById<ImageView>(com.business.zyvo.R.id.img_cross)
+            var okBtn: RelativeLayout = findViewById<RelativeLayout>(R.id.rl_okay)
+//            okBtn.setOnClickListener {
+//                dialog.dismiss()
+//            }
+            cross.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+                autoOpenDialog2Job?.cancel()
+                openDialogSuccess()
+                dialog.dismiss()
+            }
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
+        }
+    }
+
+    private fun openDialogSuccess() {
+
+        val dialog = Dialog(this, com.business.zyvo.R.style.BottomSheetDialog)
+        dialog?.apply {
+            setCancelable(true)
+            setContentView(com.business.zyvo.R.layout.dialog_success_report_submit)
+            window?.attributes = WindowManager.LayoutParams().apply {
+                copyFrom(window?.attributes)
+                width = WindowManager.LayoutParams.MATCH_PARENT
+                height = WindowManager.LayoutParams.MATCH_PARENT
+            }
+
+            var cross: ImageView = findViewById<ImageView>(com.business.zyvo.R.id.img_cross)
+            var okBtn: RelativeLayout = findViewById<RelativeLayout>(com.business.zyvo.R.id.rl_okay)
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            cross.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            okBtn.setOnClickListener {
+                dialog.dismiss()
+            }
+            window?.setLayout(
+                (resources.displayMetrics.widthPixels * 0.9).toInt(),  // Width 90% of screen
+                ViewGroup.LayoutParams.WRAP_CONTENT                   // Height wrap content
+            )
+            window?.setBackgroundDrawableResource(android.R.color.transparent)
+            show()
         }
     }
 

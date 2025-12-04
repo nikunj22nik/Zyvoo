@@ -206,8 +206,8 @@
                 app:maxCollapsedLines="3"
                 android:visibility="gone"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                app:readMoreText="Read More"
-                app:readLessText="Read Less"
+                app:readMoreText="Read more"
+                app:readLessText="Read less"
                 app:readMoreColor="@color/green_color_bar" />
 
 
@@ -220,7 +220,6 @@
                 android:textSize="@dimen/_13sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:justificationMode="inter_word"
                 android:lineSpacingExtra="0dp"
                 android:lineSpacingMultiplier="1.0"
                 android:textAlignment="viewStart"
@@ -234,9 +233,9 @@
                 android:textColor="@color/green_color_bar"
                 android:fontFamily="@font/poppins"
                 android:textSize="@dimen/_13sdp"
-                android:text="Read More"
+                android:text="Read more"
                 android:layout_marginHorizontal="@dimen/_15sdp"
-                android:justificationMode="inter_word"
+
                 android:textAlignment="viewStart"
                 android:gravity="start" />
 

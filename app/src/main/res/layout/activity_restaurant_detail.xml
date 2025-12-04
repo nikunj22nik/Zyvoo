@@ -893,12 +893,28 @@
                 android:text=""
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:justificationMode="inter_word"
+
                 android:textAlignment="viewStart"
                 app:maxCollapsedLines="3"
-                app:readMoreText="Read More"
-                app:readLessText="Read Less"
+                app:readMoreText="Read more"
+                app:readLessText="Read less"
                 app:readMoreColor="@color/green_color_bar" />
+
+<!--            <TextView-->
+<!--                android:id="@+id/readMoreTextView"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:textColor="#000000"-->
+<!--                android:fontFamily="@font/poppins"-->
+<!--                android:textSize="@dimen/_13sdp"-->
+<!--                android:layout_marginHorizontal="@dimen/_15sdp"-->
+<!--                android:layout_marginTop="@dimen/_5sdp"-->
+
+<!--                android:lineSpacingExtra="0dp"-->
+<!--                android:paddingEnd="8dp"-->
+<!--                android:lineSpacingMultiplier="1.0"-->
+
+<!--                />-->
 
             <TextView
                 android:id="@+id/readMoreTextView"
@@ -909,11 +925,12 @@
                 android:textSize="@dimen/_13sdp"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:layout_marginTop="@dimen/_5sdp"
-                android:justificationMode="inter_word"
+
                 android:lineSpacingExtra="0dp"
+                android:paddingEnd="8dp"
                 android:lineSpacingMultiplier="1.0"
-                android:textAlignment="viewStart"
-                android:gravity="start" />
+
+                />
 
             <TextView
                 android:id="@+id/readMore"
@@ -923,7 +940,7 @@
                 android:textColor="@color/green_color_bar"
                 android:fontFamily="@font/poppins"
                 android:textSize="@dimen/_13sdp"
-                android:text="Read More"
+                android:text="Read more"
                 android:layout_marginHorizontal="@dimen/_15sdp"
                 android:justificationMode="inter_word"
                 android:textAlignment="viewStart"

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.business.zyvo.AppConstant
 import com.business.zyvo.OnClickListener
 import com.business.zyvo.OnClickListener1
+import com.business.zyvo.TextJustifyUtil.Companion.justifyText
 import com.business.zyvo.databinding.LayoutArticlesBinding
 import com.business.zyvo.fragment.guest.helpCenter.model.Article
 import com.business.zyvo.model.AllArticlesModel
@@ -33,6 +34,7 @@ class AdapterAllArticles(var context: Context,
               } else {
                   Html.fromHtml(currentItem.description)
               }
+              binding.textDescription.justifyText()
 
           }else{
               binding.textDescription.visibility = View.GONE

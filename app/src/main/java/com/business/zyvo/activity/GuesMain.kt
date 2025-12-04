@@ -267,6 +267,7 @@ class GuesMain : AppCompatActivity(), OnClickListener,
                     guestViewModel.getChatUserChannelList(userId,type).collect {
                         when (it) {
                             is NetworkResult.Success -> {
+                                Log.d("28-11-2025",it.data.toString())
                                 it.data?.let {
                                     guestViewModel.chatChannel = it
                                     it.forEach {

@@ -49,6 +49,7 @@ import com.business.zyvo.databinding.ActivityExtraTimeChargesBinding
 import com.business.zyvo.fragment.guest.SelectHourFragmentDialog
 import com.business.zyvo.onClickSelectCard
 import com.business.zyvo.session.SessionManager
+import com.business.zyvo.utils.BadWordsFilter
 import com.business.zyvo.utils.ErrorDialog
 import com.business.zyvo.utils.ErrorDialog.addHours
 import com.business.zyvo.utils.ErrorDialog.calculatePercentage
@@ -287,6 +288,11 @@ class ExtraTimeChargesActivity : AppCompatActivity(), SelectHourFragmentDialog.D
         })
         binding.rlSubmitMessage.setOnClickListener {
             val userInput = binding.etShareMessage.text.toString()
+            if (BadWordsFilter.containsBadWords(userInput)) {
+                showErrorDialog(this, "This message contains inappropriate words and is not allowed.")
+                binding.etShareMessage.setText("")
+                return@setOnClickListener
+            }
             if (userInput.length > 0) {
                 messageSend = userInput
             }

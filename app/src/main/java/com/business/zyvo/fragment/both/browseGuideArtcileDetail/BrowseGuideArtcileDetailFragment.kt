@@ -25,6 +25,7 @@ import com.business.zyvo.LoadingUtils
 import com.business.zyvo.LoadingUtils.Companion.showErrorDialog
 import com.business.zyvo.NetworkResult
 import com.business.zyvo.R
+import com.business.zyvo.TextJustifyUtil.Companion.justifyText
 import com.business.zyvo.databinding.FragmentBrowseGuideArtcileDetailBinding
 import com.business.zyvo.fragment.both.browseGuideArtcileDetail.model.ArticleDetailsResponse
 import com.business.zyvo.fragment.both.browseGuideArtcileDetail.model.GuideDetailResponse
@@ -154,6 +155,7 @@ class BrowseGuideArtcileDetailFragment : Fragment() {
 
 
                             binding.textDescription.text = htmlText
+                            binding.textDescription.justifyText()
                             binding.textDescription.movementMethod = LinkMovementMethod.getInstance()
 
                             binding.textDescription.post {
